@@ -1001,6 +1001,7 @@ int main()
 			t->Draw(0.25);
 		}
 		cursor->Draw();
+		sprender->Flush();
 
 		//turn depth testing back on for 3D shit
 		glEnable(GL_DEPTH_TEST);

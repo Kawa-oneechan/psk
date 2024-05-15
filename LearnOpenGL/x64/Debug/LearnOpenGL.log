@@ -1,16 +1,4 @@
-﻿  VFS.cpp
-  stb_image_write.cpp
-  stb_image.cpp
-  JSONValue.cpp
-  JSON.cpp
-  format.cc
-  stb_truetype.cpp
-  SpriteRenderer.cpp
-  main.cpp
-  Generating Code...
-  miniz.c
-  glad.c
-  Generating Code...
+﻿  LINK : C:\Users\Kawa\Documents\GitHub\psk\LearnOpenGL\x64\Debug\LearnOpenGL.exe not found or not built by the last incremental link; performing full link
 LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
-  LearnOpenGL.vcxproj -> C:\Users\Kawa\Documents\Visual Studio 2015\Projects\LearnOpenGL\x64\Debug\LearnOpenGL.exe
-  LearnOpenGL.vcxproj -> C:\Users\Kawa\Documents\Visual Studio 2015\Projects\LearnOpenGL\x64\Debug\LearnOpenGL.pdb (Partial PDB)
+  LearnOpenGL.vcxproj -> C:\Users\Kawa\Documents\GitHub\psk\LearnOpenGL\x64\Debug\LearnOpenGL.exe
+  LearnOpenGL.vcxproj -> C:\Users\Kawa\Documents\GitHub\psk\LearnOpenGL\x64\Debug\LearnOpenGL.pdb (Partial PDB)

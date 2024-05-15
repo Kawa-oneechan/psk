@@ -15,6 +15,16 @@ static std::string fontFiles[MAXFONTS];
 static int fontSizes[MAXFONTS];
 static int numFonts = 0;
 
+static Texture* currentTexture = nullptr;
+static Shader* currentShader = nullptr;
+
+static glm::mat4 models[200];
+static glm::vec4 sourceRects[200];
+static glm::vec4 spriteColors[200];
+static int spriteFlipX[200];
+static int spriteFlipY[200];
+static int instanceCursor = 0;
+
 SpriteRenderer::SpriteRenderer()
 {
 	unsigned int VBO;
@@ -54,6 +64,32 @@ SpriteRenderer::~SpriteRenderer()
 	glDeleteVertexArrays(1, &this->quadVAO);
 }
 
+void SpriteRenderer::Flush()
+{
+	if (instanceCursor == 0)
+		return;
+
+	currentShader->Use();
+	currentTexture->Use(0);
+
+	//shader.SetMat4("model", model);
+	//shader.SetVec4("sourceRect", srcRect);
+	//shader.SetVec4("spriteColor", color);
+	//shader.SetBool("flipX", (flip & 1) == 1);
+	//shader.SetBool("flipY", (flip & 2) == 2);
+	glUniformMatrix4fv(glGetUniformLocation(currentShader->ID, "model"), instanceCursor, GL_FALSE, &models[0][0][0]);
+	glUniform4fv(glGetUniformLocation(currentShader->ID, "sourceRect"), instanceCursor, &sourceRects[0][0]);
+	glUniform4fv(glGetUniformLocation(currentShader->ID, "spriteColor"), instanceCursor, &spriteColors[0][0]);
+	glUniform1iv(glGetUniformLocation(currentShader->ID, "flipX"), instanceCursor, &spriteFlipX[0]);
+	glUniform1iv(glGetUniformLocation(currentShader->ID, "flipY"), instanceCursor, &spriteFlipY[0]);
+
+	glBindVertexArray(this->quadVAO);
+	//glDrawArrays(GL_TRIANGLES, 0, 6);
+	glDrawArraysInstanced(GL_TRIANGLES, 0, 6, instanceCursor);
+	glBindVertexArray(0);
+	instanceCursor = 0;
+}
+
 void SpriteRenderer::DrawSprite(Shader& shader, Texture &texture, glm::vec2 position, glm::vec2 size, glm::vec4 srcRect, float rotate, const glm::vec4& color, int flip)
 {
 	glm::mat4 orthoProjection = glm::ortho(0.0f, width, height, 0.0f, -1.0f, 1.0f);
@@ -79,18 +115,50 @@ void SpriteRenderer::DrawSprite(Shader& shader, Texture &texture, glm::vec2 posi
 		srcRect.y = -srcRect.y;
 	}
 
-	shader.SetMat4("model", model);
-	shader.SetVec4("sourceRect", srcRect);
-	shader.SetVec4("spriteColor", color);
-	shader.SetBool("flipX", (flip & 1) == 1);
-	shader.SetBool("flipY", (flip & 2) == 2);
+	bool flush = false;
+	if (currentShader == nullptr || currentShader->ID != shader.ID)
+	{
+		if (currentShader != nullptr)
+			flush = true;
+		else
+			currentShader = &shader;
+	}
+	if (currentTexture == nullptr || currentTexture->ID != texture.ID)
+	{
+		if (currentTexture != nullptr)
+			flush = true;
+		else
+			currentTexture = &texture;
+	}
+	if (instanceCursor >= 200)
+		flush = true;
 
-	texture.Use(0);
+	if (flush)
+	{
+		Flush();
+		currentShader = &shader;
+		currentTexture = &texture;
+	}
 
+	//shader.SetMat4("model", model);
+	//shader.SetVec4("sourceRect", srcRect);
+	//shader.SetVec4("spriteColor", color);
+	//shader.SetBool("flipX", (flip & 1) == 1);
+	//shader.SetBool("flipY", (flip & 2) == 2);
 
-	glBindVertexArray(this->quadVAO);
-	glDrawArrays(GL_TRIANGLES, 0, 6);
-	glBindVertexArray(0);
+	models[instanceCursor] = model;
+	sourceRects[instanceCursor] = srcRect;
+	spriteColors[instanceCursor] = color;
+	spriteFlipX[instanceCursor] = ((flip & 1) == 1);
+	spriteFlipY[instanceCursor] = ((flip & 2) == 2);
+	instanceCursor++;
+
+	//texture.Use(0);
+
+	//glBindVertexArray(this->quadVAO);
+	////glDrawArrays(GL_TRIANGLES, 0, 6);
+	//glDrawArraysInstanced(GL_TRIANGLES, 0, 6, 1);
+	//glBindVertexArray(0);
 }
 
 void SpriteRenderer::DrawSprite(Texture &texture, const glm::vec2& position, const glm::vec2& size, const glm::vec4& srcRect, float rotate, const glm::vec4& color, int flip)

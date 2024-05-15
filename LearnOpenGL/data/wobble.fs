@@ -1,27 +1,30 @@
 #version 330 core
+
 in vec2 TexCoords;
+flat in int index;
+
 out vec4 color;
 
 uniform sampler2D image;
 uniform sampler2D gradient1;
 uniform sampler2D gradient2;
-uniform vec4 spriteColor;
-uniform vec4 sourceRect;
-uniform bool flipX, flipY;
+uniform vec4 spriteColor[200];
+uniform vec4 sourceRect[200];
+uniform bool flipX[200], flipY[200];
 uniform float time;
 
 void main()
 {
 	vec2 uv = TexCoords;
-	vec4 sr = sourceRect;
+	vec4 sr = sourceRect[index];
 
-	if (sourceRect.z != 0)
+	if (sr.z != 0)
 	{
-		uv.x -= (uv.x * 2) * float(flipX);
-		sr.x += sr.w * float(flipX);
+		uv.x -= (uv.x * 2) * float(flipX[index]);
+		sr.x += sr.w * float(flipX[index]);
 
-		uv.y -= (uv.y * 2) * float(flipY);
-		sr.y -= sr.z * float(flipY);
+		uv.y -= (uv.y * 2) * float(flipY[index]);
+		sr.y -= sr.z * float(flipY[index]);
 
 		uv *= sr.zw;
 		uv += sr.xy;
@@ -37,7 +40,7 @@ void main()
 	float edge = min(abs(sin(time * 6.0) * 0.8) * grad, 1.0);
 	float cutOff = smoothstep(edge, 0.2 + edge, rawBubble);
 
-	color = vec4(spriteColor.rgb, cutOff * spriteColor.a);
+	color = vec4(spriteColor[index].rgb, cutOff * spriteColor[index].a);
 
 	//debug sliver of gradient
 	//if (uv.x < 0.05) color = vec4(grad, grad, grad, 1.0);
