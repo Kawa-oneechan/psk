@@ -1,4 +1,0 @@
-﻿  LINK : C:\Users\Kawa\Documents\GitHub\psk\LearnOpenGL\x64\Debug\LearnOpenGL.exe not found or not built by the last incremental link; performing full link
-LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
-  LearnOpenGL.vcxproj -> C:\Users\Kawa\Documents\GitHub\psk\LearnOpenGL\x64\Debug\LearnOpenGL.exe
-  LearnOpenGL.vcxproj -> C:\Users\Kawa\Documents\GitHub\psk\LearnOpenGL\x64\Debug\LearnOpenGL.pdb (Partial PDB)
