@@ -43,6 +43,21 @@ float lastFrame = 0.0f;
 float width = SCR_WIDTH, height = SCR_HEIGHT;
 float scale = (float)WIN_WIDTH / (float)SCR_HEIGHT;
 
+class UI
+{
+public:
+	static glm::vec4 primaryColor;
+	static glm::vec4 secondaryColor;
+	static std::vector<glm::vec4> textColors;
+
+	static JSONObject& json;
+
+	void Load(const JSONValue& source)
+	{
+
+	}
+};
+
 class InputsMap
 {
 public:

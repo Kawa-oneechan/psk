@@ -1,0 +1,63 @@
+{
+	"colors": {
+		"primary":   [ 0.15, 0.30, 0.43, 0.75 ], //#BF264D6E
+		"secondary": [ 1.00, 0.98, 0.89, 1.00 ], //#FFFFFAE3
+		"text": [
+			[ 0.961, 0.506, 0.773, 1.0 ], //#FFF581C5 Town
+			[ 0.024, 0.714, 0.820, 1.0 ], //#FF06B6D1 Important
+			[ 0.000, 0.761, 0.000, 1.0 ], //#FF00C200 Player
+			[ 0.941, 0.549, 0.000, 1.0 ], //#FFF08C00 NPC
+			[ 0.510, 0.443, 0.341, 0.5 ], //#80827157 Onomatopoeia
+			[ 0.847, 0.247, 0.247, 1.0 ], //#FFD83F3F CampGameRed
+			[ 0.365, 0.365, 0.400, 1.0 ]  //#FF5D5D66 CampGameBlack
+		]
+	},
+	//UI test
+	"hotbar": {
+		"textures": [
+			"ui/squares.png"
+		],
+		"panels": [
+			//{ } //backing panel or whatever
+			{
+				"position": [ -48, 0 ],
+				"type": "sprite",
+				"texture": 0, //squares
+				"frame": 1, //extend left
+				"color": "primary"
+			},
+			{
+				"id": "hotbarButton_1",
+				"position": [ 52, 0 ],
+				"type": "sprite",
+				"texture": 0,
+				"frame": 0, //regular
+				"color": "primary"
+			},
+			{
+				"id": "hotbarButton_2",
+				"position": [ 192, 0 ],
+				"type": "sprite",
+				"texture": 0,
+				"frame": 0,
+				"color": "primary"
+			},
+			{
+				"id": "hotbarButton_3",
+				"position": [ 332, 0 ],
+				"type": "sprite",
+				"texture": 0,
+				"frame": 0,
+				"color": "primary"
+			},
+			{
+				"id": "hotbarButton_4",
+				"position": [ 472, 0 ],
+				"type": "sprite",
+				"texture": 0,
+				"frame": 0,
+				"color": "primary"
+			}
+		]
+	}
+}
