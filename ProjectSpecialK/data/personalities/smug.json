@@ -1,0 +1,17 @@
+{
+	"id": "smug",
+	"voice": [ "zk", "an" ],
+	"base": "zk",
+	"name": {
+		"en": "smug",
+		"ja": "キザ",
+		"ko": "느끼하긴",
+		"zh": "别扭",
+		"de": "arrogant",
+		"es": "enteradillo",
+		"fr": "star",
+		"it": "arrogante",
+		"nl": "verwaand",
+		"ru": "самодовольный"
+	}
+}

@@ -1,0 +1,17 @@
+{
+	"id": "jock",
+	"voice": [ "ha", "ge" ],
+	"base": "ha",
+	"name": {
+		"en": "jock",
+		"ja": "はきはき",
+		"ko": "운동광",
+		"zh": "悠閒",
+		"de": "sportlich",
+		"es": "atlético",
+		"fr": "sportif",
+		"it": "sportivo",
+		"nl": "atletisch",
+		"ru": "спортивный"
+	}
+}

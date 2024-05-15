@@ -1,0 +1,17 @@
+{
+	"id": "lazy",
+	"voice": [ "bo", "fu" ],
+	"base": "bo",
+	"name": {
+		"en": "lazy",
+		"ja": "ぼんやり",
+		"ko": "먹보",
+		"zh": "悠閒",
+		"de": "schlafmütze",
+		"es": "perezoso",
+		"fr": "paresseux",
+		"it": "pigro",
+		"nl": "lui",
+		"ru": "ленивый"
+	}
+}

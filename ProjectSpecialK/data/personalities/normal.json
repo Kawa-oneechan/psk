@@ -1,0 +1,17 @@
+{
+	"id": "normal",
+	"voice": [ "bo", "fu" ],
+	"base": "fu",
+	"name": {
+		"en": "normal",
+		"ja": "ふつう",
+		"ko": "친절함",
+		"zh": "友好的",
+		"de": "ausgeglichen",
+		"es": "normal",
+		"fr": "normal",
+		"it": "dolce",
+		"nl": "vriendelijk",
+		"ru": "обычная"
+	}
+}

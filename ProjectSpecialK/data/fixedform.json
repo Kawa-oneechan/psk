@@ -1,0 +1,76 @@
+{
+  "str:fix:001" : {
+    "en" : "<delay:8>.<delay:8>.<delay:8>.",
+    "ja" : "<delay:8>・<delay:8>・<delay:8>・",
+    "ko" : "...",
+    "zh" : "<delay:8>…<delay:8>…",
+    "de" : "<delay:8>.<delay:8>.<delay:8>.<delay:8>"
+  },
+  "str:fix:002" : {
+    "en" : "<delay:12>.<delay:12>.<delay:12>.",
+    "ja" : "<delay:12>・<delay:12>・<delay:12>・",
+    "ko" : "...",
+    "zh" : "<delay:12>…<delay:12>…"
+  },
+  "str:fix:005" : {
+    "en" : "<delay:20:8:20:8:15:15:8:20><str:phrase>",
+    "es" : "<delay:12:6:10:8:12:8:10:4><str:phrase>"
+  },
+  "str:fix:006" : { "en" : "<str:player>", "ja" : "<str:player><str:kun>" },
+  "str:fix:007" : { "en" : "<str:nick>", "ja" : "<str:nick><str:kun>" },
+  "str:fix:008" : {
+    "en" : "<num:30>:<num:31>",
+    "ja" : "<num:30><ruby:2:じ>時<num:31><ruby:2:ふん>分",
+    "ko" : "<num:30>시 <num:31>분",
+    "zh" : "<num:30>時<num:31>分"
+  },
+  "str:fix:009" : { "en" : "<str:nick>", "ja" : "<str:nick><150,7:>" },
+  "str:fix:011" : { "en" : "<num:9><50,18:0:205>" },
+  "str:fix:012" : { "en" : "<num:10><50,18:0:205>" },
+  "str:fix:013" : { "en" : "<num:11><50,18:0:205>" },
+  "str:fix:014" : { "en" : "<num:12><50,18:0:205>" },
+  "str:fix:015" : { "en" : "<num:13><50,18:0:205>" },
+  "str:fix:016" : { "en" : "<num:14><50,18:0:205>" },
+  "str:fix:017" : { "en" : "<num:15><50,18:0:205>" },
+  "str:fix:018" : { "en" : "<num:16><50,18:0:205>" },
+  "str:fix:019" : { "en" : "<num:bells><50,18:0:205>" },
+  "str:fix:020" : { "en" : "<num:6><50,21:0:205>" },
+  "str:fix:021" : { "en" : "<num:8><50,21:0:205>" },
+  "str:fix:025" : { "en" : "<str:player>", "ja" : "<str:player><str:27>" },
+  "str:fix:026" : { "en" : "<str:nick>", "ja" : "<str:nick><str:27>" },
+  "str:fix:027" : {
+    "en" : "<num:hour>:<num:minute>",
+    "ja" : "<num:hour><ruby:2:じ>時<num:minute><ruby:2:ふん>分",
+    "ko" : "<num:hour>시 <num:minute>분",
+    "zh" : "<num:hour>時<num:minute>分"
+  },
+  "str:fix:028" : {
+    "en" : "<str:8>",
+    "ja" : "<str:8><198,1:>",
+    "ko" : "<str:8><198,1:>",
+    "zh" : "<str:8><198,1:>"
+  },
+  "str:fix:029" : {
+    "en" : "<str:island>",
+    "ja" : "<str:island><198,1:>",
+    "ko" : "<str:island><198,1:>",
+    "zh" : "<str:island><198,1:>"
+  },
+  "str:fix:030" : {
+    "en" : "<sel:island>",
+    "ja" : "<sel:island><198,1:>",
+    "ko" : "<sel:island><198,1:>",
+    "zh" : "<sel:island><198,1:>"
+  },
+  "str:fix:031" : {
+    "en" : "<198,4:0:205>",
+    "ja" : "<198,4:0:205><198,5:0:205>",
+    "ko" : "<198,4:0:205>님"
+  },
+  "str:fix:032" : {
+    "en" : "<198,4:0:205>",
+    "ja" : "<198,4:0:205><198,6:0:205>",
+    "ko" : "<198,4:0:205>님"
+  },
+  "str:fix:049" : { "en" : "<num:bells><50,28:0:205>" }
+}

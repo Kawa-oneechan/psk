@@ -1,0 +1,17 @@
+{
+	"id": "cranky",
+	"voice": [ "ko", "ot" ],
+	"base": "ko",
+	"name": {
+		"en": "cranky",
+		"ja": "コワイ",
+		"ko": "무뚝뚝",
+		"zh": "暴躁",
+		"de": "miesepeter",
+		"es": "gruñón",
+		"fr": "versatile",
+		"it": "burbero",
+		"nl": "volwassen",
+		"ru": "капризный"
+	}
+}

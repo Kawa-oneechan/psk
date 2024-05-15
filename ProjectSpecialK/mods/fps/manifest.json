@@ -1,0 +1,7 @@
+{
+	"id": "fps",
+	"friendlyName": "First-Person Shooter stuff",
+	"author": "Kawa",
+	"priority": 10,
+	"namespaces": [ "fps" ]
+}

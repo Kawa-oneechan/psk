@@ -1,0 +1,31 @@
+{
+	"$schema": "https://json-schema.org/draft/2019-09/schema",
+	"title": "Personality",
+	"description": "Defines a personality for regular villagers.",
+	"type": "object",
+	"properties": {
+		"id": {
+			"description": "The internal identification code for this item. Must be unique.",
+			"type": "string"
+		},
+		"voice": {
+			"description": "The name of the voice clip library for this item. Must have two entries, one for male and one for female.",
+			"type": "array",
+			"contains": {
+				"type": "string"
+			},
+			"minContains": 2,
+			"maxContains": 2
+		},
+		"base": {
+			"description": "The basic two-letter name of the ACNH personality that best matches this item.",
+			"type": "string",
+			"minLength": 2,
+			"maxLength": 2
+		},
+		"name": {
+			"description": "The user-readable name of this item. May not actually be used in-game.",
+			"type": "object"
+		}
+	}
+}

@@ -1,0 +1,17 @@
+{
+	"id": "uchi",
+	"voice": [ "zk", "an" ],
+	"base": "an",
+	"name": {
+		"en": "big sister",
+		"ja": "アネキ",
+		"ko": "누님",
+		"zh": "大姐头",
+		"de": "große Schwester",
+		"es": "hermana mayor",
+		"fr": "modèle",
+		"it": "sorellona",
+		"nl": "grote zus",
+		"ru": "старшая сестра"
+	}
+}

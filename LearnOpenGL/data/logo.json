@@ -1,0 +1,76 @@
+{
+	"id": "woodBack"
+	"type": "sprite"
+	"texture": "logo.png",
+	"rect": [ 1, 1, 747, 356 ],
+	"alpha": 1.0,
+	"position": [ "middle", 32 ], //automatically figure out that this is (SCREENWIDTH/2)-(747/2).
+	"nodes": [
+		{
+			"id": "logoS"
+			"type": "sprite",
+			"texture": "logo.png", //do NOT reload, reuse the texture ID from before.
+			"rect": [ 745, 1, 117, 196 ],
+			"alpha": 1.0,
+			"position": [ 54, 62 ] //relative to the parent node.
+		},
+		{
+			"id": "logoP"
+			"type": "sprite",
+			"texture": "logo.png",
+			"rect": [ 864, 1, 85, 118 ],
+			"alpha": 1.0,
+			"position": [ 174, 116 ]
+		},
+		{
+			"id": "logoE"
+			"type": "sprite",
+			"texture": "logo.png",
+			"rect": [ 951, 1, 71, 76 ],
+			"alpha": 1.0,
+			"position": [ 257, 141 ]
+		},
+		{
+			"id": "logoC"
+			"type": "sprite",
+			"texture": "logo.png",
+			"rect": [ 864, 121, 73, 82 ],
+			"alpha": 1.0,
+			"position": [ 330, 147 ]
+		},
+		{
+			"id": "logoI"
+			"type": "sprite",
+			"texture": "logo.png",
+			"rect": [ 951, 79, 45, 102],
+			"alpha": 1.0,
+			"position": [ 396, 91 ]
+		},
+		{
+			"id": "logoA"
+			"type": "sprite",
+			"texture": "logo.png",
+			"rect": [ 745, 205, 73, 78],
+			"alpha": 1.0,
+			"position": [ 440, 149 ]
+		},
+		{
+			"id": "logoL"
+			"type": "sprite",
+			"texture": "logo.png",
+			"rect": [ 820, 205, 67, 121 ],
+			"alpha": 1.0,
+			"position": [ 491, 92 ]
+		},
+		{
+			"id": "logoK"
+			"type": "sprite",
+			"texture": "logo.png",
+			"rect": [ 889, 205, 125, 169 ],
+			"alpha": 1.0,
+			"position": [ 564, 125 ]
+		}
+	]
+	//Do I put keyframe data in a separate block, referring to nodes by ID and wrapping "woodBack" in a "nodes" block,
+	//or do I put the keyframes in each node separately, SB style? :thinking:
+}

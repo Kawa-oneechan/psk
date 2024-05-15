@@ -1,0 +1,17 @@
+{
+	"id": "snooty",
+	"voice": [ "ko", "ot" ],
+	"base": "ot",
+	"name": {
+		"en": "snooty",
+		"ja": "オトナ",
+		"ko": "어른",
+		"zh": "大姐姐",
+		"de": "abgehoben",
+		"es": "estirada",
+		"fr": "snob",
+		"it": "sofisticata",
+		"nl": "hooghartig",
+		"ru": "занудная"
+	}
+}

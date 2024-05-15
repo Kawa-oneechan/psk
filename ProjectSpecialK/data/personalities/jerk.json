@@ -1,0 +1,18 @@
+//Nasty personality suggested by ray10k on Tumblr.
+{
+	"id": "nasty",
+	"voice": [ "ko", "ko" ],
+	"base": "ko",
+	"name": {
+		"en": "nasty",
+		"ja": "キタナイ",
+		"ko": "끔찍한",
+		"zh": "可恶的",
+		"de": "böse",
+		"es": "grosero",
+		"fr": "rosse",
+		"it": "cattivo",
+		"nl": "gemeen",
+		"ru": "мерзкий"
+	}
+}

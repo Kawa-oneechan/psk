@@ -1,0 +1,36 @@
+{
+	/* One bell equals one yen (in-game Switch sells for 29980 bells,
+	while the real-life Switch sells for 29980 yen). One dollar is
+	about 150 yen.
+	*/
+	"YEN": [ "Yen", "¥", 1 ],
+	"AUD": [ "Australian dollar", "$", 98 ],
+	"USD": [ "U.S. dollar", "$", 150 ],
+	"EUR": [ "Euro", "€", 160 ],
+	"GBP": [ "British pound", "£", 190 ],
+	"HUF": [ "Hungarian forint", "Ft", 0.5 ],
+	"BRL": [ "Brazilian real", "R$", 30 ],
+	"CAD": [ "Canadian dollar", "$", 110 ],
+	"BGN": [ "Bulgarian lev", "лв", 83 ],
+	"CNY": [ "Chinese yuan", "¥", 20.5 ],
+	"HRK": [ "Croatian kuna", "kn", 21.5 ],
+	"CZK": [ "Czech koruna", "Kč", 6.40 ],
+	"DKK": [ "Danish krone", "Kr", 21.75 ],
+	"HKD": [ "Hong Kong dollar", "$", 19 ],
+	"INR": [ "Indian rupee", "₹", 1.80 ],
+	"IDR": [ "Indonesian rupiah", "Rp", 0.01 ],
+	"MYR": [ "Malaysian ringgit", "RM", 31.5 ],
+	"MXN": [ "Mexican peso", "$", 8.75 ],
+	"NZD": [ "New Zealand dollar", "$", 91.25 ],
+	"NOK": [ "Norwegian krone", "kr", 14.25 ],
+	"PHP": [ "Philippine peso", "₱", 2.5 ],
+	"PLN": [ "Polish złoti", "zł", 37.5 ],
+	"RON": [ "Romanian leu", "lei", 31.5 ],
+	"SGD": [ "Singapore dollar", "$", 111 ],
+	"ZAR": [ "South African rand", "R", 8 ],
+	"KRW": [ "Korean won", "₩", 0.10 ],
+	"SEK": [ "Swedish krona", "kr", 14.5 ],
+	"CHF": [ "Swiss franc", "Fr", 168.5 ],
+	"THB": [ "Thai baht", "฿", 4.20 ],
+	"TRY": [ "Turkish lira", "₺", 5 ]
+}

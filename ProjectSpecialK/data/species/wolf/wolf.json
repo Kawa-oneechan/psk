@@ -1,0 +1,31 @@
+{
+  "id" : "wol",
+  "name" : [
+    //Male,
+    {
+      "en" : "<info::a :the >wolf",
+      "ja" : "オオカミ",
+      "ko" : "늑대",
+      "zh" : "狼",
+      "de" : "<info:ein :ein :der >Wolf<case::::s>",
+      "es" : "<info:un :un :el >lobo",
+      "fr" : "<info:un :un :le >loup",
+      "it" : "<info:un :un :il >lupo",
+      "nl" : "<info:het :een :de >wolf",
+      "ru" : "<info:a ::>волк<case::а:у:а>"
+    },
+    //Female,
+    {
+      "en" : "<info::a :the >wolf",
+      "ja" : "オオカミ",
+      "ko" : "늑대",
+      "zh" : "狼",
+      "de" : "<info:ein :ein :der >Wolf<case::::s>",
+      "es" : "<info:una :una :la >loba",
+      "fr" : "<info:une :une :la >louve",
+      "it" : "<info:uno :una :la >lupa",
+      "nl" : "<info:het :een :de >wolf",
+      "ru" : "<info:an ::>волчиц<case:а:у:е:ы>"
+    }
+  ]
+}

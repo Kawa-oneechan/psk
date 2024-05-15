@@ -1,0 +1,18 @@
+{
+	"id": "acnh:snowflakeumbrella",
+	"name": "snowflake umbrella",
+	"type": "$tool",
+
+	"_name": {
+    "en" : "<info::a :the >snowflake umbrella",
+    "ja" : "スノーフレークのかさ",
+    "ko" : "눈꽃 우산",
+    "zh" : "雪花雨傘",
+    "de" : "<info:ein :ein :der >Schneeflockenschirm<case::::s>",
+    "es" : "<info:un :un :el >paraguas nevada",
+    "fr" : "<info:un :un :le >parapluie flocon",
+    "it" : "<info:un :un :l'⁠>ombrello fiocco di neve",
+    "nl" : "<info:het :een :de >sneeuwvlokparaplu",
+    "ru" : "<info:a ::>зонт<case:::у:а>-снежинк<case:а:у:е:и>"
+  }
+}

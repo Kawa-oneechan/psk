@@ -1,0 +1,5 @@
+{
+	"id": "psk:toolfallback",
+	"name": "(fallback tool item)",
+	"type": "$tool"
+}

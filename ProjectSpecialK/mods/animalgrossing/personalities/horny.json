@@ -1,0 +1,17 @@
+{
+	"id": "horny",
+	"voice": [ "zk", "ge" ],
+	"base": "ge",
+	"name": {
+		"en": "horny",
+		"ja": "セイヨク",
+		"ko": "뿔의",
+		"zh": "可恶的",
+		"de": "geil",
+		"es": "cachonda",
+		"fr": "libidineux",
+		"it": "suscitata",
+		"nl": "geil",
+		"ru": "сладострастный"
+	}
+}

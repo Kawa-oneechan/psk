@@ -1,0 +1,35 @@
+{
+	"$schema": "https://json-schema.org/draft/2019-09/schema",
+	"description": "Defines a species for regular villagers.",
+	"type": "object",
+	"properties": {
+		"id": {
+			"description": "The internal identification code for this item. Must be unique.",
+			"type": "string"
+		},
+		"name": {
+			"description": "The name of the species. Can be an array with language maps, an array with only English strings, or a single string.",
+			"anyOf": [
+				{
+					"type": "string"
+				},
+				{
+					"type": "array",
+					"contains": {
+						"type": "string"
+					},
+					"minContains": 2,
+					"maxContains": 2
+				},
+				{
+					"type": "array",
+					"contains": {
+						"type": "object"
+					},
+					"minContains": 2,
+					"maxContains": 2
+				}
+			]
+		}
+	}
+}

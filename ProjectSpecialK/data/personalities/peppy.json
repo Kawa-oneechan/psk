@@ -1,0 +1,17 @@
+{
+	"id": "peppy",
+	"voice": [ "ha", "ge" ],
+	"base": "ge",
+	"name": {
+		"en": "peppy",
+		"ja": "元気",
+		"ko": "건강한",
+		"zh": "精神饱满的",
+		"de": "schwungvoll",
+		"es": "animada",
+		"fr": "impétueuse",
+		"it": "senza freni",
+		"nl": "enthousiast",
+		"ru": "подвижная"
+	}
+}

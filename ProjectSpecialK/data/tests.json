@@ -1,0 +1,73 @@
+{
+/*
+	Another string calls for "#l10n:str:kun" to be transcluded,
+	like with MSBT function 110-13, so the text database engine
+	looks it up and detects the "condition" key. Some simple
+	parsing happens and the truth is determined. The request
+	to return "str:kun" now passes the buck to a new request,
+	either to "str:kun_A" or "str:kun_B".
+	End result? The boy or girl honorific if you're playing
+	in Japanese, or nothing in all the other languages.
+*/
+	"str:kun": {
+		"condition": "playerGender = $mas | playerGender = $mnb",
+		"true": "str:kun_A",
+		"false": "str:kun_B"
+	},
+	"str:kun_A": {
+		"en": "kun",
+		"ja": "くん" //kun
+	},
+	"str:kun_B": {
+		"en": "chan",
+		"ja": "ちゃん" //chan
+	},
+
+/*
+	Same basic deal, but not as... *generally* useful I guess.
+	Still, tests if string-string comparisons work.
+*/
+	"condtest2": {
+//		"condition": "playerName = \"Kawa\"", //just string to string
+		"condition": "playerName = \"Kawa\" & playerGender = 0 | playerGender = 2", //string to string AND int to two different ints wow
+		"true": "condtest2_A",
+		"false": "condtest2_B"
+	},
+	"condtest2_A": {
+		"en": "You are he."
+	},
+	"condtest2_B": {
+		"en": "You are NOT he."
+	},
+
+/*
+	SIZE and /SIZE can be ignored for now, but should not visibly appear at all then.
+	BREAK *should* appear, waiting for a key and clearing.
+	CLR should *immediately* clear the page, no waiting.
+	Not sure what to do with END tbh.
+
+	Expected output:
+
+His hair?
+--------------- (wait for key)
+WACK.
+---------------
+His gear?
+---------------
+...
+---------------
+Me?
+--------------- (still wait for key)
+I'm tight as
+--------------- (NO waiting)
+FU              (slight delay for effect)
+(end of dialogue)
+
+*/
+	"dlg:sza:wack": {
+		"en": "His hair?<break><size:200>WACK.</size><break>His gear?<break><size:200>WACK.</size><break>His jewelry?<break><size:200>WACK.</size><break>His foot stance?<break><size:200>WACK.</size><break>The way that he talks?<break><size:200>WACK.</size><break>The way that he doesn't\neven like to smile?<break><size:200>WACK.</size><break>Me?<break>I'm tight as<clr><size:200>FU</size><delay:500><clr><end>"
+	},
+	"dlg:sza:insertions": {
+		"en": "This is an insertion test.\nYou are <str:player>-<str:kun>... <size:200>bitch!</size><break>"
+	}
+}

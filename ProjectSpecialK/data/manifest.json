@@ -1,0 +1,7 @@
+{
+	"id": "projectspecialk",
+	"friendlyName": "Project Special K base data",
+	"author": "Kawa",
+	"priority": -9999,
+	"namespaces": [ "psk" ]
+}
