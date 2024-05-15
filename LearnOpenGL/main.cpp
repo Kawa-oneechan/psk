@@ -43,18 +43,48 @@ float lastFrame = 0.0f;
 float width = SCR_WIDTH, height = SCR_HEIGHT;
 float scale = (float)WIN_WIDTH / (float)SCR_HEIGHT;
 
-class UI
+glm::vec2 GetJSONVec2(JSONValue* val)
 {
-public:
-	static glm::vec4 primaryColor;
-	static glm::vec4 secondaryColor;
-	static std::vector<glm::vec4> textColors;
+	if (!val->IsArray())
+		throw std::runtime_error("GetJSONVec2: given value is not an array.");
+	auto arr = val->AsArray();
+	if (arr.size() != 2)
+		throw std::runtime_error(fmt::format("GetJSONVec2: given array has {} entries, not 2.", arr.size()));
+	if (!arr[0]->IsNumber() || !arr[1]->IsNumber())
+		throw std::runtime_error("GetJSONVec2: given array does not contain only numbers.");
+	return glm::vec2(arr[0]->AsNumber(), arr[1]->AsNumber());
+}
 
-	static JSONObject& json;
+glm::vec4 GetJSONVec4(JSONValue* val)
+{
+	if (!val->IsArray())
+		throw std::runtime_error("GetJSONVec4: given value is not an array.");
+	auto arr = val->AsArray();
+	if (arr.size() != 4)
+		throw std::runtime_error(fmt::format("GetJSONVec4: given array has {} entries, not 4.", arr.size()));
+	if (!arr[0]->IsNumber() || !arr[1]->IsNumber() || !arr[2]->IsNumber() || !arr[3]->IsNumber())
+		throw std::runtime_error("GetJSONVec4: given array does not contain only numbers.");
+	return glm::vec4(arr[0]->AsNumber(), arr[1]->AsNumber(), arr[2]->AsNumber(), arr[3]->AsNumber());
+}
 
-	void Load(const JSONValue& source)
+namespace UI
+{
+	glm::vec4 primaryColor;
+	glm::vec4 secondaryColor;
+	std::vector<glm::vec4> textColors;
+
+	JSONObject& json = JSONObject();
+
+	static void Load(const JSONValue* source)
 	{
-
+		json = source->AsObject();
+		auto colors = json["colors"]->AsObject();
+		primaryColor = GetJSONVec4(colors["primary"]);
+		secondaryColor = GetJSONVec4(colors["secondary"]);
+		for (auto& ink : colors["text"]->AsArray())
+		{
+			textColors.push_back(GetJSONVec4(ink));
+		}
 	}
 };
 
@@ -87,18 +117,6 @@ public:
 	}
 };
 static InputsMap& Inputs = InputsMap();
-
-glm::vec2 GetJSONVec2(JSONValue* val)
-{
-	if (!val->IsArray())
-		throw std::runtime_error("GetJSONVec2: given value is not an array.");
-	auto arr = val->AsArray();
-	if (arr.size() != 2)
-		throw std::runtime_error(fmt::format("GetJSONVec2: given array has {} entries, not 2.", arr.size()));
-	if (!arr[0]->IsNumber() || !arr[1]->IsNumber())
-		throw std::runtime_error("GetJSONVec2: given array does not contain only numbers.");
-	return glm::vec2(arr[0]->AsNumber(), arr[1]->AsNumber());
-}
 
 typedef std::vector<glm::vec4> TextureAtlas;
 
@@ -206,8 +224,8 @@ private:
 public:
 	Background()
 	{
-		wallpaper = new Texture("90s-and-80s-style-seamless-pattern-vector-38114882.jpg");
-		scroller = new Shader("sprite.vs", "scroller.fs");
+		wallpaper = new Texture("discobg2.jpg");
+		scroller = new Shader("shaders/scroller.fs");
 		time = 0;
 	}
 	void Draw(double dt)
@@ -267,15 +285,15 @@ public:
 
 	DialogueBox()
 	{
-		bubble[0] = new Texture("dialogue.png");
-		bubble[1] = new Texture("dialogue_exclamation.png");
-		bubble[2] = new Texture("dialogue_dream.png");
-		bubble[3] = new Texture("dialogue_system.png");
-		//bubble[4] = new Texture("dialogue_wild.png", true, GL_REPEAT, GL_NEAREST);
+		bubble[0] = new Texture("ui/dialogue/dialogue.png");
+		bubble[1] = new Texture("ui/dialogue/exclamation.png");
+		bubble[2] = new Texture("ui/dialogue/dream.png");
+		bubble[3] = new Texture("ui/dialogue/system.png");
+		//bubble[4] = new Texture("ui/dialogue/wildworld.png", true, GL_REPEAT, GL_NEAREST);
 		gradient[0] = new Texture("gradient_thin.png");
 		gradient[1] = new Texture("gradient_wide.png");
-		nametag = new Texture("dialogue_name.png");
-		wobble = new Shader("wobble.fs");
+		nametag = new Texture("ui/dialogue/nametag.png");
+		wobble = new Shader("shaders/wobble.fs");
 
 		toDisplay.clear(); //u8"Truth is... <color:1>the game</color> was rigged\nfrom the start.";
 		displayCursor = 0;
@@ -529,10 +547,10 @@ private:
 public:
 	DoomMenu()
 	{
-		scrollbar = new Texture("scrollbar.png");
-		GetAtlas(scrollbarAtlas, "scrollbar.json");
-		checkbox = new Texture("checkbox.png");
-		GetAtlas(checkboxAtlas, "checkbox.json");
+		scrollbar = new Texture("ui/scrollbar.png");
+		GetAtlas(scrollbarAtlas, "ui/scrollbar.json");
+		checkbox = new Texture("ui/checkbox.png");
+		GetAtlas(checkboxAtlas, "ui/checkbox.json");
 
 		scrollbarAtlas[1].z /= 2;
 		//Quick hack to use less of the scrollbar track's area
@@ -843,6 +861,7 @@ int main()
 	setlocale(LC_ALL, ".UTF8");
 
 	InitVFS();
+	UI::Load(ReadJSON("ui/ui.json"));
 
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -879,8 +898,8 @@ int main()
 
 	framebuffer_size_callback(window, WIN_WIDTH, WIN_HEIGHT);
 
-	Shader ourShader("3.3.shader.vs", "3.3.shader.fs");
-	spriteShader = new Shader("sprite.fs");
+	Shader ourShader("shaders/3.3.shader.vs", "shaders/3.3.shader.fs");
+	spriteShader = new Shader("shaders/sprite.fs");
 	whiteRect = new Texture("white.png", true, GL_CLAMP_TO_EDGE);
 
 	float vertices[] = {

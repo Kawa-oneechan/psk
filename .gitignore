@@ -2,6 +2,7 @@
 *.d
 
 # Compiled Object files
+x64
 *.slo
 *.lo
 *.o
@@ -31,9 +32,9 @@
 *.out
 *.app
 
+# VS stuff
 *.opendb
 *.db
-
 .vs
-x64
-
+*.filters
+*.suo

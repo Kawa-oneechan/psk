@@ -6,8 +6,14 @@
 #include "support/stb_image_write.h"
 
 extern Shader* spriteShader;
-
 extern float width, height;
+namespace UI
+{
+	extern glm::vec4 primaryColor;
+	extern glm::vec4 secondaryColor;
+	extern std::vector<glm::vec4> textColors;
+	extern JSONObject& json;
+};
 
 static stbtt_bakedchar* cdata;
 static Texture** fontTextures;
@@ -52,7 +58,7 @@ SpriteRenderer::SpriteRenderer()
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
 
-	fontShader = new Shader("font.fs");
+	fontShader = new Shader("shaders/font.fs");
 
 	originalTextRenderSize = textRenderSize = 100;
 	originalTextRenderColor = textRenderColor = glm::vec4(0, 0, 0, 1);
@@ -199,7 +205,7 @@ void SpriteRenderer::LoadFontBank(int font, int bank)
 {
 	if (cdata == nullptr)
 	{
-		auto& fontSettings = ReadJSON("fonts.json")->AsArray();
+		auto& fontSettings = ReadJSON("fonts/fonts.json")->AsArray();
 		numFonts = (int)fontSettings.size();
 		if (numFonts > MAXFONTS)
 		{
@@ -214,7 +220,7 @@ void SpriteRenderer::LoadFontBank(int font, int bank)
 		for (int i = 0; i < numFonts; i++)
 		{
 			auto& thisFont = fontSettings[i]->AsArray();
-			fontFiles[i] = thisFont[0]->AsString();
+			fontFiles[i] = "fonts/" + thisFont[0]->AsString();
 			fontSizes[i] = (int)thisFont[1]->AsNumber();
 		}
 		printf("fontSettings!");
@@ -255,17 +261,6 @@ std::vector<std::string> Split(std::string& data, char delimiter)
 	return ret;
 }
 
-static const std::vector<glm::vec4> textColors
-{
-	glm::vec4(0.961f, 0.506f, 0.773f, 1.0f), //#FFF581C5 Town
-	glm::vec4(0.024f, 0.714f, 0.820f, 1.0f), //#FF06B6D1 Important
-	glm::vec4(0.000f, 0.761f, 0.000f, 1.0f), //#FF00C200 Player
-	glm::vec4(0.941f, 0.549f, 0.000f, 1.0f), //#FFF08C00 NPC
-	glm::vec4(0.510f, 0.443f, 0.341f, 0.5f), //#80827157 Onomatopoeia
-	glm::vec4(0.847f, 0.247f, 0.247f, 1.0f), //#FFD83F3F CampGameRed
-	glm::vec4(0.365f, 0.365f, 0.400f, 1.0f), //#FF5D5D66 CampGameBlack
-};
-
 void SpriteRenderer::msbtColor(MSBTParams)
 {
 	if (tags[0] == "/color")
@@ -273,10 +268,10 @@ void SpriteRenderer::msbtColor(MSBTParams)
 	else
 	{
 		int id = std::stoi(tags[1]);
-		if (id == -1 || id >= textColors.size())
+		if (id == -1 || id >= UI::textColors.size())
 			textRenderColor = originalTextRenderColor;
 		else
-			textRenderColor = textColors[id];
+			textRenderColor = UI::textColors[id];
 	}
 }
 

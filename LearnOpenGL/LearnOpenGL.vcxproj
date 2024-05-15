@@ -148,7 +148,6 @@
     <ClInclude Include="support\JSON\JSON.h" />
     <ClInclude Include="support\JSON\JSONValue.h" />
     <ClInclude Include="support\miniz.h" />
-    <ClInclude Include="support\stb_truetype.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="VFS.h" />
   </ItemGroup>

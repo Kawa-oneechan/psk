@@ -38,7 +38,7 @@ public:
 		free(fShaderCode);
 	}
 
-	Shader(const char* fragmentPath) : Shader("sprite.vs", fragmentPath)
+	Shader(const char* fragmentPath) : Shader("shaders/sprite.vs", fragmentPath)
 	{
 	}
 
