@@ -61,7 +61,7 @@ SpriteRenderer::SpriteRenderer()
 	fontShader = new Shader("shaders/font.fs");
 
 	originalTextRenderSize = textRenderSize = 100;
-	originalTextRenderColor = textRenderColor = glm::vec4(0, 0, 0, 1);
+	originalTextRenderColor = textRenderColor = UI::textColors[0];
 	originalTextRenderFont = textRenderFont = 0;
 }
 

@@ -295,15 +295,12 @@ public:
 		nametag = new Texture("ui/dialogue/nametag.png");
 		wobble = new Shader("shaders/wobble.fs");
 
-		toDisplay.clear(); //u8"Truth is... <color:1>the game</color> was rigged\nfrom the start.";
 		displayCursor = 0;
 		time = 0;
 		delay = 0;
-		name = "Isabelle";
-		nametagColor[0] = glm::vec4(1, 0.98f, 0.56f, 1);
-		nametagColor[1] = glm::vec4(0.96f, 0.67f, 0.05f, 1);
 
-		Style(0);
+
+		Text(u8"Truth is... <color:1>the game</color> was rigged\nfrom the start.", 0, "Isabelle", glm::vec4(1, 0.98f, 0.56f, 1), glm::vec4(0.96f, 0.67f, 0.05f, 1));
 	}
 
 	void Text(const std::string& text)
@@ -314,21 +311,45 @@ public:
 		delay = 50;
 	}
 
+	void Text(const std::string& text, int style, const std::string& speaker, glm::vec4 tagBack, glm::vec4 tagInk)
+	{
+		Style(style);
+		if (style != 3)
+		{
+			name = speaker;
+			nametagColor[0] = tagBack;
+			nametagColor[1] = tagInk;
+		}
+		else
+		{
+			name.empty();
+		}
+		Text(text);
+	}
+
+	void Text(const std::string& text, int style)
+	{
+		Style(style);
+		Text(text);
+	}
+
+	//void Text(const std::string& text, Villager* speaker)
+
 	void Style(int style)
 	{
 		style = clamp(style, 0, 3);
 
 		if (style == 3) //system
 		{
-			bubbleColor = glm::vec4(0.15, 0.3, 0.43, 0.75);
-			textColor = glm::vec4(0.84, 0.98, 0.99, 1);
+			bubbleColor = UI::primaryColor;
+			textColor = UI::textColors[8];
 			font = 1;
 			bubbleNum = 3;
 		}
 		else
 		{
-			bubbleColor = glm::vec4(1, 0.98, 0.89, 1);
-			textColor = glm::vec4(0.51, 0.45, 0.34, 1);
+			bubbleColor = UI::secondaryColor;
+			textColor = UI::textColors[0];
 			font = 2;
 			bubbleNum = style;
 		}
@@ -368,7 +389,7 @@ public:
 			auto tagMidWidth = 128;
 			auto tagSrc = glm::vec4(0.45, 0.25, nametag->width - 0.25, nametag->height - 0.25);
 
-			//TODO: draw this at any angle
+			//TODO: draw this at any angle... AGAIN lol
 			sprender->DrawSprite(*nametag, tagPos, tagSize, tagSrc, -1.0f, nametagColor[0]);
 			sprender->DrawSprite(*whiteRect, tagPos + glm::vec2(nametag->width - 0.75, 11 - 1.5) * scale, glm::vec2(tagMidWidth, 72) * scale, glm::vec4(0), -1.0f, nametagColor[0]);
 			sprender->DrawSprite(*nametag, tagPos + glm::vec2(nametag->width + tagMidWidth - 1.75, -3) * scale, tagSize, tagSrc, -1.0f, nametagColor[0], 1);

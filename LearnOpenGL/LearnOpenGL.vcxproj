@@ -158,6 +158,7 @@
     <None Include="data\scroller.fs" />
     <None Include="data\sprite.fs" />
     <None Include="data\sprite.vs" />
+    <None Include="data\ui\ui.json" />
     <None Include="data\wobble.fs" />
   </ItemGroup>
   <ItemGroup>
