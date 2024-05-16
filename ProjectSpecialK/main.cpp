@@ -267,6 +267,35 @@ void testVillagerDeserializing()
 	fmt::print("Villager deserialization test: {}'s first given item is \"{}\".\n", villager->Name(), villager->GivenItems[0]->FullName());
 }
 
+void testPickingStarters()
+{
+	auto jock = Database::Find<::Personality>("jock", &personalities);
+	auto sister = Database::Find<::Personality>("uchi", &personalities);
+
+	Villager* starters[2];
+
+	auto ret = std::vector<std::string>();
+	ret.reserve(50);
+	for (const auto& v : villagers)
+	{
+		if (v.personality == jock)
+			ret.push_back(v.ID);
+	}
+	fmt::print("{} jocks to pick a starter from.\n", ret.size());
+	starters[0] = (Villager*)Database::Find<::Villager>(ret[std::rand() % ret.size()].c_str(), &villagers);
+
+	ret.clear();
+	for (const auto& v : villagers)
+	{
+		if (v.personality == sister)
+			ret.push_back(v.ID);
+	}
+	fmt::print("{} big sisters to pick a starter from.\n", ret.size());
+	starters[1] = (Villager*)Database::Find<::Villager>(ret[std::rand() % ret.size()].c_str(), &villagers);
+
+	fmt::print("Staring villagers: {} and {}.\n", starters[0]->Name(), starters[1]->Name());
+}
+
 typedef enum
 {
 	Nothing, Opening, Writing, Delaying, WaitingForKey, Done
@@ -706,38 +735,13 @@ int main(int argc, char** argv)
 	testConditionals();
 	testVillagerSerializing();
 	testVillagerDeserializing();
-	testDialogueAndMultiTasking();
-
-	{
-		auto jock = Database::Find<::Personality>("jock", &personalities);
-		auto sister = Database::Find<::Personality>("uchi", &personalities);
-
-		Villager* starters[2];
-
-		auto ret = std::vector<std::string>();
-		ret.reserve(50);
-		for (const auto& v : villagers)
-		{
-			if (v.personality == jock)
-				ret.push_back(v.ID);
-		}
-		fmt::print("{} jocks to pick a starter from.\n", ret.size());
-		starters[0] = (Villager*)Database::Find<::Villager>(ret[std::rand() % ret.size()].c_str(), &villagers);
-
-		ret.clear();
-		for (const auto& v : villagers)
-		{
-			if (v.personality == sister)
-				ret.push_back(v.ID);
-		}
-		fmt::print("{} big sisters to pick a starter from.\n", ret.size());
-		starters[1] = (Villager*)Database::Find<::Villager>(ret[std::rand() % ret.size()].c_str(), &villagers);
-
-		fmt::print("Staring villagers: {} and {}.\n", starters[0]->Name(), starters[1]->Name());
-	}
+	testPickingStarters();
 
 	fmt::print("\n\n\n\n\nPress any key.\n");
 	_getch();
+
+	testDialogueAndMultiTasking();
+
 	return 0;
 }
 
