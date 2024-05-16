@@ -184,6 +184,11 @@ public:
 		Left = Right = Middle = false;
 	}
 
+	void Clear()
+	{
+		Left = Right = Middle = false;
+	}
+
 	void Select(int style)
 	{
 		frame = atlas[style];
@@ -524,10 +529,8 @@ public:
 class DoomMenu : public Tickable
 {
 private:
-	Texture* scrollbar;
-	TextureAtlas scrollbarAtlas;
-	Texture* checkbox;
-	TextureAtlas checkboxAtlas;
+	Texture* controls;
+	TextureAtlas controlsAtlas;
 	std::vector<DoomMenuItem*>* items;
 	int highlight, mouseHighlight;
 	int scroll, visible = 12;
@@ -537,6 +540,8 @@ private:
 	std::vector<DoomMenuItem*> volume;
 
 	std::stack<std::vector<DoomMenuItem*>> stack;
+
+	std::vector<float> itemY;
 
 	void rebuild()
 	{
@@ -588,15 +593,8 @@ private:
 public:
 	DoomMenu()
 	{
-		scrollbar = new Texture("ui/scrollbar.png");
-		GetAtlas(scrollbarAtlas, "ui/scrollbar.json");
-		checkbox = new Texture("ui/checkbox.png");
-		GetAtlas(checkboxAtlas, "ui/checkbox.json");
-
-		scrollbarAtlas[1].z /= 2;
-		//Quick hack to use less of the scrollbar track's area
-		//and prevent blending. Alternatively, you'd either have both end parts in the
-		//sheet instead of flipping, or use manual coordinates.
+		controls = new Texture("ui/controls.png");
+		GetAtlas(controlsAtlas, "ui/controls.json");
 
 		rebuild();
 
@@ -612,20 +610,21 @@ public:
 	{
 		//visible = (int)(12.0f * scale);
 
-		/*
 		if (cursor->Moved())
 		{
-			//TODO: memorize heights of items
 			mouseHighlight = -1;
 			if (cursor->Position.x >= 80 && cursor->Position.x <= 80 + 600)
 			{
-				if (cursor->Position.y >= 80 && cursor->Position.y < 80 + (items->size() * 30))
+				for (int i = 0; i < itemY.size() - 1; i++)
 				{
-					mouseHighlight = highlight = (int)((cursor->Position.y - 80) / 30);
+					if (cursor->Position.y >= itemY[i] && cursor->Position.y < itemY[i + 1])
+					{
+						mouseHighlight = highlight = i;
+						break;
+					}
 				}
 			}
 		}
-		*/
 
 		while (items->at(highlight)->type == DoomMenuTypes::Text)
 			highlight++;
@@ -690,7 +689,7 @@ public:
 
 		if (item->type == DoomMenuTypes::Page)
 		{
-			if (Inputs.Enter)
+			if (Inputs.Enter || cursor->Left)
 			{
 				stack.push(*item->page);
 				items = item->page;
@@ -699,7 +698,7 @@ public:
 		}
 		else if (item->type == DoomMenuTypes::Back)
 		{
-			if (Inputs.Enter)
+			if (Inputs.Enter || cursor->Left)
 			{
 				if (stack.size() > 1)
 				{
@@ -707,13 +706,14 @@ public:
 					stack.pop();
 					items = &stack.top();
 					Inputs.Clear();
+					cursor->Clear();
 					return;
 				}
 			}
 		}
 		else if (item->type == DoomMenuTypes::Checkbox)
 		{
-			if (Inputs.Enter)
+			if (Inputs.Enter || cursor->Left)
 			{
 				item->selection ^= 1;
 				if (item->change != nullptr)
@@ -722,10 +722,11 @@ public:
 		}
 		else if (item->type == DoomMenuTypes::Options)
 		{
-			if (Inputs.Enter)
+			if (Inputs.Enter || cursor->Left)
 			{
 				Inputs.Enter = false;
 				Inputs.Right = true;
+				cursor->Left = false;
 			}
 			if (Inputs.Left)
 			{
@@ -769,6 +770,7 @@ public:
 		}
 
 		Inputs.Enter = false;
+		cursor->Left = false;
 	}
 
 	void Draw(double dt)
@@ -781,6 +783,11 @@ public:
 		const auto start = items->at(0)->type == DoomMenuTypes::Text ? 1 : 0;
 		const auto shown = std::min(visible, (int)items->size() - scroll);
 
+		const auto partSize = controlsAtlas[4].w * 0.75f *  scale;
+		const auto thumbSize = glm::vec2(controlsAtlas[3].z, controlsAtlas[3].w) * 0.50f * scale;
+
+		itemY.clear();
+
 		for (int i = 0; i < shown; i++)
 		{
 			auto item = i == 0 ? items->at(0) : items->at(i + scroll);
@@ -788,7 +795,7 @@ public:
 			auto offset = glm::vec2(item->type == DoomMenuTypes::Checkbox ? (40 * scale) : 0, 0);
 			auto font = 1;
 			auto size = 100 * scale;
-			
+
 			if (item->type == DoomMenuTypes::Text)
 			{
 				font = item->selection;
@@ -803,22 +810,39 @@ public:
 				sprender->DrawText(1, item->options[item->selection], pos + glm::vec2(col + 2, 2), black, size);
 				sprender->DrawText(1, item->options[item->selection], pos + glm::vec2(col, 0), color, size);
 			}
-			else if (item->type == DoomMenuTypes::Checkbox)
+
+			itemY.push_back(pos.y);
+			pos.y += (40 * scale) + size - (100 * scale);
+		}
+
+		//terminator
+		itemY.push_back(pos.y);
+
+		for (int i = 0; i < shown; i++)
+		{
+			auto item = i == 0 ? items->at(0) : items->at(i + scroll);
+			auto color = glm::vec4(1, 1, i + scroll == highlight ? 0.25 : 1, 1);
+			auto offset = glm::vec2(item->type == DoomMenuTypes::Checkbox ? (40 * scale) : 0, 0);
+			auto font = 1;
+			auto size = 100 * scale;
+
+			pos.y = itemY[i];
+
+			if (item->type == DoomMenuTypes::Checkbox)
 			{
 				auto checkColor = color * glm::vec4(1, 1, 1, 0.5);
-				auto partSize = checkboxAtlas[0].w * 0.75f *  scale;
-				sprender->DrawSprite(*checkbox, pos + glm::vec2(0, 4 * scale), glm::vec2(partSize), checkboxAtlas[0], 0, checkColor);
+				sprender->DrawSprite(*controls, pos + glm::vec2(0, 4 * scale), glm::vec2(partSize), controlsAtlas[4], 0, checkColor);
 				if (item->selection)
-					sprender->DrawSprite(*checkbox, pos + glm::vec2(0, 4 * scale), glm::vec2(partSize), checkboxAtlas[1], 0, color);
+					sprender->DrawSprite(*controls, pos + glm::vec2(0, 4 * scale), glm::vec2(partSize), controlsAtlas[5], 0, color);
 			}
 			else if (item->type == DoomMenuTypes::Slider)
 			{
 				auto trackColor = color * glm::vec4(1, 1, 1, 0.5);
 				auto barLength = col;
-				auto partSize = scrollbarAtlas[0].w * 0.5f;
-				sprender->DrawSprite(*scrollbar, pos + glm::vec2(col, 10), glm::vec2(partSize), scrollbarAtlas[0], 0, trackColor);
-				sprender->DrawSprite(*scrollbar, pos + glm::vec2(col + barLength + (partSize * 1), 10), glm::vec2(partSize), scrollbarAtlas[0], 180, trackColor);
-				sprender->DrawSprite(*scrollbar, pos + glm::vec2(col + partSize, 10), glm::vec2(barLength, partSize), scrollbarAtlas[1], 0, trackColor);
+				auto partSize = controlsAtlas[0].w * 0.5f;
+				sprender->DrawSprite(*controls, pos + glm::vec2(col, 10), glm::vec2(partSize), controlsAtlas[0], 0, trackColor);
+				sprender->DrawSprite(*controls, pos + glm::vec2(col + barLength + (partSize * 1), 10), glm::vec2(partSize), controlsAtlas[1], 0, trackColor);
+				sprender->DrawSprite(*controls, pos + glm::vec2(col + partSize, 10), glm::vec2(barLength, partSize), controlsAtlas[2], 0, trackColor);
 
 				//thanks GZDoom
 				auto range = item->maxVal - item->minVal;
@@ -826,8 +850,7 @@ public:
 				auto thumbPos = partSize + ((ccur * (barLength - (partSize * 2))) / range);
 
 				auto thumb = glm::vec2(col + (int)thumbPos, 10);
-				sprender->DrawSprite(*scrollbar, pos + thumb, glm::vec2(partSize), scrollbarAtlas[2], 0, color);
-				sprender->DrawSprite(*scrollbar, pos + thumb + glm::vec2(partSize, 0), glm::vec2(partSize), scrollbarAtlas[2], 180, color);
+				sprender->DrawSprite(*controls, pos + thumb, thumbSize, controlsAtlas[3], 0, color);
 
 				if (item->format != nullptr)
 				{
@@ -836,8 +859,6 @@ public:
 					sprender->DrawText(1, fmt, pos + glm::vec2(col + barLength + 54, 10), color, size * 0.75f);
 				}
 			}
-			
-			pos.y += (40*scale) + size - (100 * scale);
 		}
 	}
 };
@@ -897,6 +918,25 @@ void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
 	camera.ProcessMouseMovement(xoffset, yoffset);
 }
 
+void mousebutton_callback(GLFWwindow* window, int button, int action, int mods)
+{
+	if (button == GLFW_MOUSE_BUTTON_LEFT)
+	{
+		if (!cursor->Left && action == GLFW_RELEASE)
+			cursor->Left = true;
+	}
+	else if (button == GLFW_MOUSE_BUTTON_MIDDLE)
+	{
+		if (!cursor->Middle && action == GLFW_RELEASE)
+			cursor->Middle = true;
+	}
+	else if (button == GLFW_MOUSE_BUTTON_RIGHT)
+	{
+		if (!cursor->Right && action == GLFW_RELEASE)
+			cursor->Right = true;
+	}
+}
+
 int main()
 {
 	setlocale(LC_ALL, ".UTF8");
@@ -929,6 +969,7 @@ int main()
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 	glfwSetKeyCallback(window, key_callback);
 	glfwSetCursorPosCallback(window, mouse_callback);
+	glfwSetMouseButtonCallback(window, mousebutton_callback);
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 	
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
@@ -1143,8 +1184,7 @@ int main()
 
 		//sprender.DrawSprite(sprite, glm::vec2(200), glm::vec2(300, 400), glm::vec4(0), 45, glm::vec4(0, 1, 0, 1));
 		//sprender.DrawSprite(sprite, glm::vec2(1));
-
-	
+		
 		sprender->DrawText(0, fmt::format("time: {}", time), glm::vec2(0));
 
 		//turn depth testing back on for 3D shit
