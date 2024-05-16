@@ -137,6 +137,16 @@ void GetAtlas(TextureAtlas &ret, const std::string& jsonFile)
 		}
 		return;
 	}
+	else if (doc["type"]->AsString() == "atlas")
+	{
+		auto rects = doc["rects"]->AsArray();
+		for (const auto& rect : rects)
+		{
+			ret.push_back(GetJSONVec4(rect));
+		}
+		return;
+	}
+
 	throw std::runtime_error(fmt::format("GetAtlas: file {} has an unknown type \"{}\".", jsonFile, doc["type"]->AsString()));
 }
 
@@ -251,6 +261,7 @@ private:
 	Texture* bubble[5];
 	Texture* gradient[2];
 	Texture* nametag;
+	TextureAtlas nametagAtlas;
 	Shader* wobble;
 	std::string displayed;
 	std::string toDisplay;
@@ -293,6 +304,7 @@ public:
 		gradient[0] = new Texture("gradient_thin.png");
 		gradient[1] = new Texture("gradient_wide.png");
 		nametag = new Texture("ui/dialogue/nametag.png");
+		GetAtlas(nametagAtlas, "ui/dialogue/nametag.json");
 		wobble = new Shader("shaders/wobble.fs");
 
 		displayCursor = 0;
@@ -384,17 +396,23 @@ public:
 
 		if (!name.empty())
 		{
-			auto tagPos = glm::vec2(dlgLeft + (150 * scale), dlgTop + (sinf(time * 2) * 10) * scale);
-			auto tagSize = glm::vec2(nametag->width, nametag->height) * scale;
-			auto tagMidWidth = 128;
-			auto tagSrc = glm::vec4(0.45, 0.25, nametag->width - 0.25, nametag->height - 0.25);
+			const auto tagAngle = -6.0f;
+			const auto tagPos = glm::vec2(dlgLeft + (150 * scale), dlgTop + (sinf(time * 2) * 10) * scale);
+			const auto tagSize = glm::vec2(nametagAtlas[0].z, nametagAtlas[0].w) * scale;
+			const auto tagMidWidth = 128; //pre-measure this to fit in the Text() calls.
 
-			//TODO: draw this at any angle... AGAIN lol
-			sprender->DrawSprite(*nametag, tagPos, tagSize, tagSrc, -1.0f, nametagColor[0]);
-			sprender->DrawSprite(*whiteRect, tagPos + glm::vec2(nametag->width - 0.75, 11 - 1.5) * scale, glm::vec2(tagMidWidth, 72) * scale, glm::vec4(0), -1.0f, nametagColor[0]);
-			sprender->DrawSprite(*nametag, tagPos + glm::vec2(nametag->width + tagMidWidth - 1.75, -3) * scale, tagSize, tagSrc, -1.0f, nametagColor[0], 1);
-			sprender->DrawText(1, name, tagPos + (glm::vec2(48, 24) * scale), nametagColor[1], 120 * scale, -1.0f);
+			const auto tagPosL = tagPos;
+			const auto tagPosM = tagPosL + glm::vec2(cosf(glm::radians(tagAngle)) * tagSize.x, sinf(glm::radians(tagAngle)) * tagSize.x);
+			const auto tagPosR = tagPosM + glm::vec2(cosf(glm::radians(tagAngle)) * tagMidWidth, sinf(glm::radians(tagAngle)) * tagMidWidth);
+			//TODO: figure this one out properly
+			const auto tagPosT = tagPosL + glm::vec2(cosf(glm::radians(tagAngle)) * (tagSize.x - 0), sinf(glm::radians(tagAngle)) * (tagSize.x - 196));
+			sprender->DrawSprite(*nametag, tagPosL, tagSize, nametagAtlas[0], tagAngle, nametagColor[0], SPR_TOPLEFT);
+			sprender->DrawSprite(*nametag, tagPosM, glm::vec2(tagMidWidth, tagSize.y), nametagAtlas[2], tagAngle, nametagColor[0], SPR_TOPLEFT);
+			sprender->DrawSprite(*nametag, tagPosR, tagSize, nametagAtlas[1], tagAngle, nametagColor[0], SPR_TOPLEFT);
+			sprender->DrawText(1, name, tagPosT, nametagColor[1], 120 * scale, tagAngle);
 		}
+
+		//maybe afterwards port this to the UI Panel system?
 
 		//sprender->DrawText(1, fmt::format("DialogueBox: {}", time), glm::vec2(0, 16), glm::vec4(0, 0, 0, 0.25), 50);
 	}

@@ -1,0 +1,8 @@
+{
+	"type": "atlas",
+	"rects": [
+		[  0, 0, 64, 96 ], //left half
+		[ 80, 0, 64, 96 ], //right half
+		[ 64, 0, 16, 96 ]  //middle
+	]
+}

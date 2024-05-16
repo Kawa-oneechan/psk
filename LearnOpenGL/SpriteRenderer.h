@@ -10,8 +10,12 @@
 #define FONTATLAS_SIZE 512
 #define MAXFONTS 4
 
-
 #define MSBTParams const std::vector<std::string>& tags, int start, int len
+
+#define SPR_FLIPX 1
+#define SPR_FLIPY 2
+#define SPR_FLIPXY 3
+#define SPR_TOPLEFT 4
 
 class SpriteRenderer
 {

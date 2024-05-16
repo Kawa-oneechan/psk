@@ -96,7 +96,7 @@ void SpriteRenderer::Flush()
 	instanceCursor = 0;
 }
 
-void SpriteRenderer::DrawSprite(Shader& shader, Texture &texture, glm::vec2 position, glm::vec2 size, glm::vec4 srcRect, float rotate, const glm::vec4& color, int flip)
+void SpriteRenderer::DrawSprite(Shader& shader, Texture &texture, glm::vec2 position, glm::vec2 size, glm::vec4 srcRect, float rotate, const glm::vec4& color, int flags)
 {
 	glm::mat4 orthoProjection = glm::ortho(0.0f, width, height, 0.0f, -1.0f, 1.0f);
 
@@ -107,9 +107,9 @@ void SpriteRenderer::DrawSprite(Shader& shader, Texture &texture, glm::vec2 posi
 	glm::mat4 model = glm::mat4(1.0f);
 	model = glm::translate(model, glm::vec3(position, 0));
 	// first translate (transformations are: scale happens first, then rotation, and then final translation happens; reversed order)
-	model = glm::translate(model, glm::vec3(0.5f * size.x, 0.5f * size.y, 0)); // move origin of rotation to center of quad
+	if ((flags & 4) != 4) model = glm::translate(model, glm::vec3(0.5f * size.x, 0.5f * size.y, 0)); // move origin of rotation to center of quad
 	model = glm::rotate(model, glm::radians(rotate), glm::vec3(0, 0, 1)); // then rotate
-	model = glm::translate(model, glm::vec3(-0.5f * size.x, -0.5f * size.y, 0)); // move origin back
+	if ((flags & 4) != 4) model = glm::translate(model, glm::vec3(-0.5f * size.x, -0.5f * size.y, 0)); // move origin back
 	model = glm::scale(model, glm::vec3(size, 1)); // last scale
 
 	if (srcRect.z != 0)
@@ -155,8 +155,8 @@ void SpriteRenderer::DrawSprite(Shader& shader, Texture &texture, glm::vec2 posi
 	models[instanceCursor] = model;
 	sourceRects[instanceCursor] = srcRect;
 	spriteColors[instanceCursor] = color;
-	spriteFlipX[instanceCursor] = ((flip & 1) == 1);
-	spriteFlipY[instanceCursor] = ((flip & 2) == 2);
+	spriteFlipX[instanceCursor] = ((flags & 1) == 1);
+	spriteFlipY[instanceCursor] = ((flags & 2) == 2);
 	instanceCursor++;
 
 	//texture.Use(0);
