@@ -169,14 +169,6 @@
     <ClInclude Include="VFS.h" />
     <ClInclude Include="Villager.h" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="data\3.3.shader.fs">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </None>
-    <None Include="data\3.3.shader.vs">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </None>
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
