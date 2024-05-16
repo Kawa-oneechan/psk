@@ -11,7 +11,7 @@ typedef enum
 	USen, USes, USfr,
 	JPja, KRko, CNzh, TWzh,
 	EUde, EUen, EUes, EUfr, EUit, EUnl, EUru, EUhu,
-	DontCare, Default,
+	DontCare, Default, Unknown
 } Language;
 
 //Language used by TextGet.

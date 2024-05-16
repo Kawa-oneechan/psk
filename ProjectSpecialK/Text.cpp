@@ -2,7 +2,7 @@
 
 //#define JUSTTHEONELANGUAGE Language::USen
 
-Language gameLang = Language::EUhu;
+Language gameLang = Language::USen;
 
 static std::map<std::string, TextEntry> textEntries;
 
@@ -24,13 +24,13 @@ static Language LangStrToEnum(const std::string& lang)
 		{ "euit", EUit },{ "eunl", EUnl },{ "euru", EUru },{ "euhu", EUhu },
 		//Shorter (matches fallbacks in TextEntry::get)
 		{ "en", USen },{ "es", USes },{ "fr", USfr },
-		{ "ja", JPja },{ "ko", KRko },{ "zh", TWzh },
+		{ "ja", JPja },{ "jp", JPja },{ "ko", KRko },{ "zh", TWzh },
 		{ "de", EUde },{ "it", EUit },{ "nl", EUnl },{ "ru", EUru },{ "hu", EUhu }
 	});
 	auto match = map.find(lang);
 	if (match != map.end())
 		return match->second;
-	return USen;
+	return Unknown;
 }
 
 std::string TextCondition(std::string condition, std::string ifTrue, std::string ifElse, Language lang);
@@ -74,6 +74,8 @@ TextEntry& TextAdd(std::string& key, JSONObject& map)
 		}
 
 		auto langEnum = LangStrToEnum(langs.first);
+		if (langEnum == Unknown)
+			continue;
 #ifdef JUSTTHEONELANGUAGE
 		if (langEnum != JUSTTHEONELANGUAGE)
 			continue;

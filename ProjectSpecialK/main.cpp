@@ -566,6 +566,71 @@ public:
 
 #include <ctime>
 
+class DateTimePanel : Tickable
+{
+private:
+	std::string shownTime, shownDate;
+	int lastHour = -1;
+	int lastMinute = -1;
+	tm gm;
+
+public:
+	DateTimePanel()
+	{
+		auto now = time(nullptr);
+		localtime_s(&gm, &now);
+		Update();
+	}
+
+	void Update()
+	{
+		//24 hours, easy
+		//shownTime = fmt::format("{:2}:{:02}", gm.tm_hour, gm.tm_min);
+
+		//12 hours?
+		auto h = gm.tm_hour;
+		auto pm = h >= 12;
+		if (h == 0) h += 12;
+		else if (h > 12) h -= 12;
+
+		shownTime = fmt::format("{:2}:{:02} {}", h, gm.tm_min, pm ? "PM" : "AM");
+		
+		auto wd = gm.tm_wday;
+		if (wd == 0) wd = 7; //gm.tm_wday is 0-Sun to 6-Sat. We want 1-Mon to 7-Sun.
+
+		//TODO : use "month:format".
+		shownDate = fmt::format("{} {}, {}", TextGet(fmt::format("month:{}", gm.tm_mon + 1)), gm.tm_mday, TextGet(fmt::format("day:short:{}", wd)));
+
+		if (lastHour == 4 && gm.tm_hour == 5)
+		{
+			fmt::print("\x1B[12;40H NEXT DAY            ");
+			//trigger reset
+		}
+		if (gm.tm_hour != lastHour && gm.tm_min == 0)
+		{
+			lastHour = gm.tm_hour;
+			fmt::print("\x1B[12;40H Ding dong~! {} now", lastHour);
+			//trigger music
+		}
+	}
+
+	void Tick(double dt)
+	{
+		auto now = time(nullptr);
+		localtime_s(&gm, &now);
+		if (lastMinute != gm.tm_min)
+		{
+			Update();
+			lastMinute = gm.tm_min;
+		}
+
+		fmt::print("\x1B[10;40H DateTime");
+		fmt::print("\x1B[11;40H {}, {}", shownTime, shownDate);
+		if (gm.tm_min == 1)
+			fmt::print("\x1B[12;40H                     ");
+	}
+};
+
 void testDialogueAndMultiTasking()
 {
 	fmt::print("\x1B[2J");
@@ -580,6 +645,8 @@ void testDialogueAndMultiTasking()
 	GiftBalloonSpawner gbs;
 	gbs.Start();
 
+	DateTimePanel dtp;
+
 	int oldTime = 0;
 
 	while (dlg.state != DialogueBoxState::Done)
@@ -592,6 +659,7 @@ void testDialogueAndMultiTasking()
 		delay(1);
 		dlg.Tick(dt);
 		gbs.Tick(dt);
+		dtp.Tick(dt);
 	}
 }
 
@@ -638,7 +706,7 @@ int main(int argc, char** argv)
 	testConditionals();
 	testVillagerSerializing();
 	testVillagerDeserializing();
-	//testDialogueAndMultiTasking();
+	testDialogueAndMultiTasking();
 
 	{
 		auto jock = Database::Find<::Personality>("jock", &personalities);
