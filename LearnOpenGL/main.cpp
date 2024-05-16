@@ -231,6 +231,7 @@ private:
 	Texture* wallpaper;
 	Shader* scroller;
 	float time;
+
 public:
 	Background()
 	{
@@ -238,13 +239,14 @@ public:
 		scroller = new Shader("shaders/scroller.fs");
 		time = 0;
 	}
+
 	void Draw(double dt)
 	{
 		time += (float)dt * 0.005f;
 
 		scroller->Use();
 		scroller->SetFloat("time", time);
-		sprender->DrawSprite(*scroller, *wallpaper, glm::vec2(0), glm::vec2(width, height), glm::vec4(0,0,width,height));
+		sprender->DrawSprite(*scroller, *wallpaper, glm::vec2(0), glm::vec2(width, height), glm::vec4(0, 0, width, height));
 		sprender->DrawText(1, "Project Special K: UI test", glm::vec2(0), glm::vec4(1, 1, 1, 0.75), 50);
 		//sprender->DrawText(1, fmt::format("Project Special K: UI test (SCALE = {})", scale), glm::vec2(0), glm::vec4(1, 1, 1, 0.75), 50);
 		//sprender->DrawText(1, u8"日", glm::vec2(0, 20), glm::vec4(1, 1, 1, 0.75), 50);
@@ -937,7 +939,7 @@ int main()
 
 	framebuffer_size_callback(window, WIN_WIDTH, WIN_HEIGHT);
 
-	Shader ourShader("shaders/3.3.shader.vs", "shaders/3.3.shader.fs");
+	Shader ourShader("shaders/model.vs", "shaders/model.fs");
 	spriteShader = new Shader("shaders/sprite.fs");
 	whiteRect = new Texture("white.png", true, GL_CLAMP_TO_EDGE);
 

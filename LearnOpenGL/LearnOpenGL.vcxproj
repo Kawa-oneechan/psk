@@ -152,17 +152,16 @@
     <ClInclude Include="VFS.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="data\3.3.shader.fs" />
-    <None Include="data\3.3.shader.vs" />
-    <None Include="data\font.fs" />
-    <None Include="data\scroller.fs" />
-    <None Include="data\sprite.fs" />
-    <None Include="data\sprite.vs" />
-    <None Include="data\ui\ui.json" />
-    <None Include="data\wobble.fs" />
+    <Natvis Include="glm.natvis" />
   </ItemGroup>
   <ItemGroup>
-    <Natvis Include="glm.natvis" />
+    <None Include="data\shaders\model.fs" />
+    <None Include="data\shaders\model.vs" />
+    <None Include="data\shaders\font.fs" />
+    <None Include="data\shaders\scroller.fs" />
+    <None Include="data\shaders\sprite.fs" />
+    <None Include="data\shaders\sprite.vs" />
+    <None Include="data\shaders\wobble.fs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
