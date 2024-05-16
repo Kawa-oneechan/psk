@@ -2,6 +2,7 @@
 
 #include "support/glad/glad.h"
 #include "support/stb_image.h"
+#include "support/format.h"
 #include "VFS.h"
 
 class Texture
@@ -37,7 +38,7 @@ public:
 		}
 		else
 		{
-			printf("Failed to load texture \"%s\".\n", texturePath);
+			fmt::print("Failed to load texture \"{}\".\n", texturePath);
 		}
 		stbi_image_free(data);
 	}

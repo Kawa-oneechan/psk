@@ -1,5 +1,6 @@
 #pragma once
 
+#include "support/format.h"
 #include "glad/glad.h"
 #include "VFS.h"
 
@@ -114,7 +115,7 @@ private:
 			if (!success)
 			{
 				glGetShaderInfoLog(shader, 1024, NULL, infoLog);
-				printf("Shader compilation error, type %s:\n%s\n", type.c_str(), infoLog);
+				fmt::print("Shader compilation error, type {}:\n{}\n", type, infoLog);
 			}
 		}
 		else
@@ -123,7 +124,7 @@ private:
 			if (!success)
 			{
 				glGetProgramInfoLog(shader, 1024, NULL, infoLog);
-				printf("Shader linking error, type %s:\n%s\n", type.c_str(), infoLog);
+				fmt::print("Shader linking error, type {}:\n{}\n", type, infoLog);
 			}
 		}
 	}

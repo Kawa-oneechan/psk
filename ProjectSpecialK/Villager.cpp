@@ -14,6 +14,11 @@ Villager::Villager(JSONObject& value) : NameableThing(value)
 	personality = nullptr;
 	personalitySubtype = 0;
 	hobby = nullptr;
+	HeldTool = nullptr;
+	Hat = nullptr;
+	Glasses = nullptr;
+	Mask = nullptr;
+	Outfit = nullptr;
 
 	_customModel = value["customModel"] != nullptr && value["customModel"]->IsBool() ? value["customModel"]->AsBool() : false;
 	_isSpecial = value["isSpecial"] != nullptr && value["isSpecial"]->IsBool() ? value["isSpecial"]->AsBool() : false;
@@ -26,7 +31,7 @@ Villager::Villager(JSONObject& value) : NameableThing(value)
 	else
 	{
 		auto sp = value["species"]->AsString();
-		_species = Database::Find<::Species>(sp.c_str(), &species);
+		_species = Database::Find<::Species>(sp, &species);
 		if (_species == nullptr)
 			throw std::runtime_error(fmt::format("Unknown species \"{}\" while loading {}.", sp, ID).c_str());
 		RefSpecies = fmt::format("species:{}", _species->ID);

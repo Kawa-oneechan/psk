@@ -54,10 +54,10 @@ namespace JSONPatch
 	JSONValue* ApplyPatch(JSONValue& source, JSONValue& patch)
 	{
 #if 0
-		printf("Original: %s\n", source.Stringify().c_str());
-		printf("Patch:    %s\n", patch.Stringify().c_str());
+		fmt::print("Original: %s\n", source.Stringify());
+		fmt::print("Patch:    %s\n", patch.Stringify());
 		auto ret = mergeWorker(&source, &patch);
-		printf("New:      %s\n", ret->Stringify().c_str());
+		fmt::print("New:      %s\n", ret->Stringify());
 		return ret;
 #else
 		return mergeWorker(&source, &patch);

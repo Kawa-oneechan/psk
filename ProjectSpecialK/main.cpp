@@ -668,7 +668,7 @@ int main(int argc, char** argv)
 		fmt::print("Staring villagers: {} and {}.\n", starters[0]->Name(), starters[1]->Name());
 	}
 
-	printf("\n\n\n\n\nPress any key.\n");
+	fmt::print("\n\n\n\n\nPress any key.\n");
 	_getch();
 	return 0;
 }

@@ -171,7 +171,7 @@ static bool initVFS_sort(const VFSSource& a, const VFSSource& b)
 
 void InitVFS()
 {
-	printf("VFS: initializing...\n");
+	fmt::print("VFS: initializing...\n");
 
 	initVFS_addSource("data");
 	for (const auto& mod : fs::directory_iterator("mods"))
@@ -179,14 +179,14 @@ void InitVFS()
 		initVFS_addSource(mod.path());
 	}
 	
-	printf("Pre-sort:\n");
+	fmt::print("Pre-sort:\n");
 	for (const auto& source : sources)
 		fmt::print("* \"{}\" by {} ({}, {})\n", source.friendlyName, source.author, source.path, source.priority);
 
 	std::sort(sources.begin(), sources.end(), initVFS_sort);
 	//TODO: resolve dependencies
 
-	printf("Post-sort:\n");
+	fmt::print("Post-sort:\n");
 	for (const auto& source : sources)
 		fmt::print("* \"{}\" by {} ({}, {})\n", source.friendlyName, source.author, source.path, source.priority);
 
@@ -279,7 +279,7 @@ JSONValue* ReadJSON(const VFSEntry& entry) try
 			/*
 			if (!JSONPatch::ApplyPatch(*doc, *pdoc))
 			{
-				printf("Failed to apply patch from %s to %s.\n", sources[pents.sourceIndex].path.c_str(), entry.path.c_str());
+				fmt::print("Failed to apply patch from %s to %s.\n", sources[pents.sourceIndex].path, entry.path));
 				break;
 			}
 			*/

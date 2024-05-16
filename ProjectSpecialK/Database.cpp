@@ -14,11 +14,13 @@ std::vector<Personality> personalities;
 std::vector<Hobby> hobbies;
 std::vector<Villager> villagers;
 
+//TODO: bring back the table writer, that thing was TIGHT.
+
 namespace Database
 {
 	void LoadItemIcons()
 	{
-		printf("ItemIcons: loading...\n");
+		fmt::print("ItemIcons: loading...\n");
 
 		int width, height, channels;
 
@@ -90,215 +92,74 @@ namespace Database
 		fmt::print("ItemIcons: generated a sheet for {} entries.\n", entries.size());
 	}
 
+	template<typename T1, typename T2>
+	void loadWorker(std::vector<T1>& target, const std::string& spec, const std::string& whom)
+	{
+		auto entries = EnumerateVFS(spec);
+		target.reserve(entries.size());
+		for (const auto& entry : entries)
+		{
+			auto doc = ReadJSON(entry.path);
+
+			if (doc != nullptr)
+			{
+				try
+				{
+					target.emplace_back(T2((JSONObject&)doc->AsObject()));
+				}
+				catch (std::runtime_error& e)
+				{
+					fmt::print(WARNING u8" {}\n", e.what());
+				}
+			}
+			else
+			{
+				fmt::print("{}: error loading {}.\n", whom, entry.path);
+			}
+			delete doc;
+		}
+	}
+
+	template<typename T1>
+	void loadWorker(std::vector<T1>& target, const std::string& spec, const std::string& whom)
+	{
+		loadWorker<T1, T1>(target, spec, whom);
+	}
+
 	void LoadItems()
 	{
-		printf("ItemsDatabase: loading...\n");
-
-		auto entries = EnumerateVFS("items\\tools\\*.json");
-		items.reserve(entries.size());
-		for (const auto& entry : entries)
-		{
-			auto doc = ReadJSON(entry.path);
-
-			if (doc != nullptr)
-			{
-				try
-				{
-					items.emplace_back(Tool((JSONObject&)(doc->AsObject())));
-				}
-				catch (std::runtime_error& e)
-				{
-					fmt::print(WARNING u8" {}\n", e.what());
-				}
-			}
-			else
-			{
-				fmt::print("ItemsDatabase: error loading {}.\n", entry.path);
-			}
-			delete doc;
-		}
-		entries = EnumerateVFS("items\\furniture\\*.json");
-		items.reserve(items.capacity() + entries.size());
-		for (const auto& entry : entries)
-		{
-			auto doc = ReadJSON(entry.path);
-
-			if (doc != nullptr)
-			{
-				try
-				{
-					items.emplace_back(Furniture((JSONObject&)(doc->AsObject())));
-				}
-				catch (std::runtime_error& e)
-				{
-					fmt::print(WARNING u8" {}\n", e.what());
-				}
-			}
-			else
-			{
-				fmt::print("ItemsDatabase: error loading {}.\n", entry.path);
-			}
-			delete doc;
-		}
-		entries = EnumerateVFS("items\\outfits\\*.json");
-		items.reserve(items.capacity() + entries.size());
-		for (const auto& entry : entries)
-		{
-			const auto baseString = fs::path(entry.path).filename().stem().string();
-			const auto baseName = baseString.c_str();
-
-			auto doc = ReadJSON(entry.path);
-
-			if (doc != nullptr)
-			{
-				try
-				{
-					items.emplace_back(Outfit((JSONObject&)(doc->AsObject())));
-				}
-				catch (std::runtime_error& e)
-				{
-					fmt::print(WARNING u8" {}\n", e.what());
-				}
-			}
-			else
-			{
-				fmt::print("ItemsDatabase: error loading {}.\n", baseName);
-			}
-			delete doc;
-		}
+		fmt::print("ItemsDatabase: loading...\n");
+		loadWorker<Item, Tool>(items, "items/tools/*.json", "ItemsDatabase");
+		loadWorker<Item, Furniture>(items, "items/furniture/*.json", "ItemsDatabase");
+		loadWorker<Item, Outfit>(items, "items/outfits/*.json", "ItemsDatabase");
 		fmt::print("ItemsDatabase: ended up with {} entries.\n", items.size());
 	}
 
 	void LoadSpecies()
 	{
-		printf("SpeciesDatabase: loading...\n");
-
-		auto entries = EnumerateVFS("species\\*.json");
-		species.reserve(entries.size());
-		for (const auto& entry : entries)
-		{
-			auto doc = ReadJSON(entry.path);
-
-			if (doc != nullptr)
-			{
-				try
-				{
-					species.emplace_back(Species((JSONObject&)doc->AsObject()));
-				}
-				catch (std::runtime_error& e)
-				{
-					fmt::print(WARNING u8" {}\n", e.what());
-				}
-			}
-			else
-			{
-				fmt::print("SpeciesDatabase: error loading {}.\n", entry.path);
-				/*
-				auto error = doc->GetParseError();
-				printf("SpeciesDatabase: %s has an error at offset %u: %s\n",
-					baseName,
-					(unsigned)doc->GetErrorOffset(),
-					json::GetParseError_En(error));
-				*/
-			}
-			delete doc;
-	}
+		fmt::print("SpeciesDatabase: loading...\n");
+		loadWorker<Species>(species, "species/*.json", "SpeciesDatabase");
 		fmt::print("SpeciesDatabase: ended up with {} entries.\n", species.size());
 	}
 
 	void LoadTraits()
 	{
-		printf("TraitsDatabase: loading...\n");
-
-		auto entries = EnumerateVFS("personalities\\*.json");
-		personalities.reserve(entries.size());
-		for (const auto& entry : entries)
-		{
-			auto doc = ReadJSON(entry.path);
-
-			if (doc != nullptr)
-			{
-				try
-				{
-					personalities.emplace_back(Personality((JSONObject&)(doc->AsObject())));
-				}
-				catch (std::runtime_error& e)
-				{
-					fmt::print(WARNING u8" {}\n", e.what());
-				}
-			}
-			else
-			{
-				fmt::print("TraitsDatabase: error loading {}.\n", entry.path);
-			}
-			delete doc;
-		}
-		entries = EnumerateVFS("hobbies\\*.json");
-		hobbies.reserve(entries.size());
-		for (const auto& entry : entries)
-		{
-			auto doc = ReadJSON(entry.path);
-
-			if (doc != nullptr)
-			{
-				try
-				{
-					hobbies.emplace_back(Hobby((JSONObject&)(doc->AsObject())));
-				}
-				catch (std::runtime_error& e)
-				{
-					fmt::print(WARNING u8" {}\n", e.what());
-				}
-			}
-			else
-			{
-				fmt::print("TraitsDatabase: error loading {}.\n", entry.path);
-			}
-			delete doc;
-		}
+		fmt::print("TraitsDatabase: loading...\n");
+		loadWorker<Personality>(personalities, "personalities/*.json", "TraitsDatabase");
+		loadWorker<Hobby>(hobbies, "hobbies/*.json", "TraitsDatabase");
 		fmt::print("TraitsDatabase: ended up with {} personalities and {} hobbies.\n", personalities.size(), hobbies.size());
 	}
 
 	void LoadVillagers()
 	{
-		printf("VillagerDatabase: loading...\n");
-
-		auto entries = EnumerateVFS("villagers\\*.json");
-		villagers.reserve(entries.size());
-		for(const auto& entry : entries)
-		{
-			auto doc = ReadJSON(entry.path);
-
-			if (doc != nullptr)
-			{
-				try
-				{
-					auto villager = Villager((JSONObject&)doc->AsObject());
-					villagers.push_back(std::move(villager));
-				}
-				catch (std::runtime_error& e)
-				{
-					fmt::print(WARNING u8" {}\n", e.what());
-				}
-			}
-			else
-			{
-				fmt::print("VillagerDatabase: error loading {}.\n", entry.path);
-				/*
-				auto error = doc->GetParseError();
-				printf("VillagerDatabase: %s has an error at offset %u: %s\n",
-					baseName,
-					(unsigned)doc->GetErrorOffset(),
-					json::GetParseError_En(error));
-				*/
-			}
-		}
+		fmt::print("VillagerDatabase: loading...\n");
+		loadWorker<Villager>(villagers, "villagers/*.json", "VillagerDatabase");
 		fmt::print("VillagerDatabase: ended up with {} entries.\n", villagers.size());
 	}
 
 	void LoadGlobalStuff()
 	{
-		printf("Starting timer.\n");
+		fmt::print("Starting timer.\n");
 		auto startingTime = std::chrono::high_resolution_clock::now();
 		
 		LoadItemIcons();
