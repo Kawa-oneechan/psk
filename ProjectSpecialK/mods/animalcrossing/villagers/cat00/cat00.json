@@ -10,13 +10,14 @@
     "fr" : "Robert",
     "ru" : "Боб<case::а:у:а>"
   },
-  "species" : "$cat",
-  "personality" : "$lazy",
+  "species" : "cat",
+  "personality" : "lazy",
   "personalitySubtype" : 1,
-  "gender" : "$mas",
+  "gender" : "mas",
+  "attraction" : "both",
   "birthday" : [ 1, 1 ],
-  "hobby" : "$play",
-  "colors" : [ "$colorful", "$red" ],
+  "hobby" : "play",
+  "colors" : [ "colorful", "red" ],
   "nameTag" : [ "#A16FCE", "#FFFCE9" ],
   "catchphrase" : {
     "en" : "pthhpth",
@@ -31,31 +32,31 @@
     "ru" : "кх-кх-кх"
   },
   "clothing" : {
-    "default" : "#acnh:blossomtee/pink",
-    "rain" : [ "#acnh:raincoat/yellow", "#acnh:rainhat/yellow" ]
+    "default" : "acnh:blossomtee/pink",
+    "rain" : [ "acnh:raincoat/yellow", "acnh:rainhat/yellow" ]
   },
-  "umbrella" : "#acnh:eggyparasol",
-  "photo" : "#acnh:bobsphoto",
-  "poster" : "#acnh:bobsposter",
+  "umbrella" : "acnh:eggyparasol",
+  "photo" : "acnh:bobsphoto",
+  "poster" : "acnh:bobsposter",
   "house" : {
-    "walls" : "#acnh:blueplayroomwall",
-    "floor" : "#acnh:colorfulpuzzleflooring",
-    "music" : "#acnh:neapolitan",
+    "walls" : "acnh:blueplayroomwall",
+    "floor" : "acnh:colorfulpuzzleflooring",
+    "music" : "acnh:neapolitan",
     "items" : [
-      "#acnh:woodenblockstereo/2/2",
-      "#acnh:woodenblockbed/2",
-      "#acnh:woodenblockchair/2",
-      "#acnh:woodenblocktable/2",
-      "#acnh:woodenblockbookshelf/2",
-      "#acnh:woodenblockbench/2",
-      "#acnh:woodenblockchest/2",
-      "#acnh:woodenblocktoy/2",
-      "#acnh:toybox/2",
-      "#acnh:woodenblockwallclock/2"
+      "acnh:woodenblockstereo/2/2",
+      "acnh:woodenblockbed/2",
+      "acnh:woodenblockchair/2",
+      "acnh:woodenblocktable/2",
+      "acnh:woodenblockbookshelf/2",
+      "acnh:woodenblockbench/2",
+      "acnh:woodenblockchest/2",
+      "acnh:woodenblocktoy/2",
+      "acnh:toybox/2",
+      "acnh:woodenblockwallclock/2"
     ]
   },
-  //Assorted NmlNpcParam data
-  "xx_unparsed" : {
+  //Raw NmlNpcParam data
+  "xx_nmlnpcparam" : {
     "0_a54f92fd" : "9",
     "1_e2efe82d" : "9",
     "2_5ef86f1f" : "1",
@@ -96,5 +97,116 @@
     "37_21c5bbd6" : "5",
     "38_e52f0037" : "1",
     "39_42f255d5" : "4"
+  },
+  //Raw NpcRoom data
+  "xx_npcroom" : {
+    "2f4080c5" : 34,
+    "mDIYWorkbench" : {
+      "mUnitZ.u8" : 34,
+      "mItemSaveParam" : { "mItemNameParam.u64" : 17180069787 },
+      "mUnitX.u8" : 36,
+      "mLayer.u8" : 0
+    },
+    "mDIYRangeHeight.u8" : 4,
+    "mDIYRangeLUZ.u8" : 34,
+    "4dac5826" : 4,
+    "8549484e" : 34,
+    "96be42d5" : {
+      "mUnitZ.u8" : 34,
+      "mItemSaveParam" : { "mItemNameParam.u64" : 17180069062 },
+      "mUnitX.u8" : 36,
+      "mLayer.u8" : 0
+    },
+    "mLifePoint.f32" : 16.90883,
+    "mHobbyPoint.f32" : 13.70874,
+    "mFtrList[]" : [
+      {
+        "mUnitZ.u8" : 26,
+        "mItemSaveParam" : { "mItemNameParam.u64" : 5790 },
+        "mUnitX.u8" : 28,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 26,
+        "mItemSaveParam" : "acnh:woodenblockstereo/2/2",
+        "mUnitX.u8" : 30,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 36,
+        "mItemSaveParam" : { "mItemNameParam.u64" : 136863 },
+        "mUnitX.u8" : 26,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 30,
+        "mItemSaveParam" : "acnh:woodenblockbed/2",
+        "mUnitX.u8" : 26,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 31,
+        "mItemSaveParam" : "acnh:woodenblockchair/2",
+        "mUnitX.u8" : 34,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 30,
+        "mItemSaveParam" : "acnh:woodenblocktable/2",
+        "mUnitX.u8" : 30,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 26,
+        "mItemSaveParam" : "acnh:woodenblockbookshelf/2",
+        "mUnitX.u8" : 26,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 36,
+        "mItemSaveParam" : "acnh:woodenblockbench/2",
+        "mUnitX.u8" : 34,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 26,
+        "mItemSaveParam" : "acnh:woodenblockchest/2",
+        "mUnitX.u8" : 34,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 26,
+        "mItemSaveParam" : "acnh:woodenblocktoy/2",
+        "mUnitX.u8" : 34,
+        "mLayer.u8" : 1
+      },
+      {
+        "mUnitZ.u8" : 26,
+        "mItemSaveParam" : "acnh:toybox/2",
+        "mUnitX.u8" : 36,
+        "mLayer.u8" : 1
+      },
+      {
+        "mUnitZ.u8" : 25,
+        "mItemSaveParam" : "acnh:woodenblockwallclock/2",
+        "mUnitX.u8" : 31,
+        "mLayer.u8" : 2
+      }
+    ],
+    "d8bfabd5" : 4,
+    "mFloorRotate.u8" : 0,
+    "mDIYRangeLUX.u8" : 34,
+    "mDIYRangeWidth.u8" : 4
+  },
+  //Raw NpcHouse data
+  "xx_npchouse" : {
+    "cat00" : {
+      "mWall.u16" : 44,
+      "mCurtain.u16" : 6,
+      "mDeco" : { "mItemNameParam.u64" : 65534 },
+      "mRoof.u16" : 55,
+      "mShape.u16" : 1,
+      "mDoor.u16" : 250
+    }
   }
 }

@@ -11,13 +11,14 @@
     "it" : "Zanna",
     "ru" : "Фанг<case::а:у:а>"
   },
-  "species" : "$wol",
-  "personality" : "$cranky",
+  "species" : "wol",
+  "personality" : "cranky",
   "personalitySubtype" : 1,
-  "gender" : "$mas",
+  "gender" : "fem",
+  "attraction" : "girls",
   "birthday" : [ 18, 12 ],
-  "hobby" : "$education",
-  "colors" : [ "$white", "$aqua" ],
+  "hobby" : "education",
+  "colors" : [ "white", "aqua" ],
   "nameTag" : [ "#DECECB", "#4C4596" ],
   "catchphrase" : {
     "en" : "cha-chomp",
@@ -32,31 +33,31 @@
     "ru" : "грызь"
   },
   "clothing" : {
-    "default" : "#acnh:snowysweater/blue",
-    "rain" : [ "#acnh:raincoat/blue", "#acnh:outdoorhat/green" ]
+    "default" : "acnh:snowysweater/blue",
+    "rain" : [ "acnh:raincoat/blue", "acnh:outdoorhat/green" ]
   },
-  "umbrella" : "#acnh:snowflakeumbrella",
-  "photo" : "#acnh:fangsphoto",
-  "poster" : "#acnh:fangsposter",
+  "umbrella" : "acnh:snowflakeumbrella",
+  "photo" : "acnh:fangsphoto",
+  "poster" : "acnh:fangsposter",
   "house" : {
-    "walls" : "#acnh:archedwindowwall",
-    "floor" : "#acnh:brownhoneycombtile",
-    "music" : "#acnh:kksteppe",
+    "walls" : "acnh:archedwindowwall",
+    "floor" : "acnh:brownhoneycombtile",
+    "music" : "acnh:kksteppe",
     "items" : [
-      "#acnh:antiquebed",
-      "#acnh:hifistereo/0/2",
-      "#acnh:doublesofa/4",
-      "#acnh:antiquebureau",
-      "#acnh:antiqueclock",
-      "#acnh:floorlamp",
-      "#acnh:antiqueconsoletable",
-      "#acnh:snowglobe",
-      "#acnh:fireplace",
-      "#acnh:bookstands/2"
+      "acnh:antiquebed",
+      "acnh:hifistereo/0/2",
+      "acnh:doublesofa/4",
+      "acnh:antiquebureau",
+      "acnh:antiqueclock",
+      "acnh:floorlamp",
+      "acnh:antiqueconsoletable",
+      "acnh:snowglobe",
+      "acnh:fireplace",
+      "acnh:bookstands/2"
     ]
   },
-  //Assorted NmlNpcParam data
-  "xx_unparsed" : {
+  //Raw NmlNpcParam data
+  "xx_nmlnpcparam" : {
     "0_a54f92fd" : "9",
     "1_e2efe82d" : "9",
     "2_5ef86f1f" : "1",
@@ -97,5 +98,116 @@
     "37_21c5bbd6" : "3",
     "38_e52f0037" : "6",
     "39_42f255d5" : "3"
+  },
+  //Raw NpcRoom data
+  "xx_npcroom" : {
+    "2f4080c5" : 30,
+    "mDIYWorkbench" : {
+      "mUnitZ.u8" : 30,
+      "mItemSaveParam" : { "mItemNameParam.u64" : 8590004071 },
+      "mUnitX.u8" : 26,
+      "mLayer.u8" : 0
+    },
+    "mDIYRangeHeight.u8" : 4,
+    "mDIYRangeLUZ.u8" : 30,
+    "4dac5826" : 4,
+    "8549484e" : 26,
+    "96be42d5" : {
+      "mUnitZ.u8" : 30,
+      "mItemSaveParam" : { "mItemNameParam.u64" : 8590003398 },
+      "mUnitX.u8" : 26,
+      "mLayer.u8" : 0
+    },
+    "mLifePoint.f32" : 18.16171,
+    "mHobbyPoint.f32" : 2.743501,
+    "mFtrList[]" : [
+      {
+        "mUnitZ.u8" : 28,
+        "mItemSaveParam" : "acnh:antiquebed",
+        "mUnitX.u8" : 30,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 32,
+        "mItemSaveParam" : { "mItemNameParam.u64" : 202398 },
+        "mUnitX.u8" : 36,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 36,
+        "mItemSaveParam" : "acnh:hifistereo/0/2",
+        "mUnitX.u8" : 34,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 36,
+        "mItemSaveParam" : "acnh:doublesofa/4",
+        "mUnitX.u8" : 26,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 26,
+        "mItemSaveParam" : "acnh:antiquebureau",
+        "mUnitX.u8" : 28,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 30,
+        "mItemSaveParam" : { "mItemNameParam.u64" : 71327 },
+        "mUnitX.u8" : 26,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 26,
+        "mItemSaveParam" : "acnh:antiqueclock",
+        "mUnitX.u8" : 26,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 26,
+        "mItemSaveParam" : "acnh:floorlamp",
+        "mUnitX.u8" : 36,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 26,
+        "mItemSaveParam" : "acnh:antiqueconsoletable",
+        "mUnitX.u8" : 30,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 26,
+        "mItemSaveParam" : "acnh:snowglobe",
+        "mUnitX.u8" : 31,
+        "mLayer.u8" : 1
+      },
+      {
+        "mUnitZ.u8" : 28,
+        "mItemSaveParam" : "acnh:fireplace",
+        "mUnitX.u8" : 36,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 29,
+        "mItemSaveParam" : "acnh:bookstands/2",
+        "mUnitX.u8" : 36,
+        "mLayer.u8" : 1
+      }
+    ],
+    "d8bfabd5" : 4,
+    "mFloorRotate.u8" : 0,
+    "mDIYRangeLUX.u8" : 26,
+    "mDIYRangeWidth.u8" : 4
+  },
+  //Raw NpcHouse data
+  "xx_npchouse" : {
+    "wol06" : {
+      "mWall.u16" : 24,
+      "mCurtain.u16" : 0,
+      "mDeco" : { "mItemNameParam.u64" : 65534 },
+      "mRoof.u16" : 171,
+      "mShape.u16" : 9,
+      "mDoor.u16" : 49
+    }
   }
 }

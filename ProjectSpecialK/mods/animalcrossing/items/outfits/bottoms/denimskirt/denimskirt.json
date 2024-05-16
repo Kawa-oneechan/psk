@@ -12,7 +12,7 @@
     "nl" : "<info:de :een :het >jeansrokje",
     "ru" : "<info:an ::>джинсов<case:ая:ую:ой:ой> юбк<case:а:у:е:и>"
   },
-  "type" : "$bottoms",
+  "type" : "bottoms",
   "price" : 1120,
   "variants" : [ "blue", "lightblue", "navyblue", "black", "white" ],
   //Quick reference

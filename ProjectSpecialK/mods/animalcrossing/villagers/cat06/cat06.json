@@ -11,13 +11,13 @@
     "it" : "Felix",
     "ru" : "Панчи"
   },
-  "species" : "$cat",
-  "personality" : "$lazy",
+  "species" : "cat",
+  "personality" : "lazy",
   "personalitySubtype" : 1,
-  "gender" : "$mas",
+  "gender" : "mas",
   "birthday" : [ 11, 4 ],
-  "hobby" : "$play",
-  "colors" : [ "$blue", "$aqua" ],
+  "hobby" : "play",
+  "colors" : [ "blue", "aqua" ],
   "nameTag" : [ "#FFFFFF", "#848484" ],
   "catchphrase" : {
     "en" : "mrmpht",
@@ -32,31 +32,31 @@
     "ru" : "отдыхаем"
   },
   "clothing" : {
-    "default" : "#acnh:madrasplaidshirt/gray",
-    "rain" : [ "#acnh:raincoat/yellow", "#acnh:rainhat/yellow" ]
+    "default" : "acnh:madrasplaidshirt/gray",
+    "rain" : [ "acnh:raincoat/yellow", "acnh:rainhat/yellow" ]
   },
-  "umbrella" : "#acnh:frogumbrella",
-  "photo" : "#acnh:punchysphoto",
-  "poster" : "#acnh:punchysposter",
+  "umbrella" : "acnh:frogumbrella",
+  "photo" : "acnh:punchysphoto",
+  "poster" : "acnh:punchysposter",
   "house" : {
-    "walls" : "#acnh:bluesimpleclothwall",
-    "floor" : "#acnh:jointedmatflooring",
-    "music" : "#acnh:forestlife",
+    "walls" : "acnh:bluesimpleclothwall",
+    "floor" : "acnh:jointedmatflooring",
+    "music" : "acnh:forestlife",
     "items" : [
-      "#acnh:woodenlowtable/6",
-      "#acnh:woodensimplebed/70",
-      "#acnh:cutediytable/1",
-      "#acnh:woodenchest/6",
-      "#acnh:catgrass/3",
-      "#acnh:refrigerator/4",
-      "#acnh:woodenminitable/102",
-      "#acnh:cutemusicplayer/1/2",
-      "#acnh:gasrange/3",
-      "#acnh:ventilationfan/2"
+      "acnh:woodenlowtable/6",
+      "acnh:woodensimplebed/70",
+      "acnh:cutediytable/1",
+      "acnh:woodenchest/6",
+      "acnh:catgrass/3",
+      "acnh:refrigerator/4",
+      "acnh:woodenminitable/102",
+      "acnh:cutemusicplayer/1/2",
+      "acnh:gasrange/3",
+      "acnh:ventilationfan/2"
     ]
   },
-  //Assorted NmlNpcParam data
-  "xx_unparsed" : {
+  //Raw NmlNpcParam data
+  "xx_nmlnpcparam" : {
     "0_a54f92fd" : "9",
     "1_e2efe82d" : "9",
     "2_5ef86f1f" : "1",
@@ -97,5 +97,122 @@
     "37_21c5bbd6" : "5",
     "38_e52f0037" : "1",
     "39_42f255d5" : "4"
+  },
+  //Raw NpcRoom data
+  "xx_npcroom" : {
+    "2f4080c5" : 26,
+    "mDIYWorkbench" : {
+      "mUnitZ.u8" : 30,
+      "mItemSaveParam" : { "mItemNameParam.u64" : 135067 },
+      "mUnitX.u8" : 34,
+      "mLayer.u8" : 0
+    },
+    "mDIYRangeHeight.u8" : 4,
+    "mDIYRangeLUZ.u8" : 28,
+    "4dac5826" : 4,
+    "8549484e" : 32,
+    "96be42d5" : {
+      "mUnitZ.u8" : 26,
+      "mItemSaveParam" : { "mItemNameParam.u64" : 12884905139 },
+      "mUnitX.u8" : 34,
+      "mLayer.u8" : 0
+    },
+    "mLifePoint.f32" : 14.42009,
+    "mHobbyPoint.f32" : 8.110936,
+    "mFtrList[]" : [
+      {
+        "mUnitZ.u8" : 34,
+        "mItemSaveParam" : { "mItemNameParam.u64" : 202398 },
+        "mUnitX.u8" : 36,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 36,
+        "mItemSaveParam" : { "mItemNameParam.u64" : 136863 },
+        "mUnitX.u8" : 26,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 26,
+        "mItemSaveParam" : { "mItemNameParam.u64" : 5790 },
+        "mUnitX.u8" : 32,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 31,
+        "mItemSaveParam" : "acnh:woodenlowtable/6",
+        "mUnitX.u8" : 26,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 36,
+        "mItemSaveParam" : "acnh:woodensimplebed/70",
+        "mUnitX.u8" : 34,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 30,
+        "mItemSaveParam" : "acnh:cutediytable/1",
+        "mUnitX.u8" : 34,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 26,
+        "mItemSaveParam" : "acnh:woodenchest/6",
+        "mUnitX.u8" : 26,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 26,
+        "mItemSaveParam" : "acnh:catgrass/3",
+        "mUnitX.u8" : 26,
+        "mLayer.u8" : 1
+      },
+      {
+        "mUnitZ.u8" : 26,
+        "mItemSaveParam" : "acnh:refrigerator/4",
+        "mUnitX.u8" : 36,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 26,
+        "mItemSaveParam" : "acnh:woodenminitable/102",
+        "mUnitX.u8" : 30,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 26,
+        "mItemSaveParam" : "acnh:cutemusicplayer/1/2",
+        "mUnitX.u8" : 30,
+        "mLayer.u8" : 1
+      },
+      {
+        "mUnitZ.u8" : 26,
+        "mItemSaveParam" : "acnh:gasrange/3",
+        "mUnitX.u8" : 34,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 23,
+        "mItemSaveParam" : "acnh:ventilationfan/2",
+        "mUnitX.u8" : 34,
+        "mLayer.u8" : 2
+      }
+    ],
+    "d8bfabd5" : 4,
+    "mFloorRotate.u8" : 0,
+    "mDIYRangeLUX.u8" : 34,
+    "mDIYRangeWidth.u8" : 4
+  },
+  //Raw NpcHouse data
+  "xx_npchouse" : {
+    "cat06" : {
+      "mWall.u16" : 14,
+      "mCurtain.u16" : 1,
+      "mDeco" : { "mItemNameParam.u64" : 65534 },
+      "mRoof.u16" : 53,
+      "mShape.u16" : 1,
+      "mDoor.u16" : 255
+    }
   }
 }

@@ -10,13 +10,13 @@
     "it" : "Raimondo",
     "ru" : "Реймонд<case::а:у:а>"
   },
-  "species" : "$cat",
-  "personality" : "$smug",
+  "species" : "cat",
+  "personality" : "smug",
   "personalitySubtype" : 1,
-  "gender" : "$mas",
+  "gender" : "mas",
   "birthday" : [ 1, 10 ],
-  "hobby" : "$nature",
-  "colors" : [ "$black", "$gray" ],
+  "hobby" : "nature",
+  "colors" : [ "black", "gray" ],
   "nameTag" : [ "#ADC9D0", "#4A8A92" ],
   "catchphrase" : {
     "en" : "crisp",
@@ -31,37 +31,37 @@
     "ru" : "стильненько"
   },
   "clothing" : {
-    "default" : "#acnh:waistcoat/gray",
-    "rain" : [ "#acnh:raincoat/blue", "#acnh:outdoorhat/green" ]
+    "default" : "acnh:waistcoat/gray",
+    "rain" : [ "acnh:raincoat/blue", "acnh:outdoorhat/green" ]
   },
-  "umbrella" : "#acnh:batumbrella",
-  "photo" : "#acnh:raymondsphoto",
-  "poster" : "#acnh:raymondsposter",
+  "umbrella" : "acnh:batumbrella",
+  "photo" : "acnh:raymondsphoto",
+  "poster" : "acnh:raymondsposter",
   "house" : {
-    "walls" : "#acnh:officewall",
-    "floor" : "#acnh:monochromatictileflooring",
-    "music" : "#acnh:kkcruisin",
+    "walls" : "acnh:officewall",
+    "floor" : "acnh:monochromatictileflooring",
+    "music" : "acnh:kkcruisin",
     "items" : [
-      "#acnh:officedesk",
-      "#acnh:documentstack/32",
-      "#acnh:desktopcomputer",
-      "#acnh:whiteboard/2",
-      "#acnh:modernofficechair",
-      "#acnh:watercooler",
-      "#acnh:safe/1",
-      "#acnh:denchair/4",
-      "#acnh:wallclock",
-      "#acnh:ironworktable",
-      "#acnh:documentstack",
-      "#acnh:faxmachine/32",
-      "#acnh:formalpaper/1",
-      "#acnh:dendesk/4",
-      "#acnh:mug/39",
-      "#acnh:newtonscradle"
+      "acnh:officedesk",
+      "acnh:documentstack/32",
+      "acnh:desktopcomputer",
+      "acnh:whiteboard/2",
+      "acnh:modernofficechair",
+      "acnh:watercooler",
+      "acnh:safe/1",
+      "acnh:denchair/4",
+      "acnh:wallclock",
+      "acnh:ironworktable",
+      "acnh:documentstack",
+      "acnh:faxmachine/32",
+      "acnh:formalpaper/1",
+      "acnh:dendesk/4",
+      "acnh:mug/39",
+      "acnh:newtonscradle"
     ]
   },
-  //Assorted NmlNpcParam data
-  "xx_unparsed" : {
+  //Raw NmlNpcParam data
+  "xx_nmlnpcparam" : {
     "0_a54f92fd" : "9",
     "1_e2efe82d" : "9",
     "2_5ef86f1f" : "6",
@@ -102,5 +102,158 @@
     "37_21c5bbd6" : "4",
     "38_e52f0037" : "1",
     "39_42f255d5" : "3"
+  },
+  //Raw NpcRoom data
+  "xx_npcroom" : {
+    "2f4080c5" : 34,
+    "mDIYWorkbench" : {
+      "mUnitZ.u8" : 34,
+      "mItemSaveParam" : { "mItemNameParam.u64" : 4295167847 },
+      "mUnitX.u8" : 36,
+      "mLayer.u8" : 0
+    },
+    "mDIYRangeHeight.u8" : 4,
+    "mDIYRangeLUZ.u8" : 34,
+    "4dac5826" : 4,
+    "8549484e" : 34,
+    "96be42d5" : {
+      "mUnitZ.u8" : 34,
+      "mItemSaveParam" : { "mItemNameParam.u64" : 17180069408 },
+      "mUnitX.u8" : 36,
+      "mLayer.u8" : 0
+    },
+    "mLifePoint.f32" : 19.74496,
+    "mHobbyPoint.f32" : 5.381283,
+    "mFtrList[]" : [
+      {
+        "mUnitZ.u8" : 34,
+        "mItemSaveParam" : { "mItemNameParam.u64" : 202399 },
+        "mUnitX.u8" : 36,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 32,
+        "mItemSaveParam" : { "mItemNameParam.u64" : 71326 },
+        "mUnitX.u8" : 26,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 32,
+        "mItemSaveParam" : { "mItemNameParam.u64" : 202398 },
+        "mUnitX.u8" : 36,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 34,
+        "mItemSaveParam" : "acnh:officedesk",
+        "mUnitX.u8" : 26,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 34,
+        "mItemSaveParam" : "acnh:documentstack/32",
+        "mUnitX.u8" : 26,
+        "mLayer.u8" : 1
+      },
+      {
+        "mUnitZ.u8" : 36,
+        "mItemSaveParam" : "acnh:desktopcomputer",
+        "mUnitX.u8" : 26,
+        "mLayer.u8" : 1
+      },
+      {
+        "mUnitZ.u8" : 26,
+        "mItemSaveParam" : "acnh:whiteboard/2",
+        "mUnitX.u8" : 30,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 36,
+        "mItemSaveParam" : "acnh:modernofficechair",
+        "mUnitX.u8" : 28,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 26,
+        "mItemSaveParam" : "acnh:watercooler",
+        "mUnitX.u8" : 36,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 26,
+        "mItemSaveParam" : "acnh:safe/1",
+        "mUnitX.u8" : 34,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 29,
+        "mItemSaveParam" : "acnh:denchair/4",
+        "mUnitX.u8" : 31,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 24,
+        "mItemSaveParam" : "acnh:wallclock",
+        "mUnitX.u8" : 31,
+        "mLayer.u8" : 2
+      },
+      {
+        "mUnitZ.u8" : 26,
+        "mItemSaveParam" : "acnh:ironworktable",
+        "mUnitX.u8" : 26,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 26,
+        "mItemSaveParam" : "acnh:documentstack",
+        "mUnitX.u8" : 28,
+        "mLayer.u8" : 1
+      },
+      {
+        "mUnitZ.u8" : 26,
+        "mItemSaveParam" : "acnh:faxmachine/32",
+        "mUnitX.u8" : 26,
+        "mLayer.u8" : 1
+      },
+      {
+        "mUnitZ.u8" : 23,
+        "mItemSaveParam" : "acnh:formalpaper/1",
+        "mUnitX.u8" : 27,
+        "mLayer.u8" : 2
+      },
+      {
+        "mUnitZ.u8" : 31,
+        "mItemSaveParam" : "acnh:dendesk/4",
+        "mUnitX.u8" : 30,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 31,
+        "mItemSaveParam" : "acnh:mug/39",
+        "mUnitX.u8" : 32,
+        "mLayer.u8" : 1
+      },
+      {
+        "mUnitZ.u8" : 31,
+        "mItemSaveParam" : "acnh:newtonscradle",
+        "mUnitX.u8" : 30,
+        "mLayer.u8" : 1
+      }
+    ],
+    "d8bfabd5" : 4,
+    "mFloorRotate.u8" : 0,
+    "mDIYRangeLUX.u8" : 34,
+    "mDIYRangeWidth.u8" : 4
+  },
+  //Raw NpcHouse data
+  "xx_npchouse" : {
+    "cat23" : {
+      "mWall.u16" : 57,
+      "mCurtain.u16" : 0,
+      "mDeco" : { "mItemNameParam.u64" : 65534 },
+      "mRoof.u16" : 61,
+      "mShape.u16" : 1,
+      "mDoor.u16" : 41
+    }
   }
 }

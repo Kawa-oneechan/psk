@@ -12,7 +12,7 @@
     "nl" : "<info:het :een :de >Egyptische jurk",
     "ru" : "<info:the ::>восточно<case:е:е:му:го> плать<case:е:е:ю:я>"
   },
-  "type" : "$onepiece",
+  "type" : "onepiece",
   "price" : 2520,
   "variants" : [],
   //Quick reference

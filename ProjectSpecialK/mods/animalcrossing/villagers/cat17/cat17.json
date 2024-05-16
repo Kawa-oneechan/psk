@@ -11,13 +11,13 @@
     "it" : "Milly",
     "ru" : "Фелисити"
   },
-  "species" : "$cat",
-  "personality" : "$peppy",
+  "species" : "cat",
+  "personality" : "peppy",
   "personalitySubtype" : 1,
-  "gender" : "$fem",
+  "gender" : "fem",
   "birthday" : [ 30, 3 ],
-  "hobby" : "$fashion",
-  "colors" : [ "$yellow", "$orange" ],
+  "hobby" : "fashion",
+  "colors" : [ "yellow", "orange" ],
   "nameTag" : [ "#FFFA8F", "#889B96" ],
   "catchphrase" : {
     "en" : "mimimi",
@@ -31,32 +31,32 @@
     "ru" : "ми-ми-ми"
   },
   "clothing" : {
-    "default" : "#acnh:tweeddress/yellow",
-    "rain" : [ "#acnh:dottedraincoat/pink", "#acnh:outdoorhat/orange" ]
+    "default" : "acnh:tweeddress/yellow",
+    "rain" : [ "acnh:dottedraincoat/pink", "acnh:outdoorhat/orange" ]
   },
-  "umbrella" : "#acnh:miniflowerprintumbrella",
-  "photo" : "#acnh:felicitysphoto",
-  "poster" : "#acnh:felicitysposter",
+  "umbrella" : "acnh:miniflowerprintumbrella",
+  "photo" : "acnh:felicitysphoto",
+  "poster" : "acnh:felicitysposter",
   "house" : {
-    "walls" : "#acnh:backyardfencewall",
-    "floor" : "#acnh:daisymeadow",
-    "music" : "#acnh:kkstroll",
+    "walls" : "acnh:backyardfencewall",
+    "floor" : "acnh:daisymeadow",
+    "music" : "acnh:kkstroll",
     "items" : [
-      "#acnh:cypressplant/4",
-      "#acnh:cypressplant/4",
-      "#acnh:logstool/2",
-      "#acnh:cutemusicplayer/2/2",
-      "#acnh:gardenfaucet",
-      "#acnh:birdbath/1",
-      "#acnh:irongardenchair/4",
-      "#acnh:irongardentable/4",
-      "#acnh:birdhouse",
-      "#acnh:irongardenbench/4",
-      "#acnh:hammock/97"
+      "acnh:cypressplant/4",
+      "acnh:cypressplant/4",
+      "acnh:logstool/2",
+      "acnh:cutemusicplayer/2/2",
+      "acnh:gardenfaucet",
+      "acnh:birdbath/1",
+      "acnh:irongardenchair/4",
+      "acnh:irongardentable/4",
+      "acnh:birdhouse",
+      "acnh:irongardenbench/4",
+      "acnh:hammock/97"
     ]
   },
-  //Assorted NmlNpcParam data
-  "xx_unparsed" : {
+  //Raw NmlNpcParam data
+  "xx_nmlnpcparam" : {
     "0_a54f92fd" : "9",
     "1_e2efe82d" : "9",
     "2_5ef86f1f" : "4",
@@ -97,5 +97,122 @@
     "37_21c5bbd6" : "4",
     "38_e52f0037" : "1",
     "39_42f255d5" : "4"
+  },
+  //Raw NpcRoom data
+  "xx_npcroom" : {
+    "2f4080c5" : 34,
+    "mDIYWorkbench" : {
+      "mUnitZ.u8" : 35,
+      "mItemSaveParam" : { "mItemNameParam.u64" : 203750 },
+      "mUnitX.u8" : 35,
+      "mLayer.u8" : 0
+    },
+    "mDIYRangeHeight.u8" : 4,
+    "mDIYRangeLUZ.u8" : 34,
+    "4dac5826" : 4,
+    "8549484e" : 34,
+    "96be42d5" : {
+      "mUnitZ.u8" : 36,
+      "mItemSaveParam" : { "mItemNameParam.u64" : 4295167155 },
+      "mUnitX.u8" : 36,
+      "mLayer.u8" : 0
+    },
+    "mLifePoint.f32" : 3.952327,
+    "mHobbyPoint.f32" : 5.588648,
+    "mFtrList[]" : [
+      {
+        "mUnitZ.u8" : 36,
+        "mItemSaveParam" : "acnh:cypressplant/4",
+        "mUnitX.u8" : 26,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 36,
+        "mItemSaveParam" : "acnh:cypressplant/4",
+        "mUnitX.u8" : 36,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 26,
+        "mItemSaveParam" : { "mItemNameParam.u64" : 5790 },
+        "mUnitX.u8" : 34,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 33,
+        "mItemSaveParam" : { "mItemNameParam.u64" : 202398 },
+        "mUnitX.u8" : 36,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 33,
+        "mItemSaveParam" : "acnh:logstool/2",
+        "mUnitX.u8" : 26,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 33,
+        "mItemSaveParam" : "acnh:cutemusicplayer/2/2",
+        "mUnitX.u8" : 26,
+        "mLayer.u8" : 1
+      },
+      {
+        "mUnitZ.u8" : 26,
+        "mItemSaveParam" : "acnh:gardenfaucet",
+        "mUnitX.u8" : 36,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 26,
+        "mItemSaveParam" : "acnh:birdbath/1",
+        "mUnitX.u8" : 28,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 31,
+        "mItemSaveParam" : "acnh:irongardenchair/4",
+        "mUnitX.u8" : 36,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 31,
+        "mItemSaveParam" : "acnh:irongardentable/4",
+        "mUnitX.u8" : 34,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 26,
+        "mItemSaveParam" : "acnh:birdhouse",
+        "mUnitX.u8" : 26,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 26,
+        "mItemSaveParam" : "acnh:irongardenbench/4",
+        "mUnitX.u8" : 30,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 31,
+        "mItemSaveParam" : "acnh:hammock/97",
+        "mUnitX.u8" : 26,
+        "mLayer.u8" : 0
+      }
+    ],
+    "d8bfabd5" : 4,
+    "mFloorRotate.u8" : 0,
+    "mDIYRangeLUX.u8" : 34,
+    "mDIYRangeWidth.u8" : 4
+  },
+  //Raw NpcHouse data
+  "xx_npchouse" : {
+    "cat17" : {
+      "mWall.u16" : 26,
+      "mCurtain.u16" : 6,
+      "mDeco" : { "mItemNameParam.u64" : 65534 },
+      "mRoof.u16" : 172,
+      "mShape.u16" : 9,
+      "mDoor.u16" : 35
+    }
   }
 }

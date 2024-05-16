@@ -11,13 +11,13 @@
     "it" : "Artiglio",
     "ru" : "Чиф<case::а:у:а>"
   },
-  "species" : "$wol",
-  "personality" : "$cranky",
+  "species" : "wol",
+  "personality" : "cranky",
   "personalitySubtype" : 1,
-  "gender" : "$mas",
+  "gender" : "mas",
   "birthday" : [ 19, 12 ],
-  "hobby" : "$music",
-  "colors" : [ "$white", "$gray" ],
+  "hobby" : "music",
+  "colors" : [ "white", "gray" ],
   "nameTag" : [ "#FFAB3C", "#884C25" ],
   "catchphrase" : {
     "en" : "harrumph",
@@ -32,37 +32,37 @@
     "ru" : "фыр-р-рф"
   },
   "clothing" : {
-    "default" : "#acnh:sweateronshirt/white",
-    "rain" : [ "#acnh:raincoat/blue", "#acnh:outdoorhat/blue" ]
+    "default" : "acnh:sweateronshirt/pink",
+    "rain" : [ "acnh:raincoat/blue", "acnh:outdoorhat/blue" ]
   },
-  "umbrella" : "#acnh:vinylumbrella",
-  "photo" : "#acnh:chiefsphoto",
-  "poster" : "#acnh:chiefsposter",
+  "umbrella" : "acnh:vinylumbrella",
+  "photo" : "acnh:chiefsphoto",
+  "poster" : "acnh:chiefsposter",
   "house" : {
-    "walls" : "#acnh:streetartwall",
-    "floor" : "#acnh:paintballflooring",
-    "music" : "#acnh:rockinkk",
+    "walls" : "acnh:streetartwall",
+    "floor" : "acnh:paintballflooring",
+    "music" : "acnh:rockinkk",
     "items" : [
-      "#acnh:cardboardbed/1",
-      "#acnh:accessoriesstand/3",
-      "#acnh:stackofbooks/1",
-      "#acnh:garbagepail",
-      "#acnh:trashbags/1",
-      "#acnh:ironwoodchair/3",
-      "#acnh:tapedeck/2/2",
-      "#acnh:recordbox/34",
-      "#acnh:rockinkk",
-      "#acnh:directorschair",
-      "#acnh:ring",
-      "#acnh:bluevinylsheet",
-      "#acnh:autographcards/3",
-      "#acnh:cardboardbox/1",
-      "#acnh:paintingset/2",
-      "#acnh:bookstands"
+      "acnh:cardboardbed/1",
+      "acnh:accessoriesstand/3",
+      "acnh:stackofbooks/1",
+      "acnh:garbagepail",
+      "acnh:trashbags/1",
+      "acnh:ironwoodchair/3",
+      "acnh:tapedeck/2/2",
+      "acnh:recordbox/34",
+      "acnh:rockinkk",
+      "acnh:directorschair",
+      "acnh:ring",
+      "acnh:bluevinylsheet",
+      "acnh:autographcards/3",
+      "acnh:cardboardbox/1",
+      "acnh:paintingset/2",
+      "acnh:bookstands"
     ]
   },
-  //Assorted NmlNpcParam data
-  "xx_unparsed" : {
+  //Raw NmlNpcParam data
+  "xx_nmlnpcparam" : {
     "0_a54f92fd" : "9",
     "1_e2efe82d" : "9",
     "2_5ef86f1f" : "3",
@@ -103,5 +103,152 @@
     "37_21c5bbd6" : "5",
     "38_e52f0037" : "6",
     "39_42f255d5" : "5"
+  },
+  //Raw NpcRoom data
+  "xx_npcroom" : {
+    "2f4080c5" : 34,
+    "mDIYWorkbench" : {
+      "mUnitZ.u8" : 36,
+      "mItemSaveParam" : { "mItemNameParam.u64" : 12885036903 },
+      "mUnitX.u8" : 34,
+      "mLayer.u8" : 0
+    },
+    "mDIYRangeHeight.u8" : 4,
+    "mDIYRangeLUZ.u8" : 34,
+    "4dac5826" : 4,
+    "8549484e" : 34,
+    "96be42d5" : {
+      "mUnitZ.u8" : 36,
+      "mItemSaveParam" : { "mItemNameParam.u64" : 12885036230 },
+      "mUnitX.u8" : 34,
+      "mLayer.u8" : 0
+    },
+    "mLifePoint.f32" : 18.59579,
+    "mHobbyPoint.f32" : 17.97748,
+    "mFtrList[]" : [
+      {
+        "mUnitZ.u8" : 26,
+        "mItemSaveParam" : "acnh:cardboardbed/1",
+        "mUnitX.u8" : 26,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 29,
+        "mItemSaveParam" : "acnh:accessoriesstand/3",
+        "mUnitX.u8" : 29,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 34,
+        "mItemSaveParam" : { "mItemNameParam.u64" : 71326 },
+        "mUnitX.u8" : 26,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 36,
+        "mItemSaveParam" : { "mItemNameParam.u64" : 136863 },
+        "mUnitX.u8" : 34,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 29,
+        "mItemSaveParam" : "acnh:stackofbooks/1",
+        "mUnitX.u8" : 33,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 36,
+        "mItemSaveParam" : "acnh:garbagepail",
+        "mUnitX.u8" : 26,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 36,
+        "mItemSaveParam" : "acnh:trashbags/1",
+        "mUnitX.u8" : 28,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 26,
+        "mItemSaveParam" : "acnh:ironwoodchair/3",
+        "mUnitX.u8" : 36,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 26,
+        "mItemSaveParam" : "acnh:tapedeck/2/2",
+        "mUnitX.u8" : 36,
+        "mLayer.u8" : 1
+      },
+      {
+        "mUnitZ.u8" : 29,
+        "mItemSaveParam" : "acnh:recordbox/34",
+        "mUnitX.u8" : 31,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 31,
+        "mItemSaveParam" : "acnh:rockinkk",
+        "mUnitX.u8" : 31,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 26,
+        "mItemSaveParam" : "acnh:directorschair",
+        "mUnitX.u8" : 31,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 31,
+        "mItemSaveParam" : "acnh:ring",
+        "mUnitX.u8" : 29,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 29,
+        "mItemSaveParam" : "acnh:bluevinylsheet",
+        "mUnitX.u8" : 29,
+        "mLayer.u8" : 6
+      },
+      {
+        "mUnitZ.u8" : 25,
+        "mItemSaveParam" : "acnh:autographcards/3",
+        "mUnitX.u8" : 30,
+        "mLayer.u8" : 2
+      },
+      {
+        "mUnitZ.u8" : 26,
+        "mItemSaveParam" : "acnh:cardboardbox/1",
+        "mUnitX.u8" : 28,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 26,
+        "mItemSaveParam" : "acnh:paintingset/2",
+        "mUnitX.u8" : 28,
+        "mLayer.u8" : 1
+      },
+      {
+        "mUnitZ.u8" : 31,
+        "mItemSaveParam" : "acnh:bookstands",
+        "mUnitX.u8" : 33,
+        "mLayer.u8" : 0
+      }
+    ],
+    "d8bfabd5" : 4,
+    "mFloorRotate.u8" : 0,
+    "mDIYRangeLUX.u8" : 34,
+    "mDIYRangeWidth.u8" : 4
+  },
+  //Raw NpcHouse data
+  "xx_npchouse" : {
+    "wol00" : {
+      "mWall.u16" : 164,
+      "mCurtain.u16" : 11,
+      "mDeco" : { "mItemNameParam.u64" : 65534 },
+      "mRoof.u16" : 41,
+      "mShape.u16" : 1,
+      "mDoor.u16" : 241
+    }
   }
 }

@@ -11,13 +11,14 @@
     "it" : "Arancina",
     "ru" : "Тэнджи"
   },
-  "species" : "$cat",
-  "personality" : "$peppy",
+  "species" : "cat",
+  "personality" : "peppy",
   "personalitySubtype" : 1,
-  "gender" : "$fem",
+  "gender" : "fem",
+  "attraction" : "none",
   "birthday" : [ 17, 6 ],
-  "hobby" : "$music",
-  "colors" : [ "$green", "$yellow" ],
+  "hobby" : "music",
+  "colors" : [ "green", "yellow" ],
   "nameTag" : [ "#FFD00D", "#9B553B" ],
   "catchphrase" : {
     "en" : "reeeeOWR",
@@ -32,38 +33,38 @@
     "ru" : "фруктик"
   },
   "clothing" : {
-    "default" : "#acnh:retrodress/green",
-    "rain" : [ "#acnh:raincoat/yellow", "#acnh:rainhat/yellow" ]
+    "default" : "acnh:retrodress/green",
+    "rain" : [ "acnh:raincoat/yellow", "acnh:rainhat/yellow" ]
   },
-  "umbrella" : "#acnh:strawberryumbrella",
-  "photo" : "#acnh:tangysphoto",
-  "poster" : "#acnh:tangysposter",
+  "umbrella" : "acnh:strawberryumbrella",
+  "photo" : "acnh:tangysphoto",
+  "poster" : "acnh:tangysposter",
   "house" : {
-    "walls" : "#acnh:orangewall",
-    "floor" : "#acnh:greenretroflooring",
-    "music" : "#acnh:iloveyou",
+    "walls" : "acnh:orangewall",
+    "floor" : "acnh:greenretroflooring",
+    "music" : "acnh:iloveyou",
     "items" : [
-      "#acnh:coconutwallplanter",
-      "#acnh:juicyappletv",
-      "#acnh:palmtreelamp",
-      "#acnh:pearbed",
-      "#acnh:applechair",
-      "#acnh:peachchair/1",
-      "#acnh:pearwardrobe",
-      "#acnh:orangeendtable/1",
-      "#acnh:orangeendtable",
-      "#acnh:cherryspeakers/1/2",
-      "#acnh:infusedwaterdispenser",
-      "#acnh:cardboardbox/2",
-      "#acnh:fruitbasket",
-      "#acnh:fruitwreath",
-      "#acnh:orangewallmountedclock",
-      "#acnh:cardboardbox/4",
-      "#acnh:peachsurprisebox/1"
+      "acnh:coconutwallplanter",
+      "acnh:juicyappletv",
+      "acnh:palmtreelamp",
+      "acnh:pearbed",
+      "acnh:applechair",
+      "acnh:peachchair/1",
+      "acnh:pearwardrobe",
+      "acnh:orangeendtable/1",
+      "acnh:orangeendtable",
+      "acnh:cherryspeakers/1/2",
+      "acnh:infusedwaterdispenser",
+      "acnh:cardboardbox/2",
+      "acnh:fruitbasket",
+      "acnh:fruitwreath",
+      "acnh:orangewallmountedclock",
+      "acnh:cardboardbox/4",
+      "acnh:peachsurprisebox/1"
     ]
   },
-  //Assorted NmlNpcParam data
-  "xx_unparsed" : {
+  //Raw NmlNpcParam data
+  "xx_nmlnpcparam" : {
     "0_a54f92fd" : "9",
     "1_e2efe82d" : "9",
     "2_5ef86f1f" : "1",
@@ -104,5 +105,170 @@
     "37_21c5bbd6" : "4",
     "38_e52f0037" : "1",
     "39_42f255d5" : "4"
+  },
+  //Raw NpcRoom data
+  "xx_npcroom" : {
+    "2f4080c5" : 34,
+    "mDIYWorkbench" : {
+      "mUnitZ.u8" : 35,
+      "mItemSaveParam" : { "mItemNameParam.u64" : 203750 },
+      "mUnitX.u8" : 35,
+      "mLayer.u8" : 0
+    },
+    "mDIYRangeHeight.u8" : 4,
+    "mDIYRangeLUZ.u8" : 34,
+    "4dac5826" : 4,
+    "8549484e" : 34,
+    "96be42d5" : {
+      "mUnitZ.u8" : 34,
+      "mItemSaveParam" : { "mItemNameParam.u64" : 4295167520 },
+      "mUnitX.u8" : 36,
+      "mLayer.u8" : 0
+    },
+    "mLifePoint.f32" : 16.68555,
+    "mHobbyPoint.f32" : 18.06724,
+    "mFtrList[]" : [
+      {
+        "mUnitZ.u8" : 26,
+        "mItemSaveParam" : { "mItemNameParam.u64" : 5791 },
+        "mUnitX.u8" : 30,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 32,
+        "mItemSaveParam" : { "mItemNameParam.u64" : 71326 },
+        "mUnitX.u8" : 26,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 30,
+        "mItemSaveParam" : { "mItemNameParam.u64" : 71326 },
+        "mUnitX.u8" : 26,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 23,
+        "mItemSaveParam" : "acnh:coconutwallplanter",
+        "mUnitX.u8" : 31,
+        "mLayer.u8" : 3
+      },
+      {
+        "mUnitZ.u8" : 26,
+        "mItemSaveParam" : "acnh:juicyappletv",
+        "mUnitX.u8" : 28,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 35,
+        "mItemSaveParam" : "acnh:palmtreelamp",
+        "mUnitX.u8" : 35,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 36,
+        "mItemSaveParam" : "acnh:pearbed",
+        "mUnitX.u8" : 26,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 30,
+        "mItemSaveParam" : "acnh:applechair",
+        "mUnitX.u8" : 32,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 30,
+        "mItemSaveParam" : "acnh:peachchair/1",
+        "mUnitX.u8" : 36,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 26,
+        "mItemSaveParam" : "acnh:pearwardrobe",
+        "mUnitX.u8" : 26,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 26,
+        "mItemSaveParam" : { "mItemNameParam.u64" : 658648 },
+        "mUnitX.u8" : 35,
+        "mLayer.u8" : 4
+      },
+      {
+        "mUnitZ.u8" : 34,
+        "mItemSaveParam" : "acnh:orangeendtable/1",
+        "mUnitX.u8" : 26,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 30,
+        "mItemSaveParam" : "acnh:orangeendtable",
+        "mUnitX.u8" : 34,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 34,
+        "mItemSaveParam" : "acnh:cherryspeakers/1/2",
+        "mUnitX.u8" : 26,
+        "mLayer.u8" : 1
+      },
+      {
+        "mUnitZ.u8" : 30,
+        "mItemSaveParam" : "acnh:infusedwaterdispenser",
+        "mUnitX.u8" : 34,
+        "mLayer.u8" : 1
+      },
+      {
+        "mUnitZ.u8" : 26,
+        "mItemSaveParam" : "acnh:cardboardbox/2",
+        "mUnitX.u8" : 36,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 26,
+        "mItemSaveParam" : "acnh:fruitbasket",
+        "mUnitX.u8" : 36,
+        "mLayer.u8" : 1
+      },
+      {
+        "mUnitZ.u8" : 25,
+        "mItemSaveParam" : "acnh:fruitwreath",
+        "mUnitX.u8" : 35,
+        "mLayer.u8" : 2
+      },
+      {
+        "mUnitZ.u8" : 24,
+        "mItemSaveParam" : "acnh:orangewallmountedclock",
+        "mUnitX.u8" : 31,
+        "mLayer.u8" : 2
+      },
+      {
+        "mUnitZ.u8" : 26,
+        "mItemSaveParam" : "acnh:cardboardbox/4",
+        "mUnitX.u8" : 34,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 26,
+        "mItemSaveParam" : "acnh:peachsurprisebox/1",
+        "mUnitX.u8" : 34,
+        "mLayer.u8" : 1
+      }
+    ],
+    "d8bfabd5" : 4,
+    "mFloorRotate.u8" : 0,
+    "mDIYRangeLUX.u8" : 34,
+    "mDIYRangeWidth.u8" : 4
+  },
+  //Raw NpcHouse data
+  "xx_npchouse" : {
+    "cat05" : {
+      "mWall.u16" : 16,
+      "mCurtain.u16" : 7,
+      "mDeco" : { "mItemNameParam.u64" : 65534 },
+      "mRoof.u16" : 48,
+      "mShape.u16" : 1,
+      "mDoor.u16" : 255
+    }
   }
 }

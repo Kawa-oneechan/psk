@@ -12,7 +12,7 @@
     "nl" : "<info:::de >teenslippers",
     "ru" : "<info:::>шлепанц<case:ы:ы:ам:ев>"
   },
-  "type" : "$shoes",
+  "type" : "shoes",
   "price" : 350,
   "variants" : [
     "blue",

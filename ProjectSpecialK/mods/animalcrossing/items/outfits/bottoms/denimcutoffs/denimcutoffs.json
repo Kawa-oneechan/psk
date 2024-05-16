@@ -12,7 +12,7 @@
     "nl" : "<info:het :een :de >jeansshort",
     "ru" : "<info:::>джинсов<case:ые:ые:ым:х> шорт<case:ы:ы:ам:>"
   },
-  "type" : "$bottoms",
+  "type" : "bottoms",
   "price" : 1120,
   "variants" : [ "blue", "lightblue", "navyblue", "white", "black" ],
   //Quick reference

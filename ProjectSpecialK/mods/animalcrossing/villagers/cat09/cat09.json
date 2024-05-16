@@ -7,13 +7,13 @@
     "zh" : "戈伍紀",
     "ru" : "Кабуки"
   },
-  "species" : "$cat",
-  "personality" : "$cranky",
+  "species" : "cat",
+  "personality" : "cranky",
   "personalitySubtype" : 1,
-  "gender" : "$mas",
+  "gender" : "mas",
   "birthday" : [ 29, 11 ],
-  "hobby" : "$music",
-  "colors" : [ "$purple", "$red" ],
+  "hobby" : "music",
+  "colors" : [ "purple", "red" ],
   "nameTag" : [ "#FFFFFF", "#848484" ],
   "catchphrase" : {
     "en" : "meooo-OH",
@@ -27,29 +27,29 @@
     "ru" : "мя-я-яу"
   },
   "clothing" : {
-    "default" : "#acnh:kabukiactoryukata/purple",
-    "rain" : [ "#acnh:raincoat/beige", "#acnh:bamboohat" ]
+    "default" : "acnh:kabukiactoryukata/fuchsia",
+    "rain" : [ "acnh:raincoat/beige", "acnh:bamboohat" ]
   },
-  "umbrella" : "#acnh:paperparasol",
-  "photo" : "#acnh:kabukisphoto",
-  "poster" : "#acnh:kabukisposter",
+  "umbrella" : "acnh:paperparasol",
+  "photo" : "acnh:kabukisphoto",
+  "poster" : "acnh:kabukisposter",
   "house" : {
-    "walls" : "#acnh:dojowall",
-    "floor" : "#acnh:tatami",
-    "music" : "#acnh:kkjongara",
+    "walls" : "acnh:dojowall",
+    "floor" : "acnh:tatami",
+    "music" : "acnh:kkjongara",
     "items" : [
-      "#acnh:bamboopartition",
-      "#acnh:bamboopartition",
-      "#acnh:futon/64",
-      "#acnh:bonsaishelf",
-      "#acnh:squattoilet",
-      "#acnh:kettlebathtub",
-      "#acnh:woodenplanksign/1",
-      "#acnh:paperlantern/65"
+      "acnh:bamboopartition",
+      "acnh:bamboopartition",
+      "acnh:futon/64",
+      "acnh:bonsaishelf",
+      "acnh:squattoilet",
+      "acnh:kettlebathtub",
+      "acnh:woodenplanksign/1",
+      "acnh:paperlantern/65"
     ]
   },
-  //Assorted NmlNpcParam data
-  "xx_unparsed" : {
+  //Raw NmlNpcParam data
+  "xx_nmlnpcparam" : {
     "0_a54f92fd" : "a",
     "1_e2efe82d" : "9",
     "2_5ef86f1f" : "1",
@@ -90,5 +90,104 @@
     "37_21c5bbd6" : "5",
     "38_e52f0037" : "1",
     "39_42f255d5" : "5"
+  },
+  //Raw NpcRoom data
+  "xx_npcroom" : {
+    "2f4080c5" : 26,
+    "mDIYWorkbench" : {
+      "mUnitZ.u8" : 35,
+      "mItemSaveParam" : { "mItemNameParam.u64" : 72678 },
+      "mUnitX.u8" : 26,
+      "mLayer.u8" : 0
+    },
+    "mDIYRangeHeight.u8" : 4,
+    "mDIYRangeLUZ.u8" : 34,
+    "4dac5826" : 4,
+    "8549484e" : 30,
+    "96be42d5" : {
+      "mUnitZ.u8" : 26,
+      "mItemSaveParam" : { "mItemNameParam.u64" : 717 },
+      "mUnitX.u8" : 30,
+      "mLayer.u8" : 0
+    },
+    "mLifePoint.f32" : 1.448154,
+    "mHobbyPoint.f32" : 10.66627,
+    "mFtrList[]" : [
+      {
+        "mUnitZ.u8" : 32,
+        "mItemSaveParam" : { "mItemNameParam.u64" : 71326 },
+        "mUnitX.u8" : 26,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 26,
+        "mItemSaveParam" : { "mItemNameParam.u64" : 5791 },
+        "mUnitX.u8" : 30,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 34,
+        "mItemSaveParam" : "acnh:bamboopartition",
+        "mUnitX.u8" : 34,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 26,
+        "mItemSaveParam" : "acnh:bamboopartition",
+        "mUnitX.u8" : 34,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 26,
+        "mItemSaveParam" : "acnh:futon/64",
+        "mUnitX.u8" : 26,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 36,
+        "mItemSaveParam" : "acnh:bonsaishelf",
+        "mUnitX.u8" : 26,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 36,
+        "mItemSaveParam" : "acnh:squattoilet",
+        "mUnitX.u8" : 36,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 26,
+        "mItemSaveParam" : "acnh:kettlebathtub",
+        "mUnitX.u8" : 35,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 24,
+        "mItemSaveParam" : "acnh:woodenplanksign/1",
+        "mUnitX.u8" : 30,
+        "mLayer.u8" : 2
+      },
+      {
+        "mUnitZ.u8" : 26,
+        "mItemSaveParam" : "acnh:paperlantern/65",
+        "mUnitX.u8" : 28,
+        "mLayer.u8" : 0
+      }
+    ],
+    "d8bfabd5" : 4,
+    "mFloorRotate.u8" : 0,
+    "mDIYRangeLUX.u8" : 26,
+    "mDIYRangeWidth.u8" : 4
+  },
+  //Raw NpcHouse data
+  "xx_npchouse" : {
+    "cat09" : {
+      "mWall.u16" : 29,
+      "mCurtain.u16" : 1,
+      "mDeco" : { "mItemNameParam.u64" : 65534 },
+      "mRoof.u16" : 31,
+      "mShape.u16" : 10,
+      "mDoor.u16" : 32
+    }
   }
 }

@@ -11,13 +11,14 @@
     "it" : "Lupilia",
     "ru" : "Оди"
   },
-  "species" : "$wol",
-  "personality" : "$peppy",
+  "species" : "wol",
+  "personality" : "peppy",
   "personalitySubtype" : 0,
-  "gender" : "$fem",
+  "gender" : "fem",
+  "attraction" : "both",
   "birthday" : [ 31, 8 ],
-  "hobby" : "$fitness",
-  "colors" : [ "$green", "$white" ],
+  "hobby" : "fitness",
+  "colors" : [ "green", "white" ],
   "nameTag" : [ "#FF7A20", "#FFF3BB" ],
   "catchphrase" : {
     "en" : "foxtrot",
@@ -30,34 +31,34 @@
     "ru" : "фокстрот"
   },
   "clothing" : {
-    "default" : "#acnh:tropicalmuumuu/green",
-    "rain" : [ "#acnh:dottedraincoat/green", "#acnh:outdoorhat/orange" ]
+    "default" : "acnh:tropicalmuumuu/mint",
+    "rain" : [ "acnh:dottedraincoat/green", "acnh:outdoorhat/orange" ]
   },
-  "umbrella" : "#acnh:fairytaleumbrella",
-  "photo" : "#acnh:audiesphoto",
-  "poster" : "#acnh:audiesposter",
+  "umbrella" : "acnh:fairytaleumbrella",
+  "photo" : "acnh:audiesphoto",
+  "poster" : "acnh:audiesposter",
   "house" : {
-    "walls" : "#acnh:tropicalvista",
-    "floor" : "#acnh:greenfloralflooring",
-    "music" : "#acnh:kkisland",
+    "walls" : "acnh:tropicalvista",
+    "floor" : "acnh:greenfloralflooring",
+    "music" : "acnh:kkisland",
     "items" : [
-      "#acnh:openframekitchen",
-      "#acnh:dinerneonsign/2",
-      "#acnh:doubledoorrefrigerator",
-      "#acnh:wallfan/1",
-      "#acnh:cardboardbox/2",
-      "#acnh:fruitbasket",
-      "#acnh:menuchalkboard/3",
-      "#acnh:palmtreelamp",
-      "#acnh:rattanendtable/2",
-      "#acnh:rattanlowtable/2",
-      "#acnh:tapedeck/2/2",
-      "#acnh:coconutjuice",
-      "#acnh:yellowkitchenmat"
+      "acnh:openframekitchen",
+      "acnh:dinerneonsign/2",
+      "acnh:doubledoorrefrigerator",
+      "acnh:wallfan/1",
+      "acnh:cardboardbox/2",
+      "acnh:fruitbasket",
+      "acnh:menuchalkboard/3",
+      "acnh:palmtreelamp",
+      "acnh:rattanendtable/2",
+      "acnh:rattanlowtable/2",
+      "acnh:tapedeck/2/2",
+      "acnh:coconutjuice",
+      "acnh:yellowkitchenmat"
     ]
   },
-  //Assorted NmlNpcParam data
-  "xx_unparsed" : {
+  //Raw NmlNpcParam data
+  "xx_nmlnpcparam" : {
     "0_a54f92fd" : "9",
     "1_e2efe82d" : "9",
     "2_5ef86f1f" : "4",
@@ -98,5 +99,134 @@
     "37_21c5bbd6" : "3",
     "38_e52f0037" : "1",
     "39_42f255d5" : "3"
+  },
+  //Raw NpcRoom data
+  "xx_npcroom" : {
+    "2f4080c5" : 30,
+    "mDIYWorkbench" : {
+      "mUnitZ.u8" : 30,
+      "mItemSaveParam" : { "mItemNameParam.u64" : 200551 },
+      "mUnitX.u8" : 36,
+      "mLayer.u8" : 0
+    },
+    "mDIYRangeHeight.u8" : 4,
+    "mDIYRangeLUZ.u8" : 30,
+    "4dac5826" : 4,
+    "8549484e" : 26,
+    "96be42d5" : {
+      "mUnitZ.u8" : 30,
+      "mItemSaveParam" : { "mItemNameParam.u64" : 200223 },
+      "mUnitX.u8" : 28,
+      "mLayer.u8" : 0
+    },
+    "mLifePoint.f32" : 16.57436,
+    "mHobbyPoint.f32" : 6.737945,
+    "mFtrList[]" : [
+      {
+        "mUnitZ.u8" : 36,
+        "mItemSaveParam" : { "mItemNameParam.u64" : 136862 },
+        "mUnitX.u8" : 34,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 30,
+        "mItemSaveParam" : { "mItemNameParam.u64" : 202399 },
+        "mUnitX.u8" : 36,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 30,
+        "mItemSaveParam" : "acnh:openframekitchen",
+        "mUnitX.u8" : 28,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 26,
+        "mItemSaveParam" : "acnh:dinerneonsign/2",
+        "mUnitX.u8" : 30,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 26,
+        "mItemSaveParam" : "acnh:doubledoorrefrigerator",
+        "mUnitX.u8" : 26,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 23,
+        "mItemSaveParam" : "acnh:wallfan/1",
+        "mUnitX.u8" : 36,
+        "mLayer.u8" : 2
+      },
+      {
+        "mUnitZ.u8" : 26,
+        "mItemSaveParam" : "acnh:cardboardbox/2",
+        "mUnitX.u8" : 28,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 26,
+        "mItemSaveParam" : "acnh:fruitbasket",
+        "mUnitX.u8" : 28,
+        "mLayer.u8" : 1
+      },
+      {
+        "mUnitZ.u8" : 34,
+        "mItemSaveParam" : "acnh:menuchalkboard/3",
+        "mUnitX.u8" : 28,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 26,
+        "mItemSaveParam" : "acnh:palmtreelamp",
+        "mUnitX.u8" : 35,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 36,
+        "mItemSaveParam" : "acnh:rattanendtable/2",
+        "mUnitX.u8" : 36,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 30,
+        "mItemSaveParam" : "acnh:rattanlowtable/2",
+        "mUnitX.u8" : 32,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 36,
+        "mItemSaveParam" : "acnh:tapedeck/2/2",
+        "mUnitX.u8" : 36,
+        "mLayer.u8" : 1
+      },
+      {
+        "mUnitZ.u8" : 31,
+        "mItemSaveParam" : "acnh:coconutjuice",
+        "mUnitX.u8" : 32,
+        "mLayer.u8" : 1
+      },
+      {
+        "mUnitZ.u8" : 30,
+        "mItemSaveParam" : "acnh:yellowkitchenmat",
+        "mUnitX.u8" : 26,
+        "mLayer.u8" : 6
+      }
+    ],
+    "d8bfabd5" : 4,
+    "mFloorRotate.u8" : 0,
+    "mDIYRangeLUX.u8" : 34,
+    "mDIYRangeWidth.u8" : 4
+  },
+  //Raw NpcHouse data
+  "xx_npchouse" : {
+    "wol12" : {
+      "mWall.u16" : 132,
+      "mCurtain.u16" : 6,
+      "mDeco" : { "mItemNameParam.u64" : 65534 },
+      "mRoof.u16" : 121,
+      "mShape.u16" : 13,
+      "mDoor.u16" : 168
+    }
   }
 }

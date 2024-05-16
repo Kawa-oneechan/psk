@@ -11,13 +11,13 @@
     "it" : "Gomitolo",
     "ru" : "Руди"
   },
-  "species" : "$cat",
-  "personality" : "$jock",
+  "species" : "cat",
+  "personality" : "jock",
   "personalitySubtype" : 0,
-  "gender" : "$mas",
+  "gender" : "mas",
   "birthday" : [ 20, 12 ],
-  "hobby" : "$play",
-  "colors" : [ "$yellow", "$beige" ],
+  "hobby" : "play",
+  "colors" : [ "yellow", "beige" ],
   "nameTag" : [ "#7A2500", "#FFFCE9" ],
   "catchphrase" : {
     "en" : "mush",
@@ -32,31 +32,31 @@
     "ru" : "шмяк"
   },
   "clothing" : {
-    "default" : "#acnh:simpleparka/yellow",
-    "rain" : [ "#acnh:raincoat/red", "#acnh:rainhat/blue" ]
+    "default" : "acnh:simpleparka/yellow",
+    "rain" : [ "acnh:raincoat/red", "acnh:rainhat/blue" ]
   },
-  "umbrella" : "#acnh:twotoneumbrella",
-  "photo" : "#acnh:rudysphoto",
-  "poster" : "#acnh:rudysposter",
+  "umbrella" : "acnh:twotoneumbrella",
+  "photo" : "acnh:rudysphoto",
+  "poster" : "acnh:rudysposter",
   "house" : {
-    "walls" : "#acnh:greenplayroomwall",
-    "floor" : "#acnh:pineboardflooring",
-    "music" : "#acnh:kkblues",
+    "walls" : "acnh:greenplayroomwall",
+    "floor" : "acnh:pineboardflooring",
+    "music" : "acnh:kkblues",
     "items" : [
-      "#acnh:woodenblockstereo/2/2",
-      "#acnh:woodensimplebed/99",
-      "#acnh:throwbackwallclock/2",
-      "#acnh:minidiyworkbench/5",
-      "#acnh:throwbackcontainer",
-      "#acnh:throwbackmittchair/4",
-      "#acnh:woodenminitable/131",
-      "#acnh:trainset/1",
-      "#acnh:woodenchest/3",
-      "#acnh:minicactusset"
+      "acnh:woodenblockstereo/2/2",
+      "acnh:woodensimplebed/99",
+      "acnh:throwbackwallclock/2",
+      "acnh:minidiyworkbench/5",
+      "acnh:throwbackcontainer",
+      "acnh:throwbackmittchair/4",
+      "acnh:woodenminitable/131",
+      "acnh:trainset/1",
+      "acnh:woodenchest/3",
+      "acnh:minicactusset"
     ]
   },
-  //Assorted NmlNpcParam data
-  "xx_unparsed" : {
+  //Raw NmlNpcParam data
+  "xx_nmlnpcparam" : {
     "0_a54f92fd" : "9",
     "1_e2efe82d" : "9",
     "2_5ef86f1f" : "5",
@@ -97,5 +97,116 @@
     "37_21c5bbd6" : "3",
     "38_e52f0037" : "1",
     "39_42f255d5" : "3"
+  },
+  //Raw NpcRoom data
+  "xx_npcroom" : {
+    "2f4080c5" : 34,
+    "mDIYWorkbench" : {
+      "mUnitZ.u8" : 36,
+      "mItemSaveParam" : { "mItemNameParam.u64" : 21475036210 },
+      "mUnitX.u8" : 36,
+      "mLayer.u8" : 0
+    },
+    "mDIYRangeHeight.u8" : 4,
+    "mDIYRangeLUZ.u8" : 34,
+    "4dac5826" : 4,
+    "8549484e" : 34,
+    "96be42d5" : {
+      "mUnitZ.u8" : 36,
+      "mItemSaveParam" : { "mItemNameParam.u64" : 199859 },
+      "mUnitX.u8" : 36,
+      "mLayer.u8" : 0
+    },
+    "mLifePoint.f32" : 7.488113,
+    "mHobbyPoint.f32" : 15.81528,
+    "mFtrList[]" : [
+      {
+        "mUnitZ.u8" : 31,
+        "mItemSaveParam" : { "mItemNameParam.u64" : 71326 },
+        "mUnitX.u8" : 26,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 26,
+        "mItemSaveParam" : "acnh:woodenblockstereo/2/2",
+        "mUnitX.u8" : 30,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 30,
+        "mItemSaveParam" : { "mItemNameParam.u64" : 202399 },
+        "mUnitX.u8" : 36,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 26,
+        "mItemSaveParam" : "acnh:woodensimplebed/99",
+        "mUnitX.u8" : 26,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 23,
+        "mItemSaveParam" : "acnh:throwbackwallclock/2",
+        "mUnitX.u8" : 30,
+        "mLayer.u8" : 2
+      },
+      {
+        "mUnitZ.u8" : 36,
+        "mItemSaveParam" : "acnh:minidiyworkbench/5",
+        "mUnitX.u8" : 36,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 28,
+        "mItemSaveParam" : "acnh:throwbackcontainer",
+        "mUnitX.u8" : 26,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 36,
+        "mItemSaveParam" : "acnh:throwbackmittchair/4",
+        "mUnitX.u8" : 26,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 36,
+        "mItemSaveParam" : "acnh:woodenminitable/131",
+        "mUnitX.u8" : 28,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 30,
+        "mItemSaveParam" : "acnh:trainset/1",
+        "mUnitX.u8" : 30,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 26,
+        "mItemSaveParam" : "acnh:woodenchest/3",
+        "mUnitX.u8" : 34,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 26,
+        "mItemSaveParam" : "acnh:minicactusset",
+        "mUnitX.u8" : 36,
+        "mLayer.u8" : 1
+      }
+    ],
+    "d8bfabd5" : 4,
+    "mFloorRotate.u8" : 0,
+    "mDIYRangeLUX.u8" : 34,
+    "mDIYRangeWidth.u8" : 4
+  },
+  //Raw NpcHouse data
+  "xx_npchouse" : {
+    "cat20" : {
+      "mWall.u16" : 76,
+      "mCurtain.u16" : 2,
+      "mDeco" : { "mItemNameParam.u64" : 65534 },
+      "mRoof.u16" : 29,
+      "mShape.u16" : 9,
+      "mDoor.u16" : 230
+    }
   }
 }

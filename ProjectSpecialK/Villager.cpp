@@ -26,11 +26,8 @@ Villager::Villager(JSONObject& value) : NameableThing(value)
 	else
 	{
 		auto sp = value["species"]->AsString();
-		auto refType = Database::RefType::Enumeration;
-		_species = Database::Find<::Species>(sp.c_str(), &species, &refType);
-		if (refType != Database::RefType::Enumeration)
-			throw std::runtime_error(fmt::format("Species \"{0}\" is not an $enumeration, should probably be \"${0}\", while loading {1}.", sp, ID).c_str());
-		else if (_species == nullptr)
+		_species = Database::Find<::Species>(sp.c_str(), &species);
+		if (_species == nullptr)
 			throw std::runtime_error(fmt::format("Unknown species \"{}\" while loading {}.", sp, ID).c_str());
 		RefSpecies = fmt::format("species:{}", _species->ID);
 		StringToLower(RefSpecies);
@@ -68,13 +65,13 @@ Villager::Villager(JSONObject& value) : NameableThing(value)
 	auto _gender = value["gender"];
 	if (_gender != nullptr)
 	{
-		if (_gender->AsString() == "$mas")
+		if (_gender->AsString() == "mas")
 			this->gender = Gender::Boy;
-		else if (_gender->AsString() == "$fem")
+		else if (_gender->AsString() == "fem")
 			this->gender = Gender::Girl;
-		else if (_gender->AsString() == "$mnb")
+		else if (_gender->AsString() == "mnb")
 			this->gender = Gender::BEnby;
-		else if (_gender->AsString() == "$fnb")
+		else if (_gender->AsString() == "fnb")
 			this->gender = Gender::GEnby;
 		else
 			throw std::runtime_error(fmt::format("Unknown gender \"{}\" while loading {}.", _gender->AsString(), ID).c_str());
@@ -88,24 +85,18 @@ Villager::Villager(JSONObject& value) : NameableThing(value)
 		personality = nullptr;
 	else
 	{
-		auto refType = Database::RefType::Enumeration;
-		personality = Database::Find<::Personality>(value["personality"]->AsString(), &personalities, &refType);
-		if (refType != Database::RefType::Enumeration)
-			throw std::runtime_error(fmt::format("Personality \"{0}\" is not an $enumeration, should probably be \"${0}\", while loading {1}.", value["personality"]->AsString(), ID).c_str());
-		else if (personality == nullptr)
+		personality = Database::Find<::Personality>(value["personality"]->AsString(), &personalities);
+		if (personality == nullptr)
 			throw std::runtime_error(fmt::format("Unknown personality \"{}\" while loading {}.", value["personality"]->AsString(), ID).c_str());
 	}
 	personalitySubtype = _isSpecial ? 0 : (int)value["personalitySubtype"]->AsNumber();
 	//hobby = value["hobby"];
 	{
-		auto refType = Database::RefType::Enumeration;
-		hobby = Database::Find<::Hobby>(value["hobby"]->AsString(), &hobbies, &refType);
-		if (refType != Database::RefType::Enumeration)
-			fmt::print("\x1B[93m" "Hobby \"{0}\" is not an $enumeration, should probably be \"${0}\", while loading {1}.\n" "\x1B[0m", value["hobby"]->AsString(), ID);
-		else if (hobby == nullptr)
+		hobby = Database::Find<::Hobby>(value["hobby"]->AsString(), &hobbies);
+		if (hobby == nullptr)
 		{
 			fmt::print("\x1B[93m" "Unknown hobby \"{}\" while loading {}.\n" "\x1B[0m", value["hobby"]->AsString(), ID);
-			hobby = Database::Find<::Hobby>("$fallback", &hobbies, &refType);
+			hobby = Database::Find<::Hobby>("fallback", &hobbies);
 		}
 	}
 

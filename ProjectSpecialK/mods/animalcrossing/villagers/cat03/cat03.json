@@ -9,13 +9,13 @@
     "it" : "Micina",
     "ru" : "Оливи<case:я:ю:и:и>"
   },
-  "species" : "$cat",
-  "personality" : "$snooty",
+  "species" : "cat",
+  "personality" : "snooty",
   "personalitySubtype" : 1,
-  "gender" : "$fem",
+  "gender" : "fem",
   "birthday" : [ 3, 2 ],
-  "hobby" : "$music",
-  "colors" : [ "$white", "$black" ],
+  "hobby" : "music",
+  "colors" : [ "white", "black" ],
   "nameTag" : [ "#FFFFFF", "#848484" ],
   "catchphrase" : {
     "en" : "purrr",
@@ -29,30 +29,30 @@
     "ru" : "мур-мяу"
   },
   "clothing" : {
-    "default" : "#acnh:sweetheartdress/blue",
-    "rain" : [ "#acnh:raincoat/blue", "#acnh:rainhat/blue" ]
+    "default" : "acnh:sweetheartdress/navyblue",
+    "rain" : [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
   },
-  "umbrella" : "#acnh:blackchicumbrella",
-  "photo" : "#acnh:oliviasphoto",
-  "poster" : "#acnh:oliviasposter",
+  "umbrella" : "acnh:blackchicumbrella",
+  "photo" : "acnh:oliviasphoto",
+  "poster" : "acnh:oliviasposter",
   "house" : {
-    "walls" : "#acnh:purplerosewall",
-    "floor" : "#acnh:simpleblueflooring",
-    "music" : "#acnh:kksonata",
+    "walls" : "acnh:purplerosewall",
+    "floor" : "acnh:simpleblueflooring",
+    "music" : "acnh:kksonata",
     "items" : [
-      "#acnh:antiqueminitable",
-      "#acnh:antiqueconsoletable",
-      "#acnh:pianobench/1",
-      "#acnh:antiqueclock",
-      "#acnh:rattanlowtable/3",
-      "#acnh:doublesofa/4",
-      "#acnh:fireplace/1",
-      "#acnh:phonograph/0/2",
-      "#acnh:grandpiano/1"
+      "acnh:antiqueminitable",
+      "acnh:antiqueconsoletable",
+      "acnh:pianobench/1",
+      "acnh:antiqueclock",
+      "acnh:rattanlowtable/3",
+      "acnh:doublesofa/4",
+      "acnh:fireplace/1",
+      "acnh:phonograph/0/2",
+      "acnh:grandpiano/1"
     ]
   },
-  //Assorted NmlNpcParam data
-  "xx_unparsed" : {
+  //Raw NmlNpcParam data
+  "xx_nmlnpcparam" : {
     "0_a54f92fd" : "9",
     "1_e2efe82d" : "9",
     "2_5ef86f1f" : "3",
@@ -93,5 +93,110 @@
     "37_21c5bbd6" : "4",
     "38_e52f0037" : "1",
     "39_42f255d5" : "3"
+  },
+  //Raw NpcRoom data
+  "xx_npcroom" : {
+    "2f4080c5" : 34,
+    "mDIYWorkbench" : {
+      "mUnitZ.u8" : 36,
+      "mItemSaveParam" : { "mItemNameParam.u64" : 135015 },
+      "mUnitX.u8" : 34,
+      "mLayer.u8" : 0
+    },
+    "mDIYRangeHeight.u8" : 4,
+    "mDIYRangeLUZ.u8" : 34,
+    "4dac5826" : 4,
+    "8549484e" : 26,
+    "96be42d5" : {
+      "mUnitZ.u8" : 34,
+      "mItemSaveParam" : { "mItemNameParam.u64" : 69152 },
+      "mUnitX.u8" : 26,
+      "mLayer.u8" : 0
+    },
+    "mLifePoint.f32" : 12.74496,
+    "mHobbyPoint.f32" : 5.381283,
+    "mFtrList[]" : [
+      {
+        "mUnitZ.u8" : 36,
+        "mItemSaveParam" : { "mItemNameParam.u64" : 136862 },
+        "mUnitX.u8" : 34,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 36,
+        "mItemSaveParam" : { "mItemNameParam.u64" : 136862 },
+        "mUnitX.u8" : 36,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 26,
+        "mItemSaveParam" : "acnh:antiqueminitable",
+        "mUnitX.u8" : 32,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 36,
+        "mItemSaveParam" : "acnh:antiqueconsoletable",
+        "mUnitX.u8" : 26,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 30,
+        "mItemSaveParam" : "acnh:pianobench/1",
+        "mUnitX.u8" : 27,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 26,
+        "mItemSaveParam" : "acnh:antiqueclock",
+        "mUnitX.u8" : 30,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 29,
+        "mItemSaveParam" : "acnh:rattanlowtable/3",
+        "mUnitX.u8" : 34,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 32,
+        "mItemSaveParam" : "acnh:doublesofa/4",
+        "mUnitX.u8" : 34,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 26,
+        "mItemSaveParam" : "acnh:fireplace/1",
+        "mUnitX.u8" : 34,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 26,
+        "mItemSaveParam" : "acnh:phonograph/0/2",
+        "mUnitX.u8" : 36,
+        "mLayer.u8" : 1
+      },
+      {
+        "mUnitZ.u8" : 26,
+        "mItemSaveParam" : "acnh:grandpiano/1",
+        "mUnitX.u8" : 26,
+        "mLayer.u8" : 0
+      }
+    ],
+    "d8bfabd5" : 4,
+    "mFloorRotate.u8" : 0,
+    "mDIYRangeLUX.u8" : 34,
+    "mDIYRangeWidth.u8" : 4
+  },
+  //Raw NpcHouse data
+  "xx_npchouse" : {
+    "cat03" : {
+      "mWall.u16" : 58,
+      "mCurtain.u16" : 0,
+      "mDeco" : { "mItemNameParam.u64" : 65534 },
+      "mRoof.u16" : 59,
+      "mShape.u16" : 1,
+      "mDoor.u16" : 67
+    }
   }
 }

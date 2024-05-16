@@ -641,8 +641,8 @@ int main(int argc, char** argv)
 	//testDialogueAndMultiTasking();
 
 	{
-		auto jock = Database::Find<::Personality>("$jock", &personalities);
-		auto sister = Database::Find<::Personality>("$uchi", &personalities);
+		auto jock = Database::Find<::Personality>("jock", &personalities);
+		auto sister = Database::Find<::Personality>("uchi", &personalities);
 
 		Villager* starters[2];
 

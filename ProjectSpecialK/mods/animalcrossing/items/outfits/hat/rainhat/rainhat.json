@@ -12,7 +12,7 @@
     "nl" : "<info:het :een :de >regenhoed",
     "ru" : "<info:an ::>дождев<case:ая:ую:ой:ой> шапк<case:а:у:е:и>"
   },
-  "type" : "$cap",
+  "type" : "cap",
   "price" : 880,
   "variants" : [
     "yellow",

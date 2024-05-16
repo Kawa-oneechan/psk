@@ -4,7 +4,7 @@
     "en" : "<info::a :the >shiny catsuit",
     "ja" : "ボディスーツ"
   },
-  "type" : "$onepiece",
+  "type" : "onepiece",
   "price" : 2000,
   "variants" : [ "black", "blue", "red", "white" ]
 }

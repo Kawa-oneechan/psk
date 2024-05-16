@@ -9,13 +9,13 @@
     "fr" : "Luppa",
     "ru" : "Фре<case:я:ю:е:и>"
   },
-  "species" : "$wol",
-  "personality" : "$snooty",
+  "species" : "wol",
+  "personality" : "snooty",
   "personalitySubtype" : 1,
-  "gender" : "$fem",
+  "gender" : "fem",
   "birthday" : [ 14, 12 ],
-  "hobby" : "$fashion",
-  "colors" : [ "$green", "$blue" ],
+  "hobby" : "fashion",
+  "colors" : [ "green", "blue" ],
   "nameTag" : [ "#FF6184", "#FFFCE9" ],
   "catchphrase" : {
     "en" : "uff da",
@@ -30,34 +30,34 @@
     "ru" : "хрусть"
   },
   "clothing" : {
-    "default" : "#acnh:reindeersweater/green",
-    "rain" : [ "#acnh:dottedraincoat/lightblue", "#acnh:outdoorhat/orange" ]
+    "default" : "acnh:reindeersweater/green",
+    "rain" : [ "acnh:dottedraincoat/turquoise", "acnh:outdoorhat/orange" ]
   },
-  "umbrella" : "#acnh:lacyparasol",
-  "photo" : "#acnh:freyasphoto",
-  "poster" : "#acnh:freyasposter",
+  "umbrella" : "acnh:lacyparasol",
+  "photo" : "acnh:freyasphoto",
+  "poster" : "acnh:freyasposter",
   "house" : {
-    "walls" : "#acnh:heavycurtainwall",
-    "floor" : "#acnh:roseflooring",
-    "music" : "#acnh:luckykk",
+    "walls" : "acnh:heavycurtainwall",
+    "floor" : "acnh:roseflooring",
+    "music" : "acnh:luckykk",
     "items" : [
-      "#acnh:antiquebed",
-      "#acnh:antiquevanity",
-      "#acnh:antiquechair",
-      "#acnh:antiquechair",
-      "#acnh:musicstand",
-      "#acnh:antiqueminitable",
-      "#acnh:retroradiator",
-      "#acnh:phonograph/0/2",
-      "#acnh:antiquetable",
-      "#acnh:glassholderwithcandle",
-      "#acnh:fancyviolin",
-      "#acnh:fireplace",
-      "#acnh:matryoshka/1"
+      "acnh:antiquebed",
+      "acnh:antiquevanity",
+      "acnh:antiquechair",
+      "acnh:antiquechair",
+      "acnh:musicstand",
+      "acnh:antiqueminitable",
+      "acnh:retroradiator",
+      "acnh:phonograph/0/2",
+      "acnh:antiquetable",
+      "acnh:glassholderwithcandle",
+      "acnh:fancyviolin",
+      "acnh:fireplace",
+      "acnh:matryoshka/1"
     ]
   },
-  //Assorted NmlNpcParam data
-  "xx_unparsed" : {
+  //Raw NmlNpcParam data
+  "xx_nmlnpcparam" : {
     "0_a54f92fd" : "9",
     "1_e2efe82d" : "9",
     "2_5ef86f1f" : "6",
@@ -98,5 +98,134 @@
     "37_21c5bbd6" : "5",
     "38_e52f0037" : "6",
     "39_42f255d5" : "5"
+  },
+  //Raw NpcRoom data
+  "xx_npcroom" : {
+    "2f4080c5" : 30,
+    "mDIYWorkbench" : {
+      "mUnitZ.u8" : 30,
+      "mItemSaveParam" : { "mItemNameParam.u64" : 8589938535 },
+      "mUnitX.u8" : 26,
+      "mLayer.u8" : 0
+    },
+    "mDIYRangeHeight.u8" : 4,
+    "mDIYRangeLUZ.u8" : 30,
+    "4dac5826" : 4,
+    "8549484e" : 26,
+    "96be42d5" : {
+      "mUnitZ.u8" : 30,
+      "mItemSaveParam" : { "mItemNameParam.u64" : 8590003398 },
+      "mUnitX.u8" : 26,
+      "mLayer.u8" : 0
+    },
+    "mLifePoint.f32" : 17.57436,
+    "mHobbyPoint.f32" : 6.737945,
+    "mFtrList[]" : [
+      {
+        "mUnitZ.u8" : 26,
+        "mItemSaveParam" : "acnh:antiquebed",
+        "mUnitX.u8" : 26,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 32,
+        "mItemSaveParam" : { "mItemNameParam.u64" : 71326 },
+        "mUnitX.u8" : 26,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 30,
+        "mItemSaveParam" : { "mItemNameParam.u64" : 5791 },
+        "mUnitX.u8" : 26,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 26,
+        "mItemSaveParam" : "acnh:antiquevanity",
+        "mUnitX.u8" : 30,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 36,
+        "mItemSaveParam" : "acnh:antiquechair",
+        "mUnitX.u8" : 35,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 30,
+        "mItemSaveParam" : "acnh:antiquechair",
+        "mUnitX.u8" : 35,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 36,
+        "mItemSaveParam" : "acnh:musicstand",
+        "mUnitX.u8" : 28,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 36,
+        "mItemSaveParam" : "acnh:antiqueminitable",
+        "mUnitX.u8" : 26,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 28,
+        "mItemSaveParam" : "acnh:retroradiator",
+        "mUnitX.u8" : 36,
+        "mLayer.u8" : 5
+      },
+      {
+        "mUnitZ.u8" : 36,
+        "mItemSaveParam" : "acnh:phonograph/0/2",
+        "mUnitX.u8" : 26,
+        "mLayer.u8" : 1
+      },
+      {
+        "mUnitZ.u8" : 32,
+        "mItemSaveParam" : "acnh:antiquetable",
+        "mUnitX.u8" : 34,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 33,
+        "mItemSaveParam" : "acnh:glassholderwithcandle",
+        "mUnitX.u8" : 35,
+        "mLayer.u8" : 1
+      },
+      {
+        "mUnitZ.u8" : 34,
+        "mItemSaveParam" : "acnh:fancyviolin",
+        "mUnitX.u8" : 26,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 26,
+        "mItemSaveParam" : "acnh:fireplace",
+        "mUnitX.u8" : 34,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 26,
+        "mItemSaveParam" : "acnh:matryoshka/1",
+        "mUnitX.u8" : 35,
+        "mLayer.u8" : 1
+      }
+    ],
+    "d8bfabd5" : 4,
+    "mFloorRotate.u8" : 0,
+    "mDIYRangeLUX.u8" : 26,
+    "mDIYRangeWidth.u8" : 4
+  },
+  //Raw NpcHouse data
+  "xx_npchouse" : {
+    "wol05" : {
+      "mWall.u16" : 80,
+      "mCurtain.u16" : 6,
+      "mDeco" : { "mItemNameParam.u64" : 65534 },
+      "mRoof.u16" : 172,
+      "mShape.u16" : 9,
+      "mDoor.u16" : 103
+    }
   }
 }

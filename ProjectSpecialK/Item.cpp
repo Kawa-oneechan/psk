@@ -15,16 +15,17 @@ NameableThing::NameableThing(JSONObject& value)
 
 	auto type = value["type"] != nullptr ? value["type"]->AsString() : "";
 	if (type.empty());
-	else if (type == "$tool") Type = it_Tool;
-	else if (type == "$furniture") Type = it_Furniture;
-	else if (type == "$tops") Type = it_Tops;
-	else if (type == "$bottom") Type = it_Bottom;
-	else if (type == "$bottoms") Type = it_Bottom;
-	else if (type == "$dress") Type = it_Dress;
-	else if (type == "$onepiece") Type = it_Dress;
-	else if (type == "$hat") Type = it_Hat;
-	else if (type == "$cap") Type = it_Hat;
-	else if (type == "$shoes") Type = it_Shoes;
+	else if (type == "tool") Type = it_Tool;
+	else if (type == "furniture") Type = it_Furniture;
+	else if (type == "tops") Type = it_Tops;
+	else if (type == "bottom") Type = it_Bottom;
+	else if (type == "bottoms") Type = it_Bottom;
+	else if (type == "dress") Type = it_Dress;
+	else if (type == "dressup") Type = it_Dress;
+	else if (type == "onepiece") Type = it_Dress;
+	else if (type == "hat") Type = it_Hat;
+	else if (type == "cap") Type = it_Hat;
+	else if (type == "shoes") Type = it_Shoes;
 	else
 		throw std::runtime_error(fmt::format("Don't know what to do with type \"{}\" while loading {}.", type, ID).c_str());
 		//fmt::print("Don't know what to do with type \"{}\".\n", type);

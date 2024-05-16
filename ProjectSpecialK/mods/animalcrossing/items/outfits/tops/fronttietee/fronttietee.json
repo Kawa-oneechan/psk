@@ -12,7 +12,7 @@
     "nl" : "<info:de :een :het >geknoopt<case::::e> T-shirt",
     "ru" : "<info:an ::>футболк<case:а:у:е:и> с бантом"
   },
-  "type" : "$tops",
+  "type" : "tops",
   "price" : 640,
   "variants" : [ "black", "white", "red", "lime" ],
   //Quick reference

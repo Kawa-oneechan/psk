@@ -11,13 +11,14 @@
     "it" : "Ofelia",
     "ru" : "Кэт"
   },
-  "species" : "$cat",
-  "personality" : "$uchi",
+  "species" : "cat",
+  "personality" : "uchi",
   "personalitySubtype" : 0,
-  "gender" : "$fem",
+  "gender" : "fem",
+  "attraction" : "girls",
   "birthday" : [ 27, 4 ],
-  "hobby" : "$music",
-  "colors" : [ "$purple", "$black" ],
+  "hobby" : "music",
+  "colors" : [ "purple", "black" ],
   "nameTag" : [ "#A97851", "#FFFCE9" ],
   "catchphrase" : {
     "en" : "purrty",
@@ -32,35 +33,35 @@
     "ru" : "хор-р-рошо"
   },
   "clothing" : {
-    "default" : "#acnh:oldschooljacket/black",
-    "rain" : [ "#acnh:raincoat/red", "#acnh:outdoorhat/red" ]
+    "default" : "acnh:oldschooljacket/red",
+    "rain" : [ "acnh:raincoat/red", "acnh:outdoorhat/red" ]
   },
-  "umbrella" : "#acnh:spiderumbrella",
-  "photo" : "#acnh:kattsphoto",
-  "poster" : "#acnh:kattsposter",
+  "umbrella" : "acnh:spiderumbrella",
+  "photo" : "acnh:kattsphoto",
+  "poster" : "acnh:kattsposter",
   "house" : {
-    "walls" : "#acnh:whiteperforatedboardwall",
-    "floor" : "#acnh:steelflooring",
-    "music" : "#acnh:kkdisco",
+    "walls" : "acnh:whiteperforatedboardwall",
+    "floor" : "acnh:steelflooring",
+    "music" : "acnh:kkdisco",
     "items" : [
-      "#acnh:amp",
-      "#acnh:cardboardbox",
-      "#acnh:cardboardbox/1",
-      "#acnh:diyworkbench/7",
-      "#acnh:ventilationfan",
-      "#acnh:trashbags/1",
-      "#acnh:electricguitar",
-      "#acnh:dinersofa",
-      "#acnh:drumset/1",
-      "#acnh:cardboardbox",
-      "#acnh:stackedmagazines/128",
-      "#acnh:effectsrack",
-      "#acnh:portablerecordplayer/0/2",
-      "#acnh:ironwalllamp"
+      "acnh:amp",
+      "acnh:cardboardbox",
+      "acnh:cardboardbox/1",
+      "acnh:diyworkbench/7",
+      "acnh:ventilationfan",
+      "acnh:trashbags/1",
+      "acnh:electricguitar",
+      "acnh:dinersofa",
+      "acnh:drumset/1",
+      "acnh:cardboardbox",
+      "acnh:stackedmagazines/128",
+      "acnh:effectsrack",
+      "acnh:portablerecordplayer/0/2",
+      "acnh:ironwalllamp"
     ]
   },
-  //Assorted NmlNpcParam data
-  "xx_unparsed" : {
+  //Raw NmlNpcParam data
+  "xx_nmlnpcparam" : {
     "0_a54f92fd" : "9",
     "1_e2efe82d" : "9",
     "2_5ef86f1f" : "3",
@@ -101,5 +102,146 @@
     "37_21c5bbd6" : "4",
     "38_e52f0037" : "1",
     "39_42f255d5" : "4"
+  },
+  //Raw NpcRoom data
+  "xx_npcroom" : {
+    "2f4080c5" : 34,
+    "mDIYWorkbench" : {
+      "mUnitZ.u8" : 34,
+      "mItemSaveParam" : { "mItemNameParam.u64" : 197849 },
+      "mUnitX.u8" : 36,
+      "mLayer.u8" : 0
+    },
+    "mDIYRangeHeight.u8" : 4,
+    "mDIYRangeLUZ.u8" : 34,
+    "4dac5826" : 4,
+    "8549484e" : 34,
+    "96be42d5" : {
+      "mUnitZ.u8" : 34,
+      "mItemSaveParam" : { "mItemNameParam.u64" : 4295167520 },
+      "mUnitX.u8" : 36,
+      "mLayer.u8" : 0
+    },
+    "mLifePoint.f32" : 15.75286,
+    "mHobbyPoint.f32" : 19.66182,
+    "mFtrList[]" : [
+      {
+        "mUnitZ.u8" : 32,
+        "mItemSaveParam" : { "mItemNameParam.u64" : 202398 },
+        "mUnitX.u8" : 36,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 32,
+        "mItemSaveParam" : { "mItemNameParam.u64" : 71326 },
+        "mUnitX.u8" : 26,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 26,
+        "mItemSaveParam" : { "mItemNameParam.u64" : 5791 },
+        "mUnitX.u8" : 30,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 26,
+        "mItemSaveParam" : "acnh:amp",
+        "mUnitX.u8" : 36,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 26,
+        "mItemSaveParam" : "acnh:cardboardbox",
+        "mUnitX.u8" : 26,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 26,
+        "mItemSaveParam" : "acnh:cardboardbox/1",
+        "mUnitX.u8" : 26,
+        "mLayer.u8" : 1
+      },
+      {
+        "mUnitZ.u8" : 34,
+        "mItemSaveParam" : "acnh:diyworkbench/7",
+        "mUnitX.u8" : 36,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 23,
+        "mItemSaveParam" : "acnh:ventilationfan",
+        "mUnitX.u8" : 26,
+        "mLayer.u8" : 2
+      },
+      {
+        "mUnitZ.u8" : 30,
+        "mItemSaveParam" : "acnh:trashbags/1",
+        "mUnitX.u8" : 26,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 28,
+        "mItemSaveParam" : "acnh:electricguitar",
+        "mUnitX.u8" : 36,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 36,
+        "mItemSaveParam" : "acnh:dinersofa",
+        "mUnitX.u8" : 26,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 30,
+        "mItemSaveParam" : "acnh:drumset/1",
+        "mUnitX.u8" : 30,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 28,
+        "mItemSaveParam" : "acnh:cardboardbox",
+        "mUnitX.u8" : 26,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 28,
+        "mItemSaveParam" : "acnh:stackedmagazines/128",
+        "mUnitX.u8" : 26,
+        "mLayer.u8" : 1
+      },
+      {
+        "mUnitZ.u8" : 26,
+        "mItemSaveParam" : "acnh:effectsrack",
+        "mUnitX.u8" : 34,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 26,
+        "mItemSaveParam" : "acnh:portablerecordplayer/0/2",
+        "mUnitX.u8" : 34,
+        "mLayer.u8" : 1
+      },
+      {
+        "mUnitZ.u8" : 24,
+        "mItemSaveParam" : "acnh:ironwalllamp",
+        "mUnitX.u8" : 31,
+        "mLayer.u8" : 2
+      }
+    ],
+    "d8bfabd5" : 4,
+    "mFloorRotate.u8" : 0,
+    "mDIYRangeLUX.u8" : 34,
+    "mDIYRangeWidth.u8" : 4
+  },
+  //Raw NpcHouse data
+  "xx_npchouse" : {
+    "cat21" : {
+      "mWall.u16" : 67,
+      "mCurtain.u16" : 11,
+      "mDeco" : { "mItemNameParam.u64" : 65534 },
+      "mRoof.u16" : 53,
+      "mShape.u16" : 1,
+      "mDoor.u16" : 66
+    }
   }
 }

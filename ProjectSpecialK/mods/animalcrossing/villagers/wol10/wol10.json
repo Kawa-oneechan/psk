@@ -11,13 +11,13 @@
     "it" : "Ululo",
     "ru" : "Кайл<case::а:у:а>"
   },
-  "species" : "$wol",
-  "personality" : "$smug",
+  "species" : "wol",
+  "personality" : "smug",
   "personalitySubtype" : 0,
-  "gender" : "$mas",
+  "gender" : "mas",
   "birthday" : [ 6, 12 ],
-  "hobby" : "$music",
-  "colors" : [ "$black", "$white" ],
+  "hobby" : "music",
+  "colors" : [ "black", "white" ],
   "nameTag" : [ "#E9B010", "#FFFCE9" ],
   "catchphrase" : {
     "en" : "alpha",
@@ -32,31 +32,31 @@
     "ru" : "вожак"
   },
   "clothing" : {
-    "default" : "#acnh:giletandshirt/black",
-    "rain" : [ "#acnh:raincoat/black", "#acnh:outdoorhat/blue" ]
+    "default" : "acnh:giletandshirt/black",
+    "rain" : [ "acnh:raincoat/black", "acnh:outdoorhat/blue" ]
   },
-  "umbrella" : "#acnh:spiderumbrella",
-  "photo" : "#acnh:kylesphoto",
-  "poster" : "#acnh:kylesposter",
+  "umbrella" : "acnh:spiderumbrella",
+  "photo" : "acnh:kylesphoto",
+  "poster" : "acnh:kylesposter",
   "house" : {
-    "walls" : "#acnh:grayshantywall",
-    "floor" : "#acnh:steelflooring",
-    "music" : "#acnh:kkmetal",
+    "walls" : "acnh:grayshantywall",
+    "floor" : "acnh:steelflooring",
+    "music" : "acnh:kkmetal",
     "items" : [
-      "#acnh:pianobench",
-      "#acnh:drumset",
-      "#acnh:effectsrack",
-      "#acnh:portablerecordplayer/6/2",
-      "#acnh:micstand",
-      "#acnh:grandpiano",
-      "#acnh:electricguitar",
-      "#acnh:amp/3",
-      "#acnh:tvcamera",
-      "#acnh:cardboardbed"
+      "acnh:pianobench",
+      "acnh:drumset",
+      "acnh:effectsrack",
+      "acnh:portablerecordplayer/6/2",
+      "acnh:micstand",
+      "acnh:grandpiano",
+      "acnh:electricguitar",
+      "acnh:amp/3",
+      "acnh:tvcamera",
+      "acnh:cardboardbed"
     ]
   },
-  //Assorted NmlNpcParam data
-  "xx_unparsed" : {
+  //Raw NmlNpcParam data
+  "xx_nmlnpcparam" : {
     "0_a54f92fd" : "9",
     "1_e2efe82d" : "9",
     "2_5ef86f1f" : "2",
@@ -97,5 +97,116 @@
     "37_21c5bbd6" : "3",
     "38_e52f0037" : "6",
     "39_42f255d5" : "3"
+  },
+  //Raw NpcRoom data
+  "xx_npcroom" : {
+    "2f4080c5" : 30,
+    "mDIYWorkbench" : {
+      "mUnitZ.u8" : 30,
+      "mItemSaveParam" : { "mItemNameParam.u64" : 12885102439 },
+      "mUnitX.u8" : 36,
+      "mLayer.u8" : 0
+    },
+    "mDIYRangeHeight.u8" : 4,
+    "mDIYRangeLUZ.u8" : 30,
+    "4dac5826" : 4,
+    "8549484e" : 34,
+    "96be42d5" : {
+      "mUnitZ.u8" : 30,
+      "mItemSaveParam" : { "mItemNameParam.u64" : 200223 },
+      "mUnitX.u8" : 36,
+      "mLayer.u8" : 0
+    },
+    "mLifePoint.f32" : 3.096346,
+    "mHobbyPoint.f32" : 22.53257,
+    "mFtrList[]" : [
+      {
+        "mUnitZ.u8" : 32,
+        "mItemSaveParam" : { "mItemNameParam.u64" : 71326 },
+        "mUnitX.u8" : 26,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 30,
+        "mItemSaveParam" : { "mItemNameParam.u64" : 202399 },
+        "mUnitX.u8" : 36,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 30,
+        "mItemSaveParam" : "acnh:pianobench",
+        "mUnitX.u8" : 27,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 26,
+        "mItemSaveParam" : "acnh:drumset",
+        "mUnitX.u8" : 30,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 26,
+        "mItemSaveParam" : "acnh:effectsrack",
+        "mUnitX.u8" : 36,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 26,
+        "mItemSaveParam" : "acnh:portablerecordplayer/6/2",
+        "mUnitX.u8" : 36,
+        "mLayer.u8" : 1
+      },
+      {
+        "mUnitZ.u8" : 30,
+        "mItemSaveParam" : "acnh:micstand",
+        "mUnitX.u8" : 29,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 26,
+        "mItemSaveParam" : "acnh:grandpiano",
+        "mUnitX.u8" : 26,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 28,
+        "mItemSaveParam" : "acnh:electricguitar",
+        "mUnitX.u8" : 36,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 26,
+        "mItemSaveParam" : "acnh:amp/3",
+        "mUnitX.u8" : 34,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 36,
+        "mItemSaveParam" : "acnh:tvcamera",
+        "mUnitX.u8" : 27,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 36,
+        "mItemSaveParam" : "acnh:cardboardbed",
+        "mUnitX.u8" : 34,
+        "mLayer.u8" : 0
+      }
+    ],
+    "d8bfabd5" : 4,
+    "mFloorRotate.u8" : 0,
+    "mDIYRangeLUX.u8" : 35,
+    "mDIYRangeWidth.u8" : 4
+  },
+  //Raw NpcHouse data
+  "xx_npchouse" : {
+    "wol10" : {
+      "mWall.u16" : 165,
+      "mCurtain.u16" : 9,
+      "mDeco" : { "mItemNameParam.u64" : 65534 },
+      "mRoof.u16" : 170,
+      "mShape.u16" : 1,
+      "mDoor.u16" : 94
+    }
   }
 }

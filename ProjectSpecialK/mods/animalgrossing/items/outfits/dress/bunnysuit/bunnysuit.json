@@ -4,7 +4,7 @@
     "en" : "<info::a :the >bunny suit",
     "ja" : "バニースーツ"
   },
-  "type" : "$onepiece",
+  "type" : "onepiece",
   "price" : 2000,
   "variants" : [ "black", "blue", "red" ]
 }

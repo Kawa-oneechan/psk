@@ -12,7 +12,7 @@
     "nl" : "<info:de :een :het >kunstleren rokje",
     "ru" : "<info:an ::>юбк<case:а:у:е:и> из кожзама"
   },
-  "type" : "$bottoms",
+  "type" : "bottoms",
   "price" : 1300,
   "variants" : [ "black", "brown", "beige", "red", "blue", "yellow" ],
   //Quick reference

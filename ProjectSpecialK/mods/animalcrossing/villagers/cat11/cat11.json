@@ -8,13 +8,13 @@
     "it" : "Marylin",
     "ru" : "Моник"
   },
-  "species" : "$cat",
-  "personality" : "$snooty",
+  "species" : "cat",
+  "personality" : "snooty",
   "personalitySubtype" : 1,
-  "gender" : "$fem",
+  "gender" : "fem",
   "birthday" : [ 30, 9 ],
-  "hobby" : "$fashion",
-  "colors" : [ "$purple", "$pink" ],
+  "hobby" : "fashion",
+  "colors" : [ "purple", "pink" ],
   "nameTag" : [ "#FFFA8F", "#889B96" ],
   "catchphrase" : {
     "en" : "pffffft",
@@ -27,36 +27,36 @@
     "ru" : "фи-фи"
   },
   "clothing" : {
-    "default" : "#acnh:flapperdress/black",
-    "rain" : [ "#acnh:raincoat/purple", "#acnh:outdoorhat/purple" ]
+    "default" : "acnh:flapperdress/black",
+    "rain" : [ "acnh:raincoat/purple", "acnh:outdoorhat/purple" ]
   },
-  "umbrella" : "#acnh:purplechicumbrella",
-  "photo" : "#acnh:moniquesphoto",
-  "poster" : "#acnh:moniquesposter",
+  "umbrella" : "acnh:purplechicumbrella",
+  "photo" : "acnh:moniquesphoto",
+  "poster" : "acnh:moniquesposter",
   "house" : {
-    "walls" : "#acnh:beigemoroccanwall",
-    "floor" : "#acnh:rosewoodflooring",
-    "music" : "#acnh:kkcruisin",
+    "walls" : "acnh:beigemoroccanwall",
+    "floor" : "acnh:rosewoodflooring",
+    "music" : "acnh:kkcruisin",
     "items" : [
-      "#acnh:rattanlowtable/3",
-      "#acnh:rattanvanity/3",
-      "#acnh:showerbooth",
-      "#acnh:deluxewasher",
-      "#acnh:rattantowelbasket/3",
-      "#acnh:rattanbed/3",
-      "#acnh:lilyrecordplayer/1/2",
-      "#acnh:rattanwastebin/3",
-      "#acnh:rattanstool/3",
-      "#acnh:rattanarmchair/3",
-      "#acnh:bathroomtowelrack",
-      "#acnh:rattanwardrobe/3",
-      "#acnh:rattanendtable/3",
-      "#acnh:rattantablelamp/3",
-      "#acnh:airconditioner"
+      "acnh:rattanlowtable/3",
+      "acnh:rattanvanity/3",
+      "acnh:showerbooth",
+      "acnh:deluxewasher",
+      "acnh:rattantowelbasket/3",
+      "acnh:rattanbed/3",
+      "acnh:lilyrecordplayer/1/2",
+      "acnh:rattanwastebin/3",
+      "acnh:rattanstool/3",
+      "acnh:rattanarmchair/3",
+      "acnh:bathroomtowelrack",
+      "acnh:rattanwardrobe/3",
+      "acnh:rattanendtable/3",
+      "acnh:rattantablelamp/3",
+      "acnh:airconditioner"
     ]
   },
-  //Assorted NmlNpcParam data
-  "xx_unparsed" : {
+  //Raw NmlNpcParam data
+  "xx_nmlnpcparam" : {
     "0_a54f92fd" : "9",
     "1_e2efe82d" : "9",
     "2_5ef86f1f" : "2",
@@ -97,5 +97,146 @@
     "37_21c5bbd6" : "3",
     "38_e52f0037" : "1",
     "39_42f255d5" : "3"
+  },
+  //Raw NpcRoom data
+  "xx_npcroom" : {
+    "2f4080c5" : 30,
+    "mDIYWorkbench" : {
+      "mUnitZ.u8" : 31,
+      "mItemSaveParam" : { "mItemNameParam.u64" : 68658 },
+      "mUnitX.u8" : 26,
+      "mLayer.u8" : 0
+    },
+    "mDIYRangeHeight.u8" : 4,
+    "mDIYRangeLUZ.u8" : 30,
+    "4dac5826" : 4,
+    "8549484e" : 26,
+    "96be42d5" : {
+      "mUnitZ.u8" : 30,
+      "mItemSaveParam" : { "mItemNameParam.u64" : 69152 },
+      "mUnitX.u8" : 26,
+      "mLayer.u8" : 0
+    },
+    "mLifePoint.f32" : 25.93752,
+    "mHobbyPoint.f32" : 4.046576,
+    "mFtrList[]" : [
+      {
+        "mUnitZ.u8" : 30,
+        "mItemSaveParam" : { "mItemNameParam.u64" : 71326 },
+        "mUnitX.u8" : 26,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 30,
+        "mItemSaveParam" : { "mItemNameParam.u64" : 202398 },
+        "mUnitX.u8" : 36,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 34,
+        "mItemSaveParam" : "acnh:rattanlowtable/3",
+        "mUnitX.u8" : 26,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 26,
+        "mItemSaveParam" : "acnh:rattanvanity/3",
+        "mUnitX.u8" : 34,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 26,
+        "mItemSaveParam" : "acnh:showerbooth",
+        "mUnitX.u8" : 26,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 26,
+        "mItemSaveParam" : "acnh:deluxewasher",
+        "mUnitX.u8" : 29,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 26,
+        "mItemSaveParam" : "acnh:rattantowelbasket/3",
+        "mUnitX.u8" : 29,
+        "mLayer.u8" : 1
+      },
+      {
+        "mUnitZ.u8" : 34,
+        "mItemSaveParam" : "acnh:rattanbed/3",
+        "mUnitX.u8" : 34,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 36,
+        "mItemSaveParam" : "acnh:lilyrecordplayer/1/2",
+        "mUnitX.u8" : 26,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 26,
+        "mItemSaveParam" : "acnh:rattanwastebin/3",
+        "mUnitX.u8" : 32,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 28,
+        "mItemSaveParam" : "acnh:rattanstool/3",
+        "mUnitX.u8" : 36,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 36,
+        "mItemSaveParam" : "acnh:rattanarmchair/3",
+        "mUnitX.u8" : 28,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 25,
+        "mItemSaveParam" : "acnh:bathroomtowelrack",
+        "mUnitX.u8" : 29,
+        "mLayer.u8" : 2
+      },
+      {
+        "mUnitZ.u8" : 26,
+        "mItemSaveParam" : "acnh:rattanwardrobe/3",
+        "mUnitX.u8" : 36,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 32,
+        "mItemSaveParam" : "acnh:rattanendtable/3",
+        "mUnitX.u8" : 36,
+        "mLayer.u8" : 0
+      },
+      {
+        "mUnitZ.u8" : 32,
+        "mItemSaveParam" : "acnh:rattantablelamp/3",
+        "mUnitX.u8" : 36,
+        "mLayer.u8" : 1
+      },
+      {
+        "mUnitZ.u8" : 23,
+        "mItemSaveParam" : "acnh:airconditioner",
+        "mUnitX.u8" : 34,
+        "mLayer.u8" : 2
+      }
+    ],
+    "d8bfabd5" : 4,
+    "mFloorRotate.u8" : 0,
+    "mDIYRangeLUX.u8" : 26,
+    "mDIYRangeWidth.u8" : 4
+  },
+  //Raw NpcHouse data
+  "xx_npchouse" : {
+    "cat11" : {
+      "mWall.u16" : 26,
+      "mCurtain.u16" : 3,
+      "mDeco" : { "mItemNameParam.u64" : 65534 },
+      "mRoof.u16" : 74,
+      "mShape.u16" : 9,
+      "mDoor.u16" : 27
+    }
   }
 }

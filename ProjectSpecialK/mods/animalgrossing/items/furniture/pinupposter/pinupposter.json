@@ -1,10 +1,10 @@
 {
 	"id": "ag:pinupposter",
 	"name": "<info::an :the >pin-up poster",
-	"layout": "$wall",
-	"color": [ "$colorful", "$colorful" ],
-	"dragSound": "$normal",
+	"layout": "wall",
+	"color": [ "colorful", "colorful" ],
+	"dragSound": "normal",
 	"interaction": null,
-	"menuIcon": "$leaf",
+	"menuIcon": "leaf",
 	"itemSize": [ 1, 1.5 ]
 }
