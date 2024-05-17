@@ -90,9 +90,25 @@ namespace UI
 
 class InputsMap
 {
+private:
+	//float lastMouseX, lastMouseY;
+	glm::vec2 lastMousePos;
+
 public:
 	bool Up, Down, Left, Right;
 	bool Enter, Escape;
+
+	bool MouseLeft, MouseRight, MouseMiddle;
+	bool MouseHoldLeft;
+	glm::vec2 MousePosition;
+
+	InputsMap()
+	{
+		//lastMouseX = MousePosition.x = width + 20;
+		//lastMouseY = MousePosition.y = height + 20;
+		lastMousePos = MousePosition = glm::vec2(width, height) + 20.0f;
+		MouseLeft = MouseRight = MouseMiddle = false;
+	}
 
 	void Process(int key, int action)
 	{
@@ -110,10 +126,30 @@ public:
 			}
 		}
 	}
+	
+	void MouseMove(float x, float y)
+	{
+		//lastMouseX = MousePosition.x;
+		//lastMouseY = MousePosition.y;
+		lastMousePos = MousePosition;
+		MousePosition.x = x;
+		MousePosition.y = y;
+	}
+
+	bool MouseMoved()
+	{
+		//auto ret = (lastMouseX != MousePosition.x || lastMouseY != MousePosition.y);
+		auto ret = (lastMousePos != MousePosition);
+		//lastMouseX = MousePosition.x;
+		//lastMouseY = MousePosition.y;
+		lastMousePos = MousePosition;
+		return ret;
+	}
 
 	void Clear()
 	{
 		Up = Down = Left = Right = Enter = Escape = false;
+		MouseLeft = MouseRight = MouseMiddle = false;
 	}
 };
 static InputsMap& Inputs = InputsMap();
@@ -168,27 +204,14 @@ private:
 	glm::vec2 hotspot;
 	glm::vec4 frame;
 	glm::vec2 size;
-	float lastX, lastY;
 
 public:
-	bool Left, Right, Middle;
-	bool HoldLeft;
-	glm::vec2 Position;
-
 	Cursor()
 	{
 		hand = new Texture("hand.png");
 		GetAtlas(atlas, "hand.json");
 		Select(0);
 		size = glm::vec2(frame.w / 2);
-		lastX = Position.x = width + 20;
-		lastY = Position.y = height + 20;
-		Left = Right = Middle = false;
-	}
-
-	void Clear()
-	{
-		Left = Right = Middle = false;
 	}
 
 	void Select(int style)
@@ -196,25 +219,9 @@ public:
 		frame = atlas[style];
 	}
 
-	void Move(float x, float y)
-	{
-		lastX = Position.x;
-		lastY = Position.y;
-		Position.x = x;
-		Position.y = y;
-	}
-
-	bool Moved()
-	{
-		auto ret = (lastX != Position.x || lastY != Position.y);
-		lastX = Position.x;
-		lastY = Position.y;
-		return ret;
-	}
-
 	void Draw()
 	{
-		sprender->DrawSprite(*hand, Position + hotspot, size, frame);
+		sprender->DrawSprite(*hand, Inputs.MousePosition + hotspot, size, frame);
 	}
 };
 Cursor* cursor = nullptr;
@@ -617,15 +624,15 @@ public:
 	{
 		//visible = (int)(12.0f * scale);
 
-		if (cursor->Moved())
+		if (Inputs.MouseMoved())
 		{
 			const int col = (int)(400 * scale);
 			mouseHighlight = -1;
-			if (cursor->Position.x >= itemX && cursor->Position.x <= itemX + (col * 2.5f))
+			if (Inputs.MousePosition.x >= itemX && Inputs.MousePosition.x <= itemX + (col * 2.5f))
 			{
 				for (int i = 0; i < itemY.size() - 1; i++)
 				{
-					if (cursor->Position.y >= itemY[i] && cursor->Position.y < itemY[i + 1])
+					if (Inputs.MousePosition.y >= itemY[i] && Inputs.MousePosition.y < itemY[i + 1])
 					{
 						mouseHighlight = highlight = i;
 						break;
@@ -636,16 +643,16 @@ public:
 		cursor->Select(0);
 		if (mouseHighlight != -1 && items->at(highlight)->type == DoomMenuTypes::Slider)
 		{
-			if (cursor->Position.x >= sliderStart && cursor->Position.x <= sliderEnd)
+			if (Inputs.MousePosition.x >= sliderStart && Inputs.MousePosition.x <= sliderEnd)
 			{
 				cursor->Select(3);
-				if (cursor->HoldLeft)
+				if (Inputs.MouseHoldLeft)
 				{
 					cursor->Select(2);
 					auto item = items->at(highlight);
 					auto barLength = sliderEnd - sliderStart;
 					auto range = item->maxVal - item->minVal;
-					auto mpos = cursor->Position.x - sliderStart;
+					auto mpos = Inputs.MousePosition.x - sliderStart;
 					auto val = floor(mpos / item->step) * item->step;
 					item->selection = clamp((int)val, item->minVal, item->maxVal);
 					if (item->change != nullptr)
@@ -658,8 +665,8 @@ public:
 				}
 			}
 		}
-		if (mouseHighlight != highlight && cursor->Left)
-			cursor->Left = false;
+		if (mouseHighlight != highlight && Inputs.MouseLeft)
+			Inputs.MouseLeft = false;
 
 		while (items->at(highlight)->type == DoomMenuTypes::Text)
 			highlight++;
@@ -725,7 +732,7 @@ public:
 
 		if (item->type == DoomMenuTypes::Page)
 		{
-			if (Inputs.Enter || cursor->Left)
+			if (Inputs.Enter || Inputs.MouseLeft)
 			{
 				stack.push(*item->page);
 				items = item->page;
@@ -735,7 +742,7 @@ public:
 		}
 		else if (item->type == DoomMenuTypes::Back)
 		{
-			if (Inputs.Enter || cursor->Left)
+			if (Inputs.Enter || Inputs.MouseLeft)
 			{
 				if (stack.size() > 1)
 				{
@@ -743,14 +750,13 @@ public:
 					stack.pop();
 					items = &stack.top();
 					Inputs.Clear();
-					cursor->Clear();
 					return;
 				}
 			}
 		}
 		else if (item->type == DoomMenuTypes::Checkbox)
 		{
-			if (Inputs.Enter || cursor->Left)
+			if (Inputs.Enter || Inputs.MouseLeft)
 			{
 				item->selection ^= 1;
 				if (item->change != nullptr)
@@ -759,11 +765,11 @@ public:
 		}
 		else if (item->type == DoomMenuTypes::Options)
 		{
-			if (Inputs.Enter || cursor->Left)
+			if (Inputs.Enter || Inputs.MouseLeft)
 			{
 				Inputs.Enter = false;
 				Inputs.Right = true;
-				cursor->Left = false;
+				Inputs.MouseLeft = false;
 			}
 			if (Inputs.Left)
 			{
@@ -807,7 +813,7 @@ public:
 		}
 
 		Inputs.Enter = false;
-		cursor->Left = false;
+		Inputs.MouseLeft = false;
 	}
 
 	void Draw(double dt)
@@ -825,7 +831,7 @@ public:
 		const auto partSize = controlsAtlas[4].w * 0.75f *  scale;
 		const auto thumbSize = glm::vec2(controlsAtlas[3].z, controlsAtlas[3].w) * 0.50f * scale;
 
-		sprender->DrawText(0, fmt::format("DoomMenu: {}/{} {} {},{} - {},{}", highlight, mouseHighlight, cursor->HoldLeft, cursor->Position.x, cursor->Position.y, sliderStart, sliderEnd), glm::vec2(0, 16));
+		sprender->DrawText(0, fmt::format("DoomMenu: {}/{} {} {},{} - {},{}", highlight, mouseHighlight, Inputs.MouseHoldLeft, Inputs.MousePosition.x, Inputs.MousePosition.y, sliderStart, sliderEnd), glm::vec2(0, 16));
 
 		itemY.clear();
 
@@ -1089,7 +1095,7 @@ void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
 	float xpos = static_cast<float>(xposIn);
 	float ypos = static_cast<float>(yposIn);
 
-	cursor->Move(xpos, ypos);
+	Inputs.MouseMove(xpos, ypos);
 
 	if (firstMouse)
 	{
@@ -1111,19 +1117,19 @@ void mousebutton_callback(GLFWwindow* window, int button, int action, int mods)
 {
 	if (button == GLFW_MOUSE_BUTTON_LEFT)
 	{
-		cursor->HoldLeft = action == GLFW_PRESS;
-		if (!cursor->Left && action == GLFW_RELEASE)
-			cursor->Left = true;
+		Inputs.MouseHoldLeft = action == GLFW_PRESS;
+		if (!Inputs.MouseLeft && action == GLFW_RELEASE)
+			Inputs.MouseLeft = true;
 	}
 	else if (button == GLFW_MOUSE_BUTTON_MIDDLE)
 	{
-		if (!cursor->Middle && action == GLFW_RELEASE)
-			cursor->Middle = true;
+		if (!Inputs.MouseMiddle && action == GLFW_RELEASE)
+			Inputs.MouseMiddle = true;
 	}
 	else if (button == GLFW_MOUSE_BUTTON_RIGHT)
 	{
-		if (!cursor->Right && action == GLFW_RELEASE)
-			cursor->Right = true;
+		if (!Inputs.MouseRight && action == GLFW_RELEASE)
+			Inputs.MouseRight = true;
 	}
 }
 
