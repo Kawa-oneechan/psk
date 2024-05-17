@@ -911,7 +911,14 @@ public:
 
 class TextField : public Tickable
 {
+	//TODO: since we have a scissor test, why not have scrolling?
+	//As in, [lo, world!_ ] with the "hel" off-screen, via an offset?
+
 public:
+	glm::vec4 rect;
+	glm::vec4 color;
+	int font;
+	float size;
 	std::string value;
 	size_t caret;
 
@@ -919,16 +926,29 @@ public:
 	{
 		value = "test";
 		caret = value.length();
+
+		rect = glm::vec4(8, 32, 320, 80);
+		color = glm::vec4(1, 1, 0, 1);
+		font = 1;
+		size = 100.0f;
 	}
 
 	void Draw(double dt)
 	{
-		sprender->DrawText(0, value, glm::vec2(0, 0), glm::vec4(1, 1, 0, 1), 200.0f);
-		//Measure the substring of value up to caret, draw it there.
+		auto pos = glm::vec2(rect.x, rect.y);
 
-		auto ms = sprender->MeasureText(0, value.substr(0, caret), 200.0f);
-		//sprender->DrawSprite(*whiteRect, glm::vec2(0, 0) + glm::vec2(ms.x, 0), glm::vec2(2, ms.y), glm::vec4(0), 0, glm::vec4(1, 1, 0, 1));
-		sprender->DrawText(0, "_", glm::vec2(0, 0) + glm::vec2(ms.x, 0), glm::vec4(1, 1, 0, 1), 200.0f);
+		sprender->Flush();
+		const auto h = (int)(rect.w - rect.y);
+		glScissor((int)rect.x, (int)(height - rect.y) - h, (int)(rect.z - rect.x), h);
+		glEnable(GL_SCISSOR_TEST);
+
+		sprender->DrawText(font, value, pos, color, size);
+
+		auto ms = sprender->MeasureText(font, value.substr(0, caret), size);
+		sprender->DrawText(font, "_", pos + glm::vec2(ms.x, 0), glm::vec4(1, 1, 0, 1), size);
+
+		sprender->Flush();
+		glDisable(GL_SCISSOR_TEST);
 	}
 
 	bool Character(unsigned int codepoint)
@@ -1257,8 +1277,8 @@ int main()
 	tickables.push_back(new Background());
 	dlgBox = new DialogueBox();
 	tickables.push_back(dlgBox);
-	//tickables.push_back(new DoomMenu());
-	tickables.push_back(new TextField());
+	tickables.push_back(new DoomMenu());
+	//tickables.push_back(new TextField());
 
 	int oldTime = 0;
 
