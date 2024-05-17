@@ -254,6 +254,9 @@ public:
 		scroller->Use();
 		scroller->SetFloat("time", time);
 		sprender->DrawSprite(*scroller, *wallpaper, glm::vec2(0), glm::vec2(width, height), glm::vec4(0, 0, width, height));
+
+		//auto lol = sprender->MeasureText(1, "Project Special K: UI test", 50);
+		//sprender->DrawSprite(*whiteRect, glm::vec2(0), lol, glm::vec4(0), 0, glm::vec4(1, 1, 1, 0.5f));
 		sprender->DrawText(1, "Project Special K: UI test", glm::vec2(0), glm::vec4(1, 1, 1, 0.75), 50);
 		//sprender->DrawText(1, fmt::format("Project Special K: UI test (SCALE = {})", scale), glm::vec2(0), glm::vec4(1, 1, 1, 0.75), 50);
 		//sprender->DrawText(1, u8"日", glm::vec2(0, 20), glm::vec4(1, 1, 1, 0.75), 50);
@@ -920,8 +923,12 @@ public:
 
 	void Draw(double dt)
 	{
-		sprender->DrawText(0, value, glm::vec2(0, 32), glm::vec4(1, 1, 0, 1), 200.0f);
+		sprender->DrawText(0, value, glm::vec2(0, 0), glm::vec4(1, 1, 0, 1), 200.0f);
 		//Measure the substring of value up to caret, draw it there.
+
+		auto ms = sprender->MeasureText(0, value.substr(0, caret), 200.0f);
+		//sprender->DrawSprite(*whiteRect, glm::vec2(0, 0) + glm::vec2(ms.x, 0), glm::vec2(2, ms.y), glm::vec4(0), 0, glm::vec4(1, 1, 0, 1));
+		sprender->DrawText(0, "_", glm::vec2(0, 0) + glm::vec2(ms.x, 0), glm::vec4(1, 1, 0, 1), 200.0f);
 	}
 
 	bool Character(unsigned int codepoint)
@@ -930,27 +937,79 @@ public:
 		{
 			if (caret > 0)
 			{
+				int toDelete = 1;
 				caret--;
-				value.erase(value.cbegin() + caret);
+				if ((value[caret] & 0x80) == 0)
+				{
+				}
+				else
+				{
+					while (value[caret] & 0x80)
+					{
+						caret--;
+						toDelete++;
+						if ((value[caret + 1] & 0xC0) == 0xC0)
+							break;
+					}
+					caret++;
+					toDelete--;
+				}
+				value.erase(caret, toDelete);
 			}
 			return true;
 		}
-		else if (codepoint == 0xFFF0)
+		else if (codepoint == 0xFFF0) //left
 		{
 			if (caret > 0)
 			{
 				caret--;
+				if ((value[caret] & 0x80) == 0)
+				{
+				}
+				else
+				{
+					while (value[caret] & 0x80)
+					{
+						caret--;
+						if ((value[caret + 1] & 0xC0) == 0xC0)
+							break;
+					}
+					caret++;
+				}
 			}
 			return true;
 		}
-		else if (codepoint == 0xFFF1)
+		else if (codepoint == 0xFFF1) //right
 		{
 			if (caret < value.length())
-				caret++;
+			{
+				if ((value[caret] & 0xE0) == 0xE0)
+					caret += 3;
+				else if ((value[caret] & 0xE0) == 0xC0)
+					caret += 2;
+				else
+					caret++;
+			}
 			return true;
 		}
-		value.insert(value.cbegin() + caret, codepoint);
-		caret++;
+
+		std::string inserted;
+		if (codepoint < 0x80)
+			inserted += codepoint;
+		else if (codepoint < 0x0800)
+		{
+			inserted += (char)(((codepoint >> 6) & 0x1F) | 0xC0);
+			inserted += (char)(((codepoint >> 0) & 0x3F) | 0x80);
+		}
+		else if (codepoint < 0x10000)
+		{
+			inserted += (char)(((codepoint >> 12) & 0x0F) | 0xE0);
+			inserted += (char)(((codepoint >> 6) & 0x3F) | 0x80);
+			inserted += (char)(((codepoint >> 0) & 0x3F) | 0x80);
+		}
+		
+		value.insert(caret, inserted);
+		caret += inserted.length();
 		return true;
 	}
 };

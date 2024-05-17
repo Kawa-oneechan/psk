@@ -27,8 +27,10 @@ public:
 	void DrawSprite(Shader& shader, Texture& texture, glm::vec2 position);
 	void DrawSprite(Texture& texture, glm::vec2 position);
 
+	//In TextRenderer.cpp:
 	void DrawText(int font, const std::string& text, glm::vec2 position, const glm::vec4& color = glm::vec4(1), float size = 100, float angle = 0.0f);
 	void DrawText(const std::string& text, const glm::vec2& position, const glm::vec4& color = glm::vec4(1), float size = 100, float angle = 0.0f);
+	glm::vec2 SpriteRenderer::MeasureText(int font, const std::string& text, float size);
 
 	void Flush();
 

@@ -137,6 +137,7 @@
     <ClCompile Include="support\miniz.c" />
     <ClCompile Include="support\stb_image.cpp" />
     <ClCompile Include="support\stb_image_write.cpp" />
+    <ClCompile Include="TextRenderer.cpp" />
     <ClCompile Include="VFS.cpp" />
   </ItemGroup>
   <ItemGroup>
