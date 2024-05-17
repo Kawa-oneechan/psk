@@ -333,7 +333,7 @@ std::vector<VFSEntry> EnumerateVFS(const std::string& path)
 	return r;
 }
 
-void ForgetVFS(std::vector<VFSEntry> forget)
+void ForgetVFS(const std::vector<VFSEntry>& forget)
 {
 	auto start = entries.size();
 
@@ -347,7 +347,7 @@ void ForgetVFS(std::vector<VFSEntry> forget)
 				entries.erase(e);
 				break;
 			}
-			e++;
+			++e;
 		}
 	}
 

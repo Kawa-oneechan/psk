@@ -91,7 +91,6 @@ namespace UI
 class InputsMap
 {
 private:
-	//float lastMouseX, lastMouseY;
 	glm::vec2 lastMousePos;
 
 public:
@@ -104,10 +103,12 @@ public:
 
 	InputsMap()
 	{
-		//lastMouseX = MousePosition.x = width + 20;
-		//lastMouseY = MousePosition.y = height + 20;
+		Up = Down = Left = Right = false;
+		Enter = Escape = false;
+
 		lastMousePos = MousePosition = glm::vec2(width, height) + 20.0f;
 		MouseLeft = MouseRight = MouseMiddle = false;
+		MouseHoldLeft = false;
 	}
 
 	void Process(int key, int action)
@@ -129,8 +130,6 @@ public:
 	
 	void MouseMove(float x, float y)
 	{
-		//lastMouseX = MousePosition.x;
-		//lastMouseY = MousePosition.y;
 		lastMousePos = MousePosition;
 		MousePosition.x = x;
 		MousePosition.y = y;
@@ -138,10 +137,7 @@ public:
 
 	bool MouseMoved()
 	{
-		//auto ret = (lastMouseX != MousePosition.x || lastMouseY != MousePosition.y);
 		auto ret = (lastMousePos != MousePosition);
-		//lastMouseX = MousePosition.x;
-		//lastMouseY = MousePosition.y;
 		lastMousePos = MousePosition;
 		return ret;
 	}
@@ -342,7 +338,7 @@ public:
 		delay = 50;
 	}
 
-	void Text(const std::string& text, int style, const std::string& speaker, glm::vec4 tagBack, glm::vec4 tagInk)
+	void Text(const std::string& text, int style, const std::string& speaker, const glm::vec4& tagBack, const glm::vec4& tagInk)
 	{
 		Style(style);
 		if (style != 3)
@@ -353,7 +349,7 @@ public:
 		}
 		else
 		{
-			name.empty();
+			name.clear();
 		}
 		Text(text);
 	}
@@ -615,6 +611,11 @@ public:
 		highlight = 0;
 		mouseHighlight = 0;
 		scroll = 0;
+		
+		//to be filled in at first draw
+		sliderStart = 0;
+		sliderEnd = 1;
+		itemX = 0;
 
 		stack.push(options);
 		items = &stack.top();
@@ -1118,7 +1119,7 @@ void mousebutton_callback(GLFWwindow* window, int button, int action, int mods)
 	if (button == GLFW_MOUSE_BUTTON_LEFT)
 	{
 		Inputs.MouseHoldLeft = action == GLFW_PRESS;
-		if (!Inputs.MouseLeft && action == GLFW_RELEASE)
+		if (!Inputs.MouseLeft && action == GLFW_RELEASE) //-V1051 no I'm pretty sure I meant this
 			Inputs.MouseLeft = true;
 	}
 	else if (button == GLFW_MOUSE_BUTTON_MIDDLE)

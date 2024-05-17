@@ -87,6 +87,7 @@ InventoryItem::InventoryItem(Item * wrapped, int variant, int pattern)
 	ID = wrapped->ID;
 	RefName = wrapped->RefName;
 	EnName = wrapped->EnName;
+	Temporary = false;
 }
 
 InventoryItem::InventoryItem(Item * wrapped, int variant) : InventoryItem(wrapped, variant, 0)
@@ -107,7 +108,7 @@ InventoryItem::InventoryItem(const std::string& reference)
 	{
 		cleanName = reference.substr(0, slash);
 	}
-	_wrapped = (Item*)Database::Find<::Item>(cleanName.c_str(), &items);
+	_wrapped = (Item*)Database::Find<::Item>(cleanName, &items);
 	if (_wrapped == nullptr)
 	{
 		_wrapped = (Item*)Database::Find<::Item>("psk:toolfallback", &items);
@@ -122,6 +123,7 @@ InventoryItem::InventoryItem(const std::string& reference)
 	ID = _wrapped->ID;
 	RefName = _wrapped->RefName;
 	EnName = _wrapped->EnName;
+	Temporary = false;
 }
 
 const std::string InventoryItem::FullID()

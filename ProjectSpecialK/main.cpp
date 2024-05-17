@@ -216,9 +216,10 @@ void testConditionals()
 	theVars["playerGender"] = textCondVar{ TextCondVarType::Integer, &thePlayer.Gender };
 	theVars["playerName"] = textCondVar{ TextCondVarType::String, &thePlayer.Name };
 	theVars["$mas"] = textCondVar{ TextCondVarType::ConstInt, 0 };
-	theVars["$fem"] = textCondVar{ TextCondVarType::ConstInt, (void*)1 };
-	theVars["$mnb"] = textCondVar{ TextCondVarType::ConstInt, (void*)2 };
-	theVars["$fnb"] = textCondVar{ TextCondVarType::ConstInt, (void*)3 };
+	//Look, PVS Studio. Until such time I get Lua/Sol in here and replace this whole thing, I'm sticking with this.
+	theVars["$fem"] = textCondVar{ TextCondVarType::ConstInt, (void*)1 }; //-V566
+	theVars["$mnb"] = textCondVar{ TextCondVarType::ConstInt, (void*)2 }; //-V566
+	theVars["$fnb"] = textCondVar{ TextCondVarType::ConstInt, (void*)3 }; //-V566
 	auto result = TextGet("str:kun");
 	fmt::print("Conditional test: with playerGender {}, result is \"{}\".\n", thePlayer.Gender, result);
 	result = TextGet("condtest2");
@@ -260,7 +261,7 @@ void testVillagerSerializing()
 void testVillagerDeserializing()
 {
 	auto json = JSON::Parse("{\"catchphrase\":\"lover\",\"givenItems\":[\"ag:shinycatsuit/black\"],\"id\":\"ac:cat18\"}")->AsObject();
-	auto id = json["id"]->AsString();
+	auto& id = json["id"]->AsString();
 	auto* villager = (Villager*)Database::Find<Villager>(id, &villagers);
 	villager->Deserialize((JSONObject&)json);
 	fmt::print("Villager deserialization test: {}'s catchphrase is \"{}\".\n", villager->Name(), villager->Catchphrase());

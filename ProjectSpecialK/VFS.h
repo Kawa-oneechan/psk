@@ -33,4 +33,4 @@ extern JSONValue* ReadJSON(const VFSEntry& entry);
 extern JSONValue* ReadJSON(const std::string& path);
 //Returns a list of VFSEntries matching a particular file pattern.
 extern std::vector<VFSEntry> EnumerateVFS(const std::string& path);
-extern void ForgetVFS(std::vector<VFSEntry> entries);
+extern void ForgetVFS(const std::vector<VFSEntry>& entries);
