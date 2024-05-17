@@ -157,6 +157,7 @@ class Tickable
 public:
 	virtual void Tick(double dt) {};
 	virtual void Draw(double dt) {};
+	virtual bool Character(unsigned int codepoint) { return false; }
 };
 
 class Cursor
@@ -171,6 +172,7 @@ private:
 
 public:
 	bool Left, Right, Middle;
+	bool HoldLeft;
 	glm::vec2 Position;
 
 	Cursor()
@@ -542,6 +544,8 @@ private:
 	std::stack<std::vector<DoomMenuItem*>> stack;
 
 	std::vector<float> itemY;
+	float itemX;
+	float sliderStart, sliderEnd;
 
 	void rebuild()
 	{
@@ -612,8 +616,9 @@ public:
 
 		if (cursor->Moved())
 		{
+			const int col = (int)(400 * scale);
 			mouseHighlight = -1;
-			if (cursor->Position.x >= 80 && cursor->Position.x <= 80 + 600)
+			if (cursor->Position.x >= itemX && cursor->Position.x <= itemX + (col * 2.5f))
 			{
 				for (int i = 0; i < itemY.size() - 1; i++)
 				{
@@ -625,6 +630,33 @@ public:
 				}
 			}
 		}
+		cursor->Select(0);
+		if (mouseHighlight != -1 && items->at(highlight)->type == DoomMenuTypes::Slider)
+		{
+			if (cursor->Position.x >= sliderStart && cursor->Position.x <= sliderEnd)
+			{
+				cursor->Select(3);
+				if (cursor->HoldLeft)
+				{
+					cursor->Select(2);
+					auto item = items->at(highlight);
+					auto barLength = sliderEnd - sliderStart;
+					auto range = item->maxVal - item->minVal;
+					auto mpos = cursor->Position.x - sliderStart;
+					auto val = floor(mpos / item->step) * item->step;
+					item->selection = clamp((int)val, item->minVal, item->maxVal);
+					if (item->change != nullptr)
+						item->change(item);
+					/*
+					auto ccur = clamp(item->selection, item->minVal, item->maxVal) - item->minVal;
+					auto thumbPos = partSize + ((ccur * (barLength - (partSize * 2))) / range);
+					*/
+					//return;
+				}
+			}
+		}
+		if (mouseHighlight != highlight && cursor->Left)
+			cursor->Left = false;
 
 		while (items->at(highlight)->type == DoomMenuTypes::Text)
 			highlight++;
@@ -635,6 +667,7 @@ public:
 			if (stack.size() > 1)
 			{
 				highlight = 0;
+				mouseHighlight = -1;
 				stack.pop();
 				items = &stack.top();
 				return;
@@ -694,6 +727,7 @@ public:
 				stack.push(*item->page);
 				items = item->page;
 				highlight = 0;
+				mouseHighlight = -1;
 			}
 		}
 		else if (item->type == DoomMenuTypes::Back)
@@ -777,6 +811,8 @@ public:
 	{
 		const int col = (int)(400 * scale);
 		auto pos = glm::vec2((width / 2) - ((col * 3) / 2), 80);
+
+		itemX = pos.x;
 		
 		const auto black = glm::vec4(0, 0, 0, 0.5);
 
@@ -785,6 +821,8 @@ public:
 
 		const auto partSize = controlsAtlas[4].w * 0.75f *  scale;
 		const auto thumbSize = glm::vec2(controlsAtlas[3].z, controlsAtlas[3].w) * 0.50f * scale;
+
+		sprender->DrawText(0, fmt::format("DoomMenu: {}/{} {} {},{} - {},{}", highlight, mouseHighlight, cursor->HoldLeft, cursor->Position.x, cursor->Position.y, sliderStart, sliderEnd), glm::vec2(0, 16));
 
 		itemY.clear();
 
@@ -809,6 +847,15 @@ public:
 			{
 				sprender->DrawText(1, item->options[item->selection], pos + glm::vec2(col + 2, 2), black, size);
 				sprender->DrawText(1, item->options[item->selection], pos + glm::vec2(col, 0), color, size);
+			}
+			else if (item->type == DoomMenuTypes::Slider)
+			{
+				if (item->format != nullptr)
+				{
+					auto fmt = item->format(item);
+					sprender->DrawText(1, fmt, pos + glm::vec2(col + col+ 56, 12), black, size * 0.75f);
+					sprender->DrawText(1, fmt, pos + glm::vec2(col + col + 54, 10), color, size * 0.75f);
+				}
 			}
 
 			itemY.push_back(pos.y);
@@ -844,6 +891,9 @@ public:
 				sprender->DrawSprite(*controls, pos + glm::vec2(col + barLength + (partSize * 1), 10), glm::vec2(partSize), controlsAtlas[1], 0, trackColor);
 				sprender->DrawSprite(*controls, pos + glm::vec2(col + partSize, 10), glm::vec2(barLength, partSize), controlsAtlas[2], 0, trackColor);
 
+				sliderStart = pos.x + col + partSize;
+				sliderEnd = sliderStart + barLength;
+
 				//thanks GZDoom
 				auto range = item->maxVal - item->minVal;
 				auto ccur = clamp(item->selection, item->minVal, item->maxVal) - item->minVal;
@@ -851,15 +901,57 @@ public:
 
 				auto thumb = glm::vec2(col + (int)thumbPos, 10);
 				sprender->DrawSprite(*controls, pos + thumb, thumbSize, controlsAtlas[3], 0, color);
-
-				if (item->format != nullptr)
-				{
-					auto fmt = item->format(item);
-					sprender->DrawText(1, fmt, pos + glm::vec2(col + barLength + 56, 12), black, size * 0.75f);
-					sprender->DrawText(1, fmt, pos + glm::vec2(col + barLength + 54, 10), color, size * 0.75f);
-				}
 			}
 		}
+	}
+};
+
+class TextField : public Tickable
+{
+public:
+	std::string value;
+	size_t caret;
+
+	TextField()
+	{
+		value = "test";
+		caret = value.length();
+	}
+
+	void Draw(double dt)
+	{
+		sprender->DrawText(0, value, glm::vec2(0, 32), glm::vec4(1, 1, 0, 1), 200.0f);
+		//Measure the substring of value up to caret, draw it there.
+	}
+
+	bool Character(unsigned int codepoint)
+	{
+		if (codepoint == '\b')
+		{
+			if (caret > 0)
+			{
+				caret--;
+				value.erase(value.cbegin() + caret);
+			}
+			return true;
+		}
+		else if (codepoint == 0xFFF0)
+		{
+			if (caret > 0)
+			{
+				caret--;
+			}
+			return true;
+		}
+		else if (codepoint == 0xFFF1)
+		{
+			if (caret < value.length())
+				caret++;
+			return true;
+		}
+		value.insert(value.cbegin() + caret, codepoint);
+		caret++;
+		return true;
 	}
 };
 
@@ -873,9 +965,27 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 	glViewport(0, 0, width, height);
 }
 
+void char_callback(GLFWwindow* window, unsigned int codepoint)
+{
+	for (unsigned int i = (unsigned int)tickables.size(); i-- > 0; )
+	{
+		auto t = tickables[i];
+		if (t->Character(codepoint))
+			break;
+	}
+}
+
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
 	Inputs.Process(key, action);
+
+	//Passthroughs
+	if (key == GLFW_KEY_BACKSPACE && action == GLFW_PRESS)
+		char_callback(window, '\b');
+	else if (key == GLFW_KEY_LEFT && action == GLFW_PRESS)
+		char_callback(window, 0xFFF0);
+	else if (key == GLFW_KEY_RIGHT && action == GLFW_PRESS)
+		char_callback(window, 0xFFF1);
 
 	//if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 	//	glfwSetWindowShouldClose(window, 1);
@@ -922,6 +1032,7 @@ void mousebutton_callback(GLFWwindow* window, int button, int action, int mods)
 {
 	if (button == GLFW_MOUSE_BUTTON_LEFT)
 	{
+		cursor->HoldLeft = action == GLFW_PRESS;
 		if (!cursor->Left && action == GLFW_RELEASE)
 			cursor->Left = true;
 	}
@@ -968,6 +1079,7 @@ int main()
 	glfwMakeContextCurrent(window);
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 	glfwSetKeyCallback(window, key_callback);
+	glfwSetCharCallback(window, char_callback);
 	glfwSetCursorPosCallback(window, mouse_callback);
 	glfwSetMouseButtonCallback(window, mousebutton_callback);
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
@@ -1086,7 +1198,8 @@ int main()
 	tickables.push_back(new Background());
 	dlgBox = new DialogueBox();
 	tickables.push_back(dlgBox);
-	tickables.push_back(new DoomMenu());
+	//tickables.push_back(new DoomMenu());
+	tickables.push_back(new TextField());
 
 	int oldTime = 0;
 
