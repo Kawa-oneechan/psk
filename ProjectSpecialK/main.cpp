@@ -232,7 +232,6 @@ void testConditionals()
 	fmt::print("Conditional test: with playerName {}, result is \"{}\".\n", thePlayer.Name, result);
 	fmt::print("Conditional test: changing name...\n");
 	thePlayer.Name = "Lettie";
-	std::string boop = Sol.script("return player.name");
 	result = TextGet("condtest2");
 	fmt::print("Conditional test: with playerName {}, result is \"{}\".\n", thePlayer.Name, result);
 }
@@ -432,6 +431,8 @@ private:
 
 public:
 	DialogueBoxState state;
+	sol::coroutine* caller = nullptr;
+
 	DialogueBox()
 	{
 		name.clear();
@@ -556,7 +557,10 @@ public:
 				_getch();
 				fmt::print(u8"\x1B[5;38H\x1B[0m" u8"──");
 				if (cursorPos >= line.length())
+				{
 					state = DialogueBoxState::Done;
+					mutex = false;
+				}
 				else
 					state = DialogueBoxState::Opening;
 				cursorLine = 0;
@@ -677,7 +681,7 @@ void testDialogueAndMultiTasking()
 
 	auto villager = (Villager*)Database::Find<Villager>("ac:sza", &villagers);
 	DialogueBox dlg;
-	dlg.Start(line, villager);
+	//dlg.Start(line, villager);
 
 	GiftBalloonSpawner gbs;
 	gbs.Start();
@@ -686,6 +690,7 @@ void testDialogueAndMultiTasking()
 
 	int oldTime = 0;
 
+	/*
 	while (dlg.state != DialogueBoxState::Done)
 	{
 		int newTime = std::clock();
@@ -694,6 +699,54 @@ void testDialogueAndMultiTasking()
 		double dt = deltaTime;
 
 		delay(1);
+		dlg.Tick(dt);
+		gbs.Tick(dt);
+		dtp.Tick(dt);
+	}
+	*/
+
+	Sol.open_libraries(sol::lib::coroutine);
+
+	Sol["Message"] = sol::yielding([&dlg](sol::variadic_args va) 
+	{
+		int style = 0;
+		std::string line;
+		switch (va.size())
+		{
+		case 0:
+			//Error, lol.
+			line = "[[Forgot to specify a line]]";
+			break;
+		case 1:
+			line = va[0].as<std::string>();
+			break;
+		case 2:
+			line = va[0].as<std::string>();
+			if (va[1].is<int>())
+				style = va[1].as<int>();
+			//else va[1] is the speaker and va[2] is a style
+			break;
+		}
+
+		//apply style here when integrating.
+		dlg.Start(line, nullptr);
+		dlg.mutex = true;
+	});
+
+	Sol.script(ReadVFS("test.lua", nullptr));
+	sol::coroutine start = Sol["start"];
+
+	while (start.runnable())
+	{
+		int newTime = std::clock();
+		int deltaTime = newTime - oldTime;
+		oldTime = newTime;
+		double dt = deltaTime;
+		delay(1);
+
+		if (!dlg.mutex)
+			start();
+
 		dlg.Tick(dt);
 		gbs.Tick(dt);
 		dtp.Tick(dt);
@@ -745,10 +798,12 @@ int main(int argc, char** argv)
 	testVillagerDeserializing();
 	testPickingStarters();
 
-	fmt::print("\n\n\n\n\nPress any key.\n");
-	_getch();
+	//fmt::print("\n\n\n\n\nPress any key.\n");
+	//_getch();
 
 	testDialogueAndMultiTasking();
+	fmt::print("\n\n\n\n\nPress any key.\n");
+	_getch();
 
 	return 0;
 }
