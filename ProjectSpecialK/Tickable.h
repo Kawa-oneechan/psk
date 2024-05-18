@@ -3,6 +3,6 @@
 class Tickable
 {
 public:
-	bool mutex;
+	bool* mutex = nullptr;
 	void Tick(double dt) {};
 };

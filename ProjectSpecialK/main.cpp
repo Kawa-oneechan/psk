@@ -559,7 +559,11 @@ public:
 				if (cursorPos >= line.length())
 				{
 					state = DialogueBoxState::Done;
-					mutex = false;
+					if (mutex != nullptr)
+					{
+						*mutex = false;
+						mutex = nullptr;
+					}
 				}
 				else
 					state = DialogueBoxState::Opening;
@@ -689,6 +693,7 @@ void testDialogueAndMultiTasking()
 	DateTimePanel dtp;
 
 	int oldTime = 0;
+	bool mutex = false;
 
 	/*
 	while (dlg.state != DialogueBoxState::Done)
@@ -707,7 +712,7 @@ void testDialogueAndMultiTasking()
 
 	Sol.open_libraries(sol::lib::coroutine);
 
-	Sol["Message"] = sol::yielding([&dlg](sol::variadic_args va) 
+	Sol["Message"] = sol::yielding([&dlg, &mutex](sol::variadic_args va) 
 	{
 		int style = 0;
 		std::string line;
@@ -729,8 +734,9 @@ void testDialogueAndMultiTasking()
 		}
 
 		//apply style here when integrating.
+		dlg.mutex = &mutex;
 		dlg.Start(line, nullptr);
-		dlg.mutex = true;
+		mutex = true;
 	});
 
 	Sol.script(ReadVFS("test.lua", nullptr));
@@ -744,7 +750,7 @@ void testDialogueAndMultiTasking()
 		double dt = deltaTime;
 		delay(1);
 
-		if (!dlg.mutex)
+		if (!mutex)
 			start();
 
 		dlg.Tick(dt);
