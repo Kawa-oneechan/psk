@@ -7,6 +7,8 @@
 #include "support/miniz.h"
 #include "SpecialK.h"
 
+sol::state Sol;
+
 static void prepForUTF8andSuch()
 {
 #ifdef _WIN32
@@ -213,19 +215,24 @@ std::string villagerID = "ac:sza"; //for testing only
 void testConditionals()
 {
 	TextAdd(*ReadJSON("tests.json"));
-	theVars["playerGender"] = textCondVar{ TextCondVarType::Integer, &thePlayer.Gender };
-	theVars["playerName"] = textCondVar{ TextCondVarType::String, &thePlayer.Name };
-	theVars["$mas"] = textCondVar{ TextCondVarType::ConstInt, 0 };
-	//Look, PVS Studio. Until such time I get Lua/Sol in here and replace this whole thing, I'm sticking with this.
-	theVars["$fem"] = textCondVar{ TextCondVarType::ConstInt, (void*)1 }; //-V566
-	theVars["$mnb"] = textCondVar{ TextCondVarType::ConstInt, (void*)2 }; //-V566
-	theVars["$fnb"] = textCondVar{ TextCondVarType::ConstInt, (void*)3 }; //-V566
+
+	Sol.new_usertype<Player>("Player",
+		"name", &Player::Name,
+		"gender", &Player::Gender
+		);
+	Sol["player"] = &thePlayer;
+	Sol["_mas"] = 0;
+	Sol["_fem"] = 1;
+	Sol["_mnb"] = 2;
+	Sol["_fnb"] = 3;
+
 	auto result = TextGet("str:kun");
 	fmt::print("Conditional test: with playerGender {}, result is \"{}\".\n", thePlayer.Gender, result);
 	result = TextGet("condtest2");
 	fmt::print("Conditional test: with playerName {}, result is \"{}\".\n", thePlayer.Name, result);
 	fmt::print("Conditional test: changing name...\n");
 	thePlayer.Name = "Lettie";
+	std::string boop = Sol.script("return player.name");
 	result = TextGet("condtest2");
 	fmt::print("Conditional test: with playerName {}, result is \"{}\".\n", thePlayer.Name, result);
 }

@@ -2,6 +2,7 @@
 
 #include "support/JSON/JSON.h"
 #include "support/format.h"
+#include "support/sol.hpp"
 
 #include "VFS.h"
 #include "Item.h"
@@ -68,3 +69,5 @@ extern "C"
 #define GREEN u8""
 #define CYAN u8""
 #endif
+
+extern sol::state Sol;

@@ -33,12 +33,13 @@ static Language LangStrToEnum(const std::string& lang)
 	return Unknown;
 }
 
-std::string TextCondition(std::string condition, std::string ifTrue, std::string ifElse, Language lang);
-
 std::string TextEntry::get(Language lang)
 {
 	if (condition.size())
-		return TextCondition(condition, ifTrue, ifElse, lang);
+	{
+		bool result = Sol.script("return (" + condition + ")");
+		return TextGet(result ? ifTrue : ifElse);
+	}
 
 	auto t = text.find(lang);
 	if (t != text.end())
@@ -86,6 +87,14 @@ TextEntry& TextAdd(std::string& key, JSONObject& map)
 			break;
 #endif
 	}
+
+	if (entry->condition.empty())
+		entry->rep = entry->get();
+	else
+		entry->rep = entry->condition;
+	if (entry->rep.length() > 16)
+		entry->rep = entry->rep.substr(0, 16) + "...";
+	entry->rep.shrink_to_fit();
 
 	textEntries[key] = *entry;
 	return *entry;
@@ -212,83 +221,6 @@ static std::tuple<int, std::string, int> parseValue(const std::string& token)
 
 	return{ val, str, type };
 	//return std::make_tuple(val, str, type);
-}
-
-static std::string TextCondition(std::string condition, std::string ifTrue, std::string ifElse, Language lang)
-{
-	auto tokens = Split(condition, ' ');
-	auto verdict = false;
-	auto logicalAnd = false;
-
-	for (int i = 0; i < tokens.size(); i++)
-	{
-		auto& theVar = tokens[i++];
-		auto& theTest = tokens[i++];
-		auto& theVal = tokens[i];
-
-		auto lValue = parseValue(theVar);
-		auto rValue = parseValue(theVal);
-
-		auto verdictSoFar = false;
-		if (std::get<2>(lValue) != std::get<2>(rValue))
-		{
-			fmt::print("TextCond: vals aren't same type ({} vs {})\n", std::get<2>(lValue), std::get<2>(rValue));
-			break;
-		}
-		if (std::get<2>(lValue) == TextCondVarType::Integer)
-		{
-			auto l = std::get<0>(lValue);
-			auto r = std::get<0>(rValue);
-			if (theTest == "=") verdictSoFar = l == r;
-			else if (theTest == "!=") verdictSoFar = l != r;
-			else if (theTest == "<") verdictSoFar = l < r;
-			else if (theTest == ">") verdictSoFar = l > r;
-			else if (theTest == "<=") verdictSoFar = l <= r;
-			else if (theTest == "=>") verdictSoFar = l >= r;
-		}
-		else if (std::get<2>(lValue) == TextCondVarType::String)
-		{
-			auto l = std::get<1>(lValue);
-			auto r = std::get<1>(rValue);
-			if (theTest == "=") verdictSoFar = l == r;
-			else if (theTest == "!=") verdictSoFar = l != r;
-			else if (theTest == "startsWith") verdictSoFar = (l.length() >= r.length() && l.substr(0, r.length()) == r);
-		}
-
-		if (i + 1 < tokens.size())
-		{
-			if (tokens[i + 1] == "|")
-			{
-				if (verdictSoFar)
-				{
-					verdict = true;
-					break;
-				}
-				else
-				{
-					i++;
-					continue;
-				}
-			}
-
-			if (tokens[i + 1] == "&")
-			{
-				if (!verdictSoFar)
-					return TextGet(ifElse, lang);
-				i++;
-				verdict = verdictSoFar; //-V547
-				logicalAnd = true;
-				continue;
-			}
-		}
-		else
-		{
-			if (logicalAnd && (!verdict))
-				verdictSoFar = false;
-			verdict = verdictSoFar;
-		}
-	}
-	return TextGet(verdict ? ifTrue : ifElse, lang);
 }
 
 void StringToLower(std::string& data)

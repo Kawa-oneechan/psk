@@ -38,6 +38,7 @@ extern std::map<std::string, textCondVar> theVars;
 
 typedef struct
 {
+	std::string rep;
 	std::map<Language, std::string> text;
 	std::string condition;
 	std::string ifTrue, ifElse;

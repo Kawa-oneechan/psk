@@ -10,7 +10,7 @@
 	in Japanese, or nothing in all the other languages.
 */
 	"str:kun": {
-		"condition": "playerGender = $mas | playerGender = $mnb",
+		"condition": "player.gender == _mas or player.gender == _mnb",
 		"true": "str:kun_A",
 		"false": "str:kun_B"
 	},
@@ -25,11 +25,9 @@
 
 /*
 	Same basic deal, but not as... *generally* useful I guess.
-	Still, tests if string-string comparisons work.
 */
 	"condtest2": {
-//		"condition": "playerName = \"Kawa\"", //just string to string
-		"condition": "playerName = \"Kawa\" & playerGender = 0 | playerGender = 2", //string to string AND int to two different ints wow
+		"condition": "player.name == \"Kawa\" and (player.gender == 0 or player.gender == 2)",
 		"true": "condtest2_A",
 		"false": "condtest2_B"
 	},

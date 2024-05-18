@@ -23,4 +23,7 @@
 			<Item Name="Hobby">hobby</Item>
 		</Expand>
 	</Type>
+	<Type Name="TextEntry">
+		<DisplayString>{rep}</DisplayString>
+	</Type>
 </AutoVisualizer>
