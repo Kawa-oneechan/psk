@@ -52,6 +52,8 @@ void SpriteRenderer::LoadFontBank(int font, int bank)
 			printf("Warning: too many font definitions, only doing %d.\n", MAXFONTS);
 		}
 		cdata = (stbtt_bakedchar*)calloc(numFonts * 0x10000, sizeof(stbtt_bakedchar));
+		if (cdata == nullptr)
+			throw std::runtime_error("Could not allocate space for font atlases.");
 		fontTextures = (Texture**)calloc(numFonts * 256, sizeof(Texture*));
 		if (fontTextures == nullptr)
 			throw std::runtime_error("Could not allocate space for font textures.");

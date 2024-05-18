@@ -138,6 +138,7 @@ void SpriteRenderer::DrawSprite(Shader& shader, Texture &texture, glm::vec2 posi
 		Flush();
 		currentShader = &shader;
 		currentTexture = &texture;
+		instanceCursor = 0; //CA doesn't know Flush() already does this. Whatever.
 	}
 
 	//shader.SetMat4("model", model);
