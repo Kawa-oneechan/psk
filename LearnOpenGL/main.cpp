@@ -552,6 +552,7 @@ private:
 	std::vector<float> itemY;
 	float itemX;
 	float sliderStart, sliderEnd;
+	int sliderHolding;
 
 	void rebuild()
 	{
@@ -615,6 +616,7 @@ public:
 		//to be filled in at first draw
 		sliderStart = 0;
 		sliderEnd = 1;
+		sliderHolding = -1;
 		itemX = 0;
 
 		stack.push(options);
@@ -646,23 +648,30 @@ public:
 		{
 			if (Inputs.MousePosition.x >= sliderStart && Inputs.MousePosition.x <= sliderEnd)
 			{
-				cursor->Select(3);
-				if (Inputs.MouseHoldLeft)
+				if (sliderHolding == -1)
+					sliderHolding = highlight;
+				if (highlight == sliderHolding)
 				{
-					cursor->Select(2);
-					auto item = items->at(highlight);
-					auto barLength = sliderEnd - sliderStart;
-					auto range = item->maxVal - item->minVal;
-					auto mpos = Inputs.MousePosition.x - sliderStart;
-					auto val = floor(mpos / item->step) * item->step;
-					item->selection = clamp((int)val, item->minVal, item->maxVal);
-					if (item->change != nullptr)
-						item->change(item);
-					/*
-					auto ccur = clamp(item->selection, item->minVal, item->maxVal) - item->minVal;
-					auto thumbPos = partSize + ((ccur * (barLength - (partSize * 2))) / range);
-					*/
-					//return;
+					cursor->Select(3);
+					if (Inputs.MouseHoldLeft)
+					{
+						cursor->Select(2);
+						auto item = items->at(highlight);
+
+						//thanks GZDoom
+						auto x = clamp(Inputs.MousePosition.x, sliderStart, sliderEnd);
+						auto  v = item->minVal + ((x - sliderStart) * (item->maxVal - item->minVal)) / (sliderEnd - sliderStart);
+						item->selection = (int)(round(v / item->step) * item->step);
+						if (item->change != nullptr)
+							item->change(item);
+						/*
+						auto ccur = clamp(item->selection, item->minVal, item->maxVal) - item->minVal;
+						auto thumbPos = partSize + ((ccur * (barLength - (partSize * 2))) / range);
+						*/
+						//return;
+					}
+					else
+						sliderHolding = -1;
 				}
 			}
 		}
