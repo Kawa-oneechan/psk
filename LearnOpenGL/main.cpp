@@ -11,6 +11,7 @@
 #include "support/glm/gtc/type_ptr.hpp"
 #include "support/stb_image.h"
 #include "support/format.h"
+#include "support/tweeny-3.2.0.h"
 
 #include "Shader.h"
 #include "Texture.h"
@@ -289,6 +290,8 @@ private:
 	std::vector<TextureAtlas> atlases;
 	std::vector<Shader*> shaders;
 
+	std::vector<tweeny::tween<float>> tweens;
+
 public:
 	glm::vec2 Position;
 	float Alpha;
@@ -341,6 +344,27 @@ public:
 			panel->Alpha = pnl["alpha"] != nullptr ? (float)pnl["alpha"]->AsNumber() : 1.0f;
 			panels.push_back(panel);
 		}
+	}
+
+	void Tick(double dt)
+	{
+		if (tweens.size() > 0)
+		{
+			for (auto i = 0; i < tweens.size(); i++)
+			{
+				auto& tween = tweens[i];
+				if (tween.progress() < 1.0f)
+					tween.step(1); //(int)(dt * 1) + 1);
+				else
+					tweens.erase(tweens.begin() + i);
+			}
+		}
+	}
+
+	void Tween(float* what, tweeny::tween<float> tween)
+	{
+		tween.onStep([what](float v) { *what = v; return false; });
+		tweens.push_back(tween);
 	}
 
 	void Draw(double dt)
@@ -1397,7 +1421,9 @@ int main()
 	dlgBox = new DialogueBox();
 	tickables.push_back(dlgBox);
 	tickables.push_back(new DoomMenu());
-	tickables.push_back(new PanelLayout(UI::json["hotbar"]));
+	auto hotbar = new PanelLayout(UI::json["hotbar"]);
+	tickables.push_back(hotbar);
+	hotbar->Tween(&hotbar->Position.y, tweeny::from(height).to(0).during(100));
 	//tickables.push_back(new TextField());
 
 	int oldTime = 0;
