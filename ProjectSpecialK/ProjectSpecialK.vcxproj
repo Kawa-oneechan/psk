@@ -133,6 +133,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Audio.cpp" />
+    <ClCompile Include="crc32.c" />
     <ClCompile Include="Database.cpp" />
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="JsonPatch.cpp" />

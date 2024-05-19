@@ -189,7 +189,7 @@ namespace Database
 		{
 			table.push_back(item.ID);
 			table.push_back(item.EnName);
-			table.push_back(fmt::format("{:8X}", 0xC01DF00D /*item.Hash*/));
+			table.push_back(fmt::format("{:08X}", item.Hash));
 		}
 		Table(table, 3);
 		fmt::print("ItemsDatabase: ended up with {} entries.\n", items.size());
@@ -199,14 +199,13 @@ namespace Database
 	{
 		fmt::print("SpeciesDatabase: loading...\n");
 		loadWorker<Species>(species, "species/*.json", "SpeciesDatabase");
-		auto table = std::vector<std::string>{ "ID", "Name", "Hash" };
+		auto table = std::vector<std::string>{ "ID", "Name" };
 		for (const auto& spec: species)
 		{
 			table.push_back(spec.ID);
 			table.push_back(spec.EnName[0]);
-			table.push_back(fmt::format("{:8X}", 0xC01DF00D /*spec.Hash*/));
 		}
-		Table(table, 3);
+		Table(table, 2);
 		fmt::print("SpeciesDatabase: ended up with {} entries.\n", species.size());
 	}
 
@@ -227,7 +226,7 @@ namespace Database
 		{
 			table.push_back(villager.ID);
 			table.push_back(villager.EnName);
-			table.push_back(fmt::format("{:8X}", 0xC01DF00D /*villager.Hash*/));
+			table.push_back(fmt::format("{:08X}", villager.Hash));
 		}
 		Table(table, 3);
 		fmt::print("VillagerDatabase: ended up with {} entries.\n", villagers.size());

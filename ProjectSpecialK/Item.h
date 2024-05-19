@@ -6,6 +6,7 @@ public:
 	std::string ID;
 	std::string RefName;
 	std::string EnName;
+	unsigned int Hash;
 	int Type;
 	NameableThing(JSONObject& value);
 	NameableThing() = default;

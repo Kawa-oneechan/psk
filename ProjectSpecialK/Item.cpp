@@ -1,10 +1,13 @@
 #include "SpecialK.h"
 
+extern "C" uint32_t crc_32(const unsigned char *input_str, size_t num_bytes);
+
 extern int articlePlease;
 
 NameableThing::NameableThing(JSONObject& value)
 {
 	ID = value["id"]->AsString();
+	Hash = crc_32((unsigned char*)ID.c_str(), ID.length());
 
 	Type = it_Item;
 
