@@ -77,8 +77,8 @@
     <LibraryPath>C:\libs\glfw-3.3.9.bin.WIN64\lib-vc2015;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\libs\lua;C:\libs\glfw-3.3.9.bin.WIN64\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\libs\lua;C:\libs\glfw-3.3.9.bin.WIN64\lib-vc2015;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\libs\fmodex\api\inc;C:\libs\lua;C:\libs\glfw-3.3.9.bin.WIN64\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\libs\fmodex\api\lib;C:\libs\lua;C:\libs\glfw-3.3.9.bin.WIN64\lib-vc2015;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -98,7 +98,7 @@
       <PreprocessorDefinitions>DEBUG;_CONSOLE;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>lua536_d.lib;glfw3.lib;opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>fmodex64_vc.lib;lua536_d.lib;glfw3.lib;opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Console</SubSystem>
     </Link>
   </ItemDefinitionGroup>
@@ -132,6 +132,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Audio.cpp" />
     <ClCompile Include="Database.cpp" />
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="JsonPatch.cpp" />
@@ -156,6 +157,7 @@
     </Natvis>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Audio.h" />
     <ClInclude Include="Database.h" />
     <ClInclude Include="Item.h" />
     <ClInclude Include="Player.h" />

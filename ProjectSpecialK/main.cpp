@@ -6,6 +6,7 @@
 
 #include "support/miniz.h"
 #include "SpecialK.h"
+#include "Audio.h"
 
 sol::state Sol;
 
@@ -611,6 +612,8 @@ public:
 
 #include <ctime>
 
+Audio* bgm = nullptr;
+
 class DateTimePanel : Tickable
 {
 private:
@@ -651,11 +654,17 @@ public:
 			fmt::print("\x1B[12;40H NEXT DAY            ");
 			//trigger reset
 		}
-		if (gm.tm_hour != lastHour && gm.tm_min == 0)
+		if (lastHour == -1 || (gm.tm_hour != lastHour && gm.tm_min == 0))
 		{
 			lastHour = gm.tm_hour;
-			fmt::print("\x1B[12;40H Ding dong~! {} now", lastHour);
+			//fmt::print("\x1B[12;40H Ding dong~! {} now", lastHour);
 			//trigger music
+
+			//TODO: fade out first, probably have something else handle that.
+			if (bgm != nullptr)
+				delete bgm;
+			bgm = new Audio(fmt::format("music/bgm/clock/{:02}sunny.ogg", lastHour));
+			bgm->Play();
 		}
 	}
 
@@ -784,9 +793,13 @@ int main(int argc, char** argv)
 	std::srand((unsigned int)std::time(nullptr));
 
 	InitVFS();
+	Audio::Initialize();
 
 	testIDMangling();
 	testCurrencies();
+
+	bgm = new Audio("music/bgm/interiors/tailor.ogg");
+	bgm->Play();
 
 	thePlayer.Name = "Kawa";
 	thePlayer.Gender = Gender::BEnby;
@@ -804,8 +817,8 @@ int main(int argc, char** argv)
 	testVillagerDeserializing();
 	testPickingStarters();
 
-	//fmt::print("\n\n\n\n\nPress any key.\n");
-	//_getch();
+	fmt::print("\n\n\n\n\nPress any key.\n");
+	_getch();
 
 	testDialogueAndMultiTasking();
 	fmt::print("\n\n\n\n\nPress any key.\n");
