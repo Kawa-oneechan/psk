@@ -11,6 +11,8 @@ public:
 	unsigned int ID;
 	int width, height, channels;
 
+	Texture() = default;
+
 	//Creates a Texture from a given VFS path.
 	Texture(const char* texturePath, bool mipmaps = true, int repeat = GL_REPEAT, int filter = GL_LINEAR)
 	{

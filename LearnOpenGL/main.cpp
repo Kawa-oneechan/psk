@@ -205,6 +205,7 @@ private:
 	glm::vec2 hotspot;
 	glm::vec4 frame;
 	glm::vec2 size;
+	float scale;
 
 public:
 	Cursor()
@@ -216,6 +217,7 @@ public:
 		for (auto& hs : hsj["hotspots"]->AsArray())
 			hotspots.push_back(GetJSONVec2(hs));
 
+		SetScale(100);
 		Select(0);
 		size = glm::vec2(frame.w);
 	}
@@ -226,9 +228,15 @@ public:
 		hotspot = hotspots[style];
 	}
 
+	void SetScale(int newScale)
+	{
+		scale = newScale / 100.0f;
+		size = glm::vec2(frame.w * scale);
+	}
+
 	void Draw()
 	{
-		sprender->DrawSprite(*hand, Inputs.MousePosition - hotspot, size, frame);
+		sprender->DrawSprite(*hand, Inputs.MousePosition - (hotspot * scale), size, frame);
 	}
 };
 Cursor* cursor = nullptr;
@@ -455,12 +463,12 @@ public:
 		gradient[1] = new Texture("gradient_wide.png");
 		nametag = new Texture("ui/dialogue/nametag.png");
 		GetAtlas(nametagAtlas, "ui/dialogue/nametag.json");
+		nametagWidth = 0;
 		wobble = new Shader("shaders/wobble.fs");
 
 		displayCursor = 0;
 		time = 0;
 		delay = 0;
-
 
 		Text(u8"Truth is... <color:1>the game</color> was rigged\nfrom the start.", 0, "Isabelle", glm::vec4(1, 0.98f, 0.56f, 1), glm::vec4(0.96f, 0.67f, 0.05f, 1));
 	}
@@ -716,6 +724,7 @@ private:
 		options.push_back(new DoomMenuItem("Speech", 1, { "Silence", "Bebebese", "Animalese" }));
 		options.push_back(new DoomMenuItem("Ping rate", 2, 60, 3, 1, minutes));
 		options.push_back(new DoomMenuItem("Balloon chance", 10, 60, 15, 5, percent));
+		options.push_back(new DoomMenuItem("Cursor scale", 50, 150, 100, 10, percent, [&](DoomMenuItem*i) { cursor->SetScale(i->selection); }));
 		options.push_back(new DoomMenuItem("Volume...", &volume));
 
 		content.push_back(new DoomMenuItem("Content Manager", 2, 120));
