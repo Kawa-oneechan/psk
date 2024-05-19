@@ -412,6 +412,7 @@ private:
 	glm::vec4 bubbleColor;
 	glm::vec4 textColor;
 	glm::vec4 nametagColor[2];
+	float nametagWidth;
 	std::string name;
 	int font;
 	int bubbleNum;
@@ -471,6 +472,7 @@ public:
 		if (style != 3)
 		{
 			name = speaker;
+			nametagWidth = sprender->MeasureText(1, name, 120).x - 32;
 			nametagColor[0] = tagBack;
 			nametagColor[1] = tagInk;
 		}
@@ -538,18 +540,18 @@ public:
 
 		if (!name.empty())
 		{
-			const auto tagAngle = -6.0f;
+			const auto tagAngle = -2.0f;
 			const auto tagPos = glm::vec2(dlgLeft + (150 * scale), dlgTop + (sinf(time * 2) * 10) * scale);
 			const auto tagSize = glm::vec2(nametagAtlas[0].z, nametagAtlas[0].w) * scale;
-			const auto tagMidWidth = 128; //pre-measure this to fit in the Text() calls.
+			//const auto tagMidWidth = 128; //pre-measure this to fit in the Text() calls.
 
 			const auto tagPosL = tagPos;
 			const auto tagPosM = tagPosL + glm::vec2(cosf(glm::radians(tagAngle)) * tagSize.x, sinf(glm::radians(tagAngle)) * tagSize.x);
-			const auto tagPosR = tagPosM + glm::vec2(cosf(glm::radians(tagAngle)) * tagMidWidth, sinf(glm::radians(tagAngle)) * tagMidWidth);
+			const auto tagPosR = tagPosM + glm::vec2(cosf(glm::radians(tagAngle)) * nametagWidth, sinf(glm::radians(tagAngle)) * nametagWidth);
 			//TODO: figure this one out properly
-			const auto tagPosT = tagPosL + glm::vec2(cosf(glm::radians(tagAngle)) * (tagSize.x - 0), sinf(glm::radians(tagAngle)) * (tagSize.x - 196));
+			const auto tagPosT = tagPosL + glm::vec2(cosf(glm::radians(tagAngle)) * (tagSize.x - 16), sinf(glm::radians(tagAngle)) * (tagSize.x - 512));
 			sprender->DrawSprite(*nametag, tagPosL, tagSize, nametagAtlas[0], tagAngle, nametagColor[0], SPR_TOPLEFT);
-			sprender->DrawSprite(*nametag, tagPosM, glm::vec2(tagMidWidth, tagSize.y), nametagAtlas[2], tagAngle, nametagColor[0], SPR_TOPLEFT);
+			sprender->DrawSprite(*nametag, tagPosM, glm::vec2(nametagWidth, tagSize.y), nametagAtlas[2], tagAngle, nametagColor[0], SPR_TOPLEFT);
 			sprender->DrawSprite(*nametag, tagPosR, tagSize, nametagAtlas[1], tagAngle, nametagColor[0], SPR_TOPLEFT);
 			sprender->DrawText(1, name, tagPosT, nametagColor[1], 120 * scale, tagAngle);
 		}
