@@ -60,6 +60,12 @@
 				"texture": 0,
 				"alpha": 0.5,
 				"color": "primary"
+			},
+			{
+				"position": [ 8, 8 ],
+				"type": "text",
+				"text": "Hello~",
+				"alpha": 2
 			}
 		]
 	}

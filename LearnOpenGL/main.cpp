@@ -294,6 +294,9 @@ public:
 	float Alpha;
 	int Texture, Shader;
 	int Frame;
+	int Font;
+	float Size;
+	std::string Text;
 	glm::vec4 Color;
 };
 
@@ -339,9 +342,20 @@ public:
 			auto panel = new Panel();
 
 			panel->Position = GetJSONVec2(pnl["position"]);
-			panel->Type = 0; //TODO: parse pnl["type"]
-			panel->Texture = pnl["texture"] != nullptr ? (int)pnl["texture"]->AsNumber() : 0;
-			panel->Frame = pnl["frame"] != nullptr ? (int)pnl["frame"]->AsNumber() : 0;
+			auto& type = pnl["type"]->AsString();
+			if (type == "image") panel->Type = 0;
+			else if (type == "text") panel->Type = 1;
+			if (panel->Type == 0)
+			{
+				panel->Texture = pnl["texture"] != nullptr ? (int)pnl["texture"]->AsNumber() : 0;
+				panel->Frame = pnl["frame"] != nullptr ? (int)pnl["frame"]->AsNumber() : 0;
+			}
+			else if (panel->Type == 1)
+			{
+				panel->Text = pnl["text"] != nullptr ? pnl["text"]->AsString() : "???";
+				panel->Font = pnl["font"] != nullptr ? (int)pnl["font"]->AsNumber() : 1;
+				panel->Size = pnl["size"] != nullptr ? (float)pnl["size"]->AsNumber() : 100.0f;
+			}
 			panel->Color = glm::vec4(1, 1, 1, 1);
 			if (pnl["color"] != nullptr)
 			{
@@ -386,14 +400,16 @@ public:
 	{
 		for (const auto& panel : panels)
 		{
+			auto color = panel->Color;
+			color.a = clamp(Alpha * panel->Alpha, 0.0f, 1.0f);
+			if (color.a == 0)
+				continue;
+
 			if (panel->Type == 0) //image
 			{
 				auto texture = textures[panel->Texture];
-				//auto atlas = (TextureAtlas*)&atlases[panel->Texture][0];
 				auto frame = atlases[panel->Texture][panel->Frame];
 				auto shader = spriteShader; //shaders[panel->Shader];
-				auto color = panel->Color;
-				color.a = Alpha * panel->Alpha;
 
 				sprender->DrawSprite(
 					*shader, *texture,
@@ -403,6 +419,16 @@ public:
 					0.0f,
 					color,
 					0
+				);
+			}
+			else if (panel->Type == 1) //text
+			{
+				sprender->DrawText(
+					panel->Font,
+					panel->Text,
+					Position + panel->Position,
+					color,
+					100.0f
 				);
 			}
 		}
@@ -1441,7 +1467,8 @@ int main()
 	tickables.push_back(new DoomMenu());
 	auto hotbar = new PanelLayout(UI::json["hotbar"]);
 	tickables.push_back(hotbar);
-	hotbar->Tween(&hotbar->Position.y, tweeny::from(height).to(0).during(100));
+	hotbar->Tween(&hotbar->Position.y, tweeny::from(-100.0f).to(0).during(100));
+	hotbar->Tween(&hotbar->Alpha, tweeny::from(0.0f).to(0.75f).during(200));
 	//tickables.push_back(new TextField());
 
 	int oldTime = 0;
