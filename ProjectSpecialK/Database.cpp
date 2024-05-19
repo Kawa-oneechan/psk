@@ -48,24 +48,24 @@ void Table(std::vector<std::string> data, size_t stride)
 		}
 	}
 	
-	fmt::print(u8"┌{}┐\n", top);
+	fmt::print(GRAY u8"┌{}┐\n", top);
 
 	for (auto row = 0; row < rows; row++)
 	{
 		for (auto col = 0; col < stride; col++)
 		{
 			const auto& cel = data[row * stride + col];
-			fmt::print(u8"│");
+			fmt::print(GRAY u8"│" NORMAL);
 			if (row == 0) fmt::print(BOLD);
 			fmt::print(fmt::format(" {{:{}}} ", width[col]), cel);
 			if (row == 0) fmt::print(NORMAL);
 		}
-		fmt::print(u8"│\n");
+		fmt::print(GRAY u8"│\n");
 		if (row == 0)
-			fmt::print(u8"├{}┤\n", middle);
+			fmt::print(GRAY u8"├{}┤\n", middle);
 	}
 
-	fmt::print(u8"└{}┘\n", bottom);
+	fmt::print(GRAY u8"└{}┘" NORMAL u8"\n", bottom);
 }
 
 namespace Database

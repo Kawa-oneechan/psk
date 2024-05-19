@@ -55,6 +55,7 @@ extern "C"
 #define NORMAL u8"\x1B[0m"
 #define GREEN u8"\x1B[92m"
 #define CYAN u8"\x1B[36m"
+#define GRAY u8"\x1B[90m"
 #else
 #ifdef _WIN32
 extern "C"

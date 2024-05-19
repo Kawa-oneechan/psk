@@ -21,7 +21,7 @@ static void initVFS_addEntry(VFSEntry& entry)
 	if (entry.path.substr(entry.path.length() - 6, 6) == ".patch")
 	{
 		//Do NOT bother replacing, we want to patch ALL these fuckers in.
-		fmt::print("DEBUG: NOT replacing {}.\n", entry.path);
+		//fmt::print("DEBUG: NOT replacing {}.\n", entry.path);
 		entries.push_back(entry);
 		return;
 	}
@@ -33,7 +33,7 @@ static void initVFS_addEntry(VFSEntry& entry)
 		{
 			entries[i] = entry;
 			replaced = true;
-			fmt::print("DEBUG: replacing {}.\n", entry.path);
+			//fmt::print("DEBUG: replacing {}.\n", entry.path);
 			break;
 		}
 	}
