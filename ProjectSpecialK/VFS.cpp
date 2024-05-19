@@ -11,8 +11,9 @@
 
 namespace fs = std::experimental::filesystem;
 
-static std::vector<VFSEntry> entries;
+extern void Table(std::vector<std::string> data, size_t stride);
 
+static std::vector<VFSEntry> entries;
 static std::vector<VFSSource> sources;
 
 static void initVFS_addEntry(VFSEntry& entry)
@@ -180,15 +181,33 @@ void InitVFS()
 	}
 	
 	fmt::print("Pre-sort:\n");
+	auto table = std::vector<std::string>{ "ID", "Name", "Author", "Priority" };
+	//for (const auto& source : sources)
+	//	fmt::print("* \"{}\" by {} ({}, {})\n", source.friendlyName, source.author, source.path, source.priority);
 	for (const auto& source : sources)
-		fmt::print("* \"{}\" by {} ({}, {})\n", source.friendlyName, source.author, source.path, source.priority);
+	{
+		table.push_back(source.id);
+		table.push_back(source.friendlyName);
+		table.push_back(source.author);
+		table.push_back(std::to_string(source.priority));
+	}
+	Table(table, 4);
 
 	std::sort(sources.begin(), sources.end(), initVFS_sort);
 	//TODO: resolve dependencies
 
 	fmt::print("Post-sort:\n");
+	table = std::vector<std::string>{ "ID", "Name", "Author", "Priority" };
+	//for (const auto& source : sources)
+	//	fmt::print("* \"{}\" by {} ({}, {})\n", source.friendlyName, source.author, source.path, source.priority);
 	for (const auto& source : sources)
-		fmt::print("* \"{}\" by {} ({}, {})\n", source.friendlyName, source.author, source.path, source.priority);
+	{
+		table.push_back(source.id);
+		table.push_back(source.friendlyName);
+		table.push_back(source.author);
+		table.push_back(std::to_string(source.priority));
+	}
+	Table(table, 4);
 
 	for (int i = 0; i < sources.size(); i++)
 	{

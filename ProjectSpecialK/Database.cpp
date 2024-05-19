@@ -1,4 +1,4 @@
-#include <filesystem>
+﻿#include <filesystem>
 #include <chrono>
 #include "SpecialK.h"
 
@@ -15,6 +15,58 @@ std::vector<Hobby> hobbies;
 std::vector<Villager> villagers;
 
 //TODO: bring back the table writer, that thing was TIGHT.
+void Table(std::vector<std::string> data, size_t stride)
+{
+	size_t width[64] = { 0 };
+	auto rows = data.size() / stride;
+	for (auto col = 0; col < stride; col++)
+	{
+		for (auto row = 0; row < rows; row++)
+		{
+			const auto& cel = data[row * stride + col];
+			if (cel.length() > width[col])
+				width[col] = cel.length();
+		}
+	}
+
+	std::string top;
+	std::string middle;
+	std::string bottom;
+	for (auto col = 0; col < stride; col++)
+	{
+		for (auto i = 0; i < width[col] + 2; i++)
+		{
+			top += u8"─";
+			middle += u8"─";
+			bottom += u8"─";
+		}
+		if (col < stride - 1)
+		{
+			top += u8"┬";
+			middle += u8"┼";
+			bottom += u8"┴";
+		}
+	}
+	
+	fmt::print(u8"┌{}┐\n", top);
+
+	for (auto row = 0; row < rows; row++)
+	{
+		for (auto col = 0; col < stride; col++)
+		{
+			const auto& cel = data[row * stride + col];
+			fmt::print(u8"│");
+			if (row == 0) fmt::print(BOLD);
+			fmt::print(fmt::format(" {{:{}}} ", width[col]), cel);
+			if (row == 0) fmt::print(NORMAL);
+		}
+		fmt::print(u8"│\n");
+		if (row == 0)
+			fmt::print(u8"├{}┤\n", middle);
+	}
+
+	fmt::print(u8"└{}┘\n", bottom);
+}
 
 namespace Database
 {
@@ -132,6 +184,14 @@ namespace Database
 		loadWorker<Item, Tool>(items, "items/tools/*.json", "ItemsDatabase");
 		loadWorker<Item, Furniture>(items, "items/furniture/*.json", "ItemsDatabase");
 		loadWorker<Item, Outfit>(items, "items/outfits/*.json", "ItemsDatabase");
+		auto table = std::vector<std::string>{ "ID", "Name", "Hash" };
+		for (const auto& item : items)
+		{
+			table.push_back(item.ID);
+			table.push_back(item.EnName);
+			table.push_back(fmt::format("{:8X}", 0xC01DF00D /*item.Hash*/));
+		}
+		Table(table, 3);
 		fmt::print("ItemsDatabase: ended up with {} entries.\n", items.size());
 	}
 
@@ -139,6 +199,14 @@ namespace Database
 	{
 		fmt::print("SpeciesDatabase: loading...\n");
 		loadWorker<Species>(species, "species/*.json", "SpeciesDatabase");
+		auto table = std::vector<std::string>{ "ID", "Name", "Hash" };
+		for (const auto& spec: species)
+		{
+			table.push_back(spec.ID);
+			table.push_back(spec.EnName[0]);
+			table.push_back(fmt::format("{:8X}", 0xC01DF00D /*spec.Hash*/));
+		}
+		Table(table, 3);
 		fmt::print("SpeciesDatabase: ended up with {} entries.\n", species.size());
 	}
 
@@ -154,6 +222,14 @@ namespace Database
 	{
 		fmt::print("VillagerDatabase: loading...\n");
 		loadWorker<Villager>(villagers, "villagers/*.json", "VillagerDatabase");
+		auto table = std::vector<std::string>{ "ID", "Name","Hash" };
+		for (const auto& villager : villagers)
+		{
+			table.push_back(villager.ID);
+			table.push_back(villager.EnName);
+			table.push_back(fmt::format("{:8X}", 0xC01DF00D /*villager.Hash*/));
+		}
+		Table(table, 3);
 		fmt::print("VillagerDatabase: ended up with {} entries.\n", villagers.size());
 	}
 

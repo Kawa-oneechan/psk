@@ -803,8 +803,8 @@ int main(int argc, char** argv)
 	testIDMangling();
 	testCurrencies();
 
-	bgm = new Audio("music/bgm/interiors/tailor.ogg");
-	bgm->Play();
+	//bgm = new Audio("music/bgm/interiors/tailor.ogg");
+	//bgm->Play();
 
 	thePlayer.Name = "Kawa";
 	thePlayer.Gender = Gender::BEnby;
