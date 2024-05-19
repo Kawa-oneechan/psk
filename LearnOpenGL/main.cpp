@@ -154,7 +154,10 @@ typedef std::vector<glm::vec4> TextureAtlas;
 
 void GetAtlas(TextureAtlas &ret, const std::string& jsonFile)
 {
-	auto doc = ReadJSON(jsonFile)->AsObject();
+	auto rjs = ReadJSON(jsonFile);
+	if (rjs == nullptr)
+		return;
+	auto doc = rjs->AsObject();
 	ret.clear();
 	if (doc["type"]->AsString() == "simple")
 	{
@@ -264,6 +267,106 @@ public:
 		//sprender->DrawText(1, fmt::format("Project Special K: UI test (SCALE = {})", scale), glm::vec2(0), glm::vec4(1, 1, 1, 0.75), 50);
 		//sprender->DrawText(1, u8"日", glm::vec2(0, 20), glm::vec4(1, 1, 1, 0.75), 50);
 		//sprender->DrawText(1, u8"ā", glm::vec2(0), glm::vec4(1, 1, 1, 0.75), 200);
+	}
+};
+
+class Panel
+{
+public:
+	glm::vec2 Position;
+	int Type;
+	float Alpha;
+	int Texture, Shader;
+	int Frame;
+	glm::vec4 Color;
+};
+
+class PanelLayout : public Tickable
+{
+private:
+	std::vector<Panel*> panels;
+	std::vector<Texture*> textures;
+	std::vector<TextureAtlas> atlases;
+	std::vector<Shader*> shaders;
+
+public:
+	glm::vec2 Position;
+	float Alpha;
+
+	PanelLayout(JSONValue* source)
+	{
+		auto src = source->AsObject();
+		auto texturesSet = src["textures"]->AsArray();
+		auto& panelsSet = src["panels"]->AsArray();
+
+		Position = src["position"] != nullptr ? GetJSONVec2(src["position"]) : glm::vec2(0);
+		Alpha = src["alpha"] != nullptr ? (float)src["alpha"]->AsNumber() : 1.0f;
+
+		for (const auto& t : texturesSet)
+		{
+			auto tfn = t->AsString();
+			auto tex = new Texture(tfn.c_str());
+			textures.push_back(tex);
+
+			tfn = tfn.replace(tfn.length() - 4, 4, ".json");
+			TextureAtlas atl;
+			atl.push_back(glm::vec4(0, 0, tex->width, tex->height));
+			GetAtlas(atl, tfn);
+			atlases.push_back(atl);
+		}
+
+		for (const auto& p : panelsSet)
+		{
+			auto pnl = p->AsObject();
+			auto panel = new Panel();
+
+			panel->Position = GetJSONVec2(pnl["position"]);
+			panel->Type = 0; //TODO: parse pnl["type"]
+			panel->Texture = pnl["texture"] != nullptr ? (int)pnl["texture"]->AsNumber() : 0;
+			panel->Frame = pnl["frame"] != nullptr ? (int)pnl["frame"]->AsNumber() : 0;
+			panel->Color = glm::vec4(1, 1, 1, 1);
+			if (pnl["color"] != nullptr)
+			{
+				if (pnl["color"]->IsString())
+				{
+					auto& clr = pnl["color"]->AsString();
+					if (clr == "primary")
+						panel->Color = UI::primaryColor;
+					else if (clr == "secondary")
+						panel->Color = UI::secondaryColor;
+				}
+				else if (pnl["color"]->IsArray())
+					panel->Color = GetJSONVec4(pnl["color"]);
+			}
+			panel->Alpha = pnl["alpha"] != nullptr ? (float)pnl["alpha"]->AsNumber() : 1.0f;
+			panels.push_back(panel);
+		}
+	}
+
+	void Draw(double dt)
+	{
+		for (const auto& panel : panels)
+		{
+			if (panel->Type == 0) //image
+			{
+				auto texture = textures[panel->Texture];
+				//auto atlas = (TextureAtlas*)&atlases[panel->Texture][0];
+				auto frame = atlases[panel->Texture][panel->Frame];
+				auto shader = spriteShader; //shaders[panel->Shader];
+				auto color = panel->Color;
+				color.a = Alpha * panel->Alpha;
+
+				sprender->DrawSprite(
+					*shader, *texture,
+					Position + panel->Position,
+					glm::vec2(frame.z, frame.w),
+					frame,
+					0.0f,
+					color,
+					0
+				);
+			}
+		}
 	}
 };
 
@@ -1294,6 +1397,7 @@ int main()
 	dlgBox = new DialogueBox();
 	tickables.push_back(dlgBox);
 	tickables.push_back(new DoomMenu());
+	tickables.push_back(new PanelLayout(UI::json["hotbar"]));
 	//tickables.push_back(new TextField());
 
 	int oldTime = 0;

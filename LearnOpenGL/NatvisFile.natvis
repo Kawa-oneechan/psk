@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+	<!-- GAME STUFF -->
+	<Type Name="Item">
+		<DisplayString>{{ID={ID}, Name={EnName}}}</DisplayString>
+	</Type>
+	<Type Name="Species">
+		<DisplayString>{{ID={ID}, Name={Name}}}</DisplayString>
+	</Type>
+	<Type Name="Personality">
+		<DisplayString>{{ID={ID}}}</DisplayString>
+	</Type>
+	<Type Name="Hobby">
+		<DisplayString>{{ID={ID}}}</DisplayString>
+	</Type>
+	<Type Name="Villager">
+		<DisplayString>{EnName} ({ID}, {_species->ID})</DisplayString>
+		<Expand>
+			<Item Name="Special?">_isSpecial</Item>
+			<Item Name="Species" Condition="!_isSpecial &amp;&amp; _species != 0">_species</Item>
+			<Item Name="Model" Condition="_model != 0">_model</Item>
+			<Item Name="Outfit" Condition="!_isSpecial">defaultOutfit</Item>
+			<Item Name="Personality" Condition="!_isSpecial">personality</Item>
+			<Item Name="Hobby">hobby</Item>
+		</Expand>
+	</Type>
+	<Type Name="TextEntry">
+		<DisplayString>{rep}</DisplayString>
+	</Type>
+	
+	<!-- BACKEND STUFF -->
+	<Type Name="Texture">
+		<DisplayString>{ID}, [{width}x{height}]</DisplayString>
+	</Type>
+</AutoVisualizer>

@@ -154,6 +154,7 @@
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="glm.natvis" />
+    <Natvis Include="NatvisFile.natvis" />
   </ItemGroup>
   <ItemGroup>
     <None Include="data\shaders\model.fs" />

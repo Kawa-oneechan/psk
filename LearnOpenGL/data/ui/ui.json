@@ -17,8 +17,9 @@
 	//UI test
 	"hotbar": {
 		"textures": [
-			"ui/squares.png"
+			"ui/panels.png"
 		],
+		"alpha": 0.75,
 		"panels": [
 			//{ } //backing panel or whatever
 			{
@@ -41,7 +42,7 @@
 				"position": [ 192, 0 ],
 				"type": "sprite",
 				"texture": 0,
-				"frame": 0,
+				//leave the frame for testing.
 				"color": "primary"
 			},
 			{
@@ -49,7 +50,7 @@
 				"position": [ 332, 0 ],
 				"type": "sprite",
 				"texture": 0,
-				"frame": 0,
+				"alpha": 0.5,
 				"color": "primary"
 			},
 			{
@@ -57,7 +58,7 @@
 				"position": [ 472, 0 ],
 				"type": "sprite",
 				"texture": 0,
-				"frame": 0,
+				"alpha": 0.5,
 				"color": "primary"
 			}
 		]

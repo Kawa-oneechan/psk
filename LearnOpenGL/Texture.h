@@ -2,6 +2,7 @@
 
 #include "support/glad/glad.h"
 #include "support/stb_image.h"
+#include "support/format.h"
 #include "VFS.h"
 
 class Texture
@@ -13,17 +14,18 @@ public:
 	//Creates a Texture from a given VFS path.
 	Texture(const char* texturePath, bool mipmaps = true, int repeat = GL_REPEAT, int filter = GL_LINEAR)
 	{
-		glGenTextures(1, &ID);
-		glBindTexture(GL_TEXTURE_2D, ID);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, repeat);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, repeat);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter);
+		ID = -1;
+		width = height = channels = 0;
 
 		stbi_set_flip_vertically_on_load(1);
 
 		size_t vfsSize = 0;
 		char* vfsData = ReadVFS(texturePath, &vfsSize);
+		if (vfsData == nullptr || vfsSize == 0)
+		{
+			fmt::print("Failed to load texture \"{}\" -- no data\n", texturePath);
+			return;
+		}
 		unsigned char *data = stbi_load_from_memory((unsigned char*)vfsData, (int)vfsSize, &width, &height, &channels, 0);
 		free(vfsData);
 
@@ -32,6 +34,13 @@ public:
 
 		if (data)
 		{
+			glGenTextures(1, &ID);
+			glBindTexture(GL_TEXTURE_2D, ID);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, repeat);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, repeat);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter);
+
 			glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
 			if (mipmaps)
 				glGenerateMipmap(GL_TEXTURE_2D);
@@ -39,7 +48,7 @@ public:
 		}
 		else
 		{
-			printf("Failed to load texture \"%s\".\n", texturePath);
+			fmt::print("Failed to load texture \"{}\" -- invalid data\n", texturePath);
 		}
 		stbi_image_free(data);
 	}

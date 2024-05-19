@@ -260,6 +260,8 @@ char* ReadVFS(const std::string& path, size_t* size)
 JSONValue* ReadJSON(const VFSEntry& entry)
 {
 	auto vfsData = ReadVFS(entry.path, nullptr);
+	if (vfsData == nullptr)
+		return nullptr;
 	auto doc = JSON::Parse(vfsData);
 	free(vfsData);
 
