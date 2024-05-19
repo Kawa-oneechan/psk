@@ -189,7 +189,7 @@ namespace Database
 		{
 			table.push_back(item.ID);
 			table.push_back(item.EnName);
-			table.push_back(fmt::format("{:08X}", item.Hash));
+			table.emplace_back(fmt::format("{:08X}", item.Hash));
 		}
 		Table(table, 3);
 		fmt::print("ItemsDatabase: ended up with {} entries.\n", items.size());
@@ -226,7 +226,7 @@ namespace Database
 		{
 			table.push_back(villager.ID);
 			table.push_back(villager.EnName);
-			table.push_back(fmt::format("{:08X}", villager.Hash));
+			table.emplace_back(fmt::format("{:08X}", villager.Hash));
 		}
 		Table(table, 3);
 		fmt::print("VillagerDatabase: ended up with {} entries.\n", villagers.size());

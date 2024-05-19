@@ -189,7 +189,7 @@ void InitVFS()
 		table.push_back(source.id);
 		table.push_back(source.friendlyName);
 		table.push_back(source.author);
-		table.push_back(std::to_string(source.priority));
+		table.emplace_back(std::to_string(source.priority));
 	}
 	Table(table, 4);
 
@@ -205,7 +205,7 @@ void InitVFS()
 		table.push_back(source.id);
 		table.push_back(source.friendlyName);
 		table.push_back(source.author);
-		table.push_back(std::to_string(source.priority));
+		table.emplace_back(std::to_string(source.priority));
 	}
 	Table(table, 4);
 

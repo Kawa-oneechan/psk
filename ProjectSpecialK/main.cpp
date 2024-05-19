@@ -666,8 +666,7 @@ public:
 			//trigger music
 
 			//TODO: fade out first, probably have something else handle that.
-			if (bgm != nullptr)
-				delete bgm;
+			delete bgm;
 			bgm = new Audio(fmt::format("music/bgm/clock/{:02}sunny.ogg", lastHour));
 			bgm->Play();
 		}
