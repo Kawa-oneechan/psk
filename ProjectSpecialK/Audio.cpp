@@ -25,15 +25,14 @@ void Audio::Initialize()
 	}
 }
 
-Audio::Audio(std::string filename)
+Audio::Audio(std::string filename) : filename(filename)
 {
-	this->theSound = nullptr;
-	this->theChannel = nullptr;
+	theSound = nullptr;
+	theChannel = nullptr;
 	size_t size = 0;
-	this->filename = filename;
 	if (!audioEnabled)
 	{
-		this->status = AudioStatus::Invalid;
+		status = AudioStatus::Invalid;
 		return;
 	}
 	auto data = ReadVFS(filename, &size);
@@ -46,7 +45,12 @@ Audio::Audio(std::string filename)
 	memset(&soundEx, 0, sizeof(FMOD_CREATESOUNDEXINFO));
 	soundEx.cbsize = sizeof(FMOD_CREATESOUNDEXINFO);
 	soundEx.length = (unsigned int)size;
-	auto r = system->createStream(data, FMOD_HARDWARE | FMOD_LOOP_NORMAL | FMOD_2D | FMOD_OPENMEMORY, &soundEx, &this->theSound);
+	auto mode = FMOD_HARDWARE | FMOD_2D | FMOD_OPENMEMORY;
+	if (filename.substr(0, 5) == "music")
+		mode |= FMOD_LOOP_NORMAL;
+	else
+		mode |= FMOD_LOOP_OFF;
+	auto r = system->createStream(data, mode, &soundEx, &theSound);
 	if (r != FMOD_OK)
 	{
 		fmt::format("Could not create stream for audio file {}.", filename);
@@ -56,61 +60,64 @@ Audio::Audio(std::string filename)
 	if (ext == ".ogg")
 	{
 		FMOD_TAG tag;
-		r = this->theSound->getTag("LOOP_START", 0, &tag);
+		r = theSound->getTag("LOOP_START", 0, &tag);
 		if (r == FMOD_OK)
 		{
 			unsigned int start = atoi((char*)tag.data);
 			unsigned int end = 0;
-			this->theSound->getLength(&end, FMOD_TIMEUNIT_PCM);
-			r = this->theSound->setLoopPoints(start, FMOD_TIMEUNIT_PCM, end, FMOD_TIMEUNIT_PCM);
+			theSound->getLength(&end, FMOD_TIMEUNIT_PCM);
+			r = theSound->setLoopPoints(start, FMOD_TIMEUNIT_PCM, end, FMOD_TIMEUNIT_PCM);
 			if (r != FMOD_OK)
 				fmt::print("Wanted to set loop point for file {}, could not.", filename);
 		}
 	}
-	this->status = AudioStatus::Stopped;
+	status = AudioStatus::Stopped;
 }
 
 Audio::~Audio()
 {
-	this->Stop();
+	Stop();
 	if (audioEnabled)
-		this->theSound->release();
-	this->theChannel = NULL;
-	this->theSound = NULL;
+		theSound->release();
+	theChannel = NULL;
+	theSound = NULL;
 }
 
-void Audio::Play()
+void Audio::Play(bool force)
 {
-	if (this->status == AudioStatus::Stopped)
+	if (force && status != AudioStatus::Stopped)
+		Stop();
+
+	if (status == AudioStatus::Stopped)
 	{
 		if (audioEnabled)
 		{
-			auto r = system->playSound(FMOD_CHANNEL_FREE, this->theSound, false, &this->theChannel);
+			auto r = system->playSound(FMOD_CHANNEL_FREE, theSound, false, &theChannel);
 			if (r != FMOD_OK)
 				throw "Could not play stream.";
-			this->theChannel->setVolume(musicVolume);
+			theChannel->setVolume(musicVolume);
 		}
 	}
-	else if (this->status == AudioStatus::Paused)
+	else if (status == AudioStatus::Paused)
 	{
-		this->theChannel->setPaused(false);
+		theChannel->setPaused(false);
 	}
-	this->status = AudioStatus::Playing;
+	status = AudioStatus::Playing;
 }
 
 void Audio::Pause()
 {
 	if (audioEnabled)
-		this->theChannel->setPaused(true);
-	this->status = AudioStatus::Paused;
+		theChannel->setPaused(true);
+	status = AudioStatus::Paused;
 }
 
 void Audio::Stop()
 {
-	if (this->status != AudioStatus::Stopped)
+	if (status != AudioStatus::Stopped)
 	{
 		if (audioEnabled)
-			this->theChannel->stop();
+			theChannel->stop();
 	}
-	this->status = AudioStatus::Stopped;
+	status = AudioStatus::Stopped;
 }

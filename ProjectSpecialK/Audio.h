@@ -15,11 +15,12 @@ private:
 	FMOD::Channel* theChannel;
 	AudioStatus status;
 	std::string filename;
+
 public:
 	static void Initialize();
 	Audio(std::string filename);
 	~Audio();
-	void Play();
+	void Play(bool force = false);
 	void Pause();
 	void Stop();
 };

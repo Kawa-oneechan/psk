@@ -320,6 +320,8 @@ private:
 	int cursorLine, cursorCol;
 	size_t cursorPos;
 
+	Audio* bebebese;
+
 	//temporary
 	bool bold;
 
@@ -445,6 +447,8 @@ public:
 		cursorPos = 0;
 		state = DialogueBoxState::Opening;
 		bold = false;
+
+		bebebese = new Audio("sound/animalese/base/Voice_Monology.wav");
 	}
 
 	void Start(std::string line, Villager* nameTagSource)
@@ -529,6 +533,7 @@ public:
 					if (bold) fmt::print(BOLD);
 					fmt::print("{}", ch);
 					cursorCol++;
+					bebebese->Play(true);
 					delay = 4;
 				}
 				cursorPos++;
