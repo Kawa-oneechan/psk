@@ -201,6 +201,7 @@ class Cursor
 private:
 	Texture* hand;
 	TextureAtlas atlas;
+	std::vector<glm::vec2> hotspots;
 	glm::vec2 hotspot;
 	glm::vec4 frame;
 	glm::vec2 size;
@@ -208,20 +209,26 @@ private:
 public:
 	Cursor()
 	{
-		hand = new Texture("hand.png");
-		GetAtlas(atlas, "hand.json");
+		hand = new Texture("ui/cursors.png");
+		GetAtlas(atlas, "ui/cursors.json");
+
+		auto hsj = ReadJSON("ui/cursors.json")->AsObject();
+		for (auto& hs : hsj["hotspots"]->AsArray())
+			hotspots.push_back(GetJSONVec2(hs));
+
 		Select(0);
-		size = glm::vec2(frame.w / 2);
+		size = glm::vec2(frame.w);
 	}
 
 	void Select(int style)
 	{
 		frame = atlas[style];
+		hotspot = hotspots[style];
 	}
 
 	void Draw()
 	{
-		sprender->DrawSprite(*hand, Inputs.MousePosition + hotspot, size, frame);
+		sprender->DrawSprite(*hand, Inputs.MousePosition - hotspot, size, frame);
 	}
 };
 Cursor* cursor = nullptr;
@@ -781,10 +788,10 @@ public:
 					sliderHolding = highlight;
 				if (highlight == sliderHolding)
 				{
-					cursor->Select(3);
+					cursor->Select(5);
 					if (Inputs.MouseHoldLeft)
 					{
-						cursor->Select(2);
+						cursor->Select(6);
 						auto item = items->at(highlight);
 
 						//thanks GZDoom
