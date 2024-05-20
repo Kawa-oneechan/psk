@@ -174,7 +174,8 @@ void delay(int ms)
 
 void testVillagerGetting()
 {
-	lolly = (Villager*)Database::Find<Villager>("ac:cat18", &villagers);
+	//lolly = (Villager*)Database::Find<Villager>("ac:cat18", &villagers);
+	lolly = (Villager*)Database::Find<Villager>(0x008673EFA4, &villagers); //just because we'll need this feature later
 	if (lolly == nullptr)
 		FatalError("Could not load Lolly. Check the logs? Anyway, testing is over.");
 

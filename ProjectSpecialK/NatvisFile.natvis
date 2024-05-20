@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?> 
 <AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+	<Type Name="NameableThing">
+		<DisplayString>{{ID={ID}, Name={EnName}, {Hash,Xb}}}</DisplayString>
+		<Expand>
+			<Item Name="CRC32">Hash,Xb</Item>
+		</Expand>
+	</Type>
 	<Type Name="Item">
 		<DisplayString>{{ID={ID}, Name={EnName}}}</DisplayString>
-	</Type>
-	<Type Name="Species">
-		<DisplayString>{{ID={ID}, Name={Name}}}</DisplayString>
 	</Type>
 	<Type Name="Personality">
 		<DisplayString>{{ID={ID}}}</DisplayString>
@@ -13,14 +16,16 @@
 		<DisplayString>{{ID={ID}}}</DisplayString>
 	</Type>
 	<Type Name="Villager">
-		<DisplayString>{EnName} ({ID}, {_species->ID})</DisplayString>
+		<DisplayString>{EnName} ({ID}, {_species->ID}, {Hash,Xb})</DisplayString>
 		<Expand>
 			<Item Name="Special?">_isSpecial</Item>
 			<Item Name="Species" Condition="!_isSpecial &amp;&amp; _species != 0">_species</Item>
 			<Item Name="Model" Condition="_model != 0">_model</Item>
-			<Item Name="Outfit" Condition="!_isSpecial">defaultOutfit</Item>
+			<!-- <Item Name="Outfit" Condition="!_isSpecial">defaultOutfitID</Item> -->
+			<Item Name="Outfit" Condition="Outfit != 0">Outfit</Item>
 			<Item Name="Personality" Condition="!_isSpecial">personality</Item>
 			<Item Name="Hobby">hobby</Item>
+			<Item Name="CRC32">Hash,Xb</Item>
 		</Expand>
 	</Type>
 	<Type Name="TextEntry">
