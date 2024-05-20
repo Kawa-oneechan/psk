@@ -16,7 +16,7 @@ public:
 	//Creates a Texture from a given VFS path.
 	Texture(const char* texturePath, bool mipmaps = true, int repeat = GL_REPEAT, int filter = GL_LINEAR)
 	{
-		ID = -1;
+		ID = 0;
 		width = height = channels = 0;
 
 		stbi_set_flip_vertically_on_load(1);

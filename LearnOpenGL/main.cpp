@@ -212,6 +212,7 @@ public:
 	{
 		hand = new Texture("ui/cursors.png");
 		GetAtlas(atlas, "ui/cursors.json");
+		//atlas = new _TextureAtlas("ui/cursors.json");
 
 		auto hsj = ReadJSON("ui/cursors.json")->AsObject();
 		for (auto& hs : hsj["hotspots"]->AsArray())
@@ -236,7 +237,7 @@ public:
 
 	void Draw()
 	{
-		sprender->DrawSprite(*hand, Inputs.MousePosition - (hotspot * scale), size, frame);
+		sprender->DrawSprite(hand, Inputs.MousePosition - (hotspot * scale), size, frame);
 	}
 };
 Cursor* cursor = nullptr;
@@ -275,7 +276,7 @@ public:
 
 		scroller->Use();
 		scroller->SetFloat("time", time);
-		sprender->DrawSprite(*scroller, *wallpaper, glm::vec2(0), glm::vec2(width, height), glm::vec4(0, 0, width, height));
+		sprender->DrawSprite(scroller, wallpaper, glm::vec2(0), glm::vec2(width, height), glm::vec4(0, 0, width, height));
 
 		//auto lol = sprender->MeasureText(1, "Project Special K: UI test", 50);
 		//sprender->DrawSprite(*whiteRect, glm::vec2(0), lol, glm::vec4(0), 0, glm::vec4(1, 1, 1, 0.5f));
@@ -412,7 +413,7 @@ public:
 				auto shader = spriteShader; //shaders[panel->Shader];
 
 				sprender->DrawSprite(
-					*shader, *texture,
+					shader, texture,
 					Position + panel->Position,
 					glm::vec2(frame.z, frame.w),
 					frame,
@@ -573,8 +574,8 @@ public:
 		//	sprender->DrawSprite(*bubble[bubbleNum], glm::vec2(dlgLeft, dlgTop), glm::vec2(dlgWidth * 2, dlgHeight), glm::vec4(0));
 		//else
 		{
-			sprender->DrawSprite(*wobble, *bubble[bubbleNum], glm::vec2(dlgLeft, dlgTop), glm::vec2(dlgWidth, dlgHeight), glm::vec4(0), 0, bubbleColor, 0);
-			sprender->DrawSprite(*wobble, *bubble[bubbleNum], glm::vec2(dlgLeft + dlgWidth, dlgTop), glm::vec2(dlgWidth, dlgHeight), glm::vec4(0, 0, bubble[0]->width, bubble[0]->height), 0, bubbleColor, 1);
+			sprender->DrawSprite(wobble, bubble[bubbleNum], glm::vec2(dlgLeft, dlgTop), glm::vec2(dlgWidth, dlgHeight), glm::vec4(0), 0, bubbleColor, 0);
+			sprender->DrawSprite(wobble, bubble[bubbleNum], glm::vec2(dlgLeft + dlgWidth, dlgTop), glm::vec2(dlgWidth, dlgHeight), glm::vec4(0, 0, bubble[0]->width, bubble[0]->height), 0, bubbleColor, 1);
 		}
 
 		sprender->DrawText(font, displayed, glm::vec2(dlgLeft + (200 * scale), dlgTop + (100 * scale)), textColor, 150 * scale);
@@ -591,9 +592,9 @@ public:
 			const auto tagPosR = tagPosM + glm::vec2(cosf(glm::radians(tagAngle)) * nametagWidth, sinf(glm::radians(tagAngle)) * nametagWidth);
 			//TODO: figure this one out properly
 			const auto tagPosT = tagPosL + glm::vec2(cosf(glm::radians(tagAngle)) * (tagSize.x - 16), sinf(glm::radians(tagAngle)) * (tagSize.x - 512));
-			sprender->DrawSprite(*nametag, tagPosL, tagSize, nametagAtlas[0], tagAngle, nametagColor[0], SPR_TOPLEFT);
-			sprender->DrawSprite(*nametag, tagPosM, glm::vec2(nametagWidth, tagSize.y), nametagAtlas[2], tagAngle, nametagColor[0], SPR_TOPLEFT);
-			sprender->DrawSprite(*nametag, tagPosR, tagSize, nametagAtlas[1], tagAngle, nametagColor[0], SPR_TOPLEFT);
+			sprender->DrawSprite(nametag, tagPosL, tagSize, nametagAtlas[0], tagAngle, nametagColor[0], SPR_TOPLEFT);
+			sprender->DrawSprite(nametag, tagPosM, glm::vec2(nametagWidth, tagSize.y), nametagAtlas[2], tagAngle, nametagColor[0], SPR_TOPLEFT);
+			sprender->DrawSprite(nametag, tagPosR, tagSize, nametagAtlas[1], tagAngle, nametagColor[0], SPR_TOPLEFT);
 			sprender->DrawText(1, name, tagPosT, nametagColor[1], 120 * scale, tagAngle);
 		}
 
@@ -1068,18 +1069,18 @@ public:
 			if (item->type == DoomMenuTypes::Checkbox)
 			{
 				auto checkColor = color * glm::vec4(1, 1, 1, 0.5);
-				sprender->DrawSprite(*controls, pos + glm::vec2(0, 4 * scale), glm::vec2(partSize), controlsAtlas[4], 0, checkColor);
+				sprender->DrawSprite(controls, pos + glm::vec2(0, 4 * scale), glm::vec2(partSize), controlsAtlas[4], 0, checkColor);
 				if (item->selection)
-					sprender->DrawSprite(*controls, pos + glm::vec2(0, 4 * scale), glm::vec2(partSize), controlsAtlas[5], 0, color);
+					sprender->DrawSprite(controls, pos + glm::vec2(0, 4 * scale), glm::vec2(partSize), controlsAtlas[5], 0, color);
 			}
 			else if (item->type == DoomMenuTypes::Slider)
 			{
 				auto trackColor = color * glm::vec4(1, 1, 1, 0.5);
 				auto barLength = col;
 				auto partSize = controlsAtlas[0].w * 0.5f;
-				sprender->DrawSprite(*controls, pos + glm::vec2(col, 10), glm::vec2(partSize), controlsAtlas[0], 0, trackColor);
-				sprender->DrawSprite(*controls, pos + glm::vec2(col + barLength + (partSize * 1), 10), glm::vec2(partSize), controlsAtlas[1], 0, trackColor);
-				sprender->DrawSprite(*controls, pos + glm::vec2(col + partSize, 10), glm::vec2(barLength, partSize), controlsAtlas[2], 0, trackColor);
+				sprender->DrawSprite(controls, pos + glm::vec2(col, 10), glm::vec2(partSize), controlsAtlas[0], 0, trackColor);
+				sprender->DrawSprite(controls, pos + glm::vec2(col + barLength + (partSize * 1), 10), glm::vec2(partSize), controlsAtlas[1], 0, trackColor);
+				sprender->DrawSprite(controls, pos + glm::vec2(col + partSize, 10), glm::vec2(barLength, partSize), controlsAtlas[2], 0, trackColor);
 
 				sliderStart = pos.x + col + partSize;
 				sliderEnd = sliderStart + barLength;
@@ -1090,7 +1091,7 @@ public:
 				auto thumbPos = partSize + ((ccur * (barLength - (partSize * 2))) / range);
 
 				auto thumb = glm::vec2(col + (int)thumbPos, 10);
-				sprender->DrawSprite(*controls, pos + thumb, thumbSize, controlsAtlas[3], 0, color);
+				sprender->DrawSprite(controls, pos + thumb, thumbSize, controlsAtlas[3], 0, color);
 			}
 		}
 	}
@@ -1443,8 +1444,8 @@ int main()
 	sprender = new SpriteRenderer();
 	cursor = new Cursor();
 
-	Texture texture("apple.png");
-	Texture sprite("itemicons.png");
+	//Texture texture("apple.png");
+	//Texture sprite("itemicons.png");
 
 	camera.Position.z = 4;
 
@@ -1531,7 +1532,7 @@ int main()
 		ourShader.SetMat4("view", view);
 		ourShader.SetMat4("projection", projection);
 
-		texture.Use();
+		//texture.Use();
 		//glBindVertexArray(VAO);
 		//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 		//glDrawArrays(GL_TRIANGLES, 0, 36);
@@ -1557,7 +1558,7 @@ int main()
 		//important: disable depth testing to allow multiple sprites to overlap.
 		glDisable(GL_DEPTH_TEST);
 
-		sprender->DrawSprite(sprite, glm::vec2(100, 100), glm::vec2(128), glm::vec4(256, 256, 128, 128), 0, glm::vec4(1), 0);
+		//sprender->DrawSprite(sprite, glm::vec2(100, 100), glm::vec2(128), glm::vec4(256, 256, 128, 128), 0, glm::vec4(1), 0);
 		//sprender.DrawSprite(sprite, glm::vec2(138, 10), glm::vec2(128), glm::vec4(256, 256, 128, 128), 0, glm::vec4(1), 1);
 		//sprender.DrawSprite(sprite, glm::vec2(10, 138), glm::vec2(128), glm::vec4(256, 256, 128, 128), 0, glm::vec4(1), 2);
 		//sprender.DrawSprite(sprite, glm::vec2(138,138), glm::vec2(128), glm::vec4(256, 256, 128, 128), 0, glm::vec4(1), 3);
