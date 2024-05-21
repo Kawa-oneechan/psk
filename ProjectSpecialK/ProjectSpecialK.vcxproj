@@ -80,6 +80,10 @@
     <IncludePath>C:\libs\fmodex\api\inc;C:\libs\lua;C:\libs\glfw-3.3.9.bin.WIN64\include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\libs\fmodex\api\lib;C:\libs\lua;C:\libs\glfw-3.3.9.bin.WIN64\lib-vc2015;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IncludePath>C:\libs\fmodex\api\inc;C:\libs\lua;C:\libs\glfw-3.3.9.bin.WIN64\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\libs\fmodex\api\lib;C:\libs\lua;C:\libs\glfw-3.3.9.bin.WIN64\lib-vc2015;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -129,17 +133,18 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <SubSystem>Windows</SubSystem>
+      <AdditionalDependencies>fmodex64_vc.lib;lua536_d.lib;glfw3.lib;opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Audio.cpp" />
-    <ClCompile Include="crc32.c" />
     <ClCompile Include="Database.cpp" />
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="JsonPatch.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Species.cpp" />
+    <ClCompile Include="support\crc32.c" />
     <ClCompile Include="support\format.cc" />
     <ClCompile Include="support\glad\glad.c" />
     <ClCompile Include="support\JSON\JSON.cpp" />
