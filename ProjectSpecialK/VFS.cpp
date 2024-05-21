@@ -182,8 +182,6 @@ void InitVFS()
 	
 	fmt::print("Pre-sort:\n");
 	auto table = std::vector<std::string>{ "ID", "Name", "Author", "Priority" };
-	//for (const auto& source : sources)
-	//	fmt::print("* \"{}\" by {} ({}, {})\n", source.friendlyName, source.author, source.path, source.priority);
 	for (const auto& source : sources)
 	{
 		table.push_back(source.id);
@@ -198,8 +196,6 @@ void InitVFS()
 
 	fmt::print("Post-sort:\n");
 	table = std::vector<std::string>{ "ID", "Name", "Author", "Priority" };
-	//for (const auto& source : sources)
-	//	fmt::print("* \"{}\" by {} ({}, {})\n", source.friendlyName, source.author, source.path, source.priority);
 	for (const auto& source : sources)
 	{
 		table.push_back(source.id);

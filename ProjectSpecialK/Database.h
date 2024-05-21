@@ -41,4 +41,22 @@ namespace Database
 		}
 		return nullptr;
 	}
+
+	//Find a database entry from a JSONValue. If it's an array of strings, tries each.
+	template<typename T>
+	const T* Find(const JSONValue* value, std::vector<T>* source)
+	{
+		if (value->IsString())
+			return Find<T>(value->AsString(), source);
+		if (value->IsArray())
+		{
+			for (const auto& i : value->AsArray())
+			{
+				auto t = Find<T>(i, source);
+				if (t != nullptr)
+					return t;
+			}
+		}
+		return nullptr;
+	}
 }

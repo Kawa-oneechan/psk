@@ -30,10 +30,10 @@ Villager::Villager(JSONObject& value) : NameableThing(value)
 	}
 	else
 	{
-		auto sp = value["species"]->AsString();
+		auto sp = value["species"];
 		_species = Database::Find<::Species>(sp, &species);
 		if (_species == nullptr)
-			throw std::runtime_error(fmt::format("Unknown species \"{}\" while loading {}.", sp, ID).c_str());
+			throw std::runtime_error(fmt::format("Unknown species {} while loading {}.", sp->Stringify(), ID).c_str());
 		RefSpecies = fmt::format("species:{}", _species->ID);
 		StringToLower(RefSpecies);
 	}
@@ -79,7 +79,7 @@ Villager::Villager(JSONObject& value) : NameableThing(value)
 		else if (_gender->AsString() == "fnb")
 			this->gender = Gender::GEnby;
 		else
-			throw std::runtime_error(fmt::format("Unknown gender \"{}\" while loading {}.", _gender->AsString(), ID).c_str());
+			throw std::runtime_error(fmt::format("Unknown gender {} while loading {}.", _gender->Stringify(), ID).c_str());
 	}
 
 	auto nametag = value["nameTag"]->AsArray();
@@ -90,17 +90,17 @@ Villager::Villager(JSONObject& value) : NameableThing(value)
 		personality = nullptr;
 	else
 	{
-		personality = Database::Find<::Personality>(value["personality"]->AsString(), &personalities);
+		personality = Database::Find<::Personality>(value["personality"], &personalities);
 		if (personality == nullptr)
-			throw std::runtime_error(fmt::format("Unknown personality \"{}\" while loading {}.", value["personality"]->AsString(), ID).c_str());
+			throw std::runtime_error(fmt::format("Unknown personality {} while loading {}.", value["personality"]->Stringify(), ID).c_str());
 	}
 	personalitySubtype = _isSpecial ? 0 : (int)value["personalitySubtype"]->AsNumber();
 	//hobby = value["hobby"];
 	{
-		hobby = Database::Find<::Hobby>(value["hobby"]->AsString(), &hobbies);
+		hobby = Database::Find<::Hobby>(value["hobby"], &hobbies);
 		if (hobby == nullptr)
 		{
-			fmt::print("\x1B[93m" "Unknown hobby \"{}\" while loading {}.\n" "\x1B[0m", value["hobby"]->AsString(), ID);
+			fmt::print("\x1B[93m" "Unknown hobby {} while loading {}.\n" "\x1B[0m", value["hobby"]->Stringify(), ID);
 			hobby = Database::Find<::Hobby>("fallback", &hobbies);
 		}
 	}
@@ -179,7 +179,7 @@ std::string Villager::Nickname()
 {
 	if (_customNickname.length())
 		return _customNickname;
-	return  "Kawa"; //playerName;
+	return thePlayer.Name;
 }
 
 std::string Villager::Nickname(std::string& newNickname)

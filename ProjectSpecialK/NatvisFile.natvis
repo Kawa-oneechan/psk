@@ -31,4 +31,10 @@
 	<Type Name="TextEntry">
 		<DisplayString>{rep}</DisplayString>
 	</Type>
+	<Type Name="JSONValue">
+		<DisplayString Condition="type == 0">Null</DisplayString>
+		<DisplayString Condition="type == 1">{string_value}</DisplayString>
+		<DisplayString Condition="type == 2">{bool_value}</DisplayString>
+		<DisplayString Condition="type == 3">{number_value}</DisplayString>
+	</Type>
 </AutoVisualizer>

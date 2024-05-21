@@ -1,0 +1,50 @@
+{
+  "id" : "psk:cat01",
+  "name" : {
+    "en" : "Jasmine",
+    "ja" : "ジャスミン",
+    "ko" : "재스민",
+    "zh" : "茉莉",
+    "de" : "Jasmin",
+    "ru" : "Жасмин",
+    "nl" : "Jasmijn",
+    "hu" : "Jázmin"
+  },
+  "species" : "cat",
+  "personality" : [ "horny", "uchi" ],
+  "personalitySubtype" : 0,
+  "gender" : "fem",
+  "attraction" : "both",
+  "birthday" : [ 3, 2 ],
+  "hobby" : "music",
+  "colors" : [ "white", "black" ],
+  "nameTag" : [ "#FFFFFF", "#848484" ],
+  "catchphrase" : {
+    "en" : "mmmmrr",
+    "ja" : "うーん",
+    "ru" : "ммммрр"
+  },
+  "clothing" : {
+    "default" : "acnh:sweetheartdress/navyblue",
+    "rain" : [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
+  },
+  "umbrella" : "acnh:blackchicumbrella",
+  "photo" : "acnh:oliviasphoto",
+  "poster" : "acnh:oliviasposter",
+  "house" : {
+    "walls" : "acnh:purplerosewall",
+    "floor" : "acnh:simpleblueflooring",
+    "music" : "acnh:kksonata",
+    "items" : [
+      "acnh:antiqueminitable",
+      "acnh:antiqueconsoletable",
+      "acnh:pianobench/1",
+      "acnh:antiqueclock",
+      "acnh:rattanlowtable/3",
+      "acnh:doublesofa/4",
+      "acnh:fireplace/1",
+      "acnh:phonograph/0/2",
+      "acnh:grandpiano/1"
+    ]
+  }
+}

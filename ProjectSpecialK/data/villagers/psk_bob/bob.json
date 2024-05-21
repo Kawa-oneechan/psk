@@ -1,0 +1,17 @@
+{
+  "id" : "psk:bob",
+  "isSpecial" : true,
+  "customModel" : true,
+  "name" : {
+    "en" : "Bobo",
+    "ja" : "ボボさん",
+    "ko" : "보보 씨",
+    "zh" : "波波叔叔"
+  },
+  "gender" : "mas",
+  "birthday" : [ 6, 4 ],
+  "hobby" : "nature",
+  "nameTag" : [ "#EC7D42", "#61300B" ],
+  "photo" : "psk:bobosphoto",
+  "poster" : "acnh:bobosposter"
+}
