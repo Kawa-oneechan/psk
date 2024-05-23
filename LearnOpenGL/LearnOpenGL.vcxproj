@@ -22,6 +22,7 @@
     <ProjectGuid>{84126A22-8B6A-42AF-BFC0-65259FD76E2B}</ProjectGuid>
     <RootNamespace>LearnOpenGL</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <ProjectName>LearnOpenGL</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -127,6 +128,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="DialogueBox.cpp" />
+    <ClCompile Include="DoomMenu.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="SpriteRenderer.cpp" />
     <ClCompile Include="stb_truetype.cpp" />
@@ -142,7 +145,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="DialogueBox.h" />
+    <ClInclude Include="DoomMenu.h" />
     <ClInclude Include="Shader.h" />
+    <ClInclude Include="SpecialK.h" />
     <ClInclude Include="SpriteRenderer.h" />
     <ClInclude Include="support\format.h" />
     <ClInclude Include="support\glad\glad.h" />

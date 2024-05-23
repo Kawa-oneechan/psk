@@ -1,9 +1,6 @@
 ﻿#include <cstdio>
 #include <ctime>
 #include <cstdarg>
-#include <algorithm>
-#include <stack>
-#include <functional>
 #include "support/glad/glad.h"
 #include <GLFW/glfw3.h>
 #include "support/glm/glm.hpp"
@@ -13,12 +10,9 @@
 #include "support/format.h"
 #include "support/tweeny-3.2.0.h"
 
-#include "Shader.h"
-#include "Texture.h"
-#include "SpriteRenderer.h"
-#include "Camera.h"
-
-#include "VFS.h"
+#include "SpecialK.h"
+#include "DoomMenu.h"
+#include "DialogueBox.h"
 
 #define SCR_WIDTH 1920
 #define SCR_HEIGHT 1080
@@ -31,6 +25,7 @@ Shader* spriteShader = nullptr;
 Texture* whiteRect = nullptr;
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
 SpriteRenderer* sprender = nullptr;
+DialogueBox* dlgBox = nullptr;
 
 float lastX = SCR_WIDTH / 2.0f;
 float lastY = SCR_HEIGHT / 2.0f;
@@ -73,7 +68,7 @@ namespace UI
 	glm::vec4 primaryColor;
 	glm::vec4 secondaryColor;
 	std::vector<glm::vec4> textColors;
-
+	
 	JSONObject& json = JSONObject();
 
 	static void Load(const JSONValue* source)
@@ -89,69 +84,53 @@ namespace UI
 	}
 };
 
-class InputsMap
+InputsMap::InputsMap()
 {
-private:
-	glm::vec2 lastMousePos;
+	Up = Down = Left = Right = false;
+	Enter = Escape = false;
 
-public:
-	bool Up, Down, Left, Right;
-	bool Enter, Escape;
+	lastMousePos = MousePosition = glm::vec2(width, height) + 20.0f;
+	MouseLeft = MouseRight = MouseMiddle = false;
+	MouseHoldLeft = false;
+}
 
-	bool MouseLeft, MouseRight, MouseMiddle;
-	bool MouseHoldLeft;
-	glm::vec2 MousePosition;
-
-	InputsMap()
+void InputsMap::Process(int key, int action)
+{
+	if (action == GLFW_PRESS)
 	{
-		Up = Down = Left = Right = false;
-		Enter = Escape = false;
-
-		lastMousePos = MousePosition = glm::vec2(width, height) + 20.0f;
-		MouseLeft = MouseRight = MouseMiddle = false;
-		MouseHoldLeft = false;
-	}
-
-	void Process(int key, int action)
-	{
-		if (action == GLFW_PRESS)
+		switch (key)
 		{
-			switch (key)
-			{
-			case GLFW_KEY_UP: Up = true; break;
-			case GLFW_KEY_DOWN: Down = true; break;
-			case GLFW_KEY_LEFT: Left = true; break;
-			case GLFW_KEY_RIGHT: Right = true; break;
-			case GLFW_KEY_ENTER: Enter = true; break;
-			case GLFW_KEY_ESCAPE: Escape = true; break;
-			default: break;
-			}
+		case GLFW_KEY_UP: Up = true; break;
+		case GLFW_KEY_DOWN: Down = true; break;
+		case GLFW_KEY_LEFT: Left = true; break;
+		case GLFW_KEY_RIGHT: Right = true; break;
+		case GLFW_KEY_ENTER: Enter = true; break;
+		case GLFW_KEY_ESCAPE: Escape = true; break;
+		default: break;
 		}
 	}
+}
 	
-	void MouseMove(float x, float y)
-	{
-		lastMousePos = MousePosition;
-		MousePosition.x = x;
-		MousePosition.y = y;
-	}
+void InputsMap::MouseMove(float x, float y)
+{
+	lastMousePos = MousePosition;
+	MousePosition.x = x;
+	MousePosition.y = y;
+}
 
-	bool MouseMoved()
-	{
-		auto ret = (lastMousePos != MousePosition);
-		lastMousePos = MousePosition;
-		return ret;
-	}
+bool InputsMap::MouseMoved()
+{
+	auto ret = (lastMousePos != MousePosition);
+	lastMousePos = MousePosition;
+	return ret;
+}
 
-	void Clear()
-	{
-		Up = Down = Left = Right = Enter = Escape = false;
-		MouseLeft = MouseRight = MouseMiddle = false;
-	}
-};
-static InputsMap& Inputs = InputsMap();
-
-typedef std::vector<glm::vec4> TextureAtlas;
+void InputsMap::Clear()
+{
+	Up = Down = Left = Right = Enter = Escape = false;
+	MouseLeft = MouseRight = MouseMiddle = false;
+}
+InputsMap& Inputs = InputsMap();
 
 void GetAtlas(TextureAtlas &ret, const std::string& jsonFile)
 {
@@ -186,29 +165,7 @@ void GetAtlas(TextureAtlas &ret, const std::string& jsonFile)
 	throw std::runtime_error(fmt::format("GetAtlas: file {} has an unknown type \"{}\".", jsonFile, doc["type"]->AsString()));
 }
 
-template<typename T> static T clamp(T val, T minval, T maxval) { return std::max<T>(std::min<T>(val, maxval), minval); }
-
-class Tickable
-{
-public:
-	virtual void Tick(double dt) {};
-	virtual void Draw(double dt) {};
-	virtual bool Character(unsigned int codepoint) { return false; }
-};
-
-class Cursor
-{
-private:
-	Texture* hand;
-	TextureAtlas atlas;
-	std::vector<glm::vec2> hotspots;
-	glm::vec2 hotspot;
-	glm::vec4 frame;
-	glm::vec2 size;
-	float scale;
-
-public:
-	Cursor()
+Cursor::Cursor()
 	{
 		hand = new Texture("ui/cursors.png");
 		GetAtlas(atlas, "ui/cursors.json");
@@ -223,23 +180,23 @@ public:
 		size = glm::vec2(frame.w);
 	}
 
-	void Select(int style)
-	{
-		frame = atlas[style];
-		hotspot = hotspots[style];
-	}
+void Cursor::Select(int style)
+{
+	frame = atlas[style];
+	hotspot = hotspots[style];
+}
 
-	void SetScale(int newScale)
-	{
-		scale = newScale / 100.0f;
-		size = glm::vec2(frame.w * scale);
-	}
+void Cursor::SetScale(int newScale)
+{
+	scale = newScale / 100.0f;
+	size = glm::vec2(frame.w * scale);
+}
 
-	void Draw()
-	{
-		sprender->DrawSprite(hand, Inputs.MousePosition - (hotspot * scale), size, frame);
-	}
-};
+void Cursor::Draw()
+{
+	sprender->DrawSprite(hand, Inputs.MousePosition - (hotspot * scale), size, frame);
+}
+
 Cursor* cursor = nullptr;
 
 class UITest : public Tickable
@@ -431,667 +388,6 @@ public:
 					color,
 					100.0f
 				);
-			}
-		}
-	}
-};
-
-//TEMPORARY -- is in Text.cpp in real PSK
-extern std::vector<std::string> Split(std::string& data, char delimiter);
-
-class DialogueBox : public Tickable
-{
-private:
-	Texture* bubble[5];
-	Texture* gradient[2];
-	Texture* nametag;
-	TextureAtlas nametagAtlas;
-	Shader* wobble;
-	std::string displayed;
-	std::string toDisplay;
-	size_t displayCursor;
-	float time;
-	glm::vec4 bubbleColor;
-	glm::vec4 textColor;
-	glm::vec4 nametagColor[2];
-	float nametagWidth;
-	std::string name;
-	int font;
-	int bubbleNum;
-
-	float delay;
-
-	void msbtPass(MSBTParams)
-	{
-		displayed += toDisplay.substr(start, len);
-	}
-
-	typedef void(DialogueBox::*MSBTFunc)(MSBTParams);
-	const std::map<std::string, MSBTFunc> msbtPhase3
-	{
-		{ "color", &DialogueBox::msbtPass },
-		{ "/color", &DialogueBox::msbtPass },
-		{ "size", &DialogueBox::msbtPass },
-		{ "/size", &DialogueBox::msbtPass },
-		{ "font", &DialogueBox::msbtPass },
-		{ "/font", &DialogueBox::msbtPass },
-	};
-
-public:
-
-	DialogueBox()
-	{
-		bubble[0] = new Texture("ui/dialogue/dialogue.png");
-		bubble[1] = new Texture("ui/dialogue/exclamation.png");
-		bubble[2] = new Texture("ui/dialogue/dream.png");
-		bubble[3] = new Texture("ui/dialogue/system.png");
-		//bubble[4] = new Texture("ui/dialogue/wildworld.png", true, GL_REPEAT, GL_NEAREST);
-		gradient[0] = new Texture("gradient_thin.png");
-		gradient[1] = new Texture("gradient_wide.png");
-		nametag = new Texture("ui/dialogue/nametag.png");
-		GetAtlas(nametagAtlas, "ui/dialogue/nametag.json");
-		nametagWidth = 0;
-		wobble = new Shader("shaders/wobble.fs");
-
-		displayCursor = 0;
-		time = 0;
-		delay = 0;
-
-		Text(u8"Truth is... <color:1>the game</color> was rigged\nfrom the start.", 0, "Isabelle", glm::vec4(1, 0.98f, 0.56f, 1), glm::vec4(0.96f, 0.67f, 0.05f, 1));
-	}
-
-	void Text(const std::string& text)
-	{
-		displayed.clear();
-		toDisplay = text;
-		displayCursor = 0;
-		delay = 50;
-	}
-
-	void Text(const std::string& text, int style, const std::string& speaker, const glm::vec4& tagBack, const glm::vec4& tagInk)
-	{
-		Style(style);
-		if (style != 3)
-		{
-			name = speaker;
-			nametagWidth = sprender->MeasureText(1, name, 120).x - 32;
-			nametagColor[0] = tagBack;
-			nametagColor[1] = tagInk;
-		}
-		else
-		{
-			name.clear();
-		}
-		Text(text);
-	}
-
-	void Text(const std::string& text, int style)
-	{
-		Style(style);
-		Text(text);
-	}
-
-	//void Text(const std::string& text, Villager* speaker)
-
-	void Style(int style)
-	{
-		style = clamp(style, 0, 3);
-
-		if (style == 3) //system
-		{
-			bubbleColor = UI::primaryColor;
-			textColor = UI::textColors[8];
-			font = 1;
-			bubbleNum = 3;
-		}
-		else
-		{
-			bubbleColor = UI::secondaryColor;
-			textColor = UI::textColors[0];
-			font = 2;
-			bubbleNum = style;
-		}
-	}
-
-	void Draw(double dt)
-	{
-		time += (float)dt * 0.005f;
-
-		auto dlgScale = scale;
-		auto dlgWidth = bubble[0]->width * dlgScale;
-		auto dlgHeight = bubble[0]->height * dlgScale;
-		auto dlgLeft = (int)(width / 2) - dlgWidth;
-		auto dlgTop = (int)height - dlgHeight - 10;
-
-		wobble->Use();
-		gradient[0]->Use(1);
-		gradient[1]->Use(2);
-		wobble->SetInt("gradient1", 1);
-		wobble->SetInt("gradient2", 2);
-		wobble->SetFloat("time", time);
-
-		//if (bubbleNum == 4)
-		//	sprender->DrawSprite(*bubble[bubbleNum], glm::vec2(dlgLeft, dlgTop), glm::vec2(dlgWidth * 2, dlgHeight), glm::vec4(0));
-		//else
-		{
-			sprender->DrawSprite(wobble, bubble[bubbleNum], glm::vec2(dlgLeft, dlgTop), glm::vec2(dlgWidth, dlgHeight), glm::vec4(0), 0, bubbleColor, 0);
-			sprender->DrawSprite(wobble, bubble[bubbleNum], glm::vec2(dlgLeft + dlgWidth, dlgTop), glm::vec2(dlgWidth, dlgHeight), glm::vec4(0, 0, bubble[0]->width, bubble[0]->height), 0, bubbleColor, 1);
-		}
-
-		sprender->DrawText(font, displayed, glm::vec2(dlgLeft + (200 * scale), dlgTop + (100 * scale)), textColor, 150 * scale);
-
-		if (!name.empty())
-		{
-			const auto tagAngle = -2.0f;
-			const auto tagPos = glm::vec2(dlgLeft + (150 * scale), dlgTop + (sinf(time * 2) * 10) * scale);
-			const auto tagSize = glm::vec2(nametagAtlas[0].z, nametagAtlas[0].w) * scale;
-			//const auto tagMidWidth = 128; //pre-measure this to fit in the Text() calls.
-
-			const auto tagPosL = tagPos;
-			const auto tagPosM = tagPosL + glm::vec2(cosf(glm::radians(tagAngle)) * tagSize.x, sinf(glm::radians(tagAngle)) * tagSize.x);
-			const auto tagPosR = tagPosM + glm::vec2(cosf(glm::radians(tagAngle)) * nametagWidth, sinf(glm::radians(tagAngle)) * nametagWidth);
-			//TODO: figure this one out properly
-			const auto tagPosT = tagPosL + glm::vec2(cosf(glm::radians(tagAngle)) * (tagSize.x - 16), sinf(glm::radians(tagAngle)) * (tagSize.x - 512));
-			sprender->DrawSprite(nametag, tagPosL, tagSize, nametagAtlas[0], tagAngle, nametagColor[0], SPR_TOPLEFT);
-			sprender->DrawSprite(nametag, tagPosM, glm::vec2(nametagWidth, tagSize.y), nametagAtlas[2], tagAngle, nametagColor[0], SPR_TOPLEFT);
-			sprender->DrawSprite(nametag, tagPosR, tagSize, nametagAtlas[1], tagAngle, nametagColor[0], SPR_TOPLEFT);
-			sprender->DrawText(1, name, tagPosT, nametagColor[1], 120 * scale, tagAngle);
-		}
-
-		//maybe afterwards port this to the UI Panel system?
-
-		//sprender->DrawText(1, fmt::format("DialogueBox: {}", time), glm::vec2(0, 16), glm::vec4(0, 0, 0, 0.25), 50);
-	}
-
-	void Tick(double dt)
-	{
-		delay -= (float)dt;
-		if (delay > 0)
-			return;
-
-		if (displayCursor >= toDisplay.length())
-			return;
-
-		//We use UTF-8 to store strings but display in UTF-16.
-		unsigned int ch = toDisplay[displayCursor++] & 0xFF;
-		if ((ch & 0xE0) == 0xC0)
-		{
-			ch = (ch & 0x1F) << 6;
-			ch |= (toDisplay[displayCursor++] & 0x3F);
-		}
-		else if ((ch & 0xF0) == 0xE0)
-		{
-			ch = (ch & 0x1F) << 12;
-			ch |= (toDisplay[displayCursor++] & 0x3F) << 6;
-			ch |= (toDisplay[displayCursor++] & 0x3F);
-		}
-
-		if (ch == '<')
-		{
-			auto msbtEnd = toDisplay.find_first_of('>', displayCursor);
-			auto msbtStart = displayCursor;
-			displayCursor = msbtEnd + 1;
-
-			auto msbtWhole = toDisplay.substr(msbtStart, msbtEnd - msbtStart);
-			auto msbt = Split(msbtWhole, ':');
-			auto func = msbtPhase3.find(msbt[0]);
-			if (func != msbtPhase3.end())
-			{
-				std::invoke(func->second, this, msbt, (int)msbtStart - 1, (int)(msbtEnd - msbtStart) + 2);
-				//func->second(msbt, (int)msbtStart - 1, (int)(msbtEnd - msbtStart) + 2);
-			}
-		}
-		else
-		{
-			//Gotta re-encode the UTF-16 to UTF-8 here.
-			if (ch < 0x80)
-				displayed += ch;
-			else if (ch < 0x0800)
-			{
-				displayed += (char)(((ch >> 6) & 0x1F) | 0xC0);
-				displayed += (char)(((ch >> 0) & 0x3F) | 0x80);
-			}
-			else if (ch < 0x10000)
-			{
-				displayed += (char)(((ch >> 12) & 0x0F) | 0xE0);
-				displayed += (char)(((ch >> 6) & 0x3F) | 0x80);
-				displayed += (char)(((ch >> 0) & 0x3F) | 0x80);
-			}
-		}
-		delay = 50;
-	}
-};
-DialogueBox* dlgBox = nullptr;
-
-typedef enum
-{
-	Invalid, Text, Options, Slider, Checkbox, Page, Custom, Back
-} DoomMenuTypes;
-
-class DoomMenuItem
-{
-public:
-	std::string caption = "???";
-	std::vector<std::string> options;
-	int selection = 0;
-	DoomMenuTypes type = DoomMenuTypes::Invalid;
-	int minVal = 0;
-	int maxVal = 100;
-	int step = 1;
-	std::function<std::string(DoomMenuItem*)> format;
-	std::function<void(DoomMenuItem*)> change;
-	std::vector<DoomMenuItem*>* page;
-
-	DoomMenuItem(const std::string& cap, int min, int max, int val, int stp, std::function<std::string(DoomMenuItem*)> fmt, std::function<void(DoomMenuItem*)> chg = nullptr) : caption(cap), type(DoomMenuTypes::Slider), minVal(min), maxVal(max), selection(val), step(stp), format(fmt), change(chg), page(nullptr)
-	{
-	}
-
-	DoomMenuItem(const std::string& cap, std::vector<DoomMenuItem*>* tgt) : caption(cap), type(DoomMenuTypes::Page), page(tgt)
-	{
-	}
-
-	DoomMenuItem(const std::string& cap, bool val, std::function<void(DoomMenuItem*)> chg = nullptr) : caption(cap), type(DoomMenuTypes::Checkbox), selection(val ? 1 : 0), change(chg), page(nullptr)
-	{
-	}
-
-	DoomMenuItem(const std::string& cap, int val, std::initializer_list<std::string> opts, std::function<void(DoomMenuItem*)> chg = nullptr) : caption(cap), type(DoomMenuTypes::Options), selection(val), change(chg), page(nullptr)
-	{
-		for (auto i : opts)
-			options.emplace_back(i);
-	}
-
-	DoomMenuItem(const std::string& cap, int fnt = 0, int siz = 100) : caption(cap), type(DoomMenuTypes::Text), selection(fnt), maxVal(siz), page(nullptr)
-	{
-	}
-};
-
-class DoomMenu : public Tickable
-{
-private:
-	Texture* controls;
-	TextureAtlas controlsAtlas;
-	std::vector<DoomMenuItem*>* items;
-	int highlight, mouseHighlight;
-	int scroll, visible = 12;
-
-	std::vector<DoomMenuItem*> options;
-	std::vector<DoomMenuItem*> content;
-	std::vector<DoomMenuItem*> volume;
-
-	std::stack<std::vector<DoomMenuItem*>> stack;
-
-	std::vector<float> itemY;
-	float itemX;
-	float sliderStart, sliderEnd;
-	int sliderHolding;
-
-	void rebuild()
-	{
-		auto back = new DoomMenuItem("Back", nullptr);
-		back->type = DoomMenuTypes::Back;
-
-		auto minutes = [&](DoomMenuItem* i)
-		{
-			return fmt::format("{} minutes", i->selection);
-		};
-		auto percent = [&](DoomMenuItem* i)
-		{
-			return fmt::format("{}%", i->selection);
-		};
-
-		options.clear();
-		content.clear();
-		volume.clear();
-
-		options.push_back(new DoomMenuItem("Options", 2, 120));
-
-		options.push_back(new DoomMenuItem("Content Manager...", &content));
-		options.push_back(new DoomMenuItem("Language", 0, { "US English", u8"Japanese / 日本語", "German / Deutsch", "Spanish / español", u8"French / français", "Italian / italiano", "Hungarian / magyar", "Dutch / Nederlands" }, [&](DoomMenuItem*i) { dlgBox->Text(fmt::format("You chose <color:1>{}</color>.", i->options[i->selection])); }));
-		options.push_back(new DoomMenuItem("Continue from", 0, { "Front door", "Main room", "Last used bed", "Last location" }));
-		options.push_back(new DoomMenuItem("Speech", 1, { "Silence", "Bebebese", "Animalese" }));
-		options.push_back(new DoomMenuItem("Ping rate", 2, 60, 3, 1, minutes));
-		options.push_back(new DoomMenuItem("Balloon chance", 10, 60, 15, 5, percent));
-		options.push_back(new DoomMenuItem("Cursor scale", 50, 150, 100, 10, percent, [&](DoomMenuItem*i) { cursor->SetScale(i->selection); }));
-		options.push_back(new DoomMenuItem("Volume...", &volume));
-
-		content.push_back(new DoomMenuItem("Content Manager", 2, 120));
-		content.push_back(new DoomMenuItem("Venomous bugs <size:50>(tarantulas, scorpions et al)", true));
-		content.push_back(new DoomMenuItem("Sea bass", true, [&](DoomMenuItem*i)
-		{
-			dlgBox->Text(i->selection ? "Whatever you say..." : "Aye aye, Miss Mayor! We'll start\npouring anti-freeze in their\nspawning grounds right away!");
-		}));
-		content.push_back(new DoomMenuItem("Cranky villagers", true));
-		content.push_back(new DoomMenuItem("Horse villagers", true));
-		content.push_back(new DoomMenuItem("Easter", true));
-		content.push_back(back);
-
-		volume.push_back(new DoomMenuItem("Volume", 2, 120));
-		volume.push_back(new DoomMenuItem("Music", 0, 100, 70, 10, percent));
-		volume.push_back(new DoomMenuItem("Ambience", 0, 100, 70, 10, percent));
-		volume.push_back(new DoomMenuItem("Sound effects", 0, 100, 70, 10, percent));
-		volume.push_back(new DoomMenuItem("Speech", 0, 100, 70, 10, percent));
-		volume.push_back(back);
-	}
-
-public:
-	DoomMenu()
-	{
-		controls = new Texture("ui/controls.png");
-		GetAtlas(controlsAtlas, "ui/controls.json");
-
-		rebuild();
-
-		highlight = 0;
-		mouseHighlight = 0;
-		scroll = 0;
-		
-		//to be filled in at first draw
-		sliderStart = 0;
-		sliderEnd = 1;
-		sliderHolding = -1;
-		itemX = 0;
-
-		stack.push(options);
-		items = &stack.top();
-	}
-
-	void Tick(double dt)
-	{
-		//visible = (int)(12.0f * scale);
-
-		if (Inputs.MouseMoved())
-		{
-			const int col = (int)(400 * scale);
-			mouseHighlight = -1;
-			if (Inputs.MousePosition.x >= itemX && Inputs.MousePosition.x <= itemX + (col * 2.5f))
-			{
-				for (int i = 0; i < itemY.size() - 1; i++)
-				{
-					if (Inputs.MousePosition.y >= itemY[i] && Inputs.MousePosition.y < itemY[i + 1])
-					{
-						mouseHighlight = highlight = i;
-						break;
-					}
-				}
-			}
-		}
-		cursor->Select(0);
-		if (mouseHighlight != -1 && items->at(highlight)->type == DoomMenuTypes::Slider)
-		{
-			if (Inputs.MousePosition.x >= sliderStart && Inputs.MousePosition.x <= sliderEnd)
-			{
-				if (sliderHolding == -1)
-					sliderHolding = highlight;
-				if (highlight == sliderHolding)
-				{
-					cursor->Select(5);
-					if (Inputs.MouseHoldLeft)
-					{
-						cursor->Select(6);
-						auto item = items->at(highlight);
-
-						//thanks GZDoom
-						auto x = clamp(Inputs.MousePosition.x, sliderStart, sliderEnd);
-						auto  v = item->minVal + ((x - sliderStart) * (item->maxVal - item->minVal)) / (sliderEnd - sliderStart);
-						item->selection = (int)(round(v / item->step) * item->step);
-						if (item->change != nullptr)
-							item->change(item);
-						/*
-						auto ccur = clamp(item->selection, item->minVal, item->maxVal) - item->minVal;
-						auto thumbPos = partSize + ((ccur * (barLength - (partSize * 2))) / range);
-						*/
-						//return;
-					}
-					else
-						sliderHolding = -1;
-				}
-			}
-		}
-		if (mouseHighlight != highlight && Inputs.MouseLeft)
-			Inputs.MouseLeft = false;
-
-		while (items->at(highlight)->type == DoomMenuTypes::Text)
-			highlight++;
-
-		if (Inputs.Escape)
-		{
-			Inputs.Escape = false;
-			if (stack.size() > 1)
-			{
-				highlight = 0;
-				mouseHighlight = -1;
-				stack.pop();
-				items = &stack.top();
-				return;
-			}
-		}
-
-		if (Inputs.Up)
-		{
-			Inputs.Clear();
-			int top = items->at(0)->type == DoomMenuTypes::Text ? 1 : 0;
-			if (highlight == top)
-			{
-				highlight = (int)items->size();
-				scroll = (int)items->size() - visible;
-				if (scroll < 0) scroll = 0;
-			}
-			highlight--;
-			if (highlight <= scroll)
-				scroll--;
-			if (scroll == -1)
-			{
-				scroll = 0;
-				highlight = top;
-			}
-			while (items->at(highlight - scroll)->type == DoomMenuTypes::Text)
-			{
-				if (highlight - scroll == top)
-				{
-					highlight = (int)items->size();
-					scroll = (int)items->size() - visible;
-				}
-				highlight--;
-			}
-		}
-		else if (Inputs.Down)
-		{
-			Inputs.Clear();
-			highlight++;
-			if (highlight - scroll >= visible)
-				scroll++;
-			if (highlight == items->size())
-			{
-				highlight = 0;
-				scroll = 0;
-			}
-		}
-
-		if (highlight == -1)
-			return;
-
-		auto item = items->at(highlight);
-
-		if (item->type == DoomMenuTypes::Page)
-		{
-			if (Inputs.Enter || Inputs.MouseLeft)
-			{
-				stack.push(*item->page);
-				items = item->page;
-				highlight = 0;
-				mouseHighlight = -1;
-			}
-		}
-		else if (item->type == DoomMenuTypes::Back)
-		{
-			if (Inputs.Enter || Inputs.MouseLeft)
-			{
-				if (stack.size() > 1)
-				{
-					highlight = 0;
-					stack.pop();
-					items = &stack.top();
-					Inputs.Clear();
-					return;
-				}
-			}
-		}
-		else if (item->type == DoomMenuTypes::Checkbox)
-		{
-			if (Inputs.Enter || Inputs.MouseLeft)
-			{
-				item->selection ^= 1;
-				if (item->change != nullptr)
-					item->change(item);
-			}
-		}
-		else if (item->type == DoomMenuTypes::Options)
-		{
-			if (Inputs.Enter || Inputs.MouseLeft)
-			{
-				Inputs.Enter = false;
-				Inputs.Right = true;
-				Inputs.MouseLeft = false;
-			}
-			if (Inputs.Left)
-			{
-				Inputs.Clear();
-				if (item->selection == 0) item->selection = (int)item->options.size();
-				item->selection--;
-				if (item->change != nullptr)
-					item->change(item);
-			}
-			else if (Inputs.Right)
-			{
-				Inputs.Clear();
-				item->selection++;
-				if (item->selection == item->options.size()) item->selection = 0;
-				if (item->change != nullptr)
-					item->change(item);
-			}
-		}
-		else if (item->type == DoomMenuTypes::Slider)
-		{
-			if (Inputs.Left)
-			{
-				Inputs.Clear();
-				if (item->selection > item->minVal)
-				{
-					item->selection -= item->step;
-					if (item->change != nullptr)
-						item->change(item);
-				}
-			}
-			else if (Inputs.Right)
-			{
-				Inputs.Clear();
-				if (item->selection < item->maxVal)
-				{
-					item->selection += item->step;
-					if (item->change != nullptr)
-						item->change(item);
-				}
-			}
-		}
-
-		Inputs.Enter = false;
-		Inputs.MouseLeft = false;
-	}
-
-	void Draw(double dt)
-	{
-		const int col = (int)(400 * scale);
-		auto pos = glm::vec2((width / 2) - ((col * 3) / 2), 80);
-
-		itemX = pos.x;
-		
-		const auto black = glm::vec4(0, 0, 0, 0.5);
-
-		const auto start = items->at(0)->type == DoomMenuTypes::Text ? 1 : 0;
-		const auto shown = std::min(visible, (int)items->size() - scroll);
-
-		const auto partSize = controlsAtlas[4].w * 0.75f *  scale;
-		const auto thumbSize = glm::vec2(controlsAtlas[3].z, controlsAtlas[3].w) * 0.50f * scale;
-
-		sprender->DrawText(0, fmt::format("DoomMenu: {}/{} {} {},{} - {},{}", highlight, mouseHighlight, Inputs.MouseHoldLeft, Inputs.MousePosition.x, Inputs.MousePosition.y, sliderStart, sliderEnd), glm::vec2(0, 16));
-
-		itemY.clear();
-
-		for (int i = 0; i < shown; i++)
-		{
-			auto item = i == 0 ? items->at(0) : items->at(i + scroll);
-			auto color = glm::vec4(1, 1, i + scroll == highlight ? 0.25 : 1, 1);
-			auto offset = glm::vec2(item->type == DoomMenuTypes::Checkbox ? (40 * scale) : 0, 0);
-			auto font = 1;
-			auto size = 100 * scale;
-
-			if (item->type == DoomMenuTypes::Text)
-			{
-				font = item->selection;
-				size = item->maxVal * scale;
-			}
-
-			sprender->DrawText(font, item->caption, pos + offset + glm::vec2(2), black, size);
-			sprender->DrawText(font, item->caption, pos + offset, color, size);
-
-			if (item->type == DoomMenuTypes::Options)
-			{
-				sprender->DrawText(1, item->options[item->selection], pos + glm::vec2(col + 2, 2), black, size);
-				sprender->DrawText(1, item->options[item->selection], pos + glm::vec2(col, 0), color, size);
-			}
-			else if (item->type == DoomMenuTypes::Slider)
-			{
-				if (item->format != nullptr)
-				{
-					auto fmt = item->format(item);
-					sprender->DrawText(1, fmt, pos + glm::vec2(col + col+ 56, 12), black, size * 0.75f);
-					sprender->DrawText(1, fmt, pos + glm::vec2(col + col + 54, 10), color, size * 0.75f);
-				}
-			}
-
-			itemY.push_back(pos.y);
-			pos.y += (40 * scale) + size - (100 * scale);
-		}
-
-		//terminator
-		itemY.push_back(pos.y);
-
-		for (int i = 0; i < shown; i++)
-		{
-			auto item = i == 0 ? items->at(0) : items->at(i + scroll);
-			auto color = glm::vec4(1, 1, i + scroll == highlight ? 0.25 : 1, 1);
-			auto offset = glm::vec2(item->type == DoomMenuTypes::Checkbox ? (40 * scale) : 0, 0);
-			auto font = 1;
-			auto size = 100 * scale;
-
-			pos.y = itemY[i];
-
-			if (item->type == DoomMenuTypes::Checkbox)
-			{
-				auto checkColor = color * glm::vec4(1, 1, 1, 0.5);
-				sprender->DrawSprite(controls, pos + glm::vec2(0, 4 * scale), glm::vec2(partSize), controlsAtlas[4], 0, checkColor);
-				if (item->selection)
-					sprender->DrawSprite(controls, pos + glm::vec2(0, 4 * scale), glm::vec2(partSize), controlsAtlas[5], 0, color);
-			}
-			else if (item->type == DoomMenuTypes::Slider)
-			{
-				auto trackColor = color * glm::vec4(1, 1, 1, 0.5);
-				auto barLength = col;
-				auto partSize = controlsAtlas[0].w * 0.5f;
-				sprender->DrawSprite(controls, pos + glm::vec2(col, 10), glm::vec2(partSize), controlsAtlas[0], 0, trackColor);
-				sprender->DrawSprite(controls, pos + glm::vec2(col + barLength + (partSize * 1), 10), glm::vec2(partSize), controlsAtlas[1], 0, trackColor);
-				sprender->DrawSprite(controls, pos + glm::vec2(col + partSize, 10), glm::vec2(barLength, partSize), controlsAtlas[2], 0, trackColor);
-
-				sliderStart = pos.x + col + partSize;
-				sliderEnd = sliderStart + barLength;
-
-				//thanks GZDoom
-				auto range = item->maxVal - item->minVal;
-				auto ccur = clamp(item->selection, item->minVal, item->maxVal) - item->minVal;
-				auto thumbPos = partSize + ((ccur * (barLength - (partSize * 2))) / range);
-
-				auto thumb = glm::vec2(col + (int)thumbPos, 10);
-				sprender->DrawSprite(controls, pos + thumb, thumbSize, controlsAtlas[3], 0, color);
 			}
 		}
 	}

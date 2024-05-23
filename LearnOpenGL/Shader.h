@@ -1,6 +1,7 @@
 #pragma once
 
 #include "support/glad/glad.h"
+#include "support/glm/glm.hpp"
 #include "VFS.h"
 
 class Shader
