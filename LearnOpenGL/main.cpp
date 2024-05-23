@@ -1,18 +1,17 @@
-﻿#include <cstdio>
-#include <ctime>
-#include <cstdarg>
-#include "support/glad/glad.h"
-#include <GLFW/glfw3.h>
-#include "support/glm/glm.hpp"
-#include "support/glm/gtc/matrix_transform.hpp"
-#include "support/glm/gtc/type_ptr.hpp"
-#include "support/stb_image.h"
-#include "support/format.h"
-#include "support/tweeny-3.2.0.h"
+﻿#include "SpecialK.h"
 
-#include "SpecialK.h"
+#include "InputsMap.h"
+#include "Cursor.h"
+#include "Background.h"
 #include "DoomMenu.h"
 #include "DialogueBox.h"
+#include "PanelLayout.h"
+
+#ifdef DEBUG
+#define WINDOWTITLE "Project Special K (debug build " __DATE__ ")"
+#else
+#define WINDOWTITLE "Project Special K"
+#endif
 
 #define SCR_WIDTH 1920
 #define SCR_HEIGHT 1080
@@ -26,6 +25,7 @@ Texture* whiteRect = nullptr;
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
 SpriteRenderer* sprender = nullptr;
 DialogueBox* dlgBox = nullptr;
+Cursor* cursor = nullptr;
 
 float lastX = SCR_WIDTH / 2.0f;
 float lastY = SCR_HEIGHT / 2.0f;
@@ -63,75 +63,6 @@ glm::vec4 GetJSONVec4(JSONValue* val)
 	return glm::vec4(arr[0]->AsNumber(), arr[1]->AsNumber(), arr[2]->AsNumber(), arr[3]->AsNumber());
 }
 
-namespace UI
-{
-	glm::vec4 primaryColor;
-	glm::vec4 secondaryColor;
-	std::vector<glm::vec4> textColors;
-	
-	JSONObject& json = JSONObject();
-
-	static void Load(const JSONValue* source)
-	{
-		json = source->AsObject();
-		auto colors = json["colors"]->AsObject();
-		primaryColor = GetJSONVec4(colors["primary"]);
-		secondaryColor = GetJSONVec4(colors["secondary"]);
-		for (auto& ink : colors["text"]->AsArray())
-		{
-			textColors.push_back(GetJSONVec4(ink));
-		}
-	}
-};
-
-InputsMap::InputsMap()
-{
-	Up = Down = Left = Right = false;
-	Enter = Escape = false;
-
-	lastMousePos = MousePosition = glm::vec2(width, height) + 20.0f;
-	MouseLeft = MouseRight = MouseMiddle = false;
-	MouseHoldLeft = false;
-}
-
-void InputsMap::Process(int key, int action)
-{
-	if (action == GLFW_PRESS)
-	{
-		switch (key)
-		{
-		case GLFW_KEY_UP: Up = true; break;
-		case GLFW_KEY_DOWN: Down = true; break;
-		case GLFW_KEY_LEFT: Left = true; break;
-		case GLFW_KEY_RIGHT: Right = true; break;
-		case GLFW_KEY_ENTER: Enter = true; break;
-		case GLFW_KEY_ESCAPE: Escape = true; break;
-		default: break;
-		}
-	}
-}
-	
-void InputsMap::MouseMove(float x, float y)
-{
-	lastMousePos = MousePosition;
-	MousePosition.x = x;
-	MousePosition.y = y;
-}
-
-bool InputsMap::MouseMoved()
-{
-	auto ret = (lastMousePos != MousePosition);
-	lastMousePos = MousePosition;
-	return ret;
-}
-
-void InputsMap::Clear()
-{
-	Up = Down = Left = Right = Enter = Escape = false;
-	MouseLeft = MouseRight = MouseMiddle = false;
-}
-InputsMap& Inputs = InputsMap();
-
 void GetAtlas(TextureAtlas &ret, const std::string& jsonFile)
 {
 	auto rjs = ReadJSON(jsonFile);
@@ -165,356 +96,24 @@ void GetAtlas(TextureAtlas &ret, const std::string& jsonFile)
 	throw std::runtime_error(fmt::format("GetAtlas: file {} has an unknown type \"{}\".", jsonFile, doc["type"]->AsString()));
 }
 
-Cursor::Cursor()
-	{
-		hand = new Texture("ui/cursors.png");
-		GetAtlas(atlas, "ui/cursors.json");
-		//atlas = new _TextureAtlas("ui/cursors.json");
-
-		auto hsj = ReadJSON("ui/cursors.json")->AsObject();
-		for (auto& hs : hsj["hotspots"]->AsArray())
-			hotspots.push_back(GetJSONVec2(hs));
-
-		SetScale(100);
-		Select(0);
-		size = glm::vec2(frame.w);
-	}
-
-void Cursor::Select(int style)
+namespace UI
 {
-	frame = atlas[style];
-	hotspot = hotspots[style];
-}
+	glm::vec4 primaryColor;
+	glm::vec4 secondaryColor;
+	std::vector<glm::vec4> textColors;
+	
+	JSONObject& json = JSONObject();
 
-void Cursor::SetScale(int newScale)
-{
-	scale = newScale / 100.0f;
-	size = glm::vec2(frame.w * scale);
-}
-
-void Cursor::Draw()
-{
-	sprender->DrawSprite(hand, Inputs.MousePosition - (hotspot * scale), size, frame);
-}
-
-Cursor* cursor = nullptr;
-
-class UITest : public Tickable
-{
-	void Tick(double dt)
+	static void Load(const JSONValue* source)
 	{
-
-	}
-
-	void Draw(double dt)
-	{
-
-	}
-};
-
-class Background : public Tickable
-{
-private:
-	Texture* wallpaper;
-	Shader* scroller;
-	float time;
-
-public:
-	Background()
-	{
-		wallpaper = new Texture("discobg2.jpg");
-		scroller = new Shader("shaders/scroller.fs");
-		time = 0;
-	}
-
-	void Draw(double dt)
-	{
-		time += (float)dt * 0.005f;
-
-		scroller->Use();
-		scroller->SetFloat("time", time);
-		sprender->DrawSprite(scroller, wallpaper, glm::vec2(0), glm::vec2(width, height), glm::vec4(0, 0, width, height));
-
-		//auto lol = sprender->MeasureText(1, "Project Special K: UI test", 50);
-		//sprender->DrawSprite(*whiteRect, glm::vec2(0), lol, glm::vec4(0), 0, glm::vec4(1, 1, 1, 0.5f));
-		sprender->DrawText(1, "Project Special K: UI test", glm::vec2(0), glm::vec4(1, 1, 1, 0.75), 50);
-		//sprender->DrawText(1, fmt::format("Project Special K: UI test (SCALE = {})", scale), glm::vec2(0), glm::vec4(1, 1, 1, 0.75), 50);
-		//sprender->DrawText(1, u8"日", glm::vec2(0, 20), glm::vec4(1, 1, 1, 0.75), 50);
-		//sprender->DrawText(1, u8"ā", glm::vec2(0), glm::vec4(1, 1, 1, 0.75), 200);
-	}
-};
-
-class Panel
-{
-public:
-	glm::vec2 Position;
-	int Type;
-	float Alpha;
-	int Texture, Shader;
-	int Frame;
-	int Font;
-	float Size;
-	std::string Text;
-	glm::vec4 Color;
-};
-
-class PanelLayout : public Tickable
-{
-private:
-	std::vector<Panel*> panels;
-	std::vector<Texture*> textures;
-	std::vector<TextureAtlas> atlases;
-	std::vector<Shader*> shaders;
-
-	std::vector<tweeny::tween<float>> tweens;
-
-public:
-	glm::vec2 Position;
-	float Alpha;
-
-	PanelLayout(JSONValue* source)
-	{
-		auto src = source->AsObject();
-		auto texturesSet = src["textures"]->AsArray();
-		auto& panelsSet = src["panels"]->AsArray();
-
-		Position = src["position"] != nullptr ? GetJSONVec2(src["position"]) : glm::vec2(0);
-		Alpha = src["alpha"] != nullptr ? (float)src["alpha"]->AsNumber() : 1.0f;
-
-		for (const auto& t : texturesSet)
+		json = source->AsObject();
+		auto colors = json["colors"]->AsObject();
+		primaryColor = GetJSONVec4(colors["primary"]);
+		secondaryColor = GetJSONVec4(colors["secondary"]);
+		for (auto& ink : colors["text"]->AsArray())
 		{
-			auto tfn = t->AsString();
-			auto tex = new Texture(tfn.c_str());
-			textures.push_back(tex);
-
-			tfn = tfn.replace(tfn.length() - 4, 4, ".json");
-			TextureAtlas atl;
-			atl.push_back(glm::vec4(0, 0, tex->width, tex->height));
-			GetAtlas(atl, tfn);
-			atlases.push_back(atl);
+			textColors.push_back(GetJSONVec4(ink));
 		}
-
-		for (const auto& p : panelsSet)
-		{
-			auto pnl = p->AsObject();
-			auto panel = new Panel();
-
-			panel->Position = GetJSONVec2(pnl["position"]);
-			auto& type = pnl["type"]->AsString();
-			if (type == "image") panel->Type = 0;
-			else if (type == "text") panel->Type = 1;
-			if (panel->Type == 0)
-			{
-				panel->Texture = pnl["texture"] != nullptr ? (int)pnl["texture"]->AsNumber() : 0;
-				panel->Frame = pnl["frame"] != nullptr ? (int)pnl["frame"]->AsNumber() : 0;
-			}
-			else if (panel->Type == 1)
-			{
-				panel->Text = pnl["text"] != nullptr ? pnl["text"]->AsString() : "???";
-				panel->Font = pnl["font"] != nullptr ? (int)pnl["font"]->AsNumber() : 1;
-				panel->Size = pnl["size"] != nullptr ? (float)pnl["size"]->AsNumber() : 100.0f;
-			}
-			panel->Color = glm::vec4(1, 1, 1, 1);
-			if (pnl["color"] != nullptr)
-			{
-				if (pnl["color"]->IsString())
-				{
-					auto& clr = pnl["color"]->AsString();
-					if (clr == "primary")
-						panel->Color = UI::primaryColor;
-					else if (clr == "secondary")
-						panel->Color = UI::secondaryColor;
-				}
-				else if (pnl["color"]->IsArray())
-					panel->Color = GetJSONVec4(pnl["color"]);
-			}
-			panel->Alpha = pnl["alpha"] != nullptr ? (float)pnl["alpha"]->AsNumber() : 1.0f;
-			panels.push_back(panel);
-		}
-	}
-
-	void Tick(double dt)
-	{
-		if (tweens.size() > 0)
-		{
-			for (auto i = 0; i < tweens.size(); i++)
-			{
-				auto& tween = tweens[i];
-				if (tween.progress() < 1.0f)
-					tween.step(1); //(int)(dt * 1) + 1);
-				else
-					tweens.erase(tweens.begin() + i);
-			}
-		}
-	}
-
-	void Tween(float* what, tweeny::tween<float> tween)
-	{
-		tween.onStep([what](float v) { *what = v; return false; });
-		tweens.push_back(tween);
-	}
-
-	void Draw(double dt)
-	{
-		for (const auto& panel : panels)
-		{
-			auto color = panel->Color;
-			color.a = clamp(Alpha * panel->Alpha, 0.0f, 1.0f);
-			if (color.a == 0)
-				continue;
-
-			if (panel->Type == 0) //image
-			{
-				auto texture = textures[panel->Texture];
-				auto frame = atlases[panel->Texture][panel->Frame];
-				auto shader = spriteShader; //shaders[panel->Shader];
-
-				sprender->DrawSprite(
-					shader, texture,
-					Position + panel->Position,
-					glm::vec2(frame.z, frame.w),
-					frame,
-					0.0f,
-					color,
-					0
-				);
-			}
-			else if (panel->Type == 1) //text
-			{
-				sprender->DrawText(
-					panel->Font,
-					panel->Text,
-					Position + panel->Position,
-					color,
-					100.0f
-				);
-			}
-		}
-	}
-};
-
-class TextField : public Tickable
-{
-	//TODO: since we have a scissor test, why not have scrolling?
-	//As in, [lo, world!_ ] with the "hel" off-screen, via an offset?
-
-public:
-	glm::vec4 rect;
-	glm::vec4 color;
-	int font;
-	float size;
-	std::string value;
-	size_t caret;
-
-	TextField()
-	{
-		value = "test";
-		caret = value.length();
-
-		rect = glm::vec4(8, 32, 320, 80);
-		color = glm::vec4(1, 1, 0, 1);
-		font = 1;
-		size = 100.0f;
-	}
-
-	void Draw(double dt)
-	{
-		auto pos = glm::vec2(rect.x, rect.y);
-
-		sprender->Flush();
-		const auto h = (int)(rect.w - rect.y);
-		glScissor((int)rect.x, (int)(height - rect.y) - h, (int)(rect.z - rect.x), h);
-		glEnable(GL_SCISSOR_TEST);
-
-		sprender->DrawText(font, value, pos, color, size);
-
-		auto ms = sprender->MeasureText(font, value.substr(0, caret), size);
-		sprender->DrawText(font, "_", pos + glm::vec2(ms.x, 0), glm::vec4(1, 1, 0, 1), size);
-
-		sprender->Flush();
-		glDisable(GL_SCISSOR_TEST);
-	}
-
-	bool Character(unsigned int codepoint)
-	{
-		if (codepoint == '\b')
-		{
-			if (caret > 0)
-			{
-				int toDelete = 1;
-				caret--;
-				if ((value[caret] & 0x80) == 0)
-				{
-				}
-				else
-				{
-					while (value[caret] & 0x80)
-					{
-						caret--;
-						toDelete++;
-						if ((value[caret + 1] & 0xC0) == 0xC0)
-							break;
-					}
-					caret++;
-					toDelete--;
-				}
-				value.erase(caret, toDelete);
-			}
-			return true;
-		}
-		else if (codepoint == 0xFFF0) //left
-		{
-			if (caret > 0)
-			{
-				caret--;
-				if ((value[caret] & 0x80) == 0)
-				{
-				}
-				else
-				{
-					while (value[caret] & 0x80)
-					{
-						caret--;
-						if ((value[caret + 1] & 0xC0) == 0xC0)
-							break;
-					}
-					caret++;
-				}
-			}
-			return true;
-		}
-		else if (codepoint == 0xFFF1) //right
-		{
-			if (caret < value.length())
-			{
-				if ((value[caret] & 0xE0) == 0xE0)
-					caret += 3;
-				else if ((value[caret] & 0xE0) == 0xC0)
-					caret += 2;
-				else
-					caret++;
-			}
-			return true;
-		}
-
-		std::string inserted;
-		if (codepoint < 0x80)
-			inserted += codepoint;
-		else if (codepoint < 0x0800)
-		{
-			inserted += (char)(((codepoint >> 6) & 0x1F) | 0xC0);
-			inserted += (char)(((codepoint >> 0) & 0x3F) | 0x80);
-		}
-		else if (codepoint < 0x10000)
-		{
-			inserted += (char)(((codepoint >> 12) & 0x0F) | 0xE0);
-			inserted += (char)(((codepoint >> 6) & 0x3F) | 0x80);
-			inserted += (char)(((codepoint >> 0) & 0x3F) | 0x80);
-		}
-		
-		value.insert(caret, inserted);
-		caret += inserted.length();
-		return true;
 	}
 };
 
@@ -632,7 +231,7 @@ int main()
 		glfwWindowHint(GLFW_RESIZABLE, 0);
 	}
 
-	window = glfwCreateWindow(WIN_WIDTH, WIN_HEIGHT, "Project Special K maybe", NULL, NULL);
+	window = glfwCreateWindow(WIN_WIDTH, WIN_HEIGHT, WINDOWTITLE, NULL, NULL);
 	if (window == NULL)
 	{
 		printf("Failed to create GLFW window\n");

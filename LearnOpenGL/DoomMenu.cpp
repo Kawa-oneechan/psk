@@ -1,4 +1,6 @@
 ﻿#include "DoomMenu.h"
+#include "InputsMap.h"
+#include "Cursor.h"
 #include "DialogueBox.h"
 
 DoomMenuItem::DoomMenuItem(const std::string& cap, int val, std::initializer_list<std::string> opts, std::function<void(DoomMenuItem*)> chg = nullptr) : caption(cap), type(DoomMenuTypes::Options), selection(val), change(chg), page(nullptr)

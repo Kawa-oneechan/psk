@@ -1,10 +1,23 @@
 #pragma once
 
+#include <cstdio>
+#include <ctime>
+#include <cstdarg>
 #include <vector>
 #include <string>
 #include <functional>
 #include <stack>
 #include <algorithm>
+
+#include "support/glad/glad.h"
+#include <GLFW/glfw3.h>
+
+#include "support/glm/glm.hpp"
+#include "support/glm/gtc/matrix_transform.hpp"
+#include "support/glm/gtc/type_ptr.hpp"
+#include "support/stb_image.h"
+#include "support/format.h"
+#include "support/tweeny-3.2.0.h"
 
 #include "Shader.h"
 #include "Texture.h"
@@ -22,6 +35,8 @@ typedef std::vector<glm::vec4> TextureAtlas;
 extern void GetAtlas(TextureAtlas &ret, const std::string& jsonFile);
 
 extern SpriteRenderer* sprender;
+extern Shader* spriteShader;
+extern Texture* whiteRect;
 
 extern glm::vec2 GetJSONVec2(JSONValue* val);
 extern glm::vec4 GetJSONVec4(JSONValue* val);
@@ -45,43 +60,3 @@ public:
 	virtual void Draw(double dt) {};
 	virtual bool Character(unsigned int codepoint) { return false; }
 };
-
-class InputsMap
-{
-private:
-	glm::vec2 lastMousePos;
-
-public:
-	bool Up, Down, Left, Right;
-	bool Enter, Escape;
-
-	bool MouseLeft, MouseRight, MouseMiddle;
-	bool MouseHoldLeft;
-	glm::vec2 MousePosition;
-
-	InputsMap();
-	void Process(int key, int action);
-	void MouseMove(float x, float y);
-	bool MouseMoved();
-	void Clear();
-};
-extern InputsMap& Inputs;
-
-class Cursor
-{
-private:
-	Texture* hand;
-	TextureAtlas atlas;
-	std::vector<glm::vec2> hotspots;
-	glm::vec2 hotspot;
-	glm::vec4 frame;
-	glm::vec2 size;
-	float scale;
-
-public:
-	Cursor();
-	void Select(int style);
-	void SetScale(int newScale);
-	void Draw();
-};
-extern Cursor* cursor;

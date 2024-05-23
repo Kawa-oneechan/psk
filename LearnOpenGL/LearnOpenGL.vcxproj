@@ -128,9 +128,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Background.cpp" />
+    <ClCompile Include="Cursor.cpp" />
     <ClCompile Include="DialogueBox.cpp" />
     <ClCompile Include="DoomMenu.cpp" />
+    <ClCompile Include="InputsMap.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="PanelLayout.cpp" />
     <ClCompile Include="SpriteRenderer.cpp" />
     <ClCompile Include="stb_truetype.cpp" />
     <ClCompile Include="support\format.cc" />
@@ -140,13 +144,18 @@
     <ClCompile Include="support\miniz.c" />
     <ClCompile Include="support\stb_image.cpp" />
     <ClCompile Include="support\stb_image_write.cpp" />
+    <ClCompile Include="TextField.cpp" />
     <ClCompile Include="TextRenderer.cpp" />
     <ClCompile Include="VFS.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Background.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Cursor.h" />
     <ClInclude Include="DialogueBox.h" />
     <ClInclude Include="DoomMenu.h" />
+    <ClInclude Include="InputsMap.h" />
+    <ClInclude Include="PanelLayout.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="SpecialK.h" />
     <ClInclude Include="SpriteRenderer.h" />
@@ -155,6 +164,7 @@
     <ClInclude Include="support\JSON\JSON.h" />
     <ClInclude Include="support\JSON\JSONValue.h" />
     <ClInclude Include="support\miniz.h" />
+    <ClInclude Include="TextField.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="VFS.h" />
   </ItemGroup>
