@@ -1,11 +1,12 @@
 {
 	"type": "atlas",
 	"rects": [
-		[   0, 0,  44,  44 ], //scrollbar left knob
-		[  44, 0,  44,  44 ], //scrollbar right knob
-		[  40, 0,   8,  44 ], //scrollbar track
-		[  88, 0,  88,  44 ], //scrollbar thumb
-		[ 176, 0,  44,  44 ], //checkbox
-		[ 220, 0,  44,  44 ]  //checkbox mark
+		[   0,   0,  44,  44 ], //scrollbar left knob
+		[  44,   0,  44,  44 ], //scrollbar right knob
+		[  40,   0,   8,  44 ], //scrollbar track
+		[  88,   0,  88,  44 ], //scrollbar thumb
+		[ 176,   0,  44,  44 ], //checkbox
+		[ 220,   0,  44,  44 ], //checkbox mark
+		[   0,  44,  64,  44 ]  //down arrow, message win "next"
 	]
 }

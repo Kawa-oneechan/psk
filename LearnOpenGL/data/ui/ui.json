@@ -20,6 +20,9 @@
 			"ui/panels.png"
 		],
 		"alpha": 0.75,
+		"polygons": [
+			[ [67,4],[195,4],[129,122],[1,122] ]
+		],
 		"panels": [
 			//{ } //backing panel or whatever
 			{
@@ -28,6 +31,7 @@
 				"texture": 0, //squares
 				"frame": 1, //extend left
 				"color": "primary"
+				//polygon defaults to -1 for unclickable
 			},
 			{
 				"id": "hotbarButton_1",
@@ -35,7 +39,8 @@
 				"type": "sprite",
 				"texture": 0,
 				"frame": 0, //regular
-				"color": "primary"
+				"color": "primary",
+				"polygon": 0
 			},
 			{
 				"id": "hotbarButton_2",
