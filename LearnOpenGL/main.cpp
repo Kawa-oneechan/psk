@@ -96,6 +96,26 @@ void GetAtlas(TextureAtlas &ret, const std::string& jsonFile)
 	throw std::runtime_error(fmt::format("GetAtlas: file {} has an unknown type \"{}\".", jsonFile, doc["type"]->AsString()));
 }
 
+bool PointInPoly(const glm::vec2 point, const std::vector<glm::vec2>& polygon)
+{
+	int crossings = 0;
+	const auto numPts = polygon.size() - 1;
+
+	for (auto i = 0; i < numPts; i++)
+	{
+		if (((polygon[i].y <= point.y) && (polygon[i + 1].y > point.y))
+			|| ((polygon[i].y > point.y) && (polygon[i + 1].y <= point.y)))
+		{
+			auto vt = (point.y - polygon[i].y) / (polygon[i + 1].y - polygon[i].y);
+			if (point.x < polygon[i].x + vt * (polygon[i + 1].x - polygon[i].x))
+			{
+				++crossings;
+			}
+		}
+	}
+	return (crossings & 1) == 1;
+}
+
 namespace UI
 {
 	glm::vec4 primaryColor;
@@ -369,6 +389,14 @@ int main()
 
 	int oldTime = 0;
 
+	auto testPoly = std::vector<glm::vec2>{
+		{ 320, 0 },
+		{ 640, 240 },
+		{ 320, 400 },
+		{ 0, 240 },
+		{ 320, 0 }
+	};
+
 	while (!glfwWindowShouldClose(window))
 	{
 		int newTime = std::clock();
@@ -395,6 +423,12 @@ int main()
 			auto t = tickables[i];
 			t->Draw(0.25);
 		}
+
+		for (const auto& pos : testPoly)
+			sprender->DrawSprite(whiteRect, pos, glm::vec2(6), glm::vec4(0), 0.0f, glm::vec4(1, 0, 0, 1));
+		if (Inputs.MousePosition.x < 640 && Inputs.MousePosition.y < 480)
+			cursor->Select(PointInPoly(Inputs.MousePosition, testPoly) ? 2 : 0);
+
 		cursor->Draw();
 		sprender->Flush();
 
