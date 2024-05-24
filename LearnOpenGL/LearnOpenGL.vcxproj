@@ -135,6 +135,7 @@
     <ClCompile Include="InputsMap.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PanelLayout.cpp" />
+    <ClCompile Include="Shader.cpp" />
     <ClCompile Include="SpriteRenderer.cpp" />
     <ClCompile Include="stb_truetype.cpp" />
     <ClCompile Include="support\format.cc" />
@@ -146,6 +147,7 @@
     <ClCompile Include="support\stb_image_write.cpp" />
     <ClCompile Include="TextField.cpp" />
     <ClCompile Include="TextRenderer.cpp" />
+    <ClCompile Include="Texture.cpp" />
     <ClCompile Include="VFS.cpp" />
   </ItemGroup>
   <ItemGroup>
