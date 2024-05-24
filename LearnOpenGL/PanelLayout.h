@@ -14,6 +14,7 @@ public:
 	float Size;
 	std::string Text;
 	glm::vec4 Color;
+	int Polygon;
 };
 
 class PanelLayout : public Tickable
@@ -23,8 +24,10 @@ private:
 	std::vector<Texture*> textures;
 	std::vector<TextureAtlas> atlases;
 	std::vector<Shader*> shaders;
+	std::vector < std::vector<glm::vec2>> polygons;
 
 	std::vector<tweeny::tween<float>> tweens;
+	Panel* highlighted = nullptr;
 
 public:
 	glm::vec2 Position;

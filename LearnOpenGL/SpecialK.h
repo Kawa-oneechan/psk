@@ -41,6 +41,8 @@ extern Texture* whiteRect;
 extern glm::vec2 GetJSONVec2(JSONValue* val);
 extern glm::vec4 GetJSONVec4(JSONValue* val);
 
+extern bool PointInPoly(const glm::vec2 point, const std::vector<glm::vec2>& polygon);
+
 //TEMPORARY -- is in Text.cpp in real PSK
 extern std::vector<std::string> Split(std::string& data, char delimiter);
 

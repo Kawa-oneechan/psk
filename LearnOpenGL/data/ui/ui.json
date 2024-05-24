@@ -48,7 +48,8 @@
 				"type": "sprite",
 				"texture": 0,
 				//leave the frame for testing.
-				"color": "primary"
+				"color": "primary",
+				"polygon": 0
 			},
 			{
 				"id": "hotbarButton_3",
@@ -56,7 +57,8 @@
 				"type": "sprite",
 				"texture": 0,
 				"alpha": 0.5,
-				"color": "primary"
+				"color": "primary",
+				"polygon": 0
 			},
 			{
 				"id": "hotbarButton_4",
@@ -64,7 +66,8 @@
 				"type": "sprite",
 				"texture": 0,
 				"alpha": 0.5,
-				"color": "primary"
+				"color": "primary",
+				"polygon": 0
 			},
 			{
 				"position": [ 8, 8 ],

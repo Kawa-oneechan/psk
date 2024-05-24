@@ -389,14 +389,6 @@ int main()
 
 	int oldTime = 0;
 
-	auto testPoly = std::vector<glm::vec2>{
-		{ 320, 0 },
-		{ 640, 240 },
-		{ 320, 400 },
-		{ 0, 240 },
-		{ 320, 0 }
-	};
-
 	while (!glfwWindowShouldClose(window))
 	{
 		int newTime = std::clock();
@@ -423,11 +415,6 @@ int main()
 			auto t = tickables[i];
 			t->Draw(0.25);
 		}
-
-		for (const auto& pos : testPoly)
-			sprender->DrawSprite(whiteRect, pos, glm::vec2(6), glm::vec4(0), 0.0f, glm::vec4(1, 0, 0, 1));
-		if (Inputs.MousePosition.x < 640 && Inputs.MousePosition.y < 480)
-			cursor->Select(PointInPoly(Inputs.MousePosition, testPoly) ? 2 : 0);
 
 		cursor->Draw();
 		sprender->Flush();
