@@ -48,8 +48,7 @@ extern std::vector<std::string> Split(std::string& data, char delimiter);
 
 namespace UI
 {
-	extern glm::vec4 primaryColor;
-	extern glm::vec4 secondaryColor;
+	extern std::map<std::string, glm::vec4> themeColors;
 	extern std::vector<glm::vec4> textColors;
 
 	extern JSONObject& json;

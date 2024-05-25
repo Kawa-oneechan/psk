@@ -72,10 +72,7 @@ PanelLayout::PanelLayout(JSONValue* source)
 			if (pnl["color"]->IsString())
 			{
 				auto& clr = pnl["color"]->AsString();
-				if (clr == "primary")
-					panel->Color = UI::primaryColor;
-				else if (clr == "secondary")
-					panel->Color = UI::secondaryColor;
+				panel->Color = UI::themeColors.find(clr) != UI::themeColors.end() ? UI::themeColors[clr] : glm::vec4(1);
 			}
 			else if (pnl["color"]->IsArray())
 				panel->Color = GetJSONVec4(pnl["color"]);
@@ -106,8 +103,10 @@ void PanelLayout::Tick(double dt)
 		if (panel->Polygon == -1)
 			continue;
 		poly.clear();
+		auto const frame = atlases[panel->Texture][panel->Frame];
+		auto const size = glm::vec2(frame.z, frame.w);
 		for (const auto& point : polygons[panel->Polygon])
-			poly.emplace_back(point + Position + panel->Position);
+			poly.emplace_back(((point * size) + Position + panel->Position) * scale);
 
 		for (const auto& pos : poly)
 			sprender->DrawSprite(whiteRect, pos, glm::vec2(6), glm::vec4(0), 0.0f, glm::vec4(1, 0, 0, 1));
@@ -148,8 +147,8 @@ void PanelLayout::Draw(double dt)
 
 			sprender->DrawSprite(
 				shader, texture,
-				Position + panel->Position,
-				glm::vec2(frame.z, frame.w),
+				(Position + panel->Position) * scale,
+				glm::vec2(frame.z, frame.w) * scale,
 				frame,
 				0.0f,
 				color,
@@ -161,9 +160,9 @@ void PanelLayout::Draw(double dt)
 			sprender->DrawText(
 				panel->Font,
 				panel->Text,
-				Position + panel->Position,
+				(Position + panel->Position) * scale,
 				color,
-				100.0f
+				100.0f * scale
 			);
 		}
 	}

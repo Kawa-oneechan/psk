@@ -15,8 +15,8 @@
 
 #define SCR_WIDTH 1920
 #define SCR_HEIGHT 1080
-#define WIN_WIDTH 1920
-#define WIN_HEIGHT 1080
+#define WIN_WIDTH 1280
+#define WIN_HEIGHT 720
 
 GLFWwindow* window;
 
@@ -118,8 +118,7 @@ bool PointInPoly(const glm::vec2 point, const std::vector<glm::vec2>& polygon)
 
 namespace UI
 {
-	glm::vec4 primaryColor;
-	glm::vec4 secondaryColor;
+	std::map<std::string, glm::vec4> themeColors;
 	std::vector<glm::vec4> textColors;
 	
 	JSONObject& json = JSONObject();
@@ -128,8 +127,10 @@ namespace UI
 	{
 		json = source->AsObject();
 		auto colors = json["colors"]->AsObject();
-		primaryColor = GetJSONVec4(colors["primary"]);
-		secondaryColor = GetJSONVec4(colors["secondary"]);
+		for (auto& ink : colors["theme"]->AsObject())
+		{
+			themeColors[ink.first] = GetJSONVec4(ink.second);
+		}
 		for (auto& ink : colors["text"]->AsArray())
 		{
 			textColors.push_back(GetJSONVec4(ink));

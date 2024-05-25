@@ -1,0 +1,19 @@
+{
+  "id" : "psk:sel",
+  "isSpecial" : true,
+  "customModel" : true,
+  "name" : {
+    "en" : "Callisto",
+    "ja" : "カリスト",
+    "ko" : "칼리스토",
+    "zh" : "木卫四",
+    "de" : "Kallisto",
+    "es" : "Calisto"
+  },
+  "gender" : "fem",
+  "birthday" : [ 6, 4 ],
+  "hobby" : "nature",
+  "nameTag" : [ "#EC7D42", "#61300B" ],
+  "photo" : "psk:callistosphoto",
+  "poster" : "acnh:callistosposter"
+}

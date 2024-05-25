@@ -7,7 +7,7 @@ void DialogueBox::msbtPass(MSBTParams)
 
 DialogueBox::DialogueBox()
 {
-	bubble[0] = new Texture("ui/dialogue/dialogue.png");
+	bubble[0] = new Texture("ui/dialogue/dialogue.png", true, GL_MIRRORED_REPEAT, GL_LINEAR);
 	bubble[1] = new Texture("ui/dialogue/exclamation.png");
 	bubble[2] = new Texture("ui/dialogue/dream.png");
 	bubble[3] = new Texture("ui/dialogue/system.png");
@@ -65,14 +65,14 @@ void DialogueBox::Style(int style)
 
 	if (style == 3) //system
 	{
-		bubbleColor = UI::primaryColor;
+		bubbleColor = UI::themeColors["primary"];
 		textColor = UI::textColors[8];
 		font = 1;
 		bubbleNum = 3;
 	}
 	else
 	{
-		bubbleColor = UI::secondaryColor;
+		bubbleColor = UI::themeColors["dialogue"];
 		textColor = UI::textColors[0];
 		font = 2;
 		bubbleNum = style;
@@ -100,8 +100,8 @@ void DialogueBox::Draw(double dt)
 	//	sprender->DrawSprite(*bubble[bubbleNum], glm::vec2(dlgLeft, dlgTop), glm::vec2(dlgWidth * 2, dlgHeight), glm::vec4(0));
 	//else
 	{
-		sprender->DrawSprite(wobble, bubble[bubbleNum], glm::vec2(dlgLeft, dlgTop), glm::vec2(dlgWidth, dlgHeight), glm::vec4(0), 0, bubbleColor, 0);
-		sprender->DrawSprite(wobble, bubble[bubbleNum], glm::vec2(dlgLeft + dlgWidth, dlgTop), glm::vec2(dlgWidth, dlgHeight), glm::vec4(0, 0, bubble[0]->width, bubble[0]->height), 0, bubbleColor, 1);
+		sprender->DrawSprite(wobble, bubble[bubbleNum], glm::vec2(dlgLeft, dlgTop), glm::vec2(dlgWidth * 2, dlgHeight), glm::vec4(0, 0, bubble[bubbleNum]->width * 2, bubble[bubbleNum]->height), 0, bubbleColor, 0);
+		//sprender->DrawSprite(wobble, bubble[bubbleNum], glm::vec2(dlgLeft + dlgWidth, dlgTop), glm::vec2(dlgWidth, dlgHeight), glm::vec4(0, 0, bubble[0]->width, bubble[0]->height), 0, bubbleColor, 1);
 	}
 
 	sprender->DrawText(font, displayed, glm::vec2(dlgLeft + (200 * scale), dlgTop + (100 * scale)), textColor, 150 * scale);

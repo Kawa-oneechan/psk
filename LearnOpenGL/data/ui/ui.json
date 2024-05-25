@@ -1,7 +1,9 @@
 {
 	"colors": {
-		"primary":   [ 0.15, 0.30, 0.43, 0.75 ], //#BF264D6E
-		"secondary": [ 1.00, 0.98, 0.89, 1.00 ], //#FFFFFAE3
+		"theme": {
+			"primary":   [ 0.15, 0.30, 0.43, 0.75 ], //#BF264D6E
+			"dialogue":  [ 1.00, 0.98, 0.89, 1.00 ]  //#FFFFFAE3
+		},
 		"text": [
 			[ 0.510, 0.450, 0.340, 1.0 ], //#FF837256 Text
 			[ 0.961, 0.506, 0.773, 1.0 ], //#FFF581C5 Town
@@ -21,7 +23,12 @@
 		],
 		"alpha": 0.75,
 		"polygons": [
-			[ [67,4],[195,4],[129,122],[1,122] ]
+			[
+				[ 0.340, 0.003 ],
+				[ 0.980, 0.003 ],
+				[ 0.650, 0.950 ],
+				[ 0.005, 0.950 ]
+			]
 		],
 		"panels": [
 			//{ } //backing panel or whatever
@@ -57,8 +64,7 @@
 				"type": "sprite",
 				"texture": 0,
 				"alpha": 0.5,
-				"color": "primary",
-				"polygon": 0
+				"color": "primary"
 			},
 			{
 				"id": "hotbarButton_4",
@@ -66,8 +72,7 @@
 				"type": "sprite",
 				"texture": 0,
 				"alpha": 0.5,
-				"color": "primary",
-				"polygon": 0
+				"color": "primary"
 			},
 			{
 				"position": [ 8, 8 ],
