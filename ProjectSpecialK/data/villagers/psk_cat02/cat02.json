@@ -1,31 +1,27 @@
 {
-  "id" : "psk:rbt01",
+  "id" : "psk:cat02",
   "name" : {
-    "en" : "Patch",
-    "ja" : "パッチ",
-    "ko" : "반점",
-    "zh" : "修補",
-    "ru" : "Патч"
+    "en" : "Farrah"
   },
-  "species" : "rbt",
-  "personality" : "uchi",
+  "species" : "cat",
+  "personality" : [ "normal" ],
   "personalitySubtype" : 0,
-  "gender" : "fnb",
+  "gender" : "fem",
   "attraction" : "both",
   "birthday" : [ 3, 2 ],
-  "hobby" : "music",
+  "hobby" : "fitness",
   "colors" : [ "white", "black" ],
   "nameTag" : [ "#FFFFFF", "#848484" ],
   "catchphrase" : {
     "en" : ""
   },
   "clothing" : {
-    "default" : "acnh:rabbittee",
+    "default" : "acnh:heartsweater/red",
     "rain" : [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
   },
   "umbrella" : "acnh:blackchicumbrella",
-  "photo" : "acnh:patchsphoto",
-  "poster" : "acnh:patchsposter",
+  "photo" : "acnh:farrahsphoto",
+  "poster" : "acnh:farrahsposter",
   "house" : {
     "walls" : "acnh:purplerosewall",
     "floor" : "acnh:simpleblueflooring",

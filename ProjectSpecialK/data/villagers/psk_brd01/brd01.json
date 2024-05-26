@@ -1,31 +1,27 @@
 {
-  "id" : "psk:rbt01",
+  "id" : "psk:brd01",
   "name" : {
-    "en" : "Patch",
-    "ja" : "パッチ",
-    "ko" : "반점",
-    "zh" : "修補",
-    "ru" : "Патч"
+    "en" : "Hoshi"
   },
-  "species" : "rbt",
-  "personality" : "uchi",
+  "species" : "brd",
+  "personality" : "snooty",
   "personalitySubtype" : 0,
-  "gender" : "fnb",
+  "gender" : "fem",
   "attraction" : "both",
-  "birthday" : [ 3, 2 ],
+  "birthday" : [ 15, 11 ],
   "hobby" : "music",
-  "colors" : [ "white", "black" ],
+  "colors" : [ "blue", "gray" ],
   "nameTag" : [ "#FFFFFF", "#848484" ],
   "catchphrase" : {
     "en" : ""
   },
   "clothing" : {
-    "default" : "acnh:rabbittee",
+    "default" : "acnh:aranknitsweater/green",
     "rain" : [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
   },
   "umbrella" : "acnh:blackchicumbrella",
-  "photo" : "acnh:patchsphoto",
-  "poster" : "acnh:patchsposter",
+  "photo" : "acnh:hoshisphoto",
+  "poster" : "acnh:hoshisposter",
   "house" : {
     "walls" : "acnh:purplerosewall",
     "floor" : "acnh:simpleblueflooring",

@@ -1,31 +1,27 @@
 {
-  "id" : "psk:rbt01",
+  "id" : "psk:elp01",
   "name" : {
-    "en" : "Patch",
-    "ja" : "パッチ",
-    "ko" : "반점",
-    "zh" : "修補",
-    "ru" : "Патч"
+    "en" : "Brunnhilde"
   },
-  "species" : "rbt",
-  "personality" : "uchi",
+  "species" : "elp",
+  "personality" : "snooty",
   "personalitySubtype" : 0,
-  "gender" : "fnb",
-  "attraction" : "both",
-  "birthday" : [ 3, 2 ],
+  "gender" : "fem",
+  "attraction" : "mas",
+  "birthday" : [ 17, 8 ],
   "hobby" : "music",
-  "colors" : [ "white", "black" ],
+  "colors" : [ "yellow", "brown" ],
   "nameTag" : [ "#FFFFFF", "#848484" ],
   "catchphrase" : {
-    "en" : ""
+    "en" : "hojotoho"
   },
   "clothing" : {
-    "default" : "acnh:rabbittee",
+    "default" : "acnh:vikingtop/brown",
     "rain" : [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
   },
   "umbrella" : "acnh:blackchicumbrella",
-  "photo" : "acnh:patchsphoto",
-  "poster" : "acnh:patchsposter",
+  "photo" : "acnh:brunnhildesphoto",
+  "poster" : "acnh:brunnhildesposter",
   "house" : {
     "walls" : "acnh:purplerosewall",
     "floor" : "acnh:simpleblueflooring",

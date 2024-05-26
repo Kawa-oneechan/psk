@@ -1,31 +1,27 @@
 {
-  "id" : "psk:rbt01",
+  "id" : "psk:bea01",
   "name" : {
-    "en" : "Patch",
-    "ja" : "パッチ",
-    "ko" : "반점",
-    "zh" : "修補",
-    "ru" : "Патч"
+    "en" : "Lissa"
   },
-  "species" : "rbt",
-  "personality" : "uchi",
+  "species" : "bea",
+  "personality" : "peppy",
   "personalitySubtype" : 0,
-  "gender" : "fnb",
+  "gender" : "fem",
   "attraction" : "both",
-  "birthday" : [ 3, 2 ],
+  "birthday" : [ 29, 6 ],
   "hobby" : "music",
-  "colors" : [ "white", "black" ],
+  "colors" : [ "green", "orange" ],
   "nameTag" : [ "#FFFFFF", "#848484" ],
   "catchphrase" : {
-    "en" : ""
+    "en" : "ya heard"
   },
   "clothing" : {
-    "default" : "acnh:rabbittee",
+    "default" : "acnh:aranknitsweater/green",
     "rain" : [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
   },
   "umbrella" : "acnh:blackchicumbrella",
-  "photo" : "acnh:patchsphoto",
-  "poster" : "acnh:patchsposter",
+  "photo" : "acnh:lissasphoto",
+  "poster" : "acnh:lissasposter",
   "house" : {
     "walls" : "acnh:purplerosewall",
     "floor" : "acnh:simpleblueflooring",

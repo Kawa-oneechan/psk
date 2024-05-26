@@ -9,8 +9,10 @@
     "zh" : "波波叔叔"
   },
   "gender" : "mas",
-  "birthday" : [ 6, 4 ],
+  "birthday" : [ 5, 7 ],
+  "catchphrase" : "'owzit",
   "hobby" : "nature",
+  "colors" : [ "green", "orange" ],
   "nameTag" : [ "#EC7D42", "#61300B" ],
   "photo" : "psk:bobosphoto",
   "poster" : "acnh:bobosposter"

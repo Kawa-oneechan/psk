@@ -1,31 +1,27 @@
 {
-  "id" : "psk:rbt01",
+  "id" : "psk:hrs01",
   "name" : {
-    "en" : "Patch",
-    "ja" : "パッチ",
-    "ko" : "반점",
-    "zh" : "修補",
-    "ru" : "Патч"
+    "en" : "Ray"
   },
-  "species" : "rbt",
-  "personality" : "uchi",
+  "species" : "hrs",
+  "personality" : "jock",
   "personalitySubtype" : 0,
-  "gender" : "fnb",
-  "attraction" : "both",
-  "birthday" : [ 3, 2 ],
-  "hobby" : "music",
-  "colors" : [ "white", "black" ],
+  "gender" : "mas",
+  "attraction" : "fem",
+  "birthday" : [ 8, 8 ],
+  "hobby" : "fitness",
+  "colors" : [ "blue", "white" ],
   "nameTag" : [ "#FFFFFF", "#848484" ],
   "catchphrase" : {
     "en" : ""
   },
   "clothing" : {
-    "default" : "acnh:rabbittee",
+    "default" : "acnh:tank/navyblue",
     "rain" : [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
   },
   "umbrella" : "acnh:blackchicumbrella",
-  "photo" : "acnh:patchsphoto",
-  "poster" : "acnh:patchsposter",
+  "photo" : "acnh:raysphoto",
+  "poster" : "acnh:raysposter",
   "house" : {
     "walls" : "acnh:purplerosewall",
     "floor" : "acnh:simpleblueflooring",

@@ -25,12 +25,12 @@
     "ru" : "ммммрр"
   },
   "clothing" : {
-    "default" : "acnh:sweetheartdress/navyblue",
+    "default" : "acnh:heartsweater/red",
     "rain" : [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
   },
   "umbrella" : "acnh:blackchicumbrella",
-  "photo" : "acnh:oliviasphoto",
-  "poster" : "acnh:oliviasposter",
+  "photo" : "acnh:jasminesphoto",
+  "poster" : "acnh:jasminesposter",
   "house" : {
     "walls" : "acnh:purplerosewall",
     "floor" : "acnh:simpleblueflooring",
