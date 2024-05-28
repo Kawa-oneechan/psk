@@ -7,7 +7,7 @@
   "personality" : "snooty",
   "personalitySubtype" : 0,
   "gender" : "fem",
-  "attraction" : "mas",
+  "attraction" : "boys",
   "birthday" : [ 17, 8 ],
   "hobby" : "music",
   "colors" : [ "yellow", "brown" ],
@@ -20,8 +20,8 @@
     "rain" : [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
   },
   "umbrella" : "acnh:blackchicumbrella",
-  "photo" : "acnh:brunnhildesphoto",
-  "poster" : "acnh:brunnhildesposter",
+  "photo" : "psk:brunnhildesphoto",
+  "poster" : "psk:brunnhildesposter",
   "house" : {
     "walls" : "acnh:purplerosewall",
     "floor" : "acnh:simpleblueflooring",

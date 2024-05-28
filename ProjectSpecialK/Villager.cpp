@@ -52,16 +52,14 @@ Villager::Villager(JSONObject& value) : NameableThing(value)
 */
 
 	//Normally, special villagers have no catchphrase but we'll allow it as an option.
-	if (_isSpecial && value["catchphrase"] == nullptr)
-	{
-		RefCatchphrase = "<<special>>";
-	}
+	RefCatchphrase = fmt::format("catchphrase:{}", ID);
+	auto val = value["catchphrase"];
+	if (val == nullptr || (val->IsString() && val->AsString().empty()))
+		val = JSON::Parse("\"dummy\"");
+	if (val->IsString() && val->AsString()[0] == '#')
+		RefCatchphrase = val->AsString().substr(1);
 	else
-	{
-		RefCatchphrase = fmt::format("catchphrase:{}", ID.substr(ID.find_last_of(':') + 1));
-		auto val = value["catchphrase"];
 		TextAdd(RefCatchphrase, *val);
-	}
 
 	auto birthday = value["birthday"]->AsArray();
 	_birthday[0] = (int)birthday[0]->AsNumber();
@@ -161,7 +159,7 @@ const std::string Villager::Birthday()
 	return TextDateMD(_birthday[1], _birthday[0]);
 }
 
-std::string Villager::Catchphrase()
+const std::string Villager::Catchphrase()
 {
 	if (_customCatchphrase.length())
 		return _customCatchphrase;
@@ -175,7 +173,7 @@ std::string Villager::Catchphrase(std::string& newPhrase)
 	return oldPhrase;
 }
 
-std::string Villager::Nickname()
+const std::string Villager::Nickname()
 {
 	if (_customNickname.length())
 		return _customNickname;

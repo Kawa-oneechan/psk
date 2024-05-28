@@ -7,7 +7,7 @@
   "personality" : "jock",
   "personalitySubtype" : 0,
   "gender" : "mas",
-  "attraction" : "fem",
+  "attraction" : "girls",
   "birthday" : [ 8, 8 ],
   "hobby" : "fitness",
   "colors" : [ "blue", "white" ],
@@ -20,8 +20,8 @@
     "rain" : [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
   },
   "umbrella" : "acnh:blackchicumbrella",
-  "photo" : "acnh:raysphoto",
-  "poster" : "acnh:raysposter",
+  "photo" : "psk:raysphoto",
+  "poster" : "psk:raysposter",
   "house" : {
     "walls" : "acnh:purplerosewall",
     "floor" : "acnh:simpleblueflooring",

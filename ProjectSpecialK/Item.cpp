@@ -14,7 +14,10 @@ NameableThing::NameableThing(JSONObject& value)
 	RefName = ref;
 
 	auto val = value["name"];
-	TextAdd(ref, *val);
+	if (val->IsString() && val->AsString()[0] == '#')
+		RefName = ref = val->AsString().substr(1);
+	else
+		TextAdd(ref, *val);
 
 	EnName = StripMSBT(TextGet(ref, Language::EUen));
 }

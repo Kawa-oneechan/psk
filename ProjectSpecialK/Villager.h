@@ -72,9 +72,9 @@ public:
 	const Model* Model();
 	const std::string Birthday();
 	bool IsSpecial() { return _isSpecial; }
-	std::string Catchphrase();
+	const std::string Catchphrase();
 	std::string Catchphrase(std::string& newPhrase);
-	std::string Nickname();
+	const std::string Nickname();
 	std::string Nickname(std::string& newNickname);
 
 	void Manifest();

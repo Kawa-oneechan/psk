@@ -1,27 +1,27 @@
 {
-  "id" : "psk:cat02",
+  "id" : "psk:wol01",
   "name" : {
-    "en" : "Farrah"
+    "en" : "Retro"
   },
-  "species" : "cat",
-  "personality" : [ "normal" ],
+  "species" : "wol",
+  "personality" : "smug",
   "personalitySubtype" : 0,
-  "gender" : "fem",
-  "attraction" : "both",
-  "birthday" : [ 3, 2 ],
-  "hobby" : "fitness",
+  "gender" : "mnb",
+  "attraction" : "girls",
+  "birthday" : [ 28, 10 ],
+  "hobby" : "education",
   "colors" : [ "white", "black" ],
   "nameTag" : [ "#FFFFFF", "#848484" ],
   "catchphrase" : {
-    "en" : ""
+    "en" : "fuzzies"
   },
   "clothing" : {
-    "default" : "acnh:heartsweater/red",
+    "default" : "acnh:retrosweater/purple",
     "rain" : [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
   },
   "umbrella" : "acnh:blackchicumbrella",
-  "photo" : "psk:farrahsphoto",
-  "poster" : "psk:farrahsposter",
+  "photo" : "psk:retrosphoto",
+  "poster" : "psk:retrosposter",
   "house" : {
     "walls" : "acnh:purplerosewall",
     "floor" : "acnh:simpleblueflooring",

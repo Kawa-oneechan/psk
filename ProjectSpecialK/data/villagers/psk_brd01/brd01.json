@@ -20,8 +20,8 @@
     "rain" : [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
   },
   "umbrella" : "acnh:blackchicumbrella",
-  "photo" : "acnh:hoshisphoto",
-  "poster" : "acnh:hoshisposter",
+  "photo" : "psk:hoshisphoto",
+  "poster" : "psk:hoshisposter",
   "house" : {
     "walls" : "acnh:purplerosewall",
     "floor" : "acnh:simpleblueflooring",

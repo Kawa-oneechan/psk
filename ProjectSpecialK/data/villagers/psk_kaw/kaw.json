@@ -1,0 +1,19 @@
+{
+  "id" : "psk:kaw",
+  "isSpecial" : true,
+  "customModel" : true,
+  "name" : {
+    "en" : "Kawa",
+    "ja" : "かワ",
+    "ko" : "카와",
+    "zh" : "卡瓦"
+  },
+  "gender" : "mas",
+  "birthday" : [ 26, 6 ],
+  "catchphrase" : "myeh",
+  "hobby" : "play",
+  "colors" : [ "black", "pink" ],
+  "nameTag" : [ "#EC7D42", "#61300B" ],
+  "photo" : "psk:kawasphoto",
+  "poster" : "psk:kawasposter"
+}
