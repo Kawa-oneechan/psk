@@ -7,7 +7,6 @@ public:
 	std::string RefName;
 	std::string EnName;
 	unsigned int Hash;
-	int Type;
 	NameableThing(JSONObject& value);
 	NameableThing() = default;
 	const std::string Name();
@@ -22,8 +21,13 @@ public:
 #define it_Tops			0b0000'0001'0000'0111
 #define it_Bottom		0b0000'0010'0000'0111
 #define it_Dress		0b0000'0011'0000'0111
+//						0b0000'0011'0000'0111
 #define it_Hat			0b0000'0100'0000'0111
 #define it_Shoes		0b0000'0101'0000'0111
+
+class Tool;
+class Furniture;
+class Outfit;
 
 class Item : public NameableThing
 {
@@ -31,6 +35,15 @@ public:
 	Item(JSONObject& value);
 	int FindVariantByName(const std::string& variantName) const;
 	std::vector<std::string> variantNames;
+	int Type;
+	bool IsItem() const;
+	bool IsTool() const;
+	bool IsFurniture() const;
+	bool IsOutfit() const;
+	Item* AsItem() const;
+	Tool* AsTool() const;
+	Furniture* AsFurniture() const;
+	Outfit* AsOutfit() const;
 };
 
 class Tool : public Item

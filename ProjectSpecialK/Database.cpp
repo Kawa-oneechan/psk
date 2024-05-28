@@ -184,14 +184,15 @@ namespace Database
 		loadWorker<Item, Tool>(items, "items/tools/*.json", "ItemsDatabase");
 		loadWorker<Item, Furniture>(items, "items/furniture/*.json", "ItemsDatabase");
 		loadWorker<Item, Outfit>(items, "items/outfits/*.json", "ItemsDatabase");
-		auto table = std::vector<std::string>{ "ID", "Name", "Hash" };
+		auto table = std::vector<std::string>{ "ID", "Name", "Type", "Hash" };
 		for (const auto& item : items)
 		{
 			table.push_back(item.ID);
 			table.push_back(item.EnName);
+			table.emplace_back(fmt::format("{:#b}", item.Type));
 			table.emplace_back(fmt::format("{:08X}", item.Hash));
 		}
-		Table(table, 3);
+		Table(table, 4);
 		fmt::print("ItemsDatabase: ended up with {} entries.\n", items.size());
 	}
 

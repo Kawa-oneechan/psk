@@ -8,30 +8,10 @@ NameableThing::NameableThing(JSONObject& value)
 {
 	ID = value["id"]->AsString();
 	Hash = crc_32((unsigned char*)ID.c_str(), ID.length());
-
-	Type = it_Item;
-
 	auto ref = fmt::format("name:{}", ID);
 	StringToLower(ref);
 	StripSpaces(ref);
 	RefName = ref;
-
-	auto type = value["type"] != nullptr ? value["type"]->AsString() : "";
-	if (type.empty());
-	else if (type == "tool") Type = it_Tool;
-	else if (type == "furniture") Type = it_Furniture;
-	else if (type == "tops") Type = it_Tops;
-	else if (type == "bottom") Type = it_Bottom;
-	else if (type == "bottoms") Type = it_Bottom;
-	else if (type == "dress") Type = it_Dress;
-	else if (type == "dressup") Type = it_Dress;
-	else if (type == "onepiece") Type = it_Dress;
-	else if (type == "hat") Type = it_Hat;
-	else if (type == "cap") Type = it_Hat;
-	else if (type == "shoes") Type = it_Shoes;
-	else
-		throw std::runtime_error(fmt::format("Don't know what to do with type \"{}\" while loading {}.", type, ID).c_str());
-		//fmt::print("Don't know what to do with type \"{}\".\n", type);
 
 	auto val = value["name"];
 	TextAdd(ref, *val);
@@ -74,12 +54,73 @@ Item::Item(JSONObject& value) : NameableThing(value)
 {
 	//auto vars = value.find("variants");
 	//if (vars != value.end())
+
+	Type = it_Item;
+
+	auto type = value["type"] != nullptr ? value["type"]->AsString() : "";
+	if (type.empty());
+	else if (type == "tool") Type = it_Tool;
+	else if (type == "furniture") Type = it_Furniture;
+	else if (type == "tops") Type = it_Tops;
+	else if (type == "bottom") Type = it_Bottom;
+	else if (type == "bottoms") Type = it_Bottom;
+	else if (type == "dress") Type = it_Dress;
+	else if (type == "dressup") Type = it_Dress;
+	else if (type == "onepiece") Type = it_Dress;
+	else if (type == "hat") Type = it_Hat;
+	else if (type == "cap") Type = it_Hat;
+	else if (type == "shoes") Type = it_Shoes;
+	else
+		throw std::runtime_error(fmt::format("Don't know what to do with type \"{}\" while loading {}.", type, ID).c_str());
+	//fmt::print("Don't know what to do with type \"{}\".\n", type);
+
 	auto vars = value["variants"];
 	if (vars != nullptr)
 	{
 		for (auto v : vars->AsArray())
 			variantNames.push_back(v->AsString());
 	}
+}
+
+
+bool Item::IsItem() const
+{
+	return Type != 0;
+}
+
+bool Item::IsTool() const
+{
+	return (Type & it_Tool) == it_Tool;
+}
+
+bool Item::IsFurniture() const
+{
+	return (Type & it_Furniture) == it_Furniture;
+}
+
+bool Item::IsOutfit() const
+{
+	return (Type & it_Outfit) == it_Outfit;
+}
+
+Item* Item::AsItem() const
+{
+	return (Item*)this;
+}
+
+Tool* Item::AsTool() const
+{
+	return (Tool*)this;
+}
+
+Furniture* Item::AsFurniture() const
+{
+	return (Furniture*)this;
+}
+
+Outfit* Item::AsOutfit() const
+{
+	return (Outfit*)this;
 }
 
 InventoryItem::InventoryItem(Item * wrapped, int variant, int pattern)
@@ -151,22 +192,22 @@ const std::string InventoryItem::FullName()
 
 bool InventoryItem::IsItem() const
 {
-	return Type != 0;
+	return _wrapped->IsItem();
 }
 
 bool InventoryItem::IsTool() const
 {
-	return (Type & it_Tool) == it_Tool;
+	return _wrapped->IsTool();
 }
 
 bool InventoryItem::IsFurniture() const
 {
-	return (Type & it_Furniture) == it_Furniture;
+	return _wrapped->IsFurniture();
 }
 
 bool InventoryItem::IsOutfit() const
 {
-	return (Type & it_Outfit) == it_Outfit;
+	return _wrapped->IsOutfit();
 }
 
 Item* InventoryItem::AsItem() const

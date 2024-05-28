@@ -35,6 +35,9 @@ private:
 	unsigned char _flags[255];
 	unsigned char _memories[255];
 
+	static const int _maxFurnitureItems = 8 * 4;
+	static const int _maxOutfits = 8 * 3;
+
 	void DeleteAllThings();
 
 public:
@@ -59,7 +62,8 @@ public:
 	InventoryItem* Mask;
 	InventoryItem* Outfit;
 
-	std::vector<InventoryItem*> GivenItems;
+	std::vector<InventoryItem*> Items;
+	std::vector<InventoryItem*> Outfits;
 
 	Villager(JSONObject& value);
 	const std::string Name();
@@ -77,6 +81,8 @@ public:
 	void Depart();
 
 	void PickOutfit();
+
+	bool Villager::GiveItem(InventoryItem* item);
 
 	void Serialize(JSONObject& target);
 	void Deserialize(JSONObject& source);

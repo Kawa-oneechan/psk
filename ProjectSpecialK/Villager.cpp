@@ -232,18 +232,18 @@ void Villager::PickOutfit()
 {
 	DeleteAllThings();
 
-	if (GivenItems.size() > 0 && std::rand() % 100 > 25)
+	if (Outfits.size() > 0 && std::rand() % 100 > 25)
 	{
-		if (GivenItems.size() == 1)
+		if (Outfits.size() == 1)
 		{
-			Outfit = GivenItems[0];
+			Outfit = Outfits[0];
 			Outfit->Temporary = false; //just to be sure.
 		}
 		else
 		{
-			for (const auto& i : GivenItems)
+			for (const auto& i : Outfits)
 			{
-				if (i->IsOutfit() && std::rand() % 100 > 25)
+				if (std::rand() % 100 > 25)
 				{
 					Outfit = i;
 					Outfit->Temporary = false; //just to be sure.
@@ -256,21 +256,47 @@ void Villager::PickOutfit()
 	{
 		//use default outfit
 		Outfit = new InventoryItem(defaultOutfitID);
+		if (!Outfit->IsOutfit())
+		{
+			fmt::print("PickOutfit() for {}: \"{}\" may not exist, got a non-outfit item instead.", Name(), defaultOutfitID);
+			delete Outfit;
+			Outfit = new InventoryItem("psk:topsfallback");
+		}
 		Outfit->Temporary = true; //mark as safe to free
 	}
+}
 
+bool Villager::GiveItem(InventoryItem* item)
+{
+	auto target = &Items;
+	auto max = _maxFurnitureItems;
+	if (item->IsOutfit())
+	{
+		target = &Outfits;
+		max = _maxOutfits;
+	}
+	if (target->size() == max)
+		return false;
+	target->push_back(item);
+	return true;
 }
 
 void Villager::Serialize(JSONObject& target)
 {
 	target["id"] = new JSONValue(ID);
 	target["catchphrase"] = new JSONValue(_customCatchphrase);
-	auto givenItems = JSONArray();
-	for (const auto& i : GivenItems)
+	auto items = JSONArray();
+	for (const auto& i : Items)
 	{
-		givenItems.push_back(new JSONValue(i->FullID()));
+		items.push_back(new JSONValue(i->FullID()));
 	}
-	target["givenItems"] = new JSONValue(givenItems);
+	target["items"] = new JSONValue(items);
+	auto outfits = JSONArray();
+	for (const auto& i : Outfits)
+	{
+		outfits.push_back(new JSONValue(i->FullID()));
+	}
+	target["outfits"] = new JSONValue(items);
 }
 
 void Villager::Deserialize(JSONObject& source)
@@ -279,11 +305,16 @@ void Villager::Deserialize(JSONObject& source)
 	//Still, we might do a sanity check?
 
 	_customCatchphrase = source["catchphrase"]->AsString();
-	auto givenItems = source["givenItems"]->AsArray();
-	GivenItems.clear();
-	for (const auto& i : givenItems)
+	auto items = source["items"]->AsArray();
+	Items.clear();
+	for (const auto& i : items)
 	{
-		GivenItems.push_back(new InventoryItem(i->AsString()));
-		//GivenItems.push_back(ResolveItem(i->AsString(), "toolfallback"));
+		Items.push_back(new InventoryItem(i->AsString()));
+	}
+	auto outfits = source["outfits"]->AsArray();
+	Outfits.clear();
+	for (const auto& i : outfits)
+	{
+		Outfits.push_back(new InventoryItem(i->AsString()));
 	}
 }

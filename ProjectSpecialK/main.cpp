@@ -174,12 +174,12 @@ void delay(int ms)
 
 void testVillagerGetting()
 {
-	//lolly = (Villager*)Database::Find<Villager>("ac:cat18", &villagers);
-	lolly = (Villager*)Database::Find<Villager>(0x008673EFA4, &villagers); //just because we'll need this feature later
+	lolly = (Villager*)Database::Find<Villager>("psk:cat01", &villagers);
+	//lolly = (Villager*)Database::Find<Villager>(0x008673EFA4, &villagers); //just because we'll need this feature later
 	if (lolly == nullptr)
 		FatalError("Could not load Lolly. Check the logs? Anyway, testing is over.");
 
-	fmt::print("Villager getting test: {}, a {}, birthday on {}. ", lolly->Name(), lolly->Species(), lolly->Birthday());
+	fmt::print("Villager getting test: {}, a {}, birthday on {}. ", lolly->Name(), StripMSBT(lolly->Species()), lolly->Birthday());
 	articlePlease = 0;
 	fmt::print("Default outfit: {}\n", lolly->defaultOutfitID);
 	fmt::print("Portrait: {}\n", lolly->portraitID);
@@ -210,10 +210,6 @@ void testVillagerCatchphrases()
 	testVillagerCatchphrases2();
 }
 
-//int playerGender = 0; //for testing only
-//std::string playerName = "Kawa"; //for testing only
-std::string villagerID = "ac:sza"; //for testing only
-
 void testConditionals()
 {
 	TextAdd(*ReadJSON("tests.json"));
@@ -242,8 +238,8 @@ void testConditionals()
 namespace fs = std::experimental::filesystem;
 void testVillagerSerializing()
 {
-	//lolly->GivenItems.push_back(ResolveItem("ag:shinycatsuit", "topsfallback"));
-	lolly->GivenItems.push_back(new InventoryItem("ag:shinycatsuit"));
+	//lolly->GivenItems.push_back(new InventoryItem("ag:shinycatsuit"));
+	lolly->GiveItem(new InventoryItem("ag:shinycatsuit"));
 	auto v = JSONObject();
 	lolly->Serialize(v);
 	auto val = JSONValue(v);
@@ -268,12 +264,12 @@ void testVillagerSerializing()
 
 void testVillagerDeserializing()
 {
-	auto json = JSON::Parse("{\"catchphrase\":\"lover\",\"givenItems\":[\"ag:shinycatsuit/black\"],\"id\":\"ac:cat18\"}")->AsObject();
+	auto json = JSON::Parse("{\"catchphrase\":\"lover\",\"items\":[],\"outfits\":[\"ag:shinycatsuit/black\"],\"id\":\"psk:cat01\"}")->AsObject();
 	auto& id = json["id"]->AsString();
 	auto* villager = (Villager*)Database::Find<Villager>(id, &villagers);
 	villager->Deserialize((JSONObject&)json);
 	fmt::print("Villager deserialization test: {}'s catchphrase is \"{}\".\n", villager->Name(), villager->Catchphrase());
-	fmt::print("Villager deserialization test: {}'s first given item is \"{}\".\n", villager->Name(), villager->GivenItems[0]->FullName());
+	fmt::print("Villager deserialization test: {}'s first given outfit is \"{}\".\n", villager->Name(), villager->Outfits[0]->FullName());
 }
 
 void testPickingStarters()
