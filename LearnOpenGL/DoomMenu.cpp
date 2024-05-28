@@ -294,7 +294,7 @@ void DoomMenu::Draw(double dt)
 		const auto shown = std::min(visible, (int)items->size() - scroll);
 
 		const auto partSize = controlsAtlas[4].w * 0.75f *  scale;
-		const auto thumbSize = glm::vec2(controlsAtlas[3].z, controlsAtlas[3].w) * 0.50f * scale;
+		const auto thumbSize = glm::vec2(controlsAtlas[3].z, controlsAtlas[3].w) * 0.75f * scale;
 
 		sprender->DrawText(0, fmt::format("DoomMenu: {}/{} {} {},{} - {},{}", highlight, mouseHighlight, Inputs.MouseHoldLeft, Inputs.MousePosition.x, Inputs.MousePosition.y, sliderStart, sliderEnd), glm::vec2(0, 16));
 
@@ -327,8 +327,8 @@ void DoomMenu::Draw(double dt)
 				if (item->format != nullptr)
 				{
 					auto fmt = item->format(item);
-					sprender->DrawText(1, fmt, pos + glm::vec2(col + col + 56, 12), black, size * 0.75f);
-					sprender->DrawText(1, fmt, pos + glm::vec2(col + col + 54, 10), color, size * 0.75f);
+					sprender->DrawText(1, fmt, pos + glm::vec2(col + col + (94 * scale) + 2, 12), black, size * 0.75f);
+					sprender->DrawText(1, fmt, pos + glm::vec2(col + col + (94 * scale), 10), color, size * 0.75f);
 				}
 			}
 
@@ -360,10 +360,10 @@ void DoomMenu::Draw(double dt)
 			{
 				auto trackColor = color * glm::vec4(1, 1, 1, 0.5);
 				auto barLength = col;
-				auto partSize = controlsAtlas[0].w * 0.5f;
-				sprender->DrawSprite(controls, pos + glm::vec2(col, 10), glm::vec2(partSize), controlsAtlas[0], 0, trackColor);
-				sprender->DrawSprite(controls, pos + glm::vec2(col + barLength + (partSize * 1), 10), glm::vec2(partSize), controlsAtlas[1], 0, trackColor);
-				sprender->DrawSprite(controls, pos + glm::vec2(col + partSize, 10), glm::vec2(barLength, partSize), controlsAtlas[2], 0, trackColor);
+				//auto partSize = controlsAtlas[0].w * 0.5f * scale;
+				sprender->DrawSprite(controls, pos + glm::vec2(col, 10 * scale), glm::vec2(partSize), controlsAtlas[0], 0, trackColor);
+				sprender->DrawSprite(controls, pos + glm::vec2(col + barLength + (partSize * 1), 10 * scale), glm::vec2(partSize), controlsAtlas[1], 0, trackColor);
+				sprender->DrawSprite(controls, pos + glm::vec2(col + partSize, 10 * scale), glm::vec2(barLength, partSize), controlsAtlas[2], 0, trackColor);
 
 				sliderStart = pos.x + col + partSize;
 				sliderEnd = sliderStart + barLength;
@@ -373,7 +373,7 @@ void DoomMenu::Draw(double dt)
 				auto ccur = clamp(item->selection, item->minVal, item->maxVal) - item->minVal;
 				auto thumbPos = partSize + ((ccur * (barLength - (partSize * 2))) / range);
 
-				auto thumb = glm::vec2(col + (int)thumbPos, 10);
+				auto thumb = glm::vec2(col + (int)thumbPos, 10 * scale);
 				sprender->DrawSprite(controls, pos + thumb, thumbSize, controlsAtlas[3], 0, color);
 			}
 		}
