@@ -282,99 +282,125 @@ void DoomMenu::Tick(double dt)
 }
 
 void DoomMenu::Draw(double dt)
+{
+	const int col = (int)(400 * scale);
+
+	const float startX = (width / 2) - ((col * 3) / 2);
+	const float startY = 80;
+
+	auto pos = glm::vec2(startX, startY);
+
+	itemX = pos.x;
+
+	const auto black = glm::vec4(0, 0, 0, 0.5);
+
+	const auto start = items->at(0)->type == DoomMenuTypes::Text ? 1 : 0;
+	const auto shown = std::min(visible, (int)items->size() - scroll);
+
+	const auto partSize = controlsAtlas[4].w * 0.75f *  scale;
+	const auto thumbSize = glm::vec2(controlsAtlas[3].z, controlsAtlas[3].w) * 0.75f * scale;
+
+	sprender->DrawText(0, fmt::format("DoomMenu: {}/{} {} {},{} - {},{}", highlight, mouseHighlight, Inputs.MouseHoldLeft, Inputs.MousePosition.x, Inputs.MousePosition.y, sliderStart, sliderEnd), glm::vec2(0, 16));
+
+	itemY.clear();
+
+	pos.y -= 12 * scale;
+	for (int i = 0; i < shown; i++)
 	{
-		const int col = (int)(400 * scale);
-		auto pos = glm::vec2((width / 2) - ((col * 3) / 2), 80);
-
-		itemX = pos.x;
-
-		const auto black = glm::vec4(0, 0, 0, 0.5);
-
-		const auto start = items->at(0)->type == DoomMenuTypes::Text ? 1 : 0;
-		const auto shown = std::min(visible, (int)items->size() - scroll);
-
-		const auto partSize = controlsAtlas[4].w * 0.75f *  scale;
-		const auto thumbSize = glm::vec2(controlsAtlas[3].z, controlsAtlas[3].w) * 0.75f * scale;
-
-		sprender->DrawText(0, fmt::format("DoomMenu: {}/{} {} {},{} - {},{}", highlight, mouseHighlight, Inputs.MouseHoldLeft, Inputs.MousePosition.x, Inputs.MousePosition.y, sliderStart, sliderEnd), glm::vec2(0, 16));
-
-		itemY.clear();
-
-		for (int i = 0; i < shown; i++)
+		auto item = i == 0 ? items->at(0) : items->at(i + scroll);
+		auto size = 100 * scale;
+		pos.y += (40 * scale) + size - (100 * scale);
+		if (i + scroll == highlight) // (item->type == DoomMenuTypes::Text)
 		{
-			auto item = i == 0 ? items->at(0) : items->at(i + scroll);
-			auto color = glm::vec4(1, 1, i + scroll == highlight ? 0.25 : 1, 1);
 			auto offset = glm::vec2(item->type == DoomMenuTypes::Checkbox ? (40 * scale) : 0, 0);
-			auto font = 1;
-			auto size = 100 * scale;
-
-			if (item->type == DoomMenuTypes::Text)
-			{
-				font = item->selection;
-				size = item->maxVal * scale;
-			}
-
-			sprender->DrawText(font, item->caption, pos + offset + glm::vec2(2), black, size);
-			sprender->DrawText(font, item->caption, pos + offset, color, size);
-
-			if (item->type == DoomMenuTypes::Options)
-			{
-				sprender->DrawText(1, item->options[item->selection], pos + glm::vec2(col + 2, 2), black, size);
-				sprender->DrawText(1, item->options[item->selection], pos + glm::vec2(col, 0), color, size);
-			}
-			else if (item->type == DoomMenuTypes::Slider)
-			{
-				if (item->format != nullptr)
-				{
-					auto fmt = item->format(item);
-					sprender->DrawText(1, fmt, pos + glm::vec2(col + col + (94 * scale) + 2, 12), black, size * 0.75f);
-					sprender->DrawText(1, fmt, pos + glm::vec2(col + col + (94 * scale), 10), color, size * 0.75f);
-				}
-			}
-
-			itemY.push_back(pos.y);
-			pos.y += (40 * scale) + size - (100 * scale);
-		}
-
-		//terminator
-		itemY.push_back(pos.y);
-
-		for (int i = 0; i < shown; i++)
-		{
-			auto item = i == 0 ? items->at(0) : items->at(i + scroll);
-			auto color = glm::vec4(1, 1, i + scroll == highlight ? 0.25 : 1, 1);
-			auto offset = glm::vec2(item->type == DoomMenuTypes::Checkbox ? (40 * scale) : 0, 0);
-			auto font = 1;
-			auto size = 100 * scale;
-
-			pos.y = itemY[i];
-
-			if (item->type == DoomMenuTypes::Checkbox)
-			{
-				auto checkColor = color * glm::vec4(1, 1, 1, 0.5);
-				sprender->DrawSprite(controls, pos + glm::vec2(0, 4 * scale), glm::vec2(partSize), controlsAtlas[4], 0, checkColor);
-				if (item->selection)
-					sprender->DrawSprite(controls, pos + glm::vec2(0, 4 * scale), glm::vec2(partSize), controlsAtlas[5], 0, color);
-			}
-			else if (item->type == DoomMenuTypes::Slider)
-			{
-				auto trackColor = color * glm::vec4(1, 1, 1, 0.5);
-				auto barLength = col;
-				//auto partSize = controlsAtlas[0].w * 0.5f * scale;
-				sprender->DrawSprite(controls, pos + glm::vec2(col, 10 * scale), glm::vec2(partSize), controlsAtlas[0], 0, trackColor);
-				sprender->DrawSprite(controls, pos + glm::vec2(col + barLength + (partSize * 1), 10 * scale), glm::vec2(partSize), controlsAtlas[1], 0, trackColor);
-				sprender->DrawSprite(controls, pos + glm::vec2(col + partSize, 10 * scale), glm::vec2(barLength, partSize), controlsAtlas[2], 0, trackColor);
-
-				sliderStart = pos.x + col + partSize;
-				sliderEnd = sliderStart + barLength;
-
-				//thanks GZDoom
-				auto range = item->maxVal - item->minVal;
-				auto ccur = clamp(item->selection, item->minVal, item->maxVal) - item->minVal;
-				auto thumbPos = partSize + ((ccur * (barLength - (partSize * 2))) / range);
-
-				auto thumb = glm::vec2(col + (int)thumbPos, 10 * scale);
-				sprender->DrawSprite(controls, pos + thumb, thumbSize, controlsAtlas[3], 0, color);
-			}
+			auto highlightSize = sprender->MeasureText(1, item->caption, 100 * scale);
+			highlightSize.x += 8 * scale;
+			highlightSize.y *= 0.75f;
+			//sprender->DrawSprite(whiteRect, pos + glm::vec2(-8 * scale, 4 * scale), highlightSize, controlsAtlas[4], 0, UI::themeColors["secondary"]);
+			sprender->DrawSprite(controls, pos + offset + glm::vec2(-(highlightSize.y) * scale, 0), glm::vec2(highlightSize.y), controlsAtlas[7], 0, UI::themeColors["secondary"]);
+			sprender->DrawSprite(controls, pos + offset + glm::vec2(highlightSize.x, 0), glm::vec2(highlightSize.y), controlsAtlas[8], 0, UI::themeColors["secondary"]);
+			sprender->DrawSprite(controls, pos + offset, highlightSize, controlsAtlas[9], 0, UI::themeColors["secondary"]);
+			break;
 		}
 	}
+	pos.y = startY;
+
+	for (int i = 0; i < shown; i++)
+	{
+		auto item = i == 0 ? items->at(0) : items->at(i + scroll);
+		//auto color = glm::vec4(1, 1, i + scroll == highlight ? 0.25 : 1, 1);
+		const auto color = glm::vec4(1);
+		auto offset = glm::vec2(item->type == DoomMenuTypes::Checkbox ? (40 * scale) : 0, 0);
+		auto font = 1;
+		auto size = 100 * scale;
+
+		if (item->type == DoomMenuTypes::Text)
+		{
+			font = item->selection;
+			size = item->maxVal * scale;
+		}
+
+		sprender->DrawText(font, item->caption, pos + offset + glm::vec2(2), black, size);
+		sprender->DrawText(font, item->caption, pos + offset, color, size);
+
+		if (item->type == DoomMenuTypes::Options)
+		{
+			sprender->DrawText(1, item->options[item->selection], pos + glm::vec2(col + 2, 2), black, size);
+			sprender->DrawText(1, item->options[item->selection], pos + glm::vec2(col, 0), color, size);
+		}
+		else if (item->type == DoomMenuTypes::Slider)
+		{
+			if (item->format != nullptr)
+			{
+				auto fmt = item->format(item);
+				sprender->DrawText(1, fmt, pos + glm::vec2(col + col + (94 * scale) + 2, 12), black, size * 0.75f);
+				sprender->DrawText(1, fmt, pos + glm::vec2(col + col + (94 * scale), 10), color, size * 0.75f);
+			}
+		}
+
+		itemY.push_back(pos.y);
+		pos.y += (40 * scale) + size - (100 * scale);
+	}
+
+	//terminator
+	itemY.push_back(pos.y);
+
+	for (int i = 0; i < shown; i++)
+	{
+		auto item = i == 0 ? items->at(0) : items->at(i + scroll);
+		auto color = glm::vec4(1, 1, i + scroll == highlight ? 0.25 : 1, 1);
+		auto offset = glm::vec2(item->type == DoomMenuTypes::Checkbox ? (40 * scale) : 0, 0);
+		auto font = 1;
+		auto size = 100 * scale;
+
+		pos.y = itemY[i];
+
+		if (item->type == DoomMenuTypes::Checkbox)
+		{
+			auto checkColor = color * glm::vec4(1, 1, 1, 0.5);
+			sprender->DrawSprite(controls, pos + glm::vec2(0, 4 * scale), glm::vec2(partSize), controlsAtlas[4], 0, checkColor);
+			if (item->selection)
+				sprender->DrawSprite(controls, pos + glm::vec2(0, 4 * scale), glm::vec2(partSize), controlsAtlas[5], 0, color);
+		}
+		else if (item->type == DoomMenuTypes::Slider)
+		{
+			auto trackColor = color * glm::vec4(1, 1, 1, 0.5);
+			auto barLength = col;
+			//auto partSize = controlsAtlas[0].w * 0.5f * scale;
+			sprender->DrawSprite(controls, pos + glm::vec2(col, 10 * scale), glm::vec2(partSize), controlsAtlas[0], 0, trackColor);
+			sprender->DrawSprite(controls, pos + glm::vec2(col + barLength + (partSize * 1), 10 * scale), glm::vec2(partSize), controlsAtlas[1], 0, trackColor);
+			sprender->DrawSprite(controls, pos + glm::vec2(col + partSize, 10 * scale), glm::vec2(barLength, partSize), controlsAtlas[2], 0, trackColor);
+
+			sliderStart = pos.x + col + partSize;
+			sliderEnd = sliderStart + barLength;
+
+			//thanks GZDoom
+			auto range = item->maxVal - item->minVal;
+			auto ccur = clamp(item->selection, item->minVal, item->maxVal) - item->minVal;
+			auto thumbPos = partSize + ((ccur * (barLength - (partSize * 2))) / range);
+
+			auto thumb = glm::vec2(col + (int)thumbPos, 10 * scale);
+			sprender->DrawSprite(controls, pos + thumb, thumbSize, controlsAtlas[3], 0, color);
+		}
+	}
+}
