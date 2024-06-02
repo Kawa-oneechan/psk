@@ -90,6 +90,16 @@ bool TextField::Character(unsigned int codepoint)
 		}
 		return true;
 	}
+	else if (codepoint == 0xFFF2) //home
+	{
+		caret = 0;
+		return true;
+	}
+	else if (codepoint == 0xFFF3) //end
+	{
+		caret = value.length();
+		return true;
+	}
 
 	std::string inserted;
 	if (codepoint < 0x80)
@@ -109,4 +119,16 @@ bool TextField::Character(unsigned int codepoint)
 	value.insert(caret, inserted);
 	caret += inserted.length();
 	return true;
+}
+
+void TextField::Clear()
+{
+	value.clear();
+	caret = 0;
+}
+
+void TextField::Set(const std::string& to)
+{
+	value = to;
+	caret = value.size();
 }

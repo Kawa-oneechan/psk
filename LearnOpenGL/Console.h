@@ -19,3 +19,5 @@ public:
 	void Tick(double dt);
 	void Draw(double dt);
 };
+
+extern Console* console;

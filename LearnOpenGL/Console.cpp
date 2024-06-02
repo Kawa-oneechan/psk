@@ -1,3 +1,5 @@
+#include <regex>
+
 #include "Console.h"
 #include "InputsMap.h"
 #include "DialogueBox.h"
@@ -12,7 +14,7 @@ Console::Console()
 
 	inputLine.rect = glm::vec4(16, (height / 3) - 24, width - 8, 20);
 	inputLine.font = 0;
-	inputLine.value = "dialogue(\"Can we do <color:2>colors</color>?\")"; //"dialogue(\"Test...\")";
+	inputLine.Clear();
 
 	Sol.open_libraries(sol::lib::coroutine);
 	Sol["dialogue"] = sol::yielding([&](sol::variadic_args va)
@@ -50,9 +52,21 @@ void Console::Print(const std::string& str)
 
 bool Console::Execute(const std::string& str)
 {
-	auto ret = Sol.script("function __console()\n\n" + str + "\n\nend");
-	sol::coroutine __console = Sol["__console"];
-	__console();
+	//auto ret = Sol.script("function __console()\n\n" + str + "\n\nend");
+	//sol::coroutine __console = Sol["__console"];
+	//__console();
+	//sol::unsafe_function_result ret;
+	try
+	{
+		Sol.script(str);
+	}
+	catch (sol::error e)
+	{
+		auto what = std::string(e.what());		
+		auto isItYield = what == "lua: error: attempt to yield from outside a coroutine";
+		if (!isItYield)
+			Print(fmt::format("Error: {}", what));
+	}
 	return false;
 }
 
@@ -69,9 +83,7 @@ void Console::Tick(double dt)
 	{
 		Inputs.Enter = false;
 		Execute(inputLine.value);
-		//TODO: give the TextField itself a clear().
-		inputLine.value.clear();
-		inputLine.caret = 0;
+		inputLine.Clear();
 	}
 	inputLine.Tick(dt);
 }
@@ -86,7 +98,7 @@ void Console::Draw(double dt)
 	auto pos = glm::vec2(4, (height / 3) - 42);
 	for (unsigned int i = (unsigned int)buffer.size(), lines = 21; i-- > 0 && lines-- > 0;)
 	{
-		sprender->DrawText(0, buffer[i], pos);
+		sprender->DrawText(0, buffer[i], pos, glm::vec4(1), 100.0f, 0, true);
 		pos.y -= 16;
 	}
 

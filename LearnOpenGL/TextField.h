@@ -18,4 +18,6 @@ public:
 	TextField();
 	void Draw(double dt);
 	bool Character(unsigned int codepoint);
+	void Clear();
+	void Set(const std::string& to);
 };
