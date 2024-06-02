@@ -155,6 +155,7 @@ void DialogueBox::Tick(double dt)
 	if (ch == '<')
 	{
 		auto msbtEnd = toDisplay.find_first_of('>', displayCursor);
+		if (msbtEnd == -1) goto displayIt;
 		auto msbtStart = displayCursor;
 		displayCursor = msbtEnd + 1;
 
@@ -169,6 +170,7 @@ void DialogueBox::Tick(double dt)
 	}
 	else
 	{
+displayIt:
 		//Gotta re-encode the UTF-16 to UTF-8 here.
 		if (ch < 0x80)
 			displayed += ch;

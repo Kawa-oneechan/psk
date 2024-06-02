@@ -106,6 +106,8 @@ void SpriteRenderer::msbtColor(MSBTParams)
 {
 	if (tags[0] == "/color")
 		textRenderColor = originalTextRenderColor;
+	else if (tags.size() < 2)
+		return;
 	else
 	{
 		int id = std::stoi(tags[1]);
@@ -144,7 +146,7 @@ void SpriteRenderer::msbtFont(MSBTParams)
 	}
 }
 
-void SpriteRenderer::DrawText(int font, const std::string& text, glm::vec2 position, const glm::vec4& color, float size, float angle)
+void SpriteRenderer::DrawText(int font, const std::string& text, glm::vec2 position, const glm::vec4& color, float size, float angle, bool raw)
 {
 	if (font >= MAXFONTS)
 		font = 0;
@@ -195,9 +197,10 @@ void SpriteRenderer::DrawText(int font, const std::string& text, glm::vec2 posit
 			position.y = ogY;
 			continue;
 		}
-		if (ch == '<')
+		if (ch == '<' && !raw)
 		{
 			auto msbtEnd = text.find_first_of('>', i);
+			if (msbtEnd == -1) goto renderIt;
 			auto msbtStart = i;
 			i = msbtEnd + 1;
 
@@ -213,6 +216,7 @@ void SpriteRenderer::DrawText(int font, const std::string& text, glm::vec2 posit
 			continue;
 		}
 
+renderIt:
 		auto chr = ch & 0xFF;
 
 		auto bakedChar = cdata[(textRenderFont * 0xFFFF) + ch];
@@ -234,12 +238,12 @@ void SpriteRenderer::DrawText(int font, const std::string& text, glm::vec2 posit
 	spriteShader->SetBool("font", false);
 }
 
-void SpriteRenderer::DrawText(const std::string& text, const glm::vec2& position, const glm::vec4& color, float size, float angle)
+void SpriteRenderer::DrawText(const std::string& text, const glm::vec2& position, const glm::vec4& color, float size, float angle, bool raw)
 {
-	DrawText(0, text, position, color, size, angle);
+	DrawText(0, text, position, color, size, angle, raw);
 }
 
-glm::vec2 SpriteRenderer::MeasureText(int font, const std::string& text, float size)
+glm::vec2 SpriteRenderer::MeasureText(int font, const std::string& text, float size, bool raw)
 {
 	if (font >= MAXFONTS)
 		font = 0;
@@ -280,9 +284,10 @@ glm::vec2 SpriteRenderer::MeasureText(int font, const std::string& text, float s
 			result.y += (h + (h / 2)) * scaleF;
 			continue;
 		}
-		if (ch == '<')
+		if (ch == '<' && !raw)
 		{
 			auto msbtEnd = text.find_first_of('>', i);
+			if (msbtEnd == -1) goto measureIt;
 			auto msbtStart = i;
 			i = msbtEnd + 1;
 
@@ -298,6 +303,7 @@ glm::vec2 SpriteRenderer::MeasureText(int font, const std::string& text, float s
 			continue;
 		}
 
+measureIt:
 		auto chr = ch & 0xFF;
 
 		auto bakedChar = cdata[(textRenderFont * 0xFFFF) + ch];

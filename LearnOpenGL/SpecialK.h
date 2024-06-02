@@ -17,6 +17,7 @@
 #include "support/glm/gtc/type_ptr.hpp"
 #include "support/stb_image.h"
 #include "support/format.h"
+#include "support/sol.hpp"
 #include "support/tweeny-3.2.0.h"
 
 #include "Shader.h"
@@ -37,6 +38,8 @@ extern void GetAtlas(TextureAtlas &ret, const std::string& jsonFile);
 extern SpriteRenderer* sprender;
 extern Shader* spriteShader;
 extern Texture* whiteRect;
+
+extern sol::state Sol;
 
 extern glm::vec2 GetJSONVec2(JSONValue* val);
 extern glm::vec4 GetJSONVec4(JSONValue* val);

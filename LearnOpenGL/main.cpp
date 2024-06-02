@@ -1,5 +1,6 @@
 ﻿#include "SpecialK.h"
 
+#include "Console.h"
 #include "InputsMap.h"
 #include "Cursor.h"
 #include "Background.h"
@@ -26,6 +27,9 @@ Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
 SpriteRenderer* sprender = nullptr;
 DialogueBox* dlgBox = nullptr;
 Cursor* cursor = nullptr;
+Console* console = nullptr;
+
+sol::state Sol;
 
 float lastX = SCR_WIDTH / 2.0f;
 float lastY = SCR_HEIGHT / 2.0f;
@@ -150,6 +154,12 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 
 void char_callback(GLFWwindow* window, unsigned int codepoint)
 {
+	if (console->visible)
+	{
+		if (codepoint == '`') return;
+		console->Character(codepoint);
+		return;
+	}
 	for (unsigned int i = (unsigned int)tickables.size(); i-- > 0; )
 	{
 		auto t = tickables[i];
@@ -160,6 +170,12 @@ void char_callback(GLFWwindow* window, unsigned int codepoint)
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
+	if (key == GLFW_KEY_GRAVE_ACCENT && action == GLFW_PRESS)
+	{
+		console->visible = !console->visible;
+		return;
+	}
+
 	Inputs.Process(key, action);
 
 	//Passthroughs
@@ -359,6 +375,7 @@ int main()
 
 	sprender = new SpriteRenderer();
 	cursor = new Cursor();
+	console = new Console();
 
 	//Texture texture("apple.png");
 	//Texture sprite("itemicons.png");
@@ -387,7 +404,7 @@ int main()
 	hotbar->Tween(&hotbar->Position.y, tweeny::from(-100.0f).to(0).during(100));
 	hotbar->Tween(&hotbar->Alpha, tweeny::from(0.0f).to(0.75f).during(200));
 	//tickables.push_back(new TextField());
-
+	
 	int oldTime = 0;
 
 	while (!glfwWindowShouldClose(window))
@@ -405,17 +422,17 @@ int main()
 		//important: disable depth testing to allow multiple sprites to overlap.
 		glDisable(GL_DEPTH_TEST);
 
-		for (unsigned int i = (unsigned int)tickables.size(); i-- > 0; )
+		if (console->visible)
+			console->Tick(dt);
+		else
 		{
-			auto t = tickables[i];
-			t->Tick(dt);
+			for (unsigned int i = (unsigned int)tickables.size(); i-- > 0; )
+				tickables[i]->Tick(dt);
 		}
 
 		for (unsigned int i = 0; i < (unsigned int)tickables.size(); i++)
-		{
-			auto t = tickables[i];
-			t->Draw(0.25);
-		}
+			tickables[i]->Draw(dt * 0.25);
+		console->Draw(dt);
 
 		cursor->Draw();
 		sprender->Flush();

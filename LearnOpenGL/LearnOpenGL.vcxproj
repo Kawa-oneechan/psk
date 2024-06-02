@@ -70,12 +70,12 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\libs\glfw-3.3.9.bin.WIN64\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\libs\glfw-3.3.9.bin.WIN64\lib-vc2015;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\libs\fmodex\api\inc;C:\libs\lua;C:\libs\glfw-3.3.9.bin.WIN64\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\libs\fmodex\api\lib;C:\libs\lua;C:\libs\glfw-3.3.9.bin.WIN64\lib-vc2015;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>C:\libs\glfw-3.3.9.bin.WIN64\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\libs\glfw-3.3.9.bin.WIN64\lib-vc2015;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\libs\fmodex\api\inc;C:\libs\lua;C:\libs\glfw-3.3.9.bin.WIN64\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\libs\fmodex\api\lib;C:\libs\lua;C:\libs\glfw-3.3.9.bin.WIN64\lib-vc2015;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -93,7 +93,7 @@
       <BasicRuntimeChecks>UninitializedLocalUsageCheck</BasicRuntimeChecks>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;shell32.lib;</AdditionalDependencies>
+      <AdditionalDependencies>lua536_d.lib;glfw3.lib;opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;shell32.lib;</AdditionalDependencies>
       <IgnoreAllDefaultLibraries>
       </IgnoreAllDefaultLibraries>
     </Link>
@@ -125,13 +125,14 @@
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;shell32.lib;</AdditionalDependencies>
+      <AdditionalDependencies>lua536_d.lib;glfw3.lib;opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;shell32.lib;</AdditionalDependencies>
       <IgnoreAllDefaultLibraries>
       </IgnoreAllDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Background.cpp" />
+    <ClCompile Include="Console.cpp" />
     <ClCompile Include="Cursor.cpp" />
     <ClCompile Include="DialogueBox.cpp" />
     <ClCompile Include="DoomMenu.cpp" />
@@ -156,6 +157,7 @@
   <ItemGroup>
     <ClInclude Include="Background.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Console.h" />
     <ClInclude Include="Cursor.h" />
     <ClInclude Include="DialogueBox.h" />
     <ClInclude Include="DoomMenu.h" />
