@@ -9,16 +9,12 @@ Console::Console()
 	visible = true;
 	Print(3, "Project Special K console");
 	Print(3, "-------------------------");
-	Print(7, "TODO: allow formatted printing, by which I mean fmt::format style.");
 
 	inputLine.rect = glm::vec4(16, (height / 3) - 24, width - 8, 20);
 	inputLine.font = 0;
 	inputLine.Clear();
 
 	history.clear();
-	history.push_back("first");
-	history.push_back("second");
-	history.push_back("turd");
 	historyCursor = 0;
 
 	Sol.open_libraries(sol::lib::coroutine);
