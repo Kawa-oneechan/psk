@@ -8,9 +8,9 @@ void DialogueBox::msbtPass(MSBTParams)
 DialogueBox::DialogueBox()
 {
 	bubble[0] = new Texture("ui/dialogue/dialogue.png", true, GL_MIRRORED_REPEAT, GL_LINEAR);
-	bubble[1] = new Texture("ui/dialogue/exclamation.png");
-	bubble[2] = new Texture("ui/dialogue/dream.png");
-	bubble[3] = new Texture("ui/dialogue/system.png");
+	bubble[1] = new Texture("ui/dialogue/exclamation.png", true, GL_MIRRORED_REPEAT, GL_LINEAR);
+	bubble[2] = new Texture("ui/dialogue/dream.png", true, GL_MIRRORED_REPEAT, GL_LINEAR);
+	bubble[3] = new Texture("ui/dialogue/system.png", true, GL_MIRRORED_REPEAT, GL_LINEAR);
 	//bubble[4] = new Texture("ui/dialogue/wildworld.png", true, GL_REPEAT, GL_NEAREST);
 	gradient[0] = new Texture("gradient_thin.png");
 	gradient[1] = new Texture("gradient_wide.png");

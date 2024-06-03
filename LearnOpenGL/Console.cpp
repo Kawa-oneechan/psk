@@ -58,20 +58,14 @@ void Console::Print(const std::string& str)
 
 bool Console::Execute(const std::string& str)
 {
-	//auto ret = Sol.script("function __console()\n\n" + str + "\n\nend");
-	//sol::coroutine __console = Sol["__console"];
-	//__console();
-	//sol::unsafe_function_result ret;
 	try
 	{
-		Sol.script(str);
+		sol::coroutine s = Sol.load(str);
+		s();
 	}
-	catch (sol::error e)
+	catch (sol::error& e)
 	{
-		auto what = std::string(e.what());		
-		auto isItYield = what == "lua: error: attempt to yield from outside a coroutine";
-		if (!isItYield)
-			Print(1, fmt::format("Error: {}", what));
+		Print(1, fmt::format("Error: {}", e.what()));
 	}
 	return false;
 }
@@ -88,7 +82,8 @@ void Console::Tick(double dt)
 	if (Inputs.Enter)
 	{
 		Inputs.Enter = false;
-		history.emplace_back(inputLine.value);
+		if (history.size() == 0 || history.back() != inputLine.value)
+			history.emplace_back(inputLine.value);
 		historyCursor = 0;
 		Execute(inputLine.value);
 		inputLine.Clear();
