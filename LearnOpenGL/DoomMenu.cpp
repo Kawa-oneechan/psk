@@ -285,7 +285,7 @@ void DoomMenu::Draw(double dt)
 {
 	const int col = (int)(400 * scale);
 
-	const float startX = (width / 2) - ((col * 3) / 2);
+	const float startX = (width * 0.5f) - ((col * 3) * 0.5f);
 	const float startY = 80;
 
 	auto pos = glm::vec2(startX, startY);
