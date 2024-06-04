@@ -11,6 +11,7 @@ private:
 public:
 	bool Up, Down, Left, Right;
 	bool Enter, Escape;
+	bool PgUp, PgDown;
 
 	bool MouseLeft, MouseRight, MouseMiddle;
 	bool MouseHoldLeft;

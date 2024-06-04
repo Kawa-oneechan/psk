@@ -54,10 +54,10 @@ namespace JSONPatch
 	JSONValue* ApplyPatch(JSONValue& source, JSONValue& patch)
 	{
 #if 0
-		fmt::print("Original: %s\n", source.Stringify());
-		fmt::print("Patch:    %s\n", patch.Stringify());
+		conprint(0, "Original: %s\n", source.Stringify());
+		conprint(0, "Patch:    %s\n", patch.Stringify());
 		auto ret = mergeWorker(&source, &patch);
-		fmt::print("New:      %s\n", ret->Stringify());
+		conprint(0, "New:      %s\n", ret->Stringify());
 		return ret;
 #else
 		return mergeWorker(&source, &patch);

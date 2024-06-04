@@ -11,14 +11,14 @@ void Audio::Initialize()
 		auto r = FMOD::System_Create(&system);
 		if (r != FMOD_OK)
 		{
-			fmt::print("Could not create FMOD system object. Sound disabled.");
+			conprint(1, "Could not create FMOD system object. Sound disabled.");
 			audioEnabled = false;
 			return;
 		}
 		r = system->init(4, FMOD_INIT_NORMAL, NULL);
 		if (r != FMOD_OK)
 		{
-			fmt::print("Could not initialize FMOD system object. Sound disabled.");
+			conprint(1, "Could not initialize FMOD system object. Sound disabled.");
 			audioEnabled = false;
 			return;
 		}
@@ -38,7 +38,7 @@ Audio::Audio(std::string filename) : filename(filename)
 	auto data = ReadVFS(filename, &size);
 	if (!data)
 	{
-		fmt::print("Could not open audio file {}.", filename);
+		conprint(1, "Could not open audio file {}.", filename);
 		return;
 	}
 	auto soundEx = FMOD_CREATESOUNDEXINFO();
@@ -68,7 +68,7 @@ Audio::Audio(std::string filename) : filename(filename)
 			theSound->getLength(&end, FMOD_TIMEUNIT_PCM);
 			r = theSound->setLoopPoints(start, FMOD_TIMEUNIT_PCM, end, FMOD_TIMEUNIT_PCM);
 			if (r != FMOD_OK)
-				fmt::print("Wanted to set loop point for file {}, could not.", filename);
+				conprint(1, "Wanted to set loop point for file {}, could not.", filename);
 		}
 	}
 	status = AudioStatus::Stopped;

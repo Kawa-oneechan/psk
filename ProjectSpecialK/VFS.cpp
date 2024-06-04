@@ -8,6 +8,7 @@
 
 #include "SpecialK.h"
 #include "support/miniz.h"
+#include "Console.h"
 
 namespace fs = std::experimental::filesystem;
 
@@ -44,7 +45,7 @@ static void initVFS_addEntry(VFSEntry& entry)
 static void initVFS_fromFolder(int source)
 {
 	VFSSource& src = sources[source];
-	fmt::print("VFS: from folder {}...\n", src.path);
+	conprint(0, "VFS: from folder {}...\n", src.path);
 	for (const auto& file : fs::recursive_directory_iterator(src.path))
 	{
 		if (fs::is_directory(file.status()))
@@ -72,7 +73,7 @@ static void initVFS_fromFolder(int source)
 static void initVFS_fromArchive(int source)
 {
 	VFSSource& src = sources[source];
-	fmt::print("VFS: from {}...\n", src.path);
+	conprint(0, "VFS: from {}...\n", src.path);
 	{
 		mz_zip_archive zip;
 		memset(&zip, 0, sizeof(zip));
@@ -172,7 +173,7 @@ static bool initVFS_sort(const VFSSource& a, const VFSSource& b)
 
 void InitVFS()
 {
-	fmt::print("VFS: initializing...\n");
+	conprint(0, "VFS: initializing...\n");
 
 	initVFS_addSource("data");
 	for (const auto& mod : fs::directory_iterator("mods"))
@@ -180,7 +181,7 @@ void InitVFS()
 		initVFS_addSource(mod.path());
 	}
 	
-	fmt::print("Pre-sort:\n");
+	conprint(0, "Pre-sort:\n");
 	auto table = std::vector<std::string>{ "ID", "Name", "Author", "Priority" };
 	for (const auto& source : sources)
 	{
@@ -194,7 +195,7 @@ void InitVFS()
 	std::sort(sources.begin(), sources.end(), initVFS_sort);
 	//TODO: resolve dependencies
 
-	fmt::print("Post-sort:\n");
+	conprint(0, "Post-sort:\n");
 	table = std::vector<std::string>{ "ID", "Name", "Author", "Priority" };
 	for (const auto& source : sources)
 	{
@@ -214,7 +215,7 @@ void InitVFS()
 			initVFS_fromFolder(i);
 	}
 
-	fmt::print("VFS: ended up with {} entries.\n", entries.size());
+	conprint(0, "VFS: ended up with {} entries.\n", entries.size());
 }
 
 char* ReadVFS(const VFSEntry& entry, size_t* size)
@@ -222,14 +223,14 @@ char* ReadVFS(const VFSEntry& entry, size_t* size)
 	auto& source = sources[entry.sourceIndex];
 	if (source.isZip)
 	{
-		fmt::print("DEBUG: getting {} from {}.\n", entry.path, source.path);
+		conprint(2, "DEBUG: getting {} from {}.\n", entry.path, source.path);
 		mz_zip_archive zip;
 		memset(&zip, 0, sizeof(zip));
 		mz_zip_reader_init_file(&zip, source.path.c_str(), 0);
 		mz_zip_archive_file_stat fs;
 		if (!mz_zip_reader_file_stat(&zip, entry.zipIndex, &fs))
 		{
-			fmt::print("ReadVFS: couldn't read {}?\n", entry.path);
+			conprint(1, "ReadVFS: couldn't read {}?\n", entry.path);
 			return nullptr;
 		}
 		const size_t siz = (size_t)fs.m_uncomp_size;
@@ -275,37 +276,40 @@ namespace JSONPatch
 	extern JSONValue* ApplyPatch(JSONValue& source, JSONValue& patch);
 }
 
-JSONValue* ReadJSON(const VFSEntry& entry) try
+JSONValue* ReadJSON(const VFSEntry& entry)
 {
-	auto vfsData = ReadVFS(entry.path, nullptr);
-	auto doc = JSON::Parse(vfsData);
-	free(vfsData);
-
-	std::string ppath = entry.path + ".patch";
-	for (const auto& pents : entries)
+	try
 	{
-		if (pents.path == ppath)
+		auto vfsData = ReadVFS(entry.path, nullptr);
+		auto doc = JSON::Parse(vfsData);
+		free(vfsData);
+
+		std::string ppath = entry.path + ".patch";
+		for (const auto& pents : entries)
 		{
-			auto pdata = ReadVFS(pents.path, nullptr);
-			auto pdoc = JSON::Parse(pdata);
-			free(pdata);
-			auto patched = JSONPatch::ApplyPatch(*doc, *pdoc);
-			doc = patched;
-			/*
-			if (!JSONPatch::ApplyPatch(*doc, *pdoc))
+			if (pents.path == ppath)
 			{
+				auto pdata = ReadVFS(pents.path, nullptr);
+				auto pdoc = JSON::Parse(pdata);
+				free(pdata);
+				auto patched = JSONPatch::ApplyPatch(*doc, *pdoc);
+				doc = patched;
+				/*
+				if (!JSONPatch::ApplyPatch(*doc, *pdoc))
+				{
 				fmt::print("Failed to apply patch from %s to %s.\n", sources[pents.sourceIndex].path, entry.path));
 				break;
+				}
+				*/
 			}
-			*/
 		}
-	}
 
-	return doc;
-}
-catch (std::exception& e)
-{
-	FatalError(e.what());
+		return doc;
+	}
+	catch (std::exception& e)
+	{
+		FatalError(e.what());
+	}
 }
 
 JSONValue* ReadJSON(const std::string& path)
@@ -366,5 +370,5 @@ void ForgetVFS(const std::vector<VFSEntry>& forget)
 		}
 	}
 
-	fmt::print("ForgetVFS: went from {} to {} items, forgetting {}.\n", start, entries.size(), start - entries.size());
+	conprint(0, "ForgetVFS: went from {} to {} items, forgetting {}.\n", start, entries.size(), start - entries.size());
 }

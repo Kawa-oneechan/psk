@@ -254,6 +254,15 @@ void mousebutton_callback(GLFWwindow* window, int button, int action, int mods)
 	}
 }
 
+extern "C"
+{
+	//why bother including windows headers lol
+	_declspec(dllimport) int __stdcall MessageBoxA(_In_opt_ void* hWnd, _In_opt_ const char* lpText, _In_opt_ const char* lpCaption, _In_ unsigned int uType);
+	_declspec(dllimport) int __stdcall MessageBoxW(_In_opt_ void* hWnd, _In_opt_ const wchar_t* lpText, _In_opt_ const wchar_t* lpCaption, _In_ unsigned int uType);
+	_declspec(dllimport) int __stdcall MultiByteToWideChar(_In_ unsigned int CodePage, _In_ unsigned long dwFlags, const char* lpMultiByteStr, _In_ int cbMultiByte, wchar_t* lpWideCharStr, _In_ int cchWideChar);
+#define MessageBox MessageBoxW
+}
+
 __declspec(noreturn)
 void FatalError(const std::string& message)
 {
@@ -263,37 +272,13 @@ void FatalError(const std::string& message)
 	exit(1);
 }
 
-static void prepForUTF8andSuch()
-{
-#ifdef _WIN32
-	//Actually allow output in UTF8
-	SetConsoleOutputCP(65001);
-	setlocale(LC_ALL, ".UTF8");
-#endif
-#ifdef VTS
-	//Completely optional, allow Virtual Terminal Sequences
-	unsigned long mode = 0;
-	GetConsoleMode(GetStdHandle(STDOUT), &mode);
-	mode |= 4;
-	SetConsoleMode(GetStdHandle(STDOUT), mode);
-
-	fmt::print(REDWARNING u8" " UNDERLINE u8"HERE WE GO" NORMAL u8" " REDWARNING NORMAL u8"\n");
-	fmt::print(u8"Is this \"ramune\" in kana? ⇒ \"" GREEN u8"ラムネ" NORMAL u8"\"\n");
-	fmt::print(u8"árvíztűrő tükörfúrógép\n");
-	fmt::print("\n");
-#else
-	fmt::print(u8"Is this \"ramune\" in kana? → \"ラムネ\"\n");
-#endif
-}
-
 int main(int argc, char** argv)
 {
 	std::srand((unsigned int)std::time(nullptr));
 
-	prepForUTF8andSuch(); //setlocale(LC_ALL, ".UTF8");
-	InitVFS();
-
+	//prepForUTF8andSuch(); //setlocale(LC_ALL, ".UTF8");
 	console = new Console();
+	InitVFS();
 
 	Audio::Initialize();
 

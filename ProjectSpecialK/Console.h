@@ -9,7 +9,8 @@ private:
 	std::vector<std::pair<int, std::string>> buffer;
 	std::vector<std::string> history;
 	int historyCursor;
-	TextField inputLine;
+	int scrollCursor;
+	void* inputLine;
 
 public:
 	bool visible;
@@ -22,5 +23,4 @@ public:
 	void Tick(double dt);
 	void Draw(double dt);
 };
-
 extern Console* console;

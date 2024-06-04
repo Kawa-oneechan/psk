@@ -122,7 +122,7 @@ Villager::Villager(JSONObject& value) : NameableThing(value)
 		hobby = Database::Find<::Hobby>(value["hobby"], &hobbies);
 		if (hobby == nullptr)
 		{
-			fmt::print("\x1B[93m" "Unknown hobby {} while loading {}.\n" "\x1B[0m", value["hobby"]->Stringify(), ID);
+			conprint(1, "\x1B[93m" "Unknown hobby {} while loading {}.\n" "\x1B[0m", value["hobby"]->Stringify(), ID);
 			hobby = Database::Find<::Hobby>("fallback", &hobbies);
 		}
 	}
@@ -280,7 +280,7 @@ void Villager::PickOutfit()
 		Outfit = new InventoryItem(defaultOutfitID);
 		if (!Outfit->IsOutfit())
 		{
-			fmt::print("PickOutfit() for {}: \"{}\" may not exist, got a non-outfit item instead.", Name(), defaultOutfitID);
+			conprint(2, "PickOutfit() for {}: \"{}\" may not exist, got a non-outfit item instead.", Name(), defaultOutfitID);
 			delete Outfit;
 			Outfit = new InventoryItem("psk:topsfallback");
 		}

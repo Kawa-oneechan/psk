@@ -23,6 +23,8 @@ void InputsMap::Process(int key, int action)
 		case GLFW_KEY_RIGHT: Right = true; break;
 		case GLFW_KEY_ENTER: Enter = true; break;
 		case GLFW_KEY_ESCAPE: Escape = true; break;
+		case GLFW_KEY_PAGE_UP: PgUp = true; break;
+		case GLFW_KEY_PAGE_DOWN: PgDown = true; break;
 		default: break;
 		}
 	}
@@ -45,6 +47,7 @@ bool InputsMap::MouseMoved()
 void InputsMap::Clear()
 {
 	Up = Down = Left = Right = Enter = Escape = false;
+	PgUp = PgDown = false;
 	MouseLeft = MouseRight = MouseMiddle = false;
 }
 InputsMap& Inputs = InputsMap();
