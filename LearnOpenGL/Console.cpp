@@ -76,7 +76,7 @@ bool Console::Execute(const std::string& str)
 		if (what.find("attempt to yield from outside a coroutine") != -1)
 			; //Do nothing. Accept this silently.
 		else if (what.find("[string \"") != -1)
-			Sol.script("print(" + str + ")");
+			Execute("print(" + str + ")");
 		else
 			Print(1, fmt::format("Error: {}", what));
 	}
