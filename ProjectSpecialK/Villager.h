@@ -43,7 +43,7 @@ private:
 public:
 	std::string RefSpecies;
 	std::string RefCatchphrase;
-	std::string NameTag[2];
+	glm::vec4 NameTag[2];
 
 	const Personality* personality;
 	int personalitySubtype;

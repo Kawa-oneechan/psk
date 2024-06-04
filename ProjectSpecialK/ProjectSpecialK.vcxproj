@@ -138,12 +138,21 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Audio.cpp" />
+    <ClCompile Include="Background.cpp" />
+    <ClCompile Include="Console.cpp" />
+    <ClCompile Include="Cursor.cpp" />
     <ClCompile Include="Database.cpp" />
+    <ClCompile Include="DialogueBox.cpp" />
+    <ClCompile Include="DoomMenu.cpp" />
+    <ClCompile Include="InputsMap.cpp" />
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="JsonPatch.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="PanelLayout.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Species.cpp" />
+    <ClCompile Include="SpriteRenderer.cpp" />
     <ClCompile Include="support\crc32.c" />
     <ClCompile Include="support\format.cc" />
     <ClCompile Include="support\glad\glad.c" />
@@ -152,30 +161,51 @@
     <ClCompile Include="support\miniz.c" />
     <ClCompile Include="support\stb_image.cpp" />
     <ClCompile Include="support\stb_image_write.cpp" />
+    <ClCompile Include="support\stb_truetype.cpp" />
     <ClCompile Include="Text.cpp" />
+    <ClCompile Include="TextField.cpp" />
+    <ClCompile Include="TextRenderer.cpp" />
+    <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Traits.cpp" />
     <ClCompile Include="VFS.cpp" />
     <ClCompile Include="Villager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <Natvis Include="glm.natvis" />
     <Natvis Include="NatvisFile.natvis">
       <SubType>Designer</SubType>
     </Natvis>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Audio.h" />
+    <ClInclude Include="Background.h" />
+    <ClInclude Include="Camera.h" />
+    <ClInclude Include="Console.h" />
+    <ClInclude Include="Cursor.h" />
     <ClInclude Include="Database.h" />
+    <ClInclude Include="DialogueBox.h" />
+    <ClInclude Include="DoomMenu.h" />
+    <ClInclude Include="InputsMap.h" />
     <ClInclude Include="Item.h" />
+    <ClInclude Include="PanelLayout.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="SpecialK.h" />
     <ClInclude Include="Species.h" />
+    <ClInclude Include="SpriteRenderer.h" />
     <ClInclude Include="Text.h" />
+    <ClInclude Include="TextField.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Tickable.h" />
     <ClInclude Include="Traits.h" />
     <ClInclude Include="VFS.h" />
     <ClInclude Include="Villager.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="res.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

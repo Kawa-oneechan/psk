@@ -81,8 +81,32 @@ Villager::Villager(JSONObject& value) : NameableThing(value)
 	}
 
 	auto nametag = value["nameTag"]->AsArray();
-	NameTag[0] = nametag[0]->AsString();
-	NameTag[1] = nametag[1]->AsString();
+	//NameTag[0] = nametag[0]->AsString();
+	//NameTag[1] = nametag[1]->AsString();
+	for (int i = 0; i < 2; i++)
+	{
+		auto hex = nametag[i]->AsString();
+		int r, g, b, a;
+		if (hex.empty() || hex[0] != '#')
+			throw std::runtime_error(fmt::format("Not a color value {} while loading {}.", hex, ID).c_str());
+		if (hex.length() == 7)
+		{
+			a = 0xFF;
+			r = std::stoi(hex.substr(1, 2), nullptr, 16);
+			g = std::stoi(hex.substr(3, 2), nullptr, 16);
+			b = std::stoi(hex.substr(5, 2), nullptr, 16);
+		}
+		else if (hex.length() == 9)
+		{
+			a = std::stoi(hex.substr(1, 2), nullptr, 16);
+			r = std::stoi(hex.substr(3, 2), nullptr, 16);
+			g = std::stoi(hex.substr(5, 2), nullptr, 16);
+			b = std::stoi(hex.substr(7, 2), nullptr, 16);
+		}
+		else
+			throw std::runtime_error(fmt::format("Not a well-formed color value {} while loading {}.", hex, ID).c_str());
+		NameTag[i] = glm::vec4(r / 255.0f, g / 255.0f, b / 255.0f, a / 255.0f);
+	}
 
 	if (_isSpecial)
 		personality = nullptr;

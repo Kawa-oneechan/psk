@@ -1,14 +1,267 @@
-﻿#include <cstdio>
-#include <cmath>
-#include <chrono>
-#include <thread>
-#include <conio.h>
+﻿#include "SpecialK.h"
 
-#include "support/miniz.h"
-#include "SpecialK.h"
-#include "Audio.h"
+#include "Console.h"
+#include "InputsMap.h"
+#include "Cursor.h"
+#include "Background.h"
+#include "DoomMenu.h"
+#include "DialogueBox.h"
+#include "PanelLayout.h"
+
+#ifdef DEBUG
+#define WINDOWTITLE "Project Special K (debug build " __DATE__ ")"
+#else
+#define WINDOWTITLE "Project Special K"
+#endif
+
+#define SCR_WIDTH 1920
+#define SCR_HEIGHT 1080
+#define WIN_WIDTH 1920 //1280
+#define WIN_HEIGHT 1080 //720
+
+GLFWwindow* window;
+
+Shader* spriteShader = nullptr;
+Texture* whiteRect = nullptr;
+Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
+SpriteRenderer* sprender = nullptr;
+DialogueBox* dlgBox = nullptr;
+Cursor* cursor = nullptr;
+Console* console = nullptr;
+Audio* bgm = nullptr;
 
 sol::state Sol;
+
+float lastX = SCR_WIDTH / 2.0f;
+float lastY = SCR_HEIGHT / 2.0f;
+bool firstMouse = true;
+
+bool wireframe = false;
+
+float deltaTime = 0.0f;
+float lastFrame = 0.0f;
+
+float width = SCR_WIDTH, height = SCR_HEIGHT;
+float scale = (float)WIN_WIDTH / (float)SCR_HEIGHT;
+
+int articlePlease;
+
+glm::vec2 GetJSONVec2(JSONValue* val)
+{
+	if (!val->IsArray())
+		throw std::runtime_error("GetJSONVec2: given value is not an array.");
+	auto arr = val->AsArray();
+	if (arr.size() != 2)
+		throw std::runtime_error(fmt::format("GetJSONVec2: given array has {} entries, not 2.", arr.size()));
+	if (!arr[0]->IsNumber() || !arr[1]->IsNumber())
+		throw std::runtime_error("GetJSONVec2: given array does not contain only numbers.");
+	return glm::vec2(arr[0]->AsNumber(), arr[1]->AsNumber());
+}
+
+glm::vec4 GetJSONVec4(JSONValue* val)
+{
+	if (!val->IsArray())
+		throw std::runtime_error("GetJSONVec4: given value is not an array.");
+	auto arr = val->AsArray();
+	if (arr.size() != 4)
+		throw std::runtime_error(fmt::format("GetJSONVec4: given array has {} entries, not 4.", arr.size()));
+	if (!arr[0]->IsNumber() || !arr[1]->IsNumber() || !arr[2]->IsNumber() || !arr[3]->IsNumber())
+		throw std::runtime_error("GetJSONVec4: given array does not contain only numbers.");
+	return glm::vec4(arr[0]->AsNumber(), arr[1]->AsNumber(), arr[2]->AsNumber(), arr[3]->AsNumber());
+}
+
+void GetAtlas(TextureAtlas &ret, const std::string& jsonFile)
+{
+	auto rjs = ReadJSON(jsonFile);
+	if (rjs == nullptr)
+		return;
+	auto doc = rjs->AsObject();
+	ret.clear();
+	if (doc["type"]->AsString() == "simple")
+	{
+		auto size = GetJSONVec2(doc["size"]);
+		auto dims = GetJSONVec2(doc["dims"]);
+		for (int y = 0; y < (int)dims[0]; y++)
+		{
+			for (int x = 0; x < (int)dims[1]; x++)
+			{
+				ret.push_back(glm::vec4(x * size[0], y * size[1], size[0], size[1]));
+			}
+		}
+		return;
+	}
+	else if (doc["type"]->AsString() == "atlas")
+	{
+		auto rects = doc["rects"]->AsArray();
+		for (const auto& rect : rects)
+		{
+			ret.push_back(GetJSONVec4(rect));
+		}
+		return;
+	}
+
+	throw std::runtime_error(fmt::format("GetAtlas: file {} has an unknown type \"{}\".", jsonFile, doc["type"]->AsString()));
+}
+
+bool PointInPoly(const glm::vec2 point, const std::vector<glm::vec2>& polygon)
+{
+	int crossings = 0;
+	const auto numPts = polygon.size() - 1;
+
+	for (auto i = 0; i < numPts; i++)
+	{
+		if (((polygon[i].y <= point.y) && (polygon[i + 1].y > point.y))
+			|| ((polygon[i].y > point.y) && (polygon[i + 1].y <= point.y)))
+		{
+			auto vt = (point.y - polygon[i].y) / (polygon[i + 1].y - polygon[i].y);
+			if (point.x < polygon[i].x + vt * (polygon[i + 1].x - polygon[i].x))
+			{
+				++crossings;
+			}
+		}
+	}
+	return (crossings & 1) == 1;
+}
+
+namespace UI
+{
+	std::map<std::string, glm::vec4> themeColors;
+	std::vector<glm::vec4> textColors;
+
+	JSONObject& json = JSONObject();
+
+	static void Load(const JSONValue* source)
+	{
+		json = source->AsObject();
+		auto colors = json["colors"]->AsObject();
+		for (auto& ink : colors["theme"]->AsObject())
+		{
+			themeColors[ink.first] = GetJSONVec4(ink.second);
+		}
+		for (auto& ink : colors["text"]->AsArray())
+		{
+			textColors.push_back(GetJSONVec4(ink));
+		}
+	}
+};
+
+std::vector<Tickable*> tickables;
+
+void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+{
+	::width = (float)width;
+	::height = (float)height;
+	scale = ::height / SCR_HEIGHT;
+	glViewport(0, 0, width, height);
+}
+
+void char_callback(GLFWwindow* window, unsigned int codepoint)
+{
+	if (console->visible)
+	{
+		if (codepoint == '`') return;
+		console->Character(codepoint);
+		return;
+	}
+	for (unsigned int i = (unsigned int)tickables.size(); i-- > 0; )
+	{
+		auto t = tickables[i];
+		if (t->Character(codepoint))
+			break;
+	}
+}
+
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+	if (key == GLFW_KEY_GRAVE_ACCENT && action == GLFW_PRESS)
+	{
+		console->visible = !console->visible;
+		return;
+	}
+
+	Inputs.Process(key, action);
+
+	//Passthroughs
+	if (key == GLFW_KEY_BACKSPACE && action == GLFW_PRESS)
+		char_callback(window, '\b');
+	else if (key == GLFW_KEY_LEFT && action == GLFW_PRESS)
+		char_callback(window, 0xFFF0);
+	else if (key == GLFW_KEY_RIGHT && action == GLFW_PRESS)
+		char_callback(window, 0xFFF1);
+	else if (key == GLFW_KEY_HOME && action == GLFW_PRESS)
+		char_callback(window, 0xFFF2);
+	else if (key == GLFW_KEY_END && action == GLFW_PRESS)
+		char_callback(window, 0xFFF3);
+
+	//if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+	//	glfwSetWindowShouldClose(window, 1);
+	if (key == GLFW_KEY_F1 && action == GLFW_PRESS)
+	{
+		wireframe = !wireframe;
+		glPolygonMode(GL_FRONT_AND_BACK, wireframe ? GL_LINE : GL_FILL);
+	}
+
+	if (key == GLFW_KEY_W)
+		camera.ProcessKeyboard(CameraMovement::Forward, 0.025f);
+	else if (key == GLFW_KEY_A)
+		camera.ProcessKeyboard(CameraMovement::Left, 0.025f);
+	else if (key == GLFW_KEY_S)
+		camera.ProcessKeyboard(CameraMovement::Backward, 0.025f);
+	else if (key == GLFW_KEY_D)
+		camera.ProcessKeyboard(CameraMovement::Right, 0.025f);
+}
+
+void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
+{
+	float xpos = static_cast<float>(xposIn);
+	float ypos = static_cast<float>(yposIn);
+
+	Inputs.MouseMove(xpos, ypos);
+
+	if (firstMouse)
+	{
+		lastX = xpos;
+		lastY = ypos;
+		firstMouse = false;
+	}
+
+	float xoffset = xpos - lastX;
+	float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
+
+	lastX = xpos;
+	lastY = ypos;
+
+	//camera.ProcessMouseMovement(xoffset, yoffset);
+}
+
+void mousebutton_callback(GLFWwindow* window, int button, int action, int mods)
+{
+	if (button == GLFW_MOUSE_BUTTON_LEFT)
+	{
+		Inputs.MouseHoldLeft = action == GLFW_PRESS;
+		if (!Inputs.MouseLeft && action == GLFW_RELEASE) //-V1051 no I'm pretty sure I meant this
+			Inputs.MouseLeft = true;
+	}
+	else if (button == GLFW_MOUSE_BUTTON_MIDDLE)
+	{
+		if (!Inputs.MouseMiddle && action == GLFW_RELEASE)
+			Inputs.MouseMiddle = true;
+	}
+	else if (button == GLFW_MOUSE_BUTTON_RIGHT)
+	{
+		if (!Inputs.MouseRight && action == GLFW_RELEASE)
+			Inputs.MouseRight = true;
+	}
+}
+
+__declspec(noreturn)
+void FatalError(const std::string& message)
+{
+	wchar_t w[1024] = { 0 };
+	MultiByteToWideChar(65001, 0, message.c_str(), -1, w, 1024);
+	MessageBox(nullptr, w, L"Project Special K", 0x30);
+	exit(1);
+}
 
 static void prepForUTF8andSuch()
 {
@@ -33,798 +286,144 @@ static void prepForUTF8andSuch()
 #endif
 }
 
-__declspec(noreturn)
-void FatalError(const std::string& message)
-{
-#ifdef _CONSOLE
-	fmt::print(REDWARNING "{}\nPress any key to exit.\n", message);
-	_getch();
-	exit(1);
-#else
-	wchar_t w[1024] = { 0 };
-	MultiByteToWideChar(65001, 0, message.c_str(), -1, w, 1024);
-	MessageBox(nullptr, w, L"Project Special K", 0x30);
-	exit(1);
-#endif
-}
-
-bool IDIsQualified(const std::string& id)
-{
-	//must have a : but not as the first character.
-	return id.find(':') != std::string::npos && id[0] != ':';
-}
-
-void Qualify(std::string& id, const std::string& ns)
-{
-	if (id.substr(0, ns.length()) == ns)
-		throw std::runtime_error(fmt::format("Qualify: cannot double-qualify \"{}\", already starts with \"{}\".", id, ns));
-	id = ns + ':' + id;
-}
-
-void UnQualify(std::string& id)
-{
-	if (IDIsQualified(id))
-		id = id.substr(id.find(':') + 1);
-}
-
-void testIDMangling()
-{
-	try
-	{
-		auto& fullyQualified = "ns:id"s;
-		auto& unqualified = "id2"s;
-
-		if (!IDIsQualified(fullyQualified))
-			throw std::runtime_error(fmt::format("ID test: \"{}\" is NOT considered fully qualified.", fullyQualified));
-
-		if (IDIsQualified(unqualified))
-			throw std::runtime_error(fmt::format("ID test: \"{}\" IS considered fully qualified.", unqualified));
-
-		Qualify(unqualified, "ns");
-		if (unqualified != "ns:id2")
-			throw std::runtime_error(fmt::format("ID test: \"{}\" should be \"ns:id2\"."));
-		if (!IDIsQualified(unqualified))
-			throw std::runtime_error(fmt::format("ID test: \"{}\" is NOT considered fully qualified.", unqualified));
-
-		//Qualify(unqualified, "ns");
-		//if (unqualified != "ns:id2")
-		//	throw std::runtime_error(fmt::format("ID test: \"{}\" should be \"ns:id2\"."));
-
-		UnQualify(unqualified);
-		if (unqualified != "id2")
-			throw std::runtime_error(fmt::format("ID test: \"{}\" should be \"ns:id2\"."));
-		if (IDIsQualified(unqualified))
-			throw std::runtime_error(fmt::format("ID test: \"{}\" IS considered fully qualified.", unqualified));
-
-		fmt::print("ID test: if you reached this, we're golden.\n");
-	}
-	catch (std::runtime_error& e)
-	{
-		fmt::print(REDWARNING u8" {}" NORMAL u8"\n", e.what());
-	}
-}
-
-void testCurrencies()
-{
-	auto ratesDoc = ReadJSON("currency.json");
-	auto rates = std::map<std::string, float>();
-	for (const auto& r : ratesDoc->AsObject())
-		rates[r.first] = 1.0f / (float)r.second->AsNumber();
-
-	auto inValue = 2;
-	auto rate = (float)inValue / rates["USD"];
-	auto outValue = std::roundf(rate * 100) / 100;
-	//Proper answer as of 2024-05: $ 2.00 -> ¥ 300
-	//Value given: ¥ 300
-
-	inValue = 2; //-V1048
-	rate = (float)inValue * rates["HUF"];
-	outValue = std::roundf(rate * 100) / 100; //-V519
-	//Proper answer as of 2024-05: ¥ 2 -> Ft 4.86
-	//Value given: Ft 4.88
-}
-
-void testInventorySystems()
-{
-	//auto test = std::vector<InventoryItem*>();
-	//test.reserve(10);
-	//for (int i = 0; i < 10; i++)
-	//	test.push_back(nullptr);
-	//InventoryItem* test[10] = { nullptr };
-	auto flipflops = new InventoryItem("acnh:flipflops/pink");
-	thePlayer.GiveItem(new InventoryItem("acnh:snowysweater/black"));
-	thePlayer.GiveItem(new InventoryItem("acnh:pleatherskirt"));
-	thePlayer.GiveItem(flipflops);
-	thePlayer.GiveItem(new InventoryItem("acnh:fronttietee/red"));
-	thePlayer.GiveItem(new InventoryItem("acnh:denimcutoffs/navyblue"));
-	thePlayer.GiveItem(new InventoryItem("acnh:palatialtankdress"));
-	//test[0] = new InventoryItem("acnh:snowysweater/black");
-	//test[1] = new InventoryItem("acnh:pleatherskirt");
-	//test[2] = new InventoryItem("acnh:flipflops/pink");
-	//test[3] = new InventoryItem("acnh:fronttietee/red");
-	//test[4] = new InventoryItem("acnh:denimcutoffs");
-
-	fmt::print("------Initial------\n");
-	for (auto& i : thePlayer.OnHand)
-		fmt::print("{} ", i != nullptr ? '[' + i->Name() + ']' : "*");
-	fmt::print("\b\n");
-
-	fmt::print("------Remove flipflops------\n");
-	thePlayer.RemoveItem(flipflops);
-	for (auto& i : thePlayer.OnHand)
-		fmt::print("{} ", i != nullptr ? '[' + i->Name() + ']' : "*");
-	fmt::print("\b\n");
-
-	fmt::print("------Switch #3 and #5------\n");
-	thePlayer.SwapItems(3, 5);
-	for (auto& i : thePlayer.OnHand)
-		fmt::print("{} ", i != nullptr ? '[' + i->Name() + ']' : "*");
-	fmt::print("\b\n");
-
-	fmt::print("------------\n");
-}
-
-int articlePlease;
-Villager* lolly;
-
-void delay(int ms)
-{
-	std::this_thread::sleep_for(std::chrono::milliseconds(ms));
-}
-
-void testVillagerGetting()
-{
-	lolly = (Villager*)Database::Find<Villager>("psk:cat01", &villagers);
-	//lolly = (Villager*)Database::Find<Villager>(0x008673EFA4, &villagers); //just because we'll need this feature later
-	if (lolly == nullptr)
-		FatalError("Could not load Lolly. Check the logs? Anyway, testing is over.");
-
-	fmt::print("Villager getting test: {}, a {}, birthday on {}. ", lolly->Name(), StripMSBT(lolly->Species()), lolly->Birthday());
-	articlePlease = 0;
-	fmt::print("Default outfit: {}\n", lolly->defaultOutfitID);
-	fmt::print("Portrait: {}\n", lolly->portraitID);
-	fmt::print("Manifesting...\n");
-	lolly->Manifest();
-	fmt::print("Current outfit: {}\n", lolly->Outfit->FullName());
-	lolly->Depart();
-	//fmt::print("Default outfit: {}\n", lolly->defaultOutfit->FullName());
-	//fmt::print("Portrait: {}\n", lolly->portrait->FullName());
-}
-
-void testVillagerCatchphrases1()
-{
-	fmt::print("Villager catchphrase test: {}'s catchphrase is \"{}\".\n", lolly->Name(), lolly->Catchphrase());
-	auto phrase = "my friend"s;
-	fmt::print("Setting it to \"{}\".\n", phrase);
-	lolly->Catchphrase(phrase);
-}
-
-void testVillagerCatchphrases2()
-{
-	fmt::print("Villager catchphrase retention test: {}'s catchphrase is \"{}\".\n", lolly->Name(), lolly->Catchphrase());
-}
-
-void testVillagerCatchphrases()
-{
-	testVillagerCatchphrases1();
-	testVillagerCatchphrases2();
-}
-
-void testConditionals()
-{
-	TextAdd(*ReadJSON("tests.json"));
-
-	Sol.new_usertype<Player>("Player",
-		"name", &Player::Name,
-		"gender", &Player::Gender
-		);
-	Sol["player"] = &thePlayer;
-	Sol["_mas"] = 0;
-	Sol["_fem"] = 1;
-	Sol["_mnb"] = 2;
-	Sol["_fnb"] = 3;
-
-	auto result = TextGet("str:kun");
-	fmt::print("Conditional test: with playerGender {}, result is \"{}\".\n", thePlayer.Gender, result);
-	result = TextGet("condtest2");
-	fmt::print("Conditional test: with playerName {}, result is \"{}\".\n", thePlayer.Name, result);
-	fmt::print("Conditional test: changing name...\n");
-	thePlayer.Name = "Lettie";
-	result = TextGet("condtest2");
-	fmt::print("Conditional test: with playerName {}, result is \"{}\".\n", thePlayer.Name, result);
-}
-
-#include <filesystem>
-namespace fs = std::experimental::filesystem;
-void testVillagerSerializing()
-{
-	//lolly->GivenItems.push_back(new InventoryItem("ag:shinycatsuit"));
-	lolly->GiveItem(new InventoryItem("ag:shinycatsuit"));
-	auto v = JSONObject();
-	lolly->Serialize(v);
-	auto val = JSONValue(v);
-	auto stringified = JSON::Stringify(&val);
-	//auto stringified = JSON::Stringify(&JSONValue(v));
-	fmt::print("Serialization test: result was\n{}\n", stringified);
-
-	auto ret = mz_zip_add_mem_to_archive_file_in_place("__save.zip", "lolly.json", stringified.c_str(), stringified.length(), nullptr, 0, MZ_BEST_COMPRESSION);
-	if (ret)
-	{
-		//we made it through boys, NOW we handle renaming the new file.
-		fs::remove("save.zip");
-		fs::rename("__save.zip", "save.zip");
-		//fs::copy_file("__save.zip", "save.zip");
-		//fs::remove("__save.zip");
-		//gotta make sure these both return true!
-	}
-
-	lolly->PickOutfit();
-	fmt::print("Current outfit: {}\n", lolly->Outfit->FullName());
-}
-
-void testVillagerDeserializing()
-{
-	auto json = JSON::Parse("{\"catchphrase\":\"lover\",\"items\":[],\"outfits\":[\"ag:shinycatsuit/black\"],\"id\":\"psk:cat01\"}")->AsObject();
-	auto& id = json["id"]->AsString();
-	auto* villager = (Villager*)Database::Find<Villager>(id, &villagers);
-	villager->Deserialize((JSONObject&)json);
-	fmt::print("Villager deserialization test: {}'s catchphrase is \"{}\".\n", villager->Name(), villager->Catchphrase());
-	fmt::print("Villager deserialization test: {}'s first given outfit is \"{}\".\n", villager->Name(), villager->Outfits[0]->FullName());
-}
-
-void testPickingStarters()
-{
-	auto jock = Database::Find<::Personality>("jock", &personalities);
-	auto sister = Database::Find<::Personality>("uchi", &personalities);
-
-	Villager* starters[2];
-
-	auto ret = std::vector<std::string>();
-	ret.reserve(50);
-	for (const auto& v : villagers)
-	{
-		if (v.personality == jock)
-			ret.push_back(v.ID);
-	}
-	fmt::print("{} jocks to pick a starter from.\n", ret.size());
-	starters[0] = (Villager*)Database::Find<::Villager>(ret[std::rand() % ret.size()].c_str(), &villagers);
-
-	ret.clear();
-	for (const auto& v : villagers)
-	{
-		if (v.personality == sister)
-			ret.push_back(v.ID);
-	}
-	fmt::print("{} big sisters to pick a starter from.\n", ret.size());
-	starters[1] = (Villager*)Database::Find<::Villager>(ret[std::rand() % ret.size()].c_str(), &villagers);
-
-	fmt::print("Staring villagers: {} and {}.\n", starters[0]->Name(), starters[1]->Name());
-}
-
-typedef enum
-{
-	Nothing, Opening, Writing, Delaying, WaitingForKey, Done
-} DialogueBoxState;
-
-class DialogueBox : public Tickable
-{
-private:
-	std::string name;
-	std::string* nameTag;
-	std::string line;
-	int delay;
-
-	int cursorLine, cursorCol;
-	size_t cursorPos;
-
-	Audio* bebebese;
-
-	//temporary
-	bool bold;
-
-	#define MSBTParams const std::vector<std::string>& tags, int start, int len
-	typedef void(DialogueBox::*MSBTFunc)(MSBTParams);
-
-#pragma region Phase 1 MSBT
-	void msbtStr(MSBTParams)
-	{
-		if (tags[1] == "...")
-			line.replace(start, len, TextGet("str:fix:001"));
-		else if (tags[1] == "player")
-			line.replace(start, len, "Kawa");
-		else if (tags[1] == "kun")
-			line.replace(start, len, TextGet("str:kun"));
-	}
-
-	void msbtEllipses(MSBTParams)
-	{
-		auto fakeTags = std::vector<std::string>
-		{
-			"str", "..."
-		};
-		msbtStr(fakeTags, start, len);
-	}
-
-	std::map<std::string, MSBTFunc> msbtPhase1
-	{
-		{ "str", &DialogueBox::msbtStr },
-		{ "...", &DialogueBox::msbtEllipses }
-	};
-
-	std::string& preprocess(std::string& input)
-	{
-		for (size_t i = 0; i < input.length(); i++)
-		{
-			auto msbtStart = input.find_first_of('<', i);
-			if (msbtStart != std::string::npos)
-			{
-				msbtStart++;
-				auto msbtEnd = input.find_first_of('>', msbtStart);
-				i = msbtEnd;
-
-				auto msbtWhole = input.substr(msbtStart, msbtEnd - msbtStart);
-				//fmt::print("(MSBT: {})", msbtWhole);
-				auto msbt = Split(msbtWhole, ':');
-				auto func = msbtPhase1.find(msbt[0]);
-				if (func != msbtPhase1.end())
-				{
-					std::invoke(func->second, this, msbt, (int)msbtStart - 1, (int)(msbtEnd - msbtStart) + 2);
-					i = msbtStart; //-1 because we may have subbed in a new tag.
-				}
-			}
-		}
-		return input;
-	}
-#pragma endregion
-
-#pragma region Phase 2 MSBT
-	void msbtSize(MSBTParams)
-	{
-		bold = true;
-	}
-
-	void msbtSizeC(MSBTParams)
-	{
-		bold = false;
-	}
-
-	void msbtBreak(MSBTParams)
-	{
-		state = DialogueBoxState::WaitingForKey;
-	}
-
-	void msbtDelay(MSBTParams)
-	{
-		state = DialogueBoxState::Delaying;
-		delay = std::stoi(tags[1]);
-	}
-
-	void msbtClear(MSBTParams)
-	{
-		//drawDialogueBox();
-	}
-
-	void msbtDummy(MSBTParams)
-	{
-		//
-	}
-
-	void msbtEnd(MSBTParams)
-	{
-		//dialogueForceEnd = true;
-	}
-
-	std::map<std::string, MSBTFunc> msbtPhase2
-	{
-		{ "size", &DialogueBox::msbtSize },
-		{ "/size", &DialogueBox::msbtSizeC },
-		{ "break", &DialogueBox::msbtBreak },
-		{ "brk", &DialogueBox::msbtBreak },
-		{ "delay", &DialogueBox::msbtDelay },
-		{ "end", &DialogueBox::msbtEnd },
-		{ "clr", &DialogueBox::msbtClear },
-		{ "emote", &DialogueBox::msbtDummy },
-	};
-#pragma endregion
-
-	#undef MSBTParams
-
-public:
-	DialogueBoxState state;
-	sol::coroutine* caller = nullptr;
-
-	DialogueBox()
-	{
-		name.clear();
-		nameTag = nullptr;
-		line.clear();
-		delay = 0;
-		cursorLine = 0;
-		cursorCol = 0;
-		cursorPos = 0;
-		state = DialogueBoxState::Opening;
-		bold = false;
-
-		bebebese = new Audio("sound/animalese/base/Voice_Monology.wav");
-	}
-
-	void Start(std::string line, Villager* nameTagSource)
-	{
-		if (nameTagSource == nullptr)
-		{
-			name.clear();
-			nameTag = nullptr;
-		}
-		else
-		{
-			name = nameTagSource->Name();
-			nameTag = nameTagSource->NameTag;
-		}
-
-		this->line = preprocess(line);
-		state = DialogueBoxState::Opening;
-		cursorLine = 0;
-		cursorCol = 0;
-		cursorPos = 0;
-	}
-
-	void Tick(double dt)
-	{
-		if (state == DialogueBoxState::Opening)
-		{
-			fmt::print("\x1B[0m\x1B[1;1H"); //\x1B[2J
-			fmt::print(u8"┌────────────────────────────────────────┐\n");
-			fmt::print(u8"│                                        │\n");
-			fmt::print(u8"│                                        │\n");
-			fmt::print(u8"│                                        │\n");
-			fmt::print(u8"└────────────────────────────────────────┘\n");
-
-			if (nameTag != nullptr)
-			{
-				fmt::print("\x1B[1;3H");
-				fmt::print("\x1B]4;5;rgb:{}/{}/{}\x07", nameTag[0].substr(1, 2), nameTag[0].substr(3, 2), nameTag[0].substr(5, 2));
-				fmt::print("\x1B]4;13;rgb:{}/{}/{}\x07", nameTag[1].substr(1, 2), nameTag[1].substr(3, 2), nameTag[1].substr(5, 2));
-				fmt::print("\x1B[45;95m");
-				fmt::print("  {}  ", name);
-			}
-
-			fmt::print("\x1B[0m");
-			state = DialogueBoxState::Writing;
-		}
-		else if (state == DialogueBoxState::Writing)
-		{
-			if (delay > 0)
-			{
-				delay -= (int)std::ceil(dt);
-			}
-			else
-			{
-				fmt::print("\x1B[0m");
-				fmt::print("\x1B[{};{}H", cursorLine + 2, cursorCol + 3);
-				auto ch = line[cursorPos];
-				if (ch == '<')
-				{
-					auto msbtStart = ++cursorPos;
-					auto msbtEnd = line.find_first_of('>', msbtStart);
-					cursorPos = msbtEnd;
-
-					auto msbtWhole = line.substr(msbtStart, msbtEnd - msbtStart);
-					//fmt::print("(MSBT: {})", msbtWhole);
-					auto msbt = Split(msbtWhole, ':');
-					//if (msbt[0] == "end") break;
-					auto func = msbtPhase2.find(msbt[0]);
-					if (func != msbtPhase2.end())
-						std::invoke(func->second, this, msbt, (int)msbtStart - 1, (int)(msbtEnd - msbtStart) + 2);
-					else
-						fmt::print("\x1B[5;60H <{}>?", msbt[0]);
-				}
-				else if (ch == '\n')
-				{
-					cursorLine++;
-					cursorCol = 0;
-					if (cursorLine == 3)
-						state = DialogueBoxState::WaitingForKey;
-				}
-				else
-				{
-					if (bold) fmt::print(BOLD);
-					fmt::print("{}", ch);
-					cursorCol++;
-					bebebese->Play(true);
-					delay = 4;
-				}
-				cursorPos++;
-				if (cursorPos >= line.length())
-					state = DialogueBoxState::WaitingForKey;
-			}
-		}
-		else if (state == DialogueBoxState::Delaying)
-		{
-			delay--;
-			if (delay <= 0)
-				state = DialogueBoxState::Writing;
-		}
-		else if (state == DialogueBoxState::WaitingForKey)
-		{
-			delay++;
-			if (delay >= 60)
-				delay = 0;
-			if (delay == 30)
-				fmt::print(u8"\x1B[5;38H\x1B[36m" u8"▼");
-			else if (delay == 0)
-				fmt::print(u8"\x1B[5;38H\x1B[0m" u8"──");
-
-			auto key = _kbhit();
-			if (key != 0)
-			{
-				_getch();
-				fmt::print(u8"\x1B[5;38H\x1B[0m" u8"──");
-				if (cursorPos >= line.length())
-				{
-					state = DialogueBoxState::Done;
-					if (mutex != nullptr)
-					{
-						*mutex = false;
-						mutex = nullptr;
-					}
-				}
-				else
-					state = DialogueBoxState::Opening;
-				cursorLine = 0;
-				cursorCol = 0;
-			}
-		}
-
-		auto states = std::vector<std::string>{ "Nothing", "Opening", "Writing", "Delaying", "Waiting", "Done" };
-		fmt::print("\x1B[0m");
-		fmt::print("\x1B[1;60H DialogueBox");
-		fmt::print("\x1B[2;60H state {}      ", states[state]);
-		fmt::print("\x1B[3;60H delay {}  ", delay);
-		fmt::print("\x1B[4;60H pos   {}/{}  ", cursorPos, line.length());
-		fmt::print("\x1B[5;60H dt    {}     ", dt);
-	}
-};
-
-class GiftBalloonSpawner : Tickable
-{
-private:
-	float latitude;
-	bool goWest;
-public:
-	void Start()
-	{
-		latitude = 0;
-	}
-
-	void Tick(double dt)
-	{
-		latitude += (float)dt * 0.0025f;
-		if (latitude > 64.0f)
-		{
-			latitude = 0;
-			goWest = !goWest;
-		}
-
-		fmt::print("\x1B[0m");
-		fmt::print("\x1B[10;1H GiftBalloonSpawner");
-		fmt::print("\x1B[11;1H latitude {:.4}   ", latitude);
-		fmt::print("\x1B[12;1H aim west {}   ", goWest);
-	}
-};
-
-#include <ctime>
-
-Audio* bgm = nullptr;
-
-class DateTimePanel : Tickable
-{
-private:
-	std::string shownTime, shownDate;
-	int lastHour = -1;
-	int lastMinute = -1;
-	tm gm;
-
-public:
-	DateTimePanel()
-	{
-		auto now = time(nullptr);
-		localtime_s(&gm, &now);
-		Update();
-	}
-
-	void Update()
-	{
-		//24 hours, easy
-		//shownTime = fmt::format("{:2}:{:02}", gm.tm_hour, gm.tm_min);
-
-		//12 hours?
-		auto h = gm.tm_hour;
-		auto pm = h >= 12;
-		if (h == 0) h += 12;
-		else if (h > 12) h -= 12;
-
-		shownTime = fmt::format("{:2}:{:02} {}", h, gm.tm_min, pm ? "PM" : "AM");
-		
-		auto wd = gm.tm_wday;
-		if (wd == 0) wd = 7; //gm.tm_wday is 0-Sun to 6-Sat. We want 1-Mon to 7-Sun.
-
-		//TODO : use "month:format".
-		shownDate = fmt::format("{} {}, {}", TextGet(fmt::format("month:{}", gm.tm_mon + 1)), gm.tm_mday, TextGet(fmt::format("day:short:{}", wd)));
-
-		if (lastHour == 4 && gm.tm_hour == 5)
-		{
-			fmt::print("\x1B[12;40H NEXT DAY            ");
-			//trigger reset
-		}
-		if (lastHour == -1 || (gm.tm_hour != lastHour && gm.tm_min == 0))
-		{
-			lastHour = gm.tm_hour;
-			//fmt::print("\x1B[12;40H Ding dong~! {} now", lastHour);
-			//trigger music
-
-			//TODO: fade out first, probably have something else handle that.
-			delete bgm;
-			bgm = new Audio(fmt::format("music/bgm/clock/{:02}sunny.ogg", lastHour));
-			bgm->Play();
-		}
-	}
-
-	void Tick(double dt)
-	{
-		auto now = time(nullptr);
-		localtime_s(&gm, &now);
-		if (lastMinute != gm.tm_min)
-		{
-			Update();
-			lastMinute = gm.tm_min;
-		}
-
-		fmt::print("\x1B[10;40H DateTime");
-		fmt::print("\x1B[11;40H {}, {}", shownTime, shownDate);
-		if (gm.tm_min == 1)
-			fmt::print("\x1B[12;40H                     ");
-	}
-};
-
-void testDialogueAndMultiTasking()
-{
-	fmt::print("\x1B[2J");
-
-	TextAdd(*ReadJSON("tests.json"));
-	auto line = TextGet("dlg:sza:wack");
-
-	auto villager = (Villager*)Database::Find<Villager>("ac:sza", &villagers);
-	DialogueBox dlg;
-	//dlg.Start(line, villager);
-
-	GiftBalloonSpawner gbs;
-	gbs.Start();
-
-	DateTimePanel dtp;
-
-	int oldTime = 0;
-	bool mutex = false;
-
-	/*
-	while (dlg.state != DialogueBoxState::Done)
-	{
-		int newTime = std::clock();
-		int deltaTime = newTime - oldTime;
-		oldTime = newTime;
-		double dt = deltaTime;
-
-		delay(1);
-		dlg.Tick(dt);
-		gbs.Tick(dt);
-		dtp.Tick(dt);
-	}
-	*/
-
-	Sol.open_libraries(sol::lib::coroutine);
-
-	Sol["Message"] = sol::yielding([&dlg, &mutex](sol::variadic_args va) 
-	{
-		int style = 0;
-		std::string line;
-		switch (va.size())
-		{
-		case 0:
-			//Error, lol.
-			line = "[[Forgot to specify a line]]";
-			break;
-		case 1:
-			line = va[0].as<std::string>();
-			break;
-		case 2:
-			line = va[0].as<std::string>();
-			if (va[1].is<int>())
-				style = va[1].as<int>();
-			//else va[1] is the speaker and va[2] is a style
-			break;
-		}
-
-		//apply style here when integrating.
-		dlg.mutex = &mutex;
-		dlg.Start(line, nullptr);
-		mutex = true;
-	});
-
-	Sol.script(ReadVFS("test.lua", nullptr));
-	sol::coroutine start = Sol["start"];
-
-	while (start.runnable())
-	{
-		int newTime = std::clock();
-		int deltaTime = newTime - oldTime;
-		oldTime = newTime;
-		double dt = deltaTime;
-		delay(1);
-
-		if (!mutex)
-			start();
-
-		dlg.Tick(dt);
-		gbs.Tick(dt);
-		dtp.Tick(dt);
-	}
-}
-
 int main(int argc, char** argv)
 {
-	prepForUTF8andSuch();
-
-#ifndef _CONSOLE
-	for (int i = 1; i < argc; i++)
-	{
-		if (argv[i][0] == '-')
-		{
-			if (argv[i] == "-console"s)
-			{
-				FILE* temp = nullptr;
-				AllocConsole();
-				freopen_s(&temp, "CONIN$", "r", stdin);
-				freopen_s(&temp, "CONOUT$", "w", stdout);
-				freopen_s(&temp, "CONOUT$", "w", stderr);
-				prepForUTF8andSuch();
-			}
-		}
-	}
-#endif
-
 	std::srand((unsigned int)std::time(nullptr));
 
+	prepForUTF8andSuch(); //setlocale(LC_ALL, ".UTF8");
 	InitVFS();
+
+	console = new Console();
+
 	Audio::Initialize();
 
-	testIDMangling();
-	testCurrencies();
+	UI::Load(ReadJSON("ui/ui.json"));
 
-	//bgm = new Audio("music/bgm/interiors/tailor.ogg");
-	//bgm->Play();
+	Database::LoadGlobalStuff();
+
+
+
+
+	glfwInit();
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	glfwWindowHint(GLFW_SAMPLES, 2);
+
+	if (WIN_WIDTH == SCR_WIDTH)
+	{
+		const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+		if (mode->width == SCR_WIDTH && mode->height == SCR_HEIGHT)
+			glfwWindowHint(GLFW_DECORATED, 0);
+		glfwWindowHint(GLFW_RESIZABLE, 0);
+	}
+
+	window = glfwCreateWindow(WIN_WIDTH, WIN_HEIGHT, WINDOWTITLE, NULL, NULL);
+	if (window == NULL)
+	{
+		printf("Failed to create GLFW window\n");
+		glfwTerminate();
+		return -1;
+	}
+	glfwMakeContextCurrent(window);
+	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+	glfwSetKeyCallback(window, key_callback);
+	glfwSetCharCallback(window, char_callback);
+	glfwSetCursorPosCallback(window, mouse_callback);
+	glfwSetMouseButtonCallback(window, mousebutton_callback);
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+
+	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+	{
+		printf("Failed to initialize GLAD\n");
+		return -1;
+	}
+
+	framebuffer_size_callback(window, WIN_WIDTH, WIN_HEIGHT);
+
+	Shader ourShader("shaders/model.vs", "shaders/model.fs");
+	spriteShader = new Shader("shaders/sprite.fs");
+	whiteRect = new Texture("white.png", true, GL_CLAMP_TO_EDGE);
+
+
+
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_CULL_FACE);
+	//glFrontFace(GL_CW);
+
+	//glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
+
+	//Required for sprites
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	sprender = new SpriteRenderer();
+	cursor = new Cursor();
+
+	
+
+
 
 	thePlayer.Name = "Kawa";
 	thePlayer.Gender = Gender::BEnby;
 
 	TextAdd(*ReadJSON("datetime.json"));
 	TextAdd(*ReadJSON("fixedform.json"));
-	Database::LoadGlobalStuff();
 
-	testInventorySystems();
 
-	testVillagerGetting();
-	testVillagerCatchphrases();
-	testConditionals();
-	testVillagerSerializing();
-	testVillagerDeserializing();
-	testPickingStarters();
 
-	fmt::print("\n\n\n\n\nPress any key.\n");
-	_getch();
 
-	testDialogueAndMultiTasking();
-	fmt::print("\n\n\n\n\nPress any key.\n");
-	_getch();
 
+	tickables.push_back(new Background());
+	dlgBox = new DialogueBox();
+	tickables.push_back(dlgBox);
+	tickables.push_back(new DoomMenu());
+	auto hotbar = new PanelLayout(UI::json["hotbar"]);
+	tickables.push_back(hotbar);
+	hotbar->Tween(&hotbar->Position.y, tweeny::from(-100.0f).to(0).during(100));
+	hotbar->Tween(&hotbar->Alpha, tweeny::from(0.0f).to(0.75f).during(200));
+	//tickables.push_back(new TextField());
+
+	int oldTime = 0;
+
+	while (!glfwWindowShouldClose(window))
+	{
+		int newTime = std::clock();
+		int deltaTime = newTime - oldTime;
+		oldTime = newTime;
+		double dt = deltaTime;
+
+		auto time = (float)glfwGetTime();
+
+		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	
+	
+		//important: disable depth testing to allow multiple sprites to overlap.
+		glDisable(GL_DEPTH_TEST);
+
+		if (console->visible)
+			console->Tick(dt);
+		else
+		{
+			for (unsigned int i = (unsigned int)tickables.size(); i-- > 0; )
+				tickables[i]->Tick(dt);
+		}
+
+		for (unsigned int i = 0; i < (unsigned int)tickables.size(); i++)
+			tickables[i]->Draw(dt * 0.25);
+		console->Draw(dt);
+
+		cursor->Draw();
+		sprender->Flush();
+
+		//turn depth testing back on for 3D shit
+		glEnable(GL_DEPTH_TEST);
+		glfwSwapBuffers(window);
+		glfwPollEvents();
+	}
+
+	glfwTerminate();
 	return 0;
 }
 
