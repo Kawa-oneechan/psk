@@ -18,6 +18,12 @@ Console::Console()
 	historyCursor = 0;
 
 	Sol.open_libraries(sol::lib::coroutine);
+
+	Sol["print"] = [&](sol::variadic_args va)
+	{
+		Print(va[0]);
+	};
+
 	Sol["dialogue"] = sol::yielding([&](sol::variadic_args va)
 	{
 		int style = 0;
@@ -60,12 +66,19 @@ bool Console::Execute(const std::string& str)
 {
 	try
 	{
-		sol::coroutine s = Sol.load(str);
-		s();
+		//sol::coroutine s = Sol.load(str);
+		//s();
+		Sol.script(str);
 	}
 	catch (sol::error& e)
 	{
-		Print(1, fmt::format("Error: {}", e.what()));
+		std::string what = e.what();
+		if (what.find("attempt to yield from outside a coroutine") != -1)
+			; //Do nothing. Accept this silently.
+		else if (what.find("[string \"") != -1)
+			Sol.script("print(" + str + ")");
+		else
+			Print(1, fmt::format("Error: {}", what));
 	}
 	return false;
 }
