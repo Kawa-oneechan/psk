@@ -8,6 +8,8 @@
 #include "DialogueBox.h"
 #include "PanelLayout.h"
 
+#include <thread>
+
 #ifdef DEBUG
 #define WINDOWTITLE "Project Special K (debug build " __DATE__ ")"
 #else
@@ -284,8 +286,6 @@ int main(int argc, char** argv)
 
 	UI::Load(ReadJSON("ui/ui.json"));
 
-	Database::LoadGlobalStuff();
-
 
 
 
@@ -330,7 +330,7 @@ int main(int argc, char** argv)
 	spriteShader = new Shader("shaders/sprite.fs");
 	whiteRect = new Texture("white.png", true, GL_CLAMP_TO_EDGE);
 
-
+	int oldTime = 0;
 
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
@@ -345,7 +345,37 @@ int main(int argc, char** argv)
 	sprender = new SpriteRenderer();
 	cursor = new Cursor();
 
-	
+	//Loading screen. Might make for a good general-use thing, pass it a function pointer 
+	{
+		std::thread loader(Database::LoadGlobalStuff);
+		loader.detach();
+		glDisable(GL_DEPTH_TEST);
+		cursor->Select(1);
+		auto loadIcon = new Texture("loading.png");
+		auto loadPos = glm::vec2(width - 256, height - 256);
+		while (!glfwWindowShouldClose(window) && !Database::DoneLoading)
+		{
+			int newTime = std::clock();
+			int deltaTime = newTime - oldTime;
+			oldTime = newTime;
+			double dt = deltaTime;
+
+			auto time = (float)glfwGetTime();
+
+			glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+			glClear(GL_COLOR_BUFFER_BIT);
+
+			sprender->DrawSprite(loadIcon, loadPos, glm::vec2(128), glm::vec4(0), sinf(time) * glm::radians(1000.0f));
+
+			cursor->Draw();
+			sprender->Flush();
+
+			glfwSwapBuffers(window);
+			glfwPollEvents();
+		}
+		cursor->Select(0);
+	}
+
 
 
 
@@ -368,8 +398,6 @@ int main(int argc, char** argv)
 	hotbar->Tween(&hotbar->Position.y, tweeny::from(-100.0f).to(0).during(100));
 	hotbar->Tween(&hotbar->Alpha, tweeny::from(0.0f).to(0.75f).during(200));
 	//tickables.push_back(new TextField());
-
-	int oldTime = 0;
 
 	while (!glfwWindowShouldClose(window))
 	{

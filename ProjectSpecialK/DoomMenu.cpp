@@ -82,7 +82,7 @@ void DoomMenu::Tick(double dt)
 {
 	//visible = (int)(12.0f * scale);
 
-	if (Inputs.MouseMoved())
+	if (itemY.size() > 0 && Inputs.MouseMoved())
 	{
 		const int col = (int)(400 * scale);
 		mouseHighlight = -1;

@@ -138,7 +138,7 @@ void Console::Tick(double dt)
 		{
 			scrollCursor += 5;
 			if (scrollCursor >= buffer.size())
-				scrollCursor = buffer.size() - 1;
+				scrollCursor = (int)buffer.size() - 1;
 		}
 	}
 	else if (Inputs.PgDown)

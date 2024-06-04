@@ -14,7 +14,6 @@ std::vector<Personality> personalities;
 std::vector<Hobby> hobbies;
 std::vector<Villager> villagers;
 
-//TODO: bring back the table writer, that thing was TIGHT.
 void Table(std::vector<std::string> data, size_t stride)
 {
 	size_t width[64] = { 0 };
@@ -69,6 +68,8 @@ void Table(std::vector<std::string> data, size_t stride)
 
 namespace Database
 {
+	bool DoneLoading = false;
+
 	void LoadItemIcons()
 	{
 		conprint(0, "ItemIcons: loading...");
@@ -94,6 +95,7 @@ namespace Database
 			entries.erase(entries.begin() + (cols * rows), entries.end());
 		}
 
+		stbi_set_flip_vertically_on_load(0);
 		int iconNum = 0;
 		for (const auto& entry : entries)
 		{
@@ -247,5 +249,6 @@ namespace Database
 		auto endingTime = std::chrono::high_resolution_clock::now();
 		auto ms_int = std::chrono::duration_cast<std::chrono::milliseconds>(endingTime - startingTime);
 		conprint(0, "Loading all this took {} milliseconds.\n", ms_int.count());
+		DoneLoading = true;
 	}
 }
