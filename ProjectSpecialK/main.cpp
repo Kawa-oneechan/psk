@@ -125,6 +125,11 @@ bool PointInPoly(const glm::vec2 point, const std::vector<glm::vec2>& polygon)
 	return (crossings & 1) == 1;
 }
 
+namespace SolBinds
+{
+	extern void Setup();
+}
+
 namespace UI
 {
 	std::map<std::string, glm::vec4> themeColors;
@@ -283,6 +288,7 @@ int main(int argc, char** argv)
 	InitVFS();
 
 	Audio::Initialize();
+	SolBinds::Setup();
 
 	UI::Load(ReadJSON("ui/ui.json"));
 

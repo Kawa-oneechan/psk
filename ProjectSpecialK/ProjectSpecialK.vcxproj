@@ -151,6 +151,7 @@
     <ClCompile Include="PanelLayout.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="SolBinds.cpp" />
     <ClCompile Include="Species.cpp" />
     <ClCompile Include="SpriteRenderer.cpp" />
     <ClCompile Include="support\crc32.c" />

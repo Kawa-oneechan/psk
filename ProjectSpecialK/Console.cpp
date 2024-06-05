@@ -20,40 +20,6 @@ Console::Console()
 	history.clear();
 	historyCursor = 0;
 	scrollCursor = 0;
-
-	Sol.open_libraries(sol::lib::coroutine);
-
-	Sol["print"] = [&](sol::variadic_args va)
-	{
-		Print(va[0]);
-	};
-
-	Sol["dialogue"] = sol::yielding([&](sol::variadic_args va)
-	{
-		int style = 0;
-		std::string line;
-		switch (va.size())
-		{
-		case 0:
-			line = "[[Forgot to specify a line]]";
-			break;
-		case 1:
-			line = va[0].as<std::string>();
-			break;
-		case 2:
-			line = va[0].as<std::string>();
-			if (va[1].is<int>())
-				style = va[1].as<int>();
-			//else va[1] is the speaker and va[2] is a style
-			break;
-		}
-
-		//do that mutex thing
-		dlgBox->Text(line, style);
-		
-		//ensure we can see the result
-		visible = false;
-	});
 }
 
 void Console::Print(int color, const std::string& str)
@@ -79,8 +45,8 @@ bool Console::Execute(const std::string& str)
 		std::string what = e.what();
 		if (what.find("attempt to yield from outside a coroutine") != -1)
 			; //Do nothing. Accept this silently.
-		else if (what.find("[string \"") != -1)
-			Execute("print(" + str + ")");
+		//else if (what.find("[string \"") != -1)
+		//	Execute("print(" + str + ")");
 		else
 			Print(1, fmt::format("Error: {}", what));
 	}
