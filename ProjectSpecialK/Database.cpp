@@ -230,7 +230,7 @@ namespace Database
 			table.push_back(villager.EnName);
 			table.emplace_back(fmt::format("{:08X}", villager.Hash));
 		}
-		//Table(table, 3);
+		Table(table, 3);
 		conprint(0, "VillagerDatabase: ended up with {} entries.\n", villagers.size());
 	}
 

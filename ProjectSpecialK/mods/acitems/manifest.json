@@ -1,0 +1,7 @@
+{
+	"id": "acitems",
+	"friendlyName": "Animal Crossing items",
+	"author": "Nintendo",
+	"priority": 1,
+	"namespaces": [ "ac", "acnh" ]
+}

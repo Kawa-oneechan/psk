@@ -178,7 +178,7 @@ void Console::Draw(double dt)
 	for (unsigned int i = (unsigned int)buffer.size() - scrollCursor, lines = 21; i-- > 0 && lines-- > 0;)
 	{
 		sprender->DrawText(0, buffer[i].second, pos, colors[buffer[i].first], 100.0f, 0, true);
-		pos.y -= 16;
+		pos.y -= 15;
 	}
 
 	auto il = (TextField*)inputLine;
