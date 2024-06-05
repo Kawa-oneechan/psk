@@ -1,8 +1,0 @@
-{
-	"id": "acvillagers",
-	"friendlyName": "Animal Crossing villagers",
-	"author": "Nintendo",
-	"priority": 1,
-	"dependencies": [ "acitems" ],
-	"namespaces": [ "ac", "acnh" ]
-}
