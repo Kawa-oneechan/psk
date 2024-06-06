@@ -9,6 +9,7 @@
 #include "PanelLayout.h"
 
 #include <thread>
+#include <future>
 
 #ifdef DEBUG
 #define WINDOWTITLE "Project Special K (debug build " __DATE__ ")"
@@ -279,6 +280,59 @@ void FatalError(const std::string& message)
 	exit(1);
 }
 
+void ThreadedLoader(std::function<void(void)> loader)
+{
+	glDisable(GL_DEPTH_TEST);
+	cursor->Select(1);
+	auto loadIcon = new Texture("loading.png");
+	auto loadPos = glm::vec2(width - 256, height - 256);
+	int oldTime = 0;
+	
+	std::promise<bool> p;
+	auto future = p.get_future();
+
+	std::thread t([&p, loader]
+	{
+		loader();
+		p.set_value(true);
+	});
+
+	while (true)
+	{
+		int newTime = std::clock();
+		int deltaTime = newTime - oldTime;
+		oldTime = newTime;
+		double dt = deltaTime;
+
+		auto time = (float)glfwGetTime();
+
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT);
+
+		sprender->DrawSprite(loadIcon, loadPos, glm::vec2(128), glm::vec4(0), sinf(time) * glm::radians(1000.0f));
+		/*
+		sprender->DrawSprite(loadIcon, loadPos + glm::vec2(0, (sinf(time * 2) * 10)), glm::vec2(128), glm::vec4(0), sinf(time) * glm::radians(1000.0f));
+		for (int i = 0; i < 10; i++)
+		{
+		sprender->DrawSprite(whiteRect, loadPos + glm::vec2(0, 80 + (i * 2)), glm::vec2(128), glm::vec4(0), 0.0f, glm::vec4(0, 0, 0, i * 0.1f));
+		}
+		*/
+
+		cursor->Draw();
+		sprender->Flush();
+
+		glfwSwapBuffers(window);
+		glfwPollEvents();
+
+		auto status = future.wait_for(std::chrono::milliseconds(1));
+		if (status == std::future_status::ready)
+			break;
+
+	}
+	t.join();
+	cursor->Select(0);
+}
+
 int main(int argc, char** argv)
 {
 	std::srand((unsigned int)std::time(nullptr));
@@ -336,8 +390,6 @@ int main(int argc, char** argv)
 	spriteShader = new Shader("shaders/sprite.fs");
 	whiteRect = new Texture("white.png", true, GL_CLAMP_TO_EDGE);
 
-	int oldTime = 0;
-
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
 	//glFrontFace(GL_CW);
@@ -351,37 +403,9 @@ int main(int argc, char** argv)
 	sprender = new SpriteRenderer();
 	cursor = new Cursor();
 
-	//Loading screen. Might make for a good general-use thing, pass it a function pointer 
-	{
-		std::thread loader(Database::LoadGlobalStuff);
-		loader.detach();
-		glDisable(GL_DEPTH_TEST);
-		cursor->Select(1);
-		auto loadIcon = new Texture("loading.png");
-		auto loadPos = glm::vec2(width - 256, height - 256);
-		while (!glfwWindowShouldClose(window) && !Database::DoneLoading)
-		{
-			int newTime = std::clock();
-			int deltaTime = newTime - oldTime;
-			oldTime = newTime;
-			double dt = deltaTime;
 
-			auto time = (float)glfwGetTime();
 
-			glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-			glClear(GL_COLOR_BUFFER_BIT);
-
-			sprender->DrawSprite(loadIcon, loadPos, glm::vec2(128), glm::vec4(0), sinf(time) * glm::radians(1000.0f));
-
-			cursor->Draw();
-			sprender->Flush();
-
-			glfwSwapBuffers(window);
-			glfwPollEvents();
-		}
-		cursor->Select(0);
-	}
-
+	ThreadedLoader(Database::LoadGlobalStuff);
 
 
 
@@ -405,6 +429,7 @@ int main(int argc, char** argv)
 	hotbar->Tween(&hotbar->Alpha, tweeny::from(0.0f).to(0.75f).during(200));
 	//tickables.push_back(new TextField());
 
+	int oldTime = 0;
 	while (!glfwWindowShouldClose(window))
 	{
 		int newTime = std::clock();

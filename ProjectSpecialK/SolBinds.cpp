@@ -41,30 +41,60 @@ namespace SolBinds
 		});
 
 		Sol.new_usertype<Player>(
-			"Player",
+			"__Player",
 			sol::constructors<Player()>(),
-			"Name", &Player::Name,
+			"Name", sol::readonly(&Player::Name),
 			"Gender", &Player::Gender,
 			"Bells", &Player::Bells
-			//Can't fit all of them in here?
-			//"HasItemRoom", &Player::HasInventoryRoom,
-			//"GiveItem", &Player::GiveItem,
-			//"SwapItems", &Player::SwapItems,
-			//"RemoveItem", &Player::RemoveItem,
-			//"ConsumeItem", &Player::ConsumeItem
 		);
-		Sol["player"] = &thePlayer;
+		Sol["Player"] = &thePlayer;
+
+		Sol["PlayerBag"] = sol::new_table();
+		auto bag = Sol["PlayerBag"];
+		bag["HasInventoryRoom"] = [&]() { return thePlayer.HasInventoryRoom(); };
+		bag["SwapItems"] = [&](int from, int to) { thePlayer.SwapItems(from, to); };
+		bag["RemoveItem"] = [&](int slot) { thePlayer.RemoveItem(slot); };
+		bag["ConsumeItem"] = [&](int slot) { thePlayer.ConsumeItem(slot); };
 
 		Sol.new_usertype<Villager>(
-			"Villager",
-			"Name", &Villager::Name,
+			"__Villager",
+			"Name", sol::property(&Villager::Name),
 			"Species", &Villager::Species
 			//"Catchphrase", &Villager::Catchphrase,
 			//"Nickname", &Villager::Nickname
 		);
+
 		Sol["getVillager"] = [&](sol::variadic_args va)
 		{
-			return (Villager*)Database::Find(va[0].as<std::string>(), &villagers);
+			if (va.size() == 1)
+			{
+				Villager* ret = nullptr;
+				if (va[0].is<int>())
+					ret = (Villager*)Database::Find(va[0].as<int>(), &villagers);
+				else if (va[0].is<std::string>())
+					ret = (Villager*)Database::Find(va[0].as<std::string>(), &villagers);
+				if (ret == nullptr)
+					conprint(1, "getVillager: could not find villager {}", va[0].as<std::string>());
+				return ret;
+			}
+			conprint(1, "getVillager needs one argument, a hash or an ID.");
+			return (Villager*)nullptr;
+		};
+		Sol["getItem"] = [&](sol::variadic_args va)
+		{
+			if (va.size() == 1)
+			{
+				Item* ret = nullptr;
+				if (va[0].is<int>())
+					ret = (Item*)Database::Find(va[0].as<int>(), &items);
+				else if (va[0].is<std::string>())
+					ret = (Item*)Database::Find(va[0].as<std::string>(), &items);
+				if (ret == nullptr)
+					conprint(1, "getItem: could not find item {}", va[0].as<std::string>());
+				return ret;
+			}
+			conprint(1, "getItem needs one argument, a hash or an ID.");
+			return (Item*)nullptr;
 		};
 	}
 }

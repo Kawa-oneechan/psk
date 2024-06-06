@@ -68,8 +68,6 @@ void Table(std::vector<std::string> data, size_t stride)
 
 namespace Database
 {
-	bool DoneLoading = false;
-
 	void LoadItemIcons()
 	{
 		conprint(0, "ItemIcons: loading...");
@@ -249,6 +247,5 @@ namespace Database
 		auto endingTime = std::chrono::high_resolution_clock::now();
 		auto ms_int = std::chrono::duration_cast<std::chrono::milliseconds>(endingTime - startingTime);
 		conprint(0, "Loading all this took {} milliseconds.\n", ms_int.count());
-		DoneLoading = true;
 	}
 }

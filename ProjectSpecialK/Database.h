@@ -11,7 +11,6 @@ extern std::vector<Villager> villagers;
 namespace Database
 {
 	extern void LoadGlobalStuff();
-	extern bool DoneLoading;
 
 	//Find a database entry by reference-ID.
 	template<typename T>
