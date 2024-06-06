@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?> 
 <AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+	<!-- Game stuff -->
 	<Type Name="NameableThing">
 		<DisplayString>{{ID={ID}, Name={EnName}, {Hash,Xb}}}</DisplayString>
 		<Expand>
@@ -8,6 +9,9 @@
 	</Type>
 	<Type Name="Item">
 		<DisplayString>{{ID={ID}, Name={EnName}}}</DisplayString>
+	</Type>
+	<Type Name="Species">
+		<DisplayString>{{ID={ID}, Name={Name}}}</DisplayString>
 	</Type>
 	<Type Name="Personality">
 		<DisplayString>{{ID={ID}}}</DisplayString>
@@ -28,9 +32,13 @@
 			<Item Name="CRC32">Hash,Xb</Item>
 		</Expand>
 	</Type>
+	
+	<!-- UI stuff -->
 	<Type Name="TextEntry">
 		<DisplayString>{rep}</DisplayString>
 	</Type>
+	
+	<!-- Backend stuff -->
 	<Type Name="JSONValue">
 		<DisplayString Condition="type == 0">Null</DisplayString>
 		<DisplayString Condition="type == 1">{string_value}</DisplayString>
@@ -38,5 +46,8 @@
 		<DisplayString Condition="type == 3">{number_value}</DisplayString>
 		<DisplayString Condition="type == 4">{array_value}</DisplayString>
 		<DisplayString Condition="type == 5">{object_value}</DisplayString>
+	</Type>
+	<Type Name="Texture">
+		<DisplayString>{ID}, [{width}x{height}]</DisplayString>
 	</Type>
 </AutoVisualizer>
