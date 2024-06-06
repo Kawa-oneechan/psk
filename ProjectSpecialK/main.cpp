@@ -22,6 +22,15 @@
 #define WIN_WIDTH 1920 //1280
 #define WIN_HEIGHT 1080 //720
 
+extern "C"
+{
+	//why bother including windows headers lol
+	_declspec(dllimport) int __stdcall MessageBoxA(_In_opt_ void* hWnd, _In_opt_ const char* lpText, _In_opt_ const char* lpCaption, _In_ unsigned int uType);
+	_declspec(dllimport) int __stdcall MessageBoxW(_In_opt_ void* hWnd, _In_opt_ const wchar_t* lpText, _In_opt_ const wchar_t* lpCaption, _In_ unsigned int uType);
+	_declspec(dllimport) int __stdcall MultiByteToWideChar(_In_ unsigned int CodePage, _In_ unsigned long dwFlags, const char* lpMultiByteStr, _In_ int cbMultiByte, wchar_t* lpWideCharStr, _In_ int cchWideChar);
+#define MessageBox MessageBoxW
+}
+
 GLFWwindow* window;
 
 Shader* spriteShader = nullptr;
@@ -49,81 +58,13 @@ float scale = (float)WIN_WIDTH / (float)SCR_HEIGHT;
 
 int articlePlease;
 
-glm::vec2 GetJSONVec2(JSONValue* val)
+__declspec(noreturn)
+void FatalError(const std::string& message)
 {
-	if (!val->IsArray())
-		throw std::runtime_error("GetJSONVec2: given value is not an array.");
-	auto arr = val->AsArray();
-	if (arr.size() != 2)
-		throw std::runtime_error(fmt::format("GetJSONVec2: given array has {} entries, not 2.", arr.size()));
-	if (!arr[0]->IsNumber() || !arr[1]->IsNumber())
-		throw std::runtime_error("GetJSONVec2: given array does not contain only numbers.");
-	return glm::vec2(arr[0]->AsNumber(), arr[1]->AsNumber());
-}
-
-glm::vec4 GetJSONVec4(JSONValue* val)
-{
-	if (!val->IsArray())
-		throw std::runtime_error("GetJSONVec4: given value is not an array.");
-	auto arr = val->AsArray();
-	if (arr.size() != 4)
-		throw std::runtime_error(fmt::format("GetJSONVec4: given array has {} entries, not 4.", arr.size()));
-	if (!arr[0]->IsNumber() || !arr[1]->IsNumber() || !arr[2]->IsNumber() || !arr[3]->IsNumber())
-		throw std::runtime_error("GetJSONVec4: given array does not contain only numbers.");
-	return glm::vec4(arr[0]->AsNumber(), arr[1]->AsNumber(), arr[2]->AsNumber(), arr[3]->AsNumber());
-}
-
-void GetAtlas(TextureAtlas &ret, const std::string& jsonFile)
-{
-	auto rjs = ReadJSON(jsonFile);
-	if (rjs == nullptr)
-		return;
-	auto doc = rjs->AsObject();
-	ret.clear();
-	if (doc["type"]->AsString() == "simple")
-	{
-		auto size = GetJSONVec2(doc["size"]);
-		auto dims = GetJSONVec2(doc["dims"]);
-		for (int y = 0; y < (int)dims[0]; y++)
-		{
-			for (int x = 0; x < (int)dims[1]; x++)
-			{
-				ret.push_back(glm::vec4(x * size[0], y * size[1], size[0], size[1]));
-			}
-		}
-		return;
-	}
-	else if (doc["type"]->AsString() == "atlas")
-	{
-		auto rects = doc["rects"]->AsArray();
-		for (const auto& rect : rects)
-		{
-			ret.push_back(GetJSONVec4(rect));
-		}
-		return;
-	}
-
-	throw std::runtime_error(fmt::format("GetAtlas: file {} has an unknown type \"{}\".", jsonFile, doc["type"]->AsString()));
-}
-
-bool PointInPoly(const glm::vec2 point, const std::vector<glm::vec2>& polygon)
-{
-	int crossings = 0;
-	const auto numPts = polygon.size() - 1;
-
-	for (auto i = 0; i < numPts; i++)
-	{
-		if (((polygon[i].y <= point.y) && (polygon[i + 1].y > point.y))
-			|| ((polygon[i].y > point.y) && (polygon[i + 1].y <= point.y)))
-		{
-			auto vt = (point.y - polygon[i].y) / (polygon[i + 1].y - polygon[i].y);
-			if (point.x < polygon[i].x + vt * (polygon[i + 1].x - polygon[i].x))
-			{
-				++crossings;
-			}
-		}
-	}
-	return (crossings & 1) == 1;
+	wchar_t w[1024] = { 0 };
+	MultiByteToWideChar(65001, 0, message.c_str(), -1, w, 1024);
+	MessageBox(nullptr, w, L"Project Special K", 0x30);
+	exit(1);
 }
 
 namespace SolBinds
@@ -260,24 +201,6 @@ void mousebutton_callback(GLFWwindow* window, int button, int action, int mods)
 		if (!Inputs.MouseRight && action == GLFW_RELEASE)
 			Inputs.MouseRight = true;
 	}
-}
-
-extern "C"
-{
-	//why bother including windows headers lol
-	_declspec(dllimport) int __stdcall MessageBoxA(_In_opt_ void* hWnd, _In_opt_ const char* lpText, _In_opt_ const char* lpCaption, _In_ unsigned int uType);
-	_declspec(dllimport) int __stdcall MessageBoxW(_In_opt_ void* hWnd, _In_opt_ const wchar_t* lpText, _In_opt_ const wchar_t* lpCaption, _In_ unsigned int uType);
-	_declspec(dllimport) int __stdcall MultiByteToWideChar(_In_ unsigned int CodePage, _In_ unsigned long dwFlags, const char* lpMultiByteStr, _In_ int cbMultiByte, wchar_t* lpWideCharStr, _In_ int cchWideChar);
-#define MessageBox MessageBoxW
-}
-
-__declspec(noreturn)
-void FatalError(const std::string& message)
-{
-	wchar_t w[1024] = { 0 };
-	MultiByteToWideChar(65001, 0, message.c_str(), -1, w, 1024);
-	MessageBox(nullptr, w, L"Project Special K", 0x30);
-	exit(1);
 }
 
 void ThreadedLoader(std::function<void(void)> loader)

@@ -64,7 +64,7 @@ namespace SolBinds
 			//"Nickname", &Villager::Nickname
 		);
 
-		Sol["getVillager"] = [&](sol::variadic_args va)
+		Sol["getVillager"] = [](sol::variadic_args va)
 		{
 			if (va.size() == 1)
 			{
@@ -80,7 +80,7 @@ namespace SolBinds
 			conprint(1, "getVillager needs one argument, a hash or an ID.");
 			return (Villager*)nullptr;
 		};
-		Sol["getItem"] = [&](sol::variadic_args va)
+		Sol["getItem"] = [](sol::variadic_args va)
 		{
 			if (va.size() == 1)
 			{

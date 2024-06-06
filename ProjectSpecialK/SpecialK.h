@@ -70,6 +70,7 @@ extern glm::vec2 GetJSONVec2(JSONValue* val);
 extern glm::vec4 GetJSONVec4(JSONValue* val);
 
 extern bool PointInPoly(const glm::vec2 point, const std::vector<glm::vec2>& polygon);
+extern bool PointInRect(const glm::vec2 point, const glm::vec4 rect);
 
 namespace UI
 {

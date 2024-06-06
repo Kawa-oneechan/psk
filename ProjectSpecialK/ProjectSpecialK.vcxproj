@@ -168,6 +168,7 @@
     <ClCompile Include="TextRenderer.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Traits.cpp" />
+    <ClCompile Include="Utilities.cpp" />
     <ClCompile Include="VFS.cpp" />
     <ClCompile Include="Villager.cpp" />
   </ItemGroup>

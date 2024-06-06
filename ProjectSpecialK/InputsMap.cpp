@@ -5,6 +5,7 @@ InputsMap::InputsMap()
 {
 	Up = Down = Left = Right = false;
 	Enter = Escape = false;
+	PgUp = PgDown = false;
 
 	lastMousePos = MousePosition = glm::vec2(width, height) + 20.0f;
 	MouseLeft = MouseRight = MouseMiddle = false;
