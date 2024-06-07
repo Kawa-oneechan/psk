@@ -86,4 +86,12 @@ public:
 
 	void Serialize(JSONObject& target);
 	void Deserialize(JSONObject& source);
+
+	//kill copies
+	Villager(const Villager&) = delete;
+	//move instead
+	Villager(Villager&&) = default;
+	//what do these dooooo?
+	Villager& operator = (const Villager&) = delete;
+	Villager& operator = (Villager&&) = default;
 };

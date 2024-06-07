@@ -289,8 +289,8 @@ int main(int argc, char** argv)
 	window = glfwCreateWindow(WIN_WIDTH, WIN_HEIGHT, WINDOWTITLE, NULL, NULL);
 	if (window == NULL)
 	{
-		FatalError("Failed to create GLFW window.");
 		glfwTerminate();
+		FatalError("Failed to create GLFW window.");
 		return -1;
 	}
 	glfwMakeContextCurrent(window);
