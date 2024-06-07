@@ -80,10 +80,8 @@ namespace Database
 		const int sheetW = cols * iconSize;
 		const int sheetH = rows * iconSize;
 
-		unsigned char* sheet = (unsigned char*)malloc((sheetW * sheetH) * 4);
-		if (sheet == nullptr)
-			throw std::runtime_error("ItemIcons: could not allocate sheet.");
-		memset(sheet, 0x00, (sheetW * sheetH) * 4);
+		auto sheet = new unsigned char[(sheetW * sheetH) * 4];
+		//std::memset(sheet, 0x00, (sheetW * sheetH) * 4);
 		
 		auto entries = EnumerateVFS("itemicons\\*.png");
 
@@ -124,19 +122,14 @@ namespace Database
 		{
 			stbi_flip_vertically_on_write(1);
 			stbi_write_png("itemicons.png", sheetW, sheetH, 4, sheet, sheetW * 4);
-			/*
-			FILE* tf;
-			fopen_s(&tf, "temp.bin", "wb");
-			fwrite(sheet, (sheetW * sheetH) * 4, 1, tf);
-			fclose(tf);
-			*/
 		}
 #endif
 
 		//TODO: put itemIcons somewhere else and ONLY call this once OpenGL is running.
 		//These functions are dynamically loaded and ALL ARE NULL initially.
 		//auto itemIcons = Texture(sheet, sheetW, sheetH, 4, true);
-		free(sheet);
+
+		//free(sheet);
 
 		ForgetVFS(entries);
 

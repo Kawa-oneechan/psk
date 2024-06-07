@@ -122,10 +122,8 @@ static void initVFS_addSource(const fs::path& path)
 			if (!_stricmp(fs.m_filename, "manifest.json"))
 			{
 				const size_t siz = (size_t)fs.m_uncomp_size;
-				manifestData = (char*)malloc(siz + 2);
-				if (manifestData == nullptr)
-					return;
-				memset(manifestData, 0, siz + 2);
+				manifestData = new char[siz + 2];
+				std::memset(manifestData, 0, siz + 2);
 				mz_zip_reader_extract_to_mem(&zip, i, manifestData, siz, 0);
 				break;
 			}
@@ -139,10 +137,8 @@ static void initVFS_addSource(const fs::path& path)
 			std::ifstream file(manifestPath, std::ios::binary | std::ios::ate);
 			std::streamsize fs = file.tellg();
 			file.seekg(0, std::ios::beg);
-			manifestData = (char*)malloc(fs + 2);
-			if (manifestData == nullptr)
-				return;
-			memset(manifestData, 0, fs + 2);
+			manifestData = new char[fs + 2];
+			std::memset(manifestData, 0, fs + 2);
 			file.read(manifestData, fs);
 		}
 	}
@@ -150,7 +146,7 @@ static void initVFS_addSource(const fs::path& path)
 	if (manifestData != nullptr)
 	{
 		auto manifestDoc = JSON::Parse(manifestData)->AsObject();
-		free(manifestData);
+		delete[] manifestData;
 
 		newSrc.id = manifestDoc["id"]->AsString();
 		newSrc.friendlyName = manifestDoc["friendlyName"]->IsString() ? manifestDoc["friendlyName"]->AsString() : newSrc.id;
@@ -237,8 +233,6 @@ char* ReadVFS(const VFSEntry& entry, size_t* size)
 		if (size != nullptr)
 			*size = siz;
 		char* ret = (char*)malloc(siz + 2);
-		if (ret == nullptr)
-			return nullptr;
 		memset(ret, 0, siz + 2);
 		mz_zip_reader_extract_to_mem(&zip, entry.zipIndex, ret, siz, 0);
 		return ret;

@@ -73,7 +73,7 @@ void SpriteRenderer::LoadFontBank(int font, int bank)
 	//		return;
 
 	auto ttfData = (unsigned char*)ReadVFS(fontFiles[font], nullptr);
-	auto ttfBitmap = (unsigned char*)malloc(FONTATLAS_SIZE * FONTATLAS_SIZE);
+	auto ttfBitmap = new unsigned char[FONTATLAS_SIZE * FONTATLAS_SIZE];
 	stbtt_BakeFontBitmap(ttfData, 0, (float)fontSizes[font], ttfBitmap, FONTATLAS_SIZE, FONTATLAS_SIZE, 256 * bank, 256, &cdata[(font * 0xFFFF) + (0x100 * bank)]);
 	FlipImage(ttfBitmap, FONTATLAS_SIZE, FONTATLAS_SIZE);
 
@@ -84,9 +84,7 @@ void SpriteRenderer::LoadFontBank(int font, int bank)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	free(ttfBitmap);
 
-	//Texture font(fontID, FONTATLAS_SIZE, FONTATLAS_SIZE, 1);
 	fontTextures[(font * 256) + bank] = new Texture(fontID, FONTATLAS_SIZE, FONTATLAS_SIZE, 1);
 }
 
