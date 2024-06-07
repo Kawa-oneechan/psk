@@ -289,7 +289,7 @@ int main(int argc, char** argv)
 	window = glfwCreateWindow(WIN_WIDTH, WIN_HEIGHT, WINDOWTITLE, NULL, NULL);
 	if (window == NULL)
 	{
-		printf("Failed to create GLFW window\n");
+		FatalError("Failed to create GLFW window.");
 		glfwTerminate();
 		return -1;
 	}
@@ -303,7 +303,7 @@ int main(int argc, char** argv)
 
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 	{
-		printf("Failed to initialize GLAD\n");
+		FatalError("Failed to initialize GLAD.");
 		return -1;
 	}
 

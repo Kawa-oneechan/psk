@@ -1,8 +1,7 @@
 #include <string>
 #include <sstream>
 
-#include "SpriteRenderer.h"
-#include "Text.h"
+#include "SpecialK.h"
 #include "support/stb_truetype.h"
 #include "support/stb_image_write.h"
 
@@ -50,7 +49,7 @@ void SpriteRenderer::LoadFontBank(int font, int bank)
 		if (numFonts > MAXFONTS)
 		{
 			numFonts = MAXFONTS;
-			printf("Warning: too many font definitions, only doing %d.\n", MAXFONTS);
+			conprint(2, "Warning: too many font definitions, only doing {}.", MAXFONTS);
 		}
 		cdata = (stbtt_bakedchar*)calloc(numFonts * 0x10000, sizeof(stbtt_bakedchar));
 		if (cdata == nullptr)
@@ -65,7 +64,6 @@ void SpriteRenderer::LoadFontBank(int font, int bank)
 			fontFiles[i] = "fonts/" + thisFont[0]->AsString();
 			fontSizes[i] = (int)thisFont[1]->AsNumber();
 		}
-		printf("fontSettings!");
 	}
 
 	if (fontTextures[(font * 256) + bank] != nullptr)

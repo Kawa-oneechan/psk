@@ -45,7 +45,7 @@ static void initVFS_addEntry(VFSEntry& entry)
 static void initVFS_fromFolder(int source)
 {
 	VFSSource& src = sources[source];
-	conprint(0, "VFS: from folder {}...\n", src.path);
+	conprint(0, "VFS: from folder {}...", src.path);
 	for (const auto& file : fs::recursive_directory_iterator(src.path))
 	{
 		if (fs::is_directory(file.status()))
@@ -73,7 +73,7 @@ static void initVFS_fromFolder(int source)
 static void initVFS_fromArchive(int source)
 {
 	VFSSource& src = sources[source];
-	conprint(0, "VFS: from {}...\n", src.path);
+	conprint(0, "VFS: from {}...", src.path);
 	{
 		mz_zip_archive zip;
 		memset(&zip, 0, sizeof(zip));
@@ -173,7 +173,7 @@ static bool initVFS_sort(const VFSSource& a, const VFSSource& b)
 
 void InitVFS()
 {
-	conprint(0, "VFS: initializing...\n");
+	conprint(0, "VFS: initializing...");
 
 	initVFS_addSource("data");
 	for (const auto& mod : fs::directory_iterator("mods"))
@@ -181,7 +181,7 @@ void InitVFS()
 		initVFS_addSource(mod.path());
 	}
 	
-	conprint(0, "Pre-sort:\n");
+	conprint(0, "Pre-sort:");
 	auto table = std::vector<std::string>{ "ID", "Name", "Author", "Priority" };
 	for (const auto& source : sources)
 	{
@@ -195,7 +195,7 @@ void InitVFS()
 	std::sort(sources.begin(), sources.end(), initVFS_sort);
 	//TODO: resolve dependencies
 
-	conprint(0, "Post-sort:\n");
+	conprint(0, "Post-sort:");
 	table = std::vector<std::string>{ "ID", "Name", "Author", "Priority" };
 	for (const auto& source : sources)
 	{
@@ -215,7 +215,7 @@ void InitVFS()
 			initVFS_fromFolder(i);
 	}
 
-	conprint(0, "VFS: ended up with {} entries.\n", entries.size());
+	conprint(0, "VFS: ended up with {} entries.", entries.size());
 }
 
 char* ReadVFS(const VFSEntry& entry, size_t* size)
@@ -223,14 +223,14 @@ char* ReadVFS(const VFSEntry& entry, size_t* size)
 	auto& source = sources[entry.sourceIndex];
 	if (source.isZip)
 	{
-		conprint(2, "DEBUG: getting {} from {}.\n", entry.path, source.path);
+		conprint(2, "DEBUG: getting {} from {}.", entry.path, source.path);
 		mz_zip_archive zip;
 		memset(&zip, 0, sizeof(zip));
 		mz_zip_reader_init_file(&zip, source.path.c_str(), 0);
 		mz_zip_archive_file_stat fs;
 		if (!mz_zip_reader_file_stat(&zip, entry.zipIndex, &fs))
 		{
-			conprint(1, "ReadVFS: couldn't read {}?\n", entry.path);
+			conprint(1, "ReadVFS: couldn't read {}?", entry.path);
 			return nullptr;
 		}
 		const size_t siz = (size_t)fs.m_uncomp_size;
@@ -370,5 +370,5 @@ void ForgetVFS(const std::vector<VFSEntry>& forget)
 		}
 	}
 
-	conprint(0, "ForgetVFS: went from {} to {} items, forgetting {}.\n", start, entries.size(), start - entries.size());
+	conprint(0, "ForgetVFS: went from {} to {} items, forgetting {}.", start, entries.size(), start - entries.size());
 }

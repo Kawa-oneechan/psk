@@ -39,18 +39,6 @@ Villager::Villager(JSONObject& value) : NameableThing(value)
 	}
 	_model = nullptr;
 
-/*
-	auto ref = fmt::format("name:{}", ID.substr(ID.find_last_of(':') + 1));
-	StringToLower(ref);
-	StripSpaces(ref);
-	RefName = ref;
-
-	auto val = value.find("name")->second;
-	TextAdd(ref, *val);
-
-	EnName = TextGet(ref, Language::EUen);
-*/
-
 	//Normally, special villagers have no catchphrase but we'll allow it as an option.
 	RefCatchphrase = fmt::format("catchphrase:{}", ID);
 	auto val = value["catchphrase"];
@@ -81,8 +69,6 @@ Villager::Villager(JSONObject& value) : NameableThing(value)
 	}
 
 	auto nametag = value["nameTag"]->AsArray();
-	//NameTag[0] = nametag[0]->AsString();
-	//NameTag[1] = nametag[1]->AsString();
 	for (int i = 0; i < 2; i++)
 	{
 		auto hex = nametag[i]->AsString();
@@ -122,7 +108,7 @@ Villager::Villager(JSONObject& value) : NameableThing(value)
 		hobby = Database::Find<::Hobby>(value["hobby"], &hobbies);
 		if (hobby == nullptr)
 		{
-			conprint(1, "\x1B[93m" "Unknown hobby {} while loading {}.\n" "\x1B[0m", value["hobby"]->Stringify(), ID);
+			conprint(1, "Unknown hobby {} while loading {}.", value["hobby"]->Stringify(), ID);
 			hobby = Database::Find<::Hobby>("fallback", &hobbies);
 		}
 	}

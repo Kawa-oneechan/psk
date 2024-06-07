@@ -16,6 +16,7 @@ namespace Database
 	template<typename T>
 	const T* Find(const std::string& target, std::vector<T>* source)
 	{
+#if 1
 		for (int i = 0; i < source->size(); i++)
 		{
 			T* v = &source->at(i);
@@ -25,6 +26,12 @@ namespace Database
 			}
 		}
 		return nullptr;
+#else
+		//Arguably better code but...
+		auto it = std::find_if(source->begin(), source->end(), [&](T* v) { return v->ID == target; });
+		if (it == source->end()) return nullptr;
+		return ... what exactly?
+#endif
 	}
 
 	//Find a database entry by CRC32 hash.

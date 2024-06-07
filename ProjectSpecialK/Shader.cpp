@@ -1,4 +1,4 @@
-#include "Shader.h"
+#include "SpecialK.h"
 
 Shader::Shader(const std::string& vertexPath, const std::string& fragmentPath)
 {
@@ -113,7 +113,7 @@ void Shader::checkCompileErrors(unsigned int shader, const std::string& type)
 		if (!success)
 		{
 			glGetShaderInfoLog(shader, 1024, NULL, infoLog);
-			printf("Shader compilation error, type %s:\n%s\n", type.c_str(), infoLog);
+			conprint(1, "Shader compilation error, type {}:\n{}\n", type, infoLog);
 		}
 	}
 	else
@@ -122,7 +122,7 @@ void Shader::checkCompileErrors(unsigned int shader, const std::string& type)
 		if (!success)
 		{
 			glGetProgramInfoLog(shader, 1024, NULL, infoLog);
-			printf("Shader linking error, type %s:\n%s\n", type.c_str(), infoLog);
+			conprint(1, "Shader linking error, type {}:\n{}\n", type, infoLog);
 		}
 	}
 }

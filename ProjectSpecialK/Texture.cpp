@@ -11,7 +11,7 @@ Texture::Texture(const std::string& texturePath, bool mipmaps, int repeat, int f
 	char* vfsData = ReadVFS(texturePath, &vfsSize);
 	if (vfsData == nullptr || vfsSize == 0)
 	{
-		conprint(1, "Failed to load texture \"{}\" -- no data\n", texturePath);
+		conprint(1, "Failed to load texture \"{}\" -- no data.", texturePath);
 		return;
 	}
 	unsigned char *data = stbi_load_from_memory((unsigned char*)vfsData, (int)vfsSize, &width, &height, &channels, 0);
@@ -36,7 +36,7 @@ Texture::Texture(const std::string& texturePath, bool mipmaps, int repeat, int f
 	}
 	else
 	{
-		conprint(1, "Failed to load texture \"{}\" -- invalid data\n", texturePath);
+		conprint(1, "Failed to load texture \"{}\" -- invalid data.", texturePath);
 	}
 	stbi_image_free(data);
 }

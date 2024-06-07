@@ -7,6 +7,7 @@
 Console::Console()
 {
 	visible = false;
+	auto r = fopen_s(&hardcopy, "console.log", "wb");
 	Print(3, "Project Special K");
 	Print(3, "-----------------");
 
@@ -22,9 +23,20 @@ Console::Console()
 	scrollCursor = 0;
 }
 
+Console::~Console()
+{
+	if (hardcopy != nullptr)
+		fclose(hardcopy);
+}
+
 void Console::Print(int color, const std::string& str)
 {
 	buffer.emplace_back(std::make_pair(clamp(color, 0, 8), str));
+	if (hardcopy != nullptr)
+	{
+		fputs(str.c_str(), hardcopy);
+		fputc('\n', hardcopy);
+	}
 }
 
 void Console::Print(const std::string& str)
