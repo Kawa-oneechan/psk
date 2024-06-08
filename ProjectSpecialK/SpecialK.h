@@ -86,7 +86,7 @@ namespace UI
 template<typename T>
 auto vecfind(const std::vector<T>& h, const T& n)
 {
-	for (auto& x = h.begin(); x < h.end(); x++)
+	for (auto& x = h.begin(); x < h.end(); ++x)
 		if ((*x).id == n.id)
 			return x;
 	return h.end();

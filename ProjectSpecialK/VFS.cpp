@@ -219,7 +219,7 @@ void InitVFS()
 			if (veccontains(workingSet, source))
 				workingSet.erase(vecfind(workingSet, source));
 
-			sources.emplace_back(std::move(source));
+			sources.emplace_back(source);
 		};
 
 		for (const auto& source : sources)
@@ -272,6 +272,8 @@ char* ReadVFS(const VFSEntry& entry, size_t* size)
 		if (size != nullptr)
 			*size = siz;
 		char* ret = (char*)malloc(siz + 2);
+		if (ret == nullptr)
+			return nullptr;
 		memset(ret, 0, siz + 2);
 		mz_zip_reader_extract_to_mem(&zip, entry.zipIndex, ret, siz, 0);
 		return ret;

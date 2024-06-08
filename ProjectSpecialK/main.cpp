@@ -270,7 +270,7 @@ int main(int argc, char** argv)
 	{
 		InitVFS();
 	}
-	catch (std::runtime_error x)
+	catch (std::runtime_error& x)
 	{
 		FatalError(x.what());
 	}
