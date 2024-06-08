@@ -81,3 +81,23 @@ namespace UI
 };
 
 #define conprint(C, F, ...) console->Print(C, fmt::format(F, __VA_ARGS__));
+
+//Until I find out how the alternatives to std::vector that DO have find and contains work...
+template<typename T>
+auto vecfind(const std::vector<T>& h, const T& n)
+{
+	for (auto& x = h.begin(); x < h.end(); x++)
+		if ((*x).id == n.id)
+			return x;
+	return h.end();
+};
+
+template<typename T>
+auto veccontains(const std::vector<T>& h, const T& n)
+{
+	for (const auto& x : h)
+		if (x.id == n.id)
+			return true;
+	return false;
+};
+

@@ -61,9 +61,13 @@ int articlePlease;
 __declspec(noreturn)
 void FatalError(const std::string& message)
 {
+	conprint(1, "Fatal error: {}", message);
+
 	wchar_t w[1024] = { 0 };
 	MultiByteToWideChar(65001, 0, message.c_str(), -1, w, 1024);
 	MessageBox(nullptr, w, L"Project Special K", 0x30);
+
+	conprint(1, "Exiting...");
 	exit(1);
 }
 
@@ -262,7 +266,14 @@ int main(int argc, char** argv)
 
 	//prepForUTF8andSuch(); //setlocale(LC_ALL, ".UTF8");
 	console = new Console();
-	InitVFS();
+	try
+	{
+		InitVFS();
+	}
+	catch (std::runtime_error x)
+	{
+		FatalError(x.what());
+	}
 
 	Audio::Initialize();
 	SolBinds::Setup();

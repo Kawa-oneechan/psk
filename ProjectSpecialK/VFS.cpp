@@ -3,8 +3,6 @@
 #include <fstream>
 #include <regex>
 #include <algorithm>
-#include <malloc.h>
-#include <conio.h>
 
 #include "SpecialK.h"
 #include "support/miniz.h"
@@ -162,11 +160,6 @@ static void initVFS_addSource(const fs::path& path)
 	sources.push_back(newSrc);
 }
 
-static bool initVFS_sort(const VFSSource& a, const VFSSource& b)
-{
-	return (a.priority < b.priority);
-}
-
 void InitVFS()
 {
 	conprint(0, "VFS: initializing...");
@@ -188,8 +181,54 @@ void InitVFS()
 	}
 	Table(table, 4);
 
-	std::sort(sources.begin(), sources.end(), initVFS_sort);
-	//TODO: resolve dependencies
+	std::sort(sources.begin(), sources.end(), [](const VFSSource& a, const VFSSource& b)
+	{
+		return (a.priority < b.priority);
+	});
+	
+
+	//Dependencies?
+	{
+		std::vector<VFSSource> originalSet;
+		std::vector<VFSSource> workingSet;
+
+		std::function<void(const VFSSource&)> depWorker;
+		depWorker = [&](const VFSSource& source)
+		{
+			if (veccontains(workingSet, source))
+				throw std::runtime_error(fmt::format("Asset source \"{}\" dependencies form a cycle.", source.id));
+
+			if (veccontains(sources, source))
+				return;
+
+			for (const auto& dep : source.dependencies)
+			{
+				bool found = false;
+				for (auto& s : originalSet)
+				{
+					if (s.id == dep)
+					{
+						found = true;
+						depWorker(s);
+					}
+				}
+				if (!found)
+					throw std::runtime_error(fmt::format("Asset source \"{}\" cannot resolve dependency on \"{}\".", source.id, dep));
+			}
+
+			if (veccontains(workingSet, source))
+				workingSet.erase(vecfind(workingSet, source));
+
+			sources.emplace_back(std::move(source));
+		};
+
+		for (const auto& source : sources)
+			originalSet.emplace_back(source);
+		sources.clear();
+
+		for (const auto& source : originalSet)
+			depWorker(source);
+	}
 
 	conprint(0, "Post-sort:");
 	table = std::vector<std::string>{ "ID", "Name", "Author", "Priority" };
