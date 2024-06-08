@@ -7,6 +7,7 @@
 #include "DoomMenu.h"
 #include "DialogueBox.h"
 #include "PanelLayout.h"
+#include "DateTimePanel.h"
 
 #include <thread>
 #include <future>
@@ -361,6 +362,8 @@ int main(int argc, char** argv)
 	tickables.push_back(hotbar);
 	hotbar->Tween(&hotbar->Position.y, tweeny::from(-100.0f).to(0).during(100));
 	hotbar->Tween(&hotbar->Alpha, tweeny::from(0.0f).to(0.75f).during(200));
+	tickables.push_back(new DateTimePanel());
+
 	//tickables.push_back(new TextField());
 
 	int oldTime = 0;

@@ -5,6 +5,7 @@
 class Panel
 {
 public:
+	std::string ID;
 	glm::vec2 Position;
 	int Type;
 	float Alpha;
@@ -37,4 +38,5 @@ public:
 	void Tick(double dt);
 	void Tween(float* what, tweeny::tween<float> tween);
 	void Draw(double dt);
+	Panel* GetPanel(const std::string& id);
 };

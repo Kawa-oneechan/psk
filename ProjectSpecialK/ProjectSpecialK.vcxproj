@@ -142,6 +142,7 @@
     <ClCompile Include="Console.cpp" />
     <ClCompile Include="Cursor.cpp" />
     <ClCompile Include="Database.cpp" />
+    <ClCompile Include="DateTimePanel.cpp" />
     <ClCompile Include="DialogueBox.cpp" />
     <ClCompile Include="DoomMenu.cpp" />
     <ClCompile Include="InputsMap.cpp" />
@@ -185,6 +186,7 @@
     <ClInclude Include="Console.h" />
     <ClInclude Include="Cursor.h" />
     <ClInclude Include="Database.h" />
+    <ClInclude Include="DateTimePanel.h" />
     <ClInclude Include="DialogueBox.h" />
     <ClInclude Include="DoomMenu.h" />
     <ClInclude Include="InputsMap.h" />

@@ -118,5 +118,38 @@
 				"alpha": 2
 			}
 		]
+	},
+	"datetime": {
+		"textures": [
+			"ui/datetime.png"
+		],
+		"alpha": 0.75,
+		"panels": [
+			{
+				"position": [ 0, 850 ],
+				"type": "sprite",
+				"texture": 0,
+				"frame": 0,
+				"color": "primary"
+			},
+			{
+				"id": "time",
+				"position": [ 80, 870 ],
+				"type": "text",
+				"text": "00:00 XM",
+				"size": 150.0,
+				"alpha": 2.0,
+				"color": "white"
+			},
+			{
+				"id": "date",
+				"position": [ 80, 960 ],
+				"type": "text",
+				"text": "Foo 00, bar.",
+				"size": 80.0,
+				"alpha": 2.0,
+				"color": "white"
+			}
+		]
 	}
 }

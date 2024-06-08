@@ -49,7 +49,14 @@ PanelLayout::PanelLayout(JSONValue* source)
 		auto pnl = p->AsObject();
 		auto panel = new Panel();
 
+		if (pnl["id"] != nullptr)
+		{
+			panel->ID = pnl["id"]->AsString();
+		}
+
 		panel->Position = GetJSONVec2(pnl["position"]);
+		panel->Polygon = -1;
+
 		auto& type = pnl["type"]->AsString();
 		if (type == "image") panel->Type = 0;
 		else if (type == "text") panel->Type = 1;
@@ -162,9 +169,16 @@ void PanelLayout::Draw(double dt)
 				panel->Text,
 				(Position + panel->Position) * scale,
 				color,
-				100.0f * scale
+				panel->Size * scale
 			);
 		}
 	}
 }
 
+Panel* PanelLayout::GetPanel(const std::string& id)
+{
+	for (const auto& p : panels)
+		if (p->ID == id)
+			return p;
+	return nullptr;
+}
