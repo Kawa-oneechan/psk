@@ -134,20 +134,31 @@
 			},
 			{
 				"id": "time",
-				"position": [ 80, 870 ],
+				"position": [ 180, 870 ],
 				"type": "text",
-				"text": "00:00 XM",
+				"text": "00:00",
 				"size": 150.0,
+				"alpha": 2.0,
+				"alignment": "center",
+				"color": "white"
+			},
+			{
+				"id": "ampm",
+				"position": [ 260, 875 ],
+				"type": "text",
+				"text": "XM",
+				"size": 100.0,
 				"alpha": 2.0,
 				"color": "white"
 			},
 			{
 				"id": "date",
-				"position": [ 80, 960 ],
+				"position": [ 180, 960 ],
 				"type": "text",
 				"text": "Foo 00, bar.",
 				"size": 80.0,
 				"alpha": 2.0,
+				"alignment": "center",
 				"color": "white"
 			}
 		]

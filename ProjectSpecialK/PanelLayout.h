@@ -13,6 +13,7 @@ public:
 	int Frame;
 	int Font;
 	float Size;
+	int Alignment;
 	std::string Text;
 	glm::vec4 Color;
 	int Polygon;

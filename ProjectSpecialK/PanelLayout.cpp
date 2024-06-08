@@ -72,6 +72,14 @@ PanelLayout::PanelLayout(JSONValue* source)
 			panel->Text = pnl["text"] != nullptr ? pnl["text"]->AsString() : "???";
 			panel->Font = pnl["font"] != nullptr ? (int)pnl["font"]->AsNumber() : 1;
 			panel->Size = pnl["size"] != nullptr ? (float)pnl["size"]->AsNumber() : 100.0f;
+			panel->Alignment = 0;
+			if (pnl["alignment"] != nullptr)
+			{
+				if (pnl["alignment"]->AsString() == "right")
+					panel->Alignment = 1;
+				else if (pnl["alignment"]->AsString() == "center")
+					panel->Alignment = 2;
+			}
 		}
 		panel->Color = glm::vec4(1, 1, 1, 1);
 		if (pnl["color"] != nullptr)
@@ -164,10 +172,23 @@ void PanelLayout::Draw(double dt)
 		}
 		else if (panel->Type == 1) //text
 		{
+			if (panel->Text.empty())
+				continue;
+
+			auto pos = Position + panel->Position;
+			if (panel->Alignment > 0)
+			{
+				auto w = sprender->MeasureText(panel->Font, panel->Text, panel->Size * scale).x;
+				if (panel->Alignment == 1)
+					pos.x -= w;
+				else
+					pos.x -= w / 2;
+			}
+
 			sprender->DrawText(
 				panel->Font,
 				panel->Text,
-				(Position + panel->Position) * scale,
+				pos * scale,
 				color,
 				panel->Size * scale
 			);

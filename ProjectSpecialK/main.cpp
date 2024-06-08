@@ -83,6 +83,7 @@ namespace UI
 	std::vector<glm::vec4> textColors;
 
 	JSONObject& json = JSONObject();
+	JSONObject& settings = JSONObject();
 
 	static void Load(const JSONValue* source)
 	{
@@ -96,6 +97,10 @@ namespace UI
 		{
 			textColors.push_back(GetJSONVec4(ink));
 		}
+
+		//TODO: load from and save to file.
+		settings["cursorScale"] = new JSONValue(100);
+		settings["24hour"] = new JSONValue(true);
 	}
 };
 

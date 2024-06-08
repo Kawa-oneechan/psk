@@ -35,7 +35,7 @@ void DoomMenu::rebuild()
 		options.push_back(new DoomMenuItem("Speech", 1, { "Silence", "Bebebese", "Animalese" }));
 		options.push_back(new DoomMenuItem("Ping rate", 2, 60, 3, 1, minutes));
 		options.push_back(new DoomMenuItem("Balloon chance", 10, 60, 15, 5, percent));
-		options.push_back(new DoomMenuItem("Cursor scale", 50, 150, 100, 10, percent, [&](DoomMenuItem*i) { cursor->SetScale(i->selection); }));
+		options.push_back(new DoomMenuItem("Cursor scale", 50, 150, UI::settings["cursorScale"]->AsNumber(), 10, percent, [&](DoomMenuItem*i) { cursor->SetScale(i->selection); UI::settings["cursorScale"] = new JSONValue(i->selection); }));
 		options.push_back(new DoomMenuItem("Volume...", &volume));
 
 		content.push_back(new DoomMenuItem("Content Manager", 2, 120));
