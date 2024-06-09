@@ -10,73 +10,88 @@ DoomMenuItem::DoomMenuItem(const std::string& cap, int val, std::initializer_lis
 }
 
 void DoomMenu::rebuild()
+{
+	auto back = new DoomMenuItem("Back", nullptr);
+	back->type = DoomMenuTypes::Back;
+
+	auto minutes = [&](DoomMenuItem* i)
 	{
-		auto back = new DoomMenuItem("Back", nullptr);
-		back->type = DoomMenuTypes::Back;
+		return fmt::format("{} minutes", i->selection);
+	};
+	auto percent = [&](DoomMenuItem* i)
+	{
+		return fmt::format("{}%", i->selection);
+	};
 
-		auto minutes = [&](DoomMenuItem* i)
+	static const Language opt2lan[] = { Language::USen, Language::JPja, Language::EUde, Language::EUes, Language::EUfr, Language::EUit, Language::EUhu, Language::EUnl };
+	static const int lan2opt[] = { 0, 3, 4, 1, 0, 0, 0,	2, 0, 3, 4, 5, 7, 0, 6 };
+
+	options.clear();
+	content.clear();
+	volume.clear();
+
+	options.push_back(new DoomMenuItem(TextGet("menu:options"), 2, 120));
+
+	options.push_back(new DoomMenuItem(TextGet("menu:options:content"), &content));
+	options.push_back(new DoomMenuItem("Language", lan2opt[(int)gameLang],
+	{
+		"US English", u8"Japanese / 日本語", "German / Deutsch",
+		"Spanish / español", u8"French / français", "Italian / italiano",
+		"Hungarian / magyar", "Dutch / Nederlands" },
+		[&](DoomMenuItem*i)
 		{
-			return fmt::format("{} minutes", i->selection);
-		};
-		auto percent = [&](DoomMenuItem* i)
-		{
-			return fmt::format("{}%", i->selection);
-		};
+			gameLang = opt2lan[i->selection];
+			rebuild();
+			items = &options;
+			dlgBox->Text(fmt::format("You chose <color:1>{}</color>.", i->options[i->selection]));
+		}
+	));
+	options.push_back(new DoomMenuItem("Continue from", 0, { "Front door", "Main room", "Last used bed", "Last location" }));
+	options.push_back(new DoomMenuItem("Speech", 1, { "Silence", "Bebebese", "Animalese" }));
+	options.push_back(new DoomMenuItem("Ping rate", 2, 60, 3, 1, minutes));
+	options.push_back(new DoomMenuItem("Balloon chance", 10, 60, 15, 5, percent));
+	options.push_back(new DoomMenuItem("Cursor scale", 50, 150, (int)UI::settings["cursorScale"]->AsNumber(), 10, percent, [&](DoomMenuItem*i) { cursor->SetScale(i->selection); UI::settings["cursorScale"] = new JSONValue(i->selection); }));
+	options.push_back(new DoomMenuItem("Volume...", &volume));
 
-		options.clear();
-		content.clear();
-		volume.clear();
+	content.push_back(new DoomMenuItem("Content Manager", 2, 120));
+	content.push_back(new DoomMenuItem("Venomous bugs <size:50>(tarantulas, scorpions et al)", true));
+	content.push_back(new DoomMenuItem("Sea bass", true, [&](DoomMenuItem*i)
+	{
+		dlgBox->Text(i->selection ? "Whatever you say..." : "Aye aye, Miss Mayor! We'll start\npouring anti-freeze in their\nspawning grounds right away!");
+	}));
+	content.push_back(new DoomMenuItem("Cranky villagers", true));
+	content.push_back(new DoomMenuItem("Horse villagers", true));
+	content.push_back(new DoomMenuItem("Easter", true));
+	content.push_back(back);
 
-		options.push_back(new DoomMenuItem("Options", 2, 120));
-
-		options.push_back(new DoomMenuItem("Content Manager...", &content));
-		options.push_back(new DoomMenuItem("Language", 0, { "US English", u8"Japanese / 日本語", "German / Deutsch", "Spanish / español", u8"French / français", "Italian / italiano", "Hungarian / magyar", "Dutch / Nederlands" }, [&](DoomMenuItem*i) { dlgBox->Text(fmt::format("You chose <color:1>{}</color>.", i->options[i->selection])); }));
-		options.push_back(new DoomMenuItem("Continue from", 0, { "Front door", "Main room", "Last used bed", "Last location" }));
-		options.push_back(new DoomMenuItem("Speech", 1, { "Silence", "Bebebese", "Animalese" }));
-		options.push_back(new DoomMenuItem("Ping rate", 2, 60, 3, 1, minutes));
-		options.push_back(new DoomMenuItem("Balloon chance", 10, 60, 15, 5, percent));
-		options.push_back(new DoomMenuItem("Cursor scale", 50, 150, UI::settings["cursorScale"]->AsNumber(), 10, percent, [&](DoomMenuItem*i) { cursor->SetScale(i->selection); UI::settings["cursorScale"] = new JSONValue(i->selection); }));
-		options.push_back(new DoomMenuItem("Volume...", &volume));
-
-		content.push_back(new DoomMenuItem("Content Manager", 2, 120));
-		content.push_back(new DoomMenuItem("Venomous bugs <size:50>(tarantulas, scorpions et al)", true));
-		content.push_back(new DoomMenuItem("Sea bass", true, [&](DoomMenuItem*i)
-		{
-			dlgBox->Text(i->selection ? "Whatever you say..." : "Aye aye, Miss Mayor! We'll start\npouring anti-freeze in their\nspawning grounds right away!");
-		}));
-		content.push_back(new DoomMenuItem("Cranky villagers", true));
-		content.push_back(new DoomMenuItem("Horse villagers", true));
-		content.push_back(new DoomMenuItem("Easter", true));
-		content.push_back(back);
-
-		volume.push_back(new DoomMenuItem("Volume", 2, 120));
-		volume.push_back(new DoomMenuItem("Music", 0, 100, 70, 10, percent));
-		volume.push_back(new DoomMenuItem("Ambience", 0, 100, 70, 10, percent));
-		volume.push_back(new DoomMenuItem("Sound effects", 0, 100, 70, 10, percent));
-		volume.push_back(new DoomMenuItem("Speech", 0, 100, 70, 10, percent));
-		volume.push_back(back);
-	}
+	volume.push_back(new DoomMenuItem("Volume", 2, 120));
+	volume.push_back(new DoomMenuItem("Music", 0, 100, 70, 10, percent));
+	volume.push_back(new DoomMenuItem("Ambience", 0, 100, 70, 10, percent));
+	volume.push_back(new DoomMenuItem("Sound effects", 0, 100, 70, 10, percent));
+	volume.push_back(new DoomMenuItem("Speech", 0, 100, 70, 10, percent));
+	volume.push_back(back);
+}
 
 DoomMenu::DoomMenu()
-	{
-		controls = new Texture("ui/controls.png");
-		GetAtlas(controlsAtlas, "ui/controls.json");
+{
+	controls = new Texture("ui/controls.png");
+	GetAtlas(controlsAtlas, "ui/controls.json");
 
-		rebuild();
+	rebuild();
 
-		highlight = 0;
-		mouseHighlight = 0;
-		scroll = 0;
+	highlight = 0;
+	mouseHighlight = 0;
+	scroll = 0;
 
-		//to be filled in at first draw
-		sliderStart = 0;
-		sliderEnd = 1;
-		sliderHolding = -1;
-		itemX = 0;
+	//to be filled in at first draw
+	sliderStart = 0;
+	sliderEnd = 1;
+	sliderHolding = -1;
+	itemX = 0;
 
-		stack.push(options);
-		items = &stack.top();
-	}
+	stack.push(options);
+	items = &stack.top();
+}
 
 void DoomMenu::Tick(double dt)
 {

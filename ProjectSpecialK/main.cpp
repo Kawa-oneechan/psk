@@ -354,7 +354,7 @@ int main(int argc, char** argv)
 
 	TextAdd(*ReadJSON("datetime.json"));
 	TextAdd(*ReadJSON("fixedform.json"));
-
+	TextAdd(*ReadJSON("optionsmenu.json"));
 
 
 

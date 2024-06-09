@@ -1,0 +1,16 @@
+{
+	"menu:options": {
+		"en": "Options",
+		"ja": "オプション",
+		"de": "Einstellungen",
+		"es": "Configuración",
+		"fr": "Réglages",
+		"it": "Opzioni",
+		"nl": "Opties",
+		"hu": "Opciók"
+	},
+	"menu:options:content": {
+		"en": "Content Manager...",
+		"hu": "Tartalom kezelő..."
+	}
+}
