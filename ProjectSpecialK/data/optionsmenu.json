@@ -12,5 +12,65 @@
 	"menu:options:content": {
 		"en": "Content Manager...",
 		"hu": "Tartalom kezelő..."
+	},
+	"menu:options:language": {
+		"en": "Language",
+		"nl": "Taal"
+	},
+	"menu:options:language:en": { "en": "US English" },
+	"menu:options:language:jp": { "en": "Japanese / 日本語" },
+	"menu:options:language:de": { "en": "German / Deutsch" },
+	"menu:options:language:es": { "en": "Spanish / español" },
+	"menu:options:language:fr": { "en": "French / français" },
+	"menu:options:language:it": { "en": "Italian / italiano" },
+	"menu:options:language:hu": { "en": "Hungarian / magyar" },
+	"menu:options:language:nl": { "en": "Dutch / Nederlands" },
+	
+	"menu:options:continuefrom": {
+		"en": "Continue from"
+	},
+	"menu:options:continuefrom:0": {
+		"en": "Front door",
+		"nl": "Voordeur"
+	},
+	"menu:options:continuefrom:1": {
+		"en": "Main room",
+		"nl": "Woonkamer"
+	},
+	"menu:options:continuefrom:2": {
+		"en": "Last used bed",
+		"nl": "Laatst gebruikt bed"
+	},
+	"menu:options:continuefrom:3": {
+		"en": "Last location",
+		"nl": "Laatste locatie"
+	},
+
+	"menu:options:speech": {
+		"en": "Speech",
+		"nl": "Spraak"
+	},
+	"menu:options:speech:0": {
+		"en": "Silence",
+		"nl": "Stilte"
+	},
+	"menu:options:speech:1": {
+		"en": "Bebebese"
+	},
+	"menu:options:speech:2": {
+		"en": "Animalese"
+	},
+
+	"menu:options:pingrate": {
+		"en": "Ping rate"
+	},
+	"menu:options:balloonchance": {
+		"en": "Balloon chance"
+	},
+	"menu:options:cursorscale": {
+		"en": "Cursor scale"
+	},
+	"menu:options:volume": {
+		"en": "Volume..."
 	}
 }

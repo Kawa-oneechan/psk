@@ -1,4 +1,5 @@
-﻿#include "SpecialK.h"
+﻿#include <filesystem>
+#include "SpecialK.h"
 
 #include "Console.h"
 #include "InputsMap.h"
@@ -11,6 +12,7 @@
 
 #include <thread>
 #include <future>
+#include <fstream>
 
 #ifdef DEBUG
 #define WINDOWTITLE "Project Special K (debug build " __DATE__ ")"
@@ -85,6 +87,34 @@ namespace UI
 	JSONObject& json = JSONObject();
 	JSONObject& settings = JSONObject();
 
+
+	static char* LoadFile(const std::string &filename, size_t *size)
+	{
+		std::ifstream file(filename, std::ios::binary | std::ios::ate);
+		if (!file.good())
+			throw std::exception("Couldn't open file.");
+		std::streamsize fs = file.tellg();
+		file.seekg(0, std::ios::beg);
+		if (size != nullptr)
+			*size = fs;
+		char* ret = (char*)malloc(fs + 2);
+		if (ret == nullptr)
+			throw std::exception("Could not allocate space for file.");
+		memset(ret, 0, fs + 2);
+		file.read(ret, fs);
+		file.close();
+		return ret;
+	}
+
+	static void SaveFile(const std::string &filename, const std::string& content)
+	{
+		std::ofstream file(filename, std::ios::trunc | std::ios::binary);
+		if (!file.good())
+			throw std::exception("Couldn't open file.");
+		file.write(content.c_str(), content.size());
+		file.close();
+	}
+
 	static void Load(const JSONValue* source)
 	{
 		json = source->AsObject();
@@ -99,8 +129,37 @@ namespace UI
 		}
 
 		//TODO: load from and save to file.
-		settings["cursorScale"] = new JSONValue(100);
-		settings["24hour"] = new JSONValue(true);
+		try
+		{
+			char *data = LoadFile("options.json", nullptr);
+			settings = JSON::Parse(data)->AsObject();
+			free(data);
+		}
+		catch (std::exception)
+		{
+			settings["language"] = new JSONValue(0); //English
+			settings["continue"] = new JSONValue(0); //Front door
+			settings["speech"] = new JSONValue(1); //Bebebese
+			settings["pingRate"] = new JSONValue(3);
+			settings["balloonChance"] = new JSONValue(15);
+			settings["cursorScale"] = new JSONValue(100);
+			settings["24hour"] = new JSONValue(true);
+		}
+
+		static const Language opt2lan[] = { Language::USen, Language::JPja, Language::EUde, Language::EUes, Language::EUfr, Language::EUit, Language::EUhu, Language::EUnl };
+		gameLang = opt2lan[(int)settings["language"]->AsNumber()];
+	}
+
+	static void Save()
+	{
+		try
+		{
+			SaveFile("options.json", JSON::Stringify(&JSONValue(settings)));
+		}
+		catch (std::exception)
+		{
+			conprint(2, "Couldn't save settings.");
+		}
 	}
 };
 
@@ -408,6 +467,8 @@ int main(int argc, char** argv)
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
+
+	UI::Save();
 
 	glfwTerminate();
 	return 0;

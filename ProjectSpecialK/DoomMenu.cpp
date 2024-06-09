@@ -33,25 +33,57 @@ void DoomMenu::rebuild()
 	options.push_back(new DoomMenuItem(TextGet("menu:options"), 2, 120));
 
 	options.push_back(new DoomMenuItem(TextGet("menu:options:content"), &content));
-	options.push_back(new DoomMenuItem("Language", lan2opt[(int)gameLang],
-	{
-		"US English", u8"Japanese / 日本語", "German / Deutsch",
-		"Spanish / español", u8"French / français", "Italian / italiano",
-		"Hungarian / magyar", "Dutch / Nederlands" },
+	options.push_back(new DoomMenuItem(TextGet("menu:options:language"), lan2opt[(int)gameLang],
+		{
+			TextGet("menu:options:language:en"),
+			TextGet("menu:options:language:jp"),
+			TextGet("menu:options:language:de"),
+			TextGet("menu:options:language:es"),
+			TextGet("menu:options:language:fr"),
+			TextGet("menu:options:language:it"),
+			TextGet("menu:options:language:hu"),
+			TextGet("menu:options:language:nl"),
+		},
 		[&](DoomMenuItem*i)
 		{
 			gameLang = opt2lan[i->selection];
+			UI::settings["language"] = new JSONValue(i->selection);
 			rebuild();
 			items = &options;
 			dlgBox->Text(fmt::format("You chose <color:1>{}</color>.", i->options[i->selection]));
 		}
 	));
-	options.push_back(new DoomMenuItem("Continue from", 0, { "Front door", "Main room", "Last used bed", "Last location" }));
-	options.push_back(new DoomMenuItem("Speech", 1, { "Silence", "Bebebese", "Animalese" }));
-	options.push_back(new DoomMenuItem("Ping rate", 2, 60, 3, 1, minutes));
-	options.push_back(new DoomMenuItem("Balloon chance", 10, 60, 15, 5, percent));
-	options.push_back(new DoomMenuItem("Cursor scale", 50, 150, (int)UI::settings["cursorScale"]->AsNumber(), 10, percent, [&](DoomMenuItem*i) { cursor->SetScale(i->selection); UI::settings["cursorScale"] = new JSONValue(i->selection); }));
-	options.push_back(new DoomMenuItem("Volume...", &volume));
+	options.push_back(new DoomMenuItem(TextGet("menu:options:continuefrom"), (int)UI::settings["continue"]->AsNumber(),
+		{
+			TextGet("menu:options:continuefrom:0"),
+			TextGet("menu:options:continuefrom:1"),
+			TextGet("menu:options:continuefrom:2"),
+			TextGet("menu:options:continuefrom:3"),
+	},
+		[&](DoomMenuItem*i) { UI::settings["continue"] = new JSONValue(i->selection); }
+	));
+	options.push_back(new DoomMenuItem(TextGet("menu:options:speech"), (int)UI::settings["speech"]->AsNumber(),
+		{
+			TextGet("menu:options:speech:0"),
+			TextGet("menu:options:speech:1"),
+			TextGet("menu:options:speech:2"),
+		},
+		[&](DoomMenuItem*i) { UI::settings["speech"] = new JSONValue(i->selection); }
+	));
+	options.push_back(new DoomMenuItem(TextGet("menu:options:pingrate"), 2, 60, (int)UI::settings["pingRate"]->AsNumber(), 1, minutes,
+		[&](DoomMenuItem*i) { UI::settings["pingRate"] = new JSONValue(i->selection); }
+	));
+	options.push_back(new DoomMenuItem(TextGet("menu:options:balloonchance"), 10, 60, (int)UI::settings["balloonChance"]->AsNumber(), 5, percent,
+		[&](DoomMenuItem*i) { UI::settings["balloonChance"] = new JSONValue(i->selection); }
+	));
+	options.push_back(new DoomMenuItem(TextGet("menu:options:cursorscale"), 50, 150, (int)UI::settings["cursorScale"]->AsNumber(), 10, percent,
+		[&](DoomMenuItem*i)
+		{
+			cursor->SetScale(i->selection);
+			UI::settings["cursorScale"] = new JSONValue(i->selection);
+		}
+	));
+	options.push_back(new DoomMenuItem(TextGet("menu:options:volume"), &volume));
 
 	content.push_back(new DoomMenuItem("Content Manager", 2, 120));
 	content.push_back(new DoomMenuItem("Venomous bugs <size:50>(tarantulas, scorpions et al)", true));
