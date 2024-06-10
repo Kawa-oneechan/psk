@@ -14,6 +14,9 @@ std::vector<Personality> personalities;
 std::vector<Hobby> hobbies;
 std::vector<Villager> villagers;
 
+std::map<std::string, std::vector<std::string>> filterCategories;
+std::map<std::string, bool> filters;
+
 void Table(std::vector<std::string> data, size_t stride)
 {
 	size_t width[64] = { 0 };
@@ -136,6 +139,33 @@ namespace Database
 		conprint(0, "ItemIcons: generated a sheet for {} entries.", entries.size());
 	}
 
+	void LoadContentFilters()
+	{
+		filters.clear();
+		filterCategories.clear();
+		auto settings = UI::settings["contentFilters"]->AsObject();
+		auto doc = ReadJSON("filters.json");
+		for (const auto& f : doc->AsObject())
+		{
+			auto key = f.first;
+			auto val = f.second->AsObject();
+			auto items = std::vector<std::string>();
+			TextAdd(key, *val["name"]);
+			for (const auto& i : val["items"]->AsObject())
+			{
+				auto k = i.first;
+				auto v = i.second->AsObject();
+				TextAdd(k, *v["name"]);
+				items.push_back(k);
+
+				filters[k] = v["default"] != nullptr ? v["default"]->AsBool() : true;
+				if (settings.find(k) != settings.end())
+					filters[k] = settings[k]->AsBool();
+			}
+			filterCategories[key] = items;
+		}
+	}
+
 	template<typename T1, typename T2>
 	void loadWorker(std::vector<T1>& target, const std::string& spec, const std::string& whom)
 	{
@@ -230,6 +260,8 @@ namespace Database
 		conprint(0, "Starting timer.");
 		auto startingTime = std::chrono::high_resolution_clock::now();
 		
+		LoadContentFilters();
+
 		LoadItemIcons();
 
 		LoadItems();

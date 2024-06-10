@@ -1,0 +1,10 @@
+{
+	"filter:bugs": {
+		"items": {
+			"filter:bugs:drones": {
+				"name": "Spy drones",
+				"description": "Remote-controlled nuisances."
+			}
+		}
+	}
+}

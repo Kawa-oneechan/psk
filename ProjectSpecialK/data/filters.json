@@ -1,0 +1,38 @@
+{
+	"filter:species": {
+		"name": { "en": "Villager species" },
+		"min": 1, //must have at least one species selected
+		"ui": "species", //require a special UI (the one from the mockup)
+		"items": { /* populated automatically on load */ }
+	},
+	"filter:bugs": {
+		"name": { "en": "Bugs" },
+		"all": true, //do we give this an "enable all" option?
+		"items": {
+			"filter:bugs:badbugs": {
+				"name": { "en": "Venomous bugs" },
+				"description": { "en": "Tarantulas, scorpions and such.)" },
+				"default": false //disable them by default
+			},
+			"filter:bugs:fleas": {
+				"name": "Fleas" //oh yeah that's right my l10n system can use raw strings too
+			},
+			"filter:bugs:butterflies": {
+				"name": "Butterflies"
+			},
+			"filter:bugs:crickets": {
+				"name": "Crickets"
+			}
+		}
+	},
+	"filter:events": {
+		"name": { "en": "Yearly events" },
+		"all": true,
+		"items": {
+			"filter:events:easter": {
+				"name": { "en": "Easter", "nl": "Pasen" }
+			}
+			//could populate this on load too, from calendarevents.json...
+		}
+	}
+}

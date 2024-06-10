@@ -144,6 +144,7 @@ namespace UI
 			settings["balloonChance"] = new JSONValue(15);
 			settings["cursorScale"] = new JSONValue(100);
 			settings["24hour"] = new JSONValue(true);
+			settings["contentFilters"] = new JSONValue(JSONObject());
 		}
 
 		static const Language opt2lan[] = { Language::USen, Language::JPja, Language::EUde, Language::EUes, Language::EUfr, Language::EUit, Language::EUhu, Language::EUnl };

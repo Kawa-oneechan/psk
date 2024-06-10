@@ -2,6 +2,9 @@
 
 #include <vector>
 
+extern std::map<std::string, std::vector<std::string>> filterCategories;
+extern std::map<std::string, bool> filters;
+
 extern std::vector<Item> items;
 extern std::vector<Species> species;
 extern std::vector<Personality> personalities;

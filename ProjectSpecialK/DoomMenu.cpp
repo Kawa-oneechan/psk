@@ -86,6 +86,7 @@ void DoomMenu::rebuild()
 	options.push_back(new DoomMenuItem(TextGet("menu:options:volume"), &volume));
 
 	content.push_back(new DoomMenuItem("Content Manager", 2, 120));
+	/*
 	content.push_back(new DoomMenuItem("Venomous bugs <size:50>(tarantulas, scorpions et al)", true));
 	content.push_back(new DoomMenuItem("Sea bass", true, [&](DoomMenuItem*i)
 	{
@@ -95,6 +96,20 @@ void DoomMenu::rebuild()
 	content.push_back(new DoomMenuItem("Horse villagers", true));
 	content.push_back(new DoomMenuItem("Easter", true));
 	content.push_back(back);
+	*/
+	for (const auto& f : filters)
+	{
+		auto fk = f.first;
+		content.push_back(new DoomMenuItem(TextGet(fk), filters[fk],
+			[&, fk](DoomMenuItem*i)
+			{
+				filters[fk] = i->selection > 0;
+				auto s = UI::settings["contentFilters"]->AsObject();
+				s.insert_or_assign(fk, new JSONValue(filters[fk]));
+				UI::settings["contentFilters"] = new JSONValue(s);
+			}
+		));
+	}
 
 	volume.push_back(new DoomMenuItem("Volume", 2, 120));
 	volume.push_back(new DoomMenuItem("Music", 0, 100, 70, 10, percent));
