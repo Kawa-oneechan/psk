@@ -1,5 +1,7 @@
 #include "DateTimePanel.h"
 
+extern Audio* bgm;
+
 DateTimePanel::DateTimePanel()
 {
 	auto now = time(nullptr);
@@ -43,13 +45,12 @@ void DateTimePanel::Update()
 	if (lastHour == -1 || (gm.tm_hour != lastHour && gm.tm_min == 0))
 	{
 		lastHour = gm.tm_hour;
-		//fmt::print("\x1B[12;40H Ding dong~! {} now", lastHour);
-		//trigger music
-
-		//TODO: fade out first, probably have something else handle that.
-		//delete bgm;
-		//bgm = new Audio(fmt::format("music/bgm/clock/{:02}sunny.ogg", lastHour));
-		//bgm->Play();
+		//TODO: leave actually changing the BGM to MusicManager.
+		//MusicManager.Play(fmt::format("music/bgm/clock/{:02}sunny.ogg", lastHour), MusicType::HourlyBGM);
+		//That can then handle the chimes and fade out sequence.
+		delete bgm;
+		bgm = new Audio(fmt::format("music/bgm/clock/{:02}sunny.ogg", lastHour));
+		bgm->Play();
 	}
 }
 

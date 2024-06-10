@@ -149,6 +149,7 @@
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="JsonPatch.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MusicManager.cpp" />
     <ClCompile Include="PanelLayout.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Shader.cpp" />
