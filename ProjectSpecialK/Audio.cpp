@@ -1,36 +1,64 @@
 #include "Audio.h"
 
 FMOD::System* Audio::system;
-bool audioEnabled = true;
-float musicVolume = 1.0f, soundVolume = 1.0f;
+std::vector<Audio*> Audio::playing;
+
+bool Audio::Enabled;
+float Audio::MusicVolume, Audio::AmbientVolume, Audio::SoundVolume, Audio::SpeechVolume;
 
 void Audio::Initialize()
 {
-	if (audioEnabled)
+	Enabled = true;
+	auto r = FMOD::System_Create(&system);
+	if (r != FMOD_OK)
 	{
-		auto r = FMOD::System_Create(&system);
-		if (r != FMOD_OK)
+		conprint(1, "Could not create FMOD system object. Sound disabled.");
+		Enabled = false;
+		return;
+	}
+	r = system->init(4, FMOD_INIT_NORMAL, NULL);
+	if (r != FMOD_OK)
+	{
+		conprint(1, "Could not initialize FMOD system object. Sound disabled.");
+		Enabled = false;
+		return;
+	}
+}
+
+void Audio::Update()
+{
+	system->update();
+
+	static auto oldMusicVolume = MusicVolume;
+	auto changed = false;
+	if (oldMusicVolume != MusicVolume)
+	{
+		oldMusicVolume = MusicVolume;
+		changed = true;
+	}
+
+	if (changed)
+	{
+		for (auto x : playing)
 		{
-			conprint(1, "Could not create FMOD system object. Sound disabled.");
-			audioEnabled = false;
-			return;
-		}
-		r = system->init(4, FMOD_INIT_NORMAL, NULL);
-		if (r != FMOD_OK)
-		{
-			conprint(1, "Could not initialize FMOD system object. Sound disabled.");
-			audioEnabled = false;
-			return;
+			x->UpdateVolume();
 		}
 	}
+}
+
+static FMOD_RESULT F_CALLBACK callback(FMOD_CHANNEL *channel, FMOD_CHANNEL_CALLBACKTYPE type, void *commanddata1, void *commanddata2)
+{
+	FMOD::Channel *cppchannel = (FMOD::Channel *)channel;
+	return FMOD_OK;
 }
 
 Audio::Audio(std::string filename) : filename(filename)
 {
 	theSound = nullptr;
 	theChannel = nullptr;
+	Volume = 1.0f;
 	size_t size = 0;
-	if (!audioEnabled)
+	if (!Enabled)
 	{
 		status = AudioStatus::Invalid;
 		return;
@@ -46,16 +74,25 @@ Audio::Audio(std::string filename) : filename(filename)
 	soundEx.cbsize = sizeof(FMOD_CREATESOUNDEXINFO);
 	soundEx.length = (unsigned int)size;
 	auto mode = FMOD_HARDWARE | FMOD_2D | FMOD_OPENMEMORY;
+	auto volume = SoundVolume;
 	if (filename.substr(0, 5) == "music")
+	{
 		mode |= FMOD_LOOP_NORMAL;
+		volume = MusicVolume;
+	}
 	else
+	{
 		mode |= FMOD_LOOP_OFF;
+		//TODO: Find out if we should use AmbientVolume, SpeechVolume, or leave it on SoundVolume.
+	}
 	auto r = system->createStream(data, mode, &soundEx, &theSound);
 	if (r != FMOD_OK)
 	{
 		fmt::format("Could not create stream for audio file {}.", filename);
 		return;
 	}
+	theChannel->setCallback(callback);
+	theChannel->setVolume(volume);
 	auto ext = filename.substr(filename.length() - 4, 4);
 	if (ext == ".ogg")
 	{
@@ -77,7 +114,7 @@ Audio::Audio(std::string filename) : filename(filename)
 Audio::~Audio()
 {
 	Stop();
-	if (audioEnabled)
+	if (Enabled)
 		theSound->release();
 	theChannel = NULL;
 	theSound = NULL;
@@ -90,13 +127,14 @@ void Audio::Play(bool force)
 
 	if (status == AudioStatus::Stopped)
 	{
-		if (audioEnabled)
+		if (Enabled)
 		{
 			auto r = system->playSound(FMOD_CHANNEL_FREE, theSound, false, &theChannel);
 			if (r != FMOD_OK)
 				throw "Could not play stream.";
-			theChannel->setVolume(musicVolume);
+			UpdateVolume();
 		}
+		playing.push_back(this);
 	}
 	else if (status == AudioStatus::Paused)
 	{
@@ -107,7 +145,7 @@ void Audio::Play(bool force)
 
 void Audio::Pause()
 {
-	if (audioEnabled)
+	if (Enabled)
 		theChannel->setPaused(true);
 	status = AudioStatus::Paused;
 }
@@ -116,8 +154,15 @@ void Audio::Stop()
 {
 	if (status != AudioStatus::Stopped)
 	{
-		if (audioEnabled)
+		if (Enabled)
 			theChannel->stop();
 	}
 	status = AudioStatus::Stopped;
+	playing.erase(std::remove(playing.begin(), playing.end(), this), playing.end());
+}
+
+void Audio::UpdateVolume()
+{
+	//if (type == 0)
+	theChannel->setVolume(MusicVolume * Volume);
 }

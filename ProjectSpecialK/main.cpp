@@ -145,14 +145,27 @@ namespace UI
 			settings["cursorScale"] = new JSONValue(100);
 			settings["24hour"] = new JSONValue(true);
 			settings["contentFilters"] = new JSONValue(JSONObject());
+			settings["musicVolume"] = new JSONValue(0.7f);
+			settings["ambientVolume"] = new JSONValue(0.5f);
+			settings["soundVolume"] = new JSONValue(1);
+			settings["speechVolume"] = new JSONValue(1);
 		}
 
 		static const Language opt2lan[] = { Language::USen, Language::JPja, Language::EUde, Language::EUes, Language::EUfr, Language::EUit, Language::EUhu, Language::EUnl };
 		gameLang = opt2lan[(int)settings["language"]->AsNumber()];
+
+		Audio::MusicVolume = (float)settings["musicVolume"]->AsNumber();
+		Audio::AmbientVolume = (float)settings["ambientVolume"]->AsNumber();
+		Audio::SoundVolume = (float)settings["soundVolume"]->AsNumber();
+		Audio::SpeechVolume = (float)settings["speechVolume"]->AsNumber();
 	}
 
 	static void Save()
 	{
+		settings["musicVolume"] = new JSONValue(Audio::MusicVolume);
+		settings["ambientVolume"] = new JSONValue(Audio::AmbientVolume);
+		settings["soundVolume"] = new JSONValue(Audio::SoundVolume);
+		settings["speechVolume"] = new JSONValue(Audio::SpeechVolume);
 		try
 		{
 			SaveFile("options.json", JSON::Stringify(&JSONValue(settings)));
@@ -434,6 +447,8 @@ int main(int argc, char** argv)
 	int oldTime = 0;
 	while (!glfwWindowShouldClose(window))
 	{
+		Audio::Update();
+
 		int newTime = std::clock();
 		int deltaTime = newTime - oldTime;
 		oldTime = newTime;

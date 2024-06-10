@@ -1,5 +1,5 @@
 {
-	"menu:options": {
+	"menu:options:head": {
 		"en": "Options",
 		"ja": "オプション",
 		"de": "Einstellungen",
@@ -25,7 +25,7 @@
 	"menu:options:language:it": { "en": "Italian / italiano" },
 	"menu:options:language:hu": { "en": "Hungarian / magyar" },
 	"menu:options:language:nl": { "en": "Dutch / Nederlands" },
-	
+
 	"menu:options:continuefrom": {
 		"en": "Continue from"
 	},
@@ -72,5 +72,28 @@
 	},
 	"menu:options:volume": {
 		"en": "Volume..."
+	},
+
+	"menu:options:head:content": {
+		"en": "Content Manager"
+	},
+	"menu:options:content:species": {
+		"en": "Villager species"
+	},
+
+	"menu:options:head:volume": {
+		"en": "Volume"
+	},
+	"menu:options:volume:music": {
+		"en": "Music"
+	},
+	"menu:options:volume:ambience": {
+		"en": "Ambience"
+	},
+	"menu:options:volume:sfx": {
+		"en": "Sound effects"
+	},
+	"menu:options:volume:speech": {
+		"en": "Speech"
 	}
 }

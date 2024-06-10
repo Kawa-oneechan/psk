@@ -30,7 +30,7 @@ void DoomMenu::rebuild()
 	content.clear();
 	volume.clear();
 
-	options.push_back(new DoomMenuItem(TextGet("menu:options"), 2, 120));
+	options.push_back(new DoomMenuItem(TextGet("menu:options:head"), 2, 120));
 
 	options.push_back(new DoomMenuItem(TextGet("menu:options:content"), &content));
 	options.push_back(new DoomMenuItem(TextGet("menu:options:language"), lan2opt[(int)gameLang],
@@ -85,37 +85,81 @@ void DoomMenu::rebuild()
 	));
 	options.push_back(new DoomMenuItem(TextGet("menu:options:volume"), &volume));
 
-	content.push_back(new DoomMenuItem("Content Manager", 2, 120));
-	/*
-	content.push_back(new DoomMenuItem("Venomous bugs <size:50>(tarantulas, scorpions et al)", true));
-	content.push_back(new DoomMenuItem("Sea bass", true, [&](DoomMenuItem*i)
+	content.push_back(new DoomMenuItem(TextGet("menu:options:head:content"), 2, 120));
 	{
-		dlgBox->Text(i->selection ? "Whatever you say..." : "Aye aye, Miss Mayor! We'll start\npouring anti-freeze in their\nspawning grounds right away!");
-	}));
-	content.push_back(new DoomMenuItem("Cranky villagers", true));
-	content.push_back(new DoomMenuItem("Horse villagers", true));
-	content.push_back(new DoomMenuItem("Easter", true));
-	content.push_back(back);
-	*/
-	for (const auto& f : filters)
-	{
-		auto fk = f.first;
-		content.push_back(new DoomMenuItem(TextGet(fk), filters[fk],
-			[&, fk](DoomMenuItem*i)
+		auto fcpage = new std::vector<DoomMenuItem*>();
+		fcpage->push_back(new DoomMenuItem(TextGet("menu:options:head:content"), 2, 120));
+		fcpage->push_back(new DoomMenuItem(TextGet("menu:options:content:species"), 2, 100));
+		for (const auto& s : species)
+		{
+			auto f = "filter:species:" + s.ID;
+			//TODO: handle species having custom filters.
+			if (s.ID == "bul") continue;
+
+			auto sn = StripMSBT(TextGet(s.RefName + ":m"));
+			if (std::islower(sn[0]))
+				sn[0] = std::toupper(sn[0]);
+
+			TextAdd(f, sn);
+			if (filters.find(f) == filters.end())
+				filters[f] = true;
+
+			fcpage->push_back(new DoomMenuItem(TextGet((std::string&)f), filters[f],
+				[&, f](DoomMenuItem*i)
 			{
-				filters[fk] = i->selection > 0;
+				filters[f] = i->selection > 0;
 				auto s = UI::settings["contentFilters"]->AsObject();
-				s.insert_or_assign(fk, new JSONValue(filters[fk]));
+				s.insert_or_assign(f, new JSONValue(filters[f]));
 				UI::settings["contentFilters"] = new JSONValue(s);
 			}
-		));
-	}
+			));
+		}
+		fcpage->push_back(back);
+		//TODO: Description field, species preview
 
-	volume.push_back(new DoomMenuItem("Volume", 2, 120));
-	volume.push_back(new DoomMenuItem("Music", 0, 100, 70, 10, percent));
-	volume.push_back(new DoomMenuItem("Ambience", 0, 100, 70, 10, percent));
-	volume.push_back(new DoomMenuItem("Sound effects", 0, 100, 70, 10, percent));
-	volume.push_back(new DoomMenuItem("Speech", 0, 100, 70, 10, percent));
+		content.push_back(new DoomMenuItem(TextGet("menu:options:content:species"), fcpage));
+	}
+	for (const auto& fc : filterCategories)
+	{
+		auto fck = fc.first;
+		
+		auto fcpage = new std::vector<DoomMenuItem*>();
+		fcpage->push_back(new DoomMenuItem(TextGet("menu:options:head:content"), 2, 120));
+		fcpage->push_back(new DoomMenuItem(TextGet(fck), 2, 100));
+		for (const auto& f : fc.second)
+		{
+
+			fcpage->push_back(new DoomMenuItem(TextGet((std::string&)f), filters[f],
+				[&, f](DoomMenuItem*i)
+			{
+				filters[f] = i->selection > 0;
+				auto s = UI::settings["contentFilters"]->AsObject();
+				s.insert_or_assign(f, new JSONValue(filters[f]));
+				UI::settings["contentFilters"] = new JSONValue(s);
+			}
+			));
+		}
+
+		fcpage->push_back(back);
+		//TODO: Description field
+
+		content.push_back(new DoomMenuItem(TextGet(fck), fcpage));
+	}
+	content.push_back(back);
+
+	volume.push_back(new DoomMenuItem(TextGet("menu:options:head:volume"), 2, 120));
+	volume.push_back(new DoomMenuItem(TextGet("menu:options:volume:music"), 0, 100, (int)(Audio::MusicVolume * 100), 10, percent,
+		[&](DoomMenuItem*i) { Audio::MusicVolume = i->selection / 100.0f; }
+	));
+	volume.push_back(new DoomMenuItem(TextGet("menu:options:volume:ambience"), 0, 100, (int)(Audio::AmbientVolume * 100), 10, percent,
+		[&](DoomMenuItem*i) { Audio::AmbientVolume = i->selection / 100.0f; }
+	));
+	volume.push_back(new DoomMenuItem(TextGet("menu:options:volume:sfx"), 0, 100, (int)(Audio::SoundVolume * 100), 10, percent,
+		[&](DoomMenuItem*i) { Audio::SoundVolume = i->selection / 100.0f; }
+	));
+	volume.push_back(new DoomMenuItem(TextGet("menu:options:volume:speech"), 0, 100, (int)(Audio::SpeechVolume * 100), 10, percent,
+		[&](DoomMenuItem*i) { Audio::SpeechVolume = i->selection / 100.0f; }
+	));
 	volume.push_back(back);
 }
 
@@ -215,6 +259,7 @@ void DoomMenu::Tick(double dt)
 	{
 		Inputs.Clear();
 		int top = items->at(0)->type == DoomMenuTypes::Text ? 1 : 0;
+		top += items->at(1)->type == DoomMenuTypes::Text ? 1 : 0;
 		if (highlight == top)
 		{
 			highlight = (int)items->size();

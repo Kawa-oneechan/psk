@@ -1,17 +1,19 @@
 {
+	/*
 	"filter:species": {
 		"name": { "en": "Villager species" },
 		"min": 1, //must have at least one species selected
 		"ui": "species", //require a special UI (the one from the mockup)
-		"items": { /* populated automatically on load */ }
+		"items": { } //populated automatically on load
 	},
+	*/
 	"filter:bugs": {
 		"name": { "en": "Bugs" },
 		"all": true, //do we give this an "enable all" option?
 		"items": {
 			"filter:bugs:badbugs": {
 				"name": { "en": "Venomous bugs" },
-				"description": { "en": "Tarantulas, scorpions and such.)" },
+				"description": { "en": "Tarantulas, scorpions and such." },
 				"default": false //disable them by default
 			},
 			"filter:bugs:fleas": {
