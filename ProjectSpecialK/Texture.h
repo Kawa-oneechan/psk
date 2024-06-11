@@ -8,8 +8,9 @@
 class Texture
 {
 private:
-	unsigned char* delayedData;
-	int delayedFilter, delayedRepeat;
+	unsigned char* data;
+	std::string file;
+	int filter, repeat;
 
 public:
 	unsigned int ID;
@@ -18,10 +19,13 @@ public:
 
 	Texture() = default;
 
-	Texture(const std::string& texturePath, bool mipmaps = true, int repeat = GL_REPEAT, int filter = GL_LINEAR);
-	Texture::Texture(const unsigned char* data, int existingWidth, int existingHeight, int existingChannels, bool mipmaps = true, int repeat = GL_REPEAT, int filter = GL_LINEAR);
-	Texture(unsigned int existingID, int existingWidth, int existingHeight, int existingChannels);
+	Texture(const std::string& texturePath, int repeat = GL_REPEAT, int filter = GL_LINEAR);
+	Texture::Texture(const unsigned char* data, int width, int height, int channels, int repeat = GL_REPEAT, int filter = GL_LINEAR);
+	Texture(unsigned int id, int width, int height, int channels) : ID(id), width(width), height(height), channels(channels), data(nullptr), filter(GL_LINEAR), repeat(GL_REPEAT) {}
+
 	~Texture();
 	void Use();
 	void Use(int slot);
+
+	void SetRepeat(int newRepeat);
 };

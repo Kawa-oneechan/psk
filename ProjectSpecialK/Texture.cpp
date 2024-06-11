@@ -1,11 +1,31 @@
 #include "SpecialK.h"
 
-//TODO: refactor the actual loady bits.
-
-Texture::Texture(const std::string& texturePath, bool mipmaps, int repeat, int filter)
+static bool load(const unsigned char* data, unsigned int *id, int width, int height, int channels, int repeat, int filter)
 {
-	ID = 0xDEADBEEF;
+	glGenTextures(1, id);
+	if (glGetError())
+		return false;
+
+	int format = (channels == 4) ? GL_RGBA : GL_RGB;
+
+	glBindTexture(GL_TEXTURE_2D, *id);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, repeat);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, repeat);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter);
+
+	glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+	glGenerateMipmap(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	return true;
+}
+
+Texture::Texture(const std::string& texturePath, int repeat, int filter) : file(texturePath), repeat(repeat), filter(filter)
+{
+	ID = 0;
 	width = height = channels = 0;
+	data = nullptr;
 
 	stbi_set_flip_vertically_on_load(1);
 
@@ -16,35 +36,18 @@ Texture::Texture(const std::string& texturePath, bool mipmaps, int repeat, int f
 		conprint(1, "Failed to load texture \"{}\" -- no data.", texturePath);
 		return;
 	}
-	unsigned char *data = stbi_load_from_memory((unsigned char*)vfsData, (int)vfsSize, &width, &height, &channels, 0);
+	data = stbi_load_from_memory((unsigned char*)vfsData, (int)vfsSize, &width, &height, &channels, 0);
 	free(vfsData);
-
-	int format = GL_RGB;
-	if (channels == 4) format = GL_RGBA;
 
 	if (data)
 	{
-		glGenTextures(1, &ID);
-		if (ID == 0xDEADBEEF)
+		if (!load(data, &ID, width, height, channels, repeat, filter))
 		{
 			//We are delayed by multithreading!
 			conprint(3, "glGenTextures indicates we're threading. Delaying \"{}\"...", texturePath);
 			delayed = true;
-			delayedData = data;
-			delayedFilter = filter;
-			delayedRepeat = repeat;
 			return;
 		}
-		glBindTexture(GL_TEXTURE_2D, ID);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, repeat);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, repeat);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter);
-
-		glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
-		if (mipmaps)
-			glGenerateMipmap(GL_TEXTURE_2D);
-		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 	else
 	{
@@ -53,45 +56,24 @@ Texture::Texture(const std::string& texturePath, bool mipmaps, int repeat, int f
 	stbi_image_free(data);
 }
 
-Texture::Texture(const unsigned char* data, int existingWidth, int existingHeight, int existingChannels, bool mipmaps, int repeat, int filter)
+Texture::Texture(const unsigned char* externalData, int width, int height, int channels, int repeat, int filter) : data(nullptr), width(width), height(height), channels(channels), repeat(repeat), filter(filter)
 {
-	ID = 0xDEADBEEF;
-	width = existingWidth;
-	height = existingHeight;
-	channels = existingChannels;
+	ID = 0;
+	this->file.clear();
 
 	int format = GL_RGB;
 	if (channels == 4) format = GL_RGBA;
 
-	if (data)
+	if (externalData)
 	{
-		glGenTextures(1, &ID);
-		auto err = glGetError();
-		if (ID == 0xDEADBEEF)
+		if (!load(externalData, &ID, width, height, channels, repeat, filter))
 		{
 			//We are delayed by multithreading!
 			conprint(3, "glGenTextures indicates we're threading. Delaying load from memory...");
 			delayed = true;
-			delayedData = (unsigned char*)data;
-			delayedFilter = filter;
-			delayedRepeat = repeat;
+			this->data = (unsigned char*)externalData;
 			return;
 		}
-		glBindTexture(GL_TEXTURE_2D, ID);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, repeat);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, repeat);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter);
-
-		int format = GL_RGB;
-		if (channels == 4) format = GL_RGBA;
-
-		glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
-		err = glGetError();
-		if (mipmaps)
-			glGenerateMipmap(GL_TEXTURE_2D);
-		glBindTexture(GL_TEXTURE_2D, 0);
-		err = glGetError();
 	}
 	else
 	{
@@ -105,14 +87,6 @@ Texture::~Texture()
 	glDeleteTextures(1, temp);
 }
 
-Texture::Texture(unsigned int existingID, int existingWidth, int existingHeight, int existingChannels)
-{
-	ID = existingID;
-	width = existingWidth;
-	height = existingHeight;
-	channels = existingChannels;
-}
-
 void Texture::Use()
 {
 	Use(0);
@@ -122,34 +96,31 @@ void Texture::Use(int slot)
 {
 	if (delayed)
 	{
-		conprint(3, "Delayed-loading texture on first use...")
-		glGenTextures(1, &ID);
-		auto err = glGetError();
-		if (ID == 0xDEADBEEF)
+		if (file.empty())
+			conprint(3, "Delayed-loading texture on first use...");
+		else
+			conprint(3, "Delayed-loading texture \"{}\" on first use...", file);
+		if (!load(data, &ID, width, height, channels, repeat, filter))
 		{
 			//We are delayed by multithreading!
 			conprint(2, "glGenTextures indicates we're still threading! WTF?");
 			return;
 		}
-		glBindTexture(GL_TEXTURE_2D, ID);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, delayedRepeat);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, delayedRepeat);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, delayedFilter);
-
-		int format = GL_RGB;
-		if (channels == 4) format = GL_RGBA;
-
-		glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, delayedData);
-		err = glGetError();
-		//if (mipmaps)
-			glGenerateMipmap(GL_TEXTURE_2D);
-		glBindTexture(GL_TEXTURE_2D, 0);
-		err = glGetError();
-		delete delayedData;
+		delete data;
 		delayed = false;
 	}
 
 	glActiveTexture(GL_TEXTURE0 + slot);
 	glBindTexture(GL_TEXTURE_2D, ID);
+}
+
+void Texture::SetRepeat(int newRepeat)
+{
+	repeat = newRepeat;
+	if (delayed)
+		return;
+	glBindTexture(GL_TEXTURE_2D, ID);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, repeat);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, repeat);
+	glBindTexture(GL_TEXTURE_2D, 0);
 }

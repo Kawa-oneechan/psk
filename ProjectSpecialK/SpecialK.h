@@ -81,7 +81,7 @@ namespace UI
 	extern JSONObject& settings;
 };
 
-#define conprint(C, F, ...) console->Print(C, fmt::format(F, __VA_ARGS__));
+#define conprint(C, F, ...) console->Print(C, fmt::format(F, __VA_ARGS__))
 
 //To make coordinate spaces more explicit, maybe?
 #pragma warning(push)
