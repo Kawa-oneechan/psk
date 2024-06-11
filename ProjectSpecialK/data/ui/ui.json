@@ -112,10 +112,34 @@
 				"color": "primary"
 			},
 			{
-				"position": [ 8, 8 ],
+				"id": "hotbarNumber_1",
+				"position": [ 184, 80 ],
 				"type": "text",
-				"text": "Hello~",
-				"alpha": 2
+				"text": "1",
+				"size": 75,
+				"alignment": "right"
+			},
+			{
+				"id": "hotbarNumber_2",
+				"position": [ 324, 80 ],
+				"type": "text",
+				"text": "2",
+				"size": 75,
+				"alignment": "right"
+			},
+			{
+				"id": "hotbarIcon_1",
+				"position": [ 96, 16 ],
+				"type": "itemicon",
+				"size": 75,
+				"text": "scoop"
+			},
+			{
+				"id": "hotbarIcon_2",
+				"position": [ 236, 16 ],
+				"type": "itemicon",
+				"size": 75,
+				"text": "axe"
 			}
 		]
 	},

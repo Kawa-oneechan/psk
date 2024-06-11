@@ -11,10 +11,14 @@ extern std::vector<Personality> personalities;
 extern std::vector<Hobby> hobbies;
 extern std::vector<Villager> villagers;
 
+extern Texture* ItemIcons;
+extern std::map<std::string, glm::vec4> ItemIconAtlas;
+
 namespace Database
 {
 	extern void LoadGlobalStuff();
-
+	extern void CreateItemIconsTexture();
+	
 	//Find a database entry by reference-ID.
 	template<typename T>
 	const T* Find(const std::string& target, std::vector<T>* source)

@@ -17,6 +17,9 @@ std::vector<Villager> villagers;
 std::map<std::string, std::vector<std::string>> filterCategories;
 std::map<std::string, bool> filters;
 
+Texture* ItemIcons = nullptr;
+std::map<std::string, glm::vec4> ItemIconAtlas;
+
 void Table(std::vector<std::string> data, size_t stride)
 {
 	size_t width[64] = { 0 };
@@ -71,19 +74,20 @@ void Table(std::vector<std::string> data, size_t stride)
 
 namespace Database
 {
+	static unsigned char* sheet;
+	static const int iconSize = 128;
+	static const int cols = 16;
+	static const int rows = 16;
+	static const int sheetW = cols * iconSize;
+	static const int sheetH = rows * iconSize;
+
 	void LoadItemIcons()
 	{
 		conprint(0, "ItemIcons: loading...");
 
 		int width, height, channels;
 
-		const int iconSize = 128;
-		const int cols = 16;
-		const int rows = 16;
-		const int sheetW = cols * iconSize;
-		const int sheetH = rows * iconSize;
-
-		auto sheet = new unsigned char[(sheetW * sheetH) * 4];
+		sheet = new unsigned char[(sheetW * sheetH) * 4];
 		//std::memset(sheet, 0x00, (sheetW * sheetH) * 4);
 		
 		auto entries = EnumerateVFS("itemicons\\*.png");
@@ -119,6 +123,12 @@ namespace Database
 
 			iconNum++;
 			stbi_image_free(data);
+
+
+			auto filename = entry.path;
+			filename = filename.substr(filename.find('/') + 1);
+			filename = filename.substr(0, filename.find('.'));
+			ItemIconAtlas[filename] = glm::vec4(l, t, iconSize, iconSize);
 		}
 
 #ifdef DEBUG
@@ -128,15 +138,23 @@ namespace Database
 		}
 #endif
 
-		//TODO: put itemIcons somewhere else and ONLY call this once OpenGL is running.
-		//These functions are dynamically loaded and ALL ARE NULL initially.
-		//auto itemIcons = Texture(sheet, sheetW, sheetH, 4, true);
-
+		//Can't do this here because of multithreading bs.
+		//ItemIcons = new Texture(sheet, sheetW, sheetH, 4);
+		
 		//free(sheet);
 
 		ForgetVFS(entries);
 
 		conprint(0, "ItemIcons: generated a sheet for {} entries.", entries.size());
+	}
+	//Call this from the main thread.
+	void CreateItemIconsTexture()
+	{
+		if (sheet == nullptr)
+			return;
+		ItemIcons = new Texture(sheet, sheetW, sheetH, 4);
+		delete[] sheet;
+		sheet = nullptr;
 	}
 
 	void LoadContentFilters()

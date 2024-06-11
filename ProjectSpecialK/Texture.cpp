@@ -41,6 +41,39 @@ Texture::Texture(const std::string& texturePath, bool mipmaps, int repeat, int f
 	stbi_image_free(data);
 }
 
+Texture::Texture(const unsigned char* data, int existingWidth, int existingHeight, int existingChannels, bool mipmaps, int repeat, int filter)
+{
+	ID = 0;
+	width = existingWidth;
+	height = existingHeight;
+	channels = existingChannels;
+
+	int format = GL_RGB;
+	if (channels == 4) format = GL_RGBA;
+
+	if (data)
+	{
+		glGenTextures(1, &ID);
+		auto err = glGetError();
+		glBindTexture(GL_TEXTURE_2D, ID);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, repeat);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, repeat);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter);
+
+		glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+		err = glGetError();
+		if (mipmaps)
+			glGenerateMipmap(GL_TEXTURE_2D);
+		glBindTexture(GL_TEXTURE_2D, 0);
+		err = glGetError();
+	}
+	else
+	{
+		conprint(1, "Failed to load texture from memory -- invalid data.");
+	}
+}
+
 Texture::~Texture()
 {
 	GLuint temp[] = { ID };

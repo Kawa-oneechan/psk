@@ -2,25 +2,30 @@
 
 #include "SpecialK.h"
 
-class Panel
-{
-public:
-	std::string ID;
-	glm::vec2 Position;
-	int Type;
-	float Alpha;
-	int Texture, Shader;
-	int Frame;
-	int Font;
-	float Size;
-	int Alignment;
-	std::string Text;
-	glm::vec4 Color;
-	int Polygon;
-};
-
 class PanelLayout : public Tickable
 {
+	enum PanelType
+	{
+		Image, Text, ItemIcon,
+	};
+
+	class Panel
+	{
+	public:
+		std::string ID;
+		glm::vec2 Position;
+		PanelType Type;
+		float Alpha;
+		int Texture, Shader;
+		int Frame;
+		int Font;
+		float Size;
+		int Alignment;
+		std::string Text;
+		glm::vec4 Color;
+		int Polygon;
+	};
+
 private:
 	std::vector<Panel*> panels;
 	std::vector<Texture*> textures;

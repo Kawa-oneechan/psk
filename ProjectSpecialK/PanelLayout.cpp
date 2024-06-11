@@ -58,16 +58,17 @@ PanelLayout::PanelLayout(JSONValue* source)
 		panel->Polygon = -1;
 
 		auto& type = pnl["type"]->AsString();
-		if (type == "image") panel->Type = 0;
-		else if (type == "text") panel->Type = 1;
+		if (type == "image") panel->Type = PanelType::Image;
+		else if (type == "text") panel->Type = PanelType::Text;
+		else if (type == "itemicon") panel->Type = PanelType::ItemIcon;
 
-		if (panel->Type == 0)
+		if (panel->Type == PanelType::Image)
 		{
 			panel->Texture = pnl["texture"] != nullptr ? (int)pnl["texture"]->AsNumber() : 0;
 			panel->Frame = pnl["frame"] != nullptr ? (int)pnl["frame"]->AsNumber() : 0;
 			panel->Polygon = pnl["polygon"] != nullptr ? (int)pnl["polygon"]->AsNumber() : -1;
 		}
-		else if (panel->Type == 1)
+		else if (panel->Type == PanelType::Text)
 		{
 			panel->Text = pnl["text"] != nullptr ? pnl["text"]->AsString() : "???";
 			panel->Font = pnl["font"] != nullptr ? (int)pnl["font"]->AsNumber() : 1;
@@ -80,6 +81,12 @@ PanelLayout::PanelLayout(JSONValue* source)
 				else if (pnl["alignment"]->AsString() == "center")
 					panel->Alignment = 2;
 			}
+		}
+		else if (panel->Type == PanelType::ItemIcon)
+		{
+			panel->Text = pnl["text"] != nullptr ? pnl["text"]->AsString() : "orestone";
+			panel->Size = pnl["size"] != nullptr ? (float)pnl["size"]->AsNumber() : 100.0f;
+			panel->Polygon = pnl["polygon"] != nullptr ? (int)pnl["polygon"]->AsNumber() : -1;
 		}
 		panel->Color = glm::vec4(1, 1, 1, 1);
 		if (pnl["color"] != nullptr)
@@ -123,9 +130,6 @@ void PanelLayout::Tick(double dt)
 		for (const auto& point : polygons[panel->Polygon])
 			poly.emplace_back(((point * size) + Position + panel->Position) * scale);
 
-		for (const auto& pos : poly)
-			sprender->DrawSprite(whiteRect, pos, glm::vec2(6), glm::vec4(0), 0.0f, glm::vec4(1, 0, 0, 1));
-
 		if (PointInPoly(Inputs.MousePosition, poly))
 		{
 			newHl = panel;
@@ -154,7 +158,7 @@ void PanelLayout::Draw(double dt)
 		if (color.a == 0)
 			continue;
 
-		if (panel->Type == 0) //image
+		if (panel->Type == PanelType::Image)
 		{
 			auto texture = textures[panel->Texture];
 			auto frame = atlases[panel->Texture][panel->Frame];
@@ -170,7 +174,7 @@ void PanelLayout::Draw(double dt)
 				0
 			);
 		}
-		else if (panel->Type == 1) //text
+		else if (panel->Type == PanelType::Text)
 		{
 			if (panel->Text.empty())
 				continue;
@@ -193,10 +197,26 @@ void PanelLayout::Draw(double dt)
 				panel->Size * scale
 			);
 		}
+		else if (panel->Type == PanelType::ItemIcon)
+		{
+			auto texture = ItemIcons;
+			auto frame = ItemIconAtlas[panel->Text];
+			auto shader = spriteShader; //shaders[panel->Shader];
+
+			sprender->DrawSprite(
+				shader, texture,
+				(Position + panel->Position) * scale,
+				glm::vec2(frame.z, frame.w) * (panel->Size / 100.0f) * scale,
+				frame,
+				0.0f,
+				color,
+				0
+			);
+		}
 	}
 }
 
-Panel* PanelLayout::GetPanel(const std::string& id)
+PanelLayout::Panel* PanelLayout::GetPanel(const std::string& id)
 {
 	for (const auto& p : panels)
 		if (p->ID == id)
