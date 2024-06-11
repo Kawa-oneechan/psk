@@ -7,7 +7,9 @@
 Console::Console()
 {
 	visible = false;
-	auto r = fopen_s(&hardcopy, "console.log", "wb");
+	
+	hardcopy = std::ofstream("console.log", std::ios::trunc | std::ios::binary);
+
 	Print(3, "Project Special K");
 	Print(3, "-----------------");
 
@@ -23,19 +25,13 @@ Console::Console()
 	scrollCursor = 0;
 }
 
-Console::~Console()
-{
-	if (hardcopy != nullptr)
-		fclose(hardcopy);
-}
-
 void Console::Print(int color, const std::string& str)
 {
 	buffer.emplace_back(std::make_pair(clamp(color, 0, 8), str));
-	if (hardcopy != nullptr)
+	if (hardcopy.good())
 	{
-		fputs(str.c_str(), hardcopy);
-		fputc('\n', hardcopy);
+		hardcopy.write(str.c_str(), str.length());
+		hardcopy.write("\n", 1);
 	}
 }
 

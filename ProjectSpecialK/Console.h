@@ -3,7 +3,7 @@
 #include "SpecialK.h"
 #include "TextField.h"
 
-#include <stdio.h>
+#include <fstream>
 
 class Console : public Tickable
 {
@@ -14,13 +14,12 @@ private:
 	int scrollCursor;
 	void* inputLine;
 
-	FILE* hardcopy = nullptr;
+	std::ofstream hardcopy;
 
 public:
 	bool visible;
 
 	Console();
-	~Console();
 	bool Execute(const std::string& str);
 	void Print(int color, const std::string& str);
 	void Print(const std::string& str);
