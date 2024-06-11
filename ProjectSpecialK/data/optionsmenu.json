@@ -80,6 +80,9 @@
 	"menu:options:content:species": {
 		"en": "Villager species"
 	},
+	"menu:options:content:species:help": {
+		"en": "Unchecked species will never\nrandomly appear in your town\nas villagers. However, any\nvillager already there will stay\nuntil they move out."
+	},
 
 	"menu:options:head:volume": {
 		"en": "Volume"

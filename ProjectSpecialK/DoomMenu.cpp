@@ -87,10 +87,10 @@ void DoomMenu::rebuild()
 
 	content.push_back(new DoomMenuItem(TextGet("menu:options:head:content"), 2, 120));
 	{
-		auto fcpage = new std::vector<DoomMenuItem*>();
-		fcpage->push_back(new DoomMenuItem(TextGet("menu:options:head:content"), 2, 120));
-		fcpage->push_back(new DoomMenuItem(TextGet("menu:options:content:species"), 2, 100));
-		for (const auto& s : species)
+		species.clear();
+		species.push_back(new DoomMenuItem(TextGet("menu:options:head:content"), 2, 120));
+		species.push_back(new DoomMenuItem(TextGet("menu:options:content:species"), 2, 100));
+		for (const auto& s : ::species)
 		{
 			auto f = "filter:species:" + s.ID;
 			//TODO: handle species having custom filters.
@@ -104,7 +104,7 @@ void DoomMenu::rebuild()
 			if (Database::Filters.find(f) == Database::Filters.end())
 				Database::Filters[f] = true;
 
-			fcpage->push_back(new DoomMenuItem(TextGet((std::string&)f), Database::Filters[f],
+			species.push_back(new DoomMenuItem(TextGet((std::string&)f), Database::Filters[f],
 				[&, f](DoomMenuItem*i)
 			{
 				Database::Filters[f] = i->selection > 0;
@@ -114,11 +114,13 @@ void DoomMenu::rebuild()
 			}
 			));
 		}
-		fcpage->push_back(back);
-		//TODO: Description field, species preview
+		species.push_back(back);
 
-		content.push_back(new DoomMenuItem(TextGet("menu:options:content:species"), fcpage));
+		speciesText = TextGet("menu:options:content:species:help");
+
+		content.push_back(new DoomMenuItem(TextGet("menu:options:content:species"), &species));
 	}
+
 	for (const auto& fc : Database::FilterCategories)
 	{
 		auto fck = fc.first;
@@ -182,6 +184,13 @@ DoomMenu::DoomMenu()
 
 	stack.push(options);
 	items = &stack.top();
+
+	for (const auto& s : ::species)
+	{
+		//TODO: properly handle species having custom filters.
+		if (s.ID == "bul") continue;
+		speciesPreviews.push_back(new Texture("ui/species/" + s.ID + ".png"));
+	}
 }
 
 void DoomMenu::Tick(double dt)
@@ -393,7 +402,7 @@ void DoomMenu::Draw(double dt)
 	const int col = (int)(400 * scale);
 
 	const float startX = (width * 0.5f) - ((col * 3) * 0.5f);
-	const float startY = 80;
+	const float startY = height * 0.15f;
 
 	auto pos = glm::vec2(startX, startY);
 
@@ -401,7 +410,7 @@ void DoomMenu::Draw(double dt)
 
 	const auto black = glm::vec4(0, 0, 0, 0.5);
 
-	const auto start = items->at(0)->type == DoomMenuTypes::Text ? 1 : 0;
+	const auto start = items->at(0)->type == DoomMenuTypes::Text ? (items->at(1)->type == DoomMenuTypes::Text ? 2 : 1) : 0;
 	const auto shown = std::min(visible, (int)items->size() - scroll);
 
 	const auto partSize = controlsAtlas[4].w * 0.75f *  scale;
@@ -472,6 +481,11 @@ void DoomMenu::Draw(double dt)
 	//terminator
 	itemY.push_back(pos.y);
 
+	if (items == &species)
+	{
+		sprender->DrawText(1, speciesText, glm::vec2(width * 0.6f, height * 0.3f), glm::vec4(1), 75.0f);
+	}
+
 	for (int i = 0; i < shown; i++)
 	{
 		auto item = i == 0 ? items->at(0) : items->at(i + scroll);
@@ -509,5 +523,11 @@ void DoomMenu::Draw(double dt)
 			auto thumb = glm::vec2(col + (int)thumbPos, 10 * scale);
 			sprender->DrawSprite(controls, pos + thumb, thumbSize, controlsAtlas[3], 0, color);
 		}
+	}
+
+	//species page special stuff
+	if (items == &species && items->at(highlight)->type == DoomMenuTypes::Checkbox)
+	{
+		sprender->DrawSprite(speciesPreviews[highlight - start], glm::vec2((width * 0.5f) - (speciesPreviews[0]->width * 0.5f), (height * 0.4f) - (speciesPreviews[0]->height * 0.5f)));
 	}
 }

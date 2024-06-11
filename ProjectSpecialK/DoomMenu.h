@@ -44,6 +44,7 @@ private:
 	std::vector<DoomMenuItem*> options;
 	std::vector<DoomMenuItem*> content;
 	std::vector<DoomMenuItem*> volume;
+	std::vector<DoomMenuItem*> species;
 
 	std::stack<std::vector<DoomMenuItem*>> stack;
 
@@ -51,6 +52,9 @@ private:
 	float itemX;
 	float sliderStart, sliderEnd;
 	int sliderHolding;
+
+	std::vector<Texture*> speciesPreviews;
+	std::string speciesText;
 
 	void rebuild();
 
