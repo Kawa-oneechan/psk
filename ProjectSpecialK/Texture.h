@@ -7,9 +7,14 @@
 
 class Texture
 {
+private:
+	unsigned char* delayedData;
+	int delayedFilter, delayedRepeat;
+
 public:
 	unsigned int ID;
 	int width, height, channels;
+	bool delayed = false;
 
 	Texture() = default;
 

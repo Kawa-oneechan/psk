@@ -419,7 +419,6 @@ int main(int argc, char** argv)
 
 
 	ThreadedLoader(Database::LoadGlobalStuff);
-	Database::CreateItemIconsTexture();
 
 
 	thePlayer.Name = "Kawa";

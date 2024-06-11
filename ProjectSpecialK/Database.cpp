@@ -138,25 +138,12 @@ namespace Database
 		}
 #endif
 
-		//Can't do this here because of multithreading bs.
-		//ItemIcons = new Texture(sheet, sheetW, sheetH, 4);
+		//Loading happens in this thread, but making a texture out of it will be delayed.
+		ItemIcons = new Texture(sheet, sheetW, sheetH, 4);
 		
 		ForgetVFS(entries);
 
 		conprint(0, "ItemIcons: generated a sheet for {} entries.", entries.size());
-	}
-
-	//Call this from the main thread.
-	void CreateItemIconsTexture()
-	{
-		if (sheet == nullptr)
-		{
-			conprint(2, "Tried to create item icons texture with a null sheet. Ran it twice?");
-			return;
-		}
-		ItemIcons = new Texture(sheet, sheetW, sheetH, 4);
-		delete[] sheet;
-		sheet = nullptr;
 	}
 
 	void LoadContentFilters()
