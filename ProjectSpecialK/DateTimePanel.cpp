@@ -18,7 +18,7 @@ void DateTimePanel::Update()
 	{
 		//24 hours, easy
 		layout->GetPanel("time")->Text = fmt::format("{:2}:{:02}", gm.tm_hour, gm.tm_min);
-		layout->GetPanel("ampm")->Text = "";
+		layout->GetPanel("ampm")->Text.clear();
 	}
 	else
 	{

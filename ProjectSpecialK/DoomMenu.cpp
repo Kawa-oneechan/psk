@@ -101,15 +101,15 @@ void DoomMenu::rebuild()
 				sn[0] = std::toupper(sn[0]);
 
 			TextAdd(f, sn);
-			if (filters.find(f) == filters.end())
-				filters[f] = true;
+			if (Database::Filters.find(f) == Database::Filters.end())
+				Database::Filters[f] = true;
 
-			fcpage->push_back(new DoomMenuItem(TextGet((std::string&)f), filters[f],
+			fcpage->push_back(new DoomMenuItem(TextGet((std::string&)f), Database::Filters[f],
 				[&, f](DoomMenuItem*i)
 			{
-				filters[f] = i->selection > 0;
-				auto s = UI::settings["contentFilters"]->AsObject();
-				s.insert_or_assign(f, new JSONValue(filters[f]));
+				Database::Filters[f] = i->selection > 0;
+				auto s = UI::settings["contentFilters"]->AsObject(); //-V836 can't be helped for now
+				s.insert_or_assign(f, new JSONValue(Database::Filters[f]));
 				UI::settings["contentFilters"] = new JSONValue(s);
 			}
 			));
@@ -119,7 +119,7 @@ void DoomMenu::rebuild()
 
 		content.push_back(new DoomMenuItem(TextGet("menu:options:content:species"), fcpage));
 	}
-	for (const auto& fc : filterCategories)
+	for (const auto& fc : Database::FilterCategories)
 	{
 		auto fck = fc.first;
 		
@@ -129,12 +129,12 @@ void DoomMenu::rebuild()
 		for (const auto& f : fc.second)
 		{
 
-			fcpage->push_back(new DoomMenuItem(TextGet((std::string&)f), filters[f],
+			fcpage->push_back(new DoomMenuItem(TextGet((std::string&)f), Database::Filters[f],
 				[&, f](DoomMenuItem*i)
 			{
-				filters[f] = i->selection > 0;
-				auto s = UI::settings["contentFilters"]->AsObject();
-				s.insert_or_assign(f, new JSONValue(filters[f]));
+				Database::Filters[f] = i->selection > 0;
+				auto s = UI::settings["contentFilters"]->AsObject(); //-V836 can't be helped for now
+				s.insert_or_assign(f, new JSONValue(Database::Filters[f]));
 				UI::settings["contentFilters"] = new JSONValue(s);
 			}
 			));

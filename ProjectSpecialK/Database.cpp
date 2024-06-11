@@ -14,12 +14,6 @@ std::vector<Personality> personalities;
 std::vector<Hobby> hobbies;
 std::vector<Villager> villagers;
 
-std::map<std::string, std::vector<std::string>> filterCategories;
-std::map<std::string, bool> filters;
-
-Texture* ItemIcons = nullptr;
-std::map<std::string, glm::vec4> ItemIconAtlas;
-
 void Table(std::vector<std::string> data, size_t stride)
 {
 	size_t width[64] = { 0 };
@@ -74,6 +68,12 @@ void Table(std::vector<std::string> data, size_t stride)
 
 namespace Database
 {
+	std::map<std::string, std::vector<std::string>> FilterCategories;
+	std::map<std::string, bool> Filters;
+
+	Texture* ItemIcons = nullptr;
+	std::map<std::string, glm::vec4> ItemIconAtlas;
+
 	static unsigned char* sheet;
 	static const int iconSize = 128;
 	static const int cols = 16;
@@ -141,17 +141,19 @@ namespace Database
 		//Can't do this here because of multithreading bs.
 		//ItemIcons = new Texture(sheet, sheetW, sheetH, 4);
 		
-		//free(sheet);
-
 		ForgetVFS(entries);
 
 		conprint(0, "ItemIcons: generated a sheet for {} entries.", entries.size());
 	}
+
 	//Call this from the main thread.
 	void CreateItemIconsTexture()
 	{
 		if (sheet == nullptr)
+		{
+			conprint(2, "Tried to create item icons texture with a null sheet. Ran it twice?");
 			return;
+		}
 		ItemIcons = new Texture(sheet, sheetW, sheetH, 4);
 		delete[] sheet;
 		sheet = nullptr;
@@ -159,8 +161,8 @@ namespace Database
 
 	void LoadContentFilters()
 	{
-		filters.clear();
-		filterCategories.clear();
+		Filters.clear();
+		FilterCategories.clear();
 		auto settings = UI::settings["contentFilters"]->AsObject();
 		auto doc = ReadJSON("filters.json");
 		for (const auto& f : doc->AsObject())
@@ -176,11 +178,11 @@ namespace Database
 				TextAdd(k, *v["name"]);
 				items.push_back(k);
 
-				filters[k] = v["default"] != nullptr ? v["default"]->AsBool() : true;
+				Filters[k] = v["default"] != nullptr ? v["default"]->AsBool() : true;
 				if (settings.find(k) != settings.end())
-					filters[k] = settings[k]->AsBool();
+					Filters[k] = settings[k]->AsBool();
 			}
-			filterCategories[key] = items;
+			FilterCategories[key] = items;
 		}
 	}
 

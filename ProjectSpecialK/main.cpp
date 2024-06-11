@@ -135,7 +135,7 @@ namespace UI
 			settings = JSON::Parse(data)->AsObject();
 			free(data);
 		}
-		catch (std::exception)
+		catch (std::exception&)
 		{
 			settings["language"] = new JSONValue(0); //English
 			settings["continue"] = new JSONValue(0); //Front door
@@ -170,7 +170,7 @@ namespace UI
 		{
 			SaveFile("options.json", JSON::Stringify(&JSONValue(settings)));
 		}
-		catch (std::exception)
+		catch (std::exception&)
 		{
 			conprint(2, "Couldn't save settings.");
 		}

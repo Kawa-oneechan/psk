@@ -2,8 +2,6 @@
 
 #include <vector>
 
-extern std::map<std::string, std::vector<std::string>> filterCategories;
-extern std::map<std::string, bool> filters;
 
 extern std::vector<Item> items;
 extern std::vector<Species> species;
@@ -11,11 +9,14 @@ extern std::vector<Personality> personalities;
 extern std::vector<Hobby> hobbies;
 extern std::vector<Villager> villagers;
 
-extern Texture* ItemIcons;
-extern std::map<std::string, glm::vec4> ItemIconAtlas;
-
 namespace Database
 {
+	extern std::map<std::string, std::vector<std::string>> FilterCategories;
+	extern std::map<std::string, bool> Filters;
+
+	extern Texture* ItemIcons;
+	extern std::map<std::string, glm::vec4> ItemIconAtlas;
+
 	extern void LoadGlobalStuff();
 	extern void CreateItemIconsTexture();
 	

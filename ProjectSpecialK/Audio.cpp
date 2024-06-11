@@ -29,9 +29,11 @@ void Audio::Update()
 {
 	system->update();
 
+	static auto epsilon = glm::epsilon<float>();
 	static auto oldMusicVolume = MusicVolume;
 	auto changed = false;
-	if (oldMusicVolume != MusicVolume)
+
+	if (std::fabs(oldMusicVolume - MusicVolume) > epsilon)
 	{
 		oldMusicVolume = MusicVolume;
 		changed = true;
@@ -58,6 +60,7 @@ Audio::Audio(std::string filename) : filename(filename)
 	theChannel = nullptr;
 	Volume = 1.0f;
 	size_t size = 0;
+	type = 0;
 	if (!Enabled)
 	{
 		status = AudioStatus::Invalid;

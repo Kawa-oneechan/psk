@@ -27,7 +27,7 @@ Species::Species(JSONObject& value)
 	auto setting = true;
 	if (settings.find(filter) != settings.end())
 		setting = settings[filter]->AsBool();
-	filters.insert_or_assign(filter, setting);
+	Database::Filters.insert_or_assign(filter, setting);
 	
 	ModeledMuzzle = (value["modeledMuzzle"] != nullptr) ? value["modeledMuzzle"]->AsBool() : false;
 }
