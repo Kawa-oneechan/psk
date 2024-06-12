@@ -11,7 +11,7 @@
     "es" : "Calisto"
   },
   "gender" : "fem",
-  "birthday" : [ 6, 4 ],
+  "birthday" : [ 4, 6 ],
   "hobby" : "nature",
   "nameTag" : [ "#EC7D42", "#61300B" ],
   "photo" : "psk:callistosphoto",

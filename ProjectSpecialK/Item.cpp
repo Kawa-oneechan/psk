@@ -74,7 +74,7 @@ Item::Item(JSONObject& value) : NameableThing(value)
 	else if (type == "cap") Type = it_Hat;
 	else if (type == "shoes") Type = it_Shoes;
 	else
-		throw std::runtime_error(fmt::format("Don't know what to do with type \"{}\" while loading {}.", type, ID).c_str());
+		throw std::runtime_error(fmt::format("Don't know what to do with type \"{}\" while loading {}.", type, ID));
 	//fmt::print("Don't know what to do with type \"{}\".\n", type);
 
 	auto vars = value["variants"];

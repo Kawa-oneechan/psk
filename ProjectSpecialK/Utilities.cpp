@@ -1,4 +1,4 @@
-#include "SpecialK.h"
+﻿#include "SpecialK.h"
 
 
 glm::vec2 GetJSONVec2(JSONValue* val)
@@ -85,4 +85,56 @@ bool PointInRect(const glm::vec2 point, const glm::vec4 rect)
 		(point.x < rect.x + rect.z) &&
 		(point.y >= rect.y) &&
 		(point.y < rect.y + rect.w);
+}
+
+void Table(std::vector<std::string> data, size_t stride)
+{
+	size_t width[64] = { 0 };
+	auto rows = data.size() / stride;
+	for (auto col = 0; col < stride; col++)
+	{
+		for (auto row = 0; row < rows; row++)
+		{
+			const auto& cel = data[row * stride + col];
+			if (cel.length() > width[col])
+				width[col] = cel.length();
+		}
+	}
+
+	std::string top;
+	std::string middle;
+	std::string bottom;
+	for (auto col = 0; col < stride; col++)
+	{
+		for (auto i = 0; i < width[col] + 2; i++)
+		{
+			top += u8"─";
+			middle += u8"─";
+			bottom += u8"─";
+		}
+		if (col < stride - 1)
+		{
+			top += u8"┬";
+			middle += u8"┼";
+			bottom += u8"┴";
+		}
+	}
+
+	conprint(7, u8"┌{}┐", top);
+
+	for (auto row = 0; row < rows; row++)
+	{
+		std::string line;
+		for (auto col = 0; col < stride; col++)
+		{
+			const auto& cel = data[row * stride + col];
+			line += fmt::format(fmt::format(u8"│ {{:{}}} ", width[col]), cel);
+		}
+		line += u8"│";
+		conprint(7, line);
+		if (row == 0)
+			conprint(7, fmt::format(u8"├{}┤", middle));
+	}
+
+	conprint(7, u8"└{}┘", bottom);
 }

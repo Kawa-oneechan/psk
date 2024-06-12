@@ -12,7 +12,7 @@
   "personalitySubtype" : 0,
   "gender" : "fnb",
   "attraction" : "both",
-  "birthday" : [ 3, 2 ],
+  "birthday" : [ 1, 1 ],
   "hobby" : "music",
   "colors" : [ "white", "black" ],
   "nameTag" : [ "#FFFFFF", "#848484" ],

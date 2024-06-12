@@ -33,7 +33,7 @@ Villager::Villager(JSONObject& value) : NameableThing(value)
 		auto sp = value["species"];
 		_species = Database::Find<::Species>(sp, &species);
 		if (_species == nullptr)
-			throw std::runtime_error(fmt::format("Unknown species {} while loading {}.", sp->Stringify(), ID).c_str());
+			throw std::runtime_error(fmt::format("Unknown species {} while loading {}.", sp->Stringify(), ID));
 		RefSpecies = fmt::format("species:{}", _species->ID);
 		StringToLower(RefSpecies);
 	}
@@ -52,6 +52,12 @@ Villager::Villager(JSONObject& value) : NameableThing(value)
 	auto birthday = value["birthday"]->AsArray();
 	_birthday[0] = (int)birthday[0]->AsNumber();
 	_birthday[1] = (int)birthday[1]->AsNumber();
+	if (_birthday[0] < 1 || _birthday[0] > 31 || _birthday[1] < 1 || _birthday[1] > 12)
+	{
+		conprint(1, "Villager {} has an out of band birthday: day {}, month {}.", ID, _birthday[0], _birthday[1]);
+		//Reset to January 1 so nothing will badly break later on.
+		_birthday[0] = _birthday[1] = 1;
+	}
 
 	auto _gender = value["gender"];
 	if (_gender != nullptr)
@@ -65,7 +71,7 @@ Villager::Villager(JSONObject& value) : NameableThing(value)
 		else if (_gender->AsString() == "fnb")
 			this->gender = Gender::GEnby;
 		else
-			throw std::runtime_error(fmt::format("Unknown gender {} while loading {}.", _gender->Stringify(), ID).c_str());
+			throw std::runtime_error(fmt::format("Unknown gender {} while loading {}.", _gender->Stringify(), ID));
 	}
 
 	auto nametag = value["nameTag"]->AsArray();
@@ -74,7 +80,7 @@ Villager::Villager(JSONObject& value) : NameableThing(value)
 		auto hex = nametag[i]->AsString();
 		int r, g, b, a;
 		if (hex.empty() || hex[0] != '#')
-			throw std::runtime_error(fmt::format("Not a color value {} while loading {}.", hex, ID).c_str());
+			throw std::runtime_error(fmt::format("Not a color value {} while loading {}.", hex, ID));
 		if (hex.length() == 7)
 		{
 			a = 0xFF;
@@ -90,7 +96,7 @@ Villager::Villager(JSONObject& value) : NameableThing(value)
 			b = std::stoi(hex.substr(7, 2), nullptr, 16);
 		}
 		else
-			throw std::runtime_error(fmt::format("Not a well-formed color value {} while loading {}.", hex, ID).c_str());
+			throw std::runtime_error(fmt::format("Not a well-formed color value {} while loading {}.", hex, ID));
 		NameTag[i] = glm::vec4(r / 255.0f, g / 255.0f, b / 255.0f, a / 255.0f);
 	}
 
@@ -100,7 +106,7 @@ Villager::Villager(JSONObject& value) : NameableThing(value)
 	{
 		personality = Database::Find<::Personality>(value["personality"], &personalities);
 		if (personality == nullptr)
-			throw std::runtime_error(fmt::format("Unknown personality {} while loading {}.", value["personality"]->Stringify(), ID).c_str());
+			throw std::runtime_error(fmt::format("Unknown personality {} while loading {}.", value["personality"]->Stringify(), ID));
 	}
 	personalitySubtype = _isSpecial ? 0 : (int)value["personalitySubtype"]->AsNumber();
 	//hobby = value["hobby"];

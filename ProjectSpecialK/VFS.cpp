@@ -10,8 +10,6 @@
 
 namespace fs = std::experimental::filesystem;
 
-extern void Table(std::vector<std::string> data, size_t stride);
-
 static std::vector<VFSEntry> entries;
 static std::vector<VFSSource> sources;
 

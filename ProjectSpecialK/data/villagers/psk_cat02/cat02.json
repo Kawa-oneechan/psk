@@ -8,10 +8,10 @@
   "personalitySubtype" : 0,
   "gender" : "fem",
   "attraction" : "both",
-  "birthday" : [ 3, 2 ],
+  "birthday" : [ 1, 1 ],
   "hobby" : "fitness",
   "colors" : [ "white", "black" ],
-  "nameTag" : [ "#FFFFFF", "#848484" ],
+  "nameTag" : [ "#AA6405", "#FFF7CF" ],
   "catchphrase" : {
     "en" : ""
   },
