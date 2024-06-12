@@ -77,16 +77,14 @@ Audio::Audio(std::string filename) : filename(filename)
 	soundEx.cbsize = sizeof(FMOD_CREATESOUNDEXINFO);
 	soundEx.length = (unsigned int)size;
 	auto mode = FMOD_HARDWARE | FMOD_2D | FMOD_OPENMEMORY;
-	auto volume = SoundVolume;
 	if (filename.substr(0, 5) == "music")
 	{
 		mode |= FMOD_LOOP_NORMAL;
-		volume = MusicVolume;
 	}
 	else
 	{
 		mode |= FMOD_LOOP_OFF;
-		//TODO: Find out if we should use AmbientVolume, SpeechVolume, or leave it on SoundVolume.
+		type = 1; //TODO: extend
 	}
 	auto r = system->createStream(data, mode, &soundEx, &theSound);
 	if (r != FMOD_OK)
@@ -95,7 +93,6 @@ Audio::Audio(std::string filename) : filename(filename)
 		return;
 	}
 	theChannel->setCallback(callback);
-	theChannel->setVolume(volume);
 	auto ext = filename.substr(filename.length() - 4, 4);
 	if (ext == ".ogg")
 	{
@@ -166,6 +163,8 @@ void Audio::Stop()
 
 void Audio::UpdateVolume()
 {
-	//if (type == 0)
-	theChannel->setVolume(MusicVolume * Volume);
+	if (type == 0)
+		theChannel->setVolume(MusicVolume * Volume);
+	else if (type == 1)
+		theChannel->setVolume(SoundVolume * Volume);
 }

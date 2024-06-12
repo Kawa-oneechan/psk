@@ -35,8 +35,6 @@ public:
 class DoomMenu : public Tickable
 {
 private:
-	Texture* controls;
-	TextureAtlas controlsAtlas;
 	std::vector<DoomMenuItem*>* items;
 	int highlight, mouseHighlight;
 	int scroll, visible = 12;

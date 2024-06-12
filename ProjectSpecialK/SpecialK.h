@@ -76,6 +76,8 @@ namespace UI
 {
 	extern std::map<std::string, glm::vec4> themeColors;
 	extern std::vector<glm::vec4> textColors;
+	extern Texture* controls;
+	extern TextureAtlas controlsAtlas;
 
 	extern JSONObject& json;
 	extern JSONObject& settings;

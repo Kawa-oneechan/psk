@@ -63,7 +63,7 @@ FU              (slight delay for effect)
 
 */
 	"dlg:sza:wack": {
-		"en": "His hair?<break><size:200>WACK.</size><break>His gear?<break><size:200>WACK.</size><break>His jewelry?<break><size:200>WACK.</size><break>His foot stance?<break><size:200>WACK.</size><break>The way that he talks?<break><size:200>WACK.</size><break>The way that he doesn't\neven like to smile?<break><size:200>WACK.</size><break>Me?<break>I'm tight as<clr><size:200>FU</size><delay:500><clr><end>"
+		"en": "His hair?<break><size:200>WACK.</size><break>His gear?<break><size:200>WACK.</size><break>His jewelry?<break><size:200>WACK.</size><break>His foot stance?<break><size:200>WACK.</size><break>The way that he talks?<break><size:200>WACK.</size><break>The way that he doesn't even like to smile?<break><size:200>WACK.</size><break>Me?<break>I'm tight as<clr>\n<size:400>FU</size><delay:50><clr><end>"
 	},
 	"dlg:sza:insertions": {
 		"en": "This is an insertion test.\nYou are <str:player>-<str:kun>... <size:200>bitch!</size><break>"

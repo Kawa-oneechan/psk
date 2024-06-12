@@ -84,10 +84,12 @@ namespace UI
 	std::map<std::string, glm::vec4> themeColors;
 	std::vector<glm::vec4> textColors;
 
+	Texture* controls;
+	TextureAtlas controlsAtlas;
+
 	JSONObject& json = JSONObject();
 	JSONObject& settings = JSONObject();
-
-
+	
 	static char* LoadFile(const std::string &filename, size_t *size)
 	{
 		std::ifstream file(filename, std::ios::binary | std::ios::ate);
@@ -402,6 +404,8 @@ int main(int argc, char** argv)
 	Shader ourShader("shaders/model.vs", "shaders/model.fs");
 	spriteShader = new Shader("shaders/sprite.fs");
 	whiteRect = new Texture("white.png", GL_CLAMP_TO_EDGE);
+	UI::controls = new Texture("ui/controls.png");
+	GetAtlas(UI::controlsAtlas, "ui/controls.json");
 
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
@@ -427,14 +431,12 @@ int main(int argc, char** argv)
 	TextAdd(*ReadJSON("datetime.json"));
 	TextAdd(*ReadJSON("fixedform.json"));
 	TextAdd(*ReadJSON("optionsmenu.json"));
-
-
-
+	TextAdd(*ReadJSON("tests.json"));
 
 	tickables.push_back(new Background());
 	dlgBox = new DialogueBox();
 	tickables.push_back(dlgBox);
-	tickables.push_back(new DoomMenu());
+	//tickables.push_back(new DoomMenu());
 	auto hotbar = new PanelLayout(UI::json["hotbar"]);
 	tickables.push_back(hotbar);
 	hotbar->Tween(&hotbar->Position.y, tweeny::from(-100.0f).to(0).during(100));

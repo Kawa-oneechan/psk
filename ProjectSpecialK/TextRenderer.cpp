@@ -197,7 +197,6 @@ void SpriteRenderer::DrawText(int font, const std::string& text, glm::vec2 posit
 			if (func != msbtPhase3.end())
 			{
 				std::invoke(func->second, this, msbt, (int)msbtStart - 1, (int)(msbtEnd - msbtStart) + 2);
-				//func->second(msbt, (int)msbtStart - 1, (int)(msbtEnd - msbtStart) + 2);
 			}
 			continue;
 		}
@@ -280,12 +279,15 @@ glm::vec2 SpriteRenderer::MeasureText(int font, const std::string& text, float s
 			auto msbtWhole = text.substr(msbtStart, msbtEnd - msbtStart);
 			//fmt::print("(MSBT: {})", msbtWhole);
 			auto msbt = Split(msbtWhole, ':');
+			if (msbt[0] == "break" || msbt[0] == "clr")
+			{
+				thisLine = 0.0f;
+				result.y = 0;
+				continue;
+			}
 			auto func = msbtPhase3.find(msbt[0]);
 			if (func != msbtPhase3.end())
-			{
 				std::invoke(func->second, this, msbt, (int)msbtStart - 1, (int)(msbtEnd - msbtStart) + 2);
-				//func->second(msbt, (int)msbtStart - 1, (int)(msbtEnd - msbtStart) + 2);
-			}
 			continue;
 		}
 

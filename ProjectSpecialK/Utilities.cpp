@@ -36,9 +36,9 @@ void GetAtlas(TextureAtlas &ret, const std::string& jsonFile)
 	{
 		auto size = GetJSONVec2(doc["size"]);
 		auto dims = GetJSONVec2(doc["dims"]);
-		for (int y = 0; y < (int)dims[0]; y++)
+		for (int y = 0; y < (int)dims[1]; y++)
 		{
-			for (int x = 0; x < (int)dims[1]; x++)
+			for (int x = 0; x < (int)dims[0]; x++)
 			{
 				ret.push_back(glm::vec4(x * size[0], y * size[1], size[0], size[1]));
 			}

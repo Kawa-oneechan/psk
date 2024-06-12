@@ -1,4 +1,5 @@
 #include "DialogueBox.h"
+#include "InputsMap.h"
 
 void DialogueBox::msbtStr(MSBTParams)
 {
@@ -19,6 +20,30 @@ void DialogueBox::msbtEllipses(MSBTParams)
 	msbtStr(fakeTags, start, len);
 }
 
+void DialogueBox::msbtDelay(MSBTParams)
+{
+	delay = (float)std::stoi(tags[1]);
+}
+
+void DialogueBox::msbtEmote(MSBTParams)
+{
+
+}
+
+void DialogueBox::msbtBreak(MSBTParams)
+{
+	state = DialogueBoxState::WaitingForKey;
+}
+
+void DialogueBox::msbtClear(MSBTParams)
+{
+	displayed.clear();
+}
+
+void DialogueBox::msbtEnd(MSBTParams)
+{
+	state = DialogueBoxState::Closing;
+}
 void DialogueBox::msbtPass(MSBTParams)
 {
 	displayed += toDisplay.substr(start, len);
@@ -37,14 +62,19 @@ DialogueBox::DialogueBox()
 	GetAtlas(nametagAtlas, "ui/dialogue/nametag.json");
 	nametagWidth = 0;
 	wobble = new Shader("shaders/wobble.fs");
+	bebebese = new Audio("sound/animalese/base/Voice_Monology.wav");
 
+	Sound = DialogueBoxSound::Bebebese;
+	state = DialogueBoxState::Writing;
+	
 	displayCursor = 0;
 	time = 0;
 	delay = 0;
 
 	//Text(u8"Truth is... <color:1>the game</color> was rigged\nfrom the start.", 0, "Isabelle", glm::vec4(1, 0.98f, 0.56f, 1), glm::vec4(0.96f, 0.67f, 0.05f, 1));
 	//Text(u8"Truth is... <color:1>the game</color> was rigged from the start.",
-	Text("Are you <color:3><str:player></color>? Hiii! Welcome to <color:2>Project Special K</color>!",
+	//Text("Are you <color:3><str:player></color>? <delay:1000>Hiii! Welcome to <color:2>Project Special K</color>!",
+	Text(TextGet("dlg:sza:wack"),
 		Database::Find<Villager>("psk:cat02", &villagers));
 
 	//Text("I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I", 0);
@@ -70,6 +100,9 @@ void DialogueBox::Preprocess()
 				std::invoke(func->second, this, msbt, (int)msbtStart - 1, (int)(msbtEnd - msbtStart) + 2);
 				i = msbtStart; //-1 because we may have subbed in a new tag.
 			}
+			//else
+			//	conprint(1, "DialogueBox::Preprocess: don't know how to handle {}.", msbtWhole);
+			//no need to report on that, whatever Preprocess can't handle, Tick and DrawString ought.
 		}
 	}
 }
@@ -91,9 +124,15 @@ void DialogueBox::Wrap()
 			{
 				lastSpace = i;
 				wrapped.insert(wrapped.begin() + i, '\n');
+				//TODO: if we've reached three size 100 lines, add a <break> command instead.
 			}
 			else
-				wrapped[lastSpace] = '\n';
+			{
+				if (std::isblank(wrapped[lastSpace]))
+					wrapped[lastSpace] = '\n';
+				else
+					wrapped.insert(wrapped.begin() + lastSpace, '\n');
+			}
 		}
 	}
 	
@@ -170,6 +209,9 @@ void DialogueBox::Style(int style)
 
 void DialogueBox::Draw(double dt)
 {
+	if (state == DialogueBoxState::Done)
+		return;
+
 	time += (float)dt * 0.005f;
 
 	auto dlgScale = scale;
@@ -213,6 +255,12 @@ void DialogueBox::Draw(double dt)
 		sprender->DrawText(1, name, tagPosT, nametagColor[1], 120 * scale, tagAngle);
 	}
 
+	if (state == DialogueBoxState::WaitingForKey)
+	{
+		auto arr = UI::controlsAtlas[6];
+		sprender->DrawSprite(UI::controls, glm::vec2((width / 2) - (arr.z / 2), height - arr.w - 20), glm::vec2(arr.z, arr.w), arr, 0.0f, UI::themeColors["primary"]);
+	}
+
 	//maybe afterwards port this to the UI Panel system?
 
 	//sprender->DrawText(1, fmt::format("DialogueBox: {}", time), glm::vec2(0, 16), glm::vec4(0, 0, 0, 0.25), 50);
@@ -220,61 +268,109 @@ void DialogueBox::Draw(double dt)
 
 void DialogueBox::Tick(double dt)
 {
-	delay -= (float)dt;
-	if (delay > 0)
-		return;
-
-	if (displayCursor >= toDisplay.length())
-		return;
-
-	//We use UTF-8 to store strings but display in UTF-16.
-	unsigned int ch = toDisplay[displayCursor++] & 0xFF;
-	if ((ch & 0xE0) == 0xC0)
+	if (state == DialogueBoxState::Opening)
 	{
-		ch = (ch & 0x1F) << 6;
-		ch |= (toDisplay[displayCursor++] & 0x3F);
-	}
-	else if ((ch & 0xF0) == 0xE0)
-	{
-		ch = (ch & 0x1F) << 12;
-		ch |= (toDisplay[displayCursor++] & 0x3F) << 6;
-		ch |= (toDisplay[displayCursor++] & 0x3F);
+		//TODO: wait for animation
+		state = DialogueBoxState::Writing;
 	}
 
-	if (ch == '<')
+	if (state == DialogueBoxState::Writing)
 	{
-		auto msbtEnd = toDisplay.find_first_of('>', displayCursor);
-		if (msbtEnd == -1) goto displayIt;
-		auto msbtStart = displayCursor;
-		displayCursor = msbtEnd + 1;
+		delay -= (float)dt;
+		if (delay > 0)
+			return;
 
-		auto msbtWhole = toDisplay.substr(msbtStart, msbtEnd - msbtStart);
-		auto msbt = Split(msbtWhole, ':');
-		auto func = msbtPhase3.find(msbt[0]);
-		if (func != msbtPhase3.end())
+		if (displayCursor >= toDisplay.length())
 		{
-			std::invoke(func->second, this, msbt, (int)msbtStart - 1, (int)(msbtEnd - msbtStart) + 2);
-			//func->second(msbt, (int)msbtStart - 1, (int)(msbtEnd - msbtStart) + 2);
+			state = DialogueBoxState::WaitingForKey;
+		}
+
+		//reset delay
+		delay = 0;
+
+		//We use UTF-8 to store strings but display in UTF-16.
+		unsigned int ch = toDisplay[displayCursor++] & 0xFF;
+		if ((ch & 0xE0) == 0xC0)
+		{
+			ch = (ch & 0x1F) << 6;
+			ch |= (toDisplay[displayCursor++] & 0x3F);
+		}
+		else if ((ch & 0xF0) == 0xE0)
+		{
+			ch = (ch & 0x1F) << 12;
+			ch |= (toDisplay[displayCursor++] & 0x3F) << 6;
+			ch |= (toDisplay[displayCursor++] & 0x3F);
+		}
+
+		if (ch == '<')
+		{
+			auto msbtEnd = toDisplay.find_first_of('>', displayCursor);
+			if (msbtEnd == -1) goto displayIt;
+			auto msbtStart = displayCursor;
+			displayCursor = msbtEnd + 1;
+
+			auto msbtWhole = toDisplay.substr(msbtStart, msbtEnd - msbtStart);
+			auto msbt = Split(msbtWhole, ':');
+			auto func = msbtPhase2.find(msbt[0]);
+			if (func != msbtPhase2.end())
+			{
+				std::invoke(func->second, this, msbt, (int)msbtStart - 1, (int)(msbtEnd - msbtStart) + 2);
+			}
+			else
+				conprint(1, "DialogueBox::Tick: don't know how to handle {}.", msbtWhole);
+		}
+		else
+		{
+		displayIt:
+			//Gotta re-encode the UTF-16 to UTF-8 here.
+			if (ch < 0x80)
+				displayed += ch;
+			else if (ch < 0x0800)
+			{
+				displayed += (char)(((ch >> 6) & 0x1F) | 0xC0);
+				displayed += (char)(((ch >> 0) & 0x3F) | 0x80);
+			}
+			else if (ch < 0x10000)
+			{
+				displayed += (char)(((ch >> 12) & 0x0F) | 0xE0);
+				displayed += (char)(((ch >> 6) & 0x3F) | 0x80);
+				displayed += (char)(((ch >> 0) & 0x3F) | 0x80);
+			}
+
+			if (bubbleNum == 3 || Sound == DialogueBoxSound::Bebebese)
+				bebebese->Play(true);
+		}
+		if (delay == 0)
+			delay = 50;
+	}
+
+	if (state == DialogueBoxState::WaitingForKey)
+	{
+		if (Inputs.Enter)
+		{
+			Inputs.Enter = false;
+
+			if (displayCursor >= toDisplay.length())
+			{
+				state = DialogueBoxState::Closing;
+				if (mutex != nullptr)
+				{
+					*mutex = false;
+					mutex = nullptr;
+				}
+			}
+			else
+			{
+				displayed.clear();
+				state = DialogueBoxState::Writing;
+			}
 		}
 	}
-	else
+
+	if (state == DialogueBoxState::Closing)
 	{
-displayIt:
-		//Gotta re-encode the UTF-16 to UTF-8 here.
-		if (ch < 0x80)
-			displayed += ch;
-		else if (ch < 0x0800)
-		{
-			displayed += (char)(((ch >> 6) & 0x1F) | 0xC0);
-			displayed += (char)(((ch >> 0) & 0x3F) | 0x80);
-		}
-		else if (ch < 0x10000)
-		{
-			displayed += (char)(((ch >> 12) & 0x0F) | 0xE0);
-			displayed += (char)(((ch >> 6) & 0x3F) | 0x80);
-			displayed += (char)(((ch >> 0) & 0x3F) | 0x80);
-		}
+		//TODO: wait for animation
+		state = DialogueBoxState::Done;
 	}
-	delay = 50;
 }
 
