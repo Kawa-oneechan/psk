@@ -35,6 +35,8 @@ private:
 		{ "/font", &DialogueBox::msbtPass },
 	};
 
+	std::string Wrap(const std::string& text);
+
 public:
 
 	DialogueBox();

@@ -24,14 +24,45 @@ DialogueBox::DialogueBox()
 	delay = 0;
 
 	//Text(u8"Truth is... <color:1>the game</color> was rigged\nfrom the start.", 0, "Isabelle", glm::vec4(1, 0.98f, 0.56f, 1), glm::vec4(0.96f, 0.67f, 0.05f, 1));
-	Text(u8"Truth is... <color:1>the game</color> was rigged\nfrom the start.",
+	Text(u8"Truth is... <color:1>the game</color> was rigged from the start.",
 		(Villager*)Database::Find<Villager>("psk:kaw", &villagers));
+
+	//Text("I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I", 0);
+	//Text("IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII", 0);
+}
+
+std::string DialogueBox::Wrap(const std::string& text)
+{
+	std::string wrapped;
+
+	size_t lastSpace = -1;
+	for (size_t i = 0; i < text.length(); i++)
+	{
+		if (std::isblank(text[i]))
+			lastSpace = i;
+		wrapped += text[i];
+		auto width = sprender->MeasureText(font, wrapped, 100).x;
+		if (width > 650)
+		{
+			if (lastSpace == -1)
+			{
+				lastSpace = i;
+				wrapped.insert(wrapped.begin() + i, '\n');
+			}
+			else
+				wrapped[lastSpace] = '\n';
+		}
+	}
+	return wrapped;
 }
 
 void DialogueBox::Text(const std::string& text)
 {
+	//TODO: what the old text-only thing has in region Phase 1.
+	auto processed = Wrap(text);
+
 	displayed.clear();
-	toDisplay = text;
+	toDisplay = processed;
 	displayCursor = 0;
 	delay = 50;
 }
