@@ -24,8 +24,20 @@ private:
 
 	float delay;
 
-	void msbtPass(MSBTParams);
 	typedef void(DialogueBox::*MSBTFunc)(MSBTParams);
+
+	void msbtStr(MSBTParams);
+	void msbtEllipses(MSBTParams);
+
+	//MSBT functions that actually change the string content.
+	const std::map<std::string, MSBTFunc> msbtPhase1 = {
+		{ "str", &DialogueBox::msbtStr },
+		{ "...", &DialogueBox::msbtEllipses },
+	};
+	//TODO: look into using JSON and/or Lua to extend this.
+
+	void msbtPass(MSBTParams);
+
 	const std::map<std::string, MSBTFunc> msbtPhase3 = {
 		{ "color", &DialogueBox::msbtPass },
 		{ "/color", &DialogueBox::msbtPass },
@@ -35,7 +47,8 @@ private:
 		{ "/font", &DialogueBox::msbtPass },
 	};
 
-	std::string Wrap(const std::string& text);
+	void Preprocess();
+	void Wrap();
 
 public:
 

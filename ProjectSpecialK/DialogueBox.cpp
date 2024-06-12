@@ -1,5 +1,24 @@
 #include "DialogueBox.h"
 
+void DialogueBox::msbtStr(MSBTParams)
+{
+	if (tags[1] == "...")
+		toDisplay.replace(start, len, TextGet("str:fix:001"));
+	else if (tags[1] == "player")
+		toDisplay.replace(start, len, thePlayer.Name);
+	else if (tags[1] == "kun")
+		toDisplay.replace(start, len, TextGet("str:kun"));
+}
+
+void DialogueBox::msbtEllipses(MSBTParams)
+{
+	auto fakeTags = std::vector<std::string>
+	{
+		"str", "..."
+	};
+	msbtStr(fakeTags, start, len);
+}
+
 void DialogueBox::msbtPass(MSBTParams)
 {
 	displayed += toDisplay.substr(start, len);
@@ -24,23 +43,47 @@ DialogueBox::DialogueBox()
 	delay = 0;
 
 	//Text(u8"Truth is... <color:1>the game</color> was rigged\nfrom the start.", 0, "Isabelle", glm::vec4(1, 0.98f, 0.56f, 1), glm::vec4(0.96f, 0.67f, 0.05f, 1));
-	Text(u8"Truth is... <color:1>the game</color> was rigged from the start.",
-		(Villager*)Database::Find<Villager>("psk:kaw", &villagers));
+	//Text(u8"Truth is... <color:1>the game</color> was rigged from the start.",
+	Text("Are you <color:3><str:player></color>? Hiii! Welcome to <color:2>Project Special K</color>!",
+		Database::Find<Villager>("psk:cat02", &villagers));
 
 	//Text("I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I", 0);
 	//Text("IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII", 0);
 }
 
-std::string DialogueBox::Wrap(const std::string& text)
+void DialogueBox::Preprocess()
+{
+	for (size_t i = 0; i < toDisplay.length(); i++)
+	{
+		auto msbtStart = toDisplay.find_first_of('<', i);
+		if (msbtStart != std::string::npos)
+		{
+			msbtStart++;
+			auto msbtEnd = toDisplay.find_first_of('>', msbtStart);
+			i = msbtEnd;
+
+			auto msbtWhole = toDisplay.substr(msbtStart, msbtEnd - msbtStart);
+			auto msbt = Split(msbtWhole, ':');
+			auto func = msbtPhase1.find(msbt[0]);
+			if (func != msbtPhase1.end())
+			{
+				std::invoke(func->second, this, msbt, (int)msbtStart - 1, (int)(msbtEnd - msbtStart) + 2);
+				i = msbtStart; //-1 because we may have subbed in a new tag.
+			}
+		}
+	}
+}
+
+void DialogueBox::Wrap()
 {
 	std::string wrapped;
 
 	size_t lastSpace = -1;
-	for (size_t i = 0; i < text.length(); i++)
+	for (size_t i = 0; i < toDisplay.length(); i++)
 	{
-		if (std::isblank(text[i]))
+		if (std::isblank(toDisplay[i]))
 			lastSpace = i;
-		wrapped += text[i];
+		wrapped += toDisplay[i];
 		auto width = sprender->MeasureText(font, wrapped, 100).x;
 		if (width > 650)
 		{
@@ -53,16 +96,18 @@ std::string DialogueBox::Wrap(const std::string& text)
 				wrapped[lastSpace] = '\n';
 		}
 	}
-	return wrapped;
+	
+	toDisplay = wrapped;
 }
 
 void DialogueBox::Text(const std::string& text)
 {
-	//TODO: what the old text-only thing has in region Phase 1.
-	auto processed = Wrap(text);
-
 	displayed.clear();
-	toDisplay = processed;
+	toDisplay = text;
+
+	Preprocess();
+	Wrap();
+
 	displayCursor = 0;
 	delay = 50;
 }

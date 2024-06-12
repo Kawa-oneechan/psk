@@ -21,7 +21,7 @@ namespace Database
 	
 	//Find a database entry by reference-ID.
 	template<typename T>
-	const T* Find(const std::string& target, std::vector<T>* source)
+	T* Find(const std::string& target, std::vector<T>* source)
 	{
 #if 1
 		for (int i = 0; i < source->size(); i++)
@@ -43,7 +43,7 @@ namespace Database
 
 	//Find a database entry by CRC32 hash.
 	template<typename T>
-	const T* Find(unsigned int hash, std::vector<T>* source)
+	T* Find(unsigned int hash, std::vector<T>* source)
 	{
 		for (int i = 0; i < source->size(); i++)
 		{
@@ -58,7 +58,7 @@ namespace Database
 
 	//Find a database entry from a JSONValue. If it's an array of strings, tries each.
 	template<typename T>
-	const T* Find(const JSONValue* value, std::vector<T>* source)
+	T* Find(const JSONValue* value, std::vector<T>* source)
 	{
 		if (value->IsString())
 			return Find<T>(value->AsString(), source);

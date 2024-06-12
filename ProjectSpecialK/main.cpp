@@ -401,7 +401,7 @@ int main(int argc, char** argv)
 
 	Shader ourShader("shaders/model.vs", "shaders/model.fs");
 	spriteShader = new Shader("shaders/sprite.fs");
-	whiteRect = new Texture("white.png", true, GL_CLAMP_TO_EDGE);
+	whiteRect = new Texture("white.png", GL_CLAMP_TO_EDGE);
 
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);

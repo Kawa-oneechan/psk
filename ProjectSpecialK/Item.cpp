@@ -155,10 +155,10 @@ InventoryItem::InventoryItem(const std::string& reference)
 	{
 		cleanName = reference.substr(0, slash);
 	}
-	_wrapped = (Item*)Database::Find<::Item>(cleanName, &items);
+	_wrapped = Database::Find<::Item>(cleanName, &items);
 	if (_wrapped == nullptr)
 	{
-		_wrapped = (Item*)Database::Find<::Item>("psk:toolfallback", &items);
+		_wrapped = Database::Find<::Item>("psk:toolfallback", &items);
 	}
 	else if (slash != std::string::npos)
 	{
