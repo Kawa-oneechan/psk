@@ -152,6 +152,7 @@
     <ClCompile Include="MusicManager.cpp" />
     <ClCompile Include="PanelLayout.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Sequence.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="SolBinds.cpp" />
     <ClCompile Include="Species.cpp" />
@@ -194,6 +195,7 @@
     <ClInclude Include="Item.h" />
     <ClInclude Include="PanelLayout.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="Sequence.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="SpecialK.h" />
     <ClInclude Include="Species.h" />
