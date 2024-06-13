@@ -109,34 +109,33 @@ void DialogueBox::Preprocess()
 
 void DialogueBox::Wrap()
 {
-	std::string wrapped;
-
 	size_t lastSpace = -1;
 	for (size_t i = 0; i < toDisplay.length(); i++)
 	{
 		if (std::isblank(toDisplay[i]))
 			lastSpace = i;
-		wrapped += toDisplay[i];
-		auto width = sprender->MeasureText(font, wrapped, 100).x;
+		auto width = sprender->MeasureText(font, toDisplay.substr(0, i), 100).x;
 		if (width > 650)
 		{
 			if (lastSpace == -1)
 			{
 				lastSpace = i;
-				wrapped.insert(wrapped.begin() + i, '\n');
+				toDisplay.insert(toDisplay.begin() + i, '\n');
+				i++;
 				//TODO: if we've reached three size 100 lines, add a <break> command instead.
 			}
 			else
 			{
-				if (std::isblank(wrapped[lastSpace]))
-					wrapped[lastSpace] = '\n';
+				if (std::isblank(toDisplay[lastSpace]))
+					toDisplay[lastSpace] = '\n';
 				else
-					wrapped.insert(wrapped.begin() + lastSpace, '\n');
+				{
+					toDisplay.insert(toDisplay.begin() + lastSpace, '\n');
+					i++;
+				}
 			}
 		}
 	}
-	
-	toDisplay = wrapped;
 }
 
 void DialogueBox::Text(const std::string& text)

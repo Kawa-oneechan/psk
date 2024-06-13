@@ -10,6 +10,13 @@ public:
 	NameableThing(JSONObject& value);
 	NameableThing() = default;
 	const std::string Name();
+
+	inline bool operator== (const NameableThing& r) { return this->ID == r.ID; }
+	inline bool operator!= (const NameableThing& r) { return this->ID != r.ID; }
+	inline bool operator== (const std::string& r) { return this->ID == r; }
+	inline bool operator!= (const std::string& r) { return this->ID != r; }
+	inline bool operator== (unsigned int r) { return this->Hash == r; }
+	inline bool operator!= (unsigned int r) { return this->Hash != r; }
 };
 
 #define it_Item			0b0000'0000'0000'0001

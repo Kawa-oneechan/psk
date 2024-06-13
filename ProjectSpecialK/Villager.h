@@ -89,9 +89,8 @@ public:
 
 	//kill copies
 	Villager(const Villager&) = delete;
+	Villager& operator = (const Villager&) = delete;
 	//move instead
 	Villager(Villager&&) = default;
-	//what do these dooooo?
-	Villager& operator = (const Villager&) = delete;
 	Villager& operator = (Villager&&) = default;
 };
