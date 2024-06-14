@@ -159,7 +159,8 @@ const std::string Villager::Species()
 
 void Villager::LoadModel()
 {
-
+	//If _customModel is set, load our own. If not, look up the model reference for this species.
+	//Either way, I'm gonna need some way to reuse and refcount already-loaded models...
 }
 
 const Model* Villager::Model()

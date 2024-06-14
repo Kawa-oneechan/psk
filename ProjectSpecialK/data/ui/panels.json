@@ -1,9 +1,11 @@
 {
 	"type": "atlas",
 	"rects": [
-		[ 157, 0, 197, 128 ], //full tile
-		[   0, 0, 157, 128 ], //left tile
-		[ 354, 0, 157, 128 ], //right tile
-		[   0, 0,  32, 128 ]  //filler
+		[ 157,   0, 197, 128 ], //full tile
+		[   0,   0, 157, 128 ], //left tile
+		[ 354,   0, 157, 128 ], //right tile
+		[   0,   0,  32, 128 ], //filler
+		[   0, 128, 101, 128 ], //header bar left
+		[ 101, 128, 101, 128 ]  //header bar right
 	]
 }

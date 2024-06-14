@@ -435,8 +435,8 @@ int main(int argc, char** argv)
 
 	tickables.push_back(new Background());
 	dlgBox = new DialogueBox();
-	tickables.push_back(dlgBox);
-	//tickables.push_back(new DoomMenu());
+	//tickables.push_back(dlgBox);
+	tickables.push_back(new DoomMenu());
 	auto hotbar = new PanelLayout(UI::json["hotbar"]);
 	tickables.push_back(hotbar);
 	hotbar->Tween(&hotbar->Position.y, tweeny::from(-100.0f).to(0).during(100));

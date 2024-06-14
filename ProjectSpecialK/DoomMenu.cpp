@@ -179,6 +179,9 @@ DoomMenu::DoomMenu()
 	sliderHolding = -1;
 	itemX = 0;
 
+	panels = new Texture("ui/panels.png");
+	GetAtlas(panelAtlas, "ui/panels.json");
+
 	stack.push(options);
 	items = &stack.top();
 
@@ -417,7 +420,48 @@ void DoomMenu::Draw(double dt)
 
 	itemY.clear();
 
+	//Fucking redo this part. Have some means to Properly Know what a header is, for starters.
+	/*
+	auto headerX = 0.0f;
+	auto headerH = 0.0f;
+
+	auto headers = 0;
+
+	//background
+	if (items->at(0)->type == DoomMenuTypes::Text)
+	{
+		auto i = items->at(0);
+		if (i->maxVal >= 150)
+		{
+			//it's the primary header
+			headers++;
+			auto wh = sprender->MeasureText(i->selection, i->caption, (float)i->maxVal);
+			auto w = wh.x;
+			headerH = startY + (panelAtlas[4].w * scale);
+			headerX = (width / 2) - (w / 2);
+			sprender->DrawSprite(panels, glm::vec2(headerX, startY - 32) * scale, glm::vec2(panelAtlas[4].z, panelAtlas[4].w) * scale, panelAtlas[4], 0.0f, UI::themeColors["primary"]);
+			sprender->DrawSprite(panels, glm::vec2(headerX + panelAtlas[4].z, startY - 32) * scale, glm::vec2(w, panelAtlas[3].w) * scale, panelAtlas[3], 0.0f, UI::themeColors["primary"]);
+			sprender->DrawSprite(panels, glm::vec2(headerX + panelAtlas[4].z + w, startY - 32) * scale, glm::vec2(panelAtlas[5].z, panelAtlas[5].w) * scale, panelAtlas[5], 0.0f, UI::themeColors["primary"]);
+			//sprender->DrawSprite(panels, glm::vec2(0, startY), glm::vec2(width, (items->at(0)->maxVal + 16) * scale), panelAtlas[4]
+		}
+		if (items->at(1)->type == DoomMenuTypes::Text)
+		{
+			i = items->at(1);
+			headers++;
+			if (i->maxVal >= 120)
+			{
+				//secondary header
+				auto h = sprender->MeasureText(i->selection, i->caption, (float)i->maxVal).y;
+				sprender->DrawSprite(whiteRect, glm::vec2(0, headerH), glm::vec2(width, h) * scale, glm::vec4(0), 0.0f, UI::themeColors["primary"]);
+				headerH += h * scale;
+			}
+		}
+	}
+	//sprender->DrawSprite(whiteRect, glm::vec2(0, startY + headerH), glm::vec2(width, (items->size() - headers) * 50) * scale, glm::vec4(0), 0.0f, UI::themeColors["primary"]);
+	*/
+
 	pos.y -= 12 * scale;
+	//pos.y = startY + headerH;
 	for (int i = 0; i < shown; i++)
 	{
 		auto item = i == 0 ? items->at(0) : items->at(i + scroll);
@@ -453,12 +497,12 @@ void DoomMenu::Draw(double dt)
 			size = item->maxVal * scale;
 		}
 
-		sprender->DrawText(font, item->caption, pos + offset + glm::vec2(2), black, size);
+		//sprender->DrawText(font, item->caption, pos + offset + glm::vec2(2), black, size);
 		sprender->DrawText(font, item->caption, pos + offset, color, size);
 
 		if (item->type == DoomMenuTypes::Options)
 		{
-			sprender->DrawText(1, item->options[item->selection], pos + glm::vec2(col + 2, 2), black, size);
+			//sprender->DrawText(1, item->options[item->selection], pos + glm::vec2(col + 2, 2), black, size);
 			sprender->DrawText(1, item->options[item->selection], pos + glm::vec2(col, 0), color, size);
 		}
 		else if (item->type == DoomMenuTypes::Slider)
@@ -466,7 +510,7 @@ void DoomMenu::Draw(double dt)
 			if (item->format != nullptr)
 			{
 				auto fmt = item->format(item);
-				sprender->DrawText(1, fmt, pos + glm::vec2(col + col + (94 * scale) + 2, 12), black, size * 0.75f);
+				//sprender->DrawText(1, fmt, pos + glm::vec2(col + col + (94 * scale) + 2, 12), black, size * 0.75f);
 				sprender->DrawText(1, fmt, pos + glm::vec2(col + col + (94 * scale), 10), color, size * 0.75f);
 			}
 		}
