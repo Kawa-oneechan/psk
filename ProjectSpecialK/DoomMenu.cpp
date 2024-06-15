@@ -30,7 +30,7 @@ void DoomMenu::rebuild()
 	content.clear();
 	volume.clear();
 
-	options.push_back(new DoomMenuItem(TextGet("menu:options:head"), 2, 120));
+	options.header = TextGet("menu:options:head");
 
 	options.push_back(new DoomMenuItem(TextGet("menu:options:content"), &content));
 	options.push_back(new DoomMenuItem(TextGet("menu:options:language"), lan2opt[(int)gameLang],
@@ -85,11 +85,11 @@ void DoomMenu::rebuild()
 	));
 	options.push_back(new DoomMenuItem(TextGet("menu:options:volume"), &volume));
 
-	content.push_back(new DoomMenuItem(TextGet("menu:options:head:content"), 2, 120));
+	content.header = TextGet("menu:options:head:content");
 	{
 		species.clear();
-		species.push_back(new DoomMenuItem(TextGet("menu:options:head:content"), 2, 120));
-		species.push_back(new DoomMenuItem(TextGet("menu:options:content:species"), 2, 100));
+		species.header = TextGet("menu:options:head:content");
+		species.subheader = TextGet("menu:options:content:species");
 		for (const auto& s : ::species)
 		{
 			auto f = "filter:species:" + s.ID;
@@ -125,9 +125,7 @@ void DoomMenu::rebuild()
 	{
 		auto fck = fc.first;
 		
-		auto fcpage = new std::vector<DoomMenuItem*>();
-		fcpage->push_back(new DoomMenuItem(TextGet("menu:options:head:content"), 2, 120));
-		fcpage->push_back(new DoomMenuItem(TextGet(fck), 2, 100));
+		auto fcpage = new DoomMenuPage(TextGet("menu:options:head:content"), TextGet(fck));
 		for (const auto& f : fc.second)
 		{
 
@@ -149,7 +147,7 @@ void DoomMenu::rebuild()
 	}
 	content.push_back(back);
 
-	volume.push_back(new DoomMenuItem(TextGet("menu:options:head:volume"), 2, 120));
+	volume.header = TextGet("menu:options:head:volume");
 	volume.push_back(new DoomMenuItem(TextGet("menu:options:volume:music"), 0, 100, (int)(Audio::MusicVolume * 100), 10, percent,
 		[&](DoomMenuItem*i) { Audio::MusicVolume = i->selection / 100.0f; }
 	));
@@ -182,8 +180,8 @@ DoomMenu::DoomMenu()
 	panels = new Texture("ui/panels.png");
 	GetAtlas(panelAtlas, "ui/panels.json");
 
-	stack.push(options);
-	items = &stack.top();
+	stack.push(&options);
+	items = stack.top();
 
 	for (const auto& s : ::species)
 	{
@@ -259,7 +257,7 @@ void DoomMenu::Tick(double dt)
 			highlight = 0;
 			mouseHighlight = -1;
 			stack.pop();
-			items = &stack.top();
+			items = stack.top();
 			return;
 		}
 	}
@@ -315,7 +313,7 @@ void DoomMenu::Tick(double dt)
 	{
 		if (Inputs.Enter || Inputs.MouseLeft)
 		{
-			stack.push(*item->page);
+			stack.push(item->page);
 			items = item->page;
 			highlight = 0;
 			mouseHighlight = -1;
@@ -329,7 +327,7 @@ void DoomMenu::Tick(double dt)
 			{
 				highlight = 0;
 				stack.pop();
-				items = &stack.top();
+				items = stack.top();
 				Inputs.Clear();
 				return;
 			}
@@ -410,7 +408,6 @@ void DoomMenu::Draw(double dt)
 
 	const auto black = glm::vec4(0, 0, 0, 0.5);
 
-	const auto start = items->at(0)->type == DoomMenuTypes::Text ? (items->at(1)->type == DoomMenuTypes::Text ? 2 : 1) : 0;
 	const auto shown = std::min(visible, (int)items->size() - scroll);
 
 	const auto partSize = UI::controlsAtlas[4].w * 0.75f *  scale;
@@ -569,6 +566,6 @@ void DoomMenu::Draw(double dt)
 	//species page special stuff
 	if (items == &species && items->at(highlight)->type == DoomMenuTypes::Checkbox)
 	{
-		sprender->DrawSprite(speciesPreviews[highlight - start], glm::vec2((width * 0.5f) - (speciesPreviews[0]->width * 0.5f), (height * 0.4f) - (speciesPreviews[0]->height * 0.5f)));
+		sprender->DrawSprite(speciesPreviews[highlight], glm::vec2((width * 0.5f) - (speciesPreviews[0]->width * 0.5f), (height * 0.4f) - (speciesPreviews[0]->height * 0.5f)));
 	}
 }
