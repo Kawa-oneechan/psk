@@ -400,13 +400,38 @@ void DoomMenu::Draw(double dt)
 	const int col = (int)(400 * scale);
 
 	const float startX = (width * 0.5f) - ((col * 3) * 0.5f);
-	const float startY = height * 0.15f;
-
+	float startY = height * 0.10f;
+	float endY = height - (height * 0.30f);
+	
 	auto pos = glm::vec2(startX, startY);
 
 	itemX = pos.x;
 
-	const auto black = glm::vec4(0, 0, 0, 0.5);
+	if (!items->header.empty())
+	{
+		auto headerW = sprender->MeasureText(1, items->header, 150).x;
+		auto headerX = (width / 2) - (headerW / 2);
+
+		sprender->DrawSprite(panels, glm::vec2(headerX - panelAtlas[4].z, pos.y) * scale, glm::vec2(panelAtlas[4].z, panelAtlas[4].w) * scale, panelAtlas[4], 0.0f, UI::themeColors["primary"]);
+		sprender->DrawSprite(panels, glm::vec2(headerX, pos.y) * scale, glm::vec2(headerW, panelAtlas[3].w) * scale, panelAtlas[3], 0.0f, UI::themeColors["primary"]);
+		sprender->DrawSprite(panels, glm::vec2(headerX + headerW, pos.y) * scale, glm::vec2(panelAtlas[5].z, panelAtlas[5].w) * scale, panelAtlas[5], 0.0f, UI::themeColors["primary"]);
+
+		sprender->DrawText(1, items->header, glm::vec2(headerX, pos.y + 32), glm::vec4(1), 150);
+		pos.y += panelAtlas[4].w + 8;
+
+		if (!items->subheader.empty())
+		{
+			auto xy = sprender->MeasureText(1, items->subheader, 120);
+			headerX = (width / 2) - (xy.x / 2);
+
+			sprender->DrawSprite(whiteRect, glm::vec2(0, pos.y) * scale, glm::vec2(width, xy.y + 16) * scale, glm::vec4(0), 0.0f, UI::themeColors["primary"]);
+
+			sprender->DrawText(1, items->subheader, glm::vec2(headerX, pos.y + 8), glm::vec4(1), 120);
+			pos.y += xy.y + 16 + 8;
+		}
+
+		startY = pos.y + 8;
+	}
 
 	const auto shown = std::min(visible, (int)items->size() - scroll);
 
@@ -417,60 +442,21 @@ void DoomMenu::Draw(double dt)
 
 	itemY.clear();
 
-	//Fucking redo this part. Have some means to Properly Know what a header is, for starters.
-	/*
-	auto headerX = 0.0f;
-	auto headerH = 0.0f;
+	sprender->DrawSprite(whiteRect, glm::vec2(0, startY - 8) * scale, glm::vec2(width, endY - startY - 8) * scale, glm::vec4(0), 0.0f, UI::themeColors["primary"]);
 
-	auto headers = 0;
-
-	//background
-	if (items->at(0)->type == DoomMenuTypes::Text)
-	{
-		auto i = items->at(0);
-		if (i->maxVal >= 150)
-		{
-			//it's the primary header
-			headers++;
-			auto wh = sprender->MeasureText(i->selection, i->caption, (float)i->maxVal);
-			auto w = wh.x;
-			headerH = startY + (panelAtlas[4].w * scale);
-			headerX = (width / 2) - (w / 2);
-			sprender->DrawSprite(panels, glm::vec2(headerX, startY - 32) * scale, glm::vec2(panelAtlas[4].z, panelAtlas[4].w) * scale, panelAtlas[4], 0.0f, UI::themeColors["primary"]);
-			sprender->DrawSprite(panels, glm::vec2(headerX + panelAtlas[4].z, startY - 32) * scale, glm::vec2(w, panelAtlas[3].w) * scale, panelAtlas[3], 0.0f, UI::themeColors["primary"]);
-			sprender->DrawSprite(panels, glm::vec2(headerX + panelAtlas[4].z + w, startY - 32) * scale, glm::vec2(panelAtlas[5].z, panelAtlas[5].w) * scale, panelAtlas[5], 0.0f, UI::themeColors["primary"]);
-			//sprender->DrawSprite(panels, glm::vec2(0, startY), glm::vec2(width, (items->at(0)->maxVal + 16) * scale), panelAtlas[4]
-		}
-		if (items->at(1)->type == DoomMenuTypes::Text)
-		{
-			i = items->at(1);
-			headers++;
-			if (i->maxVal >= 120)
-			{
-				//secondary header
-				auto h = sprender->MeasureText(i->selection, i->caption, (float)i->maxVal).y;
-				sprender->DrawSprite(whiteRect, glm::vec2(0, headerH), glm::vec2(width, h) * scale, glm::vec4(0), 0.0f, UI::themeColors["primary"]);
-				headerH += h * scale;
-			}
-		}
-	}
-	//sprender->DrawSprite(whiteRect, glm::vec2(0, startY + headerH), glm::vec2(width, (items->size() - headers) * 50) * scale, glm::vec4(0), 0.0f, UI::themeColors["primary"]);
-	*/
-
-	pos.y -= 12 * scale;
+	pos.y -= 16 * scale;
 	//pos.y = startY + headerH;
 	for (int i = 0; i < shown; i++)
 	{
-		auto item = i == 0 ? items->at(0) : items->at(i + scroll);
+		auto item = items->at(i + scroll);
 		auto size = 100 * scale;
 		pos.y += (40 * scale) + size - (100 * scale);
-		if (i + scroll == highlight) // (item->type == DoomMenuTypes::Text)
+		if (i + scroll == highlight)
 		{
 			auto offset = glm::vec2(item->type == DoomMenuTypes::Checkbox ? (40 * scale) : 0, 0);
 			auto highlightSize = sprender->MeasureText(1, item->caption, 100 * scale);
 			highlightSize.x += 8 * scale;
 			highlightSize.y *= 0.75f;
-			//sprender->DrawSprite(whiteRect, pos + glm::vec2(-8 * scale, 4 * scale), highlightSize, controlsAtlas[4], 0, UI::themeColors["secondary"]);
 			sprender->DrawSprite(UI::controls, pos + offset + glm::vec2(-(highlightSize.y) * scale, 0), glm::vec2(highlightSize.y), UI::controlsAtlas[7], 0, UI::themeColors["secondary"]);
 			sprender->DrawSprite(UI::controls, pos + offset + glm::vec2(highlightSize.x, 0), glm::vec2(highlightSize.y), UI::controlsAtlas[8], 0, UI::themeColors["secondary"]);
 			sprender->DrawSprite(UI::controls, pos + offset, highlightSize, UI::controlsAtlas[9], 0, UI::themeColors["secondary"]);
@@ -521,7 +507,7 @@ void DoomMenu::Draw(double dt)
 
 	if (items == &species)
 	{
-		sprender->DrawText(1, speciesText, glm::vec2(width * 0.6f, height * 0.3f), glm::vec4(1), 75.0f);
+		sprender->DrawText(1, speciesText, glm::vec2(width * 0.6f, height * 0.4f), glm::vec4(1), 75.0f);
 	}
 
 	for (int i = 0; i < shown; i++)
@@ -566,6 +552,6 @@ void DoomMenu::Draw(double dt)
 	//species page special stuff
 	if (items == &species && items->at(highlight)->type == DoomMenuTypes::Checkbox)
 	{
-		sprender->DrawSprite(speciesPreviews[highlight], glm::vec2((width * 0.5f) - (speciesPreviews[0]->width * 0.5f), (height * 0.4f) - (speciesPreviews[0]->height * 0.5f)));
+		sprender->DrawSprite(speciesPreviews[highlight], glm::vec2((width * 0.5f) - (speciesPreviews[0]->width * 0.5f), (height * 0.5f) - (speciesPreviews[0]->height * 0.5f)));
 	}
 }
