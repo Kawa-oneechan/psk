@@ -339,7 +339,7 @@ void DialogueBox::Tick(double dt)
 			if (bubbleNum == 3 || Sound == DialogueBoxSound::Bebebese)
 				bebebese->Play(true);
 		}
-		if (delay == 0)
+		if (delay < glm::epsilon<float>())
 			delay = 50;
 	}
 

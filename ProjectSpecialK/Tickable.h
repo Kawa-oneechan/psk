@@ -3,7 +3,9 @@
 class Tickable
 {
 public:
-	bool* mutex = nullptr;
+	bool* mutex{ nullptr };
+	bool dead{ false };
+
 	virtual ~Tickable() {}
 	virtual void Tick(double dt) {};
 	virtual void Draw(double dt) {};

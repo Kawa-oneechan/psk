@@ -45,7 +45,7 @@ public:
 
 	DoomMenuPage(const std::string& hed, const std::string& sub) : header(hed), subheader(sub) {}
 	void clear() { items.clear(); }
-	void push_back(DoomMenuItem* const& i) { items.push_back(i); }
+	//void push_back(DoomMenuItem* const& i) { items.push_back(i); }
 	size_t size() { return items.size(); }
 	DoomMenuItem* at(size_t i) { return items.at(i); }
 };

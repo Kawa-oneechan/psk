@@ -32,8 +32,8 @@ void DoomMenu::rebuild()
 
 	options.header = TextGet("menu:options:head");
 
-	options.push_back(new DoomMenuItem(TextGet("menu:options:content"), &content));
-	options.push_back(new DoomMenuItem(TextGet("menu:options:language"), lan2opt[(int)gameLang],
+	options.items.push_back(new DoomMenuItem(TextGet("menu:options:content"), &content));
+	options.items.push_back(new DoomMenuItem(TextGet("menu:options:language"), lan2opt[(int)gameLang],
 		{
 			TextGet("menu:options:language:en"),
 			TextGet("menu:options:language:jp"),
@@ -53,7 +53,7 @@ void DoomMenu::rebuild()
 			dlgBox->Text(fmt::format("You chose <color:1>{}</color>.", i->options[i->selection]));
 		}
 	));
-	options.push_back(new DoomMenuItem(TextGet("menu:options:continuefrom"), (int)UI::settings["continue"]->AsNumber(),
+	options.items.push_back(new DoomMenuItem(TextGet("menu:options:continuefrom"), (int)UI::settings["continue"]->AsNumber(),
 		{
 			TextGet("menu:options:continuefrom:0"),
 			TextGet("menu:options:continuefrom:1"),
@@ -62,7 +62,7 @@ void DoomMenu::rebuild()
 	},
 		[&](DoomMenuItem*i) { UI::settings["continue"] = new JSONValue(i->selection); }
 	));
-	options.push_back(new DoomMenuItem(TextGet("menu:options:speech"), (int)UI::settings["speech"]->AsNumber(),
+	options.items.push_back(new DoomMenuItem(TextGet("menu:options:speech"), (int)UI::settings["speech"]->AsNumber(),
 		{
 			TextGet("menu:options:speech:0"),
 			TextGet("menu:options:speech:1"),
@@ -70,20 +70,20 @@ void DoomMenu::rebuild()
 		},
 		[&](DoomMenuItem*i) { UI::settings["speech"] = new JSONValue(i->selection); }
 	));
-	options.push_back(new DoomMenuItem(TextGet("menu:options:pingrate"), 2, 60, (int)UI::settings["pingRate"]->AsNumber(), 1, minutes,
+	options.items.push_back(new DoomMenuItem(TextGet("menu:options:pingrate"), 2, 60, (int)UI::settings["pingRate"]->AsNumber(), 1, minutes,
 		[&](DoomMenuItem*i) { UI::settings["pingRate"] = new JSONValue(i->selection); }
 	));
-	options.push_back(new DoomMenuItem(TextGet("menu:options:balloonchance"), 10, 60, (int)UI::settings["balloonChance"]->AsNumber(), 5, percent,
+	options.items.push_back(new DoomMenuItem(TextGet("menu:options:balloonchance"), 10, 60, (int)UI::settings["balloonChance"]->AsNumber(), 5, percent,
 		[&](DoomMenuItem*i) { UI::settings["balloonChance"] = new JSONValue(i->selection); }
 	));
-	options.push_back(new DoomMenuItem(TextGet("menu:options:cursorscale"), 50, 150, (int)UI::settings["cursorScale"]->AsNumber(), 10, percent,
+	options.items.push_back(new DoomMenuItem(TextGet("menu:options:cursorscale"), 50, 150, (int)UI::settings["cursorScale"]->AsNumber(), 10, percent,
 		[&](DoomMenuItem*i)
 		{
 			cursor->SetScale(i->selection);
 			UI::settings["cursorScale"] = new JSONValue(i->selection);
 		}
 	));
-	options.push_back(new DoomMenuItem(TextGet("menu:options:volume"), &volume));
+	options.items.push_back(new DoomMenuItem(TextGet("menu:options:volume"), &volume));
 
 	content.header = TextGet("menu:options:head:content");
 	{
@@ -104,7 +104,7 @@ void DoomMenu::rebuild()
 			if (Database::Filters.find(f) == Database::Filters.end())
 				Database::Filters[f] = true;
 
-			species.push_back(new DoomMenuItem(TextGet((std::string&)f), Database::Filters[f],
+			species.items.push_back(new DoomMenuItem(TextGet((std::string&)f), Database::Filters[f],
 				[&, f](DoomMenuItem*i)
 			{
 				Database::Filters[f] = i->selection > 0;
@@ -114,11 +114,11 @@ void DoomMenu::rebuild()
 			}
 			));
 		}
-		species.push_back(back);
+		species.items.push_back(back);
 
 		speciesText = TextGet("menu:options:content:species:help");
 
-		content.push_back(new DoomMenuItem(TextGet("menu:options:content:species"), &species));
+		content.items.push_back(new DoomMenuItem(TextGet("menu:options:content:species"), &species));
 	}
 
 	for (const auto& fc : Database::FilterCategories)
@@ -129,7 +129,7 @@ void DoomMenu::rebuild()
 		for (const auto& f : fc.second)
 		{
 
-			fcpage->push_back(new DoomMenuItem(TextGet((std::string&)f), Database::Filters[f],
+			fcpage->items.push_back(new DoomMenuItem(TextGet((std::string&)f), Database::Filters[f],
 				[&, f](DoomMenuItem*i)
 			{
 				Database::Filters[f] = i->selection > 0;
@@ -140,27 +140,27 @@ void DoomMenu::rebuild()
 			));
 		}
 
-		fcpage->push_back(back);
+		fcpage->items.push_back(back);
 		//TODO: Description field
 
-		content.push_back(new DoomMenuItem(TextGet(fck), fcpage));
+		content.items.push_back(new DoomMenuItem(TextGet(fck), fcpage));
 	}
-	content.push_back(back);
+	content.items.push_back(back);
 
 	volume.header = TextGet("menu:options:head:volume");
-	volume.push_back(new DoomMenuItem(TextGet("menu:options:volume:music"), 0, 100, (int)(Audio::MusicVolume * 100), 10, percent,
+	volume.items.push_back(new DoomMenuItem(TextGet("menu:options:volume:music"), 0, 100, (int)(Audio::MusicVolume * 100), 10, percent,
 		[&](DoomMenuItem*i) { Audio::MusicVolume = i->selection / 100.0f; }
 	));
-	volume.push_back(new DoomMenuItem(TextGet("menu:options:volume:ambience"), 0, 100, (int)(Audio::AmbientVolume * 100), 10, percent,
+	volume.items.push_back(new DoomMenuItem(TextGet("menu:options:volume:ambience"), 0, 100, (int)(Audio::AmbientVolume * 100), 10, percent,
 		[&](DoomMenuItem*i) { Audio::AmbientVolume = i->selection / 100.0f; }
 	));
-	volume.push_back(new DoomMenuItem(TextGet("menu:options:volume:sfx"), 0, 100, (int)(Audio::SoundVolume * 100), 10, percent,
+	volume.items.push_back(new DoomMenuItem(TextGet("menu:options:volume:sfx"), 0, 100, (int)(Audio::SoundVolume * 100), 10, percent,
 		[&](DoomMenuItem*i) { Audio::SoundVolume = i->selection / 100.0f; }
 	));
-	volume.push_back(new DoomMenuItem(TextGet("menu:options:volume:speech"), 0, 100, (int)(Audio::SpeechVolume * 100), 10, percent,
+	volume.items.push_back(new DoomMenuItem(TextGet("menu:options:volume:speech"), 0, 100, (int)(Audio::SpeechVolume * 100), 10, percent,
 		[&](DoomMenuItem*i) { Audio::SpeechVolume = i->selection / 100.0f; }
 	));
-	volume.push_back(back);
+	volume.items.push_back(back);
 }
 
 DoomMenu::DoomMenu()
@@ -400,8 +400,8 @@ void DoomMenu::Draw(double dt)
 	const int col = (int)(400 * scale);
 
 	const float startX = (width * 0.5f) - ((col * 3) * 0.5f);
-	float startY = height * 0.10f;
-	float endY = height - (height * 0.30f);
+	float startY = 56 * scale;
+	float endY = height - (176 * scale);
 	
 	auto pos = glm::vec2(startX, startY);
 
@@ -417,7 +417,7 @@ void DoomMenu::Draw(double dt)
 		sprender->DrawSprite(panels, glm::vec2(headerX + headerW, pos.y) * scale, glm::vec2(panelAtlas[5].z, panelAtlas[5].w) * scale, panelAtlas[5], 0.0f, UI::themeColors["primary"]);
 
 		sprender->DrawText(1, items->header, glm::vec2(headerX, pos.y + 32), glm::vec4(1), 150);
-		pos.y += panelAtlas[4].w + 8;
+		pos.y += panelAtlas[4].w + 32;
 
 		if (!items->subheader.empty())
 		{
@@ -427,10 +427,10 @@ void DoomMenu::Draw(double dt)
 			sprender->DrawSprite(whiteRect, glm::vec2(0, pos.y) * scale, glm::vec2(width, xy.y + 16) * scale, glm::vec4(0), 0.0f, UI::themeColors["primary"]);
 
 			sprender->DrawText(1, items->subheader, glm::vec2(headerX, pos.y + 8), glm::vec4(1), 120);
-			pos.y += xy.y + 16 + 8;
+			pos.y += xy.y + 20;
 		}
 
-		startY = pos.y + 8;
+		startY = pos.y + 24;
 	}
 
 	const auto shown = std::min(visible, (int)items->size() - scroll);
@@ -443,8 +443,9 @@ void DoomMenu::Draw(double dt)
 	itemY.clear();
 
 	sprender->DrawSprite(whiteRect, glm::vec2(0, startY - 8) * scale, glm::vec2(width, endY - startY - 8) * scale, glm::vec4(0), 0.0f, UI::themeColors["primary"]);
+	sprender->DrawSprite(whiteRect, glm::vec2(0, endY) * scale, glm::vec2(width, 24) * scale, glm::vec4(0), 0.0f, UI::themeColors["primary"]);
 
-	pos.y -= 16 * scale;
+	//pos.y -= 8 * scale;
 	//pos.y = startY + headerH;
 	for (int i = 0; i < shown; i++)
 	{

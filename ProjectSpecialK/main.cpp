@@ -479,6 +479,10 @@ int main(int argc, char** argv)
 		cursor->Draw();
 		sprender->Flush();
 
+		tickables.erase(std::remove_if(tickables.begin(), tickables.end(), [](Tickable* i) {
+			return i->dead;
+		}), tickables.end());
+
 		//turn depth testing back on for 3D shit
 		glEnable(GL_DEPTH_TEST);
 		glfwSwapBuffers(window);
