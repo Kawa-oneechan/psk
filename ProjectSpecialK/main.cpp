@@ -10,6 +10,9 @@
 #include "PanelLayout.h"
 #include "DateTimePanel.h"
 
+#define GLM_ENABLE_EXPERIMENTAL
+#include "support/glm/gtx/easing.hpp"
+
 #include <thread>
 #include <future>
 #include <fstream>
@@ -89,7 +92,7 @@ namespace UI
 
 	JSONObject& json = JSONObject();
 	JSONObject& settings = JSONObject();
-	
+
 	static char* LoadFile(const std::string &filename, size_t *size)
 	{
 		std::ifstream file(filename, std::ios::binary | std::ios::ate);
@@ -295,7 +298,7 @@ void ThreadedLoader(std::function<void(void)> loader)
 	auto loadIcon = new Texture("loading.png");
 	auto loadPos = glm::vec2(width - 256, height - 256);
 	int oldTime = 0;
-	
+
 	std::promise<bool> p;
 	auto future = p.get_future();
 
@@ -446,6 +449,7 @@ int main(int argc, char** argv)
 	//tickables.push_back(new TextField());
 
 	int oldTime = 0;
+	auto pos = 0.0f;
 	while (!glfwWindowShouldClose(window))
 	{
 		Audio::Update();
@@ -459,8 +463,8 @@ int main(int argc, char** argv)
 
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	
-	
+
+
 		//important: disable depth testing to allow multiple sprites to overlap.
 		glDisable(GL_DEPTH_TEST);
 
@@ -477,6 +481,27 @@ int main(int argc, char** argv)
 		console->Draw(dt);
 
 		cursor->Draw();
+
+		/*
+		Tween crap using nothing but GLM, work it into Utilities. Might replace Tweeny with it.
+		auto origin = glm::vec2(width, height) * 0.5f;
+		auto color1 = glm::vec4(1, 0, 0, 1);
+		auto color2 = glm::vec4(0, 0, 1, 1);
+		pos += 0.001f; if (pos >= 1.0f) pos = 0;
+		auto lerp = glm::linearInterpolation(pos);
+		auto color = glm::vec4((color2.r - color1.r) * lerp + color1.r,
+			(color2.g - color1.g) * lerp + color1.g,
+			(color2.b - color1.b) * lerp + color1.b,
+			(color2.a - color1.a) * lerp + color1.a);
+		sprender->DrawSprite(whiteRect, origin - glm::vec2(16, 16) + glm::vec2(0, lerp * 64), glm::vec2(32, 32), glm::vec4(0), 0.0, color);
+		lerp = glm::bounceEaseOut(pos);
+		color = glm::vec4((color2.r - color1.r) * lerp + color1.r,
+			(color2.g - color1.g) * lerp + color1.g,
+			(color2.b - color1.b) * lerp + color1.b,
+			(color2.a - color1.a) * lerp + color1.a);
+		sprender->DrawSprite(whiteRect, origin - glm::vec2(16, 16) + glm::vec2(32, lerp * 64), glm::vec2(32, 32), glm::vec4(0), 0.0, color);
+		*/
+
 		sprender->Flush();
 
 		tickables.erase(std::remove_if(tickables.begin(), tickables.end(), [](Tickable* i) {
