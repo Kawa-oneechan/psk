@@ -1,27 +1,27 @@
 {
-  "id" : "psk:cat01",
+  "id" : "psk:cat07",
   "name" : {
-    "en" : "Farrah"
+    "en" : "Socks"
   },
   "species" : "cat",
-  "personality" : [ "peppy" ],
+  "personality" : [ "cranky" ],
   "personalitySubtype" : 0,
-  "gender" : "fem",
+  "gender" : "mnb",
   "attraction" : "both",
-  "birthday" : [ 1, 1 ],
-  "hobby" : "fitness",
-  "colors" : [ "white", "black" ],
-  "nameTag" : [ "#AA6405", "#FFF7CF" ],
+  "birthday" : [ 21, 12 ],
+  "hobby" : "music",
+  "colors" : [ "green", "blue" ],
+  "nameTag" : [ "#FFFFFF", "#848484" ],
   "catchphrase" : {
-    "en" : ""
+    "en" : "y'know dude"
   },
   "clothing" : {
     "default" : "acnh:heartsweater/red",
     "rain" : [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
   },
   "umbrella" : "acnh:blackchicumbrella",
-  "photo" : "psk:farrahsphoto",
-  "poster" : "psk:farrahsposter",
+  "photo" : "psk:socksphoto",
+  "poster" : "psk:socksposter",
   "house" : {
     "walls" : "acnh:purplerosewall",
     "floor" : "acnh:simpleblueflooring",

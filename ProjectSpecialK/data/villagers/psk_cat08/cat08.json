@@ -1,27 +1,27 @@
 {
-  "id" : "psk:cat01",
+  "id" : "psk:cat08",
   "name" : {
-    "en" : "Farrah"
+    "en" : "Semilina"
   },
   "species" : "cat",
-  "personality" : [ "peppy" ],
+  "personality" : [ "uchi" ],
   "personalitySubtype" : 0,
   "gender" : "fem",
-  "attraction" : "both",
-  "birthday" : [ 1, 1 ],
-  "hobby" : "fitness",
-  "colors" : [ "white", "black" ],
-  "nameTag" : [ "#AA6405", "#FFF7CF" ],
+  "attraction" : "none",
+  "birthday" : [ 2, 7 ],
+  "hobby" : "nature",
+  "colors" : [ "colorful", "white" ],
+  "nameTag" : [ "#FFFFFF", "#848484" ],
   "catchphrase" : {
-    "en" : ""
+    "en" : "mrow"
   },
   "clothing" : {
     "default" : "acnh:heartsweater/red",
     "rain" : [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
   },
   "umbrella" : "acnh:blackchicumbrella",
-  "photo" : "psk:farrahsphoto",
-  "poster" : "psk:farrahsposter",
+  "photo" : "psk:semilinasphoto",
+  "poster" : "psk:semilinasposter",
   "house" : {
     "walls" : "acnh:purplerosewall",
     "floor" : "acnh:simpleblueflooring",

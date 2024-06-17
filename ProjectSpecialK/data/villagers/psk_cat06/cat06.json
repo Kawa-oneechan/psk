@@ -1,27 +1,27 @@
 {
-  "id" : "psk:cat01",
+  "id" : "psk:cat06",
   "name" : {
-    "en" : "Farrah"
+    "en" : "Sarta"
   },
   "species" : "cat",
-  "personality" : [ "peppy" ],
+  "personality" : [ "uchi" ],
   "personalitySubtype" : 0,
   "gender" : "fem",
   "attraction" : "both",
-  "birthday" : [ 1, 1 ],
-  "hobby" : "fitness",
-  "colors" : [ "white", "black" ],
-  "nameTag" : [ "#AA6405", "#FFF7CF" ],
+  "birthday" : [ 13, 10 ],
+  "hobby" : "music",
+  "colors" : [ "purple", "blue" ],
+  "nameTag" : [ "#FFFFFF", "#848484" ],
   "catchphrase" : {
-    "en" : ""
+    "en" : "zipper"
   },
   "clothing" : {
     "default" : "acnh:heartsweater/red",
     "rain" : [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
   },
   "umbrella" : "acnh:blackchicumbrella",
-  "photo" : "psk:farrahsphoto",
-  "poster" : "psk:farrahsposter",
+  "photo" : "psk:sartasphoto",
+  "poster" : "psk:sartasposter",
   "house" : {
     "walls" : "acnh:purplerosewall",
     "floor" : "acnh:simpleblueflooring",

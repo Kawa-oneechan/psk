@@ -1,27 +1,27 @@
 {
-  "id" : "psk:cat01",
+  "id" : "psk:cat05",
   "name" : {
-    "en" : "Farrah"
+    "en" : "Felix"
   },
   "species" : "cat",
-  "personality" : [ "peppy" ],
+  "personality" : [ "jock" ],
   "personalitySubtype" : 0,
-  "gender" : "fem",
+  "gender" : "mas",
   "attraction" : "both",
-  "birthday" : [ 1, 1 ],
-  "hobby" : "fitness",
-  "colors" : [ "white", "black" ],
-  "nameTag" : [ "#AA6405", "#FFF7CF" ],
+  "birthday" : [ 25, 11 ],
+  "hobby" : "music",
+  "colors" : [ "red", "purple" ],
+  "nameTag" : [ "#FFFFFF", "#848484" ],
   "catchphrase" : {
-    "en" : ""
+    "en" : "excellent"
   },
   "clothing" : {
     "default" : "acnh:heartsweater/red",
     "rain" : [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
   },
   "umbrella" : "acnh:blackchicumbrella",
-  "photo" : "psk:farrahsphoto",
-  "poster" : "psk:farrahsposter",
+  "photo" : "psk:felixsphoto",
+  "poster" : "psk:felixsposter",
   "house" : {
     "walls" : "acnh:purplerosewall",
     "floor" : "acnh:simpleblueflooring",

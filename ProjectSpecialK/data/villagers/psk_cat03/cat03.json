@@ -1,27 +1,27 @@
 {
-  "id" : "psk:cat01",
+  "id" : "psk:cat03",
   "name" : {
-    "en" : "Farrah"
+    "en" : "Meiki"
   },
   "species" : "cat",
-  "personality" : [ "peppy" ],
+  "personality" : [ "normal" ],
   "personalitySubtype" : 0,
-  "gender" : "fem",
-  "attraction" : "both",
-  "birthday" : [ 1, 1 ],
-  "hobby" : "fitness",
-  "colors" : [ "white", "black" ],
+  "gender" : "fnb",
+  "attraction" : "none",
+  "birthday" : [ 22, 7 ],
+  "hobby" : "play",
+  "colors" : [ "white", "yellow" ],
   "nameTag" : [ "#AA6405", "#FFF7CF" ],
   "catchphrase" : {
-    "en" : ""
+    "en" : "I think"
   },
   "clothing" : {
     "default" : "acnh:heartsweater/red",
     "rain" : [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
   },
   "umbrella" : "acnh:blackchicumbrella",
-  "photo" : "psk:farrahsphoto",
-  "poster" : "psk:farrahsposter",
+  "photo" : "psk:meikisphoto",
+  "poster" : "psk:meikisposter",
   "house" : {
     "walls" : "acnh:purplerosewall",
     "floor" : "acnh:simpleblueflooring",

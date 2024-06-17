@@ -1,27 +1,27 @@
 {
-  "id" : "psk:cat01",
+  "id" : "psk:cat04",
   "name" : {
-    "en" : "Farrah"
+    "en" : "Bea"
   },
   "species" : "cat",
-  "personality" : [ "peppy" ],
+  "personality" : [ "snooty" ],
   "personalitySubtype" : 0,
-  "gender" : "fem",
-  "attraction" : "both",
-  "birthday" : [ 1, 1 ],
-  "hobby" : "fitness",
-  "colors" : [ "white", "black" ],
-  "nameTag" : [ "#AA6405", "#FFF7CF" ],
+  "gender" : "fnb",
+  "attraction" : "boys",
+  "birthday" : [ 4, 10 ],
+  "hobby" : "education",
+  "colors" : [ "black", "yellow" ],
+  "nameTag" : [ "#FFFFFF", "#848484" ],
   "catchphrase" : {
-    "en" : ""
+    "en" : "hyahaha"
   },
   "clothing" : {
     "default" : "acnh:heartsweater/red",
     "rain" : [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
   },
   "umbrella" : "acnh:blackchicumbrella",
-  "photo" : "psk:farrahsphoto",
-  "poster" : "psk:farrahsposter",
+  "photo" : "psk:beasphoto",
+  "poster" : "psk:beasposter",
   "house" : {
     "walls" : "acnh:purplerosewall",
     "floor" : "acnh:simpleblueflooring",

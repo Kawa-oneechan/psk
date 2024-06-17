@@ -1,27 +1,27 @@
 {
-  "id" : "psk:cat01",
+  "id" : "psk:cat09",
   "name" : {
-    "en" : "Farrah"
+    "en" : "Velvet"
   },
   "species" : "cat",
-  "personality" : [ "peppy" ],
+  "personality" : [ "smug" ],
   "personalitySubtype" : 0,
-  "gender" : "fem",
-  "attraction" : "both",
-  "birthday" : [ 1, 1 ],
-  "hobby" : "fitness",
-  "colors" : [ "white", "black" ],
-  "nameTag" : [ "#AA6405", "#FFF7CF" ],
+  "gender" : "mas",
+  "attraction" : "boys",
+  "birthday" : [ 8, 11 ],
+  "hobby" : "education",
+  "colors" : [ "blue", "red" ],
+  "nameTag" : [ "#FFFFFF", "#848484" ],
   "catchphrase" : {
-    "en" : ""
+    "en" : "r-right"
   },
   "clothing" : {
     "default" : "acnh:heartsweater/red",
     "rain" : [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
   },
   "umbrella" : "acnh:blackchicumbrella",
-  "photo" : "psk:farrahsphoto",
-  "poster" : "psk:farrahsposter",
+  "photo" : "psk:velvetsphoto",
+  "poster" : "psk:velvetsposter",
   "house" : {
     "walls" : "acnh:purplerosewall",
     "floor" : "acnh:simpleblueflooring",
