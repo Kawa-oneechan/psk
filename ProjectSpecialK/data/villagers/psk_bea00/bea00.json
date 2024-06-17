@@ -1,5 +1,5 @@
 {
-  "id" : "psk:bea01",
+  "id" : "psk:bea00",
   "name" : {
     "en" : "Lissa"
   },
@@ -19,23 +19,14 @@
     "default" : "acnh:aranknitsweater/green",
     "rain" : [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
   },
-  "umbrella" : "acnh:blackchicumbrella",
+  "umbrella" : "acnh:redumbrella",
   "photo" : "psk:lissasphoto",
   "poster" : "psk:lissasposter",
   "house" : {
-    "walls" : "acnh:purplerosewall",
-    "floor" : "acnh:simpleblueflooring",
-    "music" : "acnh:kksonata",
+    "walls" : "acnh:commonwall",
+    "floor" : "acnh:commonflooring",
+    "music" : "acnh:silence",
     "items" : [
-      "acnh:antiqueminitable",
-      "acnh:antiqueconsoletable",
-      "acnh:pianobench/1",
-      "acnh:antiqueclock",
-      "acnh:rattanlowtable/3",
-      "acnh:doublesofa/4",
-      "acnh:fireplace/1",
-      "acnh:phonograph/0/2",
-      "acnh:grandpiano/1"
     ]
   }
 }

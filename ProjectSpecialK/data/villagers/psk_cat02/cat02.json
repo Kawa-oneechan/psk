@@ -1,50 +1,32 @@
 {
   "id" : "psk:cat02",
   "name" : {
-    "en" : "Jasmine",
-    "ja" : "ジャスミン",
-    "ko" : "재스민",
-    "zh" : "茉莉",
-    "de" : "Jasmin",
-    "ru" : "Жасмин",
-    "nl" : "Jasmijn",
-    "hu" : "Jázmin"
+    "en" : "Meiki"
   },
   "species" : "cat",
-  "personality" : [ "horny", "uchi" ],
+  "personality" : [ "normal" ],
   "personalitySubtype" : 0,
-  "gender" : "fem",
-  "attraction" : "both",
-  "birthday" : [ 1, 1 ],
-  "hobby" : "music",
-  "colors" : [ "white", "black" ],
-  "nameTag" : [ "#FFFFFF", "#848484" ],
+  "gender" : "fnb",
+  "attraction" : "none",
+  "birthday" : [ 22, 7 ],
+  "hobby" : "play",
+  "colors" : [ "white", "yellow" ],
+  "nameTag" : [ "#AA6405", "#FFF7CF" ],
   "catchphrase" : {
-    "en" : "mmmmrr",
-    "ja" : "うーん",
-    "ru" : "ммммрр"
+    "en" : "I think"
   },
   "clothing" : {
     "default" : "acnh:heartsweater/red",
     "rain" : [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
   },
-  "umbrella" : "acnh:blackchicumbrella",
-  "photo" : "psk:jasminesphoto",
-  "poster" : "psk:jasminesposter",
+  "umbrella" : "acnh:redumbrella",
+  "photo" : "psk:meikisphoto",
+  "poster" : "psk:meikisposter",
   "house" : {
-    "walls" : "acnh:purplerosewall",
-    "floor" : "acnh:simpleblueflooring",
-    "music" : "acnh:kksonata",
+    "walls" : "acnh:commonwall",
+    "floor" : "acnh:commonflooring",
+    "music" : "acnh:silence",
     "items" : [
-      "acnh:antiqueminitable",
-      "acnh:antiqueconsoletable",
-      "acnh:pianobench/1",
-      "acnh:antiqueclock",
-      "acnh:rattanlowtable/3",
-      "acnh:doublesofa/4",
-      "acnh:fireplace/1",
-      "acnh:phonograph/0/2",
-      "acnh:grandpiano/1"
     ]
   }
 }

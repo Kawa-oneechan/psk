@@ -1,41 +1,32 @@
 {
   "id" : "psk:cat06",
   "name" : {
-    "en" : "Sarta"
+    "en" : "Socks"
   },
   "species" : "cat",
-  "personality" : [ "uchi" ],
+  "personality" : [ "cranky" ],
   "personalitySubtype" : 0,
-  "gender" : "fem",
+  "gender" : "mnb",
   "attraction" : "both",
-  "birthday" : [ 13, 10 ],
+  "birthday" : [ 21, 12 ],
   "hobby" : "music",
-  "colors" : [ "purple", "blue" ],
+  "colors" : [ "green", "blue" ],
   "nameTag" : [ "#FFFFFF", "#848484" ],
   "catchphrase" : {
-    "en" : "zipper"
+    "en" : "y'know dude"
   },
   "clothing" : {
     "default" : "acnh:heartsweater/red",
     "rain" : [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
   },
-  "umbrella" : "acnh:blackchicumbrella",
-  "photo" : "psk:sartasphoto",
-  "poster" : "psk:sartasposter",
+  "umbrella" : "acnh:redumbrella",
+  "photo" : "psk:socksphoto",
+  "poster" : "psk:socksposter",
   "house" : {
-    "walls" : "acnh:purplerosewall",
-    "floor" : "acnh:simpleblueflooring",
-    "music" : "acnh:kksonata",
+    "walls" : "acnh:commonwall",
+    "floor" : "acnh:commonflooring",
+    "music" : "acnh:silence",
     "items" : [
-      "acnh:antiqueminitable",
-      "acnh:antiqueconsoletable",
-      "acnh:pianobench/1",
-      "acnh:antiqueclock",
-      "acnh:rattanlowtable/3",
-      "acnh:doublesofa/4",
-      "acnh:fireplace/1",
-      "acnh:phonograph/0/2",
-      "acnh:grandpiano/1"
     ]
   }
 }

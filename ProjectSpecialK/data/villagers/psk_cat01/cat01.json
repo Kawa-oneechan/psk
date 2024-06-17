@@ -1,41 +1,41 @@
 {
   "id" : "psk:cat01",
   "name" : {
-    "en" : "Farrah"
+    "en" : "Jasmine",
+    "ja" : "ジャスミン",
+    "ko" : "재스민",
+    "zh" : "茉莉",
+    "de" : "Jasmin",
+    "ru" : "Жасмин",
+    "nl" : "Jasmijn",
+    "hu" : "Jázmin"
   },
   "species" : "cat",
-  "personality" : [ "peppy" ],
+  "personality" : [ "horny", "uchi" ],
   "personalitySubtype" : 0,
   "gender" : "fem",
   "attraction" : "both",
   "birthday" : [ 1, 1 ],
-  "hobby" : "fitness",
+  "hobby" : "music",
   "colors" : [ "white", "black" ],
-  "nameTag" : [ "#AA6405", "#FFF7CF" ],
+  "nameTag" : [ "#FFFFFF", "#848484" ],
   "catchphrase" : {
-    "en" : ""
+    "en" : "mmmmrr",
+    "ja" : "うーん",
+    "ru" : "ммммрр"
   },
   "clothing" : {
     "default" : "acnh:heartsweater/red",
     "rain" : [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
   },
-  "umbrella" : "acnh:blackchicumbrella",
-  "photo" : "psk:farrahsphoto",
-  "poster" : "psk:farrahsposter",
+  "umbrella" : "acnh:redumbrella",
+  "photo" : "psk:jasminesphoto",
+  "poster" : "psk:jasminesposter",
   "house" : {
-    "walls" : "acnh:purplerosewall",
-    "floor" : "acnh:simpleblueflooring",
-    "music" : "acnh:kksonata",
+    "walls" : "acnh:commonwall",
+    "floor" : "acnh:commonflooring",
+    "music" : "acnh:silence",
     "items" : [
-      "acnh:antiqueminitable",
-      "acnh:antiqueconsoletable",
-      "acnh:pianobench/1",
-      "acnh:antiqueclock",
-      "acnh:rattanlowtable/3",
-      "acnh:doublesofa/4",
-      "acnh:fireplace/1",
-      "acnh:phonograph/0/2",
-      "acnh:grandpiano/1"
     ]
   }
 }

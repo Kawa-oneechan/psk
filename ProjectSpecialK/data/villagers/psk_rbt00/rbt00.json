@@ -1,5 +1,5 @@
 {
-  "id" : "psk:rbt01",
+  "id" : "psk:rbt00",
   "name" : {
     "en" : "Patch",
     "ja" : "パッチ",
@@ -23,23 +23,14 @@
     "default" : "acnh:rabbittee",
     "rain" : [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
   },
-  "umbrella" : "acnh:blackchicumbrella",
+  "umbrella" : "acnh:redumbrella",
   "photo" : "psk:patchsphoto",
   "poster" : "psk:patchsposter",
   "house" : {
-    "walls" : "acnh:purplerosewall",
-    "floor" : "acnh:simpleblueflooring",
-    "music" : "acnh:kksonata",
+    "walls" : "acnh:commonwall",
+    "floor" : "acnh:commonflooring",
+    "music" : "acnh:silence",
     "items" : [
-      "acnh:antiqueminitable",
-      "acnh:antiqueconsoletable",
-      "acnh:pianobench/1",
-      "acnh:antiqueclock",
-      "acnh:rattanlowtable/3",
-      "acnh:doublesofa/4",
-      "acnh:fireplace/1",
-      "acnh:phonograph/0/2",
-      "acnh:grandpiano/1"
     ]
   }
 }

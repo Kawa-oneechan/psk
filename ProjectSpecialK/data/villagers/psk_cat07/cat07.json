@@ -1,41 +1,32 @@
 {
   "id" : "psk:cat07",
   "name" : {
-    "en" : "Socks"
+    "en" : "Semilina"
   },
   "species" : "cat",
-  "personality" : [ "cranky" ],
+  "personality" : [ "uchi" ],
   "personalitySubtype" : 0,
-  "gender" : "mnb",
-  "attraction" : "both",
-  "birthday" : [ 21, 12 ],
-  "hobby" : "music",
-  "colors" : [ "green", "blue" ],
+  "gender" : "fem",
+  "attraction" : "none",
+  "birthday" : [ 2, 7 ],
+  "hobby" : "nature",
+  "colors" : [ "colorful", "white" ],
   "nameTag" : [ "#FFFFFF", "#848484" ],
   "catchphrase" : {
-    "en" : "y'know dude"
+    "en" : "mrow"
   },
   "clothing" : {
     "default" : "acnh:heartsweater/red",
     "rain" : [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
   },
-  "umbrella" : "acnh:blackchicumbrella",
-  "photo" : "psk:socksphoto",
-  "poster" : "psk:socksposter",
+  "umbrella" : "acnh:redumbrella",
+  "photo" : "psk:semilinasphoto",
+  "poster" : "psk:semilinasposter",
   "house" : {
-    "walls" : "acnh:purplerosewall",
-    "floor" : "acnh:simpleblueflooring",
-    "music" : "acnh:kksonata",
+    "walls" : "acnh:commonwall",
+    "floor" : "acnh:commonflooring",
+    "music" : "acnh:silence",
     "items" : [
-      "acnh:antiqueminitable",
-      "acnh:antiqueconsoletable",
-      "acnh:pianobench/1",
-      "acnh:antiqueclock",
-      "acnh:rattanlowtable/3",
-      "acnh:doublesofa/4",
-      "acnh:fireplace/1",
-      "acnh:phonograph/0/2",
-      "acnh:grandpiano/1"
     ]
   }
 }

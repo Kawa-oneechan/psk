@@ -1,41 +1,32 @@
 {
   "id" : "psk:cat04",
   "name" : {
-    "en" : "Bea"
+    "en" : "Felix"
   },
   "species" : "cat",
-  "personality" : [ "snooty" ],
+  "personality" : [ "jock" ],
   "personalitySubtype" : 0,
-  "gender" : "fnb",
-  "attraction" : "boys",
-  "birthday" : [ 4, 10 ],
-  "hobby" : "education",
-  "colors" : [ "black", "yellow" ],
+  "gender" : "mas",
+  "attraction" : "both",
+  "birthday" : [ 25, 11 ],
+  "hobby" : "music",
+  "colors" : [ "red", "purple" ],
   "nameTag" : [ "#FFFFFF", "#848484" ],
   "catchphrase" : {
-    "en" : "hyahaha"
+    "en" : "excellent"
   },
   "clothing" : {
     "default" : "acnh:heartsweater/red",
     "rain" : [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
   },
-  "umbrella" : "acnh:blackchicumbrella",
-  "photo" : "psk:beasphoto",
-  "poster" : "psk:beasposter",
+  "umbrella" : "acnh:redumbrella",
+  "photo" : "psk:felixsphoto",
+  "poster" : "psk:felixsposter",
   "house" : {
-    "walls" : "acnh:purplerosewall",
-    "floor" : "acnh:simpleblueflooring",
-    "music" : "acnh:kksonata",
+    "walls" : "acnh:commonwall",
+    "floor" : "acnh:commonflooring",
+    "music" : "acnh:silence",
     "items" : [
-      "acnh:antiqueminitable",
-      "acnh:antiqueconsoletable",
-      "acnh:pianobench/1",
-      "acnh:antiqueclock",
-      "acnh:rattanlowtable/3",
-      "acnh:doublesofa/4",
-      "acnh:fireplace/1",
-      "acnh:phonograph/0/2",
-      "acnh:grandpiano/1"
     ]
   }
 }

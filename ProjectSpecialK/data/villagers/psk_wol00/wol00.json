@@ -1,5 +1,5 @@
 {
-  "id" : "psk:wol01",
+  "id" : "psk:wol00",
   "name" : {
     "en" : "Retro"
   },
@@ -19,23 +19,14 @@
     "default" : "acnh:retrosweater/purple",
     "rain" : [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
   },
-  "umbrella" : "acnh:blackchicumbrella",
+  "umbrella" : "acnh:redumbrella",
   "photo" : "psk:retrosphoto",
   "poster" : "psk:retrosposter",
   "house" : {
-    "walls" : "acnh:purplerosewall",
-    "floor" : "acnh:simpleblueflooring",
-    "music" : "acnh:kksonata",
+    "walls" : "acnh:commonwall",
+    "floor" : "acnh:commonflooring",
+    "music" : "acnh:silence",
     "items" : [
-      "acnh:antiqueminitable",
-      "acnh:antiqueconsoletable",
-      "acnh:pianobench/1",
-      "acnh:antiqueclock",
-      "acnh:rattanlowtable/3",
-      "acnh:doublesofa/4",
-      "acnh:fireplace/1",
-      "acnh:phonograph/0/2",
-      "acnh:grandpiano/1"
     ]
   }
 }

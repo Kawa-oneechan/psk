@@ -1,5 +1,5 @@
 {
-  "id" : "psk:elp01",
+  "id" : "psk:elp00",
   "name" : {
     "en" : "Brunnhilde"
   },
@@ -19,23 +19,14 @@
     "default" : "acnh:vikingtop/brown",
     "rain" : [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
   },
-  "umbrella" : "acnh:blackchicumbrella",
+  "umbrella" : "acnh:redumbrella",
   "photo" : "psk:brunnhildesphoto",
   "poster" : "psk:brunnhildesposter",
   "house" : {
-    "walls" : "acnh:purplerosewall",
-    "floor" : "acnh:simpleblueflooring",
-    "music" : "acnh:kksonata",
+    "walls" : "acnh:commonwall",
+    "floor" : "acnh:commonflooring",
+    "music" : "acnh:silence",
     "items" : [
-      "acnh:antiqueminitable",
-      "acnh:antiqueconsoletable",
-      "acnh:pianobench/1",
-      "acnh:antiqueclock",
-      "acnh:rattanlowtable/3",
-      "acnh:doublesofa/4",
-      "acnh:fireplace/1",
-      "acnh:phonograph/0/2",
-      "acnh:grandpiano/1"
     ]
   }
 }

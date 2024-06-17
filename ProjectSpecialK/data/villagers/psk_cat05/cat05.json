@@ -1,41 +1,32 @@
 {
   "id" : "psk:cat05",
   "name" : {
-    "en" : "Felix"
+    "en" : "Sarta"
   },
   "species" : "cat",
-  "personality" : [ "jock" ],
+  "personality" : [ "uchi" ],
   "personalitySubtype" : 0,
-  "gender" : "mas",
+  "gender" : "fem",
   "attraction" : "both",
-  "birthday" : [ 25, 11 ],
+  "birthday" : [ 13, 10 ],
   "hobby" : "music",
-  "colors" : [ "red", "purple" ],
+  "colors" : [ "purple", "blue" ],
   "nameTag" : [ "#FFFFFF", "#848484" ],
   "catchphrase" : {
-    "en" : "excellent"
+    "en" : "zipper"
   },
   "clothing" : {
     "default" : "acnh:heartsweater/red",
     "rain" : [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
   },
-  "umbrella" : "acnh:blackchicumbrella",
-  "photo" : "psk:felixsphoto",
-  "poster" : "psk:felixsposter",
+  "umbrella" : "acnh:redumbrella",
+  "photo" : "psk:sartasphoto",
+  "poster" : "psk:sartasposter",
   "house" : {
-    "walls" : "acnh:purplerosewall",
-    "floor" : "acnh:simpleblueflooring",
-    "music" : "acnh:kksonata",
+    "walls" : "acnh:commonwall",
+    "floor" : "acnh:commonflooring",
+    "music" : "acnh:silence",
     "items" : [
-      "acnh:antiqueminitable",
-      "acnh:antiqueconsoletable",
-      "acnh:pianobench/1",
-      "acnh:antiqueclock",
-      "acnh:rattanlowtable/3",
-      "acnh:doublesofa/4",
-      "acnh:fireplace/1",
-      "acnh:phonograph/0/2",
-      "acnh:grandpiano/1"
     ]
   }
 }

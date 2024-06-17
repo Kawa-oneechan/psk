@@ -1,41 +1,32 @@
 {
   "id" : "psk:cat08",
   "name" : {
-    "en" : "Semilina"
+    "en" : "Velvet"
   },
   "species" : "cat",
-  "personality" : [ "uchi" ],
+  "personality" : [ "smug" ],
   "personalitySubtype" : 0,
-  "gender" : "fem",
-  "attraction" : "none",
-  "birthday" : [ 2, 7 ],
-  "hobby" : "nature",
-  "colors" : [ "colorful", "white" ],
+  "gender" : "mas",
+  "attraction" : "boys",
+  "birthday" : [ 8, 11 ],
+  "hobby" : "education",
+  "colors" : [ "blue", "red" ],
   "nameTag" : [ "#FFFFFF", "#848484" ],
   "catchphrase" : {
-    "en" : "mrow"
+    "en" : "r-right"
   },
   "clothing" : {
     "default" : "acnh:heartsweater/red",
     "rain" : [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
   },
-  "umbrella" : "acnh:blackchicumbrella",
-  "photo" : "psk:semilinasphoto",
-  "poster" : "psk:semilinasposter",
+  "umbrella" : "acnh:redumbrella",
+  "photo" : "psk:velvetsphoto",
+  "poster" : "psk:velvetsposter",
   "house" : {
-    "walls" : "acnh:purplerosewall",
-    "floor" : "acnh:simpleblueflooring",
-    "music" : "acnh:kksonata",
+    "walls" : "acnh:commonwall",
+    "floor" : "acnh:commonflooring",
+    "music" : "acnh:silence",
     "items" : [
-      "acnh:antiqueminitable",
-      "acnh:antiqueconsoletable",
-      "acnh:pianobench/1",
-      "acnh:antiqueclock",
-      "acnh:rattanlowtable/3",
-      "acnh:doublesofa/4",
-      "acnh:fireplace/1",
-      "acnh:phonograph/0/2",
-      "acnh:grandpiano/1"
     ]
   }
 }
