@@ -15,10 +15,17 @@ typedef enum
 class DialogueBox : public Tickable
 {
 private:
-	Texture* bubble[5];
-	Texture* gradient[2];
-	Texture* nametag;
-	TextureAtlas nametagAtlas;
+	Texture bubble[4] = {
+		Texture("ui/dialogue/dialogue.png", GL_MIRRORED_REPEAT),
+		Texture("ui/dialogue/exclamation.png", GL_MIRRORED_REPEAT),
+		Texture("ui/dialogue/dream.png", GL_MIRRORED_REPEAT),
+		Texture("ui/dialogue/system.png", GL_MIRRORED_REPEAT),
+	};
+	Texture gradient[2] = {
+		Texture("gradient_thin.png"),
+		Texture("gradient_wide.png")
+	};
+	Texture nametag = Texture("ui/dialogue/nametag.png");
 	Shader* wobble;
 	std::string displayed;
 	std::string toDisplay;

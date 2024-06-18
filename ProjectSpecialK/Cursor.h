@@ -5,8 +5,7 @@
 class Cursor
 {
 private:
-	Texture* hand;
-	TextureAtlas atlas;
+	Texture hand = Texture("ui/cursors.png");
 	std::vector<glm::vec2> hotspots;
 	glm::vec2 hotspot;
 	glm::vec4 frame;

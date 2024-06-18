@@ -29,7 +29,6 @@ class PanelLayout : public Tickable
 private:
 	std::vector<Panel*> panels;
 	std::vector<Texture*> textures;
-	std::vector<TextureAtlas> atlases;
 	std::vector<Shader*> shaders;
 	std::vector < std::vector<glm::vec2>> polygons;
 

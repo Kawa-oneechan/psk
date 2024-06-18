@@ -17,12 +17,6 @@ PanelLayout::PanelLayout(JSONValue* source)
 			auto tfn = t->AsString();
 			auto tex = new Texture(tfn);
 			textures.push_back(tex);
-
-			tfn = tfn.replace(tfn.length() - 4, 4, ".json");
-			TextureAtlas atl;
-			atl.push_back(glm::vec4(0, 0, tex->width, tex->height));
-			GetAtlas(atl, tfn);
-			atlases.push_back(atl);
 		}
 	}
 
@@ -125,7 +119,7 @@ void PanelLayout::Tick(double dt)
 		if (panel->Polygon == -1)
 			continue;
 		poly.clear();
-		auto const frame = atlases[panel->Texture][panel->Frame];
+		auto const frame = textures[panel->Texture]->operator[](panel->Frame);
 		auto const size = glm::vec2(frame.z, frame.w);
 		for (const auto& point : polygons[panel->Polygon])
 			poly.emplace_back(((point * size) + Position + panel->Position) * scale);
@@ -161,7 +155,7 @@ void PanelLayout::Draw(double dt)
 		if (panel->Type == PanelType::Image)
 		{
 			auto texture = textures[panel->Texture];
-			auto frame = atlases[panel->Texture][panel->Frame];
+			auto frame = texture->operator[](panel->Frame);
 			auto shader = spriteShader; //shaders[panel->Shader];
 
 			sprender->DrawSprite(

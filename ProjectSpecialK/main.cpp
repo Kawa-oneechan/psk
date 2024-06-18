@@ -89,6 +89,7 @@ namespace UI
 
 	Texture* controls;
 	TextureAtlas controlsAtlas;
+	//TODO: turn UI into a static class or whatever so it can initialize AFTER the VFS system, thus allowing removal of controlsAtlas.
 
 	JSONObject& json = JSONObject();
 	JSONObject& settings = JSONObject();

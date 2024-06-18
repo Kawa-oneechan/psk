@@ -51,15 +51,6 @@ void DialogueBox::msbtPass(MSBTParams)
 
 DialogueBox::DialogueBox()
 {
-	bubble[0] = new Texture("ui/dialogue/dialogue.png", GL_MIRRORED_REPEAT);
-	bubble[1] = new Texture("ui/dialogue/exclamation.png", GL_MIRRORED_REPEAT);
-	bubble[2] = new Texture("ui/dialogue/dream.png", GL_MIRRORED_REPEAT);
-	bubble[3] = new Texture("ui/dialogue/system.png", GL_MIRRORED_REPEAT);
-	//bubble[4] = new Texture("ui/dialogue/wildworld.png", GL_REPEAT);
-	gradient[0] = new Texture("gradient_thin.png");
-	gradient[1] = new Texture("gradient_wide.png");
-	nametag = new Texture("ui/dialogue/nametag.png");
-	GetAtlas(nametagAtlas, "ui/dialogue/nametag.json");
 	nametagWidth = 0;
 	wobble = new Shader("shaders/wobble.fs");
 	bebebese = new Audio("sound/animalese/base/Voice_Monology.wav");
@@ -75,7 +66,7 @@ DialogueBox::DialogueBox()
 	//Text(u8"Truth is... <color:1>the game</color> was rigged from the start.",
 	//Text("Are you <color:3><str:player></color>? <delay:1000>Hiii! Welcome to <color:2>Project Special K</color>!",
 	Text(TextGet("dlg:sza:wack"),
-		Database::Find<Villager>("psk:cat02", &villagers));
+		Database::Find<Villager>("psk:cat00", &villagers));
 
 	//Text("I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I", 0);
 	//Text("IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII", 0);
@@ -214,14 +205,14 @@ void DialogueBox::Draw(double dt)
 	time += (float)dt * 0.005f;
 
 	auto dlgScale = scale;
-	auto dlgWidth = bubble[0]->width * dlgScale;
-	auto dlgHeight = bubble[0]->height * dlgScale;
+	auto dlgWidth = bubble[0].width * dlgScale;
+	auto dlgHeight = bubble[0].height * dlgScale;
 	auto dlgLeft = (int)(width / 2) - dlgWidth;
 	auto dlgTop = (int)height - dlgHeight - 10;
 
 	wobble->Use();
-	gradient[0]->Use(1);
-	gradient[1]->Use(2);
+	gradient[0].Use(1);
+	gradient[1].Use(2);
 	wobble->SetInt("gradient1", 1);
 	wobble->SetInt("gradient2", 2);
 	wobble->SetFloat("time", time);
@@ -230,7 +221,7 @@ void DialogueBox::Draw(double dt)
 	//	sprender->DrawSprite(*bubble[bubbleNum], glm::vec2(dlgLeft, dlgTop), glm::vec2(dlgWidth * 2, dlgHeight), glm::vec4(0));
 	//else
 	{
-		sprender->DrawSprite(wobble, bubble[bubbleNum], glm::vec2(dlgLeft, dlgTop), glm::vec2(dlgWidth * 2, dlgHeight), glm::vec4(0, 0, bubble[bubbleNum]->width * 2, bubble[bubbleNum]->height), 0, bubbleColor, 0);
+		sprender->DrawSprite(wobble, &bubble[bubbleNum], glm::vec2(dlgLeft, dlgTop), glm::vec2(dlgWidth * 2, dlgHeight), glm::vec4(0, 0, bubble[bubbleNum].width * 2, bubble[bubbleNum].height), 0, bubbleColor, 0);
 		//sprender->DrawSprite(wobble, bubble[bubbleNum], glm::vec2(dlgLeft + dlgWidth, dlgTop), glm::vec2(dlgWidth, dlgHeight), glm::vec4(0, 0, bubble[0]->width, bubble[0]->height), 0, bubbleColor, 1);
 	}
 
@@ -240,7 +231,7 @@ void DialogueBox::Draw(double dt)
 	{
 		const auto tagAngle = -2.0f;
 		const auto tagPos = glm::vec2(dlgLeft + (150 * scale), dlgTop + (sinf(time * 2) * 10) * scale);
-		const auto tagSize = glm::vec2(nametagAtlas[0].z, nametagAtlas[0].w) * scale;
+		const auto tagSize = glm::vec2(nametag[0].z, nametag[0].w) * scale;
 		//const auto tagMidWidth = 128; //pre-measure this to fit in the Text() calls.
 
 		const auto tagPosL = tagPos;
@@ -248,9 +239,9 @@ void DialogueBox::Draw(double dt)
 		const auto tagPosR = tagPosM + glm::vec2(cosf(glm::radians(tagAngle)) * nametagWidth, sinf(glm::radians(tagAngle)) * nametagWidth);
 		//TODO: figure this one out properly
 		const auto tagPosT = tagPosL + glm::vec2(cosf(glm::radians(tagAngle)) * (tagSize.x - 16), sinf(glm::radians(tagAngle)) * (tagSize.x - 512));
-		sprender->DrawSprite(nametag, tagPosL, tagSize, nametagAtlas[0], tagAngle, nametagColor[0], SPR_TOPLEFT);
-		sprender->DrawSprite(nametag, tagPosM, glm::vec2(nametagWidth, tagSize.y), nametagAtlas[2], tagAngle, nametagColor[0], SPR_TOPLEFT);
-		sprender->DrawSprite(nametag, tagPosR, tagSize, nametagAtlas[1], tagAngle, nametagColor[0], SPR_TOPLEFT);
+		sprender->DrawSprite(&nametag, tagPosL, tagSize, nametag[0], tagAngle, nametagColor[0], SPR_TOPLEFT);
+		sprender->DrawSprite(&nametag, tagPosM, glm::vec2(nametagWidth, tagSize.y), nametag[2], tagAngle, nametagColor[0], SPR_TOPLEFT);
+		sprender->DrawSprite(&nametag, tagPosR, tagSize, nametag[1], tagAngle, nametagColor[0], SPR_TOPLEFT);
 		sprender->DrawText(1, name, tagPosT, nametagColor[1], 120 * scale, tagAngle);
 	}
 

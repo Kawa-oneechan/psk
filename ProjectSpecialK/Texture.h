@@ -11,6 +11,7 @@ private:
 	unsigned char* data;
 	std::string file;
 	int filter, repeat;
+	std::vector<glm::vec4> atlas;
 
 public:
 	unsigned int ID;
@@ -28,4 +29,6 @@ public:
 	void Use(int slot);
 
 	void SetRepeat(int newRepeat);
+
+	glm::vec4 operator[](size_t i) const { return (atlas.empty() || i >= atlas.size()) ? glm::vec4(0) : atlas[i]; }
 };

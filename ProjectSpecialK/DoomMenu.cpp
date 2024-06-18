@@ -26,9 +26,9 @@ void DoomMenu::rebuild()
 	static const Language opt2lan[] = { Language::USen, Language::JPja, Language::EUde, Language::EUes, Language::EUfr, Language::EUit, Language::EUhu, Language::EUnl };
 	static const int lan2opt[] = { 0, 3, 4, 1, 0, 0, 0,	2, 0, 3, 4, 5, 7, 0, 6 };
 
-	options.clear();
-	content.clear();
-	volume.clear();
+	options.items.clear();
+	content.items.clear();
+	volume.items.clear();
 
 	options.header = TextGet("menu:options:head");
 
@@ -87,7 +87,7 @@ void DoomMenu::rebuild()
 
 	content.header = TextGet("menu:options:head:content");
 	{
-		species.clear();
+		species.items.clear();
 		species.header = TextGet("menu:options:head:content");
 		species.subheader = TextGet("menu:options:content:species");
 		for (const auto& s : ::species)
@@ -177,9 +177,6 @@ DoomMenu::DoomMenu()
 	sliderHolding = -1;
 	itemX = 0;
 
-	panels = new Texture("ui/panels.png");
-	GetAtlas(panelAtlas, "ui/panels.json");
-
 	stack.push(&options);
 	items = stack.top();
 
@@ -212,7 +209,7 @@ void DoomMenu::Tick(double dt)
 		}
 	}
 	cursor->Select(0);
-	if (mouseHighlight != -1 && items->at(highlight)->type == DoomMenuTypes::Slider)
+	if (mouseHighlight != -1 && items->items[highlight]->type == DoomMenuTypes::Slider)
 	{
 		if (Inputs.MousePosition.x >= sliderStart && Inputs.MousePosition.x <= sliderEnd)
 		{
@@ -224,7 +221,7 @@ void DoomMenu::Tick(double dt)
 				if (Inputs.MouseHoldLeft)
 				{
 					cursor->Select(6);
-					auto item = items->at(highlight);
+					auto item = items->items[highlight];
 
 					//thanks GZDoom
 					auto x = clamp(Inputs.MousePosition.x, sliderStart, sliderEnd);
@@ -246,7 +243,7 @@ void DoomMenu::Tick(double dt)
 	if (mouseHighlight != highlight && Inputs.MouseLeft)
 		Inputs.MouseLeft = false;
 
-	while (items->at(highlight)->type == DoomMenuTypes::Text)
+	while (items->items[highlight]->type == DoomMenuTypes::Text)
 		highlight++;
 
 	if (Inputs.Escape)
@@ -265,12 +262,10 @@ void DoomMenu::Tick(double dt)
 	if (Inputs.Up)
 	{
 		Inputs.Clear();
-		int top = items->at(0)->type == DoomMenuTypes::Text ? 1 : 0;
-		top += items->at(1)->type == DoomMenuTypes::Text ? 1 : 0;
-		if (highlight == top)
+		if (highlight == 0)
 		{
-			highlight = (int)items->size();
-			scroll = (int)items->size() - visible;
+			highlight = (int)items->items.size();
+			scroll = (int)items->items.size() - visible;
 			if (scroll < 0) scroll = 0;
 		}
 		highlight--;
@@ -279,16 +274,7 @@ void DoomMenu::Tick(double dt)
 		if (scroll == -1)
 		{
 			scroll = 0;
-			highlight = top;
-		}
-		while (items->at(highlight - scroll)->type == DoomMenuTypes::Text)
-		{
-			if (highlight - scroll == top)
-			{
-				highlight = (int)items->size();
-				scroll = (int)items->size() - visible;
-			}
-			highlight--;
+			highlight = 0;
 		}
 	}
 	else if (Inputs.Down)
@@ -297,7 +283,7 @@ void DoomMenu::Tick(double dt)
 		highlight++;
 		if (highlight - scroll >= visible)
 			scroll++;
-		if (highlight == items->size())
+		if (highlight == items->items.size())
 		{
 			highlight = 0;
 			scroll = 0;
@@ -307,7 +293,7 @@ void DoomMenu::Tick(double dt)
 	if (highlight == -1)
 		return;
 
-	auto item = items->at(highlight);
+	auto item = items->items[highlight];
 
 	if (item->type == DoomMenuTypes::Page)
 	{
@@ -412,12 +398,12 @@ void DoomMenu::Draw(double dt)
 		auto headerW = sprender->MeasureText(1, items->header, 150).x;
 		auto headerX = (width / 2) - (headerW / 2);
 
-		sprender->DrawSprite(panels, glm::vec2(headerX - panelAtlas[4].z, pos.y) * scale, glm::vec2(panelAtlas[4].z, panelAtlas[4].w) * scale, panelAtlas[4], 0.0f, UI::themeColors["primary"]);
-		sprender->DrawSprite(panels, glm::vec2(headerX, pos.y) * scale, glm::vec2(headerW, panelAtlas[3].w) * scale, panelAtlas[3], 0.0f, UI::themeColors["primary"]);
-		sprender->DrawSprite(panels, glm::vec2(headerX + headerW, pos.y) * scale, glm::vec2(panelAtlas[5].z, panelAtlas[5].w) * scale, panelAtlas[5], 0.0f, UI::themeColors["primary"]);
+		sprender->DrawSprite(&panels, glm::vec2(headerX - panels[4].z, pos.y) * scale, glm::vec2(panels[4].z, panels[4].w) * scale, panels[4], 0.0f, UI::themeColors["primary"]);
+		sprender->DrawSprite(&panels, glm::vec2(headerX, pos.y) * scale, glm::vec2(headerW, panels[3].w) * scale, panels[3], 0.0f, UI::themeColors["primary"]);
+		sprender->DrawSprite(&panels, glm::vec2(headerX + headerW, pos.y) * scale, glm::vec2(panels[5].z, panels[5].w) * scale, panels[5], 0.0f, UI::themeColors["primary"]);
 
 		sprender->DrawText(1, items->header, glm::vec2(headerX, pos.y + 32), glm::vec4(1), 150);
-		pos.y += panelAtlas[4].w + 32;
+		pos.y += panels[4].w + 32;
 
 		if (!items->subheader.empty())
 		{
@@ -433,7 +419,7 @@ void DoomMenu::Draw(double dt)
 		startY = pos.y + 24;
 	}
 
-	const auto shown = std::min(visible, (int)items->size() - scroll);
+	const auto shown = std::min(visible, (int)items->items.size() - scroll);
 
 	const auto partSize = UI::controlsAtlas[4].w * 0.75f *  scale;
 	const auto thumbSize = glm::vec2(UI::controlsAtlas[3].z, UI::controlsAtlas[3].w) * 0.75f * scale;
@@ -449,7 +435,7 @@ void DoomMenu::Draw(double dt)
 	//pos.y = startY + headerH;
 	for (int i = 0; i < shown; i++)
 	{
-		auto item = items->at(i + scroll);
+		auto item = items->items[i + scroll];
 		auto size = 100 * scale;
 		pos.y += (40 * scale) + size - (100 * scale);
 		if (i + scroll == highlight)
@@ -468,7 +454,7 @@ void DoomMenu::Draw(double dt)
 
 	for (int i = 0; i < shown; i++)
 	{
-		auto item = i == 0 ? items->at(0) : items->at(i + scroll);
+		auto item = i == 0 ? items->items[0] : items->items[i + scroll];
 		//auto color = glm::vec4(1, 1, i + scroll == highlight ? 0.25 : 1, 1);
 		const auto color = glm::vec4(1);
 		auto offset = glm::vec2(item->type == DoomMenuTypes::Checkbox ? (40 * scale) : 0, 0);
@@ -513,7 +499,7 @@ void DoomMenu::Draw(double dt)
 
 	for (int i = 0; i < shown; i++)
 	{
-		auto item = i == 0 ? items->at(0) : items->at(i + scroll);
+		auto item = i == 0 ? items->items[0] : items->items[i + scroll];
 		auto color = glm::vec4(1, 1, i + scroll == highlight ? 0.25 : 1, 1);
 		auto offset = glm::vec2(item->type == DoomMenuTypes::Checkbox ? (40 * scale) : 0, 0);
 		auto font = 1;
@@ -551,7 +537,7 @@ void DoomMenu::Draw(double dt)
 	}
 
 	//species page special stuff
-	if (items == &species && items->at(highlight)->type == DoomMenuTypes::Checkbox)
+	if (items == &species && items->items[highlight]->type == DoomMenuTypes::Checkbox)
 	{
 		sprender->DrawSprite(speciesPreviews[highlight], glm::vec2((width * 0.5f) - (speciesPreviews[0]->width * 0.5f), (height * 0.5f) - (speciesPreviews[0]->height * 0.5f)));
 	}

@@ -39,6 +39,9 @@ Texture::Texture(const std::string& texturePath, int repeat, int filter) : file(
 	data = stbi_load_from_memory((unsigned char*)vfsData, (int)vfsSize, &width, &height, &channels, 0);
 	free(vfsData);
 
+	auto atlasPath = texturePath.substr(0, texturePath.find_last_of('.')) + ".json";
+	GetAtlas(atlas, atlasPath);
+
 	if (data)
 	{
 		if (!load(data, &ID, width, height, channels, repeat, filter))
