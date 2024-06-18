@@ -72,7 +72,7 @@ static void initVFS_fromArchive(int source)
 	conprint(0, "VFS: from {}...", src.path);
 	{
 		mz_zip_archive zip;
-		memset(&zip, 0, sizeof(zip));
+		std::memset(&zip, 0, sizeof(zip));
 		mz_zip_reader_init_file(&zip, src.path.c_str(), 0);
 		int zipFiles = mz_zip_reader_get_num_files(&zip);
 		for (int i = 0; i < zipFiles; i++)
@@ -105,7 +105,7 @@ static void initVFS_addSource(const fs::path& path)
 	if (newSrc.isZip)
 	{
 		mz_zip_archive zip;
-		memset(&zip, 0, sizeof(zip));
+		std::memset(&zip, 0, sizeof(zip));
 		mz_zip_reader_init_file(&zip, path.string().c_str(), 0);
 		int zipFiles = mz_zip_reader_get_num_files(&zip);
 		for (int i = 0; i < zipFiles; i++)
@@ -258,7 +258,7 @@ char* ReadVFS(const VFSEntry& entry, size_t* size)
 	{
 		conprint(2, "DEBUG: getting {} from {}.", entry.path, source.path);
 		mz_zip_archive zip;
-		memset(&zip, 0, sizeof(zip));
+		std::memset(&zip, 0, sizeof(zip));
 		mz_zip_reader_init_file(&zip, source.path.c_str(), 0);
 		mz_zip_archive_file_stat fs;
 		if (!mz_zip_reader_file_stat(&zip, entry.zipIndex, &fs))
@@ -269,10 +269,8 @@ char* ReadVFS(const VFSEntry& entry, size_t* size)
 		const size_t siz = (size_t)fs.m_uncomp_size;
 		if (size != nullptr)
 			*size = siz;
-		char* ret = (char*)malloc(siz + 2);
-		if (ret == nullptr)
-			return nullptr;
-		memset(ret, 0, siz + 2);
+		char* ret = new char[siz + 2];
+		std::memset(ret, 0, siz + 2);
 		mz_zip_reader_extract_to_mem(&zip, entry.zipIndex, ret, siz, 0);
 		return ret;
 	}
@@ -284,10 +282,8 @@ char* ReadVFS(const VFSEntry& entry, size_t* size)
 		file.seekg(0, std::ios::beg);
 		if (size != nullptr)
 			*size = fs;
-		char* ret = (char*)malloc(fs + 2);
-		if (ret == nullptr)
-			return nullptr;
-		memset(ret, 0, fs + 2);
+		char* ret = new char[fs + 2];
+		std::memset(ret, 0, fs + 2);
 		file.read(ret, fs);
 		return ret;
 	}

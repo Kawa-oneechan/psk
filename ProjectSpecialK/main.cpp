@@ -103,10 +103,8 @@ namespace UI
 		file.seekg(0, std::ios::beg);
 		if (size != nullptr)
 			*size = fs;
-		char* ret = (char*)malloc(fs + 2);
-		if (ret == nullptr)
-			throw std::exception("Could not allocate space for file.");
-		memset(ret, 0, fs + 2);
+		char* ret = new char[fs + 2];
+		std::memset(ret, 0, fs + 2);
 		file.read(ret, fs);
 		file.close();
 		return ret;
@@ -134,28 +132,31 @@ namespace UI
 			textColors.push_back(GetJSONVec4(ink));
 		}
 
-		//TODO: load from and save to file.
 		try
 		{
 			char *data = LoadFile("options.json", nullptr);
 			settings = JSON::Parse(data)->AsObject();
-			free(data);
+			delete[] data;
 		}
 		catch (std::exception&)
 		{
-			settings["language"] = new JSONValue(0); //English
-			settings["continue"] = new JSONValue(0); //Front door
-			settings["speech"] = new JSONValue(1); //Bebebese
-			settings["pingRate"] = new JSONValue(3);
-			settings["balloonChance"] = new JSONValue(15);
-			settings["cursorScale"] = new JSONValue(100);
-			settings["24hour"] = new JSONValue(true);
-			settings["contentFilters"] = new JSONValue(JSONObject());
-			settings["musicVolume"] = new JSONValue(0.7f);
-			settings["ambientVolume"] = new JSONValue(0.5f);
-			settings["soundVolume"] = new JSONValue(1);
-			settings["speechVolume"] = new JSONValue(1);
+			settings = JSON::Parse("{}")->AsObject();
 		}
+
+#define DS(K, V) if (settings[K] == nullptr) settings[K] = new JSONValue(V)
+		DS("language", 0); //English
+		DS("continue", 0); //Front door
+		DS("speech", 1); //Bebebese
+		DS("pingRate", 3);
+		DS("balloonChance", 15);
+		DS("cursorScale", 100);
+		DS("24hour", true);
+		DS("contentFilters", JSONObject());
+		DS("musicVolume", 0.7f);
+		DS("ambientVolume", 0.5f);
+		DS("soundVolume", 1.0f);
+		DS("speechVolume", 1.0f);
+#undef DS
 
 		static const Language opt2lan[] = { Language::USen, Language::JPja, Language::EUde, Language::EUes, Language::EUfr, Language::EUit, Language::EUhu, Language::EUnl };
 		gameLang = opt2lan[(int)settings["language"]->AsNumber()];
