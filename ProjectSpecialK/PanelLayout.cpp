@@ -14,9 +14,7 @@ PanelLayout::PanelLayout(JSONValue* source)
 	{
 		for (const auto& t : src["textures"]->AsArray())
 		{
-			auto tfn = t->AsString();
-			auto tex = new Texture(tfn);
-			textures.push_back(tex);
+			textures.push_back(new Texture(t->AsString()));
 		}
 	}
 

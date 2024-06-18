@@ -31,4 +31,7 @@ public:
 	void SetRepeat(int newRepeat);
 
 	glm::vec4 operator[](size_t i) const { return (atlas.empty() || i >= atlas.size()) ? glm::vec4(0) : atlas[i]; }
+
+	Texture(const Texture &x) = default;
+	Texture &operator=(const Texture &x) = default;
 };

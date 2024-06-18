@@ -86,8 +86,7 @@ Texture::Texture(const unsigned char* externalData, int width, int height, int c
 
 Texture::~Texture()
 {
-	GLuint temp[] = { ID };
-	glDeleteTextures(1, temp);
+	glDeleteTextures(1, &ID);
 }
 
 void Texture::Use()
