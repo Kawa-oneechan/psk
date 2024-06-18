@@ -46,7 +46,7 @@ PanelLayout::PanelLayout(JSONValue* source)
 			panel->ID = pnl["id"]->AsString();
 		}
 
-		panel->Position = GetJSONVec2(pnl["position"]);
+		//panel->Position = GetJSONVec2(pnl["position"]);
 		panel->Polygon = -1;
 
 		auto& type = pnl["type"]->AsString();
@@ -80,6 +80,52 @@ PanelLayout::PanelLayout(JSONValue* source)
 			panel->Size = pnl["size"] != nullptr ? (float)pnl["size"]->AsNumber() : 100.0f;
 			panel->Polygon = pnl["polygon"] != nullptr ? (int)pnl["polygon"]->AsNumber() : -1;
 		}
+
+		{
+			auto pos = pnl["position"]->AsArray();
+			auto w = 0;
+			auto h = 0;
+			if (panel->Type == PanelType::Image)
+			{
+				w = textures[panel->Texture]->width;
+				h = textures[panel->Texture]->height;
+			}
+			for (int i = 0; i < 2; i++)
+			{
+				if (pos[i]->IsString())
+				{
+					auto& str = pos[i]->AsString();
+					if (str == "middle")
+					{
+						if (i == 0)
+							pos[i] = new JSONValue((width * 0.5f) - (w * 0.5f));
+						else
+							pos[i] = new JSONValue((height * 0.5f) - (h * 0.5f));
+					}
+				}
+			}
+			panel->Position = GetJSONVec2(new JSONValue(pos));
+		}
+
+		panel->Parent = -1;
+		if (pnl["parent"] != nullptr)
+		{
+			if (pnl["parent"]->IsString())
+			{
+				auto& prt = pnl["parent"]->AsString();
+				for (int i = 0; i < panels.size(); i++)
+				{
+					if (panels[i]->ID == prt)
+					{
+						panel->Parent = i;
+						break;
+					}
+				}
+			}
+			else if(pnl["parent"]->IsNumber())
+				panel->Parent = (int)pnl["parent"]->AsNumber();
+		}
+
 		panel->Color = glm::vec4(1, 1, 1, 1);
 		if (pnl["color"] != nullptr)
 		{
@@ -146,6 +192,15 @@ void PanelLayout::Draw(double dt)
 		if (panel == highlighted)
 			color *= 3.0f;
 
+		auto parentPos = glm::vec2(0);
+		auto parentID = panel->Parent;
+		while (parentID != -1)
+		{
+			auto& parent = panels[parentID];
+			parentPos += parent->Position;
+			parentID = parent->Parent;
+		}
+
 		color.a = clamp(Alpha * panel->Alpha, 0.0f, 1.0f);
 		if (color.a == 0)
 			continue;
@@ -158,7 +213,7 @@ void PanelLayout::Draw(double dt)
 
 			sprender->DrawSprite(
 				shader, texture,
-				(Position + panel->Position) * scale,
+				(Position + parentPos + panel->Position) * scale,
 				glm::vec2(frame.z, frame.w) * scale,
 				frame,
 				0.0f,
@@ -171,7 +226,7 @@ void PanelLayout::Draw(double dt)
 			if (panel->Text.empty())
 				continue;
 
-			auto pos = Position + panel->Position;
+			auto pos = Position + parentPos + panel->Position;
 			if (panel->Alignment > 0)
 			{
 				auto w = sprender->MeasureText(panel->Font, panel->Text, panel->Size * scale).x;

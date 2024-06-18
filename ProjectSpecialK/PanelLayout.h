@@ -24,6 +24,7 @@ class PanelLayout : public Tickable
 		std::string Text;
 		glm::vec4 Color;
 		int Polygon;
+		int Parent;
 	};
 
 private:

@@ -4,7 +4,7 @@
 	//Atlas part
 	"type": "atlas",
 	"rects": [
-		[   1,   1, 747, 356 ], //backing plate, parent node
+		[   1,   1, 742, 356 ], //backing plate, parent node
 		[ 745,   1, 117, 196 ], //S
 		[ 864,   1,  85, 118 ], //P
 		[ 951,   1,  71,  76 ], //E
@@ -18,7 +18,7 @@
 	//Panel Layout part
 	"logoPanels": {
 		"textures": [
-			"logo.png"
+			"cinematics/logo/logo.png"
 		],
 		"panels": [
 			{
