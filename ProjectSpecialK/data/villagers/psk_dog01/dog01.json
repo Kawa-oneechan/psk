@@ -1,0 +1,32 @@
+{
+  "id" : "psk:dog01",
+  "name" : {
+    "en" : "Harmon"
+  },
+  "species" : "dog",
+  "personality" : "plain",
+  "personalitySubtype" : 0,
+  "gender" : "mas",
+  "attraction" : "boys",
+  "birthday" : [ 20, 12 ],
+  "hobby" : "music",
+  "colors" : [ "beige", "green" ],
+  "nameTag" : [ "#FFFFFF", "#848484" ],
+  "catchphrase" : {
+    "en" : "hwa-wah"
+  },
+  "clothing" : {
+    "default" : "acnh:aranknitsweater/green",
+    "rain" : [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
+  },
+  "umbrella" : "acnh:redumbrella",
+  "photo" : "psk:harmonsphoto",
+  "poster" : "psk:harmonsposter",
+  "house" : {
+    "walls" : "acnh:commonwall",
+    "floor" : "acnh:commonflooring",
+    "music" : "acnh:silence",
+    "items" : [
+    ]
+  }
+}

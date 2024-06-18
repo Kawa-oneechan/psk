@@ -1,0 +1,32 @@
+{
+  "id" : "psk:crd00",
+  "name" : {
+    "en" : "Crunch"
+  },
+  "species" : "crd",
+  "personality" : "smug",
+  "personalitySubtype" : 0,
+  "gender" : "mnb",
+  "attraction" : "both",
+  "birthday" : [ 26, 4 ],
+  "hobby" : "music",
+  "colors" : [ "white", "purple" ],
+  "nameTag" : [ "#FFFFFF", "#848484" ],
+  "catchphrase" : {
+    "en" : "ya dig"
+  },
+  "clothing" : {
+    "default" : "acnh:aranknitsweater/green",
+    "rain" : [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
+  },
+  "umbrella" : "acnh:redumbrella",
+  "photo" : "psk:crunchsphoto",
+  "poster" : "psk:crunchsposter",
+  "house" : {
+    "walls" : "acnh:commonwall",
+    "floor" : "acnh:commonflooring",
+    "music" : "acnh:silence",
+    "items" : [
+    ]
+  }
+}

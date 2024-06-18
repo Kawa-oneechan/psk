@@ -1,0 +1,32 @@
+{
+  "id" : "psk:dog00",
+  "name" : {
+    "en" : "Monica"
+  },
+  "species" : "dog",
+  "personality" : "peppy",
+  "personalitySubtype" : 0,
+  "gender" : "fem",
+  "attraction" : "girls",
+  "birthday" : [ 24, 6 ],
+  "hobby" : "music",
+  "colors" : [ "red", "black" ],
+  "nameTag" : [ "#FFFFFF", "#848484" ],
+  "catchphrase" : {
+    "en" : "my lady"
+  },
+  "clothing" : {
+    "default" : "acnh:aranknitsweater/green",
+    "rain" : [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
+  },
+  "umbrella" : "acnh:redumbrella",
+  "photo" : "psk:monicasphoto",
+  "poster" : "psk:monicasposter",
+  "house" : {
+    "walls" : "acnh:commonwall",
+    "floor" : "acnh:commonflooring",
+    "music" : "acnh:silence",
+    "items" : [
+    ]
+  }
+}

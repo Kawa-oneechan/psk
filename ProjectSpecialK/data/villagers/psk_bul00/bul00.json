@@ -1,0 +1,32 @@
+{
+  "id" : "psk:bul00",
+  "name" : {
+    "en" : "Rao"
+  },
+  "species" : "bul",
+  "personality" : "lazy",
+  "personalitySubtype" : 0,
+  "gender" : "male",
+  "attraction" : "boys",
+  "birthday" : [ 3, 4 ],
+  "hobby" : "music",
+  "colors" : [ "colorful", "beige" ],
+  "nameTag" : [ "#FFFFFF", "#848484" ],
+  "catchphrase" : {
+    "en" : "oh man"
+  },
+  "clothing" : {
+    "default" : "acnh:aranknitsweater/green",
+    "rain" : [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
+  },
+  "umbrella" : "acnh:redumbrella",
+  "photo" : "psk:raosphoto",
+  "poster" : "psk:raosposter",
+  "house" : {
+    "walls" : "acnh:commonwall",
+    "floor" : "acnh:commonflooring",
+    "music" : "acnh:silence",
+    "items" : [
+    ]
+  }
+}

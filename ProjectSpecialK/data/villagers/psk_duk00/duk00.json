@@ -1,0 +1,32 @@
+{
+  "id" : "psk:duk00",
+  "name" : {
+    "en" : "Vinny"
+  },
+  "species" : "duk",
+  "personality" : "jock",
+  "personalitySubtype" : 0,
+  "gender" : "male",
+  "attraction" : "girls",
+  "birthday" : [ 20, 4 ],
+  "hobby" : "play",
+  "colors" : [ "green", "black" ],
+  "nameTag" : [ "#FFFFFF", "#848484" ],
+  "catchphrase" : {
+    "en" : "WHAT"
+  },
+  "clothing" : {
+    "default" : "acnh:aranknitsweater/green",
+    "rain" : [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
+  },
+  "umbrella" : "acnh:redumbrella",
+  "photo" : "psk:vinnysphoto",
+  "poster" : "psk:vinnysposter",
+  "house" : {
+    "walls" : "acnh:commonwall",
+    "floor" : "acnh:commonflooring",
+    "music" : "acnh:silence",
+    "items" : [
+    ]
+  }
+}

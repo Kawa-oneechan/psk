@@ -1,0 +1,32 @@
+{
+  "id" : "psk:cbr00",
+  "name" : {
+    "en" : "Kay"
+  },
+  "species" : "cbr",
+  "personality" : "normal",
+  "personalitySubtype" : 0,
+  "gender" : "fnb",
+  "attraction" : "none",
+  "birthday" : [ 14, 3 ],
+  "hobby" : "nature",
+  "colors" : [ "purple", "yellow" ],
+  "nameTag" : [ "#FFFFFF", "#848484" ],
+  "catchphrase" : {
+    "en" : "klip"
+  },
+  "clothing" : {
+    "default" : "acnh:aranknitsweater/green",
+    "rain" : [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
+  },
+  "umbrella" : "acnh:redumbrella",
+  "photo" : "psk:kaysphoto",
+  "poster" : "psk:kaysposter",
+  "house" : {
+    "walls" : "acnh:commonwall",
+    "floor" : "acnh:commonflooring",
+    "music" : "acnh:silence",
+    "items" : [
+    ]
+  }
+}

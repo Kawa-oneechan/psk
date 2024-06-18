@@ -1,0 +1,32 @@
+{
+  "id" : "psk:dog03",
+  "name" : {
+    "en" : "Howler"
+  },
+  "species" : "dog",
+  "personality" : "smug",
+  "personalitySubtype" : 0,
+  "gender" : "mas",
+  "attraction" : "boys",
+  "birthday" : [ 20, 12 ],
+  "hobby" : "education",
+  "colors" : [ "green", "yellow" ],
+  "nameTag" : [ "#FFFFFF", "#848484" ],
+  "catchphrase" : {
+    "en" : "whoop"
+  },
+  "clothing" : {
+    "default" : "acnh:aranknitsweater/green",
+    "rain" : [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
+  },
+  "umbrella" : "acnh:redumbrella",
+  "photo" : "psk:howlersphoto",
+  "poster" : "psk:howlersposter",
+  "house" : {
+    "walls" : "acnh:commonwall",
+    "floor" : "acnh:commonflooring",
+    "music" : "acnh:silence",
+    "items" : [
+    ]
+  }
+}
