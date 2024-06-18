@@ -1,19 +1,14 @@
 #include <string>
 #include <sstream>
 
+#include "SpecialK.h"
+
 #include "SpriteRenderer.h"
 #include "support/stb_truetype.h"
 #include "support/stb_image_write.h"
 
 extern Shader* spriteShader;
 extern float width, height;
-namespace UI
-{
-	extern glm::vec4 primaryColor;
-	extern glm::vec4 secondaryColor;
-	extern std::vector<glm::vec4> textColors;
-	extern JSONObject& json;
-};
 
 static Texture* currentTexture = nullptr;
 static Shader* currentShader = nullptr;
@@ -90,7 +85,7 @@ void SpriteRenderer::Flush()
 	instanceCursor = 0;
 }
 
-void SpriteRenderer::DrawSprite(Shader* shader, Texture* texture, glm::vec2 position, glm::vec2 size, glm::vec4 srcRect, float rotate, const glm::vec4& color, int flags)
+void SpriteRenderer::DrawSprite(Shader* shader, Texture& texture, glm::vec2 position, glm::vec2 size, glm::vec4 srcRect, float rotate, const glm::vec4& color, int flags)
 {
 	glm::mat4 orthoProjection = glm::ortho(0.0f, width, height, 0.0f, -1.0f, 1.0f);
 
@@ -108,10 +103,10 @@ void SpriteRenderer::DrawSprite(Shader* shader, Texture* texture, glm::vec2 posi
 
 	if (srcRect.z != 0)
 	{
-		srcRect.x /= texture->width;
-		srcRect.y /= texture->height;
-		srcRect.z /= texture->width;
-		srcRect.w /= texture->height;
+		srcRect.x /= texture.width;
+		srcRect.y /= texture.height;
+		srcRect.z /= texture.width;
+		srcRect.w /= texture.height;
 		srcRect.y = -srcRect.y;
 	}
 
@@ -123,12 +118,12 @@ void SpriteRenderer::DrawSprite(Shader* shader, Texture* texture, glm::vec2 posi
 		else
 			currentShader = shader;
 	}
-	if (currentTexture == nullptr || currentTexture->ID != texture->ID)
+	if (currentTexture == nullptr || currentTexture->ID != texture.ID)
 	{
 		if (currentTexture != nullptr)
 			flush = true;
 		else
-			currentTexture = texture;
+			currentTexture = &texture;
 	}
 	if (instanceCursor >= 200)
 		flush = true;
@@ -137,7 +132,7 @@ void SpriteRenderer::DrawSprite(Shader* shader, Texture* texture, glm::vec2 posi
 	{
 		Flush();
 		currentShader = shader;
-		currentTexture = texture;
+		currentTexture = &texture;
 		instanceCursor = 0; //CA doesn't know Flush() already does this. Whatever.
 	}
 
@@ -162,17 +157,17 @@ void SpriteRenderer::DrawSprite(Shader* shader, Texture* texture, glm::vec2 posi
 	//glBindVertexArray(0);
 }
 
-void SpriteRenderer::DrawSprite(Texture* texture, const glm::vec2& position, const glm::vec2& size, const glm::vec4& srcRect, float rotate, const glm::vec4& color, int flip)
+void SpriteRenderer::DrawSprite(Texture& texture, const glm::vec2& position, const glm::vec2& size, const glm::vec4& srcRect, float rotate, const glm::vec4& color, int flip)
 {
 	DrawSprite(spriteShader, texture, position, size, srcRect, rotate, color, flip);
 }
 
-void SpriteRenderer::DrawSprite(Shader* shader, Texture* texture, const glm::vec2 position)
+void SpriteRenderer::DrawSprite(Shader* shader, Texture& texture, const glm::vec2 position)
 {
-	DrawSprite(shader, texture, position, glm::vec2(texture->width, texture->height), glm::vec4(0), 0, glm::vec4(1));
+	DrawSprite(shader, texture, position, glm::vec2(texture.width, texture.height), glm::vec4(0), 0, glm::vec4(1));
 }
 
-void SpriteRenderer::DrawSprite(Texture* texture, const glm::vec2 position)
+void SpriteRenderer::DrawSprite(Texture& texture, const glm::vec2 position)
 {
-	DrawSprite(spriteShader, texture, position, glm::vec2(texture->width, texture->height), glm::vec4(0), 0, glm::vec4(1));
+	DrawSprite(spriteShader, texture, position, glm::vec2(texture.width, texture.height), glm::vec4(0), 0, glm::vec4(1));
 }

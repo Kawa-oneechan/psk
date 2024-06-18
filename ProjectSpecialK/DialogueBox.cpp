@@ -221,7 +221,7 @@ void DialogueBox::Draw(double dt)
 	//	sprender->DrawSprite(*bubble[bubbleNum], glm::vec2(dlgLeft, dlgTop), glm::vec2(dlgWidth * 2, dlgHeight), glm::vec4(0));
 	//else
 	{
-		sprender->DrawSprite(wobble, &bubble[bubbleNum], glm::vec2(dlgLeft, dlgTop), glm::vec2(dlgWidth * 2, dlgHeight), glm::vec4(0, 0, bubble[bubbleNum].width * 2, bubble[bubbleNum].height), 0, bubbleColor, 0);
+		sprender->DrawSprite(wobble, bubble[bubbleNum], glm::vec2(dlgLeft, dlgTop), glm::vec2(dlgWidth * 2, dlgHeight), glm::vec4(0, 0, bubble[bubbleNum].width * 2, bubble[bubbleNum].height), 0, bubbleColor, 0);
 		//sprender->DrawSprite(wobble, bubble[bubbleNum], glm::vec2(dlgLeft + dlgWidth, dlgTop), glm::vec2(dlgWidth, dlgHeight), glm::vec4(0, 0, bubble[0]->width, bubble[0]->height), 0, bubbleColor, 1);
 	}
 
@@ -239,16 +239,16 @@ void DialogueBox::Draw(double dt)
 		const auto tagPosR = tagPosM + glm::vec2(cosf(glm::radians(tagAngle)) * nametagWidth, sinf(glm::radians(tagAngle)) * nametagWidth);
 		//TODO: figure this one out properly
 		const auto tagPosT = tagPosL + glm::vec2(cosf(glm::radians(tagAngle)) * (tagSize.x - 16), sinf(glm::radians(tagAngle)) * (tagSize.x - 512));
-		sprender->DrawSprite(&nametag, tagPosL, tagSize, nametag[0], tagAngle, nametagColor[0], SPR_TOPLEFT);
-		sprender->DrawSprite(&nametag, tagPosM, glm::vec2(nametagWidth, tagSize.y), nametag[2], tagAngle, nametagColor[0], SPR_TOPLEFT);
-		sprender->DrawSprite(&nametag, tagPosR, tagSize, nametag[1], tagAngle, nametagColor[0], SPR_TOPLEFT);
+		sprender->DrawSprite(nametag, tagPosL, tagSize, nametag[0], tagAngle, nametagColor[0], SPR_TOPLEFT);
+		sprender->DrawSprite(nametag, tagPosM, glm::vec2(nametagWidth, tagSize.y), nametag[2], tagAngle, nametagColor[0], SPR_TOPLEFT);
+		sprender->DrawSprite(nametag, tagPosR, tagSize, nametag[1], tagAngle, nametagColor[0], SPR_TOPLEFT);
 		sprender->DrawText(1, name, tagPosT, nametagColor[1], 120 * scale, tagAngle);
 	}
 
 	if (state == DialogueBoxState::WaitingForKey)
 	{
-		auto arr = UI::controlsAtlas[6];
-		sprender->DrawSprite(UI::controls, glm::vec2((width / 2) - (arr.z / 2), height - arr.w - 20), glm::vec2(arr.z, arr.w), arr, 0.0f, UI::themeColors["primary"]);
+		auto arr = (*UI::controls)[6];
+		sprender->DrawSprite(*UI::controls, glm::vec2((width / 2) - (arr.z / 2), height - arr.w - 20), glm::vec2(arr.z, arr.w), arr, 0.0f, UI::themeColors["primary"]);
 	}
 
 	//maybe afterwards port this to the UI Panel system?

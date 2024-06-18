@@ -2,7 +2,6 @@
 
 Background::Background()
 {
-	wallpaper = new Texture("discobg2.jpg");
 	scroller = new Shader("shaders/scroller.fs");
 	time = 0;
 }

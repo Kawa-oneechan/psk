@@ -214,7 +214,7 @@ renderIt:
 		auto adv = bakedChar.xadvance;
 
 		auto chPos = position + glm::vec2(bakedChar.xoff * scaleF, bakedChar.yoff * scaleF);
-		DrawSprite(fontShader, fontTextures[(textRenderFont * 256) + bank], chPos, stringScale, srcRect, angle, textRenderColor);
+		DrawSprite(fontShader, *fontTextures[(textRenderFont * 256) + bank], chPos, stringScale, srcRect, angle, textRenderColor);
 
 		//position.x += adv * scaleF;
 		position.x += cosf(glm::radians(angle)) * adv * scaleF;

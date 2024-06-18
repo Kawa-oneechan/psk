@@ -390,6 +390,8 @@ void DoomMenu::Draw(double dt)
 	float endY = height - (176 * scale);
 	
 	auto pos = glm::vec2(startX, startY);
+	
+	auto& controls = *UI::controls;
 
 	itemX = pos.x;
 
@@ -398,9 +400,9 @@ void DoomMenu::Draw(double dt)
 		auto headerW = sprender->MeasureText(1, items->header, 150).x;
 		auto headerX = (width / 2) - (headerW / 2);
 
-		sprender->DrawSprite(&panels, glm::vec2(headerX - panels[4].z, pos.y) * scale, glm::vec2(panels[4].z, panels[4].w) * scale, panels[4], 0.0f, UI::themeColors["primary"]);
-		sprender->DrawSprite(&panels, glm::vec2(headerX, pos.y) * scale, glm::vec2(headerW, panels[3].w) * scale, panels[3], 0.0f, UI::themeColors["primary"]);
-		sprender->DrawSprite(&panels, glm::vec2(headerX + headerW, pos.y) * scale, glm::vec2(panels[5].z, panels[5].w) * scale, panels[5], 0.0f, UI::themeColors["primary"]);
+		sprender->DrawSprite(panels, glm::vec2(headerX - panels[4].z, pos.y) * scale, glm::vec2(panels[4].z, panels[4].w) * scale, panels[4], 0.0f, UI::themeColors["primary"]);
+		sprender->DrawSprite(panels, glm::vec2(headerX, pos.y) * scale, glm::vec2(headerW, panels[3].w) * scale, panels[3], 0.0f, UI::themeColors["primary"]);
+		sprender->DrawSprite(panels, glm::vec2(headerX + headerW, pos.y) * scale, glm::vec2(panels[5].z, panels[5].w) * scale, panels[5], 0.0f, UI::themeColors["primary"]);
 
 		sprender->DrawText(1, items->header, glm::vec2(headerX, pos.y + 32), glm::vec4(1), 150);
 		pos.y += panels[4].w + 32;
@@ -410,7 +412,7 @@ void DoomMenu::Draw(double dt)
 			auto xy = sprender->MeasureText(1, items->subheader, 120);
 			headerX = (width / 2) - (xy.x / 2);
 
-			sprender->DrawSprite(whiteRect, glm::vec2(0, pos.y) * scale, glm::vec2(width, xy.y + 16) * scale, glm::vec4(0), 0.0f, UI::themeColors["primary"]);
+			sprender->DrawSprite(*whiteRect, glm::vec2(0, pos.y) * scale, glm::vec2(width, xy.y + 16) * scale, glm::vec4(0), 0.0f, UI::themeColors["primary"]);
 
 			sprender->DrawText(1, items->subheader, glm::vec2(headerX, pos.y + 8), glm::vec4(1), 120);
 			pos.y += xy.y + 20;
@@ -421,15 +423,15 @@ void DoomMenu::Draw(double dt)
 
 	const auto shown = std::min(visible, (int)items->items.size() - scroll);
 
-	const auto partSize = UI::controlsAtlas[4].w * 0.75f *  scale;
-	const auto thumbSize = glm::vec2(UI::controlsAtlas[3].z, UI::controlsAtlas[3].w) * 0.75f * scale;
+	const auto partSize = controls[4].w * 0.75f *  scale;
+	const auto thumbSize = glm::vec2(controls[3].z, controls[3].w) * 0.75f * scale;
 
-	sprender->DrawText(0, fmt::format("DoomMenu: {}/{} {} {},{} - {},{}", highlight, mouseHighlight, Inputs.MouseHoldLeft, Inputs.MousePosition.x, Inputs.MousePosition.y, sliderStart, sliderEnd), glm::vec2(0, 16));
+	//sprender->DrawText(0, fmt::format("DoomMenu: {}/{} {} {},{} - {},{}", highlight, mouseHighlight, Inputs.MouseHoldLeft, Inputs.MousePosition.x, Inputs.MousePosition.y, sliderStart, sliderEnd), glm::vec2(0, 16));
 
 	itemY.clear();
 
-	sprender->DrawSprite(whiteRect, glm::vec2(0, startY - 8) * scale, glm::vec2(width, endY - startY - 8) * scale, glm::vec4(0), 0.0f, UI::themeColors["primary"]);
-	sprender->DrawSprite(whiteRect, glm::vec2(0, endY) * scale, glm::vec2(width, 24) * scale, glm::vec4(0), 0.0f, UI::themeColors["primary"]);
+	sprender->DrawSprite(*whiteRect, glm::vec2(0, startY - 8) * scale, glm::vec2(width, endY - startY - 8) * scale, glm::vec4(0), 0.0f, UI::themeColors["primary"]);
+	sprender->DrawSprite(*whiteRect, glm::vec2(0, endY) * scale, glm::vec2(width, 24) * scale, glm::vec4(0), 0.0f, UI::themeColors["primary"]);
 
 	//pos.y -= 8 * scale;
 	//pos.y = startY + headerH;
@@ -444,9 +446,9 @@ void DoomMenu::Draw(double dt)
 			auto highlightSize = sprender->MeasureText(1, item->caption, 100 * scale);
 			highlightSize.x += 8 * scale;
 			highlightSize.y *= 0.75f;
-			sprender->DrawSprite(UI::controls, pos + offset + glm::vec2(-(highlightSize.y) * scale, 0), glm::vec2(highlightSize.y), UI::controlsAtlas[7], 0, UI::themeColors["secondary"]);
-			sprender->DrawSprite(UI::controls, pos + offset + glm::vec2(highlightSize.x, 0), glm::vec2(highlightSize.y), UI::controlsAtlas[8], 0, UI::themeColors["secondary"]);
-			sprender->DrawSprite(UI::controls, pos + offset, highlightSize, UI::controlsAtlas[9], 0, UI::themeColors["secondary"]);
+			sprender->DrawSprite(controls, pos + offset + glm::vec2(-(highlightSize.y) * scale, 0), glm::vec2(highlightSize.y), controls[7], 0, UI::themeColors["secondary"]);
+			sprender->DrawSprite(controls, pos + offset + glm::vec2(highlightSize.x, 0), glm::vec2(highlightSize.y), controls[8], 0, UI::themeColors["secondary"]);
+			sprender->DrawSprite(controls, pos + offset, highlightSize, controls[9], 0, UI::themeColors["secondary"]);
 			break;
 		}
 	}
@@ -510,18 +512,18 @@ void DoomMenu::Draw(double dt)
 		if (item->type == DoomMenuTypes::Checkbox)
 		{
 			auto checkColor = color * glm::vec4(1, 1, 1, 0.5);
-			sprender->DrawSprite(UI::controls, pos + glm::vec2(0, 4 * scale), glm::vec2(partSize), UI::controlsAtlas[4], 0, checkColor);
+			sprender->DrawSprite(controls, pos + glm::vec2(0, 4 * scale), glm::vec2(partSize), controls[4], 0, checkColor);
 			if (item->selection)
-				sprender->DrawSprite(UI::controls, pos + glm::vec2(0, 4 * scale), glm::vec2(partSize), UI::controlsAtlas[5], 0, color);
+				sprender->DrawSprite(controls, pos + glm::vec2(0, 4 * scale), glm::vec2(partSize), controls[5], 0, color);
 		}
 		else if (item->type == DoomMenuTypes::Slider)
 		{
 			auto trackColor = color * glm::vec4(1, 1, 1, 0.5);
 			auto barLength = col;
 			//auto partSize = controlsAtlas[0].w * 0.5f * scale;
-			sprender->DrawSprite(UI::controls, pos + glm::vec2(col, 10 * scale), glm::vec2(partSize), UI::controlsAtlas[0], 0, trackColor);
-			sprender->DrawSprite(UI::controls, pos + glm::vec2(col + barLength + (partSize * 1), 10 * scale), glm::vec2(partSize), UI::controlsAtlas[1], 0, trackColor);
-			sprender->DrawSprite(UI::controls, pos + glm::vec2(col + partSize, 10 * scale), glm::vec2(barLength, partSize), UI::controlsAtlas[2], 0, trackColor);
+			sprender->DrawSprite(controls, pos + glm::vec2(col, 10 * scale), glm::vec2(partSize), controls[0], 0, trackColor);
+			sprender->DrawSprite(controls, pos + glm::vec2(col + barLength + (partSize * 1), 10 * scale), glm::vec2(partSize), controls[1], 0, trackColor);
+			sprender->DrawSprite(controls, pos + glm::vec2(col + partSize, 10 * scale), glm::vec2(barLength, partSize), controls[2], 0, trackColor);
 
 			sliderStart = pos.x + col + partSize;
 			sliderEnd = sliderStart + barLength;
@@ -532,13 +534,13 @@ void DoomMenu::Draw(double dt)
 			auto thumbPos = partSize + ((ccur * (barLength - (partSize * 2))) / range);
 
 			auto thumb = glm::vec2(col + (int)thumbPos, 10 * scale);
-			sprender->DrawSprite(UI::controls, pos + thumb, thumbSize, UI::controlsAtlas[3], 0, color);
+			sprender->DrawSprite(controls, pos + thumb, thumbSize, controls[3], 0, color);
 		}
 	}
 
 	//species page special stuff
 	if (items == &species && items->items[highlight]->type == DoomMenuTypes::Checkbox)
 	{
-		sprender->DrawSprite(speciesPreviews[highlight], glm::vec2((width * 0.5f) - (speciesPreviews[0]->width * 0.5f), (height * 0.5f) - (speciesPreviews[0]->height * 0.5f)));
+		sprender->DrawSprite(*speciesPreviews[highlight], glm::vec2((width * 0.5f) - (speciesPreviews[0]->width * 0.5f), (height * 0.5f) - (speciesPreviews[0]->height * 0.5f)));
 	}
 }

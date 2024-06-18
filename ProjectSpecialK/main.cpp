@@ -87,9 +87,7 @@ namespace UI
 	std::map<std::string, glm::vec4> themeColors;
 	std::vector<glm::vec4> textColors;
 
-	Texture* controls;
-	TextureAtlas controlsAtlas;
-	//TODO: turn UI into a static class or whatever so it can initialize AFTER the VFS system, thus allowing removal of controlsAtlas.
+	Texture* controls = nullptr;
 
 	JSONObject& json = JSONObject();
 	JSONObject& settings = JSONObject();
@@ -297,7 +295,7 @@ void ThreadedLoader(std::function<void(void)> loader)
 {
 	glDisable(GL_DEPTH_TEST);
 	cursor->Select(1);
-	auto loadIcon = new Texture("loading.png");
+	auto loadIcon = Texture("loading.png");
 	auto loadPos = glm::vec2(width - 256, height - 256);
 	int oldTime = 0;
 
@@ -406,11 +404,9 @@ int main(int argc, char** argv)
 
 	framebuffer_size_callback(window, WIN_WIDTH, WIN_HEIGHT);
 
-	Shader ourShader("shaders/model.vs", "shaders/model.fs");
 	spriteShader = new Shader("shaders/sprite.fs");
 	whiteRect = new Texture("white.png", GL_CLAMP_TO_EDGE);
 	UI::controls = new Texture("ui/controls.png");
-	GetAtlas(UI::controlsAtlas, "ui/controls.json");
 
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);

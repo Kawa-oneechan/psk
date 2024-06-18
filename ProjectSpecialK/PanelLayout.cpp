@@ -207,8 +207,8 @@ void PanelLayout::Draw(double dt)
 
 		if (panel->Type == PanelType::Image)
 		{
-			auto texture = textures[panel->Texture];
-			auto frame = texture->operator[](panel->Frame);
+			auto& texture = *textures[panel->Texture];
+			auto frame = texture[panel->Frame];
 			auto shader = spriteShader; //shaders[panel->Shader];
 
 			sprender->DrawSprite(
@@ -246,7 +246,7 @@ void PanelLayout::Draw(double dt)
 		}
 		else if (panel->Type == PanelType::ItemIcon)
 		{
-			auto texture = Database::ItemIcons;
+			auto& texture = *Database::ItemIcons;
 			auto frame = Database::ItemIconAtlas[panel->Text];
 			auto shader = spriteShader; //shaders[panel->Shader];
 
