@@ -41,6 +41,8 @@ Texture::Texture(const std::string& texturePath, int repeat, int filter) : file(
 
 	auto atlasPath = texturePath.substr(0, texturePath.find_last_of('.')) + ".json";
 	GetAtlas(atlas, atlasPath);
+	if (atlas.empty())
+		atlas.push_back(glm::vec4(0, 0, width, height));
 
 	if (data)
 	{
@@ -63,6 +65,8 @@ Texture::Texture(const unsigned char* externalData, int width, int height, int c
 {
 	ID = 0;
 	this->file.clear();
+
+	atlas.push_back(glm::vec4(0, 0, width, height));
 
 	int format = GL_RGB;
 	if (channels == 4) format = GL_RGBA;

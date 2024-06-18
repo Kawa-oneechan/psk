@@ -454,7 +454,7 @@ void DoomMenu::Draw(double dt)
 
 	for (int i = 0; i < shown; i++)
 	{
-		auto item = i == 0 ? items->items[0] : items->items[i + scroll];
+		auto item = items->items[i + scroll];
 		//auto color = glm::vec4(1, 1, i + scroll == highlight ? 0.25 : 1, 1);
 		const auto color = glm::vec4(1);
 		auto offset = glm::vec2(item->type == DoomMenuTypes::Checkbox ? (40 * scale) : 0, 0);

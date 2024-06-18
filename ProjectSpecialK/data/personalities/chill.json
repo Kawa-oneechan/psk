@@ -1,0 +1,8 @@
+{
+	"id": "chill",
+	"voice": [ "bo", "fu" ],
+	"base": "fu",
+	"name": {
+		"en": "chill"
+	}
+}

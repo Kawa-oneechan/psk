@@ -16,8 +16,16 @@ Species::Species(JSONObject& value)
 	else if (value["name"]->IsArray())
 	{
 		auto narr = value["name"]->AsArray();
-		TextAdd(ref + ":m", *narr[0]);
-		TextAdd(ref + ":f", *narr[1]);
+		if (narr.size() == 1)
+		{
+			TextAdd(ref + ":m", *narr[0]);
+			TextAdd(ref + ":f", *narr[0]);
+		}
+		else
+		{
+			TextAdd(ref + ":m", *narr[0]);
+			TextAdd(ref + ":f", *narr[1]);
+		}
 	}
 	EnName[0] = StripMSBT(TextGet(ref + ":m", Language::EUen));
 	EnName[1] = StripMSBT(TextGet(ref + ":f", Language::EUen));
