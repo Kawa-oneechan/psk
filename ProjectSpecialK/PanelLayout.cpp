@@ -176,9 +176,9 @@ void PanelLayout::Tick(double dt)
 		highlighted = newHl;
 }
 
-Tween<float>* PanelLayout::Tween(float* target, float from, float to, float speed, Interpolation type)
+Tween<float>* PanelLayout::Tween(float* target, float from, float to, float speed, std::function<float(float)> interpolator)
 {
-	auto tween = new ::Tween<float>(target, from, to, speed, type);
+	auto tween = new ::Tween<float>(target, from, to, speed, interpolator);
 	tweens.push_back(*tween);
 	return tween;
 }
