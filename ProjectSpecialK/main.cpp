@@ -437,8 +437,8 @@ int main(int argc, char** argv)
 	tickables.push_back(new DoomMenu());
 	auto hotbar = new PanelLayout(UI::json["hotbar"]);
 	tickables.push_back(hotbar);
-	hotbar->Tween(&hotbar->Position.y, -100.0f, 0, 0.002f, 2);
-	hotbar->Tween(&hotbar->Alpha, 0, 0.75f, 0.006f, 0);
+	hotbar->Tween(&hotbar->Position.y, -100.0f, 0, 0.002f, Interpolation::BounceOut);
+	hotbar->Tween(&hotbar->Alpha, 0, 0.75f, 0.006f);
 	tickables.push_back(new DateTimePanel());
 	//auto logoJson = ReadJSON("cinematics/logo/logo.json")->AsObject();
 	//auto logoAnim = new PanelLayout(logoJson["logoPanels"]);

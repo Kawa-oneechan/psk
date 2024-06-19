@@ -5,6 +5,29 @@
 #define GLM_ENABLE_EXPERIMENTAL
 #include "support/glm/gtx/easing.hpp"
 
+typedef enum
+{
+	Linear,
+	QuadIn,
+	QuadOut,
+	QuadInOut,
+	CubeIn,
+	CubeOut,
+	CubeInOut,
+	SineIn,
+	SineOut,
+	SineInOut,
+	CircleIn,
+	CircleOut,
+	CircleInOut,
+	ElastIn,
+	ElastOut,
+	ElastInOut,
+	BounceIn,
+	BounceOut,
+	BounceInOut,
+} Interpolation;
+
 template<class T>
 struct Tween
 {
@@ -12,21 +35,38 @@ struct Tween
 	float speed;
 	T* target;
 	float progress;
-	int type;
+	Interpolation type;
 
-	Tween(T* tg, T f, T t, float s = 0.001f, int tp = 0) : target(tg), from(f), to(t), speed(s), type(tp),  progress(0) {}
+	Tween(T* tg, T f, T t, float s = 0.001f, Interpolation tp = Linear) : target(tg), from(f), to(t), speed(s), type(tp),  progress(0) {}
 
 	T value()
 	{
-		auto l = 0.0f;
 		progress = clamp(progress, 0.0f, 1.0f);
+#define X(E, M) case E: return glm::mix(from, to, M(progress))
 		switch (type)
 		{
-		case 0: l = glm::linearInterpolation(progress); break;
-		case 1: l = glm::quadraticEaseOut(progress); break;
-		case 2: l = glm::elasticEaseOut(progress); break;
+			default: [[__fallthrough]]
+			X(Linear, glm::linearInterpolation);
+			X(QuadIn, glm::quadraticEaseIn);
+			X(QuadOut, glm::quadraticEaseOut);
+			X(QuadInOut, glm::quadraticEaseInOut);
+			X(CubeIn, glm::cubicEaseIn);
+			X(CubeOut, glm::cubicEaseOut);
+			X(CubeInOut, glm::cubicEaseInOut);
+			X(SineIn, glm::sineEaseIn);
+			X(SineOut, glm::sineEaseOut);
+			X(SineInOut, glm::sineEaseInOut);
+			X(CircleIn, glm::circularEaseIn);
+			X(CircleOut, glm::circularEaseOut);
+			X(CircleInOut, glm::circularEaseInOut);
+			X(ElastIn, glm::elasticEaseIn);
+			X(ElastOut, glm::elasticEaseOut);
+			X(ElastInOut, glm::elasticEaseInOut);
+			X(BounceIn, glm::bounceEaseIn);
+			X(BounceOut, glm::bounceEaseOut);
+			X(BounceInOut, glm::bounceEaseInOut);
 		}
-		return glm::mix(from, to, l);
+#undef X
 	}
 
 	bool step()
@@ -82,5 +122,5 @@ public:
 	void Tick(double dt);
 	void Draw(double dt);
 	Panel* GetPanel(const std::string& id);
-	Tween<float>* Tween(float* target, float from, float to, float speed = 0.001f, int type = 0);
+	Tween<float>* Tween(float* target, float from, float to, float speed = 0.001f, Interpolation type = Linear);
 };
