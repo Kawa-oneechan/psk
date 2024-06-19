@@ -149,9 +149,7 @@ void PanelLayout::Tick(double dt)
 		for (auto i = 0; i < tweens.size(); i++)
 		{
 			auto& tween = tweens[i];
-			if (tween.progress() < 1.0f)
-				tween.step(1); //(int)(dt * 1) + 1);
-			else
+			if (tween.step())
 				tweens.erase(tweens.begin() + i);
 		}
 	}
@@ -178,10 +176,11 @@ void PanelLayout::Tick(double dt)
 		highlighted = newHl;
 }
 
-void PanelLayout::Tween(float* what, tweeny::tween<float> tween)
+Tween<float>* PanelLayout::Tween(float* target, float from, float to, float speed, int type)
 {
-	tween.onStep([what](float v) { *what = v; return false; });
-	tweens.push_back(tween);
+	auto tween = new ::Tween<float>(target, from, to, speed, type);
+	tweens.push_back(*tween);
+	return tween;
 }
 
 void PanelLayout::Draw(double dt)

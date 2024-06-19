@@ -19,7 +19,6 @@
 #include "support/JSON/JSON.h"
 #include "support/format.h"
 #include "support/sol.hpp"
-#include "support/tweeny-3.2.0.h"
 
 #include "VFS.h"
 #include "Shader.h"

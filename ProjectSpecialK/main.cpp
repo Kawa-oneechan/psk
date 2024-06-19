@@ -10,9 +10,6 @@
 #include "PanelLayout.h"
 #include "DateTimePanel.h"
 
-#define GLM_ENABLE_EXPERIMENTAL
-#include "support/glm/gtx/easing.hpp"
-
 #include <thread>
 #include <future>
 #include <fstream>
@@ -440,9 +437,12 @@ int main(int argc, char** argv)
 	tickables.push_back(new DoomMenu());
 	auto hotbar = new PanelLayout(UI::json["hotbar"]);
 	tickables.push_back(hotbar);
-	hotbar->Tween(&hotbar->Position.y, tweeny::from(-100.0f).to(0).during(100));
-	hotbar->Tween(&hotbar->Alpha, tweeny::from(0.0f).to(0.75f).during(200));
+	hotbar->Tween(&hotbar->Position.y, -100.0f, 0, 0.002f, 2);
+	hotbar->Tween(&hotbar->Alpha, 0, 0.75f, 0.006f, 0);
 	tickables.push_back(new DateTimePanel());
+	//auto logoJson = ReadJSON("cinematics/logo/logo.json")->AsObject();
+	//auto logoAnim = new PanelLayout(logoJson["logoPanels"]);
+	//tickables.push_back(logoAnim);
 
 	//tickables.push_back(new TextField());
 
@@ -481,23 +481,18 @@ int main(int argc, char** argv)
 		cursor->Draw();
 
 		/*
-		Tween crap using nothing but GLM, work it into Utilities. Might replace Tweeny with it.
+		//Tween crap using nothing but GLM, work it into Utilities. Might replace Tweeny with it.
 		auto origin = glm::vec2(width, height) * 0.5f;
 		auto color1 = glm::vec4(1, 0, 0, 1);
 		auto color2 = glm::vec4(0, 0, 1, 1);
 		pos += 0.001f; if (pos >= 1.0f) pos = 0;
 		auto lerp = glm::linearInterpolation(pos);
-		auto color = glm::vec4((color2.r - color1.r) * lerp + color1.r,
-			(color2.g - color1.g) * lerp + color1.g,
-			(color2.b - color1.b) * lerp + color1.b,
-			(color2.a - color1.a) * lerp + color1.a);
-		sprender->DrawSprite(whiteRect, origin - glm::vec2(16, 16) + glm::vec2(0, lerp * 64), glm::vec2(32, 32), glm::vec4(0), 0.0, color);
+		auto color = glm::mix(color1, color2, lerp);
+		sprender->DrawSprite(*whiteRect, origin - glm::vec2(16, 16) + glm::vec2(0, lerp * 64), glm::vec2(32, 32), glm::vec4(0), 0.0, color);
 		lerp = glm::bounceEaseOut(pos);
-		color = glm::vec4((color2.r - color1.r) * lerp + color1.r,
-			(color2.g - color1.g) * lerp + color1.g,
-			(color2.b - color1.b) * lerp + color1.b,
-			(color2.a - color1.a) * lerp + color1.a);
-		sprender->DrawSprite(whiteRect, origin - glm::vec2(16, 16) + glm::vec2(32, lerp * 64), glm::vec2(32, 32), glm::vec4(0), 0.0, color);
+		color = glm::mix(color1, color2, lerp);
+		sprender->DrawSprite(*whiteRect, origin - glm::vec2(16, 16) + glm::vec2(32, lerp * 64), glm::vec2(32, 32), glm::vec4(0), 0.0, color);
+		//YEAH I THINK I MIGHT. SO LONG TWEENY!
 		*/
 
 		sprender->Flush();
