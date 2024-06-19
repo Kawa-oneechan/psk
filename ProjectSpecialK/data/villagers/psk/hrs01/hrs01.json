@@ -1,0 +1,32 @@
+{
+  "id" : "psk:hrs01",
+  "name" : {
+    "en" : "Niamh"
+  },
+  "species" : "hrs",
+  "personality" : "smug",
+  "personalitySubtype" : 0,
+  "gender" : "mas",
+  "attraction" : "boys",
+  "birthday" : [ 13, 10 ],
+  "hobby" : "fashion",
+  "colors" : [ "blue", "black" ],
+  "nameTag" : [ "#FFFFFF", "#848484" ],
+  "catchphrase" : {
+    "en" : "boss"
+  },
+  "clothing" : {
+    "default" : "acnh:tank/navyblue",
+    "rain" : [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
+  },
+  "umbrella" : "acnh:redumbrella",
+  "photo" : "psk:niamhsphoto",
+  "poster" : "psk:niamhsposter",
+  "house" : {
+    "walls" : "acnh:commonwall",
+    "floor" : "acnh:commonflooring",
+    "music" : "acnh:silence",
+    "items" : [
+    ]
+  }
+}

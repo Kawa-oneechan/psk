@@ -1,0 +1,32 @@
+{
+  "id" : "psk:fox00",
+  "name" : {
+    "en" : "Egg"
+  },
+  "species" : "fox",
+  "personality" : "plain",
+  "personalitySubtype" : 0,
+  "gender" : "mnb",
+  "attraction" : "both",
+  "birthday" : [ 15, 9 ],
+  "hobby" : "music",
+  "colors" : [ "blue", "white" ],
+  "nameTag" : [ "#FFFFFF", "#848484" ],
+  "catchphrase" : {
+    "en" : "yeye"
+  },
+  "clothing" : {
+    "default" : "acnh:aranknitsweater/green",
+    "rain" : [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
+  },
+  "umbrella" : "acnh:redumbrella",
+  "photo" : "psk:eggsphoto",
+  "poster" : "psk:eggsposter",
+  "house" : {
+    "walls" : "acnh:commonwall",
+    "floor" : "acnh:commonflooring",
+    "music" : "acnh:silence",
+    "items" : [
+    ]
+  }
+}

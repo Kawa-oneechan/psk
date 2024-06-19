@@ -1,0 +1,32 @@
+{
+  "id" : "psk:gor00",
+  "name" : {
+    "en" : "Mitch"
+  },
+  "species" : "gor",
+  "personality" : "jock",
+  "personalitySubtype" : 0,
+  "gender" : "mnb",
+  "attraction" : "boys",
+  "birthday" : [ 29, 9 ],
+  "hobby" : "music",
+  "colors" : [ "black", "blue" ],
+  "nameTag" : [ "#FFFFFF", "#848484" ],
+  "catchphrase" : {
+    "en" : "huh-huh"
+  },
+  "clothing" : {
+    "default" : "acnh:aranknitsweater/green",
+    "rain" : [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
+  },
+  "umbrella" : "acnh:redumbrella",
+  "photo" : "psk:mitchsphoto",
+  "poster" : "psk:mitchsposter",
+  "house" : {
+    "walls" : "acnh:commonwall",
+    "floor" : "acnh:commonflooring",
+    "music" : "acnh:silence",
+    "items" : [
+    ]
+  }
+}
