@@ -6,8 +6,9 @@ public:
 	std::string ID;
 	std::string RefName;
 	std::string EnName;
+	std::string Path; //To locate specific stuff like models, textures, sounds...
 	unsigned int Hash;
-	NameableThing(JSONObject& value);
+	NameableThing(JSONObject& value, const std::string& filename = "");
 	NameableThing() = default;
 	const std::string Name();
 
@@ -39,7 +40,7 @@ class Outfit;
 class Item : public NameableThing
 {
 public:
-	Item(JSONObject& value);
+	Item(JSONObject& value, const std::string& filename = "");
 	int FindVariantByName(const std::string& variantName) const;
 	std::vector<std::string> variantNames;
 	int Type;
@@ -56,19 +57,19 @@ public:
 class Tool : public Item
 {
 public:
-	Tool(JSONObject& value) : Item(value) {}
+	Tool(JSONObject& value, const std::string& filename = "") : Item(value, filename) {}
 };
 
 class Furniture : public Item
 {
 public:
-	Furniture(JSONObject& value) : Item(value) {}
+	Furniture(JSONObject& value, const std::string& filename = "") : Item(value, filename) {}
 };
 
 class Outfit : public Item
 {
 public:
-	Outfit(JSONObject& value) : Item(value) {}
+	Outfit(JSONObject& value, const std::string& filename = "") : Item(value, filename) {}
 };
 
 class InventoryItem : public NameableThing

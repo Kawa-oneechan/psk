@@ -1,6 +1,6 @@
 #include "SpecialK.h"
 
-Villager::Villager(JSONObject& value) : NameableThing(value)
+Villager::Villager(JSONObject& value, const std::string& filename) : NameableThing(value, filename)
 {
 //	ID = value["id"]->AsString();
 

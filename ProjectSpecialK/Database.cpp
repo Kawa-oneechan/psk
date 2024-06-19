@@ -134,7 +134,7 @@ namespace Database
 			{
 				try
 				{
-					target.emplace_back(T2((JSONObject&)doc->AsObject()));
+					target.emplace_back(T2((JSONObject&)doc->AsObject(), entry.path));
 				}
 				catch (std::runtime_error& e)
 				{

@@ -1,6 +1,6 @@
 #include "SpecialK.h"
 
-Species::Species(JSONObject& value)
+Species::Species(JSONObject& value, const std::string& filename)
 {
 	ID = value["id"]->AsString();
 	auto ref = fmt::format("species:{}", ID);

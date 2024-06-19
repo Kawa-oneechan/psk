@@ -8,6 +8,6 @@ public:
 	std::string EnName[2];
 	bool ModeledMuzzle;
 
-	Species(JSONObject& value);
+	Species(JSONObject& value, const std::string& filename = "");
 	const std::string Name();
 };

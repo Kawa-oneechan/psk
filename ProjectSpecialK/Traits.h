@@ -5,7 +5,7 @@ class Personality
 {
 public:
 	std::string ID;
-	Personality(JSONObject& value);
+	Personality(JSONObject& value, const std::string& filename = "");
 	Personality() = default;
 };
 
@@ -14,6 +14,6 @@ class Hobby
 {
 public:
 	std::string ID;
-	Hobby(JSONObject& value);
+	Hobby(JSONObject& value, const std::string& filename = "");
 	Hobby() = default;
 };

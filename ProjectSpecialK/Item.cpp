@@ -4,7 +4,7 @@ extern "C" uint32_t crc_32(const unsigned char *input_str, size_t num_bytes);
 
 extern int articlePlease;
 
-NameableThing::NameableThing(JSONObject& value)
+NameableThing::NameableThing(JSONObject& value, const std::string& filename)
 {
 	ID = value["id"]->AsString();
 	Hash = crc_32((unsigned char*)ID.c_str(), ID.length());
@@ -13,6 +13,11 @@ NameableThing::NameableThing(JSONObject& value)
 	StripSpaces(ref);
 	RefName = ref;
 
+	if (!filename.empty())
+		Path = filename.substr(0, filename.find_last_of('/'));
+	else
+		Path.clear();
+	
 	auto val = value["name"];
 	if (val->IsString() && val->AsString()[0] == '#')
 		RefName = ref = val->AsString().substr(1);
@@ -53,7 +58,7 @@ int Item::FindVariantByName(const std::string& variantName) const
 	return -1;
 }
 
-Item::Item(JSONObject& value) : NameableThing(value)
+Item::Item(JSONObject& value, const std::string& filename) : NameableThing(value, filename)
 {
 	//auto vars = value.find("variants");
 	//if (vars != value.end())

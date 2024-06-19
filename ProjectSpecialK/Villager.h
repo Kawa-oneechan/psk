@@ -65,7 +65,7 @@ public:
 	std::vector<InventoryItem*> Items;
 	std::vector<InventoryItem*> Outfits;
 
-	Villager(JSONObject& value);
+	Villager(JSONObject& value, const std::string& filename = "");
 	const std::string Name();
 	const std::string Species();
 	void LoadModel();
