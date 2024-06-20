@@ -55,17 +55,21 @@ Villager::Villager(JSONObject& value, const std::string& filename) : NameableThi
 	if (_birthday[0] < 1 || _birthday[0] > 31 || _birthday[1] < 1 || _birthday[1] > 12)
 	{
 		conprint(1, "Villager {} has an out of band birthday: day {}, month {}.", ID, _birthday[0], _birthday[1]);
-		//Reset to January 1 so nothing will badly break later on.
-		_birthday[0] = _birthday[1] = 1;
+		_birthday[0] = glm::clamp((int)_birthday[0], 1, 31); //mind you, half the months don't go that high
+		_birthday[1] = glm::clamp((int)_birthday[1], 1, 12);
 	}
 
 	auto _gender = value["gender"];
 	if (_gender != nullptr)
 	{
-		this->gender = StringToEnum<Gender>(_gender->AsString(), { "boy", "girl", "enby-b", "enby-g" });
-		if (this->gender == (Gender)-1) //-V1084 I am Kawa and I *only* use MSVC for this lol.
-			throw std::runtime_error(fmt::format("Unknown gender {} while loading {}.", _gender->Stringify(), ID));
-
+		try
+		{
+			this->gender = StringToEnum<Gender>(_gender->AsString(), { "boy", "girl", "enby-b", "enby-g" });
+		}
+		catch (std::range_error& re)
+		{
+			throw std::runtime_error(fmt::format("Unknown gender {} while loading {}: {}", _gender->Stringify(), ID, re.what()));
+		}
 	}
 
 	auto nametag = value["nameTag"]->AsArray();

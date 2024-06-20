@@ -193,10 +193,10 @@ void InitVFS()
 		std::function<void(const VFSSource&)> depWorker;
 		depWorker = [&](const VFSSource& source)
 		{
-			if (veccontains(workingSet, source))
+			if (std::find(workingSet.begin(), workingSet.end(), source) != workingSet.end())
 				throw std::runtime_error(fmt::format("Asset source \"{}\" dependencies form a cycle.", source.id));
 
-			if (veccontains(sources, source))
+			if (std::find(sources.begin(), sources.end(), source) != sources.end())
 				return;
 
 			for (const auto& dep : source.dependencies)
@@ -214,8 +214,9 @@ void InitVFS()
 					throw std::runtime_error(fmt::format("Asset source \"{}\" cannot resolve dependency on \"{}\".", source.id, dep));
 			}
 
-			if (veccontains(workingSet, source))
-				workingSet.erase(vecfind(workingSet, source));
+			auto it = std::find(workingSet.begin(), workingSet.end(), source);
+			if (it != workingSet.end())
+				workingSet.erase(it);
 
 			sources.emplace_back(source);
 		};

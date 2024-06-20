@@ -3,14 +3,14 @@
 #include <string>
 #include "support/JSON/JSONValue.h"
 
-typedef struct
+struct VFSEntry
 {
 	std::string path; //Relative path of the file.
 	int zipIndex; //If the file is from an archive, the file's offset inside that archive.
 	int sourceIndex; //Which VFSSource the file is from.
-} VFSEntry;
+};
 
-typedef struct
+struct VFSSource
 {
 	std::string path;
 	bool isZip;
@@ -20,7 +20,9 @@ typedef struct
 	int priority;
 	std::vector<std::string> namespaces;
 	std::vector<std::string> dependencies;
-}  VFSSource;
+
+	inline bool operator== (const struct VFSSource& r) { return this->id == r.id; }
+};
 
 //Initializes the Virtual File System.
 extern void InitVFS();

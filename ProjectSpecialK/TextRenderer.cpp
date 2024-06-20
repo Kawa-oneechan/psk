@@ -137,6 +137,9 @@ void SpriteRenderer::DrawText(int font, const std::string& text, glm::vec2 posit
 	if (font >= MAXFONTS)
 		font = 0;
 
+	if (text.empty())
+		return;
+
 	textRenderColor = originalTextRenderColor = color;
 	textRenderSize = originalTextRenderSize = size;
 	textRenderFont = originalTextRenderFont = font;
@@ -232,6 +235,9 @@ glm::vec2 SpriteRenderer::MeasureText(int font, const std::string& text, float s
 {
 	if (font >= MAXFONTS)
 		font = 0;
+
+	if (text.empty())
+		return glm::vec2(0);
 
 	textRenderSize = originalTextRenderSize = size;
 	textRenderFont = originalTextRenderFont = font;

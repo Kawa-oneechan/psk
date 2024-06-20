@@ -4,14 +4,14 @@
 glm::vec2 GetJSONVec2(JSONValue* val)
 {
 	if (!val->IsArray())
-		throw std::runtime_error("GetJSONVec2: given value is not an array.");
+		throw std::runtime_error(fmt::format("GetJSONVec2: given value {} is not an array.", val->Stringify()));
 	auto arr = val->AsArray();
 	if (arr.size() != 2)
-		throw std::runtime_error(fmt::format("GetJSONVec2: given array has {} entries, not 2.", arr.size()));
+		throw std::runtime_error(fmt::format("GetJSONVec2: given array {} has {} entries, not 2.", val->Stringify(), arr.size()));
 	//if (!arr[0]->IsNumber() || !arr[1]->IsNumber())
 	for (auto x : arr)
 		if (!x->IsNumber())
-			throw std::runtime_error("GetJSONVec2: given array does not contain only numbers.");
+			throw std::runtime_error(fmt::format("GetJSONVec2: given array {} does not contain only numbers.", val->Stringify()));
 	return glm::vec2(arr[0]->AsNumber(), arr[1]->AsNumber());
 }
 
@@ -54,7 +54,7 @@ glm::vec4 GetJSONColor(JSONValue* val)
 			b = std::stoi(hex.substr(7, 2), nullptr, 16);
 		}
 		else
-			return glm::vec4(0, 0, 0, -1);
+			throw std::runtime_error(fmt::format("GetJSONColor: {} is not a valid color.", val->Stringify()));
 		return glm::vec4(r / 255.0f, g / 255.0f, b / 255.0f, a / 255.0f);
 	}
 	if (val->IsArray())
@@ -62,7 +62,7 @@ glm::vec4 GetJSONColor(JSONValue* val)
 		auto arr = val->AsArray();
 		for (auto x : arr)
 			if (!x->IsNumber())
-				return glm::vec4(0, 0, 0, -1);
+				throw std::runtime_error(fmt::format("GetJSONColor: {} is not a valid color.", val->Stringify()));
 		float r, g, b, a;
 		if (arr.size() == 3)
 		{
@@ -79,10 +79,10 @@ glm::vec4 GetJSONColor(JSONValue* val)
 			a = (float)arr[3]->AsNumber();
 		}
 		else
-			return glm::vec4(0, 0, 0, -1);
+			throw std::runtime_error(fmt::format("GetJSONColor: {} is not a valid color.", val->Stringify()));
 		return glm::vec4(arr[0]->AsNumber(), arr[1]->AsNumber(), arr[2]->AsNumber(), arr[3]->AsNumber());
 	}
-	return glm::vec4(0, 0, 0, -1);
+	throw std::runtime_error(fmt::format("GetJSONColor: {} is not a valid color.", val->Stringify()));
 }
 
 void GetAtlas(TextureAtlas &ret, const std::string& jsonFile)

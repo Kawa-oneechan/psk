@@ -73,3 +73,21 @@ extern void StringToLower(std::string& data);
 extern void StripSpaces(std::string& data);
 //Removes MSBT tags from a string.
 extern std::string StripMSBT(const std::string& data);
+
+template<typename InputIt>
+std::string join(InputIt begin, InputIt end, const std::string & separator = ", ", const std::string & concluder = "")
+{
+	std::ostringstream ss;
+
+	if (begin != end)
+		ss << *begin++;
+
+	while (begin != end)
+	{
+		ss << separator;
+		ss << *begin++;
+	}
+
+	ss << concluder;
+	return ss.str();
+}

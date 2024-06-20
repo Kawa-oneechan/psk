@@ -98,25 +98,6 @@ inline constexpr float operator "" pt(long double v) { return (float)v; }
 #pragma warning(pop)
 
 
-//Until I find out how the alternatives to std::vector that DO have find and contains work...
-template<typename T>
-auto vecfind(const std::vector<T>& h, const T& n)
-{
-	for (auto& x = h.begin(); x < h.end(); ++x)
-		if ((*x).id == n.id)
-			return x;
-	return h.end();
-};
-
-template<typename T>
-auto veccontains(const std::vector<T>& h, const T& n)
-{
-	for (const auto& x : h)
-		if (x.id == n.id)
-			return true;
-	return false;
-};
-
 template<typename T>
 auto StringToEnum(const std::string& s, std::initializer_list<const std::string> opts)
 {
@@ -127,5 +108,5 @@ auto StringToEnum(const std::string& s, std::initializer_list<const std::string>
 			return (T)i;
 		i++;
 	}
-	return (T)-1;
+	throw std::range_error(fmt::format("StringToEnum: can't find \"{}\" in list \"{}\".", s, join(opts.begin(), opts.end())));
 }
