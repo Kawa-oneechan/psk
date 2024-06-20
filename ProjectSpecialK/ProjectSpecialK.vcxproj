@@ -157,7 +157,6 @@
     <ClCompile Include="SolBinds.cpp" />
     <ClCompile Include="Species.cpp" />
     <ClCompile Include="SpriteRenderer.cpp" />
-    <ClCompile Include="support\crc32.c" />
     <ClCompile Include="support\format.cc" />
     <ClCompile Include="support\glad\glad.c" />
     <ClCompile Include="support\JSON\JSON.cpp" />

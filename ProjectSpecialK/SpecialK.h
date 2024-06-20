@@ -74,6 +74,8 @@ extern bool PointInRect(const glm::vec2 point, const glm::vec4 rect);
 
 extern void Table(std::vector<std::string> data, size_t stride);
 
+extern unsigned int GetCRC(const std::string& text);
+
 namespace UI
 {
 	extern std::map<std::string, glm::vec4> themeColors;

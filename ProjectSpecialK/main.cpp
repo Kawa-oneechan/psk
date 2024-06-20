@@ -110,7 +110,7 @@ namespace UI
 		std::ofstream file(filename, std::ios::trunc | std::ios::binary);
 		if (!file.good())
 			throw std::exception("Couldn't open file.");
-		file.write(content.c_str(), content.size());
+		file << content; //eeugh
 		file.close();
 	}
 

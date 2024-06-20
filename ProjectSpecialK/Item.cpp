@@ -1,13 +1,12 @@
 #include "SpecialK.h"
 
-extern "C" uint32_t crc_32(const unsigned char *input_str, size_t num_bytes);
-
 extern int articlePlease;
 
 NameableThing::NameableThing(JSONObject& value, const std::string& filename)
 {
 	ID = value["id"]->AsString();
-	Hash = crc_32((unsigned char*)ID.c_str(), ID.length());
+	//Hash = crc_32((unsigned char*)ID.c_str(), ID.length());
+	Hash = GetCRC(ID);
 	auto ref = fmt::format("name:{}", ID);
 	StringToLower(ref);
 	StripSpaces(ref);
