@@ -6,7 +6,7 @@
   "species" : "cat",
   "personality" : [ "jock" ],
   "personalitySubtype" : 0,
-  "gender" : "mas",
+  "gender" : "boy",
   "attraction" : "both",
   "birthday" : [ 25, 11 ],
   "hobby" : "music",

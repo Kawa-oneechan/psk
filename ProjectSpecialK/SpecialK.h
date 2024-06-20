@@ -67,6 +67,7 @@ extern sol::state Sol;
 
 extern glm::vec2 GetJSONVec2(JSONValue* val);
 extern glm::vec4 GetJSONVec4(JSONValue* val);
+extern glm::vec4 GetJSONColor(JSONValue* val);
 
 extern bool PointInPoly(const glm::vec2 point, const std::vector<glm::vec2>& polygon);
 extern bool PointInRect(const glm::vec2 point, const glm::vec4 rect);
@@ -116,3 +117,15 @@ auto veccontains(const std::vector<T>& h, const T& n)
 	return false;
 };
 
+template<typename T>
+auto StringToEnum(const std::string& s, std::initializer_list<const std::string> opts)
+{
+	int i = 0;
+	for (auto o : opts)
+	{
+		if (s == o)
+			return (T)i;
+		i++;
+	}
+	return (T)-1;
+}

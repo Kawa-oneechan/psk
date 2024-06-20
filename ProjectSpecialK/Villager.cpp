@@ -62,42 +62,18 @@ Villager::Villager(JSONObject& value, const std::string& filename) : NameableThi
 	auto _gender = value["gender"];
 	if (_gender != nullptr)
 	{
-		if (_gender->AsString() == "mas")
-			this->gender = Gender::Boy;
-		else if (_gender->AsString() == "fem")
-			this->gender = Gender::Girl;
-		else if (_gender->AsString() == "mnb")
-			this->gender = Gender::BEnby;
-		else if (_gender->AsString() == "fnb")
-			this->gender = Gender::GEnby;
-		else
+		this->gender = StringToEnum<Gender>(_gender->AsString(), { "boy", "girl", "enby-b", "enby-g" });
+		if (this->gender == (Gender)-1) //-V1084 I am Kawa and I *only* use MSVC for this lol.
 			throw std::runtime_error(fmt::format("Unknown gender {} while loading {}.", _gender->Stringify(), ID));
+
 	}
 
 	auto nametag = value["nameTag"]->AsArray();
 	for (int i = 0; i < 2; i++)
 	{
-		auto hex = nametag[i]->AsString();
-		int r, g, b, a;
-		if (hex.empty() || hex[0] != '#')
-			throw std::runtime_error(fmt::format("Not a color value {} while loading {}.", hex, ID));
-		if (hex.length() == 7)
-		{
-			a = 0xFF;
-			r = std::stoi(hex.substr(1, 2), nullptr, 16);
-			g = std::stoi(hex.substr(3, 2), nullptr, 16);
-			b = std::stoi(hex.substr(5, 2), nullptr, 16);
-		}
-		else if (hex.length() == 9)
-		{
-			a = std::stoi(hex.substr(1, 2), nullptr, 16);
-			r = std::stoi(hex.substr(3, 2), nullptr, 16);
-			g = std::stoi(hex.substr(5, 2), nullptr, 16);
-			b = std::stoi(hex.substr(7, 2), nullptr, 16);
-		}
-		else
-			throw std::runtime_error(fmt::format("Not a well-formed color value {} while loading {}.", hex, ID));
-		NameTag[i] = glm::vec4(r / 255.0f, g / 255.0f, b / 255.0f, a / 255.0f);
+		NameTag[i] = GetJSONColor(nametag[i]);
+		if (NameTag[i].a == -1)
+			throw std::runtime_error(fmt::format("Not a well-formed color value {} while loading {}.", nametag[i]->Stringify(), ID));
 	}
 
 	if (_isSpecial)
@@ -109,6 +85,7 @@ Villager::Villager(JSONObject& value, const std::string& filename) : NameableThi
 			throw std::runtime_error(fmt::format("Unknown personality {} while loading {}.", value["personality"]->Stringify(), ID));
 	}
 	personalitySubtype = _isSpecial ? 0 : (int)value["personalitySubtype"]->AsNumber();
+
 	//hobby = value["hobby"];
 	{
 		hobby = Database::Find<::Hobby>(value["hobby"], &hobbies);

@@ -8,8 +8,10 @@ glm::vec2 GetJSONVec2(JSONValue* val)
 	auto arr = val->AsArray();
 	if (arr.size() != 2)
 		throw std::runtime_error(fmt::format("GetJSONVec2: given array has {} entries, not 2.", arr.size()));
-	if (!arr[0]->IsNumber() || !arr[1]->IsNumber())
-		throw std::runtime_error("GetJSONVec2: given array does not contain only numbers.");
+	//if (!arr[0]->IsNumber() || !arr[1]->IsNumber())
+	for (auto x : arr)
+		if (!x->IsNumber())
+			throw std::runtime_error("GetJSONVec2: given array does not contain only numbers.");
 	return glm::vec2(arr[0]->AsNumber(), arr[1]->AsNumber());
 }
 
@@ -20,9 +22,67 @@ glm::vec4 GetJSONVec4(JSONValue* val)
 	auto arr = val->AsArray();
 	if (arr.size() != 4)
 		throw std::runtime_error(fmt::format("GetJSONVec4: given array has {} entries, not 4.", arr.size()));
-	if (!arr[0]->IsNumber() || !arr[1]->IsNumber() || !arr[2]->IsNumber() || !arr[3]->IsNumber())
-		throw std::runtime_error("GetJSONVec4: given array does not contain only numbers.");
+	//if (!arr[0]->IsNumber() || !arr[1]->IsNumber() || !arr[2]->IsNumber() || !arr[3]->IsNumber())
+	for (auto x : arr)
+		if (!x->IsNumber())
+			throw std::runtime_error("GetJSONVec4: given array does not contain only numbers.");
 	return glm::vec4(arr[0]->AsNumber(), arr[1]->AsNumber(), arr[2]->AsNumber(), arr[3]->AsNumber());
+}
+
+//Converts [R,G,B], [R,G,B,A], "#RRGGBB" or "#AARRGGBB" to glm::vec4.
+//Returns an alpha of -1, which is impossible, on error.
+glm::vec4 GetJSONColor(JSONValue* val)
+{
+	if (val->IsString())
+	{
+		auto hex = val->AsString();
+		int r = 0, g = 0, b = 0, a = 0;
+		if (hex.empty() || hex[0] != '#')
+			return glm::vec4(0, 0, 0, -1);
+		if (hex.length() == 7)
+		{
+			a = 0xFF;
+			r = std::stoi(hex.substr(1, 2), nullptr, 16);
+			g = std::stoi(hex.substr(3, 2), nullptr, 16);
+			b = std::stoi(hex.substr(5, 2), nullptr, 16);
+		}
+		else if (hex.length() == 9)
+		{
+			a = std::stoi(hex.substr(1, 2), nullptr, 16);
+			r = std::stoi(hex.substr(3, 2), nullptr, 16);
+			g = std::stoi(hex.substr(5, 2), nullptr, 16);
+			b = std::stoi(hex.substr(7, 2), nullptr, 16);
+		}
+		else
+			return glm::vec4(0, 0, 0, -1);
+		return glm::vec4(r / 255.0f, g / 255.0f, b / 255.0f, a / 255.0f);
+	}
+	if (val->IsArray())
+	{
+		auto arr = val->AsArray();
+		for (auto x : arr)
+			if (!x->IsNumber())
+				return glm::vec4(0, 0, 0, -1);
+		float r, g, b, a;
+		if (arr.size() == 3)
+		{
+			r = (float)arr[0]->AsNumber();
+			g = (float)arr[1]->AsNumber();
+			b = (float)arr[2]->AsNumber();
+			a = 1.0f;
+		}
+		else if (arr.size() == 4)
+		{
+			r = (float)arr[0]->AsNumber();
+			g = (float)arr[1]->AsNumber();
+			b = (float)arr[2]->AsNumber();
+			a = (float)arr[3]->AsNumber();
+		}
+		else
+			return glm::vec4(0, 0, 0, -1);
+		return glm::vec4(arr[0]->AsNumber(), arr[1]->AsNumber(), arr[2]->AsNumber(), arr[3]->AsNumber());
+	}
+	return glm::vec4(0, 0, 0, -1);
 }
 
 void GetAtlas(TextureAtlas &ret, const std::string& jsonFile)
