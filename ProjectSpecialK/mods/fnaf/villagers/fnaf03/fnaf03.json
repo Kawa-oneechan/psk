@@ -1,0 +1,32 @@
+{
+  "id" : "fnaf:fnaf03",
+  "name" : {
+    "en" : "Roxanne"
+  },
+  "species" : "wol",
+  "personality" : [ "weird" ],
+  "personalitySubtype" : 0,
+  "gender" : "girl",
+  "attraction" : "both",
+  "birthday" : [ 1, 1 ],
+  "hobby" : "music",
+  "colors" : [ "red", "green" ],
+  "nameTag" : [ "#FFFFFF", "#848484" ],
+  "catchphrase" : {
+    "en" : "rockstar"
+  },
+  "clothing" : {
+    "default" : "acnh:heartsweater/red",
+    "rain" : [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
+  },
+  "umbrella" : "acnh:redumbrella",
+  "photo" : "fnaf:roxannesphoto",
+  "poster" : "fnaf:roxannesposter",
+  "house" : {
+    "walls" : "acnh:commonwall",
+    "floor" : "acnh:commonflooring",
+    "music" : "acnh:silence",
+    "items" : [
+    ]
+  }
+}
