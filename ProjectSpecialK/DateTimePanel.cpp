@@ -7,7 +7,7 @@ DateTimePanel::DateTimePanel()
 	auto now = time(nullptr);
 	localtime_s(&gm, &now);
 
-	layout = new PanelLayout(UI::json["datetime"]);
+	//layout = new PanelLayout(UI::json["datetime"]);
 
 	Update();
 }
@@ -17,8 +17,8 @@ void DateTimePanel::Update()
 	if (UI::settings["24hour"]->AsBool())
 	{
 		//24 hours, easy
-		layout->GetPanel("time")->Text = fmt::format("{:2}:{:02}", gm.tm_hour, gm.tm_min);
-		layout->GetPanel("ampm")->Text.clear();
+		layout.GetPanel("time")->Text = fmt::format("{:2}:{:02}", gm.tm_hour, gm.tm_min);
+		layout.GetPanel("ampm")->Text.clear();
 	}
 	else
 	{
@@ -28,15 +28,14 @@ void DateTimePanel::Update()
 		if (h == 0) h += 12;
 		else if (h > 12) h -= 12;
 
-		layout->GetPanel("time")->Text = fmt::format("{:2}:{:02}", h, gm.tm_min);
-		layout->GetPanel("ampm")->Text = pm ? "PM" : "AM";
+		layout.GetPanel("time")->Text = fmt::format("{:2}:{:02}", h, gm.tm_min);
+		layout.GetPanel("ampm")->Text = pm ? "PM" : "AM";
 	}
 
 	auto wd = gm.tm_wday;
 	if (wd == 0) wd = 7; //gm.tm_wday is 0-Sun to 6-Sat. We want 1-Mon to 7-Sun.
 
-	//TODO : use "month:format".
-	layout->GetPanel("date")->Text = fmt::format("{} {}, {}", TextGet(fmt::format("month:{}", gm.tm_mon + 1)), gm.tm_mday, TextGet(fmt::format("day:short:{}", wd)));
+	layout.GetPanel("date")->Text = TextDateMD(gm.tm_mon + 1, gm.tm_mday);
 
 	if (lastHour == 4 && gm.tm_hour == 5)
 	{
@@ -56,7 +55,7 @@ void DateTimePanel::Update()
 
 void DateTimePanel::Tick(double dt)
 {
-	layout->Tick(dt);
+	layout.Tick(dt);
 
 	auto now = time(nullptr);
 	localtime_s(&gm, &now);
@@ -69,5 +68,5 @@ void DateTimePanel::Tick(double dt)
 
 void DateTimePanel::Draw(double dt)
 {
-	layout->Draw(dt);
+	layout.Draw(dt);
 }

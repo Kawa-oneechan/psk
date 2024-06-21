@@ -5,7 +5,7 @@
 class Cursor
 {
 private:
-	Texture hand = Texture("ui/cursors.png");
+	Texture hand{ Texture("ui/cursors.png") };
 	std::vector<glm::vec2> hotspots;
 	glm::vec2 hotspot;
 	glm::vec4 frame;
@@ -19,4 +19,3 @@ public:
 	void Draw();
 };
 extern Cursor* cursor;
-

@@ -8,14 +8,13 @@ class TextField : public Tickable
 	//As in, [lo, world!_ ] with the "hel" off-screen, via an offset?
 
 public:
-	glm::vec4 rect;
-	glm::vec4 color;
-	int font;
-	float size;
-	std::string value;
-	size_t caret;
+	glm::vec4 rect{ glm::vec4(0,0,128,32) };
+	glm::vec4 color{ glm::vec4(1) };
+	int font{ 1 };
+	float size{ 100.0 };
+	std::string value{ "" };
+	size_t caret{ 0 };
 
-	TextField();
 	void Draw(double dt);
 	bool Character(unsigned int codepoint);
 	void Clear();

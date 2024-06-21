@@ -6,8 +6,6 @@ Language gameLang = Language::USen;
 
 static std::map<std::string, TextEntry> textEntries;
 
-std::map<std::string, textCondVar> theVars = std::map<std::string, textCondVar>();
-
 static Language LangStrToEnum(const std::string& lang)
 {
 	const auto map = std::map<std::string, Language>(
@@ -187,40 +185,6 @@ std::string TextDateMD(int month, int day)
 			ret += format[i];
 	}
 	return ret;
-}
-
-static std::tuple<int, std::string, int> parseValue(const std::string& token)
-{
-	auto type = TextCondVarType::Integer;
-	int val = 0;
-	std::string str;
-	if (isdigit(token[0]))
-	{
-		type = TextCondVarType::Integer;
-		val = std::stoi(token);
-	}
-	else if (token[0] == '"')
-	{
-		type = TextCondVarType::String;
-		str = token.substr(1, token.length() - 2);
-	}
-	else if (theVars.find(token) != theVars.end())
-	{
-		auto second = theVars.find(token)->second;
-		type = second.type;
-		if (type == TextCondVarType::Integer)
-			val = *(int*)second.variable;
-		else if (type == TextCondVarType::String)
-			str = *(std::string*)second.variable;
-		else if (type == TextCondVarType::ConstInt)
-		{
-			val = second.constant;
-			type = TextCondVarType::Integer;
-		}
-	}
-
-	return{ val, str, type };
-	//return std::make_tuple(val, str, type);
 }
 
 void StringToLower(std::string& data)

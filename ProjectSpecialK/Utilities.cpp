@@ -85,7 +85,7 @@ glm::vec4 GetJSONColor(JSONValue* val)
 	throw std::runtime_error(fmt::format("GetJSONColor: {} is not a valid color.", val->Stringify()));
 }
 
-void GetAtlas(TextureAtlas &ret, const std::string& jsonFile)
+void GetAtlas(std::vector<glm::vec4> &ret, const std::string& jsonFile)
 {
 	auto rjs = ReadJSON(jsonFile);
 	if (rjs == nullptr)

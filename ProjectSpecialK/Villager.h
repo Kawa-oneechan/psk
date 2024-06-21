@@ -1,9 +1,9 @@
 #pragma once
 
-typedef enum
+enum Gender
 {
 	Boy, Girl, BEnby, GEnby
-} Gender;
+};
 
 //PLACEHOLDER
 class Model

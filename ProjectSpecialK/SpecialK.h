@@ -42,22 +42,20 @@ using namespace std::literals;
 __declspec(noreturn)
 extern void FatalError(const std::string& message);
 
-typedef enum
+enum LoadSpawnChoice
 {
 	FrontDoor,
 	MainRoom,
 	LastBed,
 	InPlace,
-} LoadSpawnChoice;
+};
 
 extern float width, height;
 extern float scale;
 
 template<typename T> static T clamp(T val, T minval, T maxval) { return std::max<T>(std::min<T>(val, maxval), minval); }
 
-typedef std::vector<glm::vec4> TextureAtlas;
-
-extern void GetAtlas(TextureAtlas &ret, const std::string& jsonFile);
+extern void GetAtlas(std::vector<glm::vec4> &ret, const std::string& jsonFile);
 
 extern SpriteRenderer* sprender;
 extern Shader* spriteShader;

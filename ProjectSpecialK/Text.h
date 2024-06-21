@@ -6,37 +6,18 @@
 #include <algorithm>
 
 //Supported game languages.
-typedef enum
+enum Language
 {
 	USen, USes, USfr,
 	JPja, KRko, CNzh, TWzh,
 	EUde, EUen, EUes, EUfr, EUit, EUnl, EUru, EUhu,
 	DontCare, Default, Unknown
-} Language;
+};
 
 //Language used by TextGet.
 extern Language gameLang;
 
-extern int playerGender; //for testing only
-
-typedef enum
-{
-	Integer, String, ConstInt
-} TextCondVarType;
-
-typedef struct
-{
-	TextCondVarType type;
-	union
-	{
-		void* variable;
-		int constant;
-	};
-} textCondVar;
-
-extern std::map<std::string, textCondVar> theVars;
-
-typedef struct
+struct TextEntry
 {
 	std::string rep;
 	std::map<Language, std::string> text;
@@ -45,7 +26,7 @@ typedef struct
 
 	std::string get(Language lang);
 	std::string get();
-} TextEntry;
+};
 
 //Adds a JSONObject full of localized strings to the string database.
 //The JSONObject must map strings and *only* strings to language IDs.

@@ -166,17 +166,7 @@ void DoomMenu::rebuild()
 DoomMenu::DoomMenu()
 {
 	rebuild();
-
-	highlight = 0;
-	mouseHighlight = 0;
-	scroll = 0;
-
-	//to be filled in at first draw
-	sliderStart = 0;
-	sliderEnd = 1;
-	sliderHolding = -1;
-	itemX = 0;
-
+	
 	stack.push(&options);
 	items = stack.top();
 

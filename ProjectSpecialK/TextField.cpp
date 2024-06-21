@@ -1,16 +1,5 @@
 #include "TextField.h"
 
-TextField::TextField()
-{
-	value = "test";
-	caret = value.length();
-
-	rect = glm::vec4(8, 32, 320, 80);
-	color = glm::vec4(1, 1, 0, 1);
-	font = 1;
-	size = 100.0f;
-}
-
 void TextField::Draw(double dt)
 {
 	auto pos = glm::vec2(rect.x, rect.y);

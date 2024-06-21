@@ -7,10 +7,10 @@ class DateTimePanel : public Tickable
 {
 private:
 	//std::string shownTime, shownDate;
-	int lastHour = -1;
-	int lastMinute = -1;
+	int lastHour{ -1 };
+	int lastMinute{ -1 };
 	tm gm;
-	PanelLayout* layout;
+	PanelLayout layout{ PanelLayout(UI::json["datetime"]) };
 
 public:
 	DateTimePanel();

@@ -2,10 +2,10 @@
 #include <fmod.hpp>
 #include "SpecialK.h"
 
-typedef enum
+enum AudioStatus
 {
 	Invalid, Stopped, Paused, Playing,
-} AudioStatus;
+};
 
 class Audio
 {

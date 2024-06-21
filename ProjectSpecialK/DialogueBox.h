@@ -2,15 +2,14 @@
 
 #include "SpecialK.h"
 
-typedef enum
+enum DialogueBoxState
 {
 	Opening, Writing, WaitingForKey, Closing, Done
-} DialogueBoxState;
-typedef enum
+};
+enum DialogueBoxSound
 {
 	Silent, Animalese, Bebebese
-} DialogueBoxSound;
-
+};
 
 class DialogueBox : public Tickable
 {
@@ -25,8 +24,8 @@ private:
 		Texture("gradient_thin.png"),
 		Texture("gradient_wide.png")
 	};
-	Texture nametag = Texture("ui/dialogue/nametag.png");
-	Shader* wobble;
+	Texture nametag{ Texture("ui/dialogue/nametag.png") };
+	Shader wobble{ Shader("shaders/wobble.fs") };
 	std::string displayed;
 	std::string toDisplay;
 	size_t displayCursor;

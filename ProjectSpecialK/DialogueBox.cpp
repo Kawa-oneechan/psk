@@ -52,7 +52,6 @@ void DialogueBox::msbtPass(MSBTParams)
 DialogueBox::DialogueBox()
 {
 	nametagWidth = 0;
-	wobble = new Shader("shaders/wobble.fs");
 	bebebese = new Audio("sound/animalese/base/Voice_Monology.wav");
 
 	Sound = DialogueBoxSound::Bebebese;
@@ -210,18 +209,18 @@ void DialogueBox::Draw(double dt)
 	auto dlgLeft = (int)(width / 2) - dlgWidth;
 	auto dlgTop = (int)height - dlgHeight - 10;
 
-	wobble->Use();
+	wobble.Use();
 	gradient[0].Use(1);
 	gradient[1].Use(2);
-	wobble->SetInt("gradient1", 1);
-	wobble->SetInt("gradient2", 2);
-	wobble->SetFloat("time", time);
+	wobble.SetInt("gradient1", 1);
+	wobble.SetInt("gradient2", 2);
+	wobble.SetFloat("time", time);
 
 	//if (bubbleNum == 4)
 	//	sprender->DrawSprite(*bubble[bubbleNum], glm::vec2(dlgLeft, dlgTop), glm::vec2(dlgWidth * 2, dlgHeight), glm::vec4(0));
 	//else
 	{
-		sprender->DrawSprite(wobble, bubble[bubbleNum], glm::vec2(dlgLeft, dlgTop), glm::vec2(dlgWidth * 2, dlgHeight), glm::vec4(0, 0, bubble[bubbleNum].width * 2, bubble[bubbleNum].height), 0, bubbleColor, 0);
+		sprender->DrawSprite(&wobble, bubble[bubbleNum], glm::vec2(dlgLeft, dlgTop), glm::vec2(dlgWidth * 2, dlgHeight), glm::vec4(0, 0, bubble[bubbleNum].width * 2, bubble[bubbleNum].height), 0, bubbleColor, 0);
 		//sprender->DrawSprite(wobble, bubble[bubbleNum], glm::vec2(dlgLeft + dlgWidth, dlgTop), glm::vec2(dlgWidth, dlgHeight), glm::vec4(0, 0, bubble[0]->width, bubble[0]->height), 0, bubbleColor, 1);
 	}
 

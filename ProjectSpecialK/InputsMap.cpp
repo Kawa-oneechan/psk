@@ -3,13 +3,9 @@
 
 InputsMap::InputsMap()
 {
-	Up = Down = Left = Right = false;
-	Enter = Escape = false;
-	PgUp = PgDown = false;
+	Clear();
 
 	lastMousePos = MousePosition = glm::vec2(width, height) + 20.0f;
-	MouseLeft = MouseRight = MouseMiddle = false;
-	MouseHoldLeft = false;
 }
 
 void InputsMap::Process(int key, int action)
@@ -50,6 +46,7 @@ void InputsMap::Clear()
 	Up = Down = Left = Right = Enter = Escape = false;
 	PgUp = PgDown = false;
 	MouseLeft = MouseRight = MouseMiddle = false;
+	MouseHoldLeft = false;
 }
 InputsMap& Inputs = InputsMap();
 

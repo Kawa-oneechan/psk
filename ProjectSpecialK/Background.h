@@ -5,11 +5,10 @@
 class Background : public Tickable
 {
 private:
-	Texture wallpaper = Texture("discobg2.jpg");
-	Shader* scroller;
-	float time;
+	Texture wallpaper{ Texture("discobg2.jpg") };
+	Shader scroller{ Shader("shaders/scroller.fs") };
+	float time{ 0 };
 
 public:
-	Background();
 	void Draw(double dt);
 };
