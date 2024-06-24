@@ -1,5 +1,7 @@
 #include "SpecialK.h"
 
+static std::map<std::string, std::tuple<Texture*, int>> cache;
+
 static bool load(const unsigned char* data, unsigned int *id, int width, int height, int channels, int repeat, int filter)
 {
 	glGenTextures(1, id);
@@ -26,6 +28,26 @@ Texture::Texture(const std::string& texturePath, int repeat, int filter) : file(
 	ID = 0;
 	width = height = channels = 0;
 	data = nullptr;
+
+	auto c = cache.find(texturePath);
+	if (c != cache.end())
+	{
+		Texture* t;
+		int r;
+		std::tie(t, r) = c->second;
+		ID = t->ID;
+		width = t->width;
+		height = t->height;
+		channels = t->channels;
+		data = t->data;
+		delayed = t->delayed;
+		this->repeat = t->repeat;
+		this->filter = t->filter;
+		atlas = t->atlas;
+		r++;
+		cache[file] = std::make_tuple(t, r);
+		return;
+	}
 
 	stbi_set_flip_vertically_on_load(1);
 
@@ -59,6 +81,8 @@ Texture::Texture(const std::string& texturePath, int repeat, int filter) : file(
 		conprint(1, "Failed to load texture \"{}\" -- invalid data.", texturePath);
 	}
 	stbi_image_free(data);
+
+	cache[file] = std::make_tuple(this, 1);
 }
 
 Texture::Texture(const unsigned char* externalData, int width, int height, int channels, int repeat, int filter) : data(nullptr), width(width), height(height), channels(channels), repeat(repeat), filter(filter)
@@ -90,6 +114,23 @@ Texture::Texture(const unsigned char* externalData, int width, int height, int c
 
 Texture::~Texture()
 {
+	auto c = cache.find(file);
+	if (c != cache.end())
+	{
+		Texture* t;
+		int r;
+		std::tie(t, r) = c->second;
+		r--;
+		if (r > 0)
+		{
+			cache[file] = std::make_tuple((Texture*)this, r);
+			return;
+		}
+		else
+		{
+			cache.erase(c);
+		}
+	}
 	glDeleteTextures(1, &ID);
 }
 
