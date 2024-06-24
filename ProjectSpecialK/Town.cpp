@@ -26,7 +26,7 @@ void Town::StartNewDay()
 		//TODO: there's probably a better method here.
 		for (int i = 1; 0 < calendar.size(); i++)
 		{
-			auto c = calendar[i]->AsObject();
+			auto c = calendar[i]->AsObject(); //-V836 TODO: figure this out
 			const auto until = GetJSONVec2(c["until"]);
 			if ((int)until[1] >= month)
 			{
@@ -43,7 +43,7 @@ void Town::StartNewDay()
 		auto here = calendar[0]->AsObject();
 		for (int i = monthlyRangeS; i < monthlyRangeE; i++)
 		{
-			auto c = calendar[i]->AsObject();
+			auto c = calendar[i]->AsObject(); //-V836 TODO: figure this out
 			const auto until = GetJSONVec2(c["until"]);
 			if ((int)until[0] >= day)
 				here = calendar[i]->AsObject();
