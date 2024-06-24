@@ -169,6 +169,7 @@
     <ClCompile Include="TextField.cpp" />
     <ClCompile Include="TextRenderer.cpp" />
     <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="Town.cpp" />
     <ClCompile Include="Traits.cpp" />
     <ClCompile Include="Utilities.cpp" />
     <ClCompile Include="VFS.cpp" />
@@ -203,6 +204,7 @@
     <ClInclude Include="TextField.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Tickable.h" />
+    <ClInclude Include="Town.h" />
     <ClInclude Include="Traits.h" />
     <ClInclude Include="VFS.h" />
     <ClInclude Include="Villager.h" />

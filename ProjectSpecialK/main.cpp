@@ -9,6 +9,7 @@
 #include "DialogueBox.h"
 #include "PanelLayout.h"
 #include "DateTimePanel.h"
+#include "Town.h"
 
 #include <thread>
 #include <future>
@@ -362,6 +363,11 @@ int main(int argc, char** argv)
 	UI::Load(ReadJSON("ui/ui.json"));
 
 
+	//test
+	{
+		auto town = Town();
+		town.StartNewDay();
+	}
 
 
 	glfwInit();
