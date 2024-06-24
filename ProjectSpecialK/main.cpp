@@ -365,7 +365,6 @@ int main(int argc, char** argv)
 
 	//test
 	{
-		auto town = Town();
 		town.StartNewDay();
 	}
 

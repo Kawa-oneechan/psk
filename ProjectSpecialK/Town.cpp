@@ -41,6 +41,7 @@ void Town::StartNewDay()
 				here = calendar[i]->AsObject();
 		}
 		//Now to pick a weather pattern for this day...
+		//TODO: seed the randomizer with weatherSeed and a hash of today.
 		auto rates = here["rates"]->AsArray();
 		auto pick = 0;
 		auto attempts = 1000;
@@ -76,3 +77,5 @@ std::tuple<int, int> Town::GetWeather()
 	//TODO: don't just return the wind value as-is, but calculate a random speed from it.
 	return{ weatherRain[hour], weatherWind[hour] };
 }
+
+Town town;

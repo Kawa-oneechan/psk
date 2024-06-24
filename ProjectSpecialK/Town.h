@@ -24,3 +24,5 @@ public:
 	void StartNewDay();
 	std::tuple<int, int> GetWeather();
 };
+
+extern Town town;
