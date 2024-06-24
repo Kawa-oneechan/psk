@@ -51,9 +51,8 @@ void DateTimePanel::Update()
 		delete bgm;
 		auto weather = "sunny";
 		{
-			int r, w;
-			std::tie(r, w) = town.GetWeather();
-			if (r >= 3)
+			town.UpdateWeather();
+			if (town.Weather >= Weather::RainClouds)
 				weather = "rainy";
 		}
 		bgm = new Audio(fmt::format("music/bgm/clock/{:02}{}.ogg", lastHour, weather));

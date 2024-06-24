@@ -9,6 +9,11 @@ enum Hemisphere
 	North, South
 };
 
+enum Weather
+{
+	Fine, Sunny, Cloudy, RainClouds, Rain, HeavyRain
+};
+
 class Town
 {
 private:
@@ -20,9 +25,12 @@ public:
 	std::string Name{ "Fuck-All Nowhere" };
 	Hemisphere Hemisphere{ Hemisphere::North };
 	Villager* Villagers[MAX_VILLAGERS];
+	Weather Weather;
+	int Wind;
 
+	Town();
 	void StartNewDay();
-	std::tuple<int, int> GetWeather();
+	void UpdateWeather();
 };
 
 extern Town town;

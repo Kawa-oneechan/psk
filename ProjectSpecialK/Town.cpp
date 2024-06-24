@@ -1,5 +1,10 @@
 #include "Town.h"
 
+Town::Town()
+{
+	weatherSeed = std::rand();
+}
+
 void Town::StartNewDay()
 {
 	//Select weather
@@ -10,6 +15,9 @@ void Town::StartNewDay()
 		const auto month = gm.tm_mon + 1;
 		const auto day = gm.tm_mday;
 		conprint(0, "Today is {} {}. Let's see.", day, month);
+
+		std::srand(weatherSeed + (month << 8) + (day << 16));
+
 		auto json = ReadJSON("weather.json")->AsObject();
 		auto calendar = json[Hemisphere == Hemisphere::North ? "north" : "south"]->AsArray();
 		auto monthlyRangeS = -1;
@@ -68,14 +76,27 @@ void Town::StartNewDay()
 	}
 }
 
-std::tuple<int, int> Town::GetWeather()
+void Town::UpdateWeather()
 {
 	tm gm;
 	auto now = time(nullptr);
 	localtime_s(&gm, &now);
 	auto hour = gm.tm_hour;
-	//TODO: don't just return the wind value as-is, but calculate a random speed from it.
-	return{ weatherRain[hour], weatherWind[hour] };
+
+	Weather = (::Weather)weatherRain[hour];
+	
+	if (weatherWind[hour] == 0)
+		Wind = 0;
+	else
+	{
+		auto baseWind = std::abs(weatherWind[hour]) - 1;
+		auto landIsEast = ((weatherSeed >> 16) % 2) == 1;
+		auto windIsLand = weatherWind[hour] < 0;
+		auto windStrength = ((1 << baseWind) - 1) + (std::rand() % 3);
+		if (windIsLand && landIsEast)
+			windStrength = -windStrength;
+		Wind = windStrength;
+	}
 }
 
 Town town;
