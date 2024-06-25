@@ -14,7 +14,7 @@
 
 enum SpriteFlags
 {
-	None = 0,
+	NoFlags = 0,
 	FlipX = 1,
 	FlipY = 2,
 	FlipXY = 3,
@@ -26,8 +26,8 @@ class SpriteRenderer
 public:
 	SpriteRenderer();
 	~SpriteRenderer();
-	void DrawSprite(Shader* shader, Texture& texture, glm::vec2 position, glm::vec2 size, glm::vec4 srcRect = glm::vec4(0.0f), float rotate = 0.0f, const glm::vec4& color = glm::vec4(1), SpriteFlags flags = None);
-	void DrawSprite(Texture& texture, const glm::vec2& position, const glm::vec2& size, const glm::vec4& srcRect = glm::vec4(0.0f), float rotate = 0.0f, const glm::vec4& color = glm::vec4(1), SpriteFlags flags = None);
+	void DrawSprite(Shader* shader, Texture& texture, glm::vec2 position, glm::vec2 size, glm::vec4 srcRect = glm::vec4(0.0f), float rotate = 0.0f, const glm::vec4& color = glm::vec4(1), SpriteFlags flags = SpriteFlags::NoFlags);
+	void DrawSprite(Texture& texture, const glm::vec2& position, const glm::vec2& size, const glm::vec4& srcRect = glm::vec4(0.0f), float rotate = 0.0f, const glm::vec4& color = glm::vec4(1), SpriteFlags flags = SpriteFlags::NoFlags);
 	void DrawSprite(Shader* shader, Texture& texture, glm::vec2 position);
 	void DrawSprite(Texture& texture, glm::vec2 position);
 

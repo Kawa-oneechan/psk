@@ -96,9 +96,11 @@ void SpriteRenderer::DrawSprite(Shader* shader, Texture& texture, glm::vec2 posi
 	glm::mat4 model = glm::mat4(1.0f);
 	model = glm::translate(model, glm::vec3(position, 0));
 	// first translate (transformations are: scale happens first, then rotation, and then final translation happens; reversed order)
-	if ((flags & 4) != 4) model = glm::translate(model, glm::vec3(0.5f * size.x, 0.5f * size.y, 0)); // move origin of rotation to center of quad
+	if ((flags & SpriteFlags::TopLeft) != SpriteFlags::TopLeft)
+		model = glm::translate(model, glm::vec3(0.5f * size.x, 0.5f * size.y, 0)); // move origin of rotation to center of quad
 	model = glm::rotate(model, glm::radians(rotate), glm::vec3(0, 0, 1)); // then rotate
-	if ((flags & 4) != 4) model = glm::translate(model, glm::vec3(-0.5f * size.x, -0.5f * size.y, 0)); // move origin back
+	if ((flags & SpriteFlags::TopLeft) != SpriteFlags::TopLeft)
+		model = glm::translate(model, glm::vec3(-0.5f * size.x, -0.5f * size.y, 0)); // move origin back
 	model = glm::scale(model, glm::vec3(size, 1)); // last scale
 
 	if (srcRect.z != 0)
