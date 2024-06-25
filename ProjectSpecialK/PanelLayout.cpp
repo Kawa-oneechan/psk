@@ -135,7 +135,7 @@ PanelLayout::PanelLayout(JSONValue* source)
 				panel->Color = UI::themeColors.find(clr) != UI::themeColors.end() ? UI::themeColors[clr] : glm::vec4(1);
 			}
 			else if (pnl["color"]->IsArray())
-				panel->Color = GetJSONVec4(pnl["color"]);
+				panel->Color = GetJSONColor(pnl["color"]);
 		}
 		panel->Alpha = pnl["alpha"] != nullptr ? (float)pnl["alpha"]->AsNumber() : 1.0f;
 		panels.push_back(panel);
