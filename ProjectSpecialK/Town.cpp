@@ -20,36 +20,25 @@ void Town::StartNewDay()
 
 		auto json = ReadJSON("weather.json")->AsObject();
 		auto calendar = json[Hemisphere == Hemisphere::North ? "north" : "south"]->AsArray();
-		auto monthlyRangeS = -1;
-		auto monthlyRangeE = -1;
+
+		auto here = calendar[0]->AsObject();
+		const int calNow = (month * 31) + day;
 		//NOTE: We assume all entries are sorted by date.
-		//TODO: there's probably a better method here.
 		for (int i = 1; 0 < calendar.size(); i++)
 		{
 			auto c = calendar[i]->AsObject(); //-V836 TODO: figure this out
 			const auto until = GetJSONVec2(c["until"]);
-			if ((int)until[1] >= month)
+			const int calHere = ((int)until[1] * 31) + (int)until[0];
+			if (calHere > calNow)
 			{
-				if (monthlyRangeS == -1)
-					monthlyRangeS = i;
-				else
-				{
-					monthlyRangeE = i;
-					if ((int)until[1] > month)
-						break;
-				}
+				here = calendar[i]->AsObject();
+				break;
 			}
 		}
-		auto here = calendar[0]->AsObject();
-		for (int i = monthlyRangeS; i < monthlyRangeE; i++)
-		{
-			auto c = calendar[i]->AsObject(); //-V836 TODO: figure this out
-			const auto until = GetJSONVec2(c["until"]);
-			if ((int)until[0] >= day)
-				here = calendar[i]->AsObject();
-		}
+
 		//Now to pick a weather pattern for this day...
 		//TODO: seed the randomizer with weatherSeed and a hash of today.
+
 		auto rates = here["rates"]->AsArray();
 		auto pick = 0;
 		auto attempts = 1000;
