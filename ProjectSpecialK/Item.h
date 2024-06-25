@@ -20,18 +20,21 @@ public:
 	inline bool operator!= (unsigned int r) { return this->Hash != r; }
 };
 
-#define it_Item			0b0000'0000'0000'0001
-#define it_Tool			0b0000'0000'0000'0011
-#define it_Furniture	0b0000'0000'0000'0101
-#define it_WallPiece	0b0000'0001'0000'0101
-#define it_CeilingPiece	0b0000'0010'0000'0101
-#define it_Outfit		0b0000'0000'0000'0111
-#define it_Tops			0b0000'0001'0000'0111
-#define it_Bottom		0b0000'0010'0000'0111
-#define it_Dress		0b0000'0011'0000'0111
-//						0b0000'0011'0000'0111
-#define it_Hat			0b0000'0100'0000'0111
-#define it_Shoes		0b0000'0101'0000'0111
+enum ItemType
+{
+	it_Item         = 0b0000'0000'0000'0001,
+	it_Tool         = 0b0000'0000'0000'0011,
+	it_Furniture    = 0b0000'0000'0000'0101,
+	it_WallPiece    = 0b0000'0001'0000'0101,
+	it_CeilingPiece	= 0b0000'0010'0000'0101,
+	it_Outfit       = 0b0000'0000'0000'0111,
+	it_Tops         = 0b0000'0001'0000'0111,
+	it_Bottom       = 0b0000'0010'0000'0111,
+	it_Dress        = 0b0000'0011'0000'0111,
+	//????          = 0b0000'0011'0000'0111,
+	it_Hat          = 0b0000'0100'0000'0111,
+	it_Shoes        = 0b0000'0101'0000'0111,
+};
 
 class Tool;
 class Furniture;

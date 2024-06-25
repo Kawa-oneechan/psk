@@ -85,7 +85,7 @@ void SpriteRenderer::Flush()
 	instanceCursor = 0;
 }
 
-void SpriteRenderer::DrawSprite(Shader* shader, Texture& texture, glm::vec2 position, glm::vec2 size, glm::vec4 srcRect, float rotate, const glm::vec4& color, int flags)
+void SpriteRenderer::DrawSprite(Shader* shader, Texture& texture, glm::vec2 position, glm::vec2 size, glm::vec4 srcRect, float rotate, const glm::vec4& color, SpriteFlags flags)
 {
 	glm::mat4 orthoProjection = glm::ortho(0.0f, width, height, 0.0f, -1.0f, 1.0f);
 
@@ -145,8 +145,8 @@ void SpriteRenderer::DrawSprite(Shader* shader, Texture& texture, glm::vec2 posi
 	models[instanceCursor] = model;
 	sourceRects[instanceCursor] = srcRect;
 	spriteColors[instanceCursor] = color;
-	spriteFlipX[instanceCursor] = ((flags & 1) == 1);
-	spriteFlipY[instanceCursor] = ((flags & 2) == 2);
+	spriteFlipX[instanceCursor] = ((flags & FlipX) == FlipX);
+	spriteFlipY[instanceCursor] = ((flags & FlipY) == FlipY);
 	instanceCursor++;
 
 	//texture.Use(0);
@@ -157,7 +157,7 @@ void SpriteRenderer::DrawSprite(Shader* shader, Texture& texture, glm::vec2 posi
 	//glBindVertexArray(0);
 }
 
-void SpriteRenderer::DrawSprite(Texture& texture, const glm::vec2& position, const glm::vec2& size, const glm::vec4& srcRect, float rotate, const glm::vec4& color, int flip)
+void SpriteRenderer::DrawSprite(Texture& texture, const glm::vec2& position, const glm::vec2& size, const glm::vec4& srcRect, float rotate, const glm::vec4& color, SpriteFlags flip)
 {
 	DrawSprite(spriteShader, texture, position, size, srcRect, rotate, color, flip);
 }

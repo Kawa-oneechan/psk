@@ -145,7 +145,7 @@ void Console::Draw(double dt)
 	if (!visible)
 		return;
 
-	sprender->DrawSprite(*whiteRect, glm::vec2(0), glm::vec2(width, height / 3), glm::vec4(0), 0, glm::vec4(0, 0, 0, 0.8), 0);
+	sprender->DrawSprite(*whiteRect, glm::vec2(0), glm::vec2(width, height / 3), glm::vec4(0), 0, glm::vec4(0, 0, 0, 0.8));
 
 	auto pos = glm::vec2(4, (height / 3) - 42);
 	for (unsigned int i = (unsigned int)buffer.size() - scrollCursor, lines = 21; i-- > 0 && lines-- > 0;)

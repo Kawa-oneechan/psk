@@ -216,8 +216,7 @@ void PanelLayout::Draw(double dt)
 				glm::vec2(frame.z, frame.w) * scale,
 				frame,
 				0.0f,
-				color,
-				0
+				color
 			);
 		}
 		else if (panel->Type == PanelType::Text)
@@ -255,8 +254,7 @@ void PanelLayout::Draw(double dt)
 				glm::vec2(frame.z, frame.w) * (panel->Size / 100.0f) * scale,
 				frame,
 				0.0f,
-				color,
-				0
+				color
 			);
 		}
 	}
