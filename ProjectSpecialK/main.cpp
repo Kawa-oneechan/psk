@@ -121,11 +121,11 @@ namespace UI
 		auto colors = json["colors"]->AsObject();
 		for (auto& ink : colors["theme"]->AsObject())
 		{
-			themeColors[ink.first] = GetJSONVec4(ink.second);
+			themeColors[ink.first] = GetJSONColor(ink.second);
 		}
 		for (auto& ink : colors["text"]->AsArray())
 		{
-			textColors.push_back(GetJSONVec4(ink));
+			textColors.push_back(GetJSONColor(ink));
 		}
 
 		try
@@ -450,6 +450,10 @@ int main(int argc, char** argv)
 	//tickables.push_back(logoAnim);
 
 	//tickables.push_back(new TextField());
+
+	{
+		auto textureCacheTest = Texture("ui/panels.png");
+	}
 
 	int oldTime = 0;
 	auto pos = 0.0f;
