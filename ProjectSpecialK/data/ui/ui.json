@@ -23,7 +23,7 @@
 			"brown":    "#804000",
 			"silver":   "#C0C0C0",
 			"gray":     "#808080",
-			"blue":     "#0000FF""
+			"blue":     "#0000FF",
 			"lime":     "#00FF00",
 			"cyan":     "#00FFFF",
 			"red":      "#FF0000",
@@ -55,7 +55,7 @@
 			"#06B6D1",  //Important
 			"#00C200",  //Player
 			"#F08C00",  //NPC
-			"#80827157" //Onomatopoeia
+			"#80827157",//Onomatopoeia
 			"#D83F3F",  //CampGameRed
 			"#5D5D66",  //CampGameBlack
 			"#D6FAFC"   //System

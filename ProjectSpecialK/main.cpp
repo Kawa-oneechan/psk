@@ -90,7 +90,7 @@ namespace UI
 	JSONObject& json = JSONObject();
 	JSONObject& settings = JSONObject();
 
-	static char* LoadFile(const std::string &filename, size_t *size)
+	static std::unique_ptr<char*> LoadFile(const std::string &filename, size_t *size)
 	{
 		std::ifstream file(filename, std::ios::binary | std::ios::ate);
 		if (!file.good())
@@ -99,11 +99,9 @@ namespace UI
 		file.seekg(0, std::ios::beg);
 		if (size != nullptr)
 			*size = fs;
-		char* ret = new char[fs + 2];
-		std::memset(ret, 0, fs + 2);
+		auto ret = new char[fs + 2]{ 0 };
 		file.read(ret, fs);
-		file.close();
-		return ret;
+		return std::make_unique<char*>(ret);
 	}
 
 	static void SaveFile(const std::string &filename, const std::string& content)
@@ -130,9 +128,8 @@ namespace UI
 
 		try
 		{
-			char *data = LoadFile("options.json", nullptr);
-			settings = JSON::Parse(data)->AsObject();
-			delete[] data;
+			auto data = LoadFile("options.json", nullptr);
+			settings = JSON::Parse(*data.get())->AsObject();
 		}
 		catch (std::exception&)
 		{

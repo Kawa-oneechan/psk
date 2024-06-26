@@ -66,7 +66,7 @@ Audio::Audio(std::string filename) : filename(filename)
 		status = AudioStatus::Invalid;
 		return;
 	}
-	auto data = ReadVFS(filename, &size);
+	data = ReadVFS(filename, &size);
 	if (!data)
 	{
 		conprint(1, "Could not open audio file {}.", filename);
@@ -86,7 +86,7 @@ Audio::Audio(std::string filename) : filename(filename)
 		mode |= FMOD_LOOP_OFF;
 		type = 1; //TODO: extend
 	}
-	auto r = system->createStream(data, mode, &soundEx, &theSound);
+	auto r = system->createStream(*data.get(), mode, &soundEx, &theSound);
 	if (r != FMOD_OK)
 	{
 		fmt::format("Could not create stream for audio file {}.", filename);

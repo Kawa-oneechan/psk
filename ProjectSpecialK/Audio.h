@@ -17,6 +17,7 @@ private:
 	AudioStatus status;
 	int type;
 	std::string filename;
+	std::unique_ptr<char*> data{ nullptr };
 
 public:
 	static bool Enabled;

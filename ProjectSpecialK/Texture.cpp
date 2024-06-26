@@ -52,14 +52,13 @@ Texture::Texture(const std::string& texturePath, int repeat, int filter) : file(
 	stbi_set_flip_vertically_on_load(1);
 
 	size_t vfsSize = 0;
-	char* vfsData = ReadVFS(texturePath, &vfsSize);
+	auto vfsData = ReadVFS(texturePath, &vfsSize);
 	if (vfsData == nullptr || vfsSize == 0)
 	{
 		conprint(1, "Failed to load texture \"{}\" -- no data.", texturePath);
 		return;
 	}
-	data = stbi_load_from_memory((unsigned char*)vfsData, (int)vfsSize, &width, &height, &channels, 0);
-	free(vfsData);
+	data = stbi_load_from_memory((unsigned char*)*vfsData.get(), (int)vfsSize, &width, &height, &channels, 0);
 
 	auto atlasPath = texturePath.substr(0, texturePath.find_last_of('.')) + ".json";
 	GetAtlas(atlas, atlasPath);

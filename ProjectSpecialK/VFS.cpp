@@ -252,7 +252,7 @@ void InitVFS()
 	conprint(0, "VFS: ended up with {} entries.", entries.size());
 }
 
-char* ReadVFS(const VFSEntry& entry, size_t* size)
+std::unique_ptr<char*> ReadVFS(const VFSEntry& entry, size_t* size)
 {
 	auto& source = sources[entry.sourceIndex];
 	if (source.isZip)
@@ -270,10 +270,9 @@ char* ReadVFS(const VFSEntry& entry, size_t* size)
 		const size_t siz = (size_t)fs.m_uncomp_size;
 		if (size != nullptr)
 			*size = siz;
-		char* ret = new char[siz + 2];
-		std::memset(ret, 0, siz + 2);
+		auto ret = new char[siz + 2]{ 0 };
 		mz_zip_reader_extract_to_mem(&zip, entry.zipIndex, ret, siz, 0);
-		return ret;
+		return std::make_unique<char*>(ret);
 	}
 	else
 	{
@@ -283,15 +282,14 @@ char* ReadVFS(const VFSEntry& entry, size_t* size)
 		file.seekg(0, std::ios::beg);
 		if (size != nullptr)
 			*size = fs;
-		char* ret = new char[fs + 2];
-		std::memset(ret, 0, fs + 2);
+		auto ret = new char[fs + 2]{ 0 };
 		file.read(ret, fs);
-		return ret;
+		return std::make_unique<char*>(ret);
 	}
 	return nullptr;
 }
 
-char* ReadVFS(const std::string& path, size_t* size)
+std::unique_ptr<char*> ReadVFS(const std::string& path, size_t* size)
 {
 	for (const auto& entry : entries)
 	{
@@ -311,8 +309,7 @@ JSONValue* ReadJSON(const VFSEntry& entry)
 	try
 	{
 		auto vfsData = ReadVFS(entry.path, nullptr);
-		auto doc = JSON::Parse(vfsData);
-		free(vfsData);
+		auto doc = JSON::Parse(*vfsData.get());
 
 		std::string ppath = entry.path + ".patch";
 		for (const auto& pents : entries)
@@ -320,17 +317,9 @@ JSONValue* ReadJSON(const VFSEntry& entry)
 			if (pents.path == ppath)
 			{
 				auto pdata = ReadVFS(pents.path, nullptr);
-				auto pdoc = JSON::Parse(pdata);
-				free(pdata);
+				auto pdoc = JSON::Parse(*pdata.get());
 				auto patched = JSONPatch::ApplyPatch(*doc, *pdoc);
 				doc = patched;
-				/*
-				if (!JSONPatch::ApplyPatch(*doc, *pdoc))
-				{
-				fmt::print("Failed to apply patch from %s to %s.\n", sources[pents.sourceIndex].path, entry.path));
-				break;
-				}
-				*/
 			}
 		}
 

@@ -51,9 +51,8 @@ namespace Database
 		for (const auto& entry : entries)
 		{
 			size_t vfsSize = 0;
-			char* vfsData = ReadVFS(entry.path, &vfsSize);
-			unsigned char *data = stbi_load_from_memory((unsigned char*)vfsData, (int)vfsSize, &width, &height, &channels, 0);
-			free(vfsData);
+			auto vfsData = ReadVFS(entry.path, &vfsSize);
+			unsigned char *data = stbi_load_from_memory((unsigned char*)*vfsData.get(), (int)vfsSize, &width, &height, &channels, 0);
 
 			int l = (iconNum % cols) * iconSize;
 			int t = (iconNum / rows) * iconSize;

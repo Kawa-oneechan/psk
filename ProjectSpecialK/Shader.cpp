@@ -2,18 +2,18 @@
 
 Shader::Shader(const std::string& vertexPath, const std::string& fragmentPath)
 {
-	char* vShaderCode = ReadVFS(vertexPath, nullptr);
-	char * fShaderCode = ReadVFS(fragmentPath, nullptr);
+	auto vShaderCode = ReadVFS(vertexPath, nullptr);
+	auto fShaderCode = ReadVFS(fragmentPath, nullptr);
 
 	unsigned int vertex, fragment;
 
 	vertex = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource(vertex, 1, &vShaderCode, NULL);
+	glShaderSource(vertex, 1, vShaderCode.get(), NULL);
 	glCompileShader(vertex);
 	checkCompileErrors(vertex, "VERTEX");
 
 	fragment = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(fragment, 1, &fShaderCode, NULL);
+	glShaderSource(fragment, 1, fShaderCode.get(), NULL);
 	glCompileShader(fragment);
 	checkCompileErrors(fragment, "FRAGMENT");
 
@@ -25,9 +25,6 @@ Shader::Shader(const std::string& vertexPath, const std::string& fragmentPath)
 
 	glDeleteShader(vertex);
 	glDeleteShader(fragment);
-
-	free(vShaderCode);
-	free(fShaderCode);
 }
 
 Shader::Shader(const std::string& fragmentPath) : Shader("shaders/sprite.vs", fragmentPath)
