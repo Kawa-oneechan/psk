@@ -2,7 +2,7 @@
 
 #include "SpecialK.h"
 
-enum DoomMenuTypes
+enum class DoomMenuTypes
 {
 	Text, Options, Slider, Checkbox, Page, Custom, Back
 };
@@ -11,8 +11,12 @@ class DoomMenuPage;
 
 class DoomMenuItem
 {
+private:
+	std::string key{ "" };
+	std::vector<std::string> optionKeys;
 public:
-	std::string caption{ "???" };
+	std::string caption{ "" };
+	std::string description{ "" };
 	std::vector<std::string> options;
 	int selection{ 0 };
 	DoomMenuTypes type{ DoomMenuTypes::Text };
@@ -23,27 +27,34 @@ public:
 	std::function<void(DoomMenuItem*)> change;
 	DoomMenuPage* page{ nullptr };
 
-	DoomMenuItem(const std::string& cap, int min, int max, int val, int stp, std::function<std::string(DoomMenuItem*)> fmt, std::function<void(DoomMenuItem*)> chg = nullptr) : caption(cap), type(DoomMenuTypes::Slider), minVal(min), maxVal(max), selection(val), step(stp), format(fmt), change(chg), page(nullptr) {}
+	DoomMenuItem(const std::string& cap, int min, int max, int val, int stp, std::function<std::string(DoomMenuItem*)> fmt, std::function<void(DoomMenuItem*)> chg = nullptr) : key(cap), type(DoomMenuTypes::Slider), minVal(min), maxVal(max), selection(val), step(stp), format(fmt), change(chg), page(nullptr) {}
 
-	DoomMenuItem(const std::string& cap, DoomMenuPage* tgt) : caption(cap), type(DoomMenuTypes::Page), page(tgt) {}
+	DoomMenuItem(const std::string& cap, DoomMenuPage* tgt) : key(cap), type(DoomMenuTypes::Page), page(tgt) {}
 
-	DoomMenuItem(const std::string& cap, bool val, std::function<void(DoomMenuItem*)> chg = nullptr) : caption(cap), type(DoomMenuTypes::Checkbox), selection(val ? 1 : 0), change(chg), page(nullptr) {}
+	DoomMenuItem(const std::string& cap, bool val, std::function<void(DoomMenuItem*)> chg = nullptr) : key(cap), type(DoomMenuTypes::Checkbox), selection(val ? 1 : 0), change(chg), page(nullptr) {}
 
 	DoomMenuItem(const std::string& cap, int val, std::initializer_list<std::string> opts, std::function<void(DoomMenuItem*)> chg);
 
-	DoomMenuItem(const std::string& cap, int fnt = 0, int siz = 100) : caption(cap), type(DoomMenuTypes::Text), selection(fnt), maxVal(siz), page(nullptr) {}
+	DoomMenuItem(const std::string& cap, int fnt = 0, int siz = 100) : key(cap), type(DoomMenuTypes::Text), selection(fnt), maxVal(siz), page(nullptr) {}
+
+	void Translate();
 };
 
 class DoomMenuPage
 {
 public:
+	std::string headerKey{ "" };
+	std::string subKey{ "" };
+
 	std::string header{ "" };
 	std::string subheader{ "" };
 	std::vector<DoomMenuItem*> items;
 	
 	DoomMenuPage() = default;
 
-	DoomMenuPage(const std::string& hed, const std::string& sub) : header(hed), subheader(sub) {}
+	DoomMenuPage(const std::string& hed, const std::string& sub) : headerKey(hed), subKey(sub) {}
+
+	void Translate();
 };
 
 class DoomMenu : public Tickable
@@ -69,10 +80,11 @@ private:
 	std::vector<Texture*> speciesPreviews;
 	std::string speciesText;
 
-	void rebuild();
+	void Build();
 
 public:
 	DoomMenu();
+	void Translate();
 	void Tick(double dt);
 	void Draw(double dt);
 };
