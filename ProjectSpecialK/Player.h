@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "SpecialK.h"
 
 #define MAX_ONHAND 40
@@ -21,7 +21,8 @@ public:
 	std::string Name;
 	Gender Gender;
 
-	InventoryItem* OnHand[MAX_ONHAND];
+	//TODO: make these 🌟special🌟 pointers
+	std::array<InventoryItem*, MAX_ONHAND> OnHand;
 	std::vector<InventoryItem*> Storage;
 	int OnHandLimit;
 	int StorageLimit;

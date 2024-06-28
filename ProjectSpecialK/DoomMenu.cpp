@@ -115,7 +115,7 @@ void DoomMenu::Build()
 	content.headerKey = "menu:options:head:content";
 	{
 		species.items.clear();
-		species.headerKey = "menu:options:head:content";
+		species.headerKey = "menu:options:head:content"; //-V691 "content" was not the imposter.
 		species.subKey = "menu:options:content:species";
 		for (const auto& s : ::species)
 		{

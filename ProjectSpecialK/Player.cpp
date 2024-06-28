@@ -8,7 +8,7 @@ Player::Player()
 	_birthday[0] = 0;
 	_birthday[1] = 0;
 	memset(_flags, 0, sizeof(_flags));
-	memset(OnHand, 0, sizeof(OnHand));
+	std::fill(OnHand.begin(), OnHand.end(), nullptr);
 	Storage.clear();
 	OnHandLimit = 20;
 	StorageLimit = 1600;
@@ -56,38 +56,23 @@ int Player::findItemSlot(InventoryItem* target)
 
 bool Player::HasInventoryRoom()
 {
-	for (int i = 0; i < OnHandLimit; i++)
-	{
-		if (OnHand[i] == nullptr)
-			return true;
-	}
-	return false;
+	return std::any_of(OnHand.cbegin(), OnHand.cend(), [](InventoryItem* i) { return i == nullptr; });
 }
 
 bool Player::GiveItem(InventoryItem* item)
 {
-	if (!HasInventoryRoom())
-		return false;
-	for (int i = 0; i < OnHandLimit; i++)
-	{
-		if (OnHand[i] == nullptr)
-		{
-			OnHand[i] = item;
-			return true;
-		}
-	}
-	//Somehow, Palpatine has returned.
-	return false;
+	auto it = std::find(OnHand.cbegin(), OnHand.cend(), nullptr);
+	if (it == OnHand.cend()) return false;
+	auto i = std::distance(OnHand.cbegin(), it);
+	OnHand[i] = item;
+	return true;
 }
 
 void Player::SwapItems(int from, int to)
 {
 	if (from == NO_ITEM || to == NO_ITEM)
 		return;
-
-	auto temp = OnHand[to];
-	OnHand[to] = OnHand[from];
-	OnHand[from] = temp;
+	std::swap(OnHand[from], OnHand[to]);
 }
 
 void Player::SwapItems(InventoryItem* from, InventoryItem* to)
