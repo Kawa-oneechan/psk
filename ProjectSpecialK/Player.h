@@ -16,6 +16,7 @@ private:
 	unsigned char _flags[255];
 
 	int findItemSlot(InventoryItem* target);
+	int findStorageSlot(InventoryItem* target);
 
 public:
 	std::string Name;
@@ -60,6 +61,11 @@ public:
 	bool ConsumeItem(int slot);
 	//TODO
 	bool ConsumeItem(InventoryItem* item);
+
+	bool Store(int slot);
+	bool Store(InventoryItem* item);
+	bool Retrieve(int slot);
+	bool Retrieve(InventoryItem* item);
 
 	void Serialize(JSONObject& target);
 	void Deserialize(JSONObject& source);

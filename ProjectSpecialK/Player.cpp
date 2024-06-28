@@ -108,5 +108,46 @@ bool Player::ConsumeItem(InventoryItem* item)
 	return ConsumeItem(findItemSlot(item));
 }
 
+int Player::findStorageSlot(InventoryItem* target)
+{
+	if (target == nullptr)
+		return NO_ITEM;
+	for (int i = 0; i < StorageLimit; i++)
+	{
+		if (Storage[i] == target)
+			return i;
+	}
+	return NO_ITEM;
+}
+
+bool Player::Store(int slot)
+{
+	if (Storage.size() >= StorageLimit)
+		return false;
+	auto item = OnHand[slot];
+	auto storageItem = new InventoryItem(item->AsItem());
+	Storage.push_back(storageItem);
+	RemoveItem(slot);
+	return true;
+}
+bool Player::Store(InventoryItem* item)
+{
+	return Store(findItemSlot(item));
+}
+bool Player::Retrieve(int slot)
+{
+	if (!HasInventoryRoom())
+		return false;
+	auto item = Storage[slot];
+	auto onHandItem = new InventoryItem(item->AsItem());
+	GiveItem(onHandItem);
+	Storage.erase(Storage.begin() + slot);
+	delete item;
+	return true;
+}
+bool Player::Retrieve(InventoryItem* item)
+{
+	return Retrieve(findStorageSlot(item));
+}
 
 Player thePlayer;
