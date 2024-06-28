@@ -11,36 +11,35 @@
 class Player : public NameableThing, Tickable
 {
 private:
-	const Model* _model;
-	unsigned char _birthday[2];
-	unsigned char _flags[255];
+	const Model* _model{ nullptr };
+	unsigned char _birthday[2]{ 26, 6 };
+	unsigned char _flags[255]{ 0 };
 
-	int findItemSlot(InventoryItem* target);
-	int findStorageSlot(InventoryItem* target);
+	int findItemSlot(std::shared_ptr<InventoryItem> target);
+	int findStorageSlot(std::shared_ptr<InventoryItem> target);
 
 public:
-	std::string Name;
-	Gender Gender;
+	std::string Name{ "Mayor" };
+	Gender Gender{ Gender::BEnby };
 
-	//TODO: make these 🌟special🌟 pointers
-	std::array<InventoryItem*, MAX_ONHAND> OnHand;
-	std::vector<InventoryItem*> Storage;
-	int OnHandLimit;
-	int StorageLimit;
-	unsigned int Bells;
+	std::array<std::shared_ptr<InventoryItem>, MAX_ONHAND> OnHand{ nullptr };
+	std::vector<std::shared_ptr<InventoryItem>> Storage;
+	int OnHandLimit{ 20 };
+	int StorageLimit{ 1600 };
+	unsigned int Bells{ 0 };
 	
-	InventoryItem* HeldTool;
-	InventoryItem* Hat;
-	InventoryItem* Glasses;
-	InventoryItem* Mask;
-	InventoryItem* Outfit;
-	InventoryItem* Top;
-	InventoryItem* Bottom;
-	InventoryItem* Socks;
-	InventoryItem* Shoes;
-	InventoryItem* Accessory;
+	std::shared_ptr<InventoryItem> HeldTool{ nullptr };
+	std::shared_ptr<InventoryItem> Hat{ nullptr };
+	std::shared_ptr<InventoryItem> Glasses{ nullptr };
+	std::shared_ptr<InventoryItem> Mask{ nullptr };
+	std::shared_ptr<InventoryItem> Outfit{ nullptr };
+	std::shared_ptr<InventoryItem> Top{ nullptr };
+	std::shared_ptr<InventoryItem> Bottom{ nullptr };
+	std::shared_ptr<InventoryItem> Socks{ nullptr };
+	std::shared_ptr<InventoryItem> Shoes{ nullptr };
+	std::shared_ptr<InventoryItem> Accessory{ nullptr };
 
-	Player();
+	//Player();
 	void LoadModel();
 	const Model* Model();
 	const std::string Birthday();
@@ -48,24 +47,24 @@ public:
 	//Returns true if the player has room in their inventory according to their current limit.
 	bool HasInventoryRoom();
 	//Gives the player the specified item. Returns false if there was no room.
-	bool GiveItem(InventoryItem* item);
+	bool GiveItem(std::shared_ptr<InventoryItem> item);
 	//Swaps two inventory items. Being position-based, this can swap with empty spots.
 	void SwapItems(int from, int to);
 	//Swaps two inventory items. Use SwapItems(int, int) if you need to swap with an empty spot.
-	void SwapItems(InventoryItem* from, InventoryItem* to);
+	void SwapItems(std::shared_ptr<InventoryItem> from, std::shared_ptr<InventoryItem> to);
 	//Removes an item from the inventory entirely.
 	bool RemoveItem(int slot);
 	//Removes an item from the inventory entirely.
-	bool RemoveItem(InventoryItem* item);
+	bool RemoveItem(std::shared_ptr<InventoryItem> item);
 	//TODO
 	bool ConsumeItem(int slot);
 	//TODO
-	bool ConsumeItem(InventoryItem* item);
+	bool ConsumeItem(std::shared_ptr<InventoryItem> item);
 
 	bool Store(int slot);
-	bool Store(InventoryItem* item);
+	bool Store(std::shared_ptr<InventoryItem> item);
 	bool Retrieve(int slot);
-	bool Retrieve(InventoryItem* item);
+	bool Retrieve(std::shared_ptr<InventoryItem> item);
 
 	void Serialize(JSONObject& target);
 	void Deserialize(JSONObject& source);

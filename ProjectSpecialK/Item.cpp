@@ -136,6 +136,7 @@ InventoryItem::InventoryItem(Item * wrapped, int variant, int pattern)
 	_variant = variant;
 	_pattern = pattern;
 	ID = wrapped->ID;
+	Hash = wrapped->Hash;
 	RefName = wrapped->RefName;
 	EnName = wrapped->EnName;
 	Temporary = false;
@@ -172,6 +173,7 @@ InventoryItem::InventoryItem(const std::string& reference)
 		_pattern = 0;
 	}
 	ID = _wrapped->ID;
+	Hash = _wrapped->Hash;
 	RefName = _wrapped->RefName;
 	EnName = _wrapped->EnName;
 	Temporary = false;
