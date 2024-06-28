@@ -2,24 +2,6 @@
 
 Villager::Villager(JSONObject& value, const std::string& filename) : NameableThing(value, filename)
 {
-//	ID = value["id"]->AsString();
-
-	_model = nullptr;
-	_species = nullptr;
-	gender = Gender::BEnby;
-	_birthday[0] = 0;
-	_birthday[1] = 0;
-	memset(_flags, 0, sizeof(_flags));
-	memset(_memories, 0, sizeof(_memories));
-	personality = nullptr;
-	personalitySubtype = 0;
-	hobby = nullptr;
-	HeldTool = nullptr;
-	Hat = nullptr;
-	Glasses = nullptr;
-	Mask = nullptr;
-	Outfit = nullptr;
-
 	_customModel = value["customModel"] != nullptr && value["customModel"]->IsBool() ? value["customModel"]->AsBool() : false;
 	_isSpecial = value["isSpecial"] != nullptr && value["isSpecial"]->IsBool() ? value["isSpecial"]->AsBool() : false;
 	
@@ -104,9 +86,9 @@ Villager::Villager(JSONObject& value, const std::string& filename) : NameableThi
 	if (value["photo"] != nullptr) photoID = value["photo"]->AsString();
 	if (value["poster"] != nullptr) portraitID = value["poster"]->AsString();
 	/*
-	umbrella = new InventoryItem(value["umbrella"]->AsString());
-	photo = new InventoryItem(value["photo"]->AsString());
-	portrait = new InventoryItem(value["poster"]->AsString());
+	umbrella = std::make_shared<InventoryItem>(value["umbrella"]->AsString());
+	photo = std::make_shared<InventoryItem>(value["photo"]->AsString());
+	portrait = std::make_shared<InventoryItem>(value["poster"]->AsString());
 	*/
 
 	//Everything after this point is only for regular villagers.
@@ -119,9 +101,9 @@ Villager::Villager(JSONObject& value, const std::string& filename) : NameableThi
 	rainCoatID = (clothing["rain"]->AsArray())[0]->AsString();
 	rainHatID = (clothing["rain"]->AsArray())[1]->AsString();
 	/*
-	defaultOutfit = new InventoryItem(clothing["default"]->AsString()); //ResolveItem(clothing["default"]->AsString(), "topsfallback");
-	rainCoat = new InventoryItem((clothing["rain"]->AsArray())[0]->AsString()); //ResolveItem((clothing["rain"]->AsArray())[0]->AsString(), "topsfallback");
-	rainHat = new InventoryItem((clothing["rain"]->AsArray())[1]->AsString()); //ResolveItem((clothing["rain"]->AsArray())[1]->AsString(), "hatfallback");
+	defaultOutfit = std::make_shared<InventoryItem>(clothing["default"]->AsString()); //ResolveItem(clothing["default"]->AsString(), "topsfallback");
+	rainCoat = std::make_shared<InventoryItem>((clothing["rain"]->AsArray())[0]->AsString()); //ResolveItem((clothing["rain"]->AsArray())[0]->AsString(), "topsfallback");
+	rainHat = std::make_shared<InventoryItem>((clothing["rain"]->AsArray())[1]->AsString()); //ResolveItem((clothing["rain"]->AsArray())[1]->AsString(), "hatfallback");
 	*/
 }
 
@@ -193,30 +175,15 @@ void Villager::Manifest()
 void Villager::DeleteAllThings()
 {
 	if (HeldTool != nullptr && HeldTool->Temporary)
-	{
-		delete HeldTool;
 		HeldTool = nullptr;
-	}
 	if (Hat != nullptr && Hat->Temporary)
-	{
-		delete Hat;
 		Hat = nullptr;
-	}
 	if (Glasses != nullptr && Glasses->Temporary)
-	{
-		delete Glasses;
 		Glasses = nullptr;
-	}
 	if (Mask != nullptr && Mask->Temporary)
-	{
-		delete Mask;
 		Mask = nullptr;
-	}
 	if (Outfit != nullptr && Outfit->Temporary)
-	{
-		delete Outfit;
 		Outfit = nullptr;
-	}
 }
 
 void Villager::Depart()
@@ -251,18 +218,17 @@ void Villager::PickOutfit()
 	else
 	{
 		//use default outfit
-		Outfit = new InventoryItem(defaultOutfitID);
+		Outfit = std::make_shared<InventoryItem>(defaultOutfitID);
 		if (!Outfit->IsOutfit())
 		{
 			conprint(2, "PickOutfit() for {}: \"{}\" may not exist, got a non-outfit item instead.", Name(), defaultOutfitID);
-			delete Outfit;
-			Outfit = new InventoryItem("psk:topsfallback");
+			Outfit = std::make_shared<InventoryItem>("psk:topsfallback");
 		}
 		Outfit->Temporary = true; //mark as safe to free
 	}
 }
 
-bool Villager::GiveItem(InventoryItem* item)
+bool Villager::GiveItem(std::shared_ptr<InventoryItem> item)
 {
 	auto target = &Items;
 	auto max = _maxFurnitureItems;
@@ -305,12 +271,12 @@ void Villager::Deserialize(JSONObject& source)
 	Items.clear();
 	for (const auto& i : items)
 	{
-		Items.push_back(new InventoryItem(i->AsString()));
+		Items.push_back(std::make_shared<InventoryItem>(i->AsString()));
 	}
 	auto outfits = source["outfits"]->AsArray();
 	Outfits.clear();
 	for (const auto& i : outfits)
 	{
-		Outfits.push_back(new InventoryItem(i->AsString()));
+		Outfits.push_back(std::make_shared<InventoryItem>(i->AsString()));
 	}
 }

@@ -24,16 +24,16 @@ House stuff, exterior:
 class Villager : public NameableThing, Tickable
 {
 private:
-	const Model* _model;
-	const Species* _species;
-	bool _customModel;
-	bool _isSpecial;
-	std::string _customCatchphrase;
-	std::string _customNickname;
-	Gender gender;
-	unsigned char _birthday[2];
-	unsigned char _flags[255];
-	unsigned char _memories[255];
+	const Model* _model{ nullptr };
+	const Species* _species{ nullptr };
+	bool _customModel{ false };
+	bool _isSpecial{ false };
+	std::string _customCatchphrase{ "" };
+	std::string _customNickname{ "" };
+	Gender gender{ Gender::BEnby };
+	unsigned char _birthday[2]{ 1, 1 };
+	unsigned char _flags[255]{ 0 };
+	unsigned char _memories[255]{ 0 };
 
 	static const int _maxFurnitureItems = 8 * 4;
 	static const int _maxOutfits = 8 * 3;
@@ -41,29 +41,29 @@ private:
 	void DeleteAllThings();
 
 public:
-	std::string RefSpecies;
-	std::string RefCatchphrase;
-	glm::vec4 NameTag[2];
+	std::string RefSpecies{ "" };
+	std::string RefCatchphrase{ "" };
+	glm::vec4 NameTag[2]{};
 
-	const Personality* personality;
-	int personalitySubtype;
-	const Hobby* hobby;
+	const Personality* personality{ nullptr };
+	int personalitySubtype{ 0 };
+	const Hobby* hobby{ nullptr };
 
-	std::string umbrellaID;
-	std::string photoID;
-	std::string portraitID;
-	std::string defaultOutfitID;
-	std::string rainCoatID;
-	std::string rainHatID;
+	std::string umbrellaID{ "" };
+	std::string photoID{ "" };
+	std::string portraitID{ "" };
+	std::string defaultOutfitID{ "" };
+	std::string rainCoatID{ "" };
+	std::string rainHatID{ "" };
 
-	InventoryItem* HeldTool;
-	InventoryItem* Hat;
-	InventoryItem* Glasses;
-	InventoryItem* Mask;
-	InventoryItem* Outfit;
+	std::shared_ptr<InventoryItem> HeldTool{ nullptr };
+	std::shared_ptr<InventoryItem> Hat{ nullptr };
+	std::shared_ptr<InventoryItem> Glasses{ nullptr };
+	std::shared_ptr<InventoryItem> Mask{ nullptr };
+	std::shared_ptr<InventoryItem> Outfit{ nullptr };
 
-	std::vector<InventoryItem*> Items;
-	std::vector<InventoryItem*> Outfits;
+	std::vector<std::shared_ptr<InventoryItem>> Items;
+	std::vector<std::shared_ptr<InventoryItem>> Outfits;
 
 	Villager(JSONObject& value, const std::string& filename = "");
 	const std::string Name();
@@ -82,7 +82,7 @@ public:
 
 	void PickOutfit();
 
-	bool Villager::GiveItem(InventoryItem* item);
+	bool Villager::GiveItem(std::shared_ptr<InventoryItem> item);
 
 	void Serialize(JSONObject& target);
 	void Deserialize(JSONObject& source);
