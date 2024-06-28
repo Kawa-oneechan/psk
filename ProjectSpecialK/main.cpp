@@ -434,8 +434,6 @@ int main(int argc, char** argv)
 	TextAdd(*ReadJSON("tests.json"));
 
 	tickables.push_back(new Background());
-	dlgBox = new DialogueBox();
-	//tickables.push_back(dlgBox);
 	tickables.push_back(new DoomMenu());
 	auto hotbar = new PanelLayout(UI::json["hotbar"]);
 	tickables.push_back(hotbar);
@@ -445,6 +443,8 @@ int main(int argc, char** argv)
 	//auto logoJson = ReadJSON("cinematics/logo/logo.json")->AsObject();
 	//auto logoAnim = new PanelLayout(logoJson["logoPanels"]);
 	//tickables.push_back(logoAnim);
+	dlgBox = new DialogueBox();
+	tickables.push_back(dlgBox);
 
 	//tickables.push_back(new TextField());
 

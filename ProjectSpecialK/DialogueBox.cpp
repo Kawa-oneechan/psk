@@ -1,4 +1,4 @@
-#include "DialogueBox.h"
+﻿#include "DialogueBox.h"
 #include "InputsMap.h"
 
 void DialogueBox::msbtStr(MSBTParams)
@@ -55,7 +55,7 @@ DialogueBox::DialogueBox()
 	bebebese = new Audio("sound/animalese/base/Voice_Monology.wav");
 
 	Sound = DialogueBoxSound::Bebebese;
-	state = DialogueBoxState::Writing;
+	state = DialogueBoxState::Done;
 	
 	displayCursor = 0;
 	time = 0;
@@ -100,11 +100,18 @@ void DialogueBox::Preprocess()
 void DialogueBox::Wrap()
 {
 	size_t lastSpace = -1;
-	for (size_t i = 0; i < toDisplay.length(); i++)
+	for (size_t i = 0; i < toDisplay.length();)
 	{
-		if (std::isblank(toDisplay[i]))
+		unsigned int ch = toDisplay[i] & 0xFF;
+		auto size = 1;
+		if ((ch & 0xE0) == 0xC0)
+			size = 2;
+		else if ((ch & 0xF0) == 0xE0)
+			size = 3;
+
+		if (size == 1 && std::isblank(ch))
 			lastSpace = i;
-		auto width = sprender->MeasureText(font, toDisplay.substr(0, i), 100).x;
+		auto width = sprender->MeasureText(font, toDisplay.substr(0, i + size), 100).x;
 		if (width > 650)
 		{
 			if (lastSpace == -1)
@@ -125,6 +132,8 @@ void DialogueBox::Wrap()
 				}
 			}
 		}
+
+		i += size;
 	}
 }
 
@@ -138,6 +147,11 @@ void DialogueBox::Text(const std::string& text)
 
 	displayCursor = 0;
 	delay = 50;
+
+	if (state == DialogueBoxState::Done)
+		state = DialogueBoxState::Opening;
+	else
+		state = DialogueBoxState::Writing;
 }
 
 void DialogueBox::Text(const std::string& text, int style, const std::string& speaker, const glm::vec4& tagBack, const glm::vec4& tagInk)

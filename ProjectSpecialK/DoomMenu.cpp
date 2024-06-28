@@ -77,7 +77,7 @@ void DoomMenu::Build()
 			UI::settings["language"] = new JSONValue(i->selection);
 			Translate();
 			items = &options;
-			//dlgBox->Text(fmt::format("You chose <color:1>{}</color>.", i->options[i->selection]));
+			dlgBox->Text(fmt::format("You chose <color:1>{}</color>.", i->options[i->selection]));
 		}
 	));
 	options.items.push_back(new DoomMenuItem("menu:options:continuefrom", (int)UI::settings["continue"]->AsNumber(),
