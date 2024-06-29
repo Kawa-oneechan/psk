@@ -68,33 +68,33 @@ namespace SolBinds
 		{
 			if (va.size() == 1)
 			{
-				Villager* ret = nullptr;
+				std::shared_ptr<Villager> ret = nullptr;
 				if (va[0].is<int>())
-					ret = Database::Find(va[0].as<int>(), &villagers);
+					ret = Database::Find(va[0].as<int>(), villagers);
 				else if (va[0].is<std::string>())
-					ret = Database::Find(va[0].as<std::string>(), &villagers);
+					ret = Database::Find(va[0].as<std::string>(), villagers);
 				if (ret == nullptr)
 					conprint(1, "getVillager: could not find villager {}", va[0].as<std::string>());
 				return ret;
 			}
 			conprint(1, "getVillager needs one argument, a hash or an ID.");
-			return (Villager*)nullptr;
+			return (std::shared_ptr<Villager>)nullptr;
 		};
 		Sol["getItem"] = [](sol::variadic_args va)
 		{
 			if (va.size() == 1)
 			{
-				Item* ret = nullptr;
+				std::shared_ptr<Item> ret = nullptr;
 				if (va[0].is<int>())
-					ret = Database::Find(va[0].as<int>(), &items);
+					ret = Database::Find(va[0].as<int>(), items);
 				else if (va[0].is<std::string>())
-					ret = Database::Find(va[0].as<std::string>(), &items);
+					ret = Database::Find(va[0].as<std::string>(), items);
 				if (ret == nullptr)
 					conprint(1, "getItem: could not find item {}", va[0].as<std::string>());
 				return ret;
 			}
 			conprint(1, "getItem needs one argument, a hash or an ID.");
-			return (Item*)nullptr;
+			return (std::shared_ptr<Item>)nullptr;
 		};
 	}
 }

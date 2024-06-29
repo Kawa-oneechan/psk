@@ -65,7 +65,7 @@ DialogueBox::DialogueBox()
 	//Text(u8"Truth is... <color:1>the game</color> was rigged from the start.",
 	//Text("Are you <color:3><str:player></color>? <delay:1000>Hiii! Welcome to <color:2>Project Special K</color>!",
 	Text(TextGet("dlg:sza:wack"),
-		Database::Find<Villager>("psk:cat00", &villagers));
+		Database::Find<Villager>("psk:cat00", villagers));
 
 	//Text("I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I", 0);
 	//Text("IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII", 0);
@@ -177,7 +177,7 @@ void DialogueBox::Text(const std::string& text, int style)
 	Text(text);
 }
 
-void DialogueBox::Text(const std::string& text, Villager* speaker)
+void DialogueBox::Text(const std::string& text, std::shared_ptr<Villager> speaker)
 {
 	Style(0);
 	if (speaker != nullptr)

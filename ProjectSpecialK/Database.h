@@ -3,11 +3,11 @@
 #include <vector>
 
 
-extern std::vector<Item> items;
-extern std::vector<Species> species;
-extern std::vector<Personality> personalities;
-extern std::vector<Hobby> hobbies;
-extern std::vector<Villager> villagers;
+extern std::vector<std::shared_ptr<Item>> items;
+extern std::vector<std::shared_ptr<Species>> species;
+extern std::vector<std::shared_ptr<Personality>> personalities;
+extern std::vector<std::shared_ptr<Hobby>> hobbies;
+extern std::vector<std::shared_ptr<Villager>> villagers;
 
 namespace Database
 {
@@ -21,12 +21,12 @@ namespace Database
 	
 	//Find a database entry by reference-ID.
 	template<typename T>
-	T* Find(const std::string& target, std::vector<T>* source)
+	std::shared_ptr<T> Find(const std::string& target, std::vector<std::shared_ptr<T>>& source)
 	{
 #if 1
-		for (int i = 0; i < source->size(); i++)
+		for (int i = 0; i < source.size(); i++)
 		{
-			T* v = &source->at(i);
+			std::shared_ptr<T> v = source.at(i);
 			if (v->ID == target)
 			{
 				return v;
@@ -43,11 +43,11 @@ namespace Database
 
 	//Find a database entry by CRC32 hash.
 	template<typename T>
-	T* Find(unsigned int hash, std::vector<T>* source)
+	std::shared_ptr<T> Find(unsigned int hash, std::vector<std::shared_ptr<T>>& source)
 	{
-		for (int i = 0; i < source->size(); i++)
+		for (int i = 0; i < source.size(); i++)
 		{
-			T* v = &source->at(i);
+			std::shared_ptr<T> v = source.at(i);
 			if (v->Hash == hash)
 			{
 				return v;
@@ -58,7 +58,7 @@ namespace Database
 
 	//Find a database entry from a JSONValue. If it's an array of strings, tries each.
 	template<typename T>
-	T* Find(const JSONValue* value, std::vector<T>* source)
+	std::shared_ptr<T> Find(const JSONValue* value, std::vector<std::shared_ptr<T>>& source)
 	{
 		if (value->IsString())
 			return Find<T>(value->AsString(), source);

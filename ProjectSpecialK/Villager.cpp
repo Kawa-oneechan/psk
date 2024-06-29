@@ -13,7 +13,7 @@ Villager::Villager(JSONObject& value, const std::string& filename) : NameableThi
 	else
 	{
 		auto sp = value["species"];
-		_species = Database::Find<::Species>(sp, &species);
+		_species = Database::Find<::Species>(sp, species);
 		if (_species == nullptr)
 			throw std::runtime_error(fmt::format("Unknown species {} while loading {}.", sp->Stringify(), ID));
 		RefSpecies = fmt::format("species:{}", _species->ID);
@@ -66,7 +66,7 @@ Villager::Villager(JSONObject& value, const std::string& filename) : NameableThi
 		personality = nullptr;
 	else
 	{
-		personality = Database::Find<::Personality>(value["personality"], &personalities);
+		personality = Database::Find<::Personality>(value["personality"], personalities);
 		if (personality == nullptr)
 			throw std::runtime_error(fmt::format("Unknown personality {} while loading {}.", value["personality"]->Stringify(), ID));
 	}
@@ -74,11 +74,11 @@ Villager::Villager(JSONObject& value, const std::string& filename) : NameableThi
 
 	//hobby = value["hobby"];
 	{
-		hobby = Database::Find<::Hobby>(value["hobby"], &hobbies);
+		hobby = Database::Find<::Hobby>(value["hobby"], hobbies);
 		if (hobby == nullptr)
 		{
 			conprint(1, "Unknown hobby {} while loading {}.", value["hobby"]->Stringify(), ID);
-			hobby = Database::Find<::Hobby>("fallback", &hobbies);
+			hobby = Database::Find<::Hobby>("fallback", hobbies);
 		}
 	}
 

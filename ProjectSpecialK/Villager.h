@@ -25,7 +25,7 @@ class Villager : public NameableThing, Tickable
 {
 private:
 	const Model* _model{ nullptr };
-	const Species* _species{ nullptr };
+	std::shared_ptr<Species> _species{ nullptr };
 	bool _customModel{ false };
 	bool _isSpecial{ false };
 	std::string _customCatchphrase{ "" };
@@ -45,9 +45,9 @@ public:
 	std::string RefCatchphrase{ "" };
 	glm::vec4 NameTag[2]{};
 
-	const Personality* personality{ nullptr };
+	std::shared_ptr<Personality> personality{ nullptr };
 	int personalitySubtype{ 0 };
-	const Hobby* hobby{ nullptr };
+	std::shared_ptr<Hobby> hobby{ nullptr };
 
 	std::string umbrellaID{ "" };
 	std::string photoID{ "" };

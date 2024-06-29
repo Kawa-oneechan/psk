@@ -8,11 +8,11 @@
 
 namespace fs = std::experimental::filesystem;
 
-std::vector<Item> items;
-std::vector<Species> species;
-std::vector<Personality> personalities;
-std::vector<Hobby> hobbies;
-std::vector<Villager> villagers;
+std::vector<std::shared_ptr<Item>> items;
+std::vector<std::shared_ptr<Species>> species;
+std::vector<std::shared_ptr<Personality>> personalities;
+std::vector<std::shared_ptr<Hobby>> hobbies;
+std::vector<std::shared_ptr<Villager>> villagers;
 
 namespace Database
 {
@@ -121,7 +121,7 @@ namespace Database
 	}
 
 	template<typename T1, typename T2>
-	void loadWorker(std::vector<T1>& target, const std::string& spec, const std::string& whom)
+	void loadWorker(std::vector<std::shared_ptr<T1>>& target, const std::string& spec, const std::string& whom)
 	{
 		auto entries = EnumerateVFS(spec);
 		target.reserve(entries.size());
@@ -133,7 +133,7 @@ namespace Database
 			{
 				try
 				{
-					target.emplace_back(T2((JSONObject&)doc->AsObject(), entry.path));
+					target.emplace_back(std::make_shared<T2>((JSONObject&)doc->AsObject(), entry.path));
 				}
 				catch (std::runtime_error& e)
 				{
@@ -149,7 +149,7 @@ namespace Database
 	}
 
 	template<typename T1>
-	void loadWorker(std::vector<T1>& target, const std::string& spec, const std::string& whom)
+	void loadWorker(std::vector<std::shared_ptr<T1>>& target, const std::string& spec, const std::string& whom)
 	{
 		loadWorker<T1, T1>(target, spec, whom);
 	}
@@ -163,10 +163,10 @@ namespace Database
 		auto table = std::vector<std::string>{ "ID", "Name", "Type", "Hash" };
 		for (const auto& item : items)
 		{
-			table.push_back(item.ID);
-			table.push_back(item.EnName);
-			table.emplace_back(fmt::format("{:#b}", item.Type));
-			table.emplace_back(fmt::format("{:08X}", item.Hash));
+			table.push_back(item->ID);
+			table.push_back(item->EnName);
+			table.emplace_back(fmt::format("{:#b}", item->Type));
+			table.emplace_back(fmt::format("{:08X}", item->Hash));
 		}
 		Table(table, 4);
 		conprint(0, "ItemsDatabase: ended up with {} entries.", items.size());
@@ -179,8 +179,8 @@ namespace Database
 		auto table = std::vector<std::string>{ "ID", "Name" };
 		for (const auto& spec: species)
 		{
-			table.push_back(spec.ID);
-			table.push_back(spec.EnName[0]);
+			table.push_back(spec->ID);
+			table.push_back(spec->EnName[0]);
 		}
 		Table(table, 2);
 		conprint(0, "SpeciesDatabase: ended up with {} entries.", species.size());
@@ -201,9 +201,9 @@ namespace Database
 		auto table = std::vector<std::string>{ "ID", "Name","Hash" };
 		for (const auto& villager : villagers)
 		{
-			table.push_back(villager.ID);
-			table.push_back(villager.EnName);
-			table.emplace_back(fmt::format("{:08X}", villager.Hash));
+			table.push_back(villager->ID);
+			table.push_back(villager->EnName);
+			table.emplace_back(fmt::format("{:08X}", villager->Hash));
 		}
 		Table(table, 3);
 		conprint(0, "VillagerDatabase: ended up with {} entries.", villagers.size());

@@ -130,7 +130,7 @@ Outfit* Item::AsOutfit() const
 	return (Outfit*)this;
 }
 
-InventoryItem::InventoryItem(Item * wrapped, int variant, int pattern)
+InventoryItem::InventoryItem(std::shared_ptr<Item> wrapped, int variant, int pattern)
 {
 	_wrapped = wrapped;
 	_variant = variant;
@@ -142,10 +142,10 @@ InventoryItem::InventoryItem(Item * wrapped, int variant, int pattern)
 	Temporary = false;
 }
 
-InventoryItem::InventoryItem(Item * wrapped, int variant) : InventoryItem(wrapped, variant, 0)
+InventoryItem::InventoryItem(std::shared_ptr<Item> wrapped, int variant) : InventoryItem(wrapped, variant, 0)
 {}
 
-InventoryItem::InventoryItem(Item * wrapped) : InventoryItem(wrapped, 0, 0)
+InventoryItem::InventoryItem(std::shared_ptr<Item> wrapped) : InventoryItem(wrapped, 0, 0)
 {}
 
 InventoryItem::InventoryItem(const std::string& reference)
@@ -160,10 +160,10 @@ InventoryItem::InventoryItem(const std::string& reference)
 	{
 		cleanName = reference.substr(0, slash);
 	}
-	_wrapped = Database::Find<::Item>(cleanName, &items);
+	_wrapped = Database::Find<::Item>(cleanName, items);
 	if (_wrapped == nullptr)
 	{
-		_wrapped = Database::Find<::Item>("psk:toolfallback", &items);
+		_wrapped = Database::Find<::Item>("psk:toolfallback", items);
 	}
 	else if (slash != std::string::npos)
 	{
@@ -219,22 +219,22 @@ bool InventoryItem::IsOutfit() const
 	return _wrapped->IsOutfit();
 }
 
-Item* InventoryItem::AsItem() const
+std::shared_ptr<Item> InventoryItem::AsItem() const
 {
-	return (Item*)_wrapped;
+	return std::static_pointer_cast<Item>(_wrapped);
 }
 
-Tool* InventoryItem::AsTool() const
+std::shared_ptr<Tool> InventoryItem::AsTool() const
 {
-	return (Tool*)_wrapped;
+	return std::static_pointer_cast<Tool>(_wrapped);
 }
 
-Furniture* InventoryItem::AsFurniture() const
+std::shared_ptr<Furniture> InventoryItem::AsFurniture() const
 {
-	return (Furniture*)_wrapped;
+	return std::static_pointer_cast<Furniture>(_wrapped);
 }
 
-Outfit* InventoryItem::AsOutfit() const
+std::shared_ptr<Outfit> InventoryItem::AsOutfit() const
 {
-	return (Outfit*)_wrapped;
+	return std::static_pointer_cast<Outfit>(_wrapped);
 }

@@ -119,11 +119,11 @@ void DoomMenu::Build()
 		species.subKey = "menu:options:content:species";
 		for (const auto& s : ::species)
 		{
-			auto f = "filter:species:" + s.ID;
+			auto f = "filter:species:" + s->ID;
 			//TODO: handle species having custom filters.
-			if (s.ID == "bul") continue;
+			if (s->ID == "bul") continue;
 
-			auto sn = StripMSBT(TextGet(s.RefName + ":m"));
+			auto sn = StripMSBT(TextGet(s->RefName + ":m"));
 			if (std::islower(sn[0]))
 				sn[0] = std::toupper(sn[0]);
 
@@ -208,8 +208,8 @@ DoomMenu::DoomMenu()
 	for (const auto& s : ::species)
 	{
 		//TODO: properly handle species having custom filters.
-		if (s.ID == "bul") continue;
-		speciesPreviews.push_back(new Texture("ui/species/" + s.ID + ".png"));
+		if (s->ID == "bul") continue;
+		speciesPreviews.push_back(new Texture("ui/species/" + s->ID + ".png"));
 	}
 }
 

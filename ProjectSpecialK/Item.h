@@ -78,12 +78,12 @@ public:
 class InventoryItem : public NameableThing
 {
 private:
-	Item* _wrapped;
+	std::shared_ptr<Item> _wrapped;
 	int _variant, _pattern;
 public:
-	InventoryItem(Item* wrapped, int variant, int pattern);
-	InventoryItem(Item* wrapped, int variant);
-	InventoryItem(Item* wrapped);
+	InventoryItem(std::shared_ptr<Item> wrapped, int variant, int pattern);
+	InventoryItem(std::shared_ptr<Item> wrapped, int variant);
+	InventoryItem(std::shared_ptr<Item> wrapped);
 	InventoryItem(const std::string& reference);
 	const std::string FullID();
 	const std::string FullName();
@@ -91,10 +91,10 @@ public:
 	bool IsTool() const;
 	bool IsFurniture() const;
 	bool IsOutfit() const;
-	Item* AsItem() const;
-	Tool* AsTool() const;
-	Furniture* AsFurniture() const;
-	Outfit* AsOutfit() const;
+	std::shared_ptr<Item> AsItem() const;
+	std::shared_ptr<Tool> AsTool() const;
+	std::shared_ptr<Furniture> AsFurniture() const;
+	std::shared_ptr<Outfit> AsOutfit() const;
 	//Safe to delete if true. If not, DO NOT DELETE.
 	bool Temporary;
 };
