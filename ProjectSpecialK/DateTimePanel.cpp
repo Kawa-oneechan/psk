@@ -52,7 +52,7 @@ void DateTimePanel::Update()
 		auto weather = "sunny";
 		{
 			town.UpdateWeather();
-			if (town.Weather >= Weather::RainClouds)
+			if (town.Clouds >= Town::Weather::RainClouds)
 				weather = "rainy";
 		}
 		bgm = new Audio(fmt::format("music/bgm/clock/{:02}{}.ogg", lastHour, weather));

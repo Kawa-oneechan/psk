@@ -72,7 +72,7 @@ void Town::UpdateWeather()
 	localtime_s(&gm, &now);
 	auto hour = gm.tm_hour;
 
-	Weather = (::Weather)weatherRain[hour];
+	Clouds = static_cast<Town::Weather>(weatherRain[hour]);
 	
 	if (weatherWind[hour] == 0)
 		Wind = 0;

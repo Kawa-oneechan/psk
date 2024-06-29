@@ -63,7 +63,7 @@ Audio::Audio(std::string filename) : filename(filename)
 	type = 0;
 	if (!Enabled)
 	{
-		status = AudioStatus::Invalid;
+		status = Status::Invalid;
 		return;
 	}
 	data = ReadVFS(filename, &size);
@@ -108,7 +108,7 @@ Audio::Audio(std::string filename) : filename(filename)
 				conprint(1, "Wanted to set loop point for file {}, could not.", filename);
 		}
 	}
-	status = AudioStatus::Stopped;
+	status = Status::Stopped;
 }
 
 Audio::~Audio()
@@ -122,10 +122,10 @@ Audio::~Audio()
 
 void Audio::Play(bool force)
 {
-	if (force && status != AudioStatus::Stopped)
+	if (force && status != Status::Stopped)
 		Stop();
 
-	if (status == AudioStatus::Stopped)
+	if (status == Status::Stopped)
 	{
 		if (Enabled)
 		{
@@ -136,28 +136,28 @@ void Audio::Play(bool force)
 		}
 		playing.push_back(this);
 	}
-	else if (status == AudioStatus::Paused)
+	else if (status == Status::Paused)
 	{
 		theChannel->setPaused(false);
 	}
-	status = AudioStatus::Playing;
+	status = Status::Playing;
 }
 
 void Audio::Pause()
 {
 	if (Enabled)
 		theChannel->setPaused(true);
-	status = AudioStatus::Paused;
+	status = Status::Paused;
 }
 
 void Audio::Stop()
 {
-	if (status != AudioStatus::Stopped)
+	if (status != Status::Stopped)
 	{
 		if (Enabled)
 			theChannel->stop();
 	}
-	status = AudioStatus::Stopped;
+	status = Status::Stopped;
 	playing.erase(std::remove(playing.begin(), playing.end(), this), playing.end());
 }
 

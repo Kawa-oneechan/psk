@@ -20,22 +20,6 @@ public:
 	inline bool operator!= (unsigned int r) { return this->Hash != r; }
 };
 
-enum ItemType
-{
-	it_Item         = 0b0000'0000'0000'0001,
-	it_Tool         = 0b0000'0000'0000'0011,
-	it_Furniture    = 0b0000'0000'0000'0101,
-	it_WallPiece    = 0b0000'0001'0000'0101,
-	it_CeilingPiece	= 0b0000'0010'0000'0101,
-	it_Outfit       = 0b0000'0000'0000'0111,
-	it_Tops         = 0b0000'0001'0000'0111,
-	it_Bottom       = 0b0000'0010'0000'0111,
-	it_Dress        = 0b0000'0011'0000'0111,
-	//????          = 0b0000'0011'0000'0111,
-	it_Hat          = 0b0000'0100'0000'0111,
-	it_Shoes        = 0b0000'0101'0000'0111,
-};
-
 class Item;
 class Tool;
 class Furniture;
@@ -52,7 +36,22 @@ public:
 	Item(JSONObject& value, const std::string& filename = "");
 	int FindVariantByName(const std::string& variantName) const;
 	std::vector<std::string> variantNames;
-	int Type;
+
+	enum Type
+	{
+		Generic = 0b0000'0000'0000'0001,
+		Tool = 0b0000'0000'0000'0011,
+		Furniture = 0b0000'0000'0000'0101,
+		WallPiece = 0b0000'0001'0000'0101,
+		CeilingPiece = 0b0000'0010'0000'0101,
+		Outfit = 0b0000'0000'0000'0111,
+		Tops = 0b0000'0001'0000'0111,
+		Bottom = 0b0000'0010'0000'0111,
+		Dress = 0b0000'0011'0000'0111,
+		//????          = 0b0000'0011'0000'0111,
+		Hat = 0b0000'0100'0000'0111,
+		Shoes = 0b0000'0101'0000'0111,
+	} Type;
 	bool IsItem() const;
 	bool IsTool() const;
 	bool IsFurniture() const;

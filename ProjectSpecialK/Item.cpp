@@ -62,21 +62,21 @@ Item::Item(JSONObject& value, const std::string& filename) : NameableThing(value
 	//auto vars = value.find("variants");
 	//if (vars != value.end())
 
-	Type = it_Item;
+	Type = Type::Generic;
 
 	auto type = value["type"] != nullptr ? value["type"]->AsString() : "";
 	if (type.empty());
-	else if (type == "tool") Type = it_Tool;
-	else if (type == "furniture") Type = it_Furniture;
-	else if (type == "tops") Type = it_Tops;
-	else if (type == "bottom") Type = it_Bottom;
-	else if (type == "bottoms") Type = it_Bottom;
-	else if (type == "dress") Type = it_Dress;
-	else if (type == "dressup") Type = it_Dress;
-	else if (type == "onepiece") Type = it_Dress;
-	else if (type == "hat") Type = it_Hat;
-	else if (type == "cap") Type = it_Hat;
-	else if (type == "shoes") Type = it_Shoes;
+	else if (type == "tool") Type = Type::Tool;
+	else if (type == "furniture") Type = Type::Furniture;
+	else if (type == "tops") Type = Type::Tops;
+	else if (type == "bottom") Type = Type::Bottom;
+	else if (type == "bottoms") Type = Type::Bottom;
+	else if (type == "dress") Type = Type::Dress;
+	else if (type == "dressup") Type = Type::Dress;
+	else if (type == "onepiece") Type = Type::Dress;
+	else if (type == "hat") Type = Type::Hat;
+	else if (type == "cap") Type = Type::Hat;
+	else if (type == "shoes") Type = Type::Shoes;
 	else
 		throw std::runtime_error(fmt::format("Don't know what to do with type \"{}\" while loading {}.", type, ID));
 	//fmt::print("Don't know what to do with type \"{}\".\n", type);
@@ -97,42 +97,38 @@ bool Item::IsItem() const
 
 bool Item::IsTool() const
 {
-	return (Type & it_Tool) == it_Tool;
+	return (Type & Type::Tool) == Type::Tool;
 }
 
 bool Item::IsFurniture() const
 {
-	return (Type & it_Furniture) == it_Furniture;
+	return (Type & Type::Furniture) == Type::Furniture;
 }
 
 bool Item::IsOutfit() const
 {
-	return (Type & it_Outfit) == it_Outfit;
+	return (Type & Type::Outfit) == Type::Outfit;
 }
 
 ItemP Item::AsItem() const
 {
 	//TODO: CHECK THIS
-	//return std::make_shared<Item>(this);
-	return nullptr;
+	return std::make_shared<Item>(*this);
 }
 
 ToolP Item::AsTool() const
 {
-	//return std::make_shared<Tool>(this);
-	return nullptr;
+	return std::make_shared<::Tool>(*(::Tool*)this);
 }
 
 FurnitureP Item::AsFurniture() const
 {
-	//return std::make_shared<Furniture>(this);
-	return nullptr;
+	return std::make_shared<::Furniture>(*(::Furniture*)this);
 }
 
 OutfitP Item::AsOutfit() const
 {
-	//return std::make_shared<Outfit>(this);
-	return nullptr;
+	return std::make_shared<::Outfit>(*(::Outfit*)this);
 }
 
 InventoryItem::InventoryItem(ItemP wrapped, int variant, int pattern)

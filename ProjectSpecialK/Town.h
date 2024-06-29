@@ -2,20 +2,6 @@
 
 #include "SpecialK.h"
 
-#define MAX_VILLAGERS 64
-#define MAX_MAPDIST 256
-#define MAX_MAPSIZE (MAX_MAPDIST * MAX_MAPDIST)
-
-enum Hemisphere
-{
-	North, South
-};
-
-enum Weather
-{
-	Fine, Sunny, Cloudy, RainClouds, Rain, HeavyRain
-};
-
 struct SavedMapItem
 {
 	unsigned int id;
@@ -93,11 +79,25 @@ private:
 
 public:
 	std::string Name{ "Fuck-All Nowhere" };
-	Hemisphere Hemisphere{ Hemisphere::North };
-	Villager* Villagers[MAX_VILLAGERS]{ 0 };
-	Weather Weather{ Fine };
+
+	static const int MaxVillagers{ 64 };
+	static const int MaxMapExtent{ 256 };
+	static const int MaxMapSize{ MaxMapExtent * MaxMapExtent };
+
+	enum class Hemisphere
+	{
+		North, South
+	} Hemisphere{ Hemisphere::North };
+
+	enum class Weather
+	{
+		Fine, Sunny, Cloudy, RainClouds, Rain, HeavyRain
+	} Clouds{ Weather::Fine };
+	
+	std::vector<VillagerP> Villagers;
+	
 	int Wind{ 0 };
-	LiveTerrainTile Tiles[MAX_MAPSIZE]{ 0 };
+	LiveTerrainTile Tiles[MaxMapExtent]{ 0 };
 	std::vector<void*> Objects;
 
 	Town();

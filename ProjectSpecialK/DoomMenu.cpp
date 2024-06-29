@@ -3,7 +3,7 @@
 #include "Cursor.h"
 #include "DialogueBox.h"
 
-DoomMenuItem::DoomMenuItem(const std::string& cap, int val, std::initializer_list<std::string> opts, std::function<void(DoomMenuItem*)> chg = nullptr) : key(cap), type(DoomMenuTypes::Options), selection(val), change(chg), page(nullptr)
+DoomMenuItem::DoomMenuItem(const std::string& cap, int val, std::initializer_list<std::string> opts, std::function<void(DoomMenuItem*)> chg = nullptr) : key(cap), type(Type::Options), selection(val), change(chg), page(nullptr)
 {
 	for (auto i : opts)
 		optionKeys.emplace_back(i);
@@ -13,13 +13,13 @@ void DoomMenuItem::Translate()
 {
 	caption = TextGet(key);
 	description = TextGet(key + ":desc");
-	if (type == DoomMenuTypes::Options)
+	if (type == Type::Options)
 	{
 		options.clear();
 		for (auto i : optionKeys)
 			options.emplace_back(TextGet(i));
 	}
-	if (type == DoomMenuTypes::Page && page != nullptr)
+	if (type == Type::Page && page != nullptr)
 	{
 		page->Translate();
 	}
@@ -39,7 +39,7 @@ void DoomMenuPage::Translate()
 void DoomMenu::Build()
 {
 	auto back = new DoomMenuItem("Back", nullptr);
-	back->type = DoomMenuTypes::Back;
+	back->type = DoomMenuItem::Type::Back;
 
 	auto minutes = [&](DoomMenuItem* i)
 	{
@@ -234,7 +234,7 @@ void DoomMenu::Tick(double dt)
 		}
 	}
 	cursor->Select(0);
-	if (mouseHighlight != -1 && items->items[highlight]->type == DoomMenuTypes::Slider)
+	if (mouseHighlight != -1 && items->items[highlight]->type == DoomMenuItem::Type::Slider)
 	{
 		if (Inputs.MousePosition.x >= sliderStart && Inputs.MousePosition.x <= sliderEnd)
 		{
@@ -268,7 +268,7 @@ void DoomMenu::Tick(double dt)
 	if (mouseHighlight != highlight && Inputs.MouseLeft)
 		Inputs.MouseLeft = false;
 
-	while (items->items[highlight]->type == DoomMenuTypes::Text)
+	while (items->items[highlight]->type == DoomMenuItem::Type::Text)
 		highlight++;
 
 	if (Inputs.Escape)
@@ -320,7 +320,7 @@ void DoomMenu::Tick(double dt)
 
 	auto item = items->items[highlight];
 
-	if (item->type == DoomMenuTypes::Page)
+	if (item->type == DoomMenuItem::Type::Page)
 	{
 		if (Inputs.Enter || Inputs.MouseLeft)
 		{
@@ -330,7 +330,7 @@ void DoomMenu::Tick(double dt)
 			mouseHighlight = -1;
 		}
 	}
-	else if (item->type == DoomMenuTypes::Back)
+	else if (item->type == DoomMenuItem::Type::Back)
 	{
 		if (Inputs.Enter || Inputs.MouseLeft)
 		{
@@ -344,7 +344,7 @@ void DoomMenu::Tick(double dt)
 			}
 		}
 	}
-	else if (item->type == DoomMenuTypes::Checkbox)
+	else if (item->type == DoomMenuItem::Type::Checkbox)
 	{
 		if (Inputs.Enter || Inputs.MouseLeft)
 		{
@@ -353,7 +353,7 @@ void DoomMenu::Tick(double dt)
 				item->change(item);
 		}
 	}
-	else if (item->type == DoomMenuTypes::Options)
+	else if (item->type == DoomMenuItem::Type::Options)
 	{
 		if (Inputs.Enter || Inputs.MouseLeft)
 		{
@@ -378,7 +378,7 @@ void DoomMenu::Tick(double dt)
 				item->change(item);
 		}
 	}
-	else if (item->type == DoomMenuTypes::Slider)
+	else if (item->type == DoomMenuItem::Type::Slider)
 	{
 		if (Inputs.Left)
 		{
@@ -467,7 +467,7 @@ void DoomMenu::Draw(double dt)
 		pos.y += (40 * scale) + size - (100 * scale);
 		if (i + scroll == highlight)
 		{
-			auto offset = glm::vec2(item->type == DoomMenuTypes::Checkbox ? (40 * scale) : 0, 0);
+			auto offset = glm::vec2(item->type == DoomMenuItem::Type::Checkbox ? (40 * scale) : 0, 0);
 			auto highlightSize = sprender->MeasureText(1, item->caption, 100 * scale);
 			highlightSize.x += 8 * scale;
 			highlightSize.y *= 0.75f;
@@ -484,11 +484,11 @@ void DoomMenu::Draw(double dt)
 		auto item = items->items[i + scroll];
 		//auto color = glm::vec4(1, 1, i + scroll == highlight ? 0.25 : 1, 1);
 		const auto color = glm::vec4(1);
-		auto offset = glm::vec2(item->type == DoomMenuTypes::Checkbox ? (40 * scale) : 0, 0);
+		auto offset = glm::vec2(item->type == DoomMenuItem::Type::Checkbox ? (40 * scale) : 0, 0);
 		auto font = 1;
 		auto size = 100 * scale;
 
-		if (item->type == DoomMenuTypes::Text)
+		if (item->type == DoomMenuItem::Type::Text)
 		{
 			font = item->selection;
 			size = item->maxVal * scale;
@@ -497,12 +497,12 @@ void DoomMenu::Draw(double dt)
 		//sprender->DrawText(font, item->caption, pos + offset + glm::vec2(2), black, size);
 		sprender->DrawText(font, item->caption, pos + offset, color, size);
 
-		if (item->type == DoomMenuTypes::Options)
+		if (item->type == DoomMenuItem::Type::Options)
 		{
 			//sprender->DrawText(1, item->options[item->selection], pos + glm::vec2(col + 2, 2), black, size);
 			sprender->DrawText(1, item->options[item->selection], pos + glm::vec2(col, 0), color, size);
 		}
-		else if (item->type == DoomMenuTypes::Slider)
+		else if (item->type == DoomMenuItem::Type::Slider)
 		{
 			if (item->format != nullptr)
 			{
@@ -528,20 +528,20 @@ void DoomMenu::Draw(double dt)
 	{
 		auto item = i == 0 ? items->items[0] : items->items[i + scroll];
 		auto color = glm::vec4(1, 1, i + scroll == highlight ? 0.25 : 1, 1);
-		auto offset = glm::vec2(item->type == DoomMenuTypes::Checkbox ? (40 * scale) : 0, 0);
+		auto offset = glm::vec2(item->type == DoomMenuItem::Type::Checkbox ? (40 * scale) : 0, 0);
 		auto font = 1;
 		auto size = 100 * scale;
 
 		pos.y = itemY[i];
 
-		if (item->type == DoomMenuTypes::Checkbox)
+		if (item->type == DoomMenuItem::Type::Checkbox)
 		{
 			auto checkColor = color * glm::vec4(1, 1, 1, 0.5);
 			sprender->DrawSprite(controls, pos + glm::vec2(0, 4 * scale), glm::vec2(partSize), controls[4], 0, checkColor);
 			if (item->selection)
 				sprender->DrawSprite(controls, pos + glm::vec2(0, 4 * scale), glm::vec2(partSize), controls[5], 0, color);
 		}
-		else if (item->type == DoomMenuTypes::Slider)
+		else if (item->type == DoomMenuItem::Type::Slider)
 		{
 			auto trackColor = color * glm::vec4(1, 1, 1, 0.5);
 			auto barLength = col;
@@ -564,7 +564,7 @@ void DoomMenu::Draw(double dt)
 	}
 
 	//species page special stuff
-	if (items == &species && items->items[highlight]->type == DoomMenuTypes::Checkbox)
+	if (items == &species && items->items[highlight]->type == DoomMenuItem::Type::Checkbox)
 	{
 		sprender->DrawSprite(*speciesPreviews[highlight], glm::vec2((width * 0.5f) - (speciesPreviews[0]->width * 0.5f), (height * 0.5f) - (speciesPreviews[0]->height * 0.5f)));
 	}

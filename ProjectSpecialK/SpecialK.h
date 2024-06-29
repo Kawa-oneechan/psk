@@ -42,7 +42,7 @@ using namespace std::literals;
 __declspec(noreturn)
 extern void FatalError(const std::string& message);
 
-enum LoadSpawnChoice
+enum class LoadSpawnChoice
 {
 	FrontDoor,
 	MainRoom,

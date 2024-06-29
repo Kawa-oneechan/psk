@@ -2,15 +2,6 @@
 
 #include "SpecialK.h"
 
-enum DialogueBoxState
-{
-	Opening, Writing, WaitingForKey, Closing, Done
-};
-enum DialogueBoxSound
-{
-	Silent, Animalese, Bebebese
-};
-
 class DialogueBox : public Tickable
 {
 private:
@@ -41,7 +32,10 @@ private:
 	float delay;
 
 	Audio* bebebese;
-	DialogueBoxState state;
+	enum class State
+	{
+		Opening, Writing, WaitingForKey, Closing, Done
+	} state{ State::Opening };
 
 	typedef void(DialogueBox::*MSBTFunc)(MSBTParams);
 
@@ -83,7 +77,10 @@ private:
 	void Wrap();
 
 public:
-	DialogueBoxSound Sound;
+	enum class Sound
+	{
+		Silent, Animalese, Bebebese
+	} Sound;
 
 	DialogueBox();
 	void Text(const std::string& text);

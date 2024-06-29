@@ -2,19 +2,19 @@
 #include <fmod.hpp>
 #include "SpecialK.h"
 
-enum AudioStatus
-{
-	Invalid, Stopped, Paused, Playing,
-};
-
 class Audio
 {
+	enum class Status
+	{
+		Invalid, Stopped, Paused, Playing,
+	};
+
 private:
 	static FMOD::System* Audio::system;
 	static std::vector<Audio*> playing;
 	FMOD::Sound* theSound;
 	FMOD::Channel* theChannel;
-	AudioStatus status;
+	Status status;
 	int type;
 	std::string filename;
 	std::unique_ptr<char*> data{ nullptr };

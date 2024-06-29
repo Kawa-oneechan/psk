@@ -2,11 +2,6 @@
 
 #include "SpecialK.h"
 
-enum class DoomMenuTypes
-{
-	Text, Options, Slider, Checkbox, Page, Custom, Back
-};
-
 class DoomMenuPage;
 
 class DoomMenuItem
@@ -19,7 +14,10 @@ public:
 	std::string description{ "" };
 	std::vector<std::string> options;
 	int selection{ 0 };
-	DoomMenuTypes type{ DoomMenuTypes::Text };
+	enum class Type
+	{
+		Text, Options, Slider, Checkbox, Page, Custom, Back
+	} type { Type::Text };
 	int minVal{ 0 };
 	int maxVal{ 100 };
 	int step{ 1 };
@@ -27,15 +25,15 @@ public:
 	std::function<void(DoomMenuItem*)> change;
 	DoomMenuPage* page{ nullptr };
 
-	DoomMenuItem(const std::string& cap, int min, int max, int val, int stp, std::function<std::string(DoomMenuItem*)> fmt, std::function<void(DoomMenuItem*)> chg = nullptr) : key(cap), type(DoomMenuTypes::Slider), minVal(min), maxVal(max), selection(val), step(stp), format(fmt), change(chg), page(nullptr) {}
+	DoomMenuItem(const std::string& cap, int min, int max, int val, int stp, std::function<std::string(DoomMenuItem*)> fmt, std::function<void(DoomMenuItem*)> chg = nullptr) : key(cap), type(Type::Slider), minVal(min), maxVal(max), selection(val), step(stp), format(fmt), change(chg), page(nullptr) {}
 
-	DoomMenuItem(const std::string& cap, DoomMenuPage* tgt) : key(cap), type(DoomMenuTypes::Page), page(tgt) {}
+	DoomMenuItem(const std::string& cap, DoomMenuPage* tgt) : key(cap), type(Type::Page), page(tgt) {}
 
-	DoomMenuItem(const std::string& cap, bool val, std::function<void(DoomMenuItem*)> chg = nullptr) : key(cap), type(DoomMenuTypes::Checkbox), selection(val ? 1 : 0), change(chg), page(nullptr) {}
+	DoomMenuItem(const std::string& cap, bool val, std::function<void(DoomMenuItem*)> chg = nullptr) : key(cap), type(Type::Checkbox), selection(val ? 1 : 0), change(chg), page(nullptr) {}
 
 	DoomMenuItem(const std::string& cap, int val, std::initializer_list<std::string> opts, std::function<void(DoomMenuItem*)> chg);
 
-	DoomMenuItem(const std::string& cap, int fnt = 0, int siz = 100) : key(cap), type(DoomMenuTypes::Text), selection(fnt), maxVal(siz), page(nullptr) {}
+	DoomMenuItem(const std::string& cap, int fnt = 0, int siz = 100) : key(cap), type(Type::Text), selection(fnt), maxVal(siz), page(nullptr) {}
 
 	void Translate();
 };

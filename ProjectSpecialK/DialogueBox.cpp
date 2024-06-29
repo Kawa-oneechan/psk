@@ -32,7 +32,7 @@ void DialogueBox::msbtEmote(MSBTParams)
 
 void DialogueBox::msbtBreak(MSBTParams)
 {
-	state = DialogueBoxState::WaitingForKey;
+	state = State::WaitingForKey;
 }
 
 void DialogueBox::msbtClear(MSBTParams)
@@ -42,7 +42,7 @@ void DialogueBox::msbtClear(MSBTParams)
 
 void DialogueBox::msbtEnd(MSBTParams)
 {
-	state = DialogueBoxState::Closing;
+	state = State::Closing;
 }
 void DialogueBox::msbtPass(MSBTParams)
 {
@@ -54,8 +54,8 @@ DialogueBox::DialogueBox()
 	nametagWidth = 0;
 	bebebese = new Audio("sound/animalese/base/Voice_Monology.wav");
 
-	Sound = DialogueBoxSound::Bebebese;
-	state = DialogueBoxState::Done;
+	Sound = Sound::Bebebese;
+	state = State::Done;
 	
 	displayCursor = 0;
 	time = 0;
@@ -148,10 +148,10 @@ void DialogueBox::Text(const std::string& text)
 	displayCursor = 0;
 	delay = 50;
 
-	if (state == DialogueBoxState::Done)
-		state = DialogueBoxState::Opening;
+	if (state == State::Done)
+		state = State::Opening;
 	else
-		state = DialogueBoxState::Writing;
+		state = State::Writing;
 }
 
 void DialogueBox::Text(const std::string& text, int style, const std::string& speaker, const glm::vec4& tagBack, const glm::vec4& tagInk)
@@ -212,7 +212,7 @@ void DialogueBox::Style(int style)
 
 void DialogueBox::Draw(double dt)
 {
-	if (state == DialogueBoxState::Done)
+	if (state == State::Done)
 		return;
 
 	time += (float)dt * 0.005f;
@@ -258,7 +258,7 @@ void DialogueBox::Draw(double dt)
 		sprender->DrawText(1, name, tagPosT, nametagColor[1], 120 * scale, tagAngle);
 	}
 
-	if (state == DialogueBoxState::WaitingForKey)
+	if (state == State::WaitingForKey)
 	{
 		auto arr = (*UI::controls)[6];
 		sprender->DrawSprite(*UI::controls, glm::vec2((width / 2) - (arr.z / 2), height - arr.w - 20), glm::vec2(arr.z, arr.w), arr, 0.0f, UI::themeColors["primary"]);
@@ -271,13 +271,13 @@ void DialogueBox::Draw(double dt)
 
 void DialogueBox::Tick(double dt)
 {
-	if (state == DialogueBoxState::Opening)
+	if (state == State::Opening)
 	{
 		//TODO: wait for animation
-		state = DialogueBoxState::Writing;
+		state = State::Writing;
 	}
 
-	if (state == DialogueBoxState::Writing)
+	if (state == State::Writing)
 	{
 		delay -= (float)dt;
 		if (delay > 0)
@@ -285,7 +285,7 @@ void DialogueBox::Tick(double dt)
 
 		if (displayCursor >= toDisplay.length())
 		{
-			state = DialogueBoxState::WaitingForKey;
+			state = State::WaitingForKey;
 		}
 
 		//reset delay
@@ -340,14 +340,14 @@ void DialogueBox::Tick(double dt)
 				displayed += (char)(((ch >> 0) & 0x3F) | 0x80);
 			}
 
-			if (bubbleNum == 3 || Sound == DialogueBoxSound::Bebebese)
+			if (bubbleNum == 3 || Sound == Sound::Bebebese)
 				bebebese->Play(true);
 		}
 		if (delay < glm::epsilon<float>())
 			delay = 50;
 	}
 
-	if (state == DialogueBoxState::WaitingForKey)
+	if (state == State::WaitingForKey)
 	{
 		if (Inputs.Enter)
 		{
@@ -355,7 +355,7 @@ void DialogueBox::Tick(double dt)
 
 			if (displayCursor >= toDisplay.length())
 			{
-				state = DialogueBoxState::Closing;
+				state = State::Closing;
 				if (mutex != nullptr)
 				{
 					*mutex = false;
@@ -365,15 +365,15 @@ void DialogueBox::Tick(double dt)
 			else
 			{
 				displayed.clear();
-				state = DialogueBoxState::Writing;
+				state = State::Writing;
 			}
 		}
 	}
 
-	if (state == DialogueBoxState::Closing)
+	if (state == State::Closing)
 	{
 		//TODO: wait for animation
-		state = DialogueBoxState::Done;
+		state = State::Done;
 	}
 }
 
