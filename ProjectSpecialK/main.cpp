@@ -42,7 +42,7 @@ Texture* whiteRect = nullptr;
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
 SpriteRenderer* sprender = nullptr;
 DialogueBox* dlgBox = nullptr;
-Cursor* cursor = nullptr;
+CursorP cursor = nullptr;
 Console* console = nullptr;
 Audio* bgm = nullptr;
 
@@ -418,7 +418,7 @@ int main(int argc, char** argv)
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	sprender = new SpriteRenderer();
-	cursor = new Cursor();
+	cursor = std::make_shared<Cursor>();
 
 
 

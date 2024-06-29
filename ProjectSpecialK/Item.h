@@ -36,9 +36,15 @@ enum ItemType
 	it_Shoes        = 0b0000'0101'0000'0111,
 };
 
+class Item;
 class Tool;
 class Furniture;
 class Outfit;
+
+typedef std::shared_ptr<Item> ItemP;
+typedef std::shared_ptr<Tool> ToolP;
+typedef std::shared_ptr<Furniture> FurnitureP;
+typedef std::shared_ptr<Outfit> OutfitP;
 
 class Item : public NameableThing
 {
@@ -51,10 +57,10 @@ public:
 	bool IsTool() const;
 	bool IsFurniture() const;
 	bool IsOutfit() const;
-	Item* AsItem() const;
-	Tool* AsTool() const;
-	Furniture* AsFurniture() const;
-	Outfit* AsOutfit() const;
+	ItemP AsItem() const;
+	ToolP AsTool() const;
+	FurnitureP AsFurniture() const;
+	OutfitP AsOutfit() const;
 };
 
 class Tool : public Item
@@ -78,12 +84,12 @@ public:
 class InventoryItem : public NameableThing
 {
 private:
-	std::shared_ptr<Item> _wrapped;
+	ItemP _wrapped;
 	int _variant, _pattern;
 public:
-	InventoryItem(std::shared_ptr<Item> wrapped, int variant, int pattern);
-	InventoryItem(std::shared_ptr<Item> wrapped, int variant);
-	InventoryItem(std::shared_ptr<Item> wrapped);
+	InventoryItem(ItemP wrapped, int variant, int pattern);
+	InventoryItem(ItemP wrapped, int variant);
+	InventoryItem(ItemP wrapped);
 	InventoryItem(const std::string& reference);
 	const std::string FullID();
 	const std::string FullName();
@@ -91,10 +97,11 @@ public:
 	bool IsTool() const;
 	bool IsFurniture() const;
 	bool IsOutfit() const;
-	std::shared_ptr<Item> AsItem() const;
-	std::shared_ptr<Tool> AsTool() const;
-	std::shared_ptr<Furniture> AsFurniture() const;
-	std::shared_ptr<Outfit> AsOutfit() const;
+	ItemP AsItem() const;
+	ToolP AsTool() const;
+	FurnitureP AsFurniture() const;
+	OutfitP AsOutfit() const;
 	//Safe to delete if true. If not, DO NOT DELETE.
 	bool Temporary;
 };
+typedef std::shared_ptr<InventoryItem> InventoryItemP;

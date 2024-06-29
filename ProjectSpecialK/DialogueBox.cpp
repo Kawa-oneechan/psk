@@ -177,7 +177,7 @@ void DialogueBox::Text(const std::string& text, int style)
 	Text(text);
 }
 
-void DialogueBox::Text(const std::string& text, std::shared_ptr<Villager> speaker)
+void DialogueBox::Text(const std::string& text, VillagerP speaker)
 {
 	Style(0);
 	if (speaker != nullptr)

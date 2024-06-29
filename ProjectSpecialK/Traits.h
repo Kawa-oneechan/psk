@@ -8,6 +8,7 @@ public:
 	Personality(JSONObject& value, const std::string& filename = "");
 	Personality() = default;
 };
+typedef std::shared_ptr<Personality> PersonalityP;
 
 //PLACEHOLDER
 class Hobby
@@ -17,3 +18,4 @@ public:
 	Hobby(JSONObject& value, const std::string& filename = "");
 	Hobby() = default;
 };
+typedef std::shared_ptr<Hobby> HobbyP;

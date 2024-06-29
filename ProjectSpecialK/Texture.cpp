@@ -113,6 +113,8 @@ Texture::Texture(const unsigned char* externalData, int width, int height, int c
 
 Texture::~Texture()
 {
+	if (cache.size() == 0)
+		return;
 	auto c = cache.find(file);
 	if (c != cache.end())
 	{

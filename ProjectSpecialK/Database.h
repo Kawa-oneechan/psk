@@ -3,11 +3,11 @@
 #include <vector>
 
 
-extern std::vector<std::shared_ptr<Item>> items;
-extern std::vector<std::shared_ptr<Species>> species;
-extern std::vector<std::shared_ptr<Personality>> personalities;
-extern std::vector<std::shared_ptr<Hobby>> hobbies;
-extern std::vector<std::shared_ptr<Villager>> villagers;
+extern std::vector<ItemP> items;
+extern std::vector<SpeciesP> species;
+extern std::vector<PersonalityP> personalities;
+extern std::vector<HobbyP> hobbies;
+extern std::vector<VillagerP> villagers;
 
 namespace Database
 {
@@ -26,7 +26,7 @@ namespace Database
 #if 1
 		for (int i = 0; i < source.size(); i++)
 		{
-			std::shared_ptr<T> v = source.at(i);
+			auto v = source.at(i);
 			if (v->ID == target)
 			{
 				return v;
@@ -47,7 +47,7 @@ namespace Database
 	{
 		for (int i = 0; i < source.size(); i++)
 		{
-			std::shared_ptr<T> v = source.at(i);
+			auto v = source.at(i);
 			if (v->Hash == hash)
 			{
 				return v;

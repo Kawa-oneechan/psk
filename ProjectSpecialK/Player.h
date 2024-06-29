@@ -15,29 +15,29 @@ private:
 	unsigned char _birthday[2]{ 26, 6 };
 	unsigned char _flags[255]{ 0 };
 
-	int findItemSlot(std::shared_ptr<InventoryItem> target);
-	int findStorageSlot(std::shared_ptr<InventoryItem> target);
+	int findItemSlot(InventoryItemP target);
+	int findStorageSlot(InventoryItemP target);
 
 public:
 	std::string Name{ "Mayor" };
 	Gender Gender{ Gender::BEnby };
 
-	std::array<std::shared_ptr<InventoryItem>, MAX_ONHAND> OnHand{ nullptr };
-	std::vector<std::shared_ptr<InventoryItem>> Storage;
+	std::array<InventoryItemP, MAX_ONHAND> OnHand{ nullptr };
+	std::vector<InventoryItemP> Storage;
 	int OnHandLimit{ 20 };
 	int StorageLimit{ 1600 };
 	unsigned int Bells{ 0 };
 	
-	std::shared_ptr<InventoryItem> HeldTool{ nullptr };
-	std::shared_ptr<InventoryItem> Hat{ nullptr };
-	std::shared_ptr<InventoryItem> Glasses{ nullptr };
-	std::shared_ptr<InventoryItem> Mask{ nullptr };
-	std::shared_ptr<InventoryItem> Outfit{ nullptr };
-	std::shared_ptr<InventoryItem> Top{ nullptr };
-	std::shared_ptr<InventoryItem> Bottom{ nullptr };
-	std::shared_ptr<InventoryItem> Socks{ nullptr };
-	std::shared_ptr<InventoryItem> Shoes{ nullptr };
-	std::shared_ptr<InventoryItem> Accessory{ nullptr };
+	InventoryItemP HeldTool{ nullptr };
+	InventoryItemP Hat{ nullptr };
+	InventoryItemP Glasses{ nullptr };
+	InventoryItemP Mask{ nullptr };
+	InventoryItemP Outfit{ nullptr };
+	InventoryItemP Top{ nullptr };
+	InventoryItemP Bottom{ nullptr };
+	InventoryItemP Socks{ nullptr };
+	InventoryItemP Shoes{ nullptr };
+	InventoryItemP Accessory{ nullptr };
 
 	//Player();
 	void LoadModel();
@@ -47,24 +47,24 @@ public:
 	//Returns true if the player has room in their inventory according to their current limit.
 	bool HasInventoryRoom();
 	//Gives the player the specified item. Returns false if there was no room.
-	bool GiveItem(std::shared_ptr<InventoryItem> item);
+	bool GiveItem(InventoryItemP item);
 	//Swaps two inventory items. Being position-based, this can swap with empty spots.
 	void SwapItems(int from, int to);
 	//Swaps two inventory items. Use SwapItems(int, int) if you need to swap with an empty spot.
-	void SwapItems(std::shared_ptr<InventoryItem> from, std::shared_ptr<InventoryItem> to);
+	void SwapItems(InventoryItemP from, InventoryItemP to);
 	//Removes an item from the inventory entirely.
 	bool RemoveItem(int slot);
 	//Removes an item from the inventory entirely.
-	bool RemoveItem(std::shared_ptr<InventoryItem> item);
+	bool RemoveItem(InventoryItemP item);
 	//TODO
 	bool ConsumeItem(int slot);
 	//TODO
-	bool ConsumeItem(std::shared_ptr<InventoryItem> item);
+	bool ConsumeItem(InventoryItemP item);
 
 	bool Store(int slot);
-	bool Store(std::shared_ptr<InventoryItem> item);
+	bool Store(InventoryItemP item);
 	bool Retrieve(int slot);
-	bool Retrieve(std::shared_ptr<InventoryItem> item);
+	bool Retrieve(InventoryItemP item);
 
 	void Serialize(JSONObject& target);
 	void Deserialize(JSONObject& source);

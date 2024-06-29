@@ -18,4 +18,5 @@ public:
 	void SetScale(int newScale);
 	void Draw();
 };
-extern Cursor* cursor;
+typedef std::shared_ptr<Cursor> CursorP;
+extern CursorP cursor;

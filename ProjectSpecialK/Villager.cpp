@@ -228,7 +228,7 @@ void Villager::PickOutfit()
 	}
 }
 
-bool Villager::GiveItem(std::shared_ptr<InventoryItem> item)
+bool Villager::GiveItem(InventoryItemP item)
 {
 	auto target = &Items;
 	auto max = _maxFurnitureItems;

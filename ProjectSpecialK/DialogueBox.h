@@ -89,7 +89,7 @@ public:
 	void Text(const std::string& text);
 	void Text(const std::string& text, int style, const std::string& speaker, const glm::vec4& tagBack, const glm::vec4& tagInk);
 	void Text(const std::string& text, int style);
-	void Text(const std::string& text, std::shared_ptr<Villager> speaker);
+	void Text(const std::string& text, VillagerP speaker);
 	void Style(int style);
 	void Draw(double dt);
 	void Tick(double dt);

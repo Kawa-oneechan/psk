@@ -12,7 +12,7 @@ private:
 	std::vector<std::string> history;
 	int historyCursor;
 	int scrollCursor;
-	void* inputLine;
+	void* inputLine; //ugly, needs reworking
 
 	std::ofstream hardcopy;
 

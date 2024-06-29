@@ -1,6 +1,6 @@
 #include "Sequence.h"
 
-Sequence::Sequence(std::initializer_list<Tickable*> tickables)
+Sequence::Sequence(std::initializer_list<TickableP> tickables)
 {
 	for (auto i : tickables)
 		parts.emplace_back(i);
@@ -25,7 +25,7 @@ void Sequence::Tick(double dt)
 	if (!waiting)
 	{
 		//Is this safe?
-		delete now;
+		//delete now;
 
 		cursor++;
 		//Reached end?

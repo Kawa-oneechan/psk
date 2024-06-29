@@ -8,11 +8,11 @@
 
 namespace fs = std::experimental::filesystem;
 
-std::vector<std::shared_ptr<Item>> items;
-std::vector<std::shared_ptr<Species>> species;
-std::vector<std::shared_ptr<Personality>> personalities;
-std::vector<std::shared_ptr<Hobby>> hobbies;
-std::vector<std::shared_ptr<Villager>> villagers;
+std::vector<ItemP> items;
+std::vector<SpeciesP> species;
+std::vector<PersonalityP> personalities;
+std::vector<HobbyP> hobbies;
+std::vector<VillagerP> villagers;
 
 namespace Database
 {

@@ -5,12 +5,12 @@
 class Sequence : public Tickable
 {
 private:
-	std::vector<Tickable*> parts;
+	std::vector<TickableP> parts;
 	int cursor;
 	bool waiting;
 
 public:
-	Sequence(std::initializer_list<Tickable*> tickables);
+	Sequence(std::initializer_list<TickableP> tickables);
 	void Tick(double dt);
 	void Draw(double dt);
 };

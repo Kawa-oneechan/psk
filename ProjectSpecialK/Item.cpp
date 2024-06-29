@@ -110,27 +110,32 @@ bool Item::IsOutfit() const
 	return (Type & it_Outfit) == it_Outfit;
 }
 
-Item* Item::AsItem() const
+ItemP Item::AsItem() const
 {
-	return (Item*)this;
+	//TODO: CHECK THIS
+	//return std::make_shared<Item>(this);
+	return nullptr;
 }
 
-Tool* Item::AsTool() const
+ToolP Item::AsTool() const
 {
-	return (Tool*)this;
+	//return std::make_shared<Tool>(this);
+	return nullptr;
 }
 
-Furniture* Item::AsFurniture() const
+FurnitureP Item::AsFurniture() const
 {
-	return (Furniture*)this;
+	//return std::make_shared<Furniture>(this);
+	return nullptr;
 }
 
-Outfit* Item::AsOutfit() const
+OutfitP Item::AsOutfit() const
 {
-	return (Outfit*)this;
+	//return std::make_shared<Outfit>(this);
+	return nullptr;
 }
 
-InventoryItem::InventoryItem(std::shared_ptr<Item> wrapped, int variant, int pattern)
+InventoryItem::InventoryItem(ItemP wrapped, int variant, int pattern)
 {
 	_wrapped = wrapped;
 	_variant = variant;
@@ -142,10 +147,10 @@ InventoryItem::InventoryItem(std::shared_ptr<Item> wrapped, int variant, int pat
 	Temporary = false;
 }
 
-InventoryItem::InventoryItem(std::shared_ptr<Item> wrapped, int variant) : InventoryItem(wrapped, variant, 0)
+InventoryItem::InventoryItem(ItemP wrapped, int variant) : InventoryItem(wrapped, variant, 0)
 {}
 
-InventoryItem::InventoryItem(std::shared_ptr<Item> wrapped) : InventoryItem(wrapped, 0, 0)
+InventoryItem::InventoryItem(ItemP wrapped) : InventoryItem(wrapped, 0, 0)
 {}
 
 InventoryItem::InventoryItem(const std::string& reference)
@@ -219,22 +224,22 @@ bool InventoryItem::IsOutfit() const
 	return _wrapped->IsOutfit();
 }
 
-std::shared_ptr<Item> InventoryItem::AsItem() const
+ItemP InventoryItem::AsItem() const
 {
 	return std::static_pointer_cast<Item>(_wrapped);
 }
 
-std::shared_ptr<Tool> InventoryItem::AsTool() const
+ToolP InventoryItem::AsTool() const
 {
 	return std::static_pointer_cast<Tool>(_wrapped);
 }
 
-std::shared_ptr<Furniture> InventoryItem::AsFurniture() const
+FurnitureP InventoryItem::AsFurniture() const
 {
 	return std::static_pointer_cast<Furniture>(_wrapped);
 }
 
-std::shared_ptr<Outfit> InventoryItem::AsOutfit() const
+OutfitP InventoryItem::AsOutfit() const
 {
 	return std::static_pointer_cast<Outfit>(_wrapped);
 }

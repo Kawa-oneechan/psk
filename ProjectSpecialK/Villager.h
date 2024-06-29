@@ -25,7 +25,7 @@ class Villager : public NameableThing, Tickable
 {
 private:
 	const Model* _model{ nullptr };
-	std::shared_ptr<Species> _species{ nullptr };
+	SpeciesP _species{ nullptr };
 	bool _customModel{ false };
 	bool _isSpecial{ false };
 	std::string _customCatchphrase{ "" };
@@ -45,9 +45,9 @@ public:
 	std::string RefCatchphrase{ "" };
 	glm::vec4 NameTag[2]{};
 
-	std::shared_ptr<Personality> personality{ nullptr };
+	PersonalityP personality{ nullptr };
 	int personalitySubtype{ 0 };
-	std::shared_ptr<Hobby> hobby{ nullptr };
+	HobbyP hobby{ nullptr };
 
 	std::string umbrellaID{ "" };
 	std::string photoID{ "" };
@@ -56,14 +56,14 @@ public:
 	std::string rainCoatID{ "" };
 	std::string rainHatID{ "" };
 
-	std::shared_ptr<InventoryItem> HeldTool{ nullptr };
-	std::shared_ptr<InventoryItem> Hat{ nullptr };
-	std::shared_ptr<InventoryItem> Glasses{ nullptr };
-	std::shared_ptr<InventoryItem> Mask{ nullptr };
-	std::shared_ptr<InventoryItem> Outfit{ nullptr };
+	InventoryItemP HeldTool{ nullptr };
+	InventoryItemP Hat{ nullptr };
+	InventoryItemP Glasses{ nullptr };
+	InventoryItemP Mask{ nullptr };
+	InventoryItemP Outfit{ nullptr };
 
-	std::vector<std::shared_ptr<InventoryItem>> Items;
-	std::vector<std::shared_ptr<InventoryItem>> Outfits;
+	std::vector<InventoryItemP> Items;
+	std::vector<InventoryItemP> Outfits;
 
 	Villager(JSONObject& value, const std::string& filename = "");
 	const std::string Name();
@@ -82,7 +82,7 @@ public:
 
 	void PickOutfit();
 
-	bool Villager::GiveItem(std::shared_ptr<InventoryItem> item);
+	bool Villager::GiveItem(InventoryItemP item);
 
 	void Serialize(JSONObject& target);
 	void Deserialize(JSONObject& source);
@@ -94,3 +94,4 @@ public:
 	Villager(Villager&&) = default;
 	Villager& operator = (Villager&&) = default;
 };
+typedef std::shared_ptr<Villager> VillagerP;

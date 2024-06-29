@@ -17,7 +17,7 @@ const std::string Player::Birthday()
 	return TextDateMD(_birthday[1], _birthday[0]);
 }
 
-int Player::findItemSlot(std::shared_ptr<InventoryItem> target)
+int Player::findItemSlot(InventoryItemP target)
 {
 	if (target == nullptr)
 		return NO_ITEM;
@@ -31,10 +31,10 @@ int Player::findItemSlot(std::shared_ptr<InventoryItem> target)
 
 bool Player::HasInventoryRoom()
 {
-	return std::any_of(OnHand.cbegin(), OnHand.cend(), [](std::shared_ptr<InventoryItem> i) { return i == nullptr; });
+	return std::any_of(OnHand.cbegin(), OnHand.cend(), [](InventoryItemP i) { return i == nullptr; });
 }
 
-bool Player::GiveItem(std::shared_ptr<InventoryItem> item)
+bool Player::GiveItem(InventoryItemP item)
 {
 	auto it = std::find(OnHand.cbegin(), OnHand.cend(), nullptr);
 	if (it == OnHand.cend()) return false;
@@ -50,7 +50,7 @@ void Player::SwapItems(int from, int to)
 	std::swap(OnHand[from], OnHand[to]);
 }
 
-void Player::SwapItems(std::shared_ptr<InventoryItem> from, std::shared_ptr<InventoryItem> to)
+void Player::SwapItems(InventoryItemP from, InventoryItemP to)
 {
 	SwapItems(findItemSlot(from), findItemSlot(to));
 }
@@ -65,7 +65,7 @@ bool Player::RemoveItem(int slot)
 	return true;
 }
 
-bool Player::RemoveItem(std::shared_ptr<InventoryItem> item)
+bool Player::RemoveItem(InventoryItemP item)
 {
 	return RemoveItem(findItemSlot(item));
 }
@@ -77,12 +77,12 @@ bool Player::ConsumeItem(int slot)
 	return false;
 }
 
-bool Player::ConsumeItem(std::shared_ptr<InventoryItem> item)
+bool Player::ConsumeItem(InventoryItemP item)
 {
 	return ConsumeItem(findItemSlot(item));
 }
 
-int Player::findStorageSlot(std::shared_ptr<InventoryItem> target)
+int Player::findStorageSlot(InventoryItemP target)
 {
 	if (target == nullptr)
 		return NO_ITEM;
@@ -103,7 +103,7 @@ bool Player::Store(int slot)
 	return true;
 }
 
-bool Player::Store(std::shared_ptr<InventoryItem> item)
+bool Player::Store(InventoryItemP item)
 {
 	return Store(findItemSlot(item));
 }
@@ -117,7 +117,7 @@ bool Player::Retrieve(int slot)
 	return true;
 }
 
-bool Player::Retrieve(std::shared_ptr<InventoryItem> item)
+bool Player::Retrieve(InventoryItemP item)
 {
 	return Retrieve(findStorageSlot(item));
 }

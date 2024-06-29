@@ -11,3 +11,4 @@ public:
 	virtual void Draw(double dt) {};
 	virtual bool Character(unsigned int codepoint) { return false; }
 };
+typedef std::shared_ptr<Tickable> TickableP;
