@@ -15,24 +15,21 @@
 #include <future>
 #include <fstream>
 
+constexpr auto WindowTitle = "Project Special K"
 #ifdef DEBUG
-#define WINDOWTITLE "Project Special K (debug build " __DATE__ ")"
-#else
-#define WINDOWTITLE "Project Special K"
+" (debug build " __DATE__ ")";
 #endif
 
-#define SCR_WIDTH 1920
-#define SCR_HEIGHT 1080
-#define WIN_WIDTH 1920 //1280
-#define WIN_HEIGHT 1080 //720
+constexpr int ScreenWidth = 1920;
+constexpr int ScreenHeight = 1080;
+constexpr int WindowWidth = 1920; //1280
+constexpr int WindowHeight = 1080; //720
 
 extern "C"
 {
 	//why bother including windows headers lol
-	_declspec(dllimport) int __stdcall MessageBoxA(_In_opt_ void* hWnd, _In_opt_ const char* lpText, _In_opt_ const char* lpCaption, _In_ unsigned int uType);
 	_declspec(dllimport) int __stdcall MessageBoxW(_In_opt_ void* hWnd, _In_opt_ const wchar_t* lpText, _In_opt_ const wchar_t* lpCaption, _In_ unsigned int uType);
 	_declspec(dllimport) int __stdcall MultiByteToWideChar(_In_ unsigned int CodePage, _In_ unsigned long dwFlags, const char* lpMultiByteStr, _In_ int cbMultiByte, wchar_t* lpWideCharStr, _In_ int cchWideChar);
-#define MessageBox MessageBoxW
 }
 
 GLFWwindow* window;
@@ -48,8 +45,8 @@ Audio* bgm = nullptr;
 
 sol::state Sol;
 
-float lastX = SCR_WIDTH / 2.0f;
-float lastY = SCR_HEIGHT / 2.0f;
+float lastX = ScreenWidth / 2.0f;
+float lastY = ScreenHeight / 2.0f;
 bool firstMouse = true;
 
 bool wireframe = false;
@@ -57,8 +54,8 @@ bool wireframe = false;
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 
-float width = SCR_WIDTH, height = SCR_HEIGHT;
-float scale = (float)WIN_WIDTH / (float)SCR_HEIGHT;
+float width = ScreenWidth, height = ScreenHeight;
+float scale = (float)WindowWidth / (float)WindowHeight;
 
 int articlePlease;
 
@@ -69,7 +66,7 @@ void FatalError(const std::string& message)
 
 	wchar_t w[1024] = { 0 };
 	MultiByteToWideChar(65001, 0, message.c_str(), -1, w, 1024);
-	MessageBox(nullptr, w, L"Project Special K", 0x30);
+	MessageBoxW(nullptr, w, L"Project Special K", 0x30);
 
 	conprint(1, "Exiting...");
 	exit(1);
@@ -85,7 +82,7 @@ namespace UI
 	std::map<std::string, glm::vec4> themeColors;
 	std::vector<glm::vec4> textColors;
 
-	Texture* controls = nullptr;
+	std::shared_ptr<Texture> controls{ nullptr };
 
 	JSONObject& json = JSONObject();
 	JSONObject& settings = JSONObject();
@@ -183,7 +180,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
 	::width = (float)width;
 	::height = (float)height;
-	scale = ::height / SCR_HEIGHT;
+	scale = ::height / ScreenHeight;
 	glViewport(0, 0, width, height);
 }
 
@@ -372,15 +369,15 @@ int main(int argc, char** argv)
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	glfwWindowHint(GLFW_SAMPLES, 2);
 
-	if (WIN_WIDTH == SCR_WIDTH)
+	if (WindowWidth == ScreenWidth)
 	{
 		const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-		if (mode->width == SCR_WIDTH && mode->height == SCR_HEIGHT)
+		if (mode->width == ScreenWidth && mode->height == ScreenHeight)
 			glfwWindowHint(GLFW_DECORATED, 0);
 		glfwWindowHint(GLFW_RESIZABLE, 0);
 	}
 
-	window = glfwCreateWindow(WIN_WIDTH, WIN_HEIGHT, WINDOWTITLE, NULL, NULL);
+	window = glfwCreateWindow(WindowWidth, WindowHeight, WindowTitle, NULL, NULL);
 	if (window == NULL)
 	{
 		glfwTerminate();
@@ -401,11 +398,11 @@ int main(int argc, char** argv)
 		return -1;
 	}
 
-	framebuffer_size_callback(window, WIN_WIDTH, WIN_HEIGHT);
+	framebuffer_size_callback(window, WindowWidth, WindowHeight);
 
 	spriteShader = new Shader("shaders/sprite.fs");
 	whiteRect = new Texture("white.png", GL_CLAMP_TO_EDGE);
-	UI::controls = new Texture("ui/controls.png");
+	UI::controls = std::make_shared<Texture>("ui/controls.png");
 
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);

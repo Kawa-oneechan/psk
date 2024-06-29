@@ -62,7 +62,7 @@ Item::Item(JSONObject& value, const std::string& filename) : NameableThing(value
 	//auto vars = value.find("variants");
 	//if (vars != value.end())
 
-	Type = Type::Generic;
+	//Type = Type::Generic;
 
 	auto type = value["type"] != nullptr ? value["type"]->AsString() : "";
 	if (type.empty());

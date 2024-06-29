@@ -17,8 +17,8 @@ namespace UI
 
 static stbtt_bakedchar* cdata;
 static Texture** fontTextures;
-static std::string fontFiles[MAXFONTS];
-static int fontSizes[MAXFONTS];
+static std::string fontFiles[MaxFonts];
+static int fontSizes[MaxFonts];
 static int numFonts = 0;
 
 static void FlipImage(unsigned char* image, int width, int height)
@@ -46,10 +46,10 @@ void SpriteRenderer::LoadFontBank(int font, int bank)
 	{
 		auto& fontSettings = ReadJSON("fonts/fonts.json")->AsArray();
 		numFonts = (int)fontSettings.size();
-		if (numFonts > MAXFONTS)
+		if (numFonts > MaxFonts)
 		{
-			numFonts = MAXFONTS;
-			conprint(2, "Warning: too many font definitions, only doing {}.", MAXFONTS);
+			numFonts = MaxFonts;
+			conprint(2, "Warning: too many font definitions, only doing {}.", MaxFonts);
 		}
 		cdata = (stbtt_bakedchar*)calloc(numFonts * 0x10000, sizeof(stbtt_bakedchar));
 		if (cdata == nullptr)
@@ -73,19 +73,19 @@ void SpriteRenderer::LoadFontBank(int font, int bank)
 	//		return;
 
 	auto ttfData = ReadVFS(fontFiles[font], nullptr);
-	auto ttfBitmap = new unsigned char[FONTATLAS_SIZE * FONTATLAS_SIZE];
-	stbtt_BakeFontBitmap((unsigned char*)*ttfData.get(), 0, (float)fontSizes[font], ttfBitmap, FONTATLAS_SIZE, FONTATLAS_SIZE, 256 * bank, 256, &cdata[(font * 0xFFFF) + (0x100 * bank)]);
-	FlipImage(ttfBitmap, FONTATLAS_SIZE, FONTATLAS_SIZE);
+	auto ttfBitmap = new unsigned char[FontAtlasExtent * FontAtlasExtent];
+	stbtt_BakeFontBitmap((unsigned char*)*ttfData.get(), 0, (float)fontSizes[font], ttfBitmap, FontAtlasExtent, FontAtlasExtent, 256 * bank, 256, &cdata[(font * 0xFFFF) + (0x100 * bank)]);
+	FlipImage(ttfBitmap, FontAtlasExtent, FontAtlasExtent);
 
 	unsigned int fontID;
 	glGenTextures(1, &fontID);
 	glBindTexture(GL_TEXTURE_2D, fontID);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, FONTATLAS_SIZE, FONTATLAS_SIZE, 0, GL_RED, GL_UNSIGNED_BYTE, ttfBitmap);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, FontAtlasExtent, FontAtlasExtent, 0, GL_RED, GL_UNSIGNED_BYTE, ttfBitmap);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
-	fontTextures[(font * 256) + bank] = new Texture(fontID, FONTATLAS_SIZE, FONTATLAS_SIZE, 1);
+	fontTextures[(font * 256) + bank] = new Texture(fontID, FontAtlasExtent, FontAtlasExtent, 1);
 }
 
 void SpriteRenderer::msbtColor(MSBTParams)
@@ -134,7 +134,7 @@ void SpriteRenderer::msbtFont(MSBTParams)
 
 void SpriteRenderer::DrawText(int font, const std::string& text, glm::vec2 position, const glm::vec4& color, float size, float angle, bool raw)
 {
-	if (font >= MAXFONTS)
+	if (font >= MaxFonts)
 		font = 0;
 
 	if (text.empty())
@@ -233,7 +233,7 @@ void SpriteRenderer::DrawText(const std::string& text, const glm::vec2& position
 
 glm::vec2 SpriteRenderer::MeasureText(int font, const std::string& text, float size, bool raw)
 {
-	if (font >= MAXFONTS)
+	if (font >= MaxFonts)
 		font = 0;
 
 	if (text.empty())

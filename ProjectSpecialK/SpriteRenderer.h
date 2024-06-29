@@ -7,9 +7,10 @@
 #include "Texture.h"
 #include "Shader.h"
 
-#define FONTATLAS_SIZE 512
-#define MAXFONTS 4
+constexpr int FontAtlasExtent = 512;
+constexpr int MaxFonts = 4;
 
+//Surely there's a better way to define these functions without having to type this whole damn thing?
 #define MSBTParams const std::vector<std::string>& tags, int start, int len
 
 enum SpriteFlags

@@ -1,12 +1,14 @@
 ﻿#pragma once
 #include "SpecialK.h"
 
-#define MAX_ONHAND 40
-#define MAX_STORAGE 5000
+constexpr int MaxOnHand = 7; //40
+constexpr int MaxStorage = 5000;
+constexpr int StartingOnHand = 20;
+constexpr int StartingStorage = 1600;
 
 //Special sentinel for inventory management,
 //could mean an item wasn't found or it was nullptr.
-#define NO_ITEM -1
+constexpr int NoItem = -1;
 
 class Player : public NameableThing, Tickable
 {
@@ -22,10 +24,10 @@ public:
 	std::string Name{ "Mayor" };
 	Gender Gender{ Gender::BEnby };
 
-	std::array<InventoryItemP, MAX_ONHAND> OnHand{ nullptr };
+	std::array<InventoryItemP, MaxOnHand> OnHand{ nullptr };
 	std::vector<InventoryItemP> Storage;
-	int OnHandLimit{ 20 };
-	int StorageLimit{ 1600 };
+	int OnHandLimit{ StartingOnHand };
+	int StorageLimit{ StartingStorage };
 	unsigned int Bells{ 0 };
 	
 	InventoryItemP HeldTool{ nullptr };

@@ -15,9 +15,9 @@ void Sequence::Tick(double dt)
 	if (cursor >= parts.size())
 		return;
 
-	auto now = parts[cursor];
 	if (waiting)
 	{
+		auto now = parts[cursor];
 		now->mutex = &waiting;
 		now->Tick(dt);
 	}
@@ -44,9 +44,9 @@ void Sequence::Draw(double dt)
 	if (cursor >= parts.size())
 		return;
 
-	auto now = parts[cursor];
 	if (waiting)
 	{
+		auto now = parts[cursor];
 		now->mutex = &waiting;
 		now->Draw(dt);
 	}

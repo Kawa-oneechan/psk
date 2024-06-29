@@ -20,13 +20,13 @@ const std::string Player::Birthday()
 int Player::findItemSlot(InventoryItemP target)
 {
 	if (target == nullptr)
-		return NO_ITEM;
+		return NoItem;
 	for (int i = 0; i < OnHandLimit; i++)
 	{
 		if (OnHand[i] == target)
 			return i;
 	}
-	return NO_ITEM;
+	return NoItem;
 }
 
 bool Player::HasInventoryRoom()
@@ -45,7 +45,7 @@ bool Player::GiveItem(InventoryItemP item)
 
 void Player::SwapItems(int from, int to)
 {
-	if (from == NO_ITEM || to == NO_ITEM)
+	if (from == NoItem || to == NoItem)
 		return;
 	std::swap(OnHand[from], OnHand[to]);
 }
@@ -57,7 +57,7 @@ void Player::SwapItems(InventoryItemP from, InventoryItemP to)
 
 bool Player::RemoveItem(int slot)
 {
-	if (slot == NO_ITEM)
+	if (slot == NoItem)
 		return false;
 	if (OnHand[slot] == nullptr)
 		return false;
@@ -72,9 +72,9 @@ bool Player::RemoveItem(InventoryItemP item)
 
 bool Player::ConsumeItem(int slot)
 {
-	if (slot == NO_ITEM)
+	if (slot == NoItem)
 		return false;
-	return false;
+	return true;
 }
 
 bool Player::ConsumeItem(InventoryItemP item)
@@ -85,13 +85,13 @@ bool Player::ConsumeItem(InventoryItemP item)
 int Player::findStorageSlot(InventoryItemP target)
 {
 	if (target == nullptr)
-		return NO_ITEM;
+		return NoItem;
 	for (int i = 0; i < StorageLimit; i++)
 	{
 		if (Storage[i] == target)
 			return i;
 	}
-	return NO_ITEM;
+	return NoItem;
 }
 
 bool Player::Store(int slot)

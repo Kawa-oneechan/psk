@@ -51,7 +51,7 @@ public:
 		//????          = 0b0000'0011'0000'0111,
 		Hat = 0b0000'0100'0000'0111,
 		Shoes = 0b0000'0101'0000'0111,
-	} Type;
+	} Type{ Type::Generic };
 	bool IsItem() const;
 	bool IsTool() const;
 	bool IsFurniture() const;
