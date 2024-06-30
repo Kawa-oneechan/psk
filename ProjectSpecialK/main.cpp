@@ -77,6 +77,8 @@ namespace SolBinds
 	extern void Setup();
 }
 
+extern void RunTests();
+
 namespace UI
 {
 	std::map<std::string, glm::vec4> themeColors;
@@ -445,9 +447,7 @@ int main(int argc, char** argv)
 
 	//tickables.push_back(new TextField());
 
-	{
-		auto textureCacheTest = Texture("ui/panels.png");
-	}
+	RunTests();
 
 	int oldTime = 0;
 	auto pos = 0.0f;
