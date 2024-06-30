@@ -23,7 +23,7 @@ namespace Database
 	template<typename T>
 	std::shared_ptr<T> Find(const std::string& target, std::vector<std::shared_ptr<T>>& source)
 	{
-#if 1
+#if 0
 		for (int i = 0; i < source.size(); i++)
 		{
 			auto v = source.at(i);
@@ -34,10 +34,13 @@ namespace Database
 		}
 		return nullptr;
 #else
-		//Arguably better code but...
-		auto it = std::find_if(source->begin(), source->end(), [&](T* v) { return v->ID == target; });
-		if (it == source->end()) return nullptr;
-		return ... what exactly?
+		auto it = std::find_if(source.begin(), source.end(), [&](std::shared_ptr<T> v)
+		{
+			return v->ID == target;
+		});
+		if (it == source.end())
+			return nullptr;
+		return *it;
 #endif
 	}
 
@@ -45,6 +48,7 @@ namespace Database
 	template<typename T>
 	std::shared_ptr<T> Find(unsigned int hash, std::vector<std::shared_ptr<T>>& source)
 	{
+#if 0
 		for (int i = 0; i < source.size(); i++)
 		{
 			auto v = source.at(i);
@@ -54,6 +58,15 @@ namespace Database
 			}
 		}
 		return nullptr;
+#else
+		auto it = std::find_if(source.begin(), source.end(), [&](std::shared_ptr<T> v)
+		{
+			return v->Hash == hash;
+		});
+		if (it == source.end())
+			return nullptr;
+		return *it;
+#endif
 	}
 
 	//Find a database entry from a JSONValue. If it's an array of strings, tries each.
