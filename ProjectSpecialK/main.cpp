@@ -473,12 +473,17 @@ int main(int argc, char** argv)
 			console->Tick(dt);
 		else
 		{
-			for (unsigned int i = (unsigned int)tickables.size(); i-- > 0; )
-				tickables[i]->Tick(dt);
+			//for (unsigned int i = (unsigned int)tickables.size(); i-- > 0; )
+			//	tickables[i]->Tick(dt);
+			//a bit ugly but technically still better vis-a-vis iterators
+			for (auto& t = tickables.crbegin(); t != tickables.crend(); ++t)
+				(*t)->Tick(dt);
 		}
 
-		for (unsigned int i = 0; i < (unsigned int)tickables.size(); i++)
-			tickables[i]->Draw(dt * 0.25);
+		//for (unsigned int i = 0; i < (unsigned int)tickables.size(); i++)
+		//	tickables[i]->Draw(dt * 0.25);
+		for (const auto& t : tickables)
+			t->Draw(dt * 0.25);
 		console->Draw(dt);
 
 		cursor->Draw();
