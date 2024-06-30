@@ -101,7 +101,7 @@ static void initVFS_addSource(const fs::path& path)
 	newSrc.path = path.string();
 	newSrc.isZip = path.extension() == ".zip";
 
-	char* manifestData = nullptr;
+	std::unique_ptr<char[]> manifestData = nullptr;
 	if (newSrc.isZip)
 	{
 		mz_zip_archive zip;
@@ -118,9 +118,8 @@ static void initVFS_addSource(const fs::path& path)
 			if (!_stricmp(fs.m_filename, "manifest.json"))
 			{
 				const size_t siz = (size_t)fs.m_uncomp_size;
-				manifestData = new char[siz + 2];
-				std::memset(manifestData, 0, siz + 2);
-				mz_zip_reader_extract_to_mem(&zip, i, manifestData, siz, 0);
+				manifestData = std::make_unique<char[]>(siz + 2);
+				mz_zip_reader_extract_to_mem(&zip, i, manifestData.get(), siz, 0);
 				break;
 			}
 		}
@@ -133,16 +132,14 @@ static void initVFS_addSource(const fs::path& path)
 			std::ifstream file(manifestPath, std::ios::binary | std::ios::ate);
 			std::streamsize fs = file.tellg();
 			file.seekg(0, std::ios::beg);
-			manifestData = new char[fs + 2];
-			std::memset(manifestData, 0, fs + 2);
-			file.read(manifestData, fs);
+			manifestData = std::make_unique<char[]>(fs + 2);
+			file.read(manifestData.get(), fs);
 		}
 	}
 
 	if (manifestData != nullptr)
 	{
-		auto manifestDoc = JSON::Parse(manifestData)->AsObject();
-		delete[] manifestData;
+		auto manifestDoc = JSON::Parse(manifestData.get())->AsObject();
 
 		newSrc.id = manifestDoc["id"]->AsString();
 		newSrc.friendlyName = manifestDoc["friendlyName"]->IsString() ? manifestDoc["friendlyName"]->AsString() : newSrc.id;
@@ -252,7 +249,7 @@ void InitVFS()
 	conprint(0, "VFS: ended up with {} entries.", entries.size());
 }
 
-std::unique_ptr<char*> ReadVFS(const VFSEntry& entry, size_t* size)
+std::unique_ptr<char[]> ReadVFS(const VFSEntry& entry, size_t* size)
 {
 	auto& source = sources[entry.sourceIndex];
 	if (source.isZip)
@@ -270,9 +267,9 @@ std::unique_ptr<char*> ReadVFS(const VFSEntry& entry, size_t* size)
 		const size_t siz = (size_t)fs.m_uncomp_size;
 		if (size != nullptr)
 			*size = siz;
-		auto ret = new char[siz + 2]{ 0 };
-		mz_zip_reader_extract_to_mem(&zip, entry.zipIndex, ret, siz, 0);
-		return std::make_unique<char*>(ret);
+		auto ret = std::make_unique<char[]>(siz + 2);
+		mz_zip_reader_extract_to_mem(&zip, entry.zipIndex, ret.get(), siz, 0);
+		return ret; //return std::make_unique<char*>(ret);
 	}
 	else
 	{
@@ -282,14 +279,14 @@ std::unique_ptr<char*> ReadVFS(const VFSEntry& entry, size_t* size)
 		file.seekg(0, std::ios::beg);
 		if (size != nullptr)
 			*size = fs;
-		auto ret = new char[fs + 2]{ 0 };
-		file.read(ret, fs);
-		return std::make_unique<char*>(ret);
+		auto ret = std::make_unique<char[]>(fs + 2);
+		file.read(ret.get(), fs);
+		return ret; //return std::make_unique<char*>(ret);
 	}
 	return nullptr;
 }
 
-std::unique_ptr<char*> ReadVFS(const std::string& path, size_t* size)
+std::unique_ptr<char[]> ReadVFS(const std::string& path, size_t* size)
 {
 	for (const auto& entry : entries)
 	{
@@ -309,7 +306,7 @@ JSONValue* ReadJSON(const VFSEntry& entry)
 	try
 	{
 		auto vfsData = ReadVFS(entry.path, nullptr);
-		auto doc = JSON::Parse(*vfsData.get());
+		auto doc = JSON::Parse(vfsData.get());
 
 		std::string ppath = entry.path + ".patch";
 		for (const auto& pents : entries)
@@ -317,7 +314,7 @@ JSONValue* ReadJSON(const VFSEntry& entry)
 			if (pents.path == ppath)
 			{
 				auto pdata = ReadVFS(pents.path, nullptr);
-				auto pdoc = JSON::Parse(*pdata.get());
+				auto pdoc = JSON::Parse(pdata.get());
 				auto patched = JSONPatch::ApplyPatch(*doc, *pdoc);
 				doc = patched;
 			}

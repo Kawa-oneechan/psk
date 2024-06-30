@@ -58,7 +58,7 @@ Texture::Texture(const std::string& texturePath, int repeat, int filter) : file(
 		conprint(1, "Failed to load texture \"{}\" -- no data.", texturePath);
 		return;
 	}
-	data = stbi_load_from_memory((unsigned char*)*vfsData.get(), (int)vfsSize, &width, &height, &channels, 0);
+	data = stbi_load_from_memory((unsigned char*)vfsData.get(), (int)vfsSize, &width, &height, &channels, 0);
 
 	auto atlasPath = texturePath.substr(0, texturePath.find_last_of('.')) + ".json";
 	GetAtlas(atlas, atlasPath);
@@ -101,7 +101,10 @@ Texture::Texture(const unsigned char* externalData, int width, int height, int c
 			//We are delayed by multithreading!
 			conprint(3, "glGenTextures indicates we're threading. Delaying load from memory...");
 			delayed = true;
-			this->data = (unsigned char*)externalData;
+			//grab a copy we control for later
+			auto size = width * height * channels;
+			this->data = new unsigned char[size];
+			std::memcpy(this->data, externalData, width * height * channels);
 			return;
 		}
 	}

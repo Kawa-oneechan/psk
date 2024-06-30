@@ -52,7 +52,7 @@ namespace Database
 		{
 			size_t vfsSize = 0;
 			auto vfsData = ReadVFS(entry.path, &vfsSize);
-			unsigned char *data = stbi_load_from_memory((unsigned char*)*vfsData.get(), (int)vfsSize, &width, &height, &channels, 0);
+			unsigned char *data = stbi_load_from_memory((unsigned char*)vfsData.get(), (int)vfsSize, &width, &height, &channels, 0);
 
 			int l = (iconNum % cols) * iconSize;
 			int t = (iconNum / rows) * iconSize;

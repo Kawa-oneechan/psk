@@ -74,7 +74,7 @@ void SpriteRenderer::LoadFontBank(int font, int bank)
 
 	auto ttfData = ReadVFS(fontFiles[font], nullptr);
 	auto ttfBitmap = new unsigned char[FontAtlasExtent * FontAtlasExtent];
-	stbtt_BakeFontBitmap((unsigned char*)*ttfData.get(), 0, (float)fontSizes[font], ttfBitmap, FontAtlasExtent, FontAtlasExtent, 256 * bank, 256, &cdata[(font * 0xFFFF) + (0x100 * bank)]);
+	stbtt_BakeFontBitmap((unsigned char*)ttfData.get(), 0, (float)fontSizes[font], ttfBitmap, FontAtlasExtent, FontAtlasExtent, 256 * bank, 256, &cdata[(font * 0xFFFF) + (0x100 * bank)]);
 	FlipImage(ttfBitmap, FontAtlasExtent, FontAtlasExtent);
 
 	unsigned int fontID;

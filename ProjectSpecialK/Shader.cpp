@@ -6,14 +6,16 @@ Shader::Shader(const std::string& vertexPath, const std::string& fragmentPath)
 	auto fShaderCode = ReadVFS(fragmentPath, nullptr);
 
 	unsigned int vertex, fragment;
+	char* vs = vShaderCode.get();
+	char* fs = fShaderCode.get();
 
 	vertex = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource(vertex, 1, vShaderCode.get(), NULL);
+	glShaderSource(vertex, 1, &vs, NULL);
 	glCompileShader(vertex);
 	checkCompileErrors(vertex, "VERTEX");
 
 	fragment = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(fragment, 1, fShaderCode.get(), NULL);
+	glShaderSource(fragment, 1, &fs, NULL);
 	glCompileShader(fragment);
 	checkCompileErrors(fragment, "FRAGMENT");
 
