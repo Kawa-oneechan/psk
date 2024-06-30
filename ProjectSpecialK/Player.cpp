@@ -7,7 +7,7 @@ void Player::LoadModel()
 
 const Model* Player::Model()
 {
-	if (_model == nullptr)
+	if (!_model)
 		LoadModel();
 	return _model;
 }
@@ -19,7 +19,7 @@ const std::string Player::Birthday()
 
 int Player::findItemSlot(InventoryItemP target)
 {
-	if (target == nullptr)
+	if (!target)
 		return NoItem;
 	for (int i = 0; i < OnHandLimit; i++)
 	{
@@ -31,7 +31,7 @@ int Player::findItemSlot(InventoryItemP target)
 
 bool Player::HasInventoryRoom()
 {
-	return std::any_of(OnHand.cbegin(), OnHand.cend(), [](InventoryItemP i) { return i == nullptr; });
+	return std::any_of(OnHand.cbegin(), OnHand.cend(), [](InventoryItemP i) { return i; });
 }
 
 bool Player::GiveItem(InventoryItemP item)
@@ -59,7 +59,7 @@ bool Player::RemoveItem(int slot)
 {
 	if (slot == NoItem)
 		return false;
-	if (OnHand[slot] == nullptr)
+	if (!OnHand[slot])
 		return false;
 	OnHand[slot] = nullptr;
 	return true;
@@ -84,7 +84,7 @@ bool Player::ConsumeItem(InventoryItemP item)
 
 int Player::findStorageSlot(InventoryItemP target)
 {
-	if (target == nullptr)
+	if (!target)
 		return NoItem;
 	for (int i = 0; i < StorageLimit; i++)
 	{

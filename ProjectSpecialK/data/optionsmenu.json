@@ -7,7 +7,7 @@
 		"fr": "Réglages",
 		"it": "Opzioni",
 		"nl": "Opties",
-		"hu": "Opciók"
+		"hu": "Beállítások"
 	},
 	"menu:options:content": {
 		"en": "Content Manager...",
@@ -15,7 +15,8 @@
 	},
 	"menu:options:language": {
 		"en": "Language",
-		"nl": "Taal"
+		"nl": "Taal",
+		"hu": "Nyelv"
 	},
 	"menu:options:language:en": { "en": "US English" },
 	"menu:options:language:jp": { "en": "Japanese / 日本語" },
@@ -25,34 +26,49 @@
 	"menu:options:language:it": { "en": "Italian / italiano" },
 	"menu:options:language:hu": { "en": "Hungarian / magyar" },
 	"menu:options:language:nl": { "en": "Dutch / Nederlands" },
+	"menu:options:language:uk": { "en": "UK English" },
+	"menu:options:language:taunt": {
+		"en": "You chose <color:1>US English</color>. Howdy partner, this island is 300 square hamburgers of FREEDOM!",
+		"jp": "<color:1>日本語</color>を選択しました。 ごちゃごちゃしていてすみません。",
+		"hu": "<color:1>Magyar</color> nyelv kiválasztva. Gratulálok! Ha ezt el tudod olvasni, jó eséllyel ez az anyanyelved!",
+		"nl": "Je hebt voor <color:1>Nederlands</color> gekozen. Waarom zijn bijna alle namen hetzelfde gebleven?",
+		"uk": "You chose <color:1>Proper English</color>. Don't worry, you don't need a Video Game License here, we won't tell, love."
+	},
 
 	"menu:options:continuefrom": {
-		"en": "Continue from"
+		"en": "Continue from",
+		"hu": "Folytatás innen:"
 	},
 	"menu:options:continuefrom:0": {
 		"en": "Front door",
-		"nl": "Voordeur"
+		"nl": "Voordeur",
+		"hu": "Fő ajtó"
 	},
 	"menu:options:continuefrom:1": {
 		"en": "Main room",
-		"nl": "Woonkamer"
+		"nl": "Woonkamer",
+		"hu": "Nappali"
 	},
 	"menu:options:continuefrom:2": {
 		"en": "Last used bed",
-		"nl": "Laatst gebruikt bed"
+		"nl": "Laatst gebruikt bed",
+		"hu": "Utoljára használt ágy"
 	},
 	"menu:options:continuefrom:3": {
 		"en": "Last location",
-		"nl": "Laatste locatie"
+		"nl": "Laatste locatie",
+		"hu": "Utolsó hely"
 	},
 
 	"menu:options:speech": {
 		"en": "Speech",
-		"nl": "Spraak"
+		"nl": "Spraak",
+		"hu": "Beszéd"
 	},
 	"menu:options:speech:0": {
 		"en": "Silence",
-		"nl": "Stilte"
+		"nl": "Stilte",
+		"hu": "Csend"
 	},
 	"menu:options:speech:1": {
 		"en": "Bebebese"
@@ -62,41 +78,53 @@
 	},
 
 	"menu:options:pingrate": {
-		"en": "Ping rate"
+		"en": "Ping rate",
+		"hu": "Ping érték"
 	},
 	"menu:options:balloonchance": {
-		"en": "Balloon chance"
+		"en": "Balloon chance",
+		"hu": "Lufi esélye"
 	},
 	"menu:options:cursorscale": {
-		"en": "Cursor scale"
+		"en": "Cursor scale",
+		"hu": "Mutató mérete"
 	},
 	"menu:options:volume": {
-		"en": "Volume..."
+		"en": "Volume...",
+		"hu": "Hangerő..."
 	},
 
 	"menu:options:head:content": {
-		"en": "Content Manager"
+		"en": "Content Manager",
+		"hu": "Tartalomkezelő"
 	},
 	"menu:options:content:species": {
-		"en": "Villager species"
+		"en": "Villager species",
+		"hu": "Lakosok fajtája"
 	},
 	"menu:options:content:species:help": {
-		"en": "Unchecked species will never\nrandomly appear in your town\nas villagers. However, any\nvillager already there will stay\nuntil they move out."
+		"en": "Unchecked species will never\nrandomly appear in your town\nas villagers. However, any\nvillager already there will stay\nuntil they move out.",
+		"hu": "A ki nem jelölt fajok soha nem jelennek\nmeg lakosként. Minden eddigi ilyen lakos\nkiutasításig marad."
 	},
 
 	"menu:options:head:volume": {
-		"en": "Volume"
+		"en": "Volume",
+		"hu": "Hangerő"
 	},
 	"menu:options:volume:music": {
-		"en": "Music"
+		"en": "Music",
+		"hu": "Zene"
 	},
 	"menu:options:volume:ambience": {
-		"en": "Ambience"
+		"en": "Ambience",
+		"hu": "Háttérzaj"
 	},
 	"menu:options:volume:sfx": {
-		"en": "Sound effects"
+		"en": "Sound effects",
+		"hu": "Hangeffektusok"
 	},
 	"menu:options:volume:speech": {
-		"en": "Speech"
+		"en": "Speech",
+		"hu": "Beszéd"
 	}
 }

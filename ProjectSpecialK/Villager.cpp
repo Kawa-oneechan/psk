@@ -14,7 +14,7 @@ Villager::Villager(JSONObject& value, const std::string& filename) : NameableThi
 	{
 		auto sp = value["species"];
 		_species = Database::Find<::Species>(sp, species);
-		if (_species == nullptr)
+		if (!_species)
 			throw std::runtime_error(fmt::format("Unknown species {} while loading {}.", sp->Stringify(), ID));
 		RefSpecies = fmt::format("species:{}", _species->ID);
 		StringToLower(RefSpecies);
@@ -24,7 +24,7 @@ Villager::Villager(JSONObject& value, const std::string& filename) : NameableThi
 	//Normally, special villagers have no catchphrase but we'll allow it as an option.
 	RefCatchphrase = fmt::format("catchphrase:{}", ID);
 	auto val = value["catchphrase"];
-	if (val == nullptr || (val->IsString() && val->AsString().empty()))
+	if (!val || (val->IsString() && val->AsString().empty()))
 		val = JSON::Parse("\"dummy\"");
 	if (val->IsString() && val->AsString()[0] == '#')
 		RefCatchphrase = val->AsString().substr(1);
@@ -67,7 +67,7 @@ Villager::Villager(JSONObject& value, const std::string& filename) : NameableThi
 	else
 	{
 		personality = Database::Find<::Personality>(value["personality"], personalities);
-		if (personality == nullptr)
+		if (!personality)
 			throw std::runtime_error(fmt::format("Unknown personality {} while loading {}.", value["personality"]->Stringify(), ID));
 	}
 	personalitySubtype = _isSpecial ? 0 : (int)value["personalitySubtype"]->AsNumber();
@@ -75,7 +75,7 @@ Villager::Villager(JSONObject& value, const std::string& filename) : NameableThi
 	//hobby = value["hobby"];
 	{
 		hobby = Database::Find<::Hobby>(value["hobby"], hobbies);
-		if (hobby == nullptr)
+		if (!hobby)
 		{
 			conprint(1, "Unknown hobby {} while loading {}.", value["hobby"]->Stringify(), ID);
 			hobby = Database::Find<::Hobby>("fallback", hobbies);
@@ -128,7 +128,7 @@ void Villager::LoadModel()
 
 const Model* Villager::Model()
 {
-	if (_model == nullptr)
+	if (!_model)
 		LoadModel();
 	return _model;
 }

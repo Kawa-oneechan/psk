@@ -1,4 +1,5 @@
 ﻿#include "DialogueBox.h"
+#include "PanelLayout.h"
 #include "InputsMap.h"
 
 void DialogueBox::msbtStr(MSBTParams)
@@ -51,16 +52,6 @@ void DialogueBox::msbtPass(MSBTParams)
 
 DialogueBox::DialogueBox()
 {
-	nametagWidth = 0;
-	bebebese = new Audio("sound/animalese/base/Voice_Monology.wav");
-
-	Sound = Sound::Bebebese;
-	state = State::Done;
-	
-	displayCursor = 0;
-	time = 0;
-	delay = 0;
-
 	//Text(u8"Truth is... <color:1>the game</color> was rigged\nfrom the start.", 0, "Isabelle", glm::vec4(1, 0.98f, 0.56f, 1), glm::vec4(0.96f, 0.67f, 0.05f, 1));
 	//Text(u8"Truth is... <color:1>the game</color> was rigged from the start.",
 	//Text("Are you <color:3><str:player></color>? <delay:1000>Hiii! Welcome to <color:2>Project Special K</color>!",
@@ -218,10 +209,14 @@ void DialogueBox::Draw(double dt)
 	time += (float)dt * 0.005f;
 
 	auto dlgScale = scale;
+
+	if (state == State::Opening || state == State::Closing)
+		dlgScale *= glm::mix(0.0f, 1.0f, tween); //glm::elasticEaseOut(tween));
+
 	auto dlgWidth = bubble[0].width * dlgScale;
 	auto dlgHeight = bubble[0].height * dlgScale;
 	auto dlgLeft = (int)(width / 2) - dlgWidth;
-	auto dlgTop = (int)height - dlgHeight - 10;
+	auto dlgTop = (int)height - bubble[0].height - 16;
 
 	wobble.Use();
 	gradient[0].Use(1);
@@ -238,14 +233,16 @@ void DialogueBox::Draw(double dt)
 		//sprender->DrawSprite(wobble, bubble[bubbleNum], glm::vec2(dlgLeft + dlgWidth, dlgTop), glm::vec2(dlgWidth, dlgHeight), glm::vec4(0, 0, bubble[0]->width, bubble[0]->height), 0, bubbleColor, 1);
 	}
 
-	sprender->DrawText(font, displayed, glm::vec2(dlgLeft + (200 * scale), dlgTop + (100 * scale)), textColor, 150 * scale);
+	sprender->DrawText(font, displayed, glm::vec2(dlgLeft + (200 * dlgScale), dlgTop + (100 * dlgScale)), textColor, 150 * dlgScale);
 
 	if (!name.empty())
 	{
 		const auto tagAngle = -2.0f;
-		const auto tagPos = glm::vec2(dlgLeft + (150 * scale), dlgTop + (sinf(time * 2) * 10) * scale);
+		const auto tagPos = glm::vec2((int)(width / 2) - bubble[0].width + (150 * scale), dlgTop + (sinf(time * 2) * 10) * scale);
 		const auto tagSize = glm::vec2(nametag[0].z, nametag[0].w) * scale;
-		//const auto tagMidWidth = 128; //pre-measure this to fit in the Text() calls.
+		const auto alpha = glm::clamp((tween * 2.0f) - 0.75f, 0.0f, 1.0f);
+		nametagColor[0].a = alpha;
+		nametagColor[1].a = alpha;
 
 		const auto tagPosL = tagPos;
 		const auto tagPosM = tagPosL + glm::vec2(cosf(glm::radians(tagAngle)) * tagSize.x, sinf(glm::radians(tagAngle)) * tagSize.x);
@@ -271,14 +268,24 @@ void DialogueBox::Draw(double dt)
 
 void DialogueBox::Tick(double dt)
 {
+	//if (dt > 10) dt = 0;
+
+	if (state == State::Done)
+	{
+		tween = 0;
+	}
+
 	if (state == State::Opening)
 	{
-		//TODO: wait for animation
-		state = State::Writing;
+		tween += (float)dt * 0.025f;
+		if (tween >= 1.0f)
+			state = State::Writing;
 	}
 
 	if (state == State::Writing)
 	{
+		tween = 1;
+
 		delay -= (float)dt;
 		if (delay > 0)
 			return;
@@ -356,6 +363,7 @@ void DialogueBox::Tick(double dt)
 			if (displayCursor >= toDisplay.length())
 			{
 				state = State::Closing;
+				tween = 1;
 				if (mutex != nullptr)
 				{
 					*mutex = false;
@@ -372,8 +380,9 @@ void DialogueBox::Tick(double dt)
 
 	if (state == State::Closing)
 	{
-		//TODO: wait for animation
-		state = State::Done;
+		tween -= (float)dt * 0.025f;
+		if (tween <= 0.0f)
+			state = State::Done;
 	}
 }
 

@@ -162,7 +162,7 @@ InventoryItem::InventoryItem(const std::string& reference)
 		cleanName = reference.substr(0, slash);
 	}
 	_wrapped = Database::Find<::Item>(cleanName, items);
-	if (_wrapped == nullptr)
+	if (!_wrapped)
 	{
 		_wrapped = Database::Find<::Item>("psk:toolfallback", items);
 	}

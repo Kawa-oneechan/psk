@@ -73,7 +73,7 @@ namespace SolBinds
 					ret = Database::Find(va[0].as<int>(), villagers);
 				else if (va[0].is<std::string>())
 					ret = Database::Find(va[0].as<std::string>(), villagers);
-				if (ret == nullptr)
+				if (!ret)
 					conprint(1, "getVillager: could not find villager {}", va[0].as<std::string>());
 				return ret;
 			}
@@ -89,7 +89,7 @@ namespace SolBinds
 					ret = Database::Find(va[0].as<int>(), items);
 				else if (va[0].is<std::string>())
 					ret = Database::Find(va[0].as<std::string>(), items);
-				if (ret == nullptr)
+				if (!ret)
 					conprint(1, "getItem: could not find item {}", va[0].as<std::string>());
 				return ret;
 			}

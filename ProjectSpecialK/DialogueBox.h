@@ -19,23 +19,25 @@ private:
 	Shader wobble{ Shader("shaders/wobble.fs") };
 	std::string displayed;
 	std::string toDisplay;
-	size_t displayCursor;
-	float time;
+	size_t displayCursor{ 0 };
+	float time{ 0 };
 	glm::vec4 bubbleColor;
 	glm::vec4 textColor;
 	glm::vec4 nametagColor[2];
-	float nametagWidth;
+	float nametagWidth{ 0 };
 	std::string name;
-	int font;
-	int bubbleNum;
+	int font{ 0 };
+	int bubbleNum{ 0 };
+	float tween{ 0 };
 
-	float delay;
+	float delay{ 0 };
 
-	Audio* bebebese;
+	std::shared_ptr<Audio> bebebese{ std::make_shared<Audio>("sound/animalese/base/Voice_Monology.wav") };
+
 	enum class State
 	{
 		Opening, Writing, WaitingForKey, Closing, Done
-	} state{ State::Opening };
+	} state{ State::Done };
 
 	typedef void(DialogueBox::*MSBTFunc)(MSBTParams);
 
@@ -80,7 +82,7 @@ public:
 	enum class Sound
 	{
 		Silent, Animalese, Bebebese
-	} Sound;
+	} Sound{ Sound::Bebebese };
 
 	DialogueBox();
 	void Text(const std::string& text);

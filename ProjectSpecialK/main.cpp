@@ -133,7 +133,7 @@ namespace UI
 			settings = JSON::Parse("{}")->AsObject();
 		}
 
-#define DS(K, V) if (settings[K] == nullptr) settings[K] = new JSONValue(V)
+#define DS(K, V) if (!settings[K]) settings[K] = new JSONValue(V)
 		DS("language", 0); //English
 		DS("continue", 0); //Front door
 		DS("speech", 1); //Bebebese

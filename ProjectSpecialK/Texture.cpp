@@ -53,7 +53,7 @@ Texture::Texture(const std::string& texturePath, int repeat, int filter) : file(
 
 	size_t vfsSize = 0;
 	auto vfsData = ReadVFS(texturePath, &vfsSize);
-	if (vfsData == nullptr || vfsSize == 0)
+	if (!vfsData || vfsSize == 0)
 	{
 		conprint(1, "Failed to load texture \"{}\" -- no data.", texturePath);
 		return;

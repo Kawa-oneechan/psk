@@ -23,7 +23,8 @@ static Language LangStrToEnum(const std::string& lang)
 		//Shorter (matches fallbacks in TextEntry::get)
 		{ "en", USen },{ "es", USes },{ "fr", USfr },
 		{ "ja", JPja },{ "jp", JPja },{ "ko", KRko },{ "zh", TWzh },
-		{ "de", EUde },{ "it", EUit },{ "nl", EUnl },{ "ru", EUru },{ "hu", EUhu }
+		{ "de", EUde },{ "it", EUit },{ "nl", EUnl },{ "ru", EUru },{ "hu", EUhu },
+		{ "uk", EUen }
 	});
 	auto match = map.find(lang);
 	if (match != map.end())

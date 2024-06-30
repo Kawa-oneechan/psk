@@ -15,7 +15,7 @@ namespace UI
 	extern JSONObject& json;
 };
 
-static stbtt_bakedchar* cdata;
+static stbtt_bakedchar* cdata{ nullptr };
 static Texture** fontTextures;
 static std::string fontFiles[MaxFonts];
 static int fontSizes[MaxFonts];
@@ -42,7 +42,7 @@ static void FlipImage(unsigned char* image, int width, int height)
 
 void SpriteRenderer::LoadFontBank(int font, int bank)
 {
-	if (cdata == nullptr)
+	if (!cdata)
 	{
 		auto& fontSettings = ReadJSON("fonts/fonts.json")->AsArray();
 		numFonts = (int)fontSettings.size();
@@ -52,10 +52,10 @@ void SpriteRenderer::LoadFontBank(int font, int bank)
 			conprint(2, "Warning: too many font definitions, only doing {}.", MaxFonts);
 		}
 		cdata = (stbtt_bakedchar*)calloc(numFonts * 0x10000, sizeof(stbtt_bakedchar));
-		if (cdata == nullptr)
+		if (!cdata)
 			throw std::runtime_error("Could not allocate space for font atlases.");
 		fontTextures = (Texture**)calloc(numFonts * 256, sizeof(Texture*));
-		if (fontTextures == nullptr)
+		if (!fontTextures)
 			throw std::runtime_error("Could not allocate space for font textures.");
 
 		for (int i = 0; i < numFonts; i++)

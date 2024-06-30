@@ -113,14 +113,14 @@ void SpriteRenderer::DrawSprite(Shader* shader, Texture& texture, glm::vec2 posi
 	}
 
 	bool flush = false;
-	if (currentShader == nullptr || currentShader->ID != shader->ID)
+	if (!currentShader  || currentShader->ID != shader->ID)
 	{
 		if (currentShader != nullptr)
 			flush = true;
 		else
 			currentShader = shader;
 	}
-	if (currentTexture == nullptr || currentTexture->ID != texture.ID)
+	if (!currentTexture || currentTexture->ID != texture.ID)
 	{
 		if (currentTexture != nullptr)
 			flush = true;

@@ -50,8 +50,11 @@ void DoomMenu::Build()
 		return fmt::format("{}%", i->selection);
 	};
 
-	static const Language opt2lan[] = { Language::USen, Language::JPja, Language::EUde, Language::EUes, Language::EUfr, Language::EUit, Language::EUhu, Language::EUnl };
-	static const int lan2opt[] = { 0, 3, 4, 1, 0, 0, 0,	2, 0, 3, 4, 5, 7, 0, 6 };
+	static const Language opt2lan[] = { Language::USen, Language::JPja, Language::EUde, Language::EUes, Language::EUfr, Language::EUit, Language::EUhu, Language::EUnl, Language::EUen };
+	static const int lan2opt[] = {
+		0, 3, 4,
+		1, 0, 0, 0,
+		2, 8, 3, 4, 5, 7, 0, 6 };
 
 	options.items.clear();
 	content.items.clear();
@@ -70,6 +73,7 @@ void DoomMenu::Build()
 			"menu:options:language:it",
 			"menu:options:language:hu",
 			"menu:options:language:nl",
+			"menu:options:language:uk"
 		},
 		[&](DoomMenuItem*i)
 		{
@@ -77,7 +81,8 @@ void DoomMenu::Build()
 			UI::settings["language"] = new JSONValue(i->selection);
 			Translate();
 			items = &options;
-			dlgBox->Text(fmt::format("You chose <color:1>{}</color>.", i->options[i->selection]));
+			//dlgBox->Text(fmt::format("You chose <color:1>{}</color>.", i->options[i->selection]));
+			dlgBox->Text(TextGet("menu:options:language:taunt"), Database::Find<Villager>("psk:xct", villagers));
 		}
 	));
 	options.items.push_back(new DoomMenuItem("menu:options:continuefrom", (int)UI::settings["continue"]->AsNumber(),
@@ -124,7 +129,7 @@ void DoomMenu::Build()
 			if (s->ID == "bul") continue;
 
 			auto sn = StripMSBT(TextGet(s->RefName + ":m"));
-			if (std::islower(sn[0]))
+			if (sn[0] > 32 && sn[0] < 127 && std::islower(sn[0]))
 				sn[0] = std::toupper(sn[0]);
 
 			TextAdd(f, sn);
