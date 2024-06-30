@@ -148,7 +148,7 @@ namespace UI
 		DS("speechVolume", 1.0f);
 #undef DS
 
-		static const Language opt2lan[] = { Language::USen, Language::JPja, Language::EUde, Language::EUes, Language::EUfr, Language::EUit, Language::EUhu, Language::EUnl };
+		static const Language opt2lan[] = { Language::USen, Language::JPja, Language::EUde, Language::EUes, Language::EUfr, Language::EUit, Language::EUhu, Language::EUnl, Language::EUen };
 		gameLang = opt2lan[(int)settings["language"]->AsNumber()];
 
 		Audio::MusicVolume = (float)settings["musicVolume"]->AsNumber();
