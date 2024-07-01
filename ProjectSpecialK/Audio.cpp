@@ -3,6 +3,8 @@
 FMOD::System* Audio::system;
 std::vector<Audio*> Audio::playing;
 
+std::map<std::string, std::shared_ptr<Audio>> uiSounds;
+
 bool Audio::Enabled;
 float Audio::MusicVolume, Audio::AmbientVolume, Audio::SoundVolume, Audio::SpeechVolume;
 
@@ -73,16 +75,15 @@ Audio::Audio(std::string filename) : filename(filename)
 	soundEx.cbsize = sizeof(FMOD_CREATESOUNDEXINFO);
 	soundEx.length = (unsigned int)size;
 	auto mode = FMOD_HARDWARE | FMOD_2D | FMOD_OPENMEMORY;
+	//this needs a better detection method
 	if (filename.substr(0, 5) == "music")
-	{
-		mode |= FMOD_LOOP_NORMAL;
 		type = Type::Music;
-	}
+	else if (filename.substr(0, 7) == "ambient")
+		type = Type::Ambient;
+	else if (filename.substr(6, 9) == "animalese")
+		type = Type::Speech;
 	else
-	{
-		mode |= FMOD_LOOP_OFF;
 		type = Type::Sound; //TODO: extend
-	}
 	auto r = system->createStream(data.get(), mode, &soundEx, &theSound);
 	if (r != FMOD_OK)
 	{
@@ -97,6 +98,9 @@ Audio::Audio(std::string filename) : filename(filename)
 		r = theSound->getTag("LOOP_START", 0, &tag);
 		if (r == FMOD_OK)
 		{
+			r = theSound->setMode(mode | FMOD_LOOP_NORMAL);
+			if (r != FMOD_OK)
+				conprint(1, "Wanted to enable looping for file {}, could not.", filename);
 			unsigned int start = atoi((char*)tag.data);
 			unsigned int end = 0;
 			theSound->getLength(&end, FMOD_TIMEUNIT_PCM);
@@ -105,7 +109,6 @@ Audio::Audio(std::string filename) : filename(filename)
 				conprint(1, "Wanted to set loop point for file {}, could not.", filename);
 		}
 	}
-	theChannel->getFrequency(&frequency);
 	status = Status::Stopped;
 }
 
@@ -131,6 +134,7 @@ void Audio::Play(bool force)
 			if (r != FMOD_OK)
 				throw "Could not play stream.";
 			UpdateVolume();
+
 		}
 		playing.push_back(this);
 	}
@@ -138,6 +142,7 @@ void Audio::Play(bool force)
 	{
 		theChannel->setPaused(false);
 	}
+	theChannel->getFrequency(&frequency);
 	status = Status::Playing;
 }
 
@@ -184,4 +189,11 @@ void Audio::SetPosition(glm::vec3 pos)
 		return;
 	FMOD_VECTOR v = {pos.x, pos.y, pos.z};
 	theChannel->set3DAttributes(&v, nullptr);
+}
+
+void Audio::SetPan(float pos)
+{
+	auto r = theChannel->setPan(pos);
+	if (r != FMOD_OK)
+		conprint(1, "Couldn't set pan position for {}.", filename);
 }

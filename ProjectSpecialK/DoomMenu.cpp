@@ -25,6 +25,29 @@ void DoomMenuItem::Translate()
 	}
 }
 
+void DoomMenuItem::Beep()
+{
+	switch (type)
+	{
+	case Type::Slider:
+	{
+		auto beep = uiSounds["selectShort"];
+
+		auto ccur = clamp(selection, minVal, maxVal) - minVal;
+		auto panpot = -1.0f + ((ccur / (float)(maxVal - minVal)) * 2.0f);
+
+		beep->Play(true);
+		beep->SetPan(panpot);
+		break;
+	}
+	case Type::Checkbox:
+	{
+		uiSounds["checkSmall"]->Play(true);
+		break;
+	}
+	}
+}
+
 void DoomMenuPage::Translate()
 {
 	if (!headerKey.empty()) header = TextGet(headerKey);
@@ -354,6 +377,7 @@ void DoomMenu::Tick(float dt)
 		if (Inputs.Enter || Inputs.MouseLeft)
 		{
 			item->selection ^= 1;
+			item->Beep();
 			if (item->change != nullptr)
 				item->change(item);
 		}
@@ -391,6 +415,7 @@ void DoomMenu::Tick(float dt)
 			if (item->selection > item->minVal)
 			{
 				item->selection -= item->step;
+				item->Beep();
 				if (item->change != nullptr)
 					item->change(item);
 			}
@@ -401,6 +426,7 @@ void DoomMenu::Tick(float dt)
 			if (item->selection < item->maxVal)
 			{
 				item->selection += item->step;
+				item->Beep();
 				if (item->change != nullptr)
 					item->change(item);
 			}

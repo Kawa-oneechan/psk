@@ -36,6 +36,8 @@ public:
 	DoomMenuItem(const std::string& cap, int fnt = 0, int siz = 100) : key(cap), type(Type::Text), selection(fnt), maxVal(siz), page(nullptr) {}
 
 	void Translate();
+
+	void Beep();
 };
 
 class DoomMenuPage

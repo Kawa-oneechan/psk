@@ -48,5 +48,8 @@ public:
 
 	void SetPitch(float ratio);
 	void SetPosition(glm::vec3 pos);
+	void SetPan(float pos);
 };
+
+extern std::map<std::string, std::shared_ptr<Audio>> uiSounds;
 
