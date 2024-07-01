@@ -1,34 +1,29 @@
 #include "SpecialK.h"
 
-Species::Species(JSONObject& value, const std::string& filename)
+Species::Species(JSONObject& value, const std::string& filename) : NameableThing(value, filename)
 {
-	ID = value["id"]->AsString();
-	auto ref = fmt::format("species:{}", ID);
-	StringToLower(ref);
-	RefName = ref;
-
 	if (value["name"]->IsString())
 	{
 		auto& both = value["name"]->AsString();
-		TextAdd(ref + ":m", both);
-		TextAdd(ref + ":f", both);
+		TextAdd(RefName + ":m", both);
+		TextAdd(RefName + ":f", both);
 	}
 	else if (value["name"]->IsArray())
 	{
 		auto narr = value["name"]->AsArray();
 		if (narr.size() == 1)
 		{
-			TextAdd(ref + ":m", *narr[0]);
-			TextAdd(ref + ":f", *narr[0]);
+			TextAdd(RefName + ":m", *narr[0]);
+			TextAdd(RefName + ":f", *narr[0]);
 		}
 		else
 		{
-			TextAdd(ref + ":m", *narr[0]);
-			TextAdd(ref + ":f", *narr[1]);
+			TextAdd(RefName + ":m", *narr[0]);
+			TextAdd(RefName + ":f", *narr[1]);
 		}
 	}
-	EnName[0] = StripMSBT(TextGet(ref + ":m", Language::EUen));
-	EnName[1] = StripMSBT(TextGet(ref + ":f", Language::EUen));
+	EnName[0] = StripMSBT(TextGet(RefName + ":m", Language::EUen));
+	EnName[1] = StripMSBT(TextGet(RefName + ":f", Language::EUen));
 
 	auto filter = fmt::format("filter:species:{}", ID);
 	auto settings = UI::settings["contentFilters"]->AsObject();

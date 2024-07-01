@@ -28,8 +28,8 @@ private:
 	SpeciesP _species{ nullptr };
 	bool _customModel{ false };
 	bool _isSpecial{ false };
-	std::string _customCatchphrase{ "" };
-	std::string _customNickname{ "" };
+	std::string _customCatchphrase;
+	std::string _customNickname;
 	Gender gender{ Gender::BEnby };
 	unsigned char _birthday[2]{ 1, 1 };
 	unsigned char _flags[255]{ 0 };
@@ -41,20 +41,20 @@ private:
 	void DeleteAllThings();
 
 public:
-	std::string RefSpecies{ "" };
-	std::string RefCatchphrase{ "" };
+	std::string RefSpecies;
+	std::string RefCatchphrase;
 	glm::vec4 NameTag[2]{};
 
 	PersonalityP personality{ nullptr };
 	int personalitySubtype{ 0 };
 	HobbyP hobby{ nullptr };
 
-	std::string umbrellaID{ "" };
-	std::string photoID{ "" };
-	std::string portraitID{ "" };
-	std::string defaultOutfitID{ "" };
-	std::string rainCoatID{ "" };
-	std::string rainHatID{ "" };
+	std::string umbrellaID;
+	std::string photoID;
+	std::string portraitID;
+	std::string defaultOutfitID;
+	std::string rainCoatID;
+	std::string rainHatID;
 
 	InventoryItemP HeldTool{ nullptr };
 	InventoryItemP Hat{ nullptr };

@@ -1,10 +1,8 @@
 #pragma once
 
-class Species
+class Species : public NameableThing
 {
 public:
-	std::string ID;
-	std::string RefName;
 	std::string EnName[2];
 	bool ModeledMuzzle;
 

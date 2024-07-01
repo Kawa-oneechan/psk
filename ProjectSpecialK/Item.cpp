@@ -18,6 +18,12 @@ NameableThing::NameableThing(JSONObject& value, const std::string& filename)
 		Path.clear();
 	
 	auto val = value["name"];
+	if (val->IsArray())
+	{
+		//We may be trying to load a Species, which has masculine and feminine names.
+		//Don't even bother setting EnName, as Species hides it with EnName[].
+		return;
+	}
 	if (val->IsString() && val->AsString()[0] == '#')
 		RefName = ref = val->AsString().substr(1);
 	else

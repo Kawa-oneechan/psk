@@ -7,11 +7,11 @@ class DoomMenuPage;
 class DoomMenuItem
 {
 private:
-	std::string key{ "" };
+	std::string key;
 	std::vector<std::string> optionKeys;
 public:
-	std::string caption{ "" };
-	std::string description{ "" };
+	std::string caption;
+	std::string description;
 	std::vector<std::string> options;
 	int selection{ 0 };
 	enum class Type
@@ -41,11 +41,11 @@ public:
 class DoomMenuPage
 {
 public:
-	std::string headerKey{ "" };
-	std::string subKey{ "" };
+	std::string headerKey;
+	std::string subKey;
 
-	std::string header{ "" };
-	std::string subheader{ "" };
+	std::string header;
+	std::string subheader;
 	std::vector<DoomMenuItem*> items;
 	
 	DoomMenuPage() = default;

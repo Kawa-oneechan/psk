@@ -12,7 +12,7 @@ public:
 	glm::vec4 color{ glm::vec4(1) };
 	int font{ 1 };
 	float size{ 100.0 };
-	std::string value{ "" };
+	std::string value;
 	size_t caret{ 0 };
 	float time{ 0 };
 
