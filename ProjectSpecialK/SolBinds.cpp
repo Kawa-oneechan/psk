@@ -2,11 +2,20 @@
 #include "DialogueBox.h"
 #include "Player.h"
 
+extern float timeScale;
+
 namespace SolBinds
 {
 	void Setup()
 	{
 		Sol.open_libraries(sol::lib::coroutine);
+
+		Sol["timeScale"] = [&](sol::variadic_args va)
+		{
+			if (va.size() == 1)
+				timeScale = va[0].as<float>();
+			return timeScale;
+		};
 
 		Sol["print"] = [&](sol::variadic_args va)
 		{

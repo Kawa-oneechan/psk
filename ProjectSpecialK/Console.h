@@ -1,9 +1,10 @@
 #pragma once
 
 #include "SpecialK.h"
-#include "TextField.h"
 
 #include <fstream>
+
+class TextField;
 
 class Console : public Tickable
 {
@@ -12,7 +13,7 @@ private:
 	std::vector<std::string> history;
 	int historyCursor;
 	int scrollCursor;
-	void* inputLine; //ugly, needs reworking
+	TextField* inputLine;
 
 	std::ofstream hardcopy;
 
@@ -24,7 +25,7 @@ public:
 	void Print(int color, const std::string& str);
 	void Print(const std::string& str);
 	bool Character(unsigned int codepoint);
-	void Tick(double dt);
-	void Draw(double dt);
+	void Tick(float dt);
+	void Draw(float dt);
 };
 extern Console* console;

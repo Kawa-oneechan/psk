@@ -83,6 +83,6 @@ private:
 public:
 	DoomMenu();
 	void Translate();
-	void Tick(double dt);
-	void Draw(double dt);
+	void Tick(float dt);
+	void Draw(float dt);
 };

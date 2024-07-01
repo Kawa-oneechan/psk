@@ -201,12 +201,12 @@ void DialogueBox::Style(int style)
 	}
 }
 
-void DialogueBox::Draw(double dt)
+void DialogueBox::Draw(float dt)
 {
 	if (state == State::Done)
 		return;
 
-	time += (float)dt * 0.005f;
+	time += dt * wobbleTimeScale;
 
 	auto dlgScale = scale;
 
@@ -266,7 +266,7 @@ void DialogueBox::Draw(double dt)
 	//sprender->DrawText(1, fmt::format("DialogueBox: {}", time), glm::vec2(0, 16), glm::vec4(0, 0, 0, 0.25), 50);
 }
 
-void DialogueBox::Tick(double dt)
+void DialogueBox::Tick(float dt)
 {
 	//if (dt > 10) dt = 0;
 
@@ -277,7 +277,7 @@ void DialogueBox::Tick(double dt)
 
 	if (state == State::Opening)
 	{
-		tween += (float)dt * 0.025f;
+		tween += dt * tweenTimeScale;
 		if (tween >= 1.0f)
 			state = State::Writing;
 	}
@@ -286,7 +286,7 @@ void DialogueBox::Tick(double dt)
 	{
 		tween = 1;
 
-		delay -= (float)dt;
+		delay -= dt;
 		if (delay > 0)
 			return;
 
@@ -380,7 +380,7 @@ void DialogueBox::Tick(double dt)
 
 	if (state == State::Closing)
 	{
-		tween -= (float)dt * 0.025f;
+		tween -= dt * tweenTimeScale;
 		if (tween <= 0.0f)
 			state = State::Done;
 	}

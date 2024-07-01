@@ -1,6 +1,7 @@
 #include <regex>
 
 #include "Console.h"
+#include "TextField.h"
 #include "InputsMap.h"
 #include "DialogueBox.h"
 
@@ -14,11 +15,9 @@ Console::Console()
 	Print(3, "-----------------");
 
 	inputLine = new TextField();
-	
-	auto il = (TextField*)inputLine;
-	il->rect = glm::vec4(16, (height / 3) - 24, width - 8, 20);
-	il->font = 0;
-	il->Clear();
+	inputLine->rect = glm::vec4(16, (height / 3) - 24, width - 8, 20);
+	inputLine->font = 0;
+	inputLine->Clear();
 
 	history.clear();
 	historyCursor = 0;
@@ -62,24 +61,22 @@ bool Console::Execute(const std::string& str)
 
 bool Console::Character(unsigned int codepoint)
 {
-	return ((TextField*)inputLine)->Character(codepoint);
+	return inputLine->Character(codepoint);
 }
 
-void Console::Tick(double dt)
+void Console::Tick(float dt)
 {
 	if (!visible)
 		return;
 
-	auto il = (TextField*)inputLine;
-
 	if (Inputs.Enter)
 	{
 		Inputs.Enter = false;
-		if (history.size() == 0 || history.back() != il->value)
-			history.emplace_back(il->value);
+		if (history.size() == 0 || history.back() != inputLine->value)
+			history.emplace_back(inputLine->value);
 		historyCursor = 0;
-		Execute(il->value);
-		il->Clear();
+		Execute(inputLine->value);
+		inputLine->Clear();
 	}
 	else if (Inputs.Up)
 	{
@@ -87,7 +84,7 @@ void Console::Tick(double dt)
 		if (historyCursor < history.size())
 		{
 			historyCursor++;
-			il->Set(history[history.size() - historyCursor]);
+			inputLine->Set(history[history.size() - historyCursor]);
 		}
 	}
 	else if (Inputs.Down)
@@ -96,12 +93,12 @@ void Console::Tick(double dt)
 		if (historyCursor > 1)
 		{
 			historyCursor--;
-			il->Set(history[history.size() - historyCursor]);
+			inputLine->Set(history[history.size() - historyCursor]);
 		}
 		else
 		{
 			historyCursor = 0;
-			il->Clear();
+			inputLine->Clear();
 		}
 	}
 	else if (Inputs.PgUp)
@@ -124,10 +121,10 @@ void Console::Tick(double dt)
 				scrollCursor = 0;
 		}
 	}
-	il->Tick(dt);
+	inputLine->Tick(dt);
 }
 
-void Console::Draw(double dt)
+void Console::Draw(float dt)
 {
 	static glm::vec4 colors[] =
 	{
@@ -154,7 +151,6 @@ void Console::Draw(double dt)
 		pos.y -= 15;
 	}
 
-	auto il = (TextField*)inputLine;
-	sprender->DrawText(0, "]", glm::vec2(4, il->rect.y));
-	il->Draw(dt);
+	sprender->DrawText(0, "]", glm::vec2(4, inputLine->rect.y));
+	inputLine->Draw(dt);
 }

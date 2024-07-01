@@ -1,8 +1,8 @@
 ﻿#include "Background.h"
 
-void Background::Draw(double dt)
+void Background::Draw(float dt)
 {
-	time += (float)dt * 0.005f;
+	time += dt * timeScale;
 
 	scroller.Use();
 	scroller.SetFloat("time", time);

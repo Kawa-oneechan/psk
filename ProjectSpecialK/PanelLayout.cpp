@@ -142,7 +142,7 @@ PanelLayout::PanelLayout(JSONValue* source)
 	}
 }
 
-void PanelLayout::Tick(double dt)
+void PanelLayout::Tick(float dt)
 {
 	if (tweens.size() > 0)
 	{
@@ -183,7 +183,7 @@ Tween<float>* PanelLayout::Tween(float* target, float from, float to, float spee
 	return tween;
 }
 
-void PanelLayout::Draw(double dt)
+void PanelLayout::Draw(float dt)
 {
 	for (const auto& panel : panels)
 	{

@@ -218,7 +218,7 @@ DoomMenu::DoomMenu()
 	}
 }
 
-void DoomMenu::Tick(double dt)
+void DoomMenu::Tick(float dt)
 {
 	//visible = (int)(12.0f * scale);
 
@@ -411,7 +411,7 @@ void DoomMenu::Tick(double dt)
 	Inputs.MouseLeft = false;
 }
 
-void DoomMenu::Draw(double dt)
+void DoomMenu::Draw(float dt)
 {
 	const int col = (int)(400 * scale);
 

@@ -8,7 +8,7 @@ Sequence::Sequence(std::initializer_list<TickableP> tickables)
 	waiting = parts.size() > 0;
 }
 
-void Sequence::Tick(double dt)
+void Sequence::Tick(float dt)
 {
 	if (parts.size() == 0)
 		return;
@@ -37,7 +37,7 @@ void Sequence::Tick(double dt)
 	}
 }
 
-void Sequence::Draw(double dt)
+void Sequence::Draw(float dt)
 {
 	if (parts.size() == 0)
 		return;
@@ -52,7 +52,7 @@ void Sequence::Draw(double dt)
 	}
 }
 
-void FuncAsTickable::Tick(double dt)
+void FuncAsTickable::Tick(float dt)
 {
 	if (wrapped != nullptr)
 		wrapped();

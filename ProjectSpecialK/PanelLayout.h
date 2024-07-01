@@ -72,8 +72,8 @@ public:
 	float Alpha;
 
 	PanelLayout(JSONValue* source);
-	void Tick(double dt);
-	void Draw(double dt);
+	void Tick(float dt);
+	void Draw(float dt);
 	Panel* GetPanel(const std::string& id);
 	Tween<float>* Tween(float* target, float from, float to, float speed = 0.001f, std::function<float(float)> interpolator = glm::linearInterpolation<float>);
 };

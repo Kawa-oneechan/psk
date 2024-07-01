@@ -14,8 +14,9 @@ public:
 	float size{ 100.0 };
 	std::string value{ "" };
 	size_t caret{ 0 };
+	float time{ 0 };
 
-	void Draw(double dt);
+	void Draw(float dt);
 	bool Character(unsigned int codepoint);
 	void Clear();
 	void Set(const std::string& to);

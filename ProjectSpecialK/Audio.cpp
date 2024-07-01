@@ -56,11 +56,7 @@ static FMOD_RESULT F_CALLBACK callback(FMOD_CHANNEL *channel, FMOD_CHANNEL_CALLB
 
 Audio::Audio(std::string filename) : filename(filename)
 {
-	theSound = nullptr;
-	theChannel = nullptr;
-	Volume = 1.0f;
 	size_t size = 0;
-	type = 0;
 	if (!Enabled)
 	{
 		status = Status::Invalid;
@@ -80,11 +76,12 @@ Audio::Audio(std::string filename) : filename(filename)
 	if (filename.substr(0, 5) == "music")
 	{
 		mode |= FMOD_LOOP_NORMAL;
+		type = Type::Music;
 	}
 	else
 	{
 		mode |= FMOD_LOOP_OFF;
-		type = 1; //TODO: extend
+		type = Type::Sound; //TODO: extend
 	}
 	auto r = system->createStream(data.get(), mode, &soundEx, &theSound);
 	if (r != FMOD_OK)
@@ -108,6 +105,7 @@ Audio::Audio(std::string filename) : filename(filename)
 				conprint(1, "Wanted to set loop point for file {}, could not.", filename);
 		}
 	}
+	theChannel->getFrequency(&frequency);
 	status = Status::Stopped;
 }
 
@@ -163,8 +161,27 @@ void Audio::Stop()
 
 void Audio::UpdateVolume()
 {
-	if (type == 0)
-		theChannel->setVolume(MusicVolume * Volume);
-	else if (type == 1)
-		theChannel->setVolume(SoundVolume * Volume);
+	auto v = 0.0f;
+	switch (type)
+	{
+	case Type::Music: v = MusicVolume; break;
+	case Type::Ambient: v = AmbientVolume; break;
+	case Type::Sound: v = SoundVolume; break;
+	case Type::Speech: v = SpeechVolume; break;
+	}
+	theChannel->setVolume(v * Volume);
+}
+
+void Audio::SetPitch(float ratio)
+{
+	theChannel->setFrequency(frequency * ratio);
+}
+
+void Audio::SetPosition(glm::vec3 pos)
+{
+	//Only generic sounds can be positioned.
+	if (type != Type::Sound)
+		return;
+	FMOD_VECTOR v = {pos.x, pos.y, pos.z};
+	theChannel->set3DAttributes(&v, nullptr);
 }

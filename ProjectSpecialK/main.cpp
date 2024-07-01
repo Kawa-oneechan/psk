@@ -57,6 +57,8 @@ float lastFrame = 0.0f;
 float width = ScreenWidth, height = ScreenHeight;
 float scale = (float)WindowWidth / (float)WindowHeight;
 
+float timeScale = 0.25f;
+
 int articlePlease;
 
 __declspec(noreturn)
@@ -458,12 +460,13 @@ int main(int argc, char** argv)
 		int newTime = std::clock();
 		int deltaTime = newTime - oldTime;
 		oldTime = newTime;
-		double dt = deltaTime;
+		float dt = (float)deltaTime;
 
 		auto time = (float)glfwGetTime();
 
-		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		//glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+		//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glClear(GL_DEPTH_BUFFER_BIT);
 
 
 		//important: disable depth testing to allow multiple sprites to overlap.
@@ -480,10 +483,8 @@ int main(int argc, char** argv)
 				(*t)->Tick(dt);
 		}
 
-		//for (unsigned int i = 0; i < (unsigned int)tickables.size(); i++)
-		//	tickables[i]->Draw(dt * 0.25);
 		for (const auto& t : tickables)
-			t->Draw(dt * 0.25);
+			t->Draw(dt * timeScale);
 		console->Draw(dt);
 
 		cursor->Draw();

@@ -60,7 +60,7 @@ void DateTimePanel::Update()
 	}
 }
 
-void DateTimePanel::Tick(double dt)
+void DateTimePanel::Tick(float dt)
 {
 	layout.Tick(dt);
 
@@ -73,7 +73,7 @@ void DateTimePanel::Tick(double dt)
 	}
 }
 
-void DateTimePanel::Draw(double dt)
+void DateTimePanel::Draw(float dt)
 {
 	layout.Draw(dt);
 }

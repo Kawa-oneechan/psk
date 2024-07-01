@@ -4,30 +4,40 @@
 
 class Audio
 {
-	enum class Status
-	{
-		Invalid, Stopped, Paused, Playing,
-	};
 
 private:
 	static FMOD::System* Audio::system;
 	static std::vector<Audio*> playing;
-	FMOD::Sound* theSound;
-	FMOD::Channel* theChannel;
-	Status status;
-	int type;
+	FMOD::Sound* theSound{ nullptr };
+	FMOD::Channel* theChannel{ nullptr };
+	enum class Status
+	{
+		Invalid, Stopped, Paused, Playing,
+	} status{ Status::Stopped };
+	enum class Type
+	{
+		Music, Ambient, Sound, Speech
+	} type{ Type::Sound };
 	std::string filename;
 	std::unique_ptr<char[]> data{ nullptr };
+	float frequency{ 0 };
 
 public:
+	//Is audio enabled in general?
 	static bool Enabled;
+	//Background music volume -- outside hourly tracks, interiors, events.
 	static float MusicVolume;
+	//Ambient noises -- outside wind, soundscapes.
 	static float AmbientVolume;
+	//General sounds -- diegetic and UI.
 	static float SoundVolume;
+	//Dialogue sounds -- Bebebese and Animalese.
 	static float SpeechVolume;
 	
 	static void Initialize();
 	static void Update();
+
+	float Volume{ 1.0f };
 
 	Audio(std::string filename);
 	~Audio();
@@ -36,6 +46,7 @@ public:
 	void Stop();
 	void UpdateVolume();
 
-	float Volume;
+	void SetPitch(float ratio);
+	void SetPosition(glm::vec3 pos);
 };
 
