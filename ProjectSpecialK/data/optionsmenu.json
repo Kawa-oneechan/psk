@@ -11,12 +11,15 @@
 	},
 	"menu:options:content": {
 		"en": "Content Manager...",
-		"hu": "Tartalom kezelő..."
+		"jp": "コンテンツ管理...",
+		"hu": "Tartalom kezelő...",
+		"nl": "Contentbeheer..."
 	},
 	"menu:options:language": {
 		"en": "Language",
-		"nl": "Taal",
-		"hu": "Nyelv"
+		"jp": "言語",
+		"hu": "Nyelv",
+		"nl": "Taal"
 	},
 	"menu:options:language:en": { "en": "US English" },
 	"menu:options:language:jp": { "en": "Japanese / 日本語" },
@@ -37,94 +40,138 @@
 
 	"menu:options:continuefrom": {
 		"en": "Continue from",
-		"hu": "Folytatás innen:"
+		"jp": "から再開",
+		"hu": "Folytatás innen",
+		"nl": "Beginlocatie"
 	},
 	"menu:options:continuefrom:0": {
 		"en": "Front door",
-		"nl": "Voordeur",
-		"hu": "Fő ajtó"
+		"jp": "表口",
+		"hu": "Fő ajtó",
+		"nl": "Voordeur"
 	},
 	"menu:options:continuefrom:1": {
 		"en": "Main room",
-		"nl": "Woonkamer",
-		"hu": "Nappali"
+		"jp": "居間",
+		"hu": "Nappali",
+		"nl": "Woonkamer"
 	},
 	"menu:options:continuefrom:2": {
 		"en": "Last used bed",
-		"nl": "Laatst gebruikt bed",
-		"hu": "Utoljára használt ágy"
+		"jp": "前回使用したベッド",
+		"hu": "Utoljára használt ágy",
+		"nl": "Laatst gebruikt bed"
 	},
 	"menu:options:continuefrom:3": {
 		"en": "Last location",
-		"nl": "Laatste locatie",
-		"hu": "Utolsó hely"
+		"jp": "前回の場所",
+		"hu": "Utolsó hely",
+		"nl": "Laatste locatie"
 	},
 
 	"menu:options:speech": {
 		"en": "Speech",
-		"nl": "Spraak",
-		"hu": "Beszéd"
+		"jp": "言葉",
+		"hu": "Beszéd",
+		"nl": "Spraak"
 	},
 	"menu:options:speech:0": {
 		"en": "Silence",
-		"nl": "Stilte",
-		"hu": "Csend"
+		"jp": "無言",
+		"hu": "Csend",
+		"nl": "Stilte"
 	},
 	"menu:options:speech:1": {
-		"en": "Bebebese"
+		"en": "Bebebese",
+		"jp": "ベベベ語",
+		"nl": "Pieppieps"
 	},
 	"menu:options:speech:2": {
-		"en": "Animalese"
+		"en": "Animalese",
+		"jp": "動物語",
+		"nl": "Animalees"
 	},
 
 	"menu:options:pingrate": {
-		"en": "Ping rate",
-		"hu": "Ping érték"
+		"en": "Request rate",
+		"jp": "リクエスト頻度",
+		"hu": "Kérési arány",
+		"nl": "Verzoekfrequentie"
+	},
+	"menu:options:pingrate:fmt": {
+		"en": "{} minutes",
+		"jp": "{}分",
+		"de": "{} Minuten",
+		"es": "{} minutos",
+		"fr": "{} minutes",
+		"it": "{} minuti",
+		"hu": "{} perc",
+		"nl": "{} minuten"
 	},
 	"menu:options:balloonchance": {
 		"en": "Balloon chance",
-		"hu": "Lufi esélye"
+		"jp": "バルーンチャンス",
+		"hu": "Lufi esélye",
+		"nl": "Ballonnenkans"
 	},
 	"menu:options:cursorscale": {
 		"en": "Cursor scale",
-		"hu": "Mutató mérete"
+		"jp": "カーソル倍率",
+		"hu": "Mutató mérete",
+		"nl": "Muiscursorschaal"
 	},
 	"menu:options:volume": {
 		"en": "Volume...",
-		"hu": "Hangerő..."
+		"jp": "音量...",
+		"hu": "Hangerő...",
+		"nl": "Volume..."
 	},
 
 	"menu:options:head:content": {
 		"en": "Content Manager",
-		"hu": "Tartalomkezelő"
+		"jp": "コンテンツ管理",
+		"hu": "Tartalomkezelő",
+		"nl": "Contentbeheer"
 	},
 	"menu:options:content:species": {
 		"en": "Villager species",
-		"hu": "Lakosok fajtája"
+		"jp": "村人の種族",
+		"hu": "Lakosok fajtája",
+		"nl": "Dorpsbewonerssoorten"
 	},
 	"menu:options:content:species:help": {
 		"en": "Unchecked species will never\nrandomly appear in your town\nas villagers. However, any\nvillager already there will stay\nuntil they move out.",
-		"hu": "A ki nem jelölt fajok soha nem jelennek\nmeg lakosként. Minden eddigi ilyen lakos\nkiutasításig marad."
+		"hu": "A ki nem jelölt fajok soha nem jelennek\nmeg lakosként. Minden eddigi ilyen lakos\nkiutasításig marad.",
+		"nl": "Ongekozen soorten zullen nooit\nwillekeurig in je dorp verschijnen,\nmaar zullen wel blijven tot ze\nverhuizen."
 	},
 
 	"menu:options:head:volume": {
 		"en": "Volume",
+		"jp": "音量",
 		"hu": "Hangerő"
 	},
 	"menu:options:volume:music": {
 		"en": "Music",
-		"hu": "Zene"
+		"jp": "音楽",
+		"hu": "Zene",
+		"nl": "Muziek"
 	},
 	"menu:options:volume:ambience": {
 		"en": "Ambience",
-		"hu": "Háttérzaj"
+		"jp": "周囲",
+		"hu": "Háttérzaj",
+		"nl": "Omgeving"
 	},
 	"menu:options:volume:sfx": {
 		"en": "Sound effects",
-		"hu": "Hangeffektusok"
+		"jp": "効果音",
+		"hu": "Hangeffektusok",
+		"nl": "Geluidseffecten"
 	},
 	"menu:options:volume:speech": {
 		"en": "Speech",
-		"hu": "Beszéd"
+		"jp": "対談",
+		"hu": "Beszéd",
+		"nl": "Spraak"
 	}
 }
