@@ -288,12 +288,29 @@ std::unique_ptr<char[]> ReadVFS(const VFSEntry& entry, size_t* size)
 
 std::unique_ptr<char[]> ReadVFS(const std::string& path, size_t* size)
 {
-	for (const auto& entry : entries)
+	auto it = std::find_if(entries.cbegin(), entries.cend(), [path](VFSEntry e)
 	{
-		if (entry.path == path)
-			return ReadVFS(entry, size);
-	}
-	return nullptr;
+		return e.path == path;
+	});
+	if (it == entries.cend())
+		return nullptr;
+	return ReadVFS(*it, size);
+}
+
+const std::string ReadVFSString(const VFSEntry& entry)
+{
+	return std::string(ReadVFS(entry, nullptr).get());
+}
+
+const std::string ReadVFSString(const std::string& path)
+{
+	auto it = std::find_if(entries.cbegin(), entries.cend(), [path](VFSEntry e)
+	{
+		return e.path == path;
+	});
+	if (it == entries.cend())
+		return nullptr;
+	return ReadVFSString(*it);
 }
 
 namespace JSONPatch
@@ -305,16 +322,16 @@ JSONValue* ReadJSON(const VFSEntry& entry)
 {
 	try
 	{
-		auto vfsData = ReadVFS(entry.path, nullptr);
-		auto doc = JSON::Parse(vfsData.get());
+		auto vfsData = ReadVFSString(entry.path);
+		auto doc = JSON::Parse(vfsData.c_str());
 
 		std::string ppath = entry.path + ".patch";
 		for (const auto& pents : entries)
 		{
 			if (pents.path == ppath)
 			{
-				auto pdata = ReadVFS(pents.path, nullptr);
-				auto pdoc = JSON::Parse(pdata.get());
+				auto pdata = ReadVFSString(pents.path);
+				auto pdoc = JSON::Parse(pdata.c_str());
 				auto patched = JSONPatch::ApplyPatch(*doc, *pdoc);
 				doc = patched;
 			}
@@ -330,12 +347,13 @@ JSONValue* ReadJSON(const VFSEntry& entry)
 
 JSONValue* ReadJSON(const std::string& path)
 {
-	for (const auto& entry : entries)
+	auto it = std::find_if(entries.cbegin(), entries.cend(), [path](VFSEntry e)
 	{
-		if (entry.path == path)
-			return ReadJSON(entry);
-	}
-	return nullptr;
+		return e.path == path;
+	});
+	if (it == entries.cend())
+		return nullptr;
+	return ReadJSON(*it);
 }
 
 std::vector<VFSEntry> EnumerateVFS(const std::string& path)

@@ -2,12 +2,12 @@
 
 Shader::Shader(const std::string& vertexPath, const std::string& fragmentPath)
 {
-	auto vShaderCode = ReadVFS(vertexPath, nullptr);
-	auto fShaderCode = ReadVFS(fragmentPath, nullptr);
+	auto vShaderCode = ReadVFSString(vertexPath);
+	auto fShaderCode = ReadVFSString(fragmentPath);
 
 	unsigned int vertex, fragment;
-	char* vs = vShaderCode.get();
-	char* fs = fShaderCode.get();
+	const char* vs = vShaderCode.c_str();
+	const char* fs = fShaderCode.c_str();
 
 	vertex = glCreateShader(GL_VERTEX_SHADER);
 	glShaderSource(vertex, 1, &vs, NULL);
