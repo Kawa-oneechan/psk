@@ -12,6 +12,7 @@ private:
 public:
 	std::string caption;
 	std::string description;
+	std::string formatText;
 	std::vector<std::string> options;
 	int selection{ 0 };
 	enum class Type

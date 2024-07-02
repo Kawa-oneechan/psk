@@ -13,6 +13,7 @@ void DoomMenuItem::Translate()
 {
 	caption = TextGet(key);
 	description = TextGet(key + ":desc");
+	formatText = TextGet(key + ":fmt");
 	if (type == Type::Options)
 	{
 		options.clear();
@@ -66,7 +67,7 @@ void DoomMenu::Build()
 
 	auto minutes = [&](DoomMenuItem* i)
 	{
-		return fmt::format(TextGet("fmt:x_minutes"), i->selection);
+		return fmt::format(i->formatText, i->selection);
 	};
 	auto percent = [&](DoomMenuItem* i)
 	{
@@ -96,7 +97,7 @@ void DoomMenu::Build()
 			"menu:options:language:it",
 			"menu:options:language:hu",
 			"menu:options:language:nl",
-			"menu:options:language:uk"
+			//"menu:options:language:uk"
 		},
 		[&](DoomMenuItem*i)
 		{
@@ -151,11 +152,11 @@ void DoomMenu::Build()
 			//TODO: handle species having custom filters.
 			if (s->ID == "bul") continue;
 
-			auto sn = StripMSBT(TextGet(s->RefName + ":m"));
-			if (sn[0] > 32 && sn[0] < 127 && std::islower(sn[0]))
-				sn[0] = std::toupper(sn[0]);
+			//auto sn = StripMSBT(TextGet(s->RefName + ":m"));
+			//if (sn[0] > 32 && sn[0] < 127 && std::islower(sn[0]))
+			//	sn[0] = std::toupper(sn[0]);
 
-			TextAdd(f, sn);
+			//TextAdd(f, sn);
 			if (Database::Filters.find(f) == Database::Filters.end())
 				Database::Filters[f] = true;
 

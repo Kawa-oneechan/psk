@@ -2,15 +2,22 @@
 
 Species::Species(JSONObject& value, const std::string& filename) : NameableThing(value, filename)
 {
+	JSONObject& filterNames = JSONObject();
+
 	if (value["name"]->IsString())
 	{
 		auto& both = value["name"]->AsString();
+
 		TextAdd(RefName + ":m", both);
 		TextAdd(RefName + ":f", both);
+
+
+		filterNames.insert(filterNames.begin(), std::pair<std::string, JSONValue*>("USen", new JSONValue(value["name"]->AsString())));
 	}
 	else if (value["name"]->IsArray())
 	{
 		auto narr = value["name"]->AsArray();
+		filterNames = narr[0]->AsObject();
 		if (narr.size() == 1)
 		{
 			TextAdd(RefName + ":m", *narr[0]);
@@ -26,6 +33,21 @@ Species::Species(JSONObject& value, const std::string& filename) : NameableThing
 	EnName[1] = StripMSBT(TextGet(RefName + ":f", Language::EUen));
 
 	auto filter = fmt::format("filter:species:{}", ID);
+	if (value["filter"])
+		filterNames = value["filter"]->AsObject();
+	else
+	{
+		for (auto sn : filterNames)
+		{
+			auto it = sn.second->AsString();
+			it = StripMSBT(it);
+			if (it[0] > 32 && it[0] < 127 && std::islower(it[0]))
+				it[0] = std::toupper(it[0]);
+			filterNames[sn.first] = new JSONValue(it);
+		}
+	}
+	TextAdd(filter, filterNames);
+
 	auto settings = UI::settings["contentFilters"]->AsObject();
 	auto setting = true;
 	if (settings.find(filter) != settings.end())

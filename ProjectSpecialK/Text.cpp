@@ -88,9 +88,11 @@ TextEntry& TextAdd(std::string& key, JSONObject& map)
 	}
 
 	if (entry->condition.empty())
-		entry->rep = entry->get();
+		entry->rep = entry->get(Language::USen);
 	else
 		entry->rep = entry->condition;
+	if (entry->rep.length() > 16)
+		entry->rep = StripMSBT(entry->rep);
 	if (entry->rep.length() > 16)
 		entry->rep = entry->rep.substr(0, 16) + "...";
 	entry->rep.shrink_to_fit();
