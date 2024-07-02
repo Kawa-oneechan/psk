@@ -32,27 +32,34 @@ Species::Species(JSONObject& value, const std::string& filename) : NameableThing
 	EnName[0] = StripMSBT(TextGet(RefName + ":m", Language::EUen));
 	EnName[1] = StripMSBT(TextGet(RefName + ":f", Language::EUen));
 
-	auto filter = fmt::format("filter:species:{}", ID);
-	if (value["filter"])
-		filterNames = value["filter"]->AsObject();
+	if (value["filterAs"])
+	{
+		FilterAs = value["filterAs"]->AsString();
+	}
 	else
 	{
-		for (auto sn : filterNames)
+		auto filter = fmt::format("filter:species:{}", ID);
+		if (value["filter"])
+			filterNames = value["filter"]->AsObject();
+		else
 		{
-			auto it = sn.second->AsString();
-			it = StripMSBT(it);
-			if (it[0] > 32 && it[0] < 127 && std::islower(it[0]))
-				it[0] = std::toupper(it[0]);
-			filterNames[sn.first] = new JSONValue(it);
+			for (auto sn : filterNames)
+			{
+				auto it = sn.second->AsString();
+				it = StripMSBT(it);
+				if (it[0] > 32 && it[0] < 127 && std::islower(it[0]))
+					it[0] = std::toupper(it[0]);
+				filterNames[sn.first] = new JSONValue(it);
+			}
 		}
-	}
-	TextAdd(filter, filterNames);
+		TextAdd(filter, filterNames);
 
-	auto settings = UI::settings["contentFilters"]->AsObject();
-	auto setting = true;
-	if (settings.find(filter) != settings.end())
-		setting = settings[filter]->AsBool();
-	Database::Filters.insert_or_assign(filter, setting);
+		auto settings = UI::settings["contentFilters"]->AsObject();
+		auto setting = true;
+		if (settings.find(filter) != settings.end())
+			setting = settings[filter]->AsBool();
+		Database::Filters.insert_or_assign(filter, setting);
+	}
 	
 	ModeledMuzzle = (value["modeledMuzzle"] != nullptr) ? value["modeledMuzzle"]->AsBool() : false;
 }

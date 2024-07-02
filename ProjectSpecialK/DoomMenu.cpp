@@ -149,14 +149,8 @@ void DoomMenu::Build()
 		for (const auto& s : ::species)
 		{
 			auto f = "filter:species:" + s->ID;
-			//TODO: handle species having custom filters.
-			if (s->ID == "bul") continue;
+			if (!s->FilterAs.empty()) continue;
 
-			//auto sn = StripMSBT(TextGet(s->RefName + ":m"));
-			//if (sn[0] > 32 && sn[0] < 127 && std::islower(sn[0]))
-			//	sn[0] = std::toupper(sn[0]);
-
-			//TextAdd(f, sn);
 			if (Database::Filters.find(f) == Database::Filters.end())
 				Database::Filters[f] = true;
 
@@ -233,11 +227,10 @@ DoomMenu::DoomMenu()
 	
 	stack.push(&options);
 	items = stack.top();
-
+	
 	for (const auto& s : ::species)
 	{
-		//TODO: properly handle species having custom filters.
-		if (s->ID == "bul") continue;
+		if (!s->FilterAs.empty()) continue;
 		speciesPreviews.push_back(new Texture("ui/species/" + s->ID + ".png"));
 	}
 }
