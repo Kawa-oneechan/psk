@@ -5,6 +5,7 @@ out vec4 color;
 uniform sampler2D image;
 uniform vec4 sourceRect;
 uniform float time;
+uniform vec2 speed;
 
 void main()
 {
@@ -12,5 +13,5 @@ void main()
 	vec4 sr = sourceRect;
 	uv *= sr.zw;
 	uv += sr.xy;
-	color = texture(image, uv + (vec2(time, -time) * 0.1));
+	color = texture(image, uv + vec2(time * speed.x, time * speed.y));
 }

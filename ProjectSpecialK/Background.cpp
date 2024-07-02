@@ -6,6 +6,7 @@ void Background::Draw(float dt)
 
 	scroller.Use();
 	scroller.SetFloat("time", time);
+	scroller.SetVec2("speed", glm::vec2(0.1f, -0.1f));
 	sprender->DrawSprite(&scroller, wallpaper, glm::vec2(0), glm::vec2(width, height), glm::vec4(0, 0, width, height));
 
 	//auto lol = sprender->MeasureText(1, "Project Special K: UI test", 50);
