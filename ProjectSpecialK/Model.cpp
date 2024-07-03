@@ -4,7 +4,7 @@
 #include "support/ufbx.h"
 
 static std::map<std::string, std::tuple<Model*, int>> cache;
-static Shader* modelShader = nullptr;
+extern Shader* modelShader;
 extern Camera camera;
 
 Model::Mesh::Mesh(ufbx_mesh* mesh)
@@ -41,7 +41,6 @@ Model::Mesh::Mesh(ufbx_mesh* mesh)
 
 	vertices.resize(num_vertices);
 
-
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
 	glGenBuffers(1, &EBO);
@@ -57,9 +56,12 @@ Model::Mesh::Mesh(ufbx_mesh* mesh)
 	//positions
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
 	glEnableVertexAttribArray(0);
-	//texture coords
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), offsetof(Vertex, TexCoords));
+	//normals
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), offsetof(Vertex, Normal));
 	glEnableVertexAttribArray(1);
+	//texture coords
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), offsetof(Vertex, TexCoords));
+	glEnableVertexAttribArray(2);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
@@ -133,7 +135,7 @@ Model::Model(const std::string& modelPath) : file(modelPath)
 			{
 				auto m1 = node->mesh->materials[0]->name.data;
 				auto it = std::find(textureNames.cbegin(), textureNames.cend(), m1);
-				m.texture = std::distance(textureNames.cbegin(), it);
+				m.texture = (unsigned int)std::distance(textureNames.cbegin(), it);
 			}
 			Meshes.emplace_back(m);
 		}
@@ -146,9 +148,6 @@ Model::Model(const std::string& modelPath) : file(modelPath)
 
 void Model::Draw()
 {
-	if (modelShader == nullptr)
-		modelShader = new Shader("shaders/model.vs", "shaders/model.fs");
-
 	modelShader->Use();
 	for (auto& m : Meshes)
 	{

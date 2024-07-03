@@ -35,6 +35,7 @@ extern "C"
 GLFWwindow* window;
 
 Shader* spriteShader = nullptr;
+Shader* modelShader = nullptr;
 Texture* whiteRect = nullptr;
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
 SpriteRenderer* sprender = nullptr;
@@ -411,6 +412,7 @@ int main(int argc, char** argv)
 	framebuffer_size_callback(window, WindowWidth, WindowHeight);
 
 	spriteShader = new Shader("shaders/sprite.fs");
+	modelShader = new Shader("shaders/model.vs", "shaders/model.fs");
 	whiteRect = new Texture("white.png", GL_CLAMP_TO_EDGE);
 	UI::controls = std::make_shared<Texture>("ui/controls.png");
 
@@ -462,6 +464,14 @@ int main(int argc, char** argv)
 	testModel.Textures.push_back(new Texture("villagers/psk/cat00/body_alb.png"));
 	testModel.Textures.push_back(new Texture("villagers/psk/cat00/eye0_alb.png"));
 	testModel.Textures.push_back(new Texture("villagers/psk/cat00/mouth0_alb.png"));
+
+
+	glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
+
+	modelShader->Use();
+	modelShader->SetVec3("lightColor", 1.0f, 1.0f, 1.0f);
+	modelShader->SetVec3("lightPos", lightPos);
+	modelShader->SetVec3("viewPos", camera.Position);
 
 	int oldTime = 0;
 	auto pos = 0.0f;
