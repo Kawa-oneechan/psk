@@ -149,6 +149,7 @@
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="JsonPatch.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Model.cpp" />
     <ClCompile Include="MusicManager.cpp" />
     <ClCompile Include="PanelLayout.cpp" />
     <ClCompile Include="Player.cpp" />
@@ -165,6 +166,7 @@
     <ClCompile Include="support\stb_image.cpp" />
     <ClCompile Include="support\stb_image_write.cpp" />
     <ClCompile Include="support\stb_truetype.cpp" />
+    <ClCompile Include="support\ufbx.c" />
     <ClCompile Include="Tests.cpp" />
     <ClCompile Include="Text.cpp" />
     <ClCompile Include="TextField.cpp" />
@@ -194,6 +196,7 @@
     <ClInclude Include="DoomMenu.h" />
     <ClInclude Include="InputsMap.h" />
     <ClInclude Include="Item.h" />
+    <ClInclude Include="Model.h" />
     <ClInclude Include="PanelLayout.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Sequence.h" />

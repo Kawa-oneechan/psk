@@ -264,7 +264,7 @@ void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
 	lastX = xpos;
 	lastY = ypos;
 
-	//camera.ProcessMouseMovement(xoffset, yoffset);
+	camera.ProcessMouseMovement(xoffset, yoffset);
 }
 
 void mousebutton_callback(GLFWwindow* window, int button, int action, int mods)
@@ -457,6 +457,8 @@ int main(int argc, char** argv)
 
 	RunTests();
 
+	auto testModel = Model("species/cat/model.fbx");
+
 	int oldTime = 0;
 	auto pos = 0.0f;
 	while (!glfwWindowShouldClose(window))
@@ -491,6 +493,9 @@ int main(int argc, char** argv)
 
 		for (const auto& t : tickables)
 			t->Draw(dt * timeScale);
+		sprender->Flush();
+		glClear(GL_DEPTH_BUFFER_BIT);
+		testModel.Draw();
 		console->Draw(dt);
 
 		cursor->Draw();
