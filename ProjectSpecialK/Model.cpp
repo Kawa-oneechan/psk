@@ -84,8 +84,8 @@ const void Model::Mesh::Draw()
 
 	glm::mat4 model = glm::mat4(1.0f);
 	//model = glm::translate(model, cubePositions[i]);
-	float angle = 20.0f;
-	angle = (float)glfwGetTime() * 25.0f;
+	//float angle = 20.0f;
+	//angle = (float)glfwGetTime() * 25.0f;
 	//model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
 	modelShader->SetMat4("model", model);
 
@@ -123,7 +123,7 @@ Model::Model(const std::string& modelPath) : file(modelPath)
 		ufbx_node *node = scene->nodes.data[i];
 		conprint(0, "{}. {}", i, node->name.data);
 		if (node->mesh)
-			Meshes.push_back(Mesh(node->mesh));
+			Meshes.emplace_back(Mesh(node->mesh));
 	}
 
 	ufbx_free_scene(scene);
