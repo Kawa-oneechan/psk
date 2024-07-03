@@ -12,10 +12,8 @@ Model::Mesh::Mesh(ufbx_mesh* mesh)
 	std::vector<unsigned int> tri_indices;
 	tri_indices.resize(mesh->max_face_triangles * 3);
 
-	for (size_t fi = 0; fi < mesh->num_faces; fi++)
+	for (auto face : mesh->faces)
 	{
-		auto face = mesh->faces[fi];
-
 		uint32_t num_tris = ufbx_triangulate_face(tri_indices.data(), tri_indices.size(), mesh, face);
 
 		for (size_t i = 0; i < num_tris * 3; i++)
@@ -117,13 +115,28 @@ Model::Model(const std::string& modelPath) : file(modelPath)
 	if (!scene)
 		FatalError(fmt::format("Could not load scene {}: {}", modelPath, errors.description.data));
 	
-	conprint(2, "Nodes:");
+	std::vector<std::string> textureNames;
+	for (auto m : scene->materials)
+	{
+		conprint(5, "{}", m->name.data);
+		textureNames.emplace_back(m->name.data);
+	}
+
 	for (size_t i = 0; i < scene->nodes.count; i++)
 	{
 		ufbx_node *node = scene->nodes.data[i];
-		conprint(0, "{}. {}", i, node->name.data);
 		if (node->mesh)
-			Meshes.emplace_back(Mesh(node->mesh));
+		{
+			auto m = Mesh(node->mesh);
+			m.texture = -1;
+			if (node->mesh->materials.count > 0)
+			{
+				auto m1 = node->mesh->materials[0]->name.data;
+				auto it = std::find(textureNames.cbegin(), textureNames.cend(), m1);
+				m.texture = std::distance(textureNames.cbegin(), it);
+			}
+			Meshes.emplace_back(m);
+		}
 	}
 
 	ufbx_free_scene(scene);
@@ -137,10 +150,15 @@ void Model::Draw()
 		modelShader = new Shader("shaders/model.vs", "shaders/model.fs");
 
 	modelShader->Use();
-	glEnable(GL_DEPTH_TEST);
-	glBindTexture(GL_TEXTURE_2D, 4);
 	for (auto& m : Meshes)
+	{
+		if (m.texture != -1 && m.texture < Textures.size())
+		{
+			//TODO: mix and nrm maps too
+			Textures[m.texture]->Use(0);
+		}
 		m.Draw();
+	}
 
 	glBindVertexArray(0);
 }

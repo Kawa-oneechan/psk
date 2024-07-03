@@ -458,6 +458,10 @@ int main(int argc, char** argv)
 	RunTests();
 
 	auto testModel = Model("species/cat/model.fbx");
+	testModel.Textures.push_back(new Texture("villagers/psk/cat00/body_alb.png"));
+	testModel.Textures.push_back(new Texture("villagers/psk/cat00/body_alb.png"));
+	testModel.Textures.push_back(new Texture("villagers/psk/cat00/eye0_alb.png"));
+	testModel.Textures.push_back(new Texture("villagers/psk/cat00/mouth0_alb.png"));
 
 	int oldTime = 0;
 	auto pos = 0.0f;
@@ -495,7 +499,9 @@ int main(int argc, char** argv)
 			t->Draw(dt * timeScale);
 		sprender->Flush();
 		glClear(GL_DEPTH_BUFFER_BIT);
+		glEnable(GL_DEPTH_TEST);
 		testModel.Draw();
+		glDisable(GL_DEPTH_TEST);
 		console->Draw(dt);
 
 		cursor->Draw();

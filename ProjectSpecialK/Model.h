@@ -21,6 +21,7 @@ class Model
 		unsigned int VBO, VAO, EBO;
 		std::vector<Vertex> vertices;
 		std::vector<unsigned int> indices;
+		unsigned int texture;
 
 		Mesh(ufbx_mesh* mesh);
 		const void Draw();
@@ -31,6 +32,7 @@ private:
 
 public:
 	std::vector<Mesh> Meshes;
+	std::vector<Texture*> Textures;
 
 	Model() = default;
 	Model(const std::string& modelPath);
