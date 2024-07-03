@@ -1,13 +1,11 @@
 #pragma once
 
-enum Gender
+#include "Model.h"
+
+enum class Gender
 {
 	Boy, Girl, BEnby, GEnby
 };
-
-//PLACEHOLDER
-class Model
-{};
 
 /*
 House stuff, exterior:
