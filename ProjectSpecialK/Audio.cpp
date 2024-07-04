@@ -11,15 +11,13 @@ float Audio::MusicVolume, Audio::AmbientVolume, Audio::SoundVolume, Audio::Speec
 void Audio::Initialize()
 {
 	Enabled = true;
-	auto r = FMOD::System_Create(&system);
-	if (r != FMOD_OK)
+	if (FMOD::System_Create(&system) != FMOD_OK)
 	{
 		conprint(1, "Could not create FMOD system object. Sound disabled.");
 		Enabled = false;
 		return;
 	}
-	r = system->init(4, FMOD_INIT_NORMAL, NULL);
-	if (r != FMOD_OK)
+	if (system->init(4, FMOD_INIT_NORMAL, NULL) != FMOD_OK)
 	{
 		conprint(1, "Could not initialize FMOD system object. Sound disabled.");
 		Enabled = false;
@@ -75,37 +73,35 @@ Audio::Audio(std::string filename) : filename(filename)
 	soundEx.cbsize = sizeof(FMOD_CREATESOUNDEXINFO);
 	soundEx.length = (unsigned int)size;
 	auto mode = FMOD_HARDWARE | FMOD_2D | FMOD_OPENMEMORY;
-	//this needs a better detection method
-	if (filename.substr(0, 5) == "music")
+	if (filename.find("music/") != std::string::npos)
 		type = Type::Music;
-	else if (filename.substr(0, 7) == "ambient")
+	else if (filename.find("ambient/") != std::string::npos)
 		type = Type::Ambient;
-	else if (filename.substr(6, 9) == "animalese")
+	else if (filename.find("animalese/") != std::string::npos)
 		type = Type::Speech;
 	else
-		type = Type::Sound; //TODO: extend
-	auto r = system->createStream(data.get(), mode, &soundEx, &theSound);
-	if (r != FMOD_OK)
+		type = Type::Sound;
+
+	if (system->createStream(data.get(), mode, &soundEx, &theSound) != FMOD_OK)
 	{
 		fmt::format("Could not create stream for audio file {}.", filename);
 		return;
 	}
 	theChannel->setCallback(callback);
+
+	//we don't have ends_with in C++17, that's a 20 thing.
 	auto ext = filename.substr(filename.length() - 4, 4);
 	if (ext == ".ogg")
 	{
 		FMOD_TAG tag;
-		r = theSound->getTag("LOOP_START", 0, &tag);
-		if (r == FMOD_OK)
+		if (theSound->getTag("LOOP_START", 0, &tag) == FMOD_OK)
 		{
-			r = theSound->setMode(mode | FMOD_LOOP_NORMAL);
-			if (r != FMOD_OK)
+			if (theSound->setMode(mode | FMOD_LOOP_NORMAL) != FMOD_OK)
 				conprint(1, "Wanted to enable looping for file {}, could not.", filename);
 			unsigned int start = atoi((char*)tag.data);
 			unsigned int end = 0;
 			theSound->getLength(&end, FMOD_TIMEUNIT_PCM);
-			r = theSound->setLoopPoints(start, FMOD_TIMEUNIT_PCM, end, FMOD_TIMEUNIT_PCM);
-			if (r != FMOD_OK)
+			if (theSound->setLoopPoints(start, FMOD_TIMEUNIT_PCM, end, FMOD_TIMEUNIT_PCM) != FMOD_OK)
 				conprint(1, "Wanted to set loop point for file {}, could not.", filename);
 		}
 	}
@@ -130,8 +126,7 @@ void Audio::Play(bool force)
 	{
 		if (Enabled)
 		{
-			auto r = system->playSound(FMOD_CHANNEL_FREE, theSound, false, &theChannel);
-			if (r != FMOD_OK)
+			if (system->playSound(FMOD_CHANNEL_FREE, theSound, false, &theChannel) != FMOD_OK)
 				throw "Could not play stream.";
 			UpdateVolume();
 
@@ -193,7 +188,6 @@ void Audio::SetPosition(glm::vec3 pos)
 
 void Audio::SetPan(float pos)
 {
-	auto r = theChannel->setPan(pos);
-	if (r != FMOD_OK)
+	if (theChannel->setPan(pos) != FMOD_OK)
 		conprint(1, "Couldn't set pan position for {}.", filename);
 }
