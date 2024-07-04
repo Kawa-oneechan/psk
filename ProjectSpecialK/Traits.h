@@ -1,14 +1,32 @@
 #pragma once
 
+/*
+Thoughts
+--------
+1. Should these be NameableThings?
+
+2. What extra properties would a Personality hold?
+According to the JSON so far, the answer is this:
+  * ID
+  * Name (gives you something to use in the content filter)
+  * Voice bank name (just the one in ACNH, gendered pair for PSK)
+  * Base (fallback voice bank in case it's missing)
+So maybe at least *that* could do with being a NameableThing...
+
+3. What does a Hobby need to define?
+There is no answer in the JSON so far...
+*/
+
 //PLACEHOLDER
-class Personality
+class Personality: public NameableThing
 {
 public:
-	std::string ID;
+	std::string Voices[2];
+
 	Personality(JSONObject& value, const std::string& filename = "");
 	Personality() = default;
 };
-typedef std::shared_ptr<Personality> PersonalityP;
+using PersonalityP = std::shared_ptr<Personality>;
 
 //PLACEHOLDER
 class Hobby
@@ -18,4 +36,4 @@ public:
 	Hobby(JSONObject& value, const std::string& filename = "");
 	Hobby() = default;
 };
-typedef std::shared_ptr<Hobby> HobbyP;
+using HobbyP = std::shared_ptr<Hobby>;

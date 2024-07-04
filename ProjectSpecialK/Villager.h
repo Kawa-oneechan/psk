@@ -92,4 +92,5 @@ public:
 	Villager(Villager&&) = default;
 	Villager& operator = (Villager&&) = default;
 };
-typedef std::shared_ptr<Villager> VillagerP;
+
+using VillagerP = std::shared_ptr<Villager>;

@@ -176,13 +176,14 @@ namespace Database
 	{
 		conprint(0, "SpeciesDatabase: loading...");
 		loadWorker<Species>(species, "species/*.json", "SpeciesDatabase");
-		auto table = std::vector<std::string>{ "ID", "Name" };
+		auto table = std::vector<std::string>{ "ID", "Name", "Hash" };
 		for (const auto& spec: species)
 		{
 			table.push_back(spec->ID);
 			table.push_back(spec->EnName[0]);
+			table.emplace_back(fmt::format("{:08X}", spec->Hash));
 		}
-		Table(table, 2);
+		Table(table, 3);
 		conprint(0, "SpeciesDatabase: ended up with {} entries.", species.size());
 	}
 
@@ -190,6 +191,14 @@ namespace Database
 	{
 		conprint(0, "TraitsDatabase: loading...");
 		loadWorker<Personality>(personalities, "personalities/*.json", "TraitsDatabase");
+		auto table = std::vector<std::string>{ "ID", "Name", "Hash" };
+		for (const auto& pers : personalities)
+		{
+			table.push_back(pers->ID);
+			table.push_back(pers->EnName);
+			table.emplace_back(fmt::format("{:08X}", pers->Hash));
+		}
+		Table(table, 3);
 		loadWorker<Hobby>(hobbies, "hobbies/*.json", "TraitsDatabase");
 		conprint(0, "TraitsDatabase: ended up with {} personalities and {} hobbies.", personalities.size(), hobbies.size());
 	}

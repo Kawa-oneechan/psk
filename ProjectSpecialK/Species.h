@@ -10,4 +10,5 @@ public:
 	Species(JSONObject& value, const std::string& filename = "");
 	const std::string Name();
 };
-typedef std::shared_ptr<Species> SpeciesP;
+
+using SpeciesP = std::shared_ptr<Species>;

@@ -25,10 +25,10 @@ class Tool;
 class Furniture;
 class Outfit;
 
-typedef std::shared_ptr<Item> ItemP;
-typedef std::shared_ptr<Tool> ToolP;
-typedef std::shared_ptr<Furniture> FurnitureP;
-typedef std::shared_ptr<Outfit> OutfitP;
+using ItemP = std::shared_ptr<Item>;
+using ToolP = std::shared_ptr<Tool>;
+using FurnitureP = std::shared_ptr<Furniture>;
+using OutfitP = std::shared_ptr<Outfit>;
 
 class Item : public NameableThing
 {
@@ -103,4 +103,5 @@ public:
 	//Safe to delete if true. If not, DO NOT DELETE.
 	bool Temporary;
 };
-typedef std::shared_ptr<InventoryItem> InventoryItemP;
+
+using InventoryItemP = std::shared_ptr<InventoryItem>;
