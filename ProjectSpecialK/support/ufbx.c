@@ -1373,8 +1373,8 @@ static ufbxi_noinline double ufbxi_parse_double(const char *str, size_t max_leng
 
 	// Round to 53 bits, accounting for potential remainder.
 	bool nonzero_tail = rem_hi != 0;
-	bool r_odd = mantissa & (1 << 11u);
-	bool r_round = mantissa & (1 << 10u);
+	bool r_odd = (mantissa & (1 << 11u)) != 0;
+	bool r_round = (mantissa & (1 << 10u)) != 0;
 	bool r_tail = (mantissa & ((1 << 10u) - 1)) != 0 || nonzero_tail;
 	uint64_t round = (r_round && (r_odd || r_tail)) ? 1u : 0u;
 
@@ -24461,7 +24461,7 @@ static ufbxi_forceinline bool ufbxi_override_less_than_prop(const ufbx_prop_over
 {
 	if (over->element_id != element_id) return over->element_id < element_id;
 	if (over->_internal_key != prop->_internal_key) return over->_internal_key < prop->_internal_key;
-	return strcmp(over->prop_name.data, prop->name.data);
+	return strcmp(over->prop_name.data, prop->name.data) == 1;
 }
 
 static ufbxi_forceinline bool ufbxi_override_equals_to_prop(const ufbx_prop_override *over, uint32_t element_id, const ufbx_prop *prop)

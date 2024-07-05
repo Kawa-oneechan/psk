@@ -159,14 +159,20 @@
     <ClCompile Include="Species.cpp" />
     <ClCompile Include="SpriteRenderer.cpp" />
     <ClCompile Include="support\format.cc" />
-    <ClCompile Include="support\glad\glad.c" />
+    <ClCompile Include="support\glad\glad.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCpp</CompileAs>
+    </ClCompile>
     <ClCompile Include="support\JSON\JSON.cpp" />
     <ClCompile Include="support\JSON\JSONValue.cpp" />
-    <ClCompile Include="support\miniz.c" />
+    <ClCompile Include="support\miniz.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCpp</CompileAs>
+    </ClCompile>
     <ClCompile Include="support\stb_image.cpp" />
     <ClCompile Include="support\stb_image_write.cpp" />
     <ClCompile Include="support\stb_truetype.cpp" />
-    <ClCompile Include="support\ufbx.c" />
+    <ClCompile Include="support\ufbx.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCpp</CompileAs>
+    </ClCompile>
     <ClCompile Include="Tests.cpp" />
     <ClCompile Include="Text.cpp" />
     <ClCompile Include="TextField.cpp" />
@@ -183,6 +189,7 @@
     <Natvis Include="NatvisFile.natvis">
       <SubType>Designer</SubType>
     </Natvis>
+    <Natvis Include="ufbx.natvis" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Audio.h" />

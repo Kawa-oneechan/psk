@@ -73,6 +73,7 @@ extern bool PointInRect(const glm::vec2 point, const glm::vec4 rect);
 extern void Table(std::vector<std::string> data, size_t stride);
 
 extern unsigned int GetCRC(const std::string& text);
+extern unsigned int GetCRC(unsigned char *buffer, int len);
 
 namespace UI
 {
