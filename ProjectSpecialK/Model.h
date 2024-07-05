@@ -29,10 +29,11 @@ class Model
 
 private:
 	std::string file;
+	Texture fallback{ Texture("fallback.png") };
 
 public:
 	std::vector<Mesh> Meshes;
-	std::vector<Texture*> Textures;
+	std::array<Texture*, 16> Textures;
 
 	Model() = default;
 	Model(const std::string& modelPath);

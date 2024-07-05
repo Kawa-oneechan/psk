@@ -7,7 +7,7 @@ static std::map<std::string, std::tuple<Model*, int>> cache;
 extern Shader* modelShader;
 extern Camera camera;
 
-Model::Mesh::Mesh(ufbx_mesh* mesh)
+Model::Mesh::Mesh(ufbx_mesh* mesh) : texture(-1)
 {
 	std::vector<unsigned int> tri_indices;
 	tri_indices.resize(mesh->max_face_triangles * 3);
@@ -153,8 +153,19 @@ void Model::Draw()
 	{
 		if (m.texture != -1 && m.texture < Textures.size())
 		{
-			//TODO: mix and nrm maps too
-			Textures[m.texture]->Use(0);
+			auto texNum = m.texture * 3;
+			for (auto i = 0; i < 3; i++)
+			{
+				if (Textures[texNum + i] == nullptr)
+				{
+					if (i == 0)
+						fallback.Use(0);
+					else
+						whiteRect->Use(i);
+				}
+				else
+					Textures[texNum + i]->Use(i);
+			}
 		}
 		m.Draw();
 	}
