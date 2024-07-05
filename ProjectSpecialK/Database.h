@@ -17,7 +17,7 @@ namespace Database
 	extern Texture* ItemIcons;
 	extern std::map<std::string, glm::vec4> ItemIconAtlas;
 
-	extern void LoadGlobalStuff();
+	extern void LoadGlobalStuff(float* progress);
 	
 	//Find a database entry by reference-ID.
 	template<typename T>

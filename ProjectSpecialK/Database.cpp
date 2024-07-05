@@ -29,7 +29,7 @@ namespace Database
 	static const int sheetW = cols * iconSize;
 	static const int sheetH = rows * iconSize;
 
-	void LoadItemIcons()
+	void LoadItemIcons(float* progress)
 	{
 		conprint(0, "ItemIcons: loading...");
 
@@ -45,6 +45,8 @@ namespace Database
 			conprint(1, "ItemIcons: Too many icons! Got {} but can only fit {}.", entries.size(), cols * rows);
 			entries.erase(entries.begin() + (cols * rows), entries.end());
 		}
+
+		auto progressStep = (1.0f / 6.0f) / entries.size();
 
 		stbi_set_flip_vertically_on_load(0);
 		int iconNum = 0;
@@ -71,11 +73,12 @@ namespace Database
 			iconNum++;
 			stbi_image_free(data);
 
-
 			auto filename = entry.path;
 			filename = filename.substr(filename.find('/') + 1);
 			filename = filename.substr(0, filename.find('.'));
 			ItemIconAtlas[filename] = glm::vec4(l, t, iconSize, iconSize);
+
+			*progress += progressStep;
 		}
 
 #ifdef DEBUG
@@ -121,9 +124,10 @@ namespace Database
 	}
 
 	template<typename T1, typename T2>
-	void loadWorker(std::vector<std::shared_ptr<T1>>& target, const std::string& spec, const std::string& whom)
+	void loadWorker(float* progress, std::vector<std::shared_ptr<T1>>& target, const std::string& spec, const std::string& whom)
 	{
 		auto entries = EnumerateVFS(spec);
+		auto progressStep = (1.0f / 6.0f) / entries.size();
 		target.reserve(entries.size());
 		for (const auto& entry : entries)
 		{
@@ -145,21 +149,22 @@ namespace Database
 				conprint(1, "{}: error loading {}.", whom, entry.path);
 			}
 			delete doc;
+			*progress += progressStep;
 		}
 	}
 
 	template<typename T1>
-	void loadWorker(std::vector<std::shared_ptr<T1>>& target, const std::string& spec, const std::string& whom)
+	void loadWorker(float* progress, std::vector<std::shared_ptr<T1>>& target, const std::string& spec, const std::string& whom)
 	{
-		loadWorker<T1, T1>(target, spec, whom);
+		loadWorker<T1, T1>(progress, target, spec, whom);
 	}
 
-	void LoadItems()
+	void LoadItems(float* progress)
 	{
 		conprint(0, "ItemsDatabase: loading...");
-		loadWorker<Item, Tool>(items, "items/tools/*.json", "ItemsDatabase");
-		loadWorker<Item, Furniture>(items, "items/furniture/*.json", "ItemsDatabase");
-		loadWorker<Item, Outfit>(items, "items/outfits/*.json", "ItemsDatabase");
+		loadWorker<Item, Tool>(progress, items, "items/tools/*.json", "ItemsDatabase");
+		loadWorker<Item, Furniture>(progress, items, "items/furniture/*.json", "ItemsDatabase");
+		loadWorker<Item, Outfit>(progress, items, "items/outfits/*.json", "ItemsDatabase");
 		auto table = std::vector<std::string>{ "ID", "Name", "Type", "Hash" };
 		for (const auto& item : items)
 		{
@@ -172,10 +177,10 @@ namespace Database
 		conprint(0, "ItemsDatabase: ended up with {} entries.", items.size());
 	}
 
-	void LoadSpecies()
+	void LoadSpecies(float* progress)
 	{
 		conprint(0, "SpeciesDatabase: loading...");
-		loadWorker<Species>(species, "species/*.json", "SpeciesDatabase");
+		loadWorker<Species>(progress, species, "species/*.json", "SpeciesDatabase");
 		auto table = std::vector<std::string>{ "ID", "Name", "Hash" };
 		for (const auto& spec: species)
 		{
@@ -187,10 +192,10 @@ namespace Database
 		conprint(0, "SpeciesDatabase: ended up with {} entries.", species.size());
 	}
 
-	void LoadTraits()
+	void LoadTraits(float* progress)
 	{
 		conprint(0, "TraitsDatabase: loading...");
-		loadWorker<Personality>(personalities, "personalities/*.json", "TraitsDatabase");
+		loadWorker<Personality>(progress, personalities, "personalities/*.json", "TraitsDatabase");
 		auto table = std::vector<std::string>{ "ID", "Name", "Hash" };
 		for (const auto& pers : personalities)
 		{
@@ -199,14 +204,14 @@ namespace Database
 			table.emplace_back(fmt::format("{:08X}", pers->Hash));
 		}
 		Table(table, 3);
-		loadWorker<Hobby>(hobbies, "hobbies/*.json", "TraitsDatabase");
+		loadWorker<Hobby>(progress, hobbies, "hobbies/*.json", "TraitsDatabase");
 		conprint(0, "TraitsDatabase: ended up with {} personalities and {} hobbies.", personalities.size(), hobbies.size());
 	}
 
-	void LoadVillagers()
+	void LoadVillagers(float* progress)
 	{
 		conprint(0, "VillagerDatabase: loading...");
-		loadWorker<Villager>(villagers, "villagers/*.json", "VillagerDatabase");
+		loadWorker<Villager>(progress, villagers, "villagers/*.json", "VillagerDatabase");
 		auto table = std::vector<std::string>{ "ID", "Name","Hash" };
 		for (const auto& villager : villagers)
 		{
@@ -218,19 +223,20 @@ namespace Database
 		conprint(0, "VillagerDatabase: ended up with {} entries.", villagers.size());
 	}
 
-	void LoadGlobalStuff()
+	void LoadGlobalStuff(float* progress)
 	{
 		conprint(0, "Starting timer.");
 		auto startingTime = std::chrono::high_resolution_clock::now();
 		
+		*progress = 0.0;
 		LoadContentFilters();
 
-		LoadItemIcons();
+		LoadItemIcons(progress);
 
-		LoadItems();
-		LoadSpecies();
-		LoadTraits();
-		LoadVillagers();
+		LoadItems(progress);
+		LoadSpecies(progress);
+		LoadTraits(progress);
+		LoadVillagers(progress);
 
 		auto endingTime = std::chrono::high_resolution_clock::now();
 		auto ms_int = std::chrono::duration_cast<std::chrono::milliseconds>(endingTime - startingTime);

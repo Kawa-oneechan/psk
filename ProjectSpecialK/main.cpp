@@ -288,7 +288,7 @@ void mousebutton_callback(GLFWwindow* window, int button, int action, int mods)
 	}
 }
 
-void ThreadedLoader(std::function<void(void)> loader)
+void ThreadedLoader(std::function<void(float*)> loader)
 {
 	glDisable(GL_DEPTH_TEST);
 	cursor->Select(1);
@@ -296,12 +296,15 @@ void ThreadedLoader(std::function<void(void)> loader)
 	auto loadPos = glm::vec2(width - 256, height - 256);
 	int oldTime = 0;
 
+	auto loadProgress = 0.0f;
+	auto loadPointer = &loadProgress;
+
 	std::promise<bool> p;
 	auto future = p.get_future();
 
-	std::thread t([&p, loader]
+	std::thread t([&p, loader, loadPointer]
 	{
-		loader();
+		loader(loadPointer);
 		p.set_value(true);
 	});
 
@@ -325,6 +328,9 @@ void ThreadedLoader(std::function<void(void)> loader)
 		sprender->DrawSprite(whiteRect, loadPos + glm::vec2(0, 80 + (i * 2)), glm::vec2(128), glm::vec4(0), 0.0f, glm::vec4(0, 0, 0, i * 0.1f));
 		}
 		*/
+
+		sprender->DrawSprite(*whiteRect, glm::vec2(0, 0), glm::vec2(width, 16), glm::vec4(0), 0.0f, glm::vec4(1, 1, 1, 0.25f));
+		sprender->DrawSprite(*whiteRect, glm::vec2(0, 0), glm::vec2(width * loadProgress, 16), glm::vec4(0), 0.0f, glm::vec4(1, 1, 1, 0.75f));
 
 		cursor->Draw();
 		sprender->Flush();
