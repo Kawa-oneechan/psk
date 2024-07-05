@@ -65,10 +65,17 @@ extern sol::state Sol;
 
 extern glm::vec2 GetJSONVec2(JSONValue* val);
 extern glm::vec4 GetJSONVec4(JSONValue* val);
+//Converts [R,G,B], [R,G,B,A], "#RRGGBB" or "#AARRGGBB" to glm::vec4.
+//Returns an alpha of -1, which is impossible, on error.
 extern glm::vec4 GetJSONColor(JSONValue* val);
 
 extern bool PointInPoly(const glm::vec2 point, const std::vector<glm::vec2>& polygon);
 extern bool PointInRect(const glm::vec2 point, const glm::vec4 rect);
+
+//Decodes a UTF-8 byte sequence to a codepoint, returns it and the size of the sequence.
+extern std::tuple<unsigned int, size_t> GetChar(const std::string& what, size_t where);
+//Encodes a codepoint into a UTF-8 byte sequence and appends it to the given string.
+extern void AppendChar(std::string& where, unsigned int what);
 
 extern void Table(std::vector<std::string> data, size_t stride);
 

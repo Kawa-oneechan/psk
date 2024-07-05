@@ -93,12 +93,9 @@ void DialogueBox::Wrap()
 	size_t lastSpace = -1;
 	for (size_t i = 0; i < toDisplay.length();)
 	{
-		unsigned int ch = toDisplay[i] & 0xFF;
-		auto size = 1;
-		if ((ch & 0xE0) == 0xC0)
-			size = 2;
-		else if ((ch & 0xF0) == 0xE0)
-			size = 3;
+		unsigned int ch;
+		size_t size;
+		std::tie(ch, size) = GetChar(toDisplay, i);
 
 		if (size == 1 && std::isblank(ch))
 			lastSpace = i;
@@ -299,18 +296,10 @@ void DialogueBox::Tick(float dt)
 		delay = 0;
 
 		//We use UTF-8 to store strings but display in UTF-16.
-		unsigned int ch = toDisplay[displayCursor++] & 0xFF;
-		if ((ch & 0xE0) == 0xC0)
-		{
-			ch = (ch & 0x1F) << 6;
-			ch |= (toDisplay[displayCursor++] & 0x3F);
-		}
-		else if ((ch & 0xF0) == 0xE0)
-		{
-			ch = (ch & 0x1F) << 12;
-			ch |= (toDisplay[displayCursor++] & 0x3F) << 6;
-			ch |= (toDisplay[displayCursor++] & 0x3F);
-		}
+		unsigned int ch;
+		size_t size;
+		std::tie(ch, size) = GetChar(toDisplay, displayCursor);
+		displayCursor += size;
 
 		if (ch == '<')
 		{
@@ -332,20 +321,7 @@ void DialogueBox::Tick(float dt)
 		else
 		{
 		displayIt:
-			//Gotta re-encode the UTF-16 to UTF-8 here.
-			if (ch < 0x80)
-				displayed += ch;
-			else if (ch < 0x0800)
-			{
-				displayed += (char)(((ch >> 6) & 0x1F) | 0xC0);
-				displayed += (char)(((ch >> 0) & 0x3F) | 0x80);
-			}
-			else if (ch < 0x10000)
-			{
-				displayed += (char)(((ch >> 12) & 0x0F) | 0xE0);
-				displayed += (char)(((ch >> 6) & 0x3F) | 0x80);
-				displayed += (char)(((ch >> 0) & 0x3F) | 0x80);
-			}
+			AppendChar(displayed, ch);
 
 			if (bubbleNum == 3 || Sound == Sound::Bebebese)
 				bebebese->Play(true);

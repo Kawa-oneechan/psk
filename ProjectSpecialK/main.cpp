@@ -308,10 +308,10 @@ void ThreadedLoader(std::function<void(float*)> loader)
 		p.set_value(true);
 	});
 
-	const int barWidth = width * 0.80f;
+	const int barWidth = (int)glm::floor(width * 0.80f);
 	const int barHeight = 16;
-	const int barLeft = (width / 2) - (barWidth / 2);
-	const int barTop = (height / 2) - (barHeight / 1);
+	const int barLeft = (int)glm::floor(width / 2) - (barWidth / 2);
+	const int barTop = (int)glm::floor(height / 2) - (barHeight / 1);
 	
 	while (true)
 	{

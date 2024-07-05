@@ -12,7 +12,7 @@ Species::Species(JSONObject& value, const std::string& filename) : NameableThing
 		TextAdd(RefName + ":f", both);
 
 
-		filterNames.emplace(filterNames.begin(), std::pair<std::string, JSONValue*>("USen", new JSONValue(value["name"]->AsString())));
+		filterNames.insert(filterNames.begin(), std::pair<std::string, JSONValue*>("USen", new JSONValue(value["name"]->AsString())));
 	}
 	else if (value["name"]->IsArray())
 	{

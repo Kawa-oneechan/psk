@@ -29,8 +29,6 @@ glm::vec4 GetJSONVec4(JSONValue* val)
 	return glm::vec4(arr[0]->AsNumber(), arr[1]->AsNumber(), arr[2]->AsNumber(), arr[3]->AsNumber());
 }
 
-//Converts [R,G,B], [R,G,B,A], "#RRGGBB" or "#AARRGGBB" to glm::vec4.
-//Returns an alpha of -1, which is impossible, on error.
 glm::vec4 GetJSONColor(JSONValue* val)
 {
 	if (val->IsString())
@@ -145,6 +143,36 @@ bool PointInRect(const glm::vec2 point, const glm::vec4 rect)
 		(point.x < rect.x + rect.z) &&
 		(point.y >= rect.y) &&
 		(point.y < rect.y + rect.w);
+}
+
+std::tuple<unsigned int, size_t> GetChar(const std::string& what, size_t where)
+{
+	unsigned int ch = what[where] & 0xFF;
+	size_t size = 1;
+	if ((ch & 0xE0) == 0xC0)
+		size = 2;
+	else if ((ch & 0xF0) == 0xE0)
+		size = 3;
+	if (where + size > what.length())
+		throw std::exception("Broken UTF-8 sequence.");
+	return{ ch, size };
+}
+
+void AppendChar(std::string& where, unsigned int what)
+{
+	if (what < 0x80)
+	where += what;
+	else if (what < 0x0800)
+	{
+		where += (char)(((what >> 6) & 0x1F) | 0xC0);
+		where += (char)(((what >> 0) & 0x3F) | 0x80);
+	}
+	else if (what < 0x10000)
+	{
+		where += (char)(((what >> 12) & 0x0F) | 0xE0);
+		where += (char)(((what >> 6) & 0x3F) | 0x80);
+		where += (char)(((what >> 0) & 0x3F) | 0x80);
+	}
 }
 
 void Table(std::vector<std::string> data, size_t stride)
