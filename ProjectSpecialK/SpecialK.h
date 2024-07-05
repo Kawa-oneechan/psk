@@ -105,16 +105,11 @@ inline constexpr int operator "" t(unsigned long long v) { return (int)v; }
 inline constexpr float operator "" pt(long double v) { return (float)v; }
 #pragma warning(pop)
 
-
 template<typename T>
 auto StringToEnum(const std::string& s, std::initializer_list<const std::string> opts)
 {
-	int i = 0;
-	for (auto o : opts)
-	{
-		if (s == o)
-			return (T)i;
-		i++;
-	}
-	throw std::range_error(fmt::format("StringToEnum: can't find \"{}\" in list \"{}\".", s, join(opts.begin(), opts.end())));
+	auto it = std::find(opts.begin(), opts.end(), s);
+	if (it == opts.end())
+		throw std::range_error(fmt::format("StringToEnum: can't find \"{}\" in list \"{}\".", s, join(opts.begin(), opts.end())));
+	return (T)std::distance(opts.begin(), it);
 }
