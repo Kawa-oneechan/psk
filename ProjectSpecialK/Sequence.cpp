@@ -24,11 +24,7 @@ void Sequence::Tick(float dt)
 	//No longer waiting?
 	if (!waiting)
 	{
-		//Is this safe?
-		//delete now;
-
 		cursor++;
-		//Reached end?
 		if (cursor >= parts.size())
 		{
 			if (mutex != nullptr)

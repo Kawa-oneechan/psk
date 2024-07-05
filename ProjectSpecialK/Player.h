@@ -41,7 +41,6 @@ public:
 	InventoryItemP Shoes{ nullptr };
 	InventoryItemP Accessory{ nullptr };
 
-	//Player();
 	void LoadModel();
 	const Model* Model();
 	const std::string Birthday();

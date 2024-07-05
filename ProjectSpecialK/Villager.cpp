@@ -7,7 +7,6 @@ Villager::Villager(JSONObject& value, const std::string& filename) : NameableThi
 	
 	if (_isSpecial)
 	{
-		//_species = nullptr;
 		RefSpecies = "<<special>>";
 	}
 	else
@@ -72,7 +71,6 @@ Villager::Villager(JSONObject& value, const std::string& filename) : NameableThi
 	}
 	personalitySubtype = _isSpecial ? 0 : (int)value["personalitySubtype"]->AsNumber();
 
-	//hobby = value["hobby"];
 	{
 		hobby = Database::Find<::Hobby>(value["hobby"], hobbies);
 		if (!hobby)
@@ -85,26 +83,15 @@ Villager::Villager(JSONObject& value, const std::string& filename) : NameableThi
 	if (value["umbrella"] != nullptr) umbrellaID = value["umbrella"]->AsString();
 	if (value["photo"] != nullptr) photoID = value["photo"]->AsString();
 	if (value["poster"] != nullptr) portraitID = value["poster"]->AsString();
-	/*
-	umbrella = std::make_shared<InventoryItem>(value["umbrella"]->AsString());
-	photo = std::make_shared<InventoryItem>(value["photo"]->AsString());
-	portrait = std::make_shared<InventoryItem>(value["poster"]->AsString());
-	*/
 
 	//Everything after this point is only for regular villagers.
 	if (_isSpecial)
 		return;
 
-	//TODO: variations. Right now, those are stripped out while looking up the items.
 	auto clothing = value["clothing"]->AsObject();
 	defaultOutfitID = clothing["default"]->AsString();
 	rainCoatID = (clothing["rain"]->AsArray())[0]->AsString();
 	rainHatID = (clothing["rain"]->AsArray())[1]->AsString();
-	/*
-	defaultOutfit = std::make_shared<InventoryItem>(clothing["default"]->AsString()); //ResolveItem(clothing["default"]->AsString(), "topsfallback");
-	rainCoat = std::make_shared<InventoryItem>((clothing["rain"]->AsArray())[0]->AsString()); //ResolveItem((clothing["rain"]->AsArray())[0]->AsString(), "topsfallback");
-	rainHat = std::make_shared<InventoryItem>((clothing["rain"]->AsArray())[1]->AsString()); //ResolveItem((clothing["rain"]->AsArray())[1]->AsString(), "hatfallback");
-	*/
 }
 
 const std::string Villager::Name()
@@ -135,7 +122,6 @@ const Model* Villager::Model()
 
 const std::string Villager::Birthday()
 {
-	//return TextGet("month" + std::to_string(_birthday[0])) + " " + std::to_string(_birthday[1]);
 	return TextDateMD(_birthday[1], _birthday[0]);
 }
 

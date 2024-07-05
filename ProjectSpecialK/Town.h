@@ -40,9 +40,10 @@ struct SavedMapItem
 	{
 		struct
 		{
-			unsigned char OffsetX, OffsetY; //how far back this extends
+			unsigned char OffsetX, OffsetY; //How far back does this extend?
 			unsigned short Root;
 		} Extension;
+		//... let's be honest, if this format is only for serializing, why bother storing extensions?
 		struct
 		{
 			unsigned short : 16;

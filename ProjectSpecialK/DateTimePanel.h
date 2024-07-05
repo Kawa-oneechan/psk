@@ -6,7 +6,6 @@
 class DateTimePanel : public Tickable
 {
 private:
-	//std::string shownTime, shownDate;
 	int lastHour{ -1 };
 	int lastMinute{ -1 };
 	tm gm;

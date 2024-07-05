@@ -46,7 +46,6 @@ PanelLayout::PanelLayout(JSONValue* source)
 			panel->ID = pnl["id"]->AsString();
 		}
 
-		//panel->Position = GetJSONVec2(pnl["position"]);
 		panel->Polygon = -1;
 
 		auto& type = pnl["type"]->AsString();
@@ -208,7 +207,7 @@ void PanelLayout::Draw(float dt)
 		{
 			auto& texture = *textures[panel->Texture];
 			auto frame = texture[panel->Frame];
-			auto shader = spriteShader; //shaders[panel->Shader];
+			auto shader = spriteShader;
 
 			sprender->DrawSprite(
 				shader, texture,
@@ -246,7 +245,7 @@ void PanelLayout::Draw(float dt)
 		{
 			auto& texture = *Database::ItemIcons;
 			auto frame = Database::ItemIconAtlas[panel->Text];
-			auto shader = spriteShader; //shaders[panel->Shader];
+			auto shader = spriteShader;
 
 			sprender->DrawSprite(
 				shader, texture,

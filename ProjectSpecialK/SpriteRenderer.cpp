@@ -23,6 +23,7 @@ static int instanceCursor = 0;
 SpriteRenderer::SpriteRenderer()
 {
 	unsigned int VBO;
+	//TODO: make this indexed
 	float vertices[] = {
 		//pos	tex
 		0, 1,	0, -1,	//bottom left
@@ -67,11 +68,6 @@ void SpriteRenderer::Flush()
 	currentShader->Use();
 	currentTexture->Use(0);
 
-	//shader.SetMat4("model", model);
-	//shader.SetVec4("sourceRect", srcRect);
-	//shader.SetVec4("spriteColor", color);
-	//shader.SetBool("flipX", (flip & 1) == 1);
-	//shader.SetBool("flipY", (flip & 2) == 2);
 	glUniformMatrix4fv(glGetUniformLocation(currentShader->ID, "model"), instanceCursor, GL_FALSE, &models[0][0][0]);
 	glUniform4fv(glGetUniformLocation(currentShader->ID, "sourceRect"), instanceCursor, &sourceRects[0][0]);
 	glUniform4fv(glGetUniformLocation(currentShader->ID, "spriteColor"), instanceCursor, &spriteColors[0][0]);
@@ -79,7 +75,6 @@ void SpriteRenderer::Flush()
 	glUniform1iv(glGetUniformLocation(currentShader->ID, "flipY"), instanceCursor, &spriteFlipY[0]);
 
 	glBindVertexArray(this->quadVAO);
-	//glDrawArrays(GL_TRIANGLES, 0, 6);
 	glDrawArraysInstanced(GL_TRIANGLES, 0, 6, instanceCursor);
 	glBindVertexArray(0);
 	instanceCursor = 0;
@@ -138,25 +133,12 @@ void SpriteRenderer::DrawSprite(Shader* shader, Texture& texture, glm::vec2 posi
 		instanceCursor = 0; //CA doesn't know Flush() already does this. Whatever.
 	}
 
-	//shader.SetMat4("model", model);
-	//shader.SetVec4("sourceRect", srcRect);
-	//shader.SetVec4("spriteColor", color);
-	//shader.SetBool("flipX", (flip & 1) == 1);
-	//shader.SetBool("flipY", (flip & 2) == 2);
-
 	models[instanceCursor] = model;
 	sourceRects[instanceCursor] = srcRect;
 	spriteColors[instanceCursor] = color;
 	spriteFlipX[instanceCursor] = ((flags & FlipX) == FlipX);
 	spriteFlipY[instanceCursor] = ((flags & FlipY) == FlipY);
 	instanceCursor++;
-
-	//texture.Use(0);
-
-	//glBindVertexArray(this->quadVAO);
-	////glDrawArrays(GL_TRIANGLES, 0, 6);
-	//glDrawArraysInstanced(GL_TRIANGLES, 0, 6, 1);
-	//glBindVertexArray(0);
 }
 
 void SpriteRenderer::DrawSprite(Texture& texture, const glm::vec2& position, const glm::vec2& size, const glm::vec4& srcRect, float rotate, const glm::vec4& color, SpriteFlags flip)

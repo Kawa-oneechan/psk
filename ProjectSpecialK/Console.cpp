@@ -42,8 +42,6 @@ bool Console::Execute(const std::string& str)
 {
 	try
 	{
-		//sol::coroutine s = Sol.load(str);
-		//s();
 		Sol.script(str);
 	}
 	catch (sol::error& e)
@@ -51,8 +49,6 @@ bool Console::Execute(const std::string& str)
 		std::string what = e.what();
 		if (what.find("attempt to yield from outside a coroutine") != -1)
 			; //Do nothing. Accept this silently.
-		//else if (what.find("[string \"") != -1)
-		//	Execute("print(" + str + ")");
 		else
 			Print(1, fmt::format("Error: {}", what));
 	}

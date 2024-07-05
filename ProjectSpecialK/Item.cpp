@@ -5,8 +5,8 @@ extern int articlePlease;
 NameableThing::NameableThing(JSONObject& value, const std::string& filename)
 {
 	ID = value["id"]->AsString();
-	//Hash = crc_32((unsigned char*)ID.c_str(), ID.length());
 	Hash = GetCRC(ID);
+	
 	auto ref = fmt::format("name:{}", ID);
 	StringToLower(ref);
 	StripSpaces(ref);
@@ -65,11 +65,6 @@ int Item::FindVariantByName(const std::string& variantName) const
 
 Item::Item(JSONObject& value, const std::string& filename) : NameableThing(value, filename)
 {
-	//auto vars = value.find("variants");
-	//if (vars != value.end())
-
-	//Type = Type::Generic;
-
 	auto type = value["type"] != nullptr ? value["type"]->AsString() : "";
 	if (type.empty());
 	else if (type == "tool") Type = Type::Tool;
@@ -85,7 +80,6 @@ Item::Item(JSONObject& value, const std::string& filename) : NameableThing(value
 	else if (type == "shoes") Type = Type::Shoes;
 	else
 		throw std::runtime_error(fmt::format("Don't know what to do with type \"{}\" while loading {}.", type, ID));
-	//fmt::print("Don't know what to do with type \"{}\".\n", type);
 
 	auto vars = value["variants"];
 	if (vars != nullptr)

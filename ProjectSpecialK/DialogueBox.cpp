@@ -81,9 +81,6 @@ void DialogueBox::Preprocess()
 				std::invoke(func->second, this, msbt, (int)msbtStart - 1, (int)(msbtEnd - msbtStart) + 2);
 				i = msbtStart; //-1 because we may have subbed in a new tag.
 			}
-			//else
-			//	conprint(1, "DialogueBox::Preprocess: don't know how to handle {}.", msbtWhole);
-			//no need to report on that, whatever Preprocess can't handle, Tick and DrawString ought.
 		}
 	}
 }
@@ -208,7 +205,7 @@ void DialogueBox::Draw(float dt)
 	auto dlgScale = scale;
 
 	if (state == State::Opening || state == State::Closing)
-		dlgScale *= glm::mix(0.0f, 1.0f, tween); //glm::elasticEaseOut(tween));
+		dlgScale *= glm::mix(0.0f, 1.0f, tween);
 
 	auto dlgWidth = bubble[0].width * dlgScale;
 	auto dlgHeight = bubble[0].height * dlgScale;
@@ -222,13 +219,7 @@ void DialogueBox::Draw(float dt)
 	wobble.SetInt("gradient2", 2);
 	wobble.SetFloat("time", time);
 
-	//if (bubbleNum == 4)
-	//	sprender->DrawSprite(*bubble[bubbleNum], glm::vec2(dlgLeft, dlgTop), glm::vec2(dlgWidth * 2, dlgHeight), glm::vec4(0));
-	//else
-	{
-		sprender->DrawSprite(&wobble, bubble[bubbleNum], glm::vec2(dlgLeft, dlgTop), glm::vec2(dlgWidth * 2, dlgHeight), glm::vec4(0, 0, bubble[bubbleNum].width * 2, bubble[bubbleNum].height), 0, bubbleColor);
-		//sprender->DrawSprite(wobble, bubble[bubbleNum], glm::vec2(dlgLeft + dlgWidth, dlgTop), glm::vec2(dlgWidth, dlgHeight), glm::vec4(0, 0, bubble[0]->width, bubble[0]->height), 0, bubbleColor, 1);
-	}
+	sprender->DrawSprite(&wobble, bubble[bubbleNum], glm::vec2(dlgLeft, dlgTop), glm::vec2(dlgWidth * 2, dlgHeight), glm::vec4(0, 0, bubble[bubbleNum].width * 2, bubble[bubbleNum].height), 0, bubbleColor);
 
 	sprender->DrawText(font, displayed, glm::vec2(dlgLeft + (200 * dlgScale), dlgTop + (100 * dlgScale)), textColor, 150 * dlgScale);
 
@@ -244,7 +235,7 @@ void DialogueBox::Draw(float dt)
 		const auto tagPosL = tagPos;
 		const auto tagPosM = tagPosL + glm::vec2(cosf(glm::radians(tagAngle)) * tagSize.x, sinf(glm::radians(tagAngle)) * tagSize.x);
 		const auto tagPosR = tagPosM + glm::vec2(cosf(glm::radians(tagAngle)) * nametagWidth, sinf(glm::radians(tagAngle)) * nametagWidth);
-		//TODO: figure this one out properly
+		//TODO: do proper "rotate point around origin point" thing.
 		const auto tagPosT = tagPosL + glm::vec2(cosf(glm::radians(tagAngle)) * (tagSize.x - 16), sinf(glm::radians(tagAngle)) * (tagSize.x - 512));
 		sprender->DrawSprite(nametag, tagPosL, tagSize, nametag[0], tagAngle, nametagColor[0], TopLeft);
 		sprender->DrawSprite(nametag, tagPosM, glm::vec2(nametagWidth, tagSize.y), nametag[2], tagAngle, nametagColor[0], TopLeft);
@@ -259,14 +250,10 @@ void DialogueBox::Draw(float dt)
 	}
 
 	//maybe afterwards port this to the UI Panel system?
-
-	//sprender->DrawText(1, fmt::format("DialogueBox: {}", time), glm::vec2(0, 16), glm::vec4(0, 0, 0, 0.25), 50);
 }
 
 void DialogueBox::Tick(float dt)
 {
-	//if (dt > 10) dt = 0;
-
 	if (state == State::Done)
 	{
 		tween = 0;
@@ -292,10 +279,8 @@ void DialogueBox::Tick(float dt)
 			state = State::WaitingForKey;
 		}
 
-		//reset delay
 		delay = 0;
 
-		//We use UTF-8 to store strings but display in UTF-16.
 		unsigned int ch;
 		size_t size;
 		std::tie(ch, size) = GetChar(toDisplay, displayCursor);

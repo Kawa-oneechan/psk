@@ -18,7 +18,6 @@ static void initVFS_addEntry(VFSEntry& entry)
 	if (entry.path.substr(entry.path.length() - 6, 6) == ".patch")
 	{
 		//Do NOT bother replacing, we want to patch ALL these fuckers in.
-		//fmt::print("DEBUG: NOT replacing {}.\n", entry.path);
 		entries.push_back(entry);
 		return;
 	}
@@ -30,7 +29,6 @@ static void initVFS_addEntry(VFSEntry& entry)
 		{
 			entries[i] = entry;
 			replaced = true;
-			//fmt::print("DEBUG: replacing {}.\n", entry.path);
 			break;
 		}
 	}
@@ -182,7 +180,7 @@ void InitVFS()
 	});
 	
 
-	//Dependencies?
+	//Resolve dependencies
 	{
 		std::vector<VFSSource> originalSet;
 		std::vector<VFSSource> workingSet;
@@ -269,7 +267,7 @@ std::unique_ptr<char[]> ReadVFS(const VFSEntry& entry, size_t* size)
 			*size = siz;
 		auto ret = std::make_unique<char[]>(siz + 2);
 		mz_zip_reader_extract_to_mem(&zip, entry.zipIndex, ret.get(), siz, 0);
-		return ret; //return std::make_unique<char*>(ret);
+		return ret;
 	}
 	else
 	{
@@ -281,7 +279,7 @@ std::unique_ptr<char[]> ReadVFS(const VFSEntry& entry, size_t* size)
 			*size = fs;
 		auto ret = std::make_unique<char[]>(fs + 2);
 		file.read(ret.get(), fs);
-		return ret; //return std::make_unique<char*>(ret);
+		return ret;
 	}
 	return nullptr;
 }
@@ -360,7 +358,7 @@ std::vector<VFSEntry> EnumerateVFS(const std::string& path)
 {
 	std::vector<VFSEntry> r;
 
-	//Turn "species\\*.json" into "species\\\\(.*?)\.json"
+	//Turn "species\\*.json" into "species/(.*?)\.json"
 	std::string pathAsPattern;
 	for (const auto& ch : path)
 	{

@@ -17,7 +17,6 @@ So maybe at least *that* could do with being a NameableThing...
 There is no answer in the JSON so far...
 */
 
-//PLACEHOLDER
 class Personality: public NameableThing
 {
 public:

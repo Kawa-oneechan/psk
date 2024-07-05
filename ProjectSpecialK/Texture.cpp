@@ -69,7 +69,6 @@ Texture::Texture(const std::string& texturePath, int repeat, int filter) : file(
 	{
 		if (!load(data, &ID, width, height, channels, repeat, filter))
 		{
-			//We are delayed by multithreading!
 			conprint(3, "glGenTextures indicates we're threading. Delaying \"{}\"...", texturePath);
 			delayed = true;
 			return;
@@ -98,7 +97,6 @@ Texture::Texture(const unsigned char* externalData, int width, int height, int c
 	{
 		if (!load(externalData, &ID, width, height, channels, repeat, filter))
 		{
-			//We are delayed by multithreading!
 			conprint(3, "glGenTextures indicates we're threading. Delaying load from memory...");
 			delayed = true;
 			//grab a copy we control for later
@@ -153,7 +151,6 @@ void Texture::Use(int slot)
 			conprint(3, "Delayed-loading texture \"{}\" on first use...", file);
 		if (!load(data, &ID, width, height, channels, repeat, filter))
 		{
-			//We are delayed by multithreading!
 			conprint(2, "glGenTextures indicates we're still threading! WTF?");
 			return;
 		}

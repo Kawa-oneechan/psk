@@ -105,7 +105,6 @@ void DoomMenu::Build()
 			UI::settings["language"] = new JSONValue(i->selection);
 			Translate();
 			items = &options;
-			//dlgBox->Text(fmt::format("You chose <color:1>{}</color>.", i->options[i->selection]));
 			dlgBox->Text(TextGet("menu:options:language:taunt"), Database::Find<Villager>("psk:xct", villagers));
 		}
 	));
@@ -215,9 +214,6 @@ void DoomMenu::Translate()
 {
 	speciesText = TextGet("menu:options:content:species:help");
 	options.Translate();
-	//content.Translate();
-	//volume.Translate();
-	//species.Translate();
 }
 
 DoomMenu::DoomMenu()
@@ -237,8 +233,6 @@ DoomMenu::DoomMenu()
 
 void DoomMenu::Tick(float dt)
 {
-	//visible = (int)(12.0f * scale);
-
 	if (itemY.size() > 0 && Inputs.MouseMoved())
 	{
 		const int col = (int)(400 * scale);
@@ -276,11 +270,6 @@ void DoomMenu::Tick(float dt)
 					item->selection = (int)(round(v / item->step) * item->step);
 					if (item->change != nullptr)
 						item->change(item);
-					/*
-					auto ccur = clamp(item->selection, item->minVal, item->maxVal) - item->minVal;
-					auto thumbPos = partSize + ((ccur * (barLength - (partSize * 2))) / range);
-					*/
-					//return;
 				}
 				else
 					sliderHolding = -1;
@@ -476,15 +465,11 @@ void DoomMenu::Draw(float dt)
 	const auto partSize = controls[4].w * 0.75f *  scale;
 	const auto thumbSize = glm::vec2(controls[3].z, controls[3].w) * 0.75f * scale;
 
-	//sprender->DrawText(0, fmt::format("DoomMenu: {}/{} {} {},{} - {},{}", highlight, mouseHighlight, Inputs.MouseHoldLeft, Inputs.MousePosition.x, Inputs.MousePosition.y, sliderStart, sliderEnd), glm::vec2(0, 16));
-
 	itemY.clear();
 
 	sprender->DrawSprite(*whiteRect, glm::vec2(0, startY - 8) * scale, glm::vec2(width, endY - startY - 8) * scale, glm::vec4(0), 0.0f, UI::themeColors["primary"]);
 	sprender->DrawSprite(*whiteRect, glm::vec2(0, endY) * scale, glm::vec2(width, 24) * scale, glm::vec4(0), 0.0f, UI::themeColors["primary"]);
 
-	//pos.y -= 8 * scale;
-	//pos.y = startY + headerH;
 	for (int i = 0; i < shown; i++)
 	{
 		auto item = items->items[i + scroll];
@@ -507,8 +492,7 @@ void DoomMenu::Draw(float dt)
 	for (int i = 0; i < shown; i++)
 	{
 		auto item = items->items[i + scroll];
-		//auto color = glm::vec4(1, 1, i + scroll == highlight ? 0.25 : 1, 1);
-		const auto color = glm::vec4(1);
+		const auto color = glm::vec4(1); //TODO: use UI::themeColors
 		auto offset = glm::vec2(item->type == DoomMenuItem::Type::Checkbox ? (40 * scale) : 0, 0);
 		auto font = 1;
 		auto size = 100 * scale;
@@ -519,12 +503,10 @@ void DoomMenu::Draw(float dt)
 			size = item->maxVal * scale;
 		}
 
-		//sprender->DrawText(font, item->caption, pos + offset + glm::vec2(2), black, size);
 		sprender->DrawText(font, item->caption, pos + offset, color, size);
 
 		if (item->type == DoomMenuItem::Type::Options)
 		{
-			//sprender->DrawText(1, item->options[item->selection], pos + glm::vec2(col + 2, 2), black, size);
 			sprender->DrawText(1, item->options[item->selection], pos + glm::vec2(col, 0), color, size);
 		}
 		else if (item->type == DoomMenuItem::Type::Slider)
@@ -532,7 +514,6 @@ void DoomMenu::Draw(float dt)
 			if (item->format != nullptr)
 			{
 				auto fmt = item->format(item);
-				//sprender->DrawText(1, fmt, pos + glm::vec2(col + col + (94 * scale) + 2, 12), black, size * 0.75f);
 				sprender->DrawText(1, fmt, pos + glm::vec2(col + col + (94 * scale), 10), color, size * 0.75f);
 			}
 		}
@@ -570,7 +551,6 @@ void DoomMenu::Draw(float dt)
 		{
 			auto trackColor = color * glm::vec4(1, 1, 1, 0.5);
 			auto barLength = col;
-			//auto partSize = controlsAtlas[0].w * 0.5f * scale;
 			sprender->DrawSprite(controls, pos + glm::vec2(col, 10 * scale), glm::vec2(partSize), controls[0], 0, trackColor);
 			sprender->DrawSprite(controls, pos + glm::vec2(col + barLength + (partSize * 1), 10 * scale), glm::vec2(partSize), controls[1], 0, trackColor);
 			sprender->DrawSprite(controls, pos + glm::vec2(col + partSize, 10 * scale), glm::vec2(barLength, partSize), controls[2], 0, trackColor);

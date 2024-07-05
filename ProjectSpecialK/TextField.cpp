@@ -50,6 +50,7 @@ bool TextField::Character(unsigned int codepoint)
 		}
 		return true;
 	}
+	//TODO: replace magic numbers with identifiers.
 	else if (codepoint == 0xFFF0) //left
 	{
 		if (caret > 0)

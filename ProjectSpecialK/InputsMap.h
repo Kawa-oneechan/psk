@@ -14,7 +14,7 @@ public:
 	bool PgUp, PgDown;
 
 	bool MouseLeft, MouseRight, MouseMiddle;
-	bool MouseHoldLeft;
+	bool MouseHoldLeft, MouseHoldRight, MouseHoldMiddle;
 	glm::vec2 MousePosition;
 
 	InputsMap();

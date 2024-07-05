@@ -139,9 +139,9 @@ namespace UI
 		}
 
 #define DS(K, V) if (!settings[K]) settings[K] = new JSONValue(V)
-		DS("language", 0); //English
-		DS("continue", 0); //Front door
-		DS("speech", 1); //Bebebese
+		DS("language", (int)Language::USen);
+		DS("continue", (int)LoadSpawnChoice::FrontDoor);
+		DS("speech", (int)DialogueBox::Sound::Bebebese);
 		DS("pingRate", 3);
 		DS("balloonChance", 15);
 		DS("cursorScale", 100);
@@ -236,13 +236,13 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	}
 
 	if (key == GLFW_KEY_W)
-		camera.ProcessKeyboard(CameraMovement::Forward, 0.025f);
+		camera.ProcessKeyboard(Camera::Movement::Forward, 0.025f);
 	else if (key == GLFW_KEY_A)
-		camera.ProcessKeyboard(CameraMovement::Left, 0.025f);
+		camera.ProcessKeyboard(Camera::Movement::Left, 0.025f);
 	else if (key == GLFW_KEY_S)
-		camera.ProcessKeyboard(CameraMovement::Backward, 0.025f);
+		camera.ProcessKeyboard(Camera::Movement::Backward, 0.025f);
 	else if (key == GLFW_KEY_D)
-		camera.ProcessKeyboard(CameraMovement::Right, 0.025f);
+		camera.ProcessKeyboard(Camera::Movement::Right, 0.025f);
 }
 
 void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
@@ -260,12 +260,13 @@ void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
 	}
 
 	float xoffset = xpos - lastX;
-	float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
+	float yoffset = lastY - ypos; //reversed since y-coordinates go from bottom to top
 
 	lastX = xpos;
 	lastY = ypos;
 
-	camera.ProcessMouseMovement(xoffset, yoffset);
+	if (Inputs.MouseHoldMiddle)
+		camera.ProcessMouseMovement(xoffset, yoffset);
 }
 
 void mousebutton_callback(GLFWwindow* window, int button, int action, int mods)
@@ -278,12 +279,14 @@ void mousebutton_callback(GLFWwindow* window, int button, int action, int mods)
 	}
 	else if (button == GLFW_MOUSE_BUTTON_MIDDLE)
 	{
-		if (!Inputs.MouseMiddle && action == GLFW_RELEASE)
+		Inputs.MouseHoldMiddle = action == GLFW_PRESS;
+		if (!Inputs.MouseMiddle && action == GLFW_RELEASE) //-V1051
 			Inputs.MouseMiddle = true;
 	}
 	else if (button == GLFW_MOUSE_BUTTON_RIGHT)
 	{
-		if (!Inputs.MouseRight && action == GLFW_RELEASE)
+		Inputs.MouseHoldRight = action == GLFW_PRESS;
+		if (!Inputs.MouseRight && action == GLFW_RELEASE) //-V1051
 			Inputs.MouseRight = true;
 	}
 }
@@ -326,13 +329,6 @@ void ThreadedLoader(std::function<void(float*)> loader)
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		sprender->DrawSprite(loadIcon, loadPos, glm::vec2(128), glm::vec4(0), sinf(time) * glm::radians(1000.0f));
-		/*
-		sprender->DrawSprite(loadIcon, loadPos + glm::vec2(0, (sinf(time * 2) * 10)), glm::vec2(128), glm::vec4(0), sinf(time) * glm::radians(1000.0f));
-		for (int i = 0; i < 10; i++)
-		{
-		sprender->DrawSprite(whiteRect, loadPos + glm::vec2(0, 80 + (i * 2)), glm::vec2(128), glm::vec4(0), 0.0f, glm::vec4(0, 0, 0, i * 0.1f));
-		}
-		*/
 
 		sprender->DrawSprite(*whiteRect, glm::vec2(barLeft - 1, barTop - 1), glm::vec2(barWidth + 2, barHeight + 2), glm::vec4(0), 0.0f, glm::vec4(1, 1, 1, 1));
 		sprender->DrawSprite(*whiteRect, glm::vec2(barLeft, barTop), glm::vec2(barWidth, barHeight), glm::vec4(0), 0.0f, glm::vec4(0.25, 0.25, 0.25, 1));
@@ -355,9 +351,9 @@ void ThreadedLoader(std::function<void(float*)> loader)
 
 int main(int argc, char** argv)
 {
+	setlocale(LC_ALL, "en_US.UTF-8");
 	std::srand((unsigned int)std::time(nullptr));
 
-	//prepForUTF8andSuch(); //setlocale(LC_ALL, ".UTF8");
 	console = new Console();
 	try
 	{
@@ -498,10 +494,15 @@ int main(int argc, char** argv)
 
 		auto time = (float)glfwGetTime();
 
-		//glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-		//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		glClear(GL_DEPTH_BUFFER_BIT);
-
+		if (wireframe)
+		{
+			glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		}
+		else
+		{
+			glClear(GL_DEPTH_BUFFER_BIT);
+		}
 
 		//important: disable depth testing to allow multiple sprites to overlap.
 		glDisable(GL_DEPTH_TEST);
@@ -510,8 +511,6 @@ int main(int argc, char** argv)
 			console->Tick(dt);
 		else
 		{
-			//for (unsigned int i = (unsigned int)tickables.size(); i-- > 0; )
-			//	tickables[i]->Tick(dt);
 			//a bit ugly but technically still better vis-a-vis iterators
 			for (auto& t = tickables.crbegin(); t != tickables.crend(); ++t)
 				(*t)->Tick(dt);
@@ -519,29 +518,15 @@ int main(int argc, char** argv)
 
 		for (const auto& t : tickables)
 			t->Draw(dt * timeScale);
+
 		sprender->Flush();
 		glClear(GL_DEPTH_BUFFER_BIT);
 		glEnable(GL_DEPTH_TEST);
 		testModel.Draw();
 		glDisable(GL_DEPTH_TEST);
+
 		console->Draw(dt);
-
 		cursor->Draw();
-
-		/*
-		//Tween crap using nothing but GLM, work it into Utilities. Might replace Tweeny with it.
-		auto origin = glm::vec2(width, height) * 0.5f;
-		auto color1 = glm::vec4(1, 0, 0, 1);
-		auto color2 = glm::vec4(0, 0, 1, 1);
-		pos += 0.001f; if (pos >= 1.0f) pos = 0;
-		auto lerp = glm::linearInterpolation(pos);
-		auto color = glm::mix(color1, color2, lerp);
-		sprender->DrawSprite(*whiteRect, origin - glm::vec2(16, 16) + glm::vec2(0, lerp * 64), glm::vec2(32, 32), glm::vec4(0), 0.0, color);
-		lerp = glm::bounceEaseOut(pos);
-		color = glm::mix(color1, color2, lerp);
-		sprender->DrawSprite(*whiteRect, origin - glm::vec2(16, 16) + glm::vec2(32, lerp * 64), glm::vec2(32, 32), glm::vec4(0), 0.0, color);
-		//YEAH I THINK I MIGHT. SO LONG TWEENY!
-		*/
 
 		sprender->Flush();
 

@@ -31,7 +31,7 @@ static void FlipImage(unsigned char* image, int width, int height)
 	{
 		unsigned char *row0 = bytes + row * width;
 		unsigned char *row1 = bytes + (width - row - 1) * width;
-		// swap row0 with row1
+		//TODO: improve this -- is there some C++17 algo bullshit for this?
 		memcpy(temp, row0, width);
 		memcpy(row0, row1, width);
 		memcpy(row1, temp, width);
@@ -68,9 +68,6 @@ void SpriteRenderer::LoadFontBank(int font, int bank)
 
 	if (fontTextures[(font * 256) + bank] != nullptr)
 		return;
-
-	//	if (fontTextures[font][bank] != nullptr)
-	//		return;
 
 	auto ttfData = ReadVFS(fontFiles[font], nullptr);
 	auto ttfBitmap = new unsigned char[FontAtlasExtent * FontAtlasExtent];
@@ -152,19 +149,10 @@ void SpriteRenderer::DrawText(int font, const std::string& text, glm::vec2 posit
 
 	while (text[i] != 0)
 	{
-		//UTF-8 decoder woo
-		unsigned int ch = text[i++] & 0xFF;
-		if ((ch & 0xE0) == 0xC0)
-		{
-			ch = (ch & 0x1F) << 6;
-			ch |= (text[i++] & 0x3F);
-		}
-		else if ((ch & 0xF0) == 0xE0)
-		{
-			ch = (ch & 0x1F) << 12;
-			ch |= (text[i++] & 0x3F) << 6;
-			ch |= (text[i++] & 0x3F);
-		}
+		unsigned int ch;
+		size_t size;
+		std::tie(ch, size) = GetChar(text, i);
+		i += size;
 
 		auto bank = ch >> 8;
 		LoadFontBank(textRenderFont, bank);
@@ -249,19 +237,10 @@ glm::vec2 SpriteRenderer::MeasureText(int font, const std::string& text, float s
 
 	while (text[i] != 0)
 	{
-		//UTF-8 decoder woo
-		unsigned int ch = text[i++] & 0xFF;
-		if ((ch & 0xE0) == 0xC0)
-		{
-			ch = (ch & 0x1F) << 6;
-			ch |= (text[i++] & 0x3F);
-		}
-		else if ((ch & 0xF0) == 0xE0)
-		{
-			ch = (ch & 0x1F) << 12;
-			ch |= (text[i++] & 0x3F) << 6;
-			ch |= (text[i++] & 0x3F);
-		}
+		unsigned int ch;
+		size_t size;
+		std::tie(ch, size) = GetChar(text, i);
+		i += size;
 
 		auto bank = ch >> 8;
 		LoadFontBank(textRenderFont, bank);

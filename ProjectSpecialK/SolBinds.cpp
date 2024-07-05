@@ -38,14 +38,12 @@ namespace SolBinds
 				line = va[0].as<std::string>();
 				if (va[1].is<int>())
 					style = va[1].as<int>();
-				//else va[1] is the speaker and va[2] is a style
+				//TODO: else va[1] is the speaker and va[2] is a style
 				break;
 			}
 
-			//do that mutex thing
 			dlgBox->Text(line, style);
 
-			//ensure we can see the result
 			console->visible = false;
 		});
 
@@ -69,8 +67,6 @@ namespace SolBinds
 			"__Villager",
 			"Name", sol::property(&Villager::Name),
 			"Species", &Villager::Species
-			//"Catchphrase", &Villager::Catchphrase,
-			//"Nickname", &Villager::Nickname
 		);
 
 		Sol["getVillager"] = [](sol::variadic_args va)

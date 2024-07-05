@@ -1,7 +1,5 @@
 #include "SpecialK.h"
 
-//#define JUSTTHEONELANGUAGE Language::USen
-
 Language gameLang = Language::USen;
 
 static std::map<std::string, TextEntry> textEntries;
@@ -43,7 +41,7 @@ std::string TextEntry::get(Language lang)
 	auto t = text.find(lang);
 	if (t != text.end())
 		return t->second;
-	//Couldn't find it? Fall back.
+
 	switch (lang)
 	{
 	case USen: return "<404>";
@@ -76,15 +74,7 @@ TextEntry& TextAdd(std::string& key, JSONObject& map)
 		auto langEnum = LangStrToEnum(langs.first);
 		if (langEnum == Unknown)
 			continue;
-#ifdef JUSTTHEONELANGUAGE
-		if (langEnum != JUSTTHEONELANGUAGE)
-			continue;
-#endif
 		entry->text[langEnum] = langs.second->AsString();
-#ifdef JUSTTHEONELANGUAGE
-		if (langEnum == JUSTTHEONELANGUAGE)
-			break;
-#endif
 	}
 
 	if (entry->condition.empty())

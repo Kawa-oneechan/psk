@@ -8,10 +8,8 @@ glm::vec2 GetJSONVec2(JSONValue* val)
 	auto arr = val->AsArray();
 	if (arr.size() != 2)
 		throw std::runtime_error(fmt::format("GetJSONVec2: given array {} has {} entries, not 2.", val->Stringify(), arr.size()));
-	//if (!arr[0]->IsNumber() || !arr[1]->IsNumber())
-	for (auto x : arr)
-		if (!x->IsNumber())
-			throw std::runtime_error(fmt::format("GetJSONVec2: given array {} does not contain only numbers.", val->Stringify()));
+	if (std::any_of(arr.cbegin(), arr.cend(), [](JSONValue* x) { return !x->IsNumber(); }))
+		throw std::runtime_error(fmt::format("GetJSONVec2: given array {} does not contain only numbers.", val->Stringify()));
 	return glm::vec2(arr[0]->AsNumber(), arr[1]->AsNumber());
 }
 
@@ -22,10 +20,8 @@ glm::vec4 GetJSONVec4(JSONValue* val)
 	auto arr = val->AsArray();
 	if (arr.size() != 4)
 		throw std::runtime_error(fmt::format("GetJSONVec4: given array has {} entries, not 4.", arr.size()));
-	//if (!arr[0]->IsNumber() || !arr[1]->IsNumber() || !arr[2]->IsNumber() || !arr[3]->IsNumber())
-	for (auto x : arr)
-		if (!x->IsNumber())
-			throw std::runtime_error("GetJSONVec4: given array does not contain only numbers.");
+	if (std::any_of(arr.cbegin(), arr.cend(), [](JSONValue* x) { return !x->IsNumber(); }))
+		throw std::runtime_error("GetJSONVec4: given array does not contain only numbers.");
 	return glm::vec4(arr[0]->AsNumber(), arr[1]->AsNumber(), arr[2]->AsNumber(), arr[3]->AsNumber());
 }
 
@@ -155,6 +151,17 @@ std::tuple<unsigned int, size_t> GetChar(const std::string& what, size_t where)
 		size = 3;
 	if (where + size > what.length())
 		throw std::exception("Broken UTF-8 sequence.");
+	if (size == 2)
+	{
+		ch = (ch & 0x1F) << 6;
+		ch |= (what[where + 1] & 0x3F);
+	}
+	else if (size == 3)
+	{
+		ch = (ch & 0x1F) << 12;
+		ch |= (what[where + 1] & 0x3F) << 6;
+		ch |= (what[where + 2] & 0x3F);
+	}
 	return{ ch, size };
 }
 

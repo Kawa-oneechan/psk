@@ -8,8 +8,6 @@ DateTimePanel::DateTimePanel()
 	auto now = time(nullptr);
 	localtime_s(&gm, &now);
 
-	//layout = new PanelLayout(UI::json["datetime"]);
-
 	Update();
 }
 
@@ -17,13 +15,11 @@ void DateTimePanel::Update()
 {
 	if (UI::settings["24hour"]->AsBool())
 	{
-		//24 hours, easy
 		layout.GetPanel("time")->Text = fmt::format("{:2}:{:02}", gm.tm_hour, gm.tm_min);
 		layout.GetPanel("ampm")->Text.clear();
 	}
 	else
 	{
-		//12 hours?
 		auto h = gm.tm_hour;
 		auto pm = h >= 12;
 		if (h == 0) h += 12;
@@ -40,7 +36,7 @@ void DateTimePanel::Update()
 
 	if (lastHour == 4 && gm.tm_hour == 5)
 	{
-		//trigger reset
+		//trigger morning reset
 	}
 	if (lastHour == -1 || (gm.tm_hour != lastHour && gm.tm_min == 0))
 	{

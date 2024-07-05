@@ -7,14 +7,14 @@ extern int articlePlease;
 void TestVillagerGetting()
 {
 	auto farrah = Database::Find<Villager>("psk:cat00", villagers);
-	//farrah = Database::Find<Villager>(EF4A26F4, &villagers);
+	//farrah = Database::Find<Villager>(0xEF4A26F4, &villagers);
 	if (!farrah)
 	{
 		conprint(2, "Could not load Farrah. Check the logs.");
 		return;
 	}
 
-	farrah->defaultOutfitID = "acnh:fronttietee/black";
+	farrah->defaultOutfitID = "acnh:fronttietee/red";
 
 	conprint(0, "Villager getting test: {}, a {}, birthday on {}.", farrah->Name(), StripMSBT(farrah->Species()), farrah->Birthday());
 	articlePlease = 0;

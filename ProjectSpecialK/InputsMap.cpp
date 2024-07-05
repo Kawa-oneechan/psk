@@ -46,7 +46,7 @@ void InputsMap::Clear()
 	Up = Down = Left = Right = Enter = Escape = false;
 	PgUp = PgDown = false;
 	MouseLeft = MouseRight = MouseMiddle = false;
-	MouseHoldLeft = false;
+	MouseHoldLeft = MouseHoldRight = MouseHoldMiddle = false;
 }
 InputsMap& Inputs = InputsMap();
 
