@@ -308,6 +308,11 @@ void ThreadedLoader(std::function<void(float*)> loader)
 		p.set_value(true);
 	});
 
+	const int barWidth = width * 0.80f;
+	const int barHeight = 16;
+	const int barLeft = (width / 2) - (barWidth / 2);
+	const int barTop = (height / 2) - (barHeight / 1);
+	
 	while (true)
 	{
 		int newTime = std::clock();
@@ -329,8 +334,9 @@ void ThreadedLoader(std::function<void(float*)> loader)
 		}
 		*/
 
-		sprender->DrawSprite(*whiteRect, glm::vec2(0, 0), glm::vec2(width, 16), glm::vec4(0), 0.0f, glm::vec4(1, 1, 1, 0.25f));
-		sprender->DrawSprite(*whiteRect, glm::vec2(0, 0), glm::vec2(width * loadProgress, 16), glm::vec4(0), 0.0f, glm::vec4(1, 1, 1, 0.75f));
+		sprender->DrawSprite(*whiteRect, glm::vec2(barLeft - 1, barTop - 1), glm::vec2(barWidth + 2, barHeight + 2), glm::vec4(0), 0.0f, glm::vec4(1, 1, 1, 1));
+		sprender->DrawSprite(*whiteRect, glm::vec2(barLeft, barTop), glm::vec2(barWidth, barHeight), glm::vec4(0), 0.0f, glm::vec4(0.25, 0.25, 0.25, 1));
+		sprender->DrawSprite(*whiteRect, glm::vec2(barLeft, barTop), glm::vec2(barWidth * loadProgress, barHeight), glm::vec4(0), 0.0f, glm::vec4(1, 1, 1, 1));
 
 		cursor->Draw();
 		sprender->Flush();

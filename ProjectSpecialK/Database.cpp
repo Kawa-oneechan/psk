@@ -19,24 +19,26 @@ namespace Database
 	std::map<std::string, std::vector<std::string>> FilterCategories;
 	std::map<std::string, bool> Filters;
 
-	Texture* ItemIcons = nullptr;
+	std::shared_ptr<Texture> ItemIcons = nullptr;
+	//Required to call item icons by name instead of number, like the atlas provided by Texture.
 	std::map<std::string, glm::vec4> ItemIconAtlas;
 
-	static unsigned char* sheet;
-	static const int iconSize = 128;
-	static const int cols = 16;
-	static const int rows = 16;
-	static const int sheetW = cols * iconSize;
-	static const int sheetH = rows * iconSize;
+	static const float progressParts = 1.0f / 8.0f;
 
 	void LoadItemIcons(float* progress)
 	{
 		conprint(0, "ItemIcons: loading...");
 
+		constexpr int iconSize = 128;
+		constexpr int cols = 16;
+		constexpr int rows = 16;
+		constexpr int sheetW = cols * iconSize;
+		constexpr int sheetH = rows * iconSize;
+
+		unsigned char* sheet;
 		int width, height, channels;
 
 		sheet = new unsigned char[(sheetW * sheetH) * 4];
-		//std::memset(sheet, 0x00, (sheetW * sheetH) * 4);
 		
 		auto entries = EnumerateVFS("itemicons\\*.png");
 
@@ -46,7 +48,7 @@ namespace Database
 			entries.erase(entries.begin() + (cols * rows), entries.end());
 		}
 
-		auto progressStep = (1.0f / 6.0f) / entries.size();
+		auto progressStep = progressParts / entries.size();
 
 		stbi_set_flip_vertically_on_load(0);
 		int iconNum = 0;
@@ -89,7 +91,7 @@ namespace Database
 #endif
 
 		//Loading happens in this thread, but making a texture out of it will be delayed.
-		ItemIcons = new Texture(sheet, sheetW, sheetH, 4);
+		ItemIcons = std::make_shared<Texture>(sheet, sheetW, sheetH, 4);
 		
 		ForgetVFS(entries);
 
@@ -127,7 +129,7 @@ namespace Database
 	void loadWorker(float* progress, std::vector<std::shared_ptr<T1>>& target, const std::string& spec, const std::string& whom)
 	{
 		auto entries = EnumerateVFS(spec);
-		auto progressStep = (1.0f / 6.0f) / entries.size();
+		auto progressStep = progressParts / entries.size();
 		target.reserve(entries.size());
 		for (const auto& entry : entries)
 		{

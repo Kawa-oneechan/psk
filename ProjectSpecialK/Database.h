@@ -14,7 +14,7 @@ namespace Database
 	extern std::map<std::string, std::vector<std::string>> FilterCategories;
 	extern std::map<std::string, bool> Filters;
 
-	extern Texture* ItemIcons;
+	extern std::shared_ptr<Texture> ItemIcons;
 	extern std::map<std::string, glm::vec4> ItemIconAtlas;
 
 	extern void LoadGlobalStuff(float* progress);
