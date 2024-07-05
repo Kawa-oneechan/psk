@@ -1,3 +1,5 @@
+#define USE_EXTERNAL_MZCRC
+
 #ifndef MINIZ_EXPORT
 #define MINIZ_EXPORT
 #endif

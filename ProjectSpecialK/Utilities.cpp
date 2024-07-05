@@ -245,3 +245,26 @@ unsigned int GetCRC(const std::string& text)
 	return crc ^ 0xFFFFFFFFL;
 }
 
+extern "C"
+{
+	unsigned long mz_crc32(unsigned long start, const unsigned char *ptr, size_t buf_len)
+	{
+		unsigned int crc = start ^ 0xFFFFFFFFL;
+
+		for (auto i = 0; i < buf_len; i++)
+			crc = (crc >> 8) ^ crclut[ptr[i] ^ crc & 0xFF];
+
+		return crc ^ 0xFFFFFFFFL;
+	}
+
+	unsigned int stb_crc32(unsigned char *buffer, int len)
+	{
+		unsigned int crc = 0xFFFFFFFFL;
+
+		for (auto i = 0; i < len; i++)
+			crc = (crc >> 8) ^ crclut[buffer[i] ^ crc & 0xFF];
+
+		return crc ^ 0xFFFFFFFFL;
+	}
+}
+
