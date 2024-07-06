@@ -30,20 +30,20 @@ struct TextEntry
 
 //Adds a JSONObject full of localized strings to the string database.
 //The JSONObject must map strings and *only* strings to language IDs.
-extern TextEntry& TextAdd(std::string& key, JSONObject& map);
+extern TextEntry& TextAdd(std::string key, JSONObject& map);
 //Adds a presumably English string to the string database.
-extern TextEntry& TextAdd(std::string& key, const std::string& english);
+extern TextEntry& TextAdd(std::string key, const std::string& english);
 //Adds a JSONValue that can be an object *or* a string to the string database.
 //See TextAdd(std::string& key, JSONObject& map) for details.
-extern TextEntry& TextAdd(std::string& key, JSONValue& value);
+extern TextEntry& TextAdd(std::string key, JSONValue& value);
 //Adds a presumably English string to the string database.
-extern TextEntry& TextAdd(const char* key, const char* english);
+//extern TextEntry& TextAdd(const char* key, const char* english);
 //Adds maps or strings from a JSONObject to the string database.
 extern void TextAdd(JSONValue& doc);
 //Returns a localized string.
-extern std::string TextGet(std::string& key, Language lang = Language::Default);
+extern std::string TextGet(std::string key, Language lang = Language::Default);
 //Returns a localized string.
-extern std::string TextGet(const char* key);
+//extern std::string TextGet(const char* key);
 //Returns a localized date.
 extern std::string TextDateMD(int month, int day);
 //Splits a string into a vector of strings by the specified delimiter.

@@ -168,7 +168,8 @@ InventoryItem::InventoryItem(const std::string& reference)
 	}
 	else if (slash != std::string::npos)
 	{
-		auto varNames = Split(reference.substr(slash + 1), '/');
+		auto k = reference.substr(slash + 1);
+		auto varNames = Split(k, '/');
 		_variant = _wrapped->FindVariantByName(varNames[0]);
 		//TODO: pattern
 		_pattern = 0;

@@ -143,6 +143,8 @@ bool PointInRect(const glm::vec2 point, const glm::vec4 rect)
 
 std::tuple<unsigned int, size_t> GetChar(const std::string& what, size_t where)
 {
+	if (where >= what.size())
+		return{ 0, 0 };
 	unsigned int ch = what[where] & 0xFF;
 	size_t size = 1;
 	if ((ch & 0xE0) == 0xC0)
@@ -168,7 +170,7 @@ std::tuple<unsigned int, size_t> GetChar(const std::string& what, size_t where)
 void AppendChar(std::string& where, unsigned int what)
 {
 	if (what < 0x80)
-	where += what;
+	where += (char)what;
 	else if (what < 0x0800)
 	{
 		where += (char)(((what >> 6) & 0x1F) | 0xC0);

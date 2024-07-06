@@ -98,7 +98,7 @@ bool TextField::Character(unsigned int codepoint)
 
 	std::string inserted;
 	if (codepoint < 0x80)
-		inserted += codepoint;
+		inserted += (char)codepoint;
 	else if (codepoint < 0x0800)
 	{
 		inserted += (char)(((codepoint >> 6) & 0x1F) | 0xC0);

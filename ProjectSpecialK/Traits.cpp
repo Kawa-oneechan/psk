@@ -8,7 +8,7 @@ Personality::Personality(JSONObject& value, const std::string& filename) : Namea
 		voices[0] = v[0]->AsString();
 		voices[1] = v[1]->AsString();
 	}
-	auto& base = value["base"]->AsString();
+	//auto& base = value["base"]->AsString();
 
 	/*
 	TODO: check if "sound/animalese/{}/a.wav" or whatever exists for each of the two voice banks.
@@ -20,7 +20,7 @@ Personality::Personality(JSONObject& value, const std::string& filename) : Namea
 	*/
 }
 
-Hobby::Hobby(JSONObject& value, const std::string& filename)
+Hobby::Hobby(JSONObject& value, const std::string&)
 {
 	ID = value["id"]->AsString();
 }

@@ -88,8 +88,8 @@ namespace UI
 	extern std::vector<glm::vec4> textColors;
 	extern std::shared_ptr<Texture> controls;
 
-	extern JSONObject& json;
-	extern JSONObject& settings;
+	extern JSONObject json;
+	extern JSONObject settings;
 };
 
 #define conprint(C, F, ...) console->Print(C, fmt::format(F, __VA_ARGS__))

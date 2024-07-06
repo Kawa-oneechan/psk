@@ -23,5 +23,5 @@ public:
 	bool MouseMoved();
 	void Clear();
 };
-extern InputsMap& Inputs;
+extern InputsMap Inputs;
 

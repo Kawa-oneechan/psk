@@ -12,8 +12,10 @@ DoomMenuItem::DoomMenuItem(const std::string& cap, int val, std::initializer_lis
 void DoomMenuItem::Translate()
 {
 	caption = TextGet(key);
-	description = TextGet(key + ":desc");
-	formatText = TextGet(key + ":fmt");
+	auto k = key + ":desc";
+	description = TextGet(k);
+	k = key + ":fmt";
+	formatText = TextGet(k);
 	if (type == Type::Options)
 	{
 		options.clear();
@@ -233,6 +235,7 @@ DoomMenu::DoomMenu()
 
 void DoomMenu::Tick(float dt)
 {
+	dt;
 	if (itemY.size() > 0 && Inputs.MouseMoved())
 	{
 		const int col = (int)(400 * scale);
@@ -422,6 +425,7 @@ void DoomMenu::Tick(float dt)
 
 void DoomMenu::Draw(float dt)
 {
+	dt;
 	const int col = (int)(400 * scale);
 
 	const float startX = (width * 0.5f) - ((col * 3) * 0.5f);
@@ -535,8 +539,6 @@ void DoomMenu::Draw(float dt)
 		auto item = i == 0 ? items->items[0] : items->items[i + scroll];
 		auto color = glm::vec4(1, 1, i + scroll == highlight ? 0.25 : 1, 1);
 		auto offset = glm::vec2(item->type == DoomMenuItem::Type::Checkbox ? (40 * scale) : 0, 0);
-		auto font = 1;
-		auto size = 100 * scale;
 
 		pos.y = itemY[i];
 

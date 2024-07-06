@@ -50,7 +50,8 @@ void Audio::Update()
 
 static FMOD_RESULT F_CALLBACK callback(FMOD_CHANNEL *channel, FMOD_CHANNEL_CALLBACKTYPE type, void *commanddata1, void *commanddata2)
 {
-	FMOD::Channel *cppchannel = (FMOD::Channel *)channel;
+	channel, type; commanddata1; commanddata2;
+	//FMOD::Channel *cppchannel = (FMOD::Channel *)channel;
 	return FMOD_OK;
 }
 

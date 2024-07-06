@@ -89,8 +89,8 @@ namespace UI
 
 	std::shared_ptr<Texture> controls{ nullptr };
 
-	JSONObject& json = JSONObject();
-	JSONObject& settings = JSONObject();
+	JSONObject json = JSONObject();
+	JSONObject settings = JSONObject();
 
 	static std::unique_ptr<char*> LoadFile(const std::string &filename, size_t *size)
 	{
@@ -170,7 +170,7 @@ namespace UI
 		settings["speechVolume"] = new JSONValue(Audio::SpeechVolume);
 		try
 		{
-			SaveFile("options.json", JSON::Stringify(&JSONValue(settings)));
+			SaveFile("options.json", JSON::Stringify(new JSONValue(settings)));
 		}
 		catch (std::exception&)
 		{
@@ -183,6 +183,7 @@ std::vector<Tickable*> tickables;
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
+	window;
 	::width = (float)width;
 	::height = (float)height;
 	scale = ::height / ScreenHeight;
@@ -191,6 +192,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 
 void char_callback(GLFWwindow* window, unsigned int codepoint)
 {
+	window;
 	if (console->visible)
 	{
 		if (codepoint == '`') return;
@@ -207,6 +209,7 @@ void char_callback(GLFWwindow* window, unsigned int codepoint)
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
+	scancode;  mods;
 	if (key == GLFW_KEY_GRAVE_ACCENT && action == GLFW_PRESS)
 	{
 		console->visible = !console->visible;
@@ -247,6 +250,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 
 void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
 {
+	window;
 	float xpos = static_cast<float>(xposIn);
 	float ypos = static_cast<float>(yposIn);
 
@@ -271,6 +275,7 @@ void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
 
 void mousebutton_callback(GLFWwindow* window, int button, int action, int mods)
 {
+	window; mods;
 	if (button == GLFW_MOUSE_BUTTON_LEFT)
 	{
 		Inputs.MouseHoldLeft = action == GLFW_PRESS;
@@ -351,6 +356,7 @@ void ThreadedLoader(std::function<void(float*)> loader)
 
 int main(int argc, char** argv)
 {
+	argc; argv;
 	setlocale(LC_ALL, "en_US.UTF-8");
 	std::srand((unsigned int)std::time(nullptr));
 
@@ -482,7 +488,6 @@ int main(int argc, char** argv)
 	modelShader->SetVec3("viewPos", camera.Position);
 
 	int oldTime = 0;
-	auto pos = 0.0f;
 	while (!glfwWindowShouldClose(window))
 	{
 		Audio::Update();
@@ -491,8 +496,6 @@ int main(int argc, char** argv)
 		int deltaTime = newTime - oldTime;
 		oldTime = newTime;
 		float dt = (float)deltaTime;
-
-		auto time = (float)glfwGetTime();
 
 		if (wireframe)
 		{
@@ -512,7 +515,7 @@ int main(int argc, char** argv)
 		else
 		{
 			//a bit ugly but technically still better vis-a-vis iterators
-			for (auto& t = tickables.crbegin(); t != tickables.crend(); ++t)
+			for (auto t = tickables.crbegin(); t != tickables.crend(); ++t)
 				(*t)->Tick(dt);
 		}
 

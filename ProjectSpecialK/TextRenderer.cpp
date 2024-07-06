@@ -12,7 +12,7 @@ namespace UI
 	extern glm::vec4 primaryColor;
 	extern glm::vec4 secondaryColor;
 	extern std::vector<glm::vec4> textColors;
-	extern JSONObject& json;
+	extern JSONObject json;
 };
 
 static stbtt_bakedchar* cdata{ nullptr };
@@ -87,6 +87,7 @@ void SpriteRenderer::LoadFontBank(int font, int bank)
 
 void SpriteRenderer::msbtColor(MSBTParams)
 {
+	start; len;
 	if (tags[0] == "/color")
 		textRenderColor = originalTextRenderColor;
 	else if (tags.size() < 2)
@@ -103,6 +104,7 @@ void SpriteRenderer::msbtColor(MSBTParams)
 
 void SpriteRenderer::msbtSize(MSBTParams)
 {
+	start; len;
 	if (tags[0] == "/size")
 		textRenderSize = originalTextRenderSize;
 	else
@@ -117,6 +119,7 @@ void SpriteRenderer::msbtSize(MSBTParams)
 
 void SpriteRenderer::msbtFont(MSBTParams)
 {
+	start; len;
 	if (tags[0] == "/font")
 		textRenderFont = originalTextRenderFont;
 	else
@@ -150,9 +153,9 @@ void SpriteRenderer::DrawText(int font, const std::string& text, glm::vec2 posit
 	while (text[i] != 0)
 	{
 		unsigned int ch;
-		size_t size;
-		std::tie(ch, size) = GetChar(text, i);
-		i += size;
+		size_t chs;
+		std::tie(ch, chs) = GetChar(text, i);
+		i += chs;
 
 		auto bank = ch >> 8;
 		LoadFontBank(textRenderFont, bank);
@@ -182,7 +185,6 @@ void SpriteRenderer::DrawText(int font, const std::string& text, glm::vec2 posit
 			i = msbtEnd + 1;
 
 			auto msbtWhole = text.substr(msbtStart, msbtEnd - msbtStart);
-			//fmt::print("(MSBT: {})", msbtWhole);
 			auto msbt = Split(msbtWhole, ':');
 			auto func = msbtPhase3.find(msbt[0]);
 			if (func != msbtPhase3.end())
@@ -193,8 +195,6 @@ void SpriteRenderer::DrawText(int font, const std::string& text, glm::vec2 posit
 		}
 
 renderIt:
-		auto chr = ch & 0xFF;
-
 		auto bakedChar = cdata[(textRenderFont * 0xFFFF) + ch];
 
 		auto w = bakedChar.x1 - bakedChar.x0 + 0.5f;
@@ -238,9 +238,9 @@ glm::vec2 SpriteRenderer::MeasureText(int font, const std::string& text, float s
 	while (text[i] != 0)
 	{
 		unsigned int ch;
-		size_t size;
-		std::tie(ch, size) = GetChar(text, i);
-		i += size;
+		size_t chs;
+		std::tie(ch, chs) = GetChar(text, i);
+		i += chs;
 
 		auto bank = ch >> 8;
 		LoadFontBank(textRenderFont, bank);
@@ -262,7 +262,6 @@ glm::vec2 SpriteRenderer::MeasureText(int font, const std::string& text, float s
 			i = msbtEnd + 1;
 
 			auto msbtWhole = text.substr(msbtStart, msbtEnd - msbtStart);
-			//fmt::print("(MSBT: {})", msbtWhole);
 			auto msbt = Split(msbtWhole, ':');
 			if (msbt[0] == "break" || msbt[0] == "clr")
 			{
@@ -277,8 +276,6 @@ glm::vec2 SpriteRenderer::MeasureText(int font, const std::string& text, float s
 		}
 
 measureIt:
-		auto chr = ch & 0xFF;
-
 		auto bakedChar = cdata[(textRenderFont * 0xFFFF) + ch];
 
 		auto w = bakedChar.x1 - bakedChar.x0 + 0.5f;

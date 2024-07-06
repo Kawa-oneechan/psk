@@ -21,7 +21,7 @@ class Model
 		unsigned int VBO, VAO, EBO;
 		std::vector<Vertex> vertices;
 		std::vector<unsigned int> indices;
-		unsigned int texture;
+		int texture;
 
 		Mesh(ufbx_mesh* mesh);
 		const void Draw();

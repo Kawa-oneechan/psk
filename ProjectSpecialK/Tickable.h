@@ -7,9 +7,9 @@ public:
 	bool dead{ false };
 
 	virtual ~Tickable() {}
-	virtual void Tick(float dt) {};
-	virtual void Draw(float dt) {};
-	virtual bool Character(unsigned int codepoint) { return false; }
+	virtual void Tick(float) {};
+	virtual void Draw(float) {};
+	virtual bool Character(unsigned int) { return false; }
 };
 
 using TickableP = std::shared_ptr<Tickable>;

@@ -14,6 +14,7 @@ void DialogueBox::msbtStr(MSBTParams)
 
 void DialogueBox::msbtEllipses(MSBTParams)
 {
+	tags;
 	auto fakeTags = std::vector<std::string>
 	{
 		"str", "..."
@@ -23,30 +24,37 @@ void DialogueBox::msbtEllipses(MSBTParams)
 
 void DialogueBox::msbtDelay(MSBTParams)
 {
+	len; start;
+	//TODO: add checks for at least one delay.
 	delay = (float)std::stoi(tags[1]);
 }
 
 void DialogueBox::msbtEmote(MSBTParams)
 {
-
+	tags; len; start;
+	//TODO LATER
 }
 
 void DialogueBox::msbtBreak(MSBTParams)
 {
+	tags; len; start;
 	state = State::WaitingForKey;
 }
 
 void DialogueBox::msbtClear(MSBTParams)
 {
+	tags; len; start;
 	displayed.clear();
 }
 
 void DialogueBox::msbtEnd(MSBTParams)
 {
+	tags; len; start;
 	state = State::Closing;
 }
 void DialogueBox::msbtPass(MSBTParams)
 {
+	tags;
 	displayed += toDisplay.substr(start, len);
 }
 
@@ -87,7 +95,7 @@ void DialogueBox::Preprocess()
 
 void DialogueBox::Wrap()
 {
-	size_t lastSpace = -1;
+	size_t lastSpace = 0xFFFF;
 	for (size_t i = 0; i < toDisplay.length();)
 	{
 		unsigned int ch;
@@ -99,7 +107,7 @@ void DialogueBox::Wrap()
 		auto width = sprender->MeasureText(font, toDisplay.substr(0, i + size), 100).x;
 		if (width > 650)
 		{
-			if (lastSpace == -1)
+			if (lastSpace == 0xFFFF)
 			{
 				lastSpace = i;
 				toDisplay.insert(toDisplay.begin() + i, '\n');

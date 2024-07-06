@@ -48,5 +48,5 @@ void InputsMap::Clear()
 	MouseLeft = MouseRight = MouseMiddle = false;
 	MouseHoldLeft = MouseHoldRight = MouseHoldMiddle = false;
 }
-InputsMap& Inputs = InputsMap();
+InputsMap Inputs = InputsMap();
 

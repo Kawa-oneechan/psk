@@ -29,7 +29,7 @@ private:
 	std::string _customCatchphrase;
 	std::string _customNickname;
 	Gender gender{ Gender::BEnby };
-	unsigned char _birthday[2]{ 1, 1 };
+	unsigned int _birthday[2]{ 1, 1 };
 	unsigned char _flags[255]{ 0 };
 	unsigned char _memories[255]{ 0 };
 

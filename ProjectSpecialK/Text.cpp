@@ -4,7 +4,7 @@ Language gameLang = Language::USen;
 
 static std::map<std::string, TextEntry> textEntries;
 
-static Language LangStrToEnum(const std::string& lang)
+static Language LangStrToEnum(const std::string lang)
 {
 	const auto map = std::map<std::string, Language>(
 	{
@@ -57,7 +57,7 @@ std::string TextEntry::get()
 	return get(gameLang);
 }
 
-TextEntry& TextAdd(std::string& key, JSONObject& map)
+TextEntry& TextAdd(std::string key, JSONObject& map) //-V813
 {
 	auto entry = new TextEntry();
 
@@ -91,14 +91,14 @@ TextEntry& TextAdd(std::string& key, JSONObject& map)
 	return *entry;
 }
 
-TextEntry& TextAdd(std::string& key, const std::string& english)
+TextEntry& TextAdd(std::string key, const std::string& english) //-V813
 {
 	auto map = new JSONObject();
 	auto p = map->insert(map->begin(), std::pair<std::string, JSONValue*>("USen", new JSONValue(english)));
 	return TextAdd(key, *map);
 }
 
-TextEntry& TextAdd(std::string& key, JSONValue& value)
+TextEntry& TextAdd(std::string key, JSONValue& value) //-V813
 {
 	if (value.IsObject())
 	{
@@ -113,10 +113,12 @@ TextEntry& TextAdd(std::string& key, JSONValue& value)
 	throw "TextAdd<Value>: JSONValue is not an Object or String.";
 }
 
+/*
 TextEntry& TextAdd(const char* key, const char* english)
 {
 	return TextAdd(std::string(key), std::string(english));
 }
+*/
 
 void TextAdd(JSONValue& doc)
 {
@@ -128,7 +130,7 @@ void TextAdd(JSONValue& doc)
 	}
 }
 
-std::string TextGet(std::string& key, Language lang)
+std::string TextGet(std::string key, Language lang)
 {
 	auto oldLang = gameLang;
 	if (lang != Language::Default)
@@ -147,14 +149,16 @@ std::string TextGet(std::string& key, Language lang)
 	return ret;
 }
 
+/*
 std::string TextGet(const char* key)
 {
 	return TextGet(std::string(key));
 }
+*/
 
 std::string TextDateMD(int month, int day)
 {
-	auto format = TextGet("month:format");
+	auto format = TextGet("month:format"s);
 	std::string ret;
 	for (int i = 0; i < format.length(); i++)
 	{
@@ -163,7 +167,7 @@ std::string TextDateMD(int month, int day)
 			i++;
 			if (format[i] == 'm')
 			{
-				ret += TextGet("month:" + std::to_string(month));
+				ret += TextGet(fmt::format("month:{}", std::to_string(month)));
 			}
 			else if (format[i] == 'd')
 			{

@@ -2,7 +2,7 @@
 
 Species::Species(JSONObject& value, const std::string& filename) : NameableThing(value, filename)
 {
-	JSONObject& filterNames = JSONObject();
+	auto filterNames = JSONObject();
 
 	if (value["name"]->IsString())
 	{
@@ -47,7 +47,7 @@ Species::Species(JSONObject& value, const std::string& filename) : NameableThing
 				auto it = sn.second->AsString();
 				it = StripMSBT(it);
 				if (it[0] > 32 && it[0] < 127 && std::islower(it[0]))
-					it[0] = std::toupper(it[0]);
+					it[0] = (char)std::toupper(it[0]);
 				filterNames[sn.first] = new JSONValue(it);
 			}
 		}

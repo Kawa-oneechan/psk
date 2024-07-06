@@ -15,7 +15,7 @@ struct SavedMapItem
 			unsigned char Dropped : 1;
 			unsigned char Status : 3;
 			unsigned char Locked : 1;
-		};
+		} System;
 	};
 	union
 	{
@@ -52,7 +52,7 @@ struct SavedMapItem
 				unsigned short Watered;
 				unsigned short PatternHash;
 			};
-		};
+		} Flowers;
 	};
 };
 

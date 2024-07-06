@@ -143,6 +143,7 @@ PanelLayout::PanelLayout(JSONValue* source)
 
 void PanelLayout::Tick(float dt)
 {
+	dt;
 	if (tweens.size() > 0)
 	{
 		for (auto i = 0; i < tweens.size(); i++)
@@ -184,6 +185,7 @@ Tween<float>* PanelLayout::Tween(float* target, float from, float to, float spee
 
 void PanelLayout::Draw(float dt)
 {
+	dt;
 	for (const auto& panel : panels)
 	{
 		auto color = panel->Color;
