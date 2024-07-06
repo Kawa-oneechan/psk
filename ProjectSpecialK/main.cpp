@@ -324,9 +324,7 @@ void ThreadedLoader(std::function<void(float*)> loader)
 	while (true)
 	{
 		int newTime = std::clock();
-		int deltaTime = newTime - oldTime;
 		oldTime = newTime;
-		double dt = deltaTime;
 
 		auto time = (float)glfwGetTime();
 
