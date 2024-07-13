@@ -91,7 +91,10 @@ void SpriteRenderer::msbtColor(MSBTParams)
 	if (tags[0] == "/color")
 		textRenderColor = originalTextRenderColor;
 	else if (tags.size() < 2)
+	{
+		//conprint(2, "Missing paramater in MSBT Color");
 		return;
+	}
 	else
 	{
 		int id = std::stoi(tags[1]);
@@ -107,6 +110,11 @@ void SpriteRenderer::msbtSize(MSBTParams)
 	start; len;
 	if (tags[0] == "/size")
 		textRenderSize = originalTextRenderSize;
+	else if (tags.size() < 2)
+	{
+		//conprint(2, "Missing paramater in MSBT Size");
+		return;
+	}
 	else
 	{
 		int size = std::stoi(tags[1]);
@@ -122,6 +130,11 @@ void SpriteRenderer::msbtFont(MSBTParams)
 	start; len;
 	if (tags[0] == "/font")
 		textRenderFont = originalTextRenderFont;
+	else if (tags.size() < 2)
+	{
+		//conprint(2, "Missing paramater in MSBT Font");
+		return;
+	}
 	else
 	{
 		int num = std::stoi(tags[1]);

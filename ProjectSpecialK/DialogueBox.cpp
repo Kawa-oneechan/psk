@@ -4,6 +4,11 @@
 
 void DialogueBox::msbtStr(MSBTParams)
 {
+	if (tags.size() < 2)
+	{
+		conprint(2, "Missing paramater in MSBT Str: {}", toDisplay.substr(start, len));
+		return;
+	}
 	if (tags[1] == "...")
 		toDisplay.replace(start, len, TextGet("str:fix:001"));
 	else if (tags[1] == "player")
@@ -25,7 +30,12 @@ void DialogueBox::msbtEllipses(MSBTParams)
 void DialogueBox::msbtDelay(MSBTParams)
 {
 	len; start;
-	//TODO: add checks for at least one delay.
+	if (tags.size() < 2)
+	{
+		conprint(2, "Missing paramater in MSBT Delay: {}", toDisplay.substr(start, len));
+		return;
+	}
+	//TODO: add checks for per-personality delays
 	delay = (float)std::stoi(tags[1]);
 }
 
@@ -96,23 +106,24 @@ void DialogueBox::Preprocess()
 void DialogueBox::Wrap()
 {
 	size_t lastSpace = 0xFFFF;
+	auto threeLines = sprender->MeasureText(font, "1\n2\n3\n", 100).y;
 	for (size_t i = 0; i < toDisplay.length();)
 	{
 		unsigned int ch;
 		size_t size;
 		std::tie(ch, size) = GetChar(toDisplay, i);
 
-		if (size == 1 && std::isblank(ch))
+		if (size == 1 && (std::isblank(ch) || ch == '\n'))
 			lastSpace = i;
-		auto width = sprender->MeasureText(font, toDisplay.substr(0, i + size), 100).x;
-		if (width > 650)
+
+		auto space = sprender->MeasureText(font, toDisplay.substr(0, i + size), 100);
+		if (space.x > 650)
 		{
 			if (lastSpace == 0xFFFF)
 			{
 				lastSpace = i;
 				toDisplay.insert(toDisplay.begin() + i, '\n');
 				i++;
-				//TODO: if we've reached three size 100 lines, add a <break> command instead.
 			}
 			else
 			{
@@ -124,6 +135,11 @@ void DialogueBox::Wrap()
 					i++;
 				}
 			}
+		}
+		if (space.y >= threeLines)
+		{
+			toDisplay[lastSpace] = '>';
+			toDisplay.insert(lastSpace, "<break");
 		}
 
 		i += size;
@@ -354,4 +370,3 @@ void DialogueBox::Tick(float dt)
 			state = State::Done;
 	}
 }
-

@@ -4,7 +4,7 @@ Language gameLang = Language::USen;
 
 static std::map<std::string, TextEntry> textEntries;
 
-static Language LangStrToEnum(const std::string lang)
+static Language LangStrToEnum(const std::string &lang)
 {
 	const auto map = std::map<std::string, Language>(
 	{
