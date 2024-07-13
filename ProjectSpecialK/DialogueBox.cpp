@@ -120,6 +120,7 @@ void DialogueBox::Wrap()
 		//Massive hack, absolutely breaks Kinsoku Shori rules. I don't care.
 		if (size == 3 && (ch >= 0x2E80 && ch < 0xF000))
 			lastSpace = i;
+
 		auto space = sprender->MeasureText(font, toDisplay.substr(0, i + size), 100);
 		if (space.x > 650)
 		{
