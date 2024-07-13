@@ -222,13 +222,17 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	if (key == GLFW_KEY_BACKSPACE && action == GLFW_PRESS)
 		char_callback(window, '\b');
 	else if (key == GLFW_KEY_LEFT && action == GLFW_PRESS)
-		char_callback(window, 0xFFF0);
+		char_callback(window, (unsigned int)SpecialKeys::Left);
 	else if (key == GLFW_KEY_RIGHT && action == GLFW_PRESS)
-		char_callback(window, 0xFFF1);
+		char_callback(window, (unsigned int)SpecialKeys::Right);
+	else if (key == GLFW_KEY_UP && action == GLFW_PRESS)
+		char_callback(window, (unsigned int)SpecialKeys::Up);
+	else if (key == GLFW_KEY_DOWN && action == GLFW_PRESS)
+		char_callback(window, (unsigned int)SpecialKeys::Down);
 	else if (key == GLFW_KEY_HOME && action == GLFW_PRESS)
-		char_callback(window, 0xFFF2);
+		char_callback(window, (unsigned int)SpecialKeys::Home);
 	else if (key == GLFW_KEY_END && action == GLFW_PRESS)
-		char_callback(window, 0xFFF3);
+		char_callback(window, (unsigned int)SpecialKeys::End);
 
 	//if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 	//	glfwSetWindowShouldClose(window, 1);

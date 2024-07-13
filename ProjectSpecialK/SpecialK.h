@@ -50,6 +50,18 @@ enum class LoadSpawnChoice
 	InPlace,
 };
 
+enum class SpecialKeys : unsigned int
+{
+	Left = 0xFFE0,
+	Right,
+	Up,
+	Down,
+	Home,
+	End,
+	Copy,
+	Paste,
+};
+
 extern float width, height;
 extern float scale;
 

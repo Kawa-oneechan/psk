@@ -50,8 +50,7 @@ bool TextField::Character(unsigned int codepoint)
 		}
 		return true;
 	}
-	//TODO: replace magic numbers with identifiers.
-	else if (codepoint == 0xFFF0) //left
+	else if ((SpecialKeys)codepoint == SpecialKeys::Left)
 	{
 		if (caret > 0)
 		{
@@ -72,7 +71,7 @@ bool TextField::Character(unsigned int codepoint)
 		}
 		return true;
 	}
-	else if (codepoint == 0xFFF1) //right
+	else if ((SpecialKeys)codepoint == SpecialKeys::Right)
 	{
 		if (caret < value.length())
 		{
@@ -85,12 +84,12 @@ bool TextField::Character(unsigned int codepoint)
 		}
 		return true;
 	}
-	else if (codepoint == 0xFFF2) //home
+	else if ((SpecialKeys)codepoint == SpecialKeys::Home)
 	{
 		caret = 0;
 		return true;
 	}
-	else if (codepoint == 0xFFF3) //end
+	else if ((SpecialKeys)codepoint == SpecialKeys::End)
 	{
 		caret = value.length();
 		return true;
