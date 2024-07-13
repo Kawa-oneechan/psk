@@ -19,7 +19,7 @@ void DoomMenuItem::Translate()
 	if (type == Type::Options)
 	{
 		options.clear();
-		for (auto i : optionKeys)
+		for (auto& i : optionKeys)
 			options.emplace_back(TextGet(i));
 	}
 	if (type == Type::Page && page != nullptr)
@@ -496,7 +496,7 @@ void DoomMenu::Draw(float dt)
 	for (int i = 0; i < shown; i++)
 	{
 		auto item = items->items[i + scroll];
-		const auto color = glm::vec4(1); //TODO: use UI::themeColors
+		const auto color = UI::themeColors["white"];
 		auto offset = glm::vec2(item->type == DoomMenuItem::Type::Checkbox ? (40 * scale) : 0, 0);
 		auto font = 1;
 		auto size = 100 * scale;
@@ -537,25 +537,23 @@ void DoomMenu::Draw(float dt)
 	for (int i = 0; i < shown; i++)
 	{
 		auto item = i == 0 ? items->items[0] : items->items[i + scroll];
-		auto color = glm::vec4(1, 1, i + scroll == highlight ? 0.25 : 1, 1);
+		auto color = UI::themeColors["white"]; //(scroll + i == highlight) ? UI::themeColors["secondary"] : UI::themeColors["white"];
 		auto offset = glm::vec2(item->type == DoomMenuItem::Type::Checkbox ? (40 * scale) : 0, 0);
 
 		pos.y = itemY[i];
 
 		if (item->type == DoomMenuItem::Type::Checkbox)
 		{
-			auto checkColor = color * glm::vec4(1, 1, 1, 0.5);
-			sprender->DrawSprite(controls, pos + glm::vec2(0, 4 * scale), glm::vec2(partSize), controls[4], 0, checkColor);
+			sprender->DrawSprite(controls, pos + glm::vec2(0, 4 * scale), glm::vec2(partSize), controls[4], 0, color);
 			if (item->selection)
 				sprender->DrawSprite(controls, pos + glm::vec2(0, 4 * scale), glm::vec2(partSize), controls[5], 0, color);
 		}
 		else if (item->type == DoomMenuItem::Type::Slider)
 		{
-			auto trackColor = color * glm::vec4(1, 1, 1, 0.5);
 			auto barLength = col;
-			sprender->DrawSprite(controls, pos + glm::vec2(col, 10 * scale), glm::vec2(partSize), controls[0], 0, trackColor);
-			sprender->DrawSprite(controls, pos + glm::vec2(col + barLength + (partSize * 1), 10 * scale), glm::vec2(partSize), controls[1], 0, trackColor);
-			sprender->DrawSprite(controls, pos + glm::vec2(col + partSize, 10 * scale), glm::vec2(barLength, partSize), controls[2], 0, trackColor);
+			sprender->DrawSprite(controls, pos + glm::vec2(col, 10 * scale), glm::vec2(partSize), controls[0], 0, color);
+			sprender->DrawSprite(controls, pos + glm::vec2(col + barLength + (partSize * 1), 10 * scale), glm::vec2(partSize), controls[1], 0, color);
+			sprender->DrawSprite(controls, pos + glm::vec2(col + partSize, 10 * scale), glm::vec2(barLength, partSize), controls[2], 0, color);
 
 			sliderStart = pos.x + col + partSize;
 			sliderEnd = sliderStart + barLength;
