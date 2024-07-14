@@ -92,7 +92,7 @@ void SpriteRenderer::msbtColor(MSBTParams)
 		textRenderColor = originalTextRenderColor;
 	else if (tags.size() < 2)
 	{
-		//conprint(2, "Missing paramater in MSBT Color");
+		//conprint(2, "Missing parameter in MSBT Color");
 		return;
 	}
 	else
@@ -112,7 +112,7 @@ void SpriteRenderer::msbtSize(MSBTParams)
 		textRenderSize = originalTextRenderSize;
 	else if (tags.size() < 2)
 	{
-		//conprint(2, "Missing paramater in MSBT Size");
+		//conprint(2, "Missing parameter in MSBT Size");
 		return;
 	}
 	else
@@ -132,7 +132,7 @@ void SpriteRenderer::msbtFont(MSBTParams)
 		textRenderFont = originalTextRenderFont;
 	else if (tags.size() < 2)
 	{
-		//conprint(2, "Missing paramater in MSBT Font");
+		//conprint(2, "Missing parameter in MSBT Font");
 		return;
 	}
 	else

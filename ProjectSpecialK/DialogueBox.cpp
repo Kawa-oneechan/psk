@@ -6,7 +6,7 @@ void DialogueBox::msbtStr(MSBTParams)
 {
 	if (tags.size() < 2)
 	{
-		conprint(2, "Missing paramater in MSBT Str: {}", toDisplay.substr(start, len));
+		conprint(2, "Missing parameter in MSBT Str: {}", toDisplay.substr(start, len));
 		return;
 	}
 	if (tags[1] == "...")
@@ -15,6 +15,36 @@ void DialogueBox::msbtStr(MSBTParams)
 		toDisplay.replace(start, len, thePlayer.Name);
 	else if (tags[1] == "kun")
 		toDisplay.replace(start, len, TextGet("str:kun"));
+	else if (tags[1] == "vname")
+	{
+		if (speaker == nullptr)
+		{
+			conprint(2, "MSBT Str called for villager name, but no speaker is set.");
+			toDisplay.replace(start, len, "Buggsy");
+			return;
+		}
+		toDisplay.replace(start, len, speaker->Name());
+	}
+	else if (tags[1] == "vspec")
+	{
+		if (speaker == nullptr)
+		{
+			conprint(2, "MSBT Str called for villager species, but no speaker is set.");
+			toDisplay.replace(start, len, "bug");
+			return;
+		}
+		toDisplay.replace(start, len, speaker->Species());
+	}
+	else if (tags[1] == "catchphrase")
+	{
+		if (speaker == nullptr)
+		{
+			conprint(2, "MSBT Str called for villager catchphrase, but no speaker is set.");
+			toDisplay.replace(start, len, "bugbug");
+			return;
+		}
+		toDisplay.replace(start, len, speaker->Catchphrase());
+	}
 }
 
 void DialogueBox::msbtEllipses(MSBTParams)
@@ -32,16 +62,50 @@ void DialogueBox::msbtDelay(MSBTParams)
 	len; start;
 	if (tags.size() < 2)
 	{
-		conprint(2, "Missing paramater in MSBT Delay: {}", toDisplay.substr(start, len));
+		conprint(2, "Missing parameter in MSBT Delay: {}", toDisplay.substr(start, len));
 		return;
 	}
-	//TODO: add checks for per-personality delays
-	delay = (float)std::stoi(tags[1]);
+	else if (tags.size() == 2)
+	{
+		delay = (float)std::stoi(tags[1]);
+	}
+	else
+	{
+		if (speaker == nullptr)
+		{
+			conprint(2, "MSBT Delay called with personality dependency, but no speaker is set.");
+			return;
+		}
+		/*
+		Function 198.0 delayPersonality takes eight separate values.
+		If tags.size() == 9, we *may* have such a setup (0 being the "delay" tag itself).
+		But if we want to support *arbitrary* personalities, we need a way to specify
+		which ones.
+
+		The solution is obvious: "<delay:10:10:20:20:10:20:10:20>" is like above, but
+		"<delay:default:10:uchi:20:horny:40>" has a clear difference in that the first
+		argument is NOT A NUMBER.
+
+		So if tags.size() == 9 && std::isdigit(tags[1][0]) we have an 198.0 style delay,
+		but otherwise we have ID-delay pairs.
+
+		If the current speaker's personality is not listed, see if their personality's
+		base fallback is and use that instead.
+		The "default" delay, if given, will apply if the speaker's personality is not
+		listed (even after falling back). If it's not and the speaker's personality
+		isn't listed, we default the default to 50.
+		*/
+	}
 }
 
 void DialogueBox::msbtEmote(MSBTParams)
 {
 	tags; len; start;
+	if (speaker == nullptr)
+	{
+		conprint(2, "MSBT Emote called but speaker is set.");
+		return;
+	}
 	//TODO LATER
 }
 
@@ -168,12 +232,13 @@ void DialogueBox::Text(const std::string& text)
 		state = State::Writing;
 }
 
-void DialogueBox::Text(const std::string& text, int style, const std::string& speaker, const glm::vec4& tagBack, const glm::vec4& tagInk)
+void DialogueBox::Text(const std::string& text, int style, const std::string& who, const glm::vec4& tagBack, const glm::vec4& tagInk)
 {
 	Style(style);
+	speaker = nullptr;
 	if (style != 3)
 	{
-		name = speaker;
+		name = who;
 		nametagWidth = sprender->MeasureText(1, name, 120).x - 32;
 		nametagColor[0] = tagBack;
 		nametagColor[1] = tagInk;
@@ -191,15 +256,16 @@ void DialogueBox::Text(const std::string& text, int style)
 	Text(text);
 }
 
-void DialogueBox::Text(const std::string& text, VillagerP speaker)
+void DialogueBox::Text(const std::string& text, VillagerP who)
 {
 	Style(0);
-	if (speaker != nullptr)
+	speaker = who;
+	if (who != nullptr)
 	{
-		name = speaker->Name();
+		name = who->Name();
 		nametagWidth = sprender->MeasureText(1, name, 120).x - 32;
-		nametagColor[0] = speaker->NameTag[0];
-		nametagColor[1] = speaker->NameTag[1];
+		nametagColor[0] = who->NameTag[0];
+		nametagColor[1] = who->NameTag[1];
 	}
 	Text(text);
 }

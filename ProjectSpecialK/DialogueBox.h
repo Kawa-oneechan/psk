@@ -28,6 +28,7 @@ private:
 	glm::vec4 nametagColor[2];
 	float nametagWidth{ 0 };
 	std::string name;
+	VillagerP speaker{ nullptr };
 	int font{ 0 };
 	int bubbleNum{ 0 };
 	float tween{ 0 };

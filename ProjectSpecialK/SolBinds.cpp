@@ -24,6 +24,7 @@ namespace SolBinds
 
 		Sol["dialogue"] = sol::yielding([&](sol::variadic_args va)
 		{
+			VillagerP speaker = nullptr;
 			int style = 0;
 			std::string line;
 			switch (va.size())
@@ -38,7 +39,14 @@ namespace SolBinds
 				line = va[0].as<std::string>();
 				if (va[1].is<int>())
 					style = va[1].as<int>();
-				//TODO: else va[1] is the speaker and va[2] is a style
+				else
+				{
+					if (va[1].is<VillagerP>())
+						speaker = va[1].as<VillagerP>();
+					else if (va[1].is<std::string>())
+						speaker = Database::Find<Villager>(va[1].as<std::string>(), villagers);
+					style = va[2].as<int>();
+				}
 				break;
 			}
 
