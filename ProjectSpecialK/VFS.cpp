@@ -323,7 +323,7 @@ JSONValue* ReadJSON(const VFSEntry& entry)
 		auto vfsData = ReadVFSString(entry.path);
 		auto doc = JSON::Parse(vfsData.c_str());
 
-		std::string ppath = entry.path + ".patch";
+		std::string ppath = entry.path + ".patch"s;
 		for (const auto& pents : entries)
 		{
 			if (pents.path == ppath)

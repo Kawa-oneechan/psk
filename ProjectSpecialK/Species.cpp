@@ -8,8 +8,8 @@ Species::Species(JSONObject& value, const std::string& filename) : NameableThing
 	{
 		auto& both = value["name"]->AsString();
 
-		TextAdd(RefName + ":m", both);
-		TextAdd(RefName + ":f", both);
+		TextAdd(RefName + ":m"s, both);
+		TextAdd(RefName + ":f"s, both);
 
 		filterNames["USen"] = new JSONValue(value["name"]->AsString());
 	}
@@ -19,17 +19,17 @@ Species::Species(JSONObject& value, const std::string& filename) : NameableThing
 		filterNames = narr[0]->AsObject();
 		if (narr.size() == 1)
 		{
-			TextAdd(RefName + ":m", *narr[0]);
-			TextAdd(RefName + ":f", *narr[0]);
+			TextAdd(RefName + ":m"s, *narr[0]);
+			TextAdd(RefName + ":f"s, *narr[0]);
 		}
 		else
 		{
-			TextAdd(RefName + ":m", *narr[0]);
-			TextAdd(RefName + ":f", *narr[1]);
+			TextAdd(RefName + ":m"s, *narr[0]);
+			TextAdd(RefName + ":f"s, *narr[1]);
 		}
 	}
-	EnName[0] = StripMSBT(TextGet(RefName + ":m", Language::EUen));
-	EnName[1] = StripMSBT(TextGet(RefName + ":f", Language::EUen));
+	EnName[0] = StripMSBT(TextGet(RefName + ":m"s, Language::EUen));
+	EnName[1] = StripMSBT(TextGet(RefName + ":f"s, Language::EUen));
 
 	if (value["filterAs"])
 	{

@@ -102,9 +102,9 @@ const std::string Villager::Name()
 const std::string Villager::Species()
 {
 	if (gender == Gender::Girl || gender == Gender::GEnby)
-		return TextGet(RefSpecies + ":f");
+		return TextGet(RefSpecies + ":f"s);
 	else
-		return TextGet(RefSpecies + ":m");
+		return TextGet(RefSpecies + ":m"s);
 }
 
 void Villager::LoadModel()
