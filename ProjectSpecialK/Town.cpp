@@ -37,7 +37,7 @@ void Town::StartNewDay()
 		}
 
 		//Now to pick a weather pattern for this day...
-		//TODO: seed the randomizer with weatherSeed and a hash of today.
+		std::srand(weatherSeed + calNow);
 		//TODO: use a less dipshit way to do a weighted random choice.
 		auto rates = here["rates"]->AsArray();
 		auto pick = 0;

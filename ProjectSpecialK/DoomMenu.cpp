@@ -34,7 +34,7 @@ void DoomMenuItem::Beep()
 	{
 	case Type::Slider:
 	{
-		auto beep = uiSounds["selectShort"];
+		auto beep = generalSounds["ui"]["selectShort"];
 
 		auto ccur = clamp(selection, minVal, maxVal) - minVal;
 		auto panpot = -1.0f + ((ccur / (float)(maxVal - minVal)) * 2.0f);
@@ -45,7 +45,7 @@ void DoomMenuItem::Beep()
 	}
 	case Type::Checkbox:
 	{
-		uiSounds["checkSmall"]->Play(true);
+		generalSounds["ui"]["checkSmall"]->Play(true);
 		break;
 	}
 	}

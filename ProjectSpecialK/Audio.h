@@ -51,5 +51,5 @@ public:
 	void SetPan(float pos);
 };
 
-extern std::map<std::string, std::shared_ptr<Audio>> uiSounds;
+extern std::map<std::string, std::map<std::string, std::shared_ptr<Audio>>> generalSounds;
 

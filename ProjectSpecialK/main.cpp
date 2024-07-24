@@ -377,12 +377,14 @@ int main(int argc, char** argv)
 
 	UI::Load(ReadJSON("ui/ui.json"));
 
-	//TODO: bind these to a JSON file
-	uiSounds["checkSmall"] = std::make_shared<Audio>("sound/ui/UI_Check_Small.wav");
-	uiSounds["cmnClose"] = std::make_shared<Audio>("sound/ui/UI_Cmn_Close.wav");
-	uiSounds["decide"] = std::make_shared<Audio>("sound/ui/UI_Decide.wav");
-	uiSounds["selectShort"] = std::make_shared<Audio>("sound/ui/UI_Select_Short.wav");
-	uiSounds["wait"] = std::make_shared<Audio>("sound/ui/UI_Wait.wav");
+	{
+		auto sounds = ReadJSON("sound/sounds.json");
+		for (auto category : sounds->AsObject())
+		{
+			for (auto sound : category.second->AsObject())
+				generalSounds[category.first][sound.first] = std::make_shared<Audio>(sound.second->AsString());
+		}
+	}
 
 	//test
 	{

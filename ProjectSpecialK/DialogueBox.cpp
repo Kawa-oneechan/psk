@@ -205,12 +205,14 @@ void DialogueBox::Wrap()
 				}
 			}
 		}
+		//TODO: This bit needs to be looked into.
+		/*
 		if (space.y >= threeLines)
 		{
 			toDisplay[lastSpace] = '>';
 			toDisplay.insert(lastSpace, "<break");
 		}
-
+		*/
 		i += size;
 	}
 }
