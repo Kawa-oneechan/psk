@@ -34,7 +34,7 @@ std::string TextEntry::get(Language lang)
 {
 	if (condition.size())
 	{
-		bool result = Sol.script(fmt::format("return ({})", condition));
+		bool result = Sol.script("return (" + condition + ")");
 		return TextGet(result ? ifTrue : ifElse);
 	}
 
@@ -57,7 +57,7 @@ std::string TextEntry::get()
 	return get(gameLang);
 }
 
-TextEntry& TextAdd(std::string& key, JSONObject& map) //-V813
+TextEntry& TextAdd(std::string key, JSONObject& map) //-V813
 {
 	auto entry = new TextEntry();
 
@@ -84,21 +84,21 @@ TextEntry& TextAdd(std::string& key, JSONObject& map) //-V813
 	if (entry->rep.length() > 16)
 		entry->rep = StripMSBT(entry->rep);
 	if (entry->rep.length() > 16)
-		entry->rep = entry->rep.substr(0, 16) + "..."s;
+		entry->rep = entry->rep.substr(0, 16) + "...";
 	entry->rep.shrink_to_fit();
 
 	textEntries[key] = *entry;
 	return *entry;
 }
 
-TextEntry& TextAdd(const std::string& key, const std::string& english) //-V813
+TextEntry& TextAdd(std::string key, const std::string& english) //-V813
 {
 	auto map = new JSONObject();
 	auto p = map->insert(map->begin(), std::pair<std::string, JSONValue*>("USen", new JSONValue(english)));
 	return TextAdd(key, *map);
 }
 
-TextEntry& TextAdd(std::string& key, JSONValue& value) //-V813
+TextEntry& TextAdd(std::string key, JSONValue& value) //-V813
 {
 	if (value.IsObject())
 	{
@@ -130,12 +130,12 @@ void TextAdd(JSONValue& doc)
 	}
 }
 
-std::string TextGet(const std::string key, Language lang)
+std::string TextGet(std::string key, Language lang)
 {
 	auto oldLang = gameLang;
 	if (lang != Language::Default)
 		gameLang = lang;
-	auto ret = fmt::format("?{}?", key);
+	auto ret = std::string("???" + key + "???");
 	for (const auto& entry : textEntries)
 	{
 		if (entry.first == key)
@@ -207,7 +207,7 @@ std::string StripMSBT(const std::string& data)
 	return ret;
 }
 
-std::vector<std::string> Split(const std::string& data, char delimiter)
+std::vector<std::string> Split(std::string& data, char delimiter)
 {
 	std::vector<std::string> ret;
 	std::string part;

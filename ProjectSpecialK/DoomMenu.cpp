@@ -12,8 +12,10 @@ DoomMenuItem::DoomMenuItem(const std::string& cap, int val, std::initializer_lis
 void DoomMenuItem::Translate()
 {
 	caption = TextGet(key);
-	description = TextGet(key + ":desc"s);
-	formatText = TextGet(key + ":fmt"s);
+	auto k = key + ":desc";
+	description = TextGet(k);
+	k = key + ":fmt";
+	formatText = TextGet(k);
 	if (type == Type::Options)
 	{
 		options.clear();
@@ -227,7 +229,7 @@ DoomMenu::DoomMenu()
 	for (const auto& s : ::species)
 	{
 		if (!s->FilterAs.empty()) continue;
-		speciesPreviews.push_back(new Texture(fmt::format("ui/species/{}.png", s->ID)));
+		speciesPreviews.push_back(new Texture("ui/species/" + s->ID + ".png"));
 	}
 }
 
