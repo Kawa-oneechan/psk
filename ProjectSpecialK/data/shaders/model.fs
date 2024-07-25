@@ -13,15 +13,24 @@ uniform sampler2D mixTexture;
 
 uniform vec3 viewPos; 
 
-uniform float ambientStrength;
-uniform vec3 lightPos; 
-uniform vec3 lightColor;
+//lighting
+#define NUMLIGHTS 4
+struct light {
+	vec3 pos;
+	vec3 color;
+	float strength;
+};
+uniform light lights[NUMLIGHTS];
+
+//uniform float ambientStrength;
+//uniform vec3 lightPos; 
+//uniform vec3 lightColor;
 
 const float specPower = 4.0; //32.0;
 
-vec3 ambientLight(vec3 litCol)
+vec3 ambientLight(vec3 litCol, float strength)
 {
-	return ambientStrength * litCol;
+	return strength * litCol;
 }
 
 vec3 diffuseLight(vec3 normal, vec3 litPos, vec3 litCol)
@@ -37,6 +46,16 @@ vec3 specularLight(vec3 normal, vec3 viewDir, vec3 litPos, vec3 litCol, float st
 	vec3 reflectDir = reflect(-litDir, normal);  
 	float spec = pow(max(dot(viewDir, reflectDir), 0.0), specPower);
 	return strength * spec * litCol;
+}
+
+vec3 getLight(light l, vec3 albedo, vec3 norm, vec3 viewDir, float spec)
+{
+	if (l.strength < 0.1) return vec3(0);
+
+	vec3 ambient = ambientLight(l.color, l.strength);
+	vec3 diffuse = diffuseLight(norm, l.pos, l.color);
+	vec3 specular = specularLight(norm, viewDir, l.pos, l.color, spec);
+	return (ambient + diffuse + specular) * albedo;
 }
 
 vec3 calcNormal(vec3 mapCol)
@@ -65,12 +84,15 @@ void main()
 	//vec3 norm = normalize(Normal);
 	vec3 norm = calcNormal(normal);
 
-	vec3 ambient = ambientLight(lightColor);
+	//vec3 ambient = ambientLight(lightColor);
 	vec3 viewDir = normalize(viewPos - FragPos);
-  	
-	vec3 diffuse = diffuseLight(norm, lightPos, lightColor);
-	vec3 specular = vec3(0); //specularLight(norm, viewDir, lightPos, lightColor, mix.g);
-	vec3 result = (ambient + diffuse + specular) * albedo.rgb;
+
+	//vec3 diffuse = diffuseLight(norm, lightPos, lightColor);
+	//vec3 specular = vec3(0); //specularLight(norm, viewDir, lightPos, lightColor, mix.g);
+	//vec3 result = (ambient + diffuse + specular) * albedo.rgb;
+	vec3 result;
+	for (int i = 0; i < NUMLIGHTS; i++)
+		result += getLight(lights[i], albedo.rgb, norm, viewDir, 0.2);
 	FragColor = vec4(result, albedo.a);
 
 	//FragColor = texture(albedoTexture, TexCoord);

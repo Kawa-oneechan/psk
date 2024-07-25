@@ -491,13 +491,10 @@ int main(int argc, char** argv)
 	testModel.Textures[10] = new Texture("villagers/psk/cat00/mouth0_nrm.png");
 	testModel.Textures[11] = new Texture("villagers/psk/cat00/mouth0_mix.png");
 
-
-	glm::vec3 lightPos(0.0f, 0.5f, 2.0f);
-
 	modelShader->Use();
-	modelShader->SetVec3("lightColor", 1.0f, 1.0f, 1.0f);
-	modelShader->SetVec3("lightPos", lightPos);
-	modelShader->SetFloat("ambientStrength", 0.25f);
+	modelShader->SetVec3("lights[0].color", 1.0f, 1.0f, 1.0f);
+	modelShader->SetVec3("lights[0].pos", 0.0f, 0.5f, 2.0f);
+	modelShader->SetFloat("lights[0].strength", 0.25f);
 	modelShader->SetVec3("viewPos", camera.Position);
 	modelShader->SetInt("albedoTexture", 0);
 	modelShader->SetInt("normalTexture", 1);
