@@ -478,18 +478,30 @@ int main(int argc, char** argv)
 	RunTests();
 
 	auto testModel = Model("species/cat/model.fbx");
-	testModel.Textures.push_back(new Texture("villagers/psk/cat00/body_alb.png"));
-	testModel.Textures.push_back(new Texture("villagers/psk/cat00/body_alb.png"));
-	testModel.Textures.push_back(new Texture("villagers/psk/cat00/eye0_alb.png"));
-	testModel.Textures.push_back(new Texture("villagers/psk/cat00/mouth0_alb.png"));
+	testModel.Textures[0] = new Texture("villagers/psk/cat00/body_alb.png");
+	testModel.Textures[1] = new Texture("villagers/psk/cat00/body_nrm.png");
+	testModel.Textures[2] = new Texture("villagers/psk/cat00/body_mix.png");
+	testModel.Textures[3] = new Texture("villagers/psk/cat00/body_alb.png");
+	testModel.Textures[4] = new Texture("villagers/psk/cat00/body_nrm.png");
+	testModel.Textures[5] = new Texture("villagers/psk/cat00/body_mix.png");
+	testModel.Textures[6] = new Texture("villagers/psk/cat00/eye0_alb.png");
+	testModel.Textures[7] = new Texture("villagers/psk/cat00/eye0_nrm.png");
+	testModel.Textures[8] = new Texture("villagers/psk/cat00/eye0_mix.png");
+	testModel.Textures[9] = new Texture("villagers/psk/cat00/mouth0_alb.png");
+	testModel.Textures[10] = new Texture("villagers/psk/cat00/mouth0_nrm.png");
+	testModel.Textures[11] = new Texture("villagers/psk/cat00/mouth0_mix.png");
 
 
-	glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
+	glm::vec3 lightPos(0.0f, 0.5f, 2.0f);
 
 	modelShader->Use();
 	modelShader->SetVec3("lightColor", 1.0f, 1.0f, 1.0f);
 	modelShader->SetVec3("lightPos", lightPos);
+	modelShader->SetFloat("ambientStrength", 0.25f);
 	modelShader->SetVec3("viewPos", camera.Position);
+	modelShader->SetInt("albedoTexture", 0);
+	modelShader->SetInt("normalTexture", 1);
+	modelShader->SetInt("mixTexture", 2);
 
 	int oldTime = 0;
 	while (!glfwWindowShouldClose(window))

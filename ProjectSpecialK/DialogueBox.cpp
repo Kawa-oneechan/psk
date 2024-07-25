@@ -170,7 +170,7 @@ void DialogueBox::Preprocess()
 void DialogueBox::Wrap()
 {
 	size_t lastSpace = 0xFFFF;
-	auto threeLines = sprender->MeasureText(font, "1\n2\n3\n", 100).y;
+	//auto threeLines = sprender->MeasureText(font, "1\n2\n3\n", 100).y;
 	for (size_t i = 0; i < toDisplay.length();)
 	{
 		unsigned int ch;

@@ -23,13 +23,57 @@ Model::Mesh::Mesh(ufbx_mesh* mesh) : texture(-1)
 			auto p = mesh->vertex_position[index];
 			auto n = mesh->vertex_normal[index];
 			auto u = mesh->vertex_uv[index];
+			//auto t = mesh->vertex_tangent[index];
 
 			Vertex v;
 			v.Position = glm::vec3(p.x, p.y, p.z) * 0.05f;
 			v.Normal = glm::vec3(n.x, n.y, n.z);
 			v.TexCoords = glm::vec2(u.x, u.y);
+			//v.Tangent = glm::vec3(t.x, t.y, t.z);
 			vertices.push_back(v);
 		}
+	}
+
+	for (size_t i = 0; i < vertices.size(); i += 3)
+	{
+		auto v0 = vertices[i + 0].Position;
+		auto v1 = vertices[i + 1].Position;
+		auto v2 = vertices[i + 2].Position;
+		auto t0 = vertices[i + 0].TexCoords;
+		auto t1 = vertices[i + 1].TexCoords;
+		auto t2 = vertices[i + 2].TexCoords;
+
+		auto e1 = glm::vec3(v1.x - v0.x, v1.y - v0.y, v1.z - v0.z);
+		auto e2 = glm::vec3(v2.x - v0.x, v2.y - v0.y, v2.z - v0.z);
+
+		auto du1 = t1.x - t0.x;
+		auto dv1 = t1.y - t0.y;
+		auto du2 = t2.x - t0.x;
+		auto dv2 = t2.y - t0.y;
+
+		auto f = 1.0f / (du1 * dv2 - du2 * dv1);
+
+		glm::vec3 t;
+		t.x = f * (dv2 * e1.x - dv1 * e2.x);
+		t.y = f * (dv2 * e1.y - dv1 * e2.y);
+		t.z = f * (dv2 * e1.z - dv1 * e2.z);
+		t = glm::normalize(t);
+
+		vertices[i + 0].Tangent = t;
+		vertices[i + 1].Tangent = t;
+		vertices[i + 2].Tangent = t;
+
+		/*
+		glm::vec3 b;
+		b.x = f * (-du2 * e1.x + du1 * e2.x);
+		b.y = f * (-du2 * e1.y + du1 * e2.y);
+		b.z = f * (-du2 * e1.z + du1 * e2.z);
+		t = glm::normalize(b);
+
+		vertices[i + 0].BiTangent = b;
+		vertices[i + 1].BiTangent = b;
+		vertices[i + 2].BiTangent = b;
+		*/
 	}
 
 	ufbx_vertex_stream streams[1] = {
@@ -61,6 +105,9 @@ Model::Mesh::Mesh(ufbx_mesh* mesh) : texture(-1)
 
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), offsetof(Vertex, TexCoords));
 	glEnableVertexAttribArray(2);
+
+	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), offsetof(Vertex, Tangent));
+	glEnableVertexAttribArray(3);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
@@ -163,7 +210,9 @@ void Model::Draw()
 						whiteRect->Use(i);
 				}
 				else
+				{
 					Textures[texNum + i]->Use(i);
+				}
 			}
 		}
 		m.Draw();

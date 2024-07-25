@@ -227,6 +227,13 @@
     <ResourceCompile Include="res.rc" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="data\shaders\font.fs" />
+    <None Include="data\shaders\model.fs" />
+    <None Include="data\shaders\model.vs" />
+    <None Include="data\shaders\scroller.fs" />
+    <None Include="data\shaders\sprite.fs" />
+    <None Include="data\shaders\sprite.vs" />
+    <None Include="data\shaders\wobble.fs" />
     <None Include="data\ui\ui.json" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
