@@ -186,7 +186,7 @@ void SpriteRenderer::DrawText(int font, const std::string& text, glm::vec2 posit
 		{
 			position.x = ogX;
 			auto h = cdata[(textRenderFont * 0xFFFF) + 'A'].x1 - cdata[(textRenderFont * 0xFFFF) + 'A'].x0;
-			ogY += (h + (h / 2)) * scaleF;
+			ogY += (h + (h / 1)) * scaleF;
 			position.y = ogY;
 			continue;
 		}
@@ -264,7 +264,7 @@ glm::vec2 SpriteRenderer::MeasureText(int font, const std::string& text, float s
 		{
 			thisLine = 0.0f;
 			auto h = cdata[(textRenderFont * 0xFFFF) + 'A'].x1 - cdata[(textRenderFont * 0xFFFF) + 'A'].x0;
-			result.y += (h + (h / 2)) * scaleF;
+			result.y += (h + (h / 1)) * scaleF;
 			continue;
 		}
 		if (ch == '<' && !raw)

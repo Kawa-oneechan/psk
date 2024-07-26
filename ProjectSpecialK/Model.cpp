@@ -26,7 +26,7 @@ Model::Mesh::Mesh(ufbx_mesh* mesh) : texture(-1)
 			//auto t = mesh->vertex_tangent[index];
 
 			Vertex v;
-			v.Position = glm::vec3(p.x, p.y, p.z) * 0.05f;
+			v.Position = glm::vec3(p.x, p.y, p.z);
 			v.Normal = glm::vec3(n.x, n.y, n.z);
 			v.TexCoords = glm::vec2(u.x, u.y);
 			//v.Tangent = glm::vec3(t.x, t.y, t.z);

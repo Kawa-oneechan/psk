@@ -37,12 +37,14 @@ GLFWwindow* window;
 Shader* spriteShader = nullptr;
 Shader* modelShader = nullptr;
 Texture* whiteRect = nullptr;
-Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
+Camera camera(glm::vec3(0.0f, 5.0f, 50.0f));
 SpriteRenderer* sprender = nullptr;
 DialogueBox* dlgBox = nullptr;
 CursorP cursor = nullptr;
 Console* console = nullptr;
 Audio* bgm = nullptr;
+
+glm::vec3 lightPos(0.0f, 15.0f, 20.0f);
 
 sol::state Sol;
 
@@ -242,14 +244,31 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		glPolygonMode(GL_FRONT_AND_BACK, wireframe ? GL_LINE : GL_FILL);
 	}
 
+	if (key == GLFW_KEY_T)
+		lightPos.y += 0.5f;
+	else if (key == GLFW_KEY_G)
+		lightPos.y -= 0.5f;
+	else if (key == GLFW_KEY_H)
+		lightPos.x += 0.5f;
+	else if (key == GLFW_KEY_F)
+		lightPos.x -= 0.5f;
+	else if (key == GLFW_KEY_R)
+		lightPos.z -= 0.5f;
+	else if (key == GLFW_KEY_Y)
+		lightPos.z += 0.5f;
+
 	if (key == GLFW_KEY_W)
-		camera.ProcessKeyboard(Camera::Movement::Forward, 0.025f);
-	else if (key == GLFW_KEY_A)
-		camera.ProcessKeyboard(Camera::Movement::Left, 0.025f);
+		camera.Position.z -= 0.5f; //camera.ProcessKeyboard(Camera::Movement::Forward, (mods == GLFW_MOD_SHIFT) ? 0.1f : 0.025f);
 	else if (key == GLFW_KEY_S)
-		camera.ProcessKeyboard(Camera::Movement::Backward, 0.025f);
+		camera.Position.z += 0.5f; //camera.ProcessKeyboard(Camera::Movement::Backward, (mods == GLFW_MOD_SHIFT) ? 0.1f : 0.025f);
+	else if (key == GLFW_KEY_A)
+		camera.Position.x -= 0.5f; //camera.ProcessKeyboard(Camera::Movement::Left, (mods == GLFW_MOD_SHIFT) ? 0.1f : 0.025f);
 	else if (key == GLFW_KEY_D)
-		camera.ProcessKeyboard(Camera::Movement::Right, 0.025f);
+		camera.Position.x += 0.5f; //camera.ProcessKeyboard(Camera::Movement::Right, (mods == GLFW_MOD_SHIFT) ? 0.1f : 0.025f);
+	else if (key == GLFW_KEY_Q)
+		camera.Position.y -= 0.5f;
+	else if (key == GLFW_KEY_E)
+		camera.Position.y += 0.5f;
 }
 
 void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
@@ -493,7 +512,7 @@ int main(int argc, char** argv)
 
 	modelShader->Use();
 	modelShader->SetVec3("lights[0].color", 1.0f, 1.0f, 1.0f);
-	modelShader->SetVec3("lights[0].pos", 0.0f, 0.5f, 2.0f);
+	modelShader->SetVec3("lights[0].pos", lightPos);
 	modelShader->SetFloat("lights[0].strength", 0.25f);
 	modelShader->SetVec3("viewPos", camera.Position);
 	modelShader->SetInt("albedoTexture", 0);
@@ -538,8 +557,16 @@ int main(int argc, char** argv)
 		sprender->Flush();
 		glClear(GL_DEPTH_BUFFER_BIT);
 		glEnable(GL_DEPTH_TEST);
+		modelShader->Use();
+		modelShader->SetVec3("lights[0].pos", lightPos);
 		testModel.Draw();
 		glDisable(GL_DEPTH_TEST);
+
+		sprender->DrawText(0, fmt::format("CAMERA\n------\nPos: {} {} {}\nPit/Yaw: {} {}\n\nLIGHT\n-----\nPos: {} {} {}",
+			camera.Position.x, camera.Position.y, camera.Position.z,
+			camera.Pitch, camera.Yaw,
+			lightPos.x, lightPos.y, lightPos.z
+		), glm::vec2(8), glm::vec4(1, 1, 0, 1));
 
 		console->Draw(dt);
 		cursor->Draw();

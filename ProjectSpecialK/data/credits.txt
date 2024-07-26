@@ -1,0 +1,71 @@
+#Programming, data mining, design
+Kawa
+
+#Mental support
+Lancette2201
+Letrune
+
+#Translations
+Hungarian:	Letrune
+Dutch:		Kawa
+
+#Ideas
+Andrea le Phrog	beargirlstink
+bobvarioa	0xb00b5
+bossbutch	delusionbait
+demifiendcruithne	eggseventy
+Foone	gryffintheparrotcat
+jelloapocalypse	justmeemawthings
+katzeregi	krusebruce
+Lancette2201	Letrune
+lustrous-orb	mezzofurrte
+mikailborg	pontaoski
+probablynothing	ray10k
+razzdrgn	shiftergirlslappy
+shrike-dyke	spades-gameing
+sweetcremereblogs	unusedcactus
+yirrgzmb
+howimportantisausernameanyway
+
+#Villager designs
+Anonymous	APL
+archvillain	axollyon
+Boorango	Calder Benson
+ChaoGardener	Chuck Youngblood
+D	Dave Jenkins
+Doc	DuoRogue
+eevee-williams	elric
+everyone	FoolForBrightness
+Foone	Friedslick6
+J. A. Sablosky	kaytypestar
+Key3Kyo	Lancette2201
+Letrune	LH
+Marquis	Marvel
+metaregress	muffiln
+natee22	North Greenfield
+pelontrix/percival	pickled-fox
+ratSprite	Renamon
+Retrotude	riotmode
+rknase	road-trip-girl
+rz-053/Aldous	Skorvold
+snurtle	thatguyoversea
+The FOSS Community	Valoric Starlight
+Weil	wyatt8740
+yes	Zarky
+zeemczed
+; DROP TABLE villagers;--
+
+#Cursors
+Kenney (CC0)
+
+#Third-party libraries
+FMOD Ex by Firelight Technologies
+FMT by Victor Zverovich
+GLAD by David Herberth
+GLFW by Camilla Löwy
+GLM by icaven
+MiniZ by Rich Geldreich
+SimpleJSON by Mike Anchor
+Sol by Rapptz and ThePhD
+STB tools by Sean Barrett
+UFBX by Samuli Raivio
