@@ -63,7 +63,7 @@ Species::Species(JSONObject& value, const std::string& filename) : NameableThing
 	ModeledMuzzle = (value["modeledMuzzle"] != nullptr) ? value["modeledMuzzle"]->AsBool() : false;
 }
 
-const std::string Species::Name()
+std::string Species::Name()
 {
 	return TextGet(RefName);
 }

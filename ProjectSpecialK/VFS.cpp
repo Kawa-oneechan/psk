@@ -295,12 +295,12 @@ std::unique_ptr<char[]> ReadVFS(const std::string& path, size_t* size)
 	return ReadVFS(*it, size);
 }
 
-const std::string ReadVFSString(const VFSEntry& entry)
+std::string ReadVFSString(const VFSEntry& entry)
 {
 	return std::string(ReadVFS(entry, nullptr).get());
 }
 
-const std::string ReadVFSString(const std::string& path)
+std::string ReadVFSString(const std::string& path)
 {
 	auto it = std::find_if(entries.cbegin(), entries.cend(), [path](VFSEntry e)
 	{

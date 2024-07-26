@@ -22,7 +22,7 @@ House stuff, exterior:
 class Villager : public NameableThing, Tickable
 {
 private:
-	const Model* _model{ nullptr };
+	ModelP _model;
 	SpeciesP _species{ nullptr };
 	bool _customModel{ false };
 	bool _isSpecial{ false };
@@ -64,15 +64,15 @@ public:
 	std::vector<InventoryItemP> Outfits;
 
 	Villager(JSONObject& value, const std::string& filename = "");
-	const std::string Name();
-	const std::string Species();
+	std::string Name();
+	std::string Species();
 	void LoadModel();
-	const Model* Model();
-	const std::string Birthday();
+	ModelP Model();
+	std::string Birthday();
 	bool IsSpecial() { return _isSpecial; }
-	const std::string Catchphrase();
+	std::string Catchphrase();
 	std::string Catchphrase(std::string& newPhrase);
-	const std::string Nickname();
+	std::string Nickname();
 	std::string Nickname(std::string& newNickname);
 
 	void Manifest();

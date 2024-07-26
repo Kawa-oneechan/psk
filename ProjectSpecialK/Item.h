@@ -10,7 +10,7 @@ public:
 	unsigned int Hash;
 	NameableThing(JSONObject& value, const std::string& filename = "");
 	NameableThing() = default;
-	const std::string Name();
+	std::string Name();
 
 	inline bool operator== (const NameableThing& r) { return this->ID == r.ID; }
 	inline bool operator!= (const NameableThing& r) { return this->ID != r.ID; }
@@ -90,8 +90,8 @@ public:
 	InventoryItem(ItemP wrapped, int variant);
 	InventoryItem(ItemP wrapped);
 	InventoryItem(const std::string& reference);
-	const std::string FullID();
-	const std::string FullName();
+	std::string FullID();
+	std::string FullName();
 	bool IsItem() const;
 	bool IsTool() const;
 	bool IsFurniture() const;

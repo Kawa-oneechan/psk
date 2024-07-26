@@ -32,7 +32,7 @@ NameableThing::NameableThing(JSONObject& value, const std::string& filename)
 	EnName = StripMSBT(TextGet(ref, Language::EUen));
 }
 
-const std::string NameableThing::Name()
+std::string NameableThing::Name()
 {
 	auto text = TextGet(RefName);
 	if (text.substr(0, 6) == "<info:")
@@ -181,7 +181,7 @@ InventoryItem::InventoryItem(const std::string& reference)
 	Temporary = false;
 }
 
-const std::string InventoryItem::FullID()
+std::string InventoryItem::FullID()
 {
 	if (_wrapped->variantNames.size() != 0)
 	{
@@ -191,7 +191,7 @@ const std::string InventoryItem::FullID()
 	return ID;
 }
 
-const std::string InventoryItem::FullName()
+std::string InventoryItem::FullName()
 {
 	if (_wrapped->variantNames.size() != 0)
 	{

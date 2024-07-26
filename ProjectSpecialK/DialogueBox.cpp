@@ -134,6 +134,11 @@ void DialogueBox::msbtPass(MSBTParams)
 
 DialogueBox::DialogueBox()
 {
+	wobble.Use();
+	wobble.SetInt("image", 0);
+	wobble.SetInt("gradient1", 1);
+	wobble.SetInt("gradient2", 2);
+
 	//Text(u8"Truth is... <color:1>the game</color> was rigged\nfrom the start.", 0, "Isabelle", glm::vec4(1, 0.98f, 0.56f, 1), glm::vec4(0.96f, 0.67f, 0.05f, 1));
 	//Text(u8"Truth is... <color:1>the game</color> was rigged from the start.",
 	//Text("Are you <color:3><str:player></color>? <delay:1000>Hiii! Welcome to <color:2>Project Special K</color>!",
@@ -312,8 +317,6 @@ void DialogueBox::Draw(float dt)
 	wobble.Use();
 	gradient[0].Use(1);
 	gradient[1].Use(2);
-	wobble.SetInt("gradient1", 1);
-	wobble.SetInt("gradient2", 2);
 	wobble.SetFloat("time", time);
 
 	sprender->DrawSprite(&wobble, bubble[bubbleNum], glm::vec2(dlgLeft, dlgTop), glm::vec2(dlgWidth * 2, dlgHeight), glm::vec4(0, 0, bubble[bubbleNum].width * 2, bubble[bubbleNum].height), 0, bubbleColor);

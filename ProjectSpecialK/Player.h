@@ -13,7 +13,7 @@ constexpr int NoItem = -1;
 class Player : public NameableThing, Tickable
 {
 private:
-	const Model* _model{ nullptr };
+	ModelP _model{ nullptr };
 	unsigned char _birthday[2]{ 26, 6 };
 	unsigned char _flags[255]{ 0 };
 
@@ -42,8 +42,8 @@ public:
 	InventoryItemP Accessory{ nullptr };
 
 	void LoadModel();
-	const Model* Model();
-	const std::string Birthday();
+	ModelP Model();
+	std::string Birthday();
 
 	//Returns true if the player has room in their inventory according to their current limit.
 	bool HasInventoryRoom();

@@ -94,12 +94,12 @@ Villager::Villager(JSONObject& value, const std::string& filename) : NameableThi
 	rainHatID = (clothing["rain"]->AsArray())[1]->AsString();
 }
 
-const std::string Villager::Name()
+std::string Villager::Name()
 {
 	return TextGet(RefName);
 }
 
-const std::string Villager::Species()
+std::string Villager::Species()
 {
 	if (gender == Gender::Girl || gender == Gender::GEnby)
 		return TextGet(RefSpecies + ":f");
@@ -113,19 +113,19 @@ void Villager::LoadModel()
 	//Either way, I'm gonna need some way to reuse and refcount already-loaded models...
 }
 
-const Model* Villager::Model()
+ModelP Villager::Model()
 {
 	if (!_model)
 		LoadModel();
 	return _model;
 }
 
-const std::string Villager::Birthday()
+std::string Villager::Birthday()
 {
 	return TextDateMD(_birthday[1], _birthday[0]);
 }
 
-const std::string Villager::Catchphrase()
+std::string Villager::Catchphrase()
 {
 	if (_customCatchphrase.length())
 		return _customCatchphrase;
@@ -139,7 +139,7 @@ std::string Villager::Catchphrase(std::string& newPhrase)
 	return oldPhrase;
 }
 
-const std::string Villager::Nickname()
+std::string Villager::Nickname()
 {
 	if (_customNickname.length())
 		return _customNickname;

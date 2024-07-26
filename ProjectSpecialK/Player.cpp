@@ -5,14 +5,14 @@ void Player::LoadModel()
 
 }
 
-const Model* Player::Model()
+ModelP Player::Model()
 {
 	if (!_model)
 		LoadModel();
 	return _model;
 }
 
-const std::string Player::Birthday()
+std::string Player::Birthday()
 {
 	return TextDateMD(_birthday[1], _birthday[0]);
 }

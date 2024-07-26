@@ -41,3 +41,5 @@ public:
 
 	void Draw();
 };
+
+using ModelP = std::shared_ptr<Model>;

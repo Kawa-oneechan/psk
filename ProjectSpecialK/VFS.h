@@ -27,9 +27,9 @@ struct VFSSource
 //Initializes the Virtual File System.
 extern void InitVFS();
 //Returns the contents of a file given by a predetermined VFSEntry, as a string.
-extern const std::string ReadVFSString(const VFSEntry& entry);
+extern std::string ReadVFSString(const VFSEntry& entry);
 //Returns the contents of a file given by name, as a string.
-extern const std::string ReadVFSString(const std::string& path);
+extern std::string ReadVFSString(const std::string& path);
 //Returns the contents of a file given by a predetermined VFSEntry.
 extern std::unique_ptr<char[]> ReadVFS(const VFSEntry& entry, size_t* size);
 //Returns the contents of a file given by name.
