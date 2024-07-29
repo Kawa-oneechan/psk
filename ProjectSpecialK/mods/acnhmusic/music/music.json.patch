@@ -2,7 +2,7 @@
 	/*
 	1. If it's a single string, that's it.
 	2. If it's an array of strings, pick one at random.
-	3. If it's an object, there are time-based rules.
+	3. If it's an array of objects, there are time-based rules.
 	   TODO: describe them.
 	4. Ift the result has any tags in it:
 	  A. Replace "{time}" with the current two digit,
@@ -13,9 +13,17 @@
 
 	"clock": "music/bgm/clock/{time}{weather}.ogg",
 	"cafe": "music/bgm/interiors/cafe.ogg",
-	"market": {
-		//work out a good way to describe this case
-	},
+	"market1": "music/bgm/interiors/market1.ogg",
+	"market2": [
+		{
+			"to": [ 21, 50 ],
+			"file": "music/bgm/interiors/market2.ogg"
+		},
+		{
+			"to": [ 22, 0 ],
+			"file": "music/bgm/interiors/marketclosing.ogg"
+		}
+	],
 	"redd": "music/bgm/interiors/redd.ogg",
 	"services": "music/bgm/interiors/services.ogg",
 	"tailor": "music/bgm/interiors/tailor.ogg"
