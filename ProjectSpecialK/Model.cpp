@@ -142,6 +142,8 @@ const void Model::Mesh::Draw()
 
 Model::Model(const std::string& modelPath) : file(modelPath)
 {
+	Textures.fill(nullptr);
+
 	auto c = cache.find(modelPath);
 	if (c != cache.end())
 	{

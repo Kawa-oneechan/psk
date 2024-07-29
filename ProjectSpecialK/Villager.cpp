@@ -5,6 +5,8 @@ Villager::Villager(JSONObject& value, const std::string& filename) : NameableThi
 	_customModel = value["customModel"] != nullptr && value["customModel"]->IsBool() ? value["customModel"]->AsBool() : false;
 	_isSpecial = value["isSpecial"] != nullptr && value["isSpecial"]->IsBool() ? value["isSpecial"]->AsBool() : false;
 	
+	Textures.fill(nullptr);
+
 	if (_isSpecial)
 	{
 		RefSpecies = "<<special>>";
@@ -109,8 +111,45 @@ std::string Villager::Species()
 
 void Villager::LoadModel()
 {
-	//If _customModel is set, load our own. If not, look up the model reference for this species.
-	//Either way, I'm gonna need some way to reuse and refcount already-loaded models...
+	if (!_model)
+	{
+		if (_customModel)
+		{
+		}
+		else
+		{
+			_model = _species->Model();
+		}
+	}
+
+	if (!Textures[0])
+	{
+		Textures[0] = new Texture(fmt::format("{}/body_alb.png", Path));
+		Textures[1] = new Texture(fmt::format("{}/body_nrm.png", Path));
+		Textures[2] = new Texture(fmt::format("{}/body_mix.png", Path));
+		Textures[3] = new Texture(fmt::format("{}/body_alb.png", Path));
+		Textures[4] = new Texture(fmt::format("{}/body_nrm.png", Path));
+		Textures[5] = new Texture(fmt::format("{}/body_mix.png", Path));
+		Textures[6] = new Texture(fmt::format("{}/eye0_alb.png", Path));
+		Textures[7] = new Texture(fmt::format("{}/eye0_nrm.png", Path));
+		Textures[8] = new Texture(fmt::format("{}/eye0_mix.png", Path));
+		Textures[9] = new Texture(fmt::format("{}/mouth0_alb.png", Path));
+		Textures[10] = new Texture(fmt::format("{}/mouth0_nrm.png", Path));
+		Textures[11] = new Texture(fmt::format("{}/mouth0_mix.png", Path));
+	}
+
+	/*
+	Load outfit parts too. Note that we cannot trust InventoryItem::LoadModel here
+	because outfits are tailored to the character. So we must load our own outfit
+	models.
+	*/
+	if (!_outfitModel && Outfit)
+	{
+		auto style = "ts_short";
+		_outfitModel = std::make_shared<::Model>(fmt::format("{}/{}.fbx", _species->Path, style));
+
+		//TODO: load outfit textures.
+	}
 }
 
 ModelP Villager::Model()
@@ -153,6 +192,36 @@ std::string Villager::Nickname(std::string& newNickname)
 	return oldNickname;
 }
 
+extern Shader* modelShader;
+void Villager::Draw()
+{
+	if (_model == nullptr)
+		LoadModel();
+
+	modelShader->Use();
+
+	_model->Textures[0] = Textures[0];
+	_model->Textures[1] = Textures[1];
+	_model->Textures[2] = Textures[2];
+	_model->Textures[4] = Textures[3];
+	_model->Textures[5] = Textures[4];
+	_model->Textures[6] = Textures[5];
+	_model->Textures[8] = Textures[6];
+	_model->Textures[9] = Textures[7];
+	_model->Textures[10] = Textures[8];
+	_model->Textures[12] = Textures[9];
+	_model->Textures[13] = Textures[10];
+	_model->Textures[14] = Textures[11];
+
+	_model->Draw();
+
+	if (_outfitModel && Outfit)
+	{
+		//set textures too
+		_outfitModel->Draw();
+	}
+}
+
 void Villager::Manifest()
 {
 	PickOutfit();
@@ -160,15 +229,15 @@ void Villager::Manifest()
 
 void Villager::DeleteAllThings()
 {
-	if (HeldTool != nullptr && HeldTool->Temporary)
+	if (HeldTool && HeldTool->Temporary)
 		HeldTool = nullptr;
-	if (Hat != nullptr && Hat->Temporary)
+	if (Hat && Hat->Temporary)
 		Hat = nullptr;
-	if (Glasses != nullptr && Glasses->Temporary)
+	if (Glasses && Glasses->Temporary)
 		Glasses = nullptr;
-	if (Mask != nullptr && Mask->Temporary)
+	if (Mask && Mask->Temporary)
 		Mask = nullptr;
-	if (Outfit != nullptr && Outfit->Temporary)
+	if (Outfit && Outfit->Temporary)
 		Outfit = nullptr;
 }
 

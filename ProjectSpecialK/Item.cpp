@@ -240,3 +240,16 @@ OutfitP InventoryItem::AsOutfit() const
 {
 	return std::static_pointer_cast<Outfit>(_wrapped);
 }
+
+void InventoryItem::LoadModel()
+{
+	if (!_model)
+		_model = std::make_shared<::Model>(fmt::format("{}/model.fbx", Path));
+}
+
+ModelP InventoryItem::Model()
+{
+	if (!_model)
+		LoadModel();
+	return _model;
+}

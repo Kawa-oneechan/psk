@@ -67,3 +67,17 @@ std::string Species::Name()
 {
 	return TextGet(RefName);
 }
+
+
+void Species::LoadModel()
+{
+	if (!_model)
+		_model = std::make_shared<::Model>(fmt::format("{}/model.fbx", Path));
+}
+
+ModelP Species::Model()
+{
+	if (!_model)
+		LoadModel();
+	return _model;
+}

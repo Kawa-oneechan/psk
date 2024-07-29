@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Model.h"
+
 class NameableThing
 {
 public:
@@ -32,10 +34,15 @@ using OutfitP = std::shared_ptr<Outfit>;
 
 class Item : public NameableThing
 {
+private:
+	ModelP _model;
 public:
 	Item(JSONObject& value, const std::string& filename = "");
 	int FindVariantByName(const std::string& variantName) const;
 	std::vector<std::string> variantNames;
+
+	void LoadModel();
+	ModelP Model();
 
 	enum Type
 	{
@@ -85,6 +92,7 @@ class InventoryItem : public NameableThing
 private:
 	ItemP _wrapped;
 	int _variant, _pattern;
+	ModelP _model;
 public:
 	InventoryItem(ItemP wrapped, int variant, int pattern);
 	InventoryItem(ItemP wrapped, int variant);
@@ -100,6 +108,11 @@ public:
 	ToolP AsTool() const;
 	FurnitureP AsFurniture() const;
 	OutfitP AsOutfit() const;
+
+	void LoadModel();
+	ModelP Model();
+
+
 	//Safe to delete if true. If not, DO NOT DELETE.
 	bool Temporary;
 };

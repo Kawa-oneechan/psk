@@ -22,7 +22,8 @@ House stuff, exterior:
 class Villager : public NameableThing, Tickable
 {
 private:
-	ModelP _model;
+	ModelP _model, _outfitModel;
+
 	SpeciesP _species{ nullptr };
 	bool _customModel{ false };
 	bool _isSpecial{ false };
@@ -35,6 +36,8 @@ private:
 
 	static const int _maxFurnitureItems = 8 * 4;
 	static const int _maxOutfits = 8 * 3;
+
+	std::array<Texture*, 16> Textures;
 
 	void DeleteAllThings();
 
@@ -74,6 +77,8 @@ public:
 	std::string Catchphrase(std::string& newPhrase);
 	std::string Nickname();
 	std::string Nickname(std::string& newNickname);
+
+	void Draw();
 
 	void Manifest();
 	void Depart();
