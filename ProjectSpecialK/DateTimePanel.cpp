@@ -1,7 +1,8 @@
 #include "DateTimePanel.h"
 #include "Town.h"
 
-extern Audio* bgm;
+//extern Audio* bgm;
+extern void PlayMusic(const std::string& id);
 
 DateTimePanel::DateTimePanel()
 {
@@ -41,18 +42,8 @@ void DateTimePanel::Update()
 	if (lastHour == -1 || (gm.tm_hour != lastHour && gm.tm_min == 0))
 	{
 		lastHour = gm.tm_hour;
-		//TODO: leave actually changing the BGM to MusicManager.
-		//MusicManager.Play(fmt::format("music/bgm/clock/{:02}sunny.ogg", lastHour), MusicType::HourlyBGM);
-		//That can then handle the chimes and fade out sequence.
-		delete bgm;
-		auto weather = "sunny";
-		{
-			town.UpdateWeather();
-			if (town.Clouds >= Town::Weather::RainClouds)
-				weather = "rainy";
-		}
-		bgm = new Audio(fmt::format("music/bgm/clock/{:02}{}.ogg", lastHour, weather));
-		bgm->Play();
+		//TODO: check for events
+		PlayMusic("clock");
 	}
 }
 

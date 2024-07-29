@@ -1,0 +1,22 @@
+{
+	/*
+	1. If it's a single string, that's it.
+	2. If it's an array of strings, pick one at random.
+	3. If it's an object, there are time-based rules.
+	   TODO: describe them.
+	4. Ift the result has any tags in it:
+	  A. Replace "{time}" with the current two digit,
+	     24-hour time ("00" to "23").
+	  B. Replace "{weather}" with "sunny", "rainy", or
+	     "snowy".
+	*/
+
+	"clock": "music/bgm/clock/{time}{weather}.ogg",
+	"cafe": "music/bgm/interiors/cafe.ogg",
+	"market": {
+		//work out a good way to describe this case
+	},
+	"redd": "music/bgm/interiors/redd.ogg",
+	"services": "music/bgm/interiors/services.ogg",
+	"tailor": "music/bgm/interiors/tailor.ogg"
+}
