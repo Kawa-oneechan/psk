@@ -510,6 +510,11 @@ int main(int argc, char** argv)
 	testModel.Textures[10] = new Texture("villagers/psk/cat00/mouth0_nrm.png");
 	testModel.Textures[11] = new Texture("villagers/psk/cat00/mouth0_mix.png");
 
+	auto testModel2 = Model("species/cat/ts_short.fbx");
+	testModel2.Textures[0] = new Texture("items/outfits/tops/oppai/albedo.png");
+	testModel2.Textures[1] = new Texture("items/outfits/tops/oppai/normal.png");
+	testModel2.Textures[2] = new Texture("items/outfits/tops/oppai/mix.png");
+
 	modelShader->Use();
 	modelShader->SetVec3("lights[0].color", 1.0f, 1.0f, 1.0f);
 	modelShader->SetVec3("lights[0].pos", lightPos);
@@ -560,6 +565,7 @@ int main(int argc, char** argv)
 		modelShader->Use();
 		modelShader->SetVec3("lights[0].pos", lightPos);
 		testModel.Draw();
+		testModel2.Draw();
 		glDisable(GL_DEPTH_TEST);
 
 		sprender->DrawText(0, fmt::format("CAMERA\n------\nPos: {} {} {}\nPit/Yaw: {} {}\n\nLIGHT\n-----\nPos: {} {} {}",

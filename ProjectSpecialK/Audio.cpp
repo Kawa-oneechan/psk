@@ -120,6 +120,9 @@ Audio::~Audio()
 
 void Audio::Play(bool force)
 {
+	if (theSound == nullptr)
+		return;
+
 	if (force && status != Status::Stopped)
 		Stop();
 
@@ -130,7 +133,6 @@ void Audio::Play(bool force)
 			if (system->playSound(FMOD_CHANNEL_FREE, theSound, false, &theChannel) != FMOD_OK)
 				throw "Could not play stream.";
 			UpdateVolume();
-
 		}
 		playing.push_back(this);
 	}

@@ -35,7 +35,7 @@ private:
 
 	float delay{ 0 };
 
-	std::shared_ptr<Audio> bebebese{ std::make_shared<Audio>("sound/animalese/base/Voice_Monology.wav") };
+	//std::shared_ptr<Audio> bebebese{ std::make_shared<Audio>("sound/voices/base/Voice_Monology.wav") };
 
 	enum class State
 	{

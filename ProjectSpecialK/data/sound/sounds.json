@@ -6,7 +6,9 @@
 		"cmnClose": "sound/ui/UI_Cmn_Close.wav",
 		"decide": "sound/ui/UI_Decide.wav",
 		"selectShort": "sound/ui/UI_Select_Short.wav",
-		"wait": "sound/ui/UI_Wait.wav"
+		"wait": "sound/ui/UI_Wait.wav",
+		"voiceDot": "sound/voices/base/Voice_Dot.wav",
+		"voiceMonology": "sound/voices/base/Voice_Monology.wav"
 	},
 	"reactions": {
 	}

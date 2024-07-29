@@ -409,7 +409,7 @@ void DialogueBox::Tick(float dt)
 			AppendChar(displayed, ch);
 
 			if (bubbleNum == 3 || Sound == Sound::Bebebese)
-				bebebese->Play(true);
+				generalSounds["ui"]["voiceMonology"]->Play(true);
 		}
 		if (delay < glm::epsilon<float>())
 			delay = 50;
