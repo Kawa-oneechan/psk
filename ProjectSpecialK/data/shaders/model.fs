@@ -10,6 +10,7 @@ in vec3 FragPos;
 uniform sampler2D albedoTexture;
 uniform sampler2D normalTexture;
 uniform sampler2D mixTexture;
+uniform sampler2D opacityTexture;
 
 uniform vec3 viewPos; 
 
@@ -79,6 +80,7 @@ void main()
 	vec4 albedo = texture(albedoTexture, TexCoord);
 	vec3 normal = texture(normalTexture, TexCoord).rgb;
 	vec4 mix = texture(mixTexture, TexCoord);
+	vec4 opacity = texture(opacityTexture, TexCoord);
 
 	//normal = normal * 2.0 - 1.0;
 	//vec3 norm = normalize(Normal);
@@ -93,7 +95,7 @@ void main()
 	vec3 result;
 	for (int i = 0; i < NUMLIGHTS; i++)
 		result += getLight(lights[i], albedo.rgb, norm, viewDir, 0.2);
-	FragColor = vec4(result, albedo.a);
+	FragColor = vec4(result, opacity.r);
 
 	//FragColor = texture(albedoTexture, TexCoord);
 	//FragColor = vec4(norm, 1.0);

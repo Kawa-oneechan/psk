@@ -500,20 +500,21 @@ int main(int argc, char** argv)
 	testModel.Textures[0] = new Texture("villagers/psk/cat00/body_alb.png");
 	testModel.Textures[1] = new Texture("villagers/psk/cat00/body_nrm.png");
 	testModel.Textures[2] = new Texture("villagers/psk/cat00/body_mix.png");
-	testModel.Textures[3] = new Texture("villagers/psk/cat00/body_alb.png");
-	testModel.Textures[4] = new Texture("villagers/psk/cat00/body_nrm.png");
-	testModel.Textures[5] = new Texture("villagers/psk/cat00/body_mix.png");
-	testModel.Textures[6] = new Texture("villagers/psk/cat00/eye0_alb.png");
-	testModel.Textures[7] = new Texture("villagers/psk/cat00/eye0_nrm.png");
-	testModel.Textures[8] = new Texture("villagers/psk/cat00/eye0_mix.png");
-	testModel.Textures[9] = new Texture("villagers/psk/cat00/mouth0_alb.png");
-	testModel.Textures[10] = new Texture("villagers/psk/cat00/mouth0_nrm.png");
-	testModel.Textures[11] = new Texture("villagers/psk/cat00/mouth0_mix.png");
+	testModel.Textures[4] = new Texture("villagers/psk/cat00/body_alb.png");
+	testModel.Textures[5] = new Texture("villagers/psk/cat00/body_nrm.png");
+	testModel.Textures[6] = new Texture("villagers/psk/cat00/body_mix.png");
+	testModel.Textures[8] = new Texture("villagers/psk/cat00/eye0_alb.png");
+	testModel.Textures[9] = new Texture("villagers/psk/cat00/eye0_nrm.png");
+	testModel.Textures[10] = new Texture("villagers/psk/cat00/eye0_mix.png");
+	testModel.Textures[12] = new Texture("villagers/psk/cat00/mouth0_alb.png");
+	testModel.Textures[13] = new Texture("villagers/psk/cat00/mouth0_nrm.png");
+	testModel.Textures[14] = new Texture("villagers/psk/cat00/mouth0_mix.png");
 
 	auto testModel2 = Model("species/cat/ts_short.fbx");
 	testModel2.Textures[0] = new Texture("items/outfits/tops/oppai/albedo.png");
 	testModel2.Textures[1] = new Texture("items/outfits/tops/oppai/normal.png");
 	testModel2.Textures[2] = new Texture("items/outfits/tops/oppai/mix.png");
+	testModel2.Textures[3] = new Texture("items/outfits/tops/oppai/opacity.png");
 
 	modelShader->Use();
 	modelShader->SetVec3("lights[0].color", 1.0f, 1.0f, 1.0f);
@@ -523,6 +524,7 @@ int main(int argc, char** argv)
 	modelShader->SetInt("albedoTexture", 0);
 	modelShader->SetInt("normalTexture", 1);
 	modelShader->SetInt("mixTexture", 2);
+	modelShader->SetInt("opacityTexture", 3);
 
 	int oldTime = 0;
 	while (!glfwWindowShouldClose(window))

@@ -199,8 +199,8 @@ void Model::Draw()
 	{
 		if (m.texture != -1 && m.texture < Textures.size())
 		{
-			auto texNum = m.texture * 3;
-			for (auto i = 0; i < 3; i++)
+			auto texNum = m.texture * 4;
+			for (auto i = 0; i < 4; i++)
 			{
 				if (Textures[texNum + i] == nullptr)
 				{
