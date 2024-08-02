@@ -1,4 +1,5 @@
 #version 330 core
+//#define TOON
 
 out vec4 FragColor;
 
@@ -38,6 +39,16 @@ vec3 diffuseLight(vec3 normal, vec3 litPos, vec3 litCol)
 {
 	vec3 litDir = normalize(litPos - FragPos);
 	float diff = max(dot(normal, litDir), 0.0);
+
+#ifdef TOON
+	//Toon shading for lol
+	     if (diff < 0.15) diff = 0.15;
+	else if (diff < 0.20) diff = 0.20;
+	else if (diff < 0.50) diff = 0.50;
+	else if (diff < 0.90) diff = 0.90;
+	else             diff = 1.00;
+#endif
+
 	return diff * litCol;
 }
 
@@ -83,8 +94,11 @@ void main()
 	vec4 opacity = texture(opacityTexture, TexCoord);
 
 	//normal = normal * 2.0 - 1.0;
-	//vec3 norm = normalize(Normal);
+#ifdef TOON
+	vec3 norm = normalize(Normal);
+#else
 	vec3 norm = calcNormal(normal);
+#endif
 
 	//vec3 ambient = ambientLight(lightColor);
 	vec3 viewDir = normalize(viewPos - FragPos);
