@@ -41,9 +41,6 @@ public:
 	int FindVariantByName(const std::string& variantName) const;
 	std::vector<std::string> variantNames;
 
-	void LoadModel();
-	ModelP Model();
-
 	enum Type
 	{
 		Generic = 0b0000'0000'0000'0001,
@@ -93,6 +90,9 @@ private:
 	ItemP _wrapped;
 	int _variant, _pattern;
 	ModelP _model;
+	
+	std::array<Texture*, 8> Textures;
+
 public:
 	InventoryItem(ItemP wrapped, int variant, int pattern);
 	InventoryItem(ItemP wrapped, int variant);
@@ -109,6 +109,8 @@ public:
 	FurnitureP AsFurniture() const;
 	OutfitP AsOutfit() const;
 
+	void LoadTextures();
+	void AssignTextures(ModelP model);
 	void LoadModel();
 	ModelP Model();
 

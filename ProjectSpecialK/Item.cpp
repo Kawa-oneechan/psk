@@ -89,7 +89,6 @@ Item::Item(JSONObject& value, const std::string& filename) : NameableThing(value
 	}
 }
 
-
 bool Item::IsItem() const
 {
 	return Type != 0;
@@ -140,7 +139,9 @@ InventoryItem::InventoryItem(ItemP wrapped, int variant, int pattern)
 	Hash = wrapped->Hash;
 	RefName = wrapped->RefName;
 	EnName = wrapped->EnName;
+	Path = wrapped->Path;
 	Temporary = false;
+	Textures.fill(nullptr);
 }
 
 InventoryItem::InventoryItem(ItemP wrapped, int variant) : InventoryItem(wrapped, variant, 0)
@@ -178,6 +179,8 @@ InventoryItem::InventoryItem(const std::string& reference)
 	Hash = _wrapped->Hash;
 	RefName = _wrapped->RefName;
 	EnName = _wrapped->EnName;
+	Path = _wrapped->Path;
+	Textures.fill(nullptr);
 	Temporary = false;
 }
 
@@ -241,10 +244,30 @@ OutfitP InventoryItem::AsOutfit() const
 	return std::static_pointer_cast<Outfit>(_wrapped);
 }
 
+void InventoryItem::LoadTextures()
+{
+	if (Textures[0] == nullptr)
+	{
+		Textures[0] = new Texture(fmt::format("{}/albedo{}.png", Path, _variant));
+		Textures[1] = new Texture(fmt::format("{}/normal.png", Path));
+		Textures[2] = new Texture(fmt::format("{}/mix.png", Path));
+		Textures[3] = new Texture(fmt::format("{}/opacity.png", Path));
+	}
+}
+
+void InventoryItem::AssignTextures(ModelP model)
+{
+	model->Textures[0] = Textures[0];
+	model->Textures[1] = Textures[1];
+	model->Textures[2] = Textures[2];
+	model->Textures[3] = Textures[3];
+}
+
 void InventoryItem::LoadModel()
 {
 	if (!_model)
 		_model = std::make_shared<::Model>(fmt::format("{}/model.fbx", Path));
+	LoadTextures();
 }
 
 ModelP InventoryItem::Model()

@@ -3,5 +3,5 @@
 	"name" : { "en" : "<info::a :the >oppai tee" },
 	"type" : "tops",
 	"price" : 640,
-	"variants" : []
+	"variants" : [ "black", "white", "gray" ]
 }

@@ -491,29 +491,8 @@ int main(int, char**)
 
 	//tickables.push_back(new TextField());
 
-	RunTests();
+	//RunTests();
 
-	/*
-	auto testModel = Model("species/cat/model.fbx");
-	testModel.Textures[0] = new Texture("villagers/psk/cat00/body_alb.png");
-	testModel.Textures[1] = new Texture("villagers/psk/cat00/body_nrm.png");
-	testModel.Textures[2] = new Texture("villagers/psk/cat00/body_mix.png");
-	testModel.Textures[4] = new Texture("villagers/psk/cat00/body_alb.png");
-	testModel.Textures[5] = new Texture("villagers/psk/cat00/body_nrm.png");
-	testModel.Textures[6] = new Texture("villagers/psk/cat00/body_mix.png");
-	testModel.Textures[8] = new Texture("villagers/psk/cat00/eye0_alb.png");
-	testModel.Textures[9] = new Texture("villagers/psk/cat00/eye0_nrm.png");
-	testModel.Textures[10] = new Texture("villagers/psk/cat00/eye0_mix.png");
-	testModel.Textures[12] = new Texture("villagers/psk/cat00/mouth0_alb.png");
-	testModel.Textures[13] = new Texture("villagers/psk/cat00/mouth0_nrm.png");
-	testModel.Textures[14] = new Texture("villagers/psk/cat00/mouth0_mix.png");
-
-	auto testModel2 = Model("species/cat/ts_short.fbx");
-	testModel2.Textures[0] = new Texture("items/outfits/tops/oppai/albedo.png");
-	testModel2.Textures[1] = new Texture("items/outfits/tops/oppai/normal.png");
-	testModel2.Textures[2] = new Texture("items/outfits/tops/oppai/mix.png");
-	testModel2.Textures[3] = new Texture("items/outfits/tops/oppai/opacity.png");
-	*/
 	modelShader->Use();
 	modelShader->SetVec3("lights[0].color", 1.0f, 1.0f, 1.0f);
 	modelShader->SetVec3("lights[0].pos", lightPos);
@@ -525,7 +504,7 @@ int main(int, char**)
 	modelShader->SetInt("opacityTexture", 3);
 
 	auto bob = Database::Find<Villager>("psk:cat00", villagers);
-	bob->defaultOutfitID = "psk:oppai";
+	bob->defaultOutfitID = "psk:oppai/white";
 	bob->Manifest();
 
 

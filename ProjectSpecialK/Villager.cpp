@@ -172,7 +172,7 @@ void Villager::LoadModel()
 		auto style = "ts_short";
 		_outfitModel = std::make_shared<::Model>(fmt::format("{}/{}.fbx", _species->Path, style));
 
-		//TODO: load outfit textures.
+		Outfit->LoadTextures();
 	}
 }
 
@@ -242,6 +242,7 @@ void Villager::Draw(double)
 	if (_outfitModel && Outfit)
 	{
 		//set textures too
+		Outfit->AssignTextures(_outfitModel);
 		_outfitModel->Draw();
 	}
 }
