@@ -18,11 +18,14 @@ class Model
 
 	class Mesh
 	{
-	public:
+	private:
 		unsigned int VBO, VAO, EBO;
 		std::vector<Vertex> vertices;
 		std::vector<unsigned int> indices;
-		int texture;
+	public:
+		int Texture;
+		bool Visible;
+		unsigned int Hash;
 
 		Mesh(ufbx_mesh* mesh);
 		const void Draw();
@@ -40,6 +43,8 @@ public:
 	Model(const std::string& modelPath);
 
 	void Draw();
+	void AllVisible();
+	Mesh& GetMesh(const std::string& name);
 };
 
 using ModelP = std::shared_ptr<Model>;

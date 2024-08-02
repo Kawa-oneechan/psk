@@ -7,8 +7,10 @@ static std::map<std::string, std::tuple<Model*, int>> cache;
 extern Shader* modelShader;
 extern Camera camera;
 
-Model::Mesh::Mesh(ufbx_mesh* mesh) : texture(-1)
+Model::Mesh::Mesh(ufbx_mesh* mesh) : Texture(-1), Visible(true)
 {
+	Hash = GetCRC(mesh->name.data);
+
 	std::vector<unsigned int> tri_indices;
 	tri_indices.resize(mesh->max_face_triangles * 3);
 
@@ -166,24 +168,27 @@ Model::Model(const std::string& modelPath) : file(modelPath)
 		FatalError(fmt::format("Could not load scene {}: {}", modelPath, errors.description.data));
 	
 	std::vector<std::string> textureNames;
+	conprint(5, "Materials:");
 	for (auto m : scene->materials)
 	{
 		conprint(5, "{}", m->name.data);
 		textureNames.emplace_back(m->name.data);
 	}
 
+	conprint(5, "Meshes:");
 	for (size_t i = 0; i < scene->nodes.count; i++)
 	{
 		ufbx_node *node = scene->nodes.data[i];
 		if (node->mesh)
 		{
 			auto m = Mesh(node->mesh);
-			m.texture = -1;
+			conprint(5, "{}", node->name.data);
+			m.Texture = -1;
 			if (node->mesh->materials.count > 0)
 			{
 				auto m1 = node->mesh->materials[0]->name.data;
 				auto it = std::find(textureNames.cbegin(), textureNames.cend(), m1);
-				m.texture = (unsigned int)std::distance(textureNames.cbegin(), it);
+				m.Texture = (unsigned int)std::distance(textureNames.cbegin(), it);
 			}
 			Meshes.emplace_back(m);
 		}
@@ -199,9 +204,12 @@ void Model::Draw()
 	modelShader->Use();
 	for (auto& m : Meshes)
 	{
-		if (m.texture != -1 && m.texture < Textures.size())
+		if (!m.Visible)
+			continue;
+
+		if (m.Texture != -1 && m.Texture < Textures.size())
 		{
-			auto texNum = m.texture * 4;
+			auto texNum = m.Texture * 4;
 			for (auto i = 0; i < 4; i++)
 			{
 				if (Textures[texNum + i] == nullptr)
@@ -221,4 +229,21 @@ void Model::Draw()
 	}
 
 	glBindVertexArray(0);
+}
+
+void Model::AllVisible()
+{
+	for (auto& m : Meshes)
+		m.Visible = true;
+}
+
+Model::Mesh& Model::GetMesh(const std::string& name)
+{
+	auto hash = GetCRC(name);
+	for (auto& m : Meshes)
+	{
+		if (m.Hash == hash)
+			return m;
+	}
+	throw std::runtime_error(fmt::format("Model::GetMesh(): could not find a mesh with name \"{}\" in \"{}\".", name, file));
 }

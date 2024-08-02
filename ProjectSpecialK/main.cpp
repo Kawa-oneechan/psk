@@ -117,9 +117,9 @@ namespace UI
 		file.close();
 	}
 
-	static void Load(const JSONValue* source)
+	static void Load()
 	{
-		json = source->AsObject();
+		json = ReadJSON("ui/ui.json")->AsObject();
 		auto colors = json["colors"]->AsObject();
 		for (auto& ink : colors["theme"]->AsObject())
 		{
@@ -162,6 +162,14 @@ namespace UI
 		Audio::AmbientVolume = (float)settings["ambientVolume"]->AsNumber();
 		Audio::SoundVolume = (float)settings["soundVolume"]->AsNumber();
 		Audio::SpeechVolume = (float)settings["speechVolume"]->AsNumber();
+
+
+		auto sounds = ReadJSON("sound/sounds.json")->AsObject();
+		for (auto category : sounds)
+		{
+			for (auto sound : category.second->AsObject())
+				generalSounds[category.first][sound.first] = std::make_shared<Audio>(sound.second->AsString());
+		}
 	}
 
 	static void Save()
@@ -375,9 +383,8 @@ void ThreadedLoader(std::function<void(float*)> loader)
 	cursor->Select(0);
 }
 
-int main(int argc, char** argv)
+int main(int, char**)
 {
-	argc; argv;
 	setlocale(LC_ALL, "en_US.UTF-8");
 	std::srand((unsigned int)std::time(nullptr));
 
@@ -394,22 +401,12 @@ int main(int argc, char** argv)
 	Audio::Initialize();
 	SolBinds::Setup();
 
-	UI::Load(ReadJSON("ui/ui.json"));
-
-	{
-		auto sounds = ReadJSON("sound/sounds.json");
-		for (auto category : sounds->AsObject())
-		{
-			for (auto sound : category.second->AsObject())
-				generalSounds[category.first][sound.first] = std::make_shared<Audio>(sound.second->AsString());
-		}
-	}
+	UI::Load();
 
 	//test
 	{
 		town.StartNewDay();
 	}
-
 
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
