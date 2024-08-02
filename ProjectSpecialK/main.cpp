@@ -571,7 +571,7 @@ int main(int, char**)
 		modelShader->SetVec3("lights[0].pos", lightPos);
 		//testModel.Draw();
 		//testModel2.Draw();
-		bob->Draw();
+		bob->Draw(dt * timeScale);
 		glDisable(GL_DEPTH_TEST);
 
 		sprender->DrawText(0, fmt::format("CAMERA\n------\nPos: {} {} {}\nPit/Yaw: {} {}\n\nLIGHT\n-----\nPos: {} {} {}",

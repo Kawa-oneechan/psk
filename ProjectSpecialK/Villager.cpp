@@ -122,8 +122,17 @@ void Villager::LoadModel()
 		}
 	}
 
-	if (!Textures[0])
+	if (Textures[0] == nullptr)
 	{
+		/*
+		Suggested ordering:
+		0. body
+		1-16. eyes
+		17-26. mouth, but only 17 for muzzles/beaks
+		27-31. accessories
+		32-N. repeat for normals
+		64-N. repeat for mix
+		*/
 		Textures[0] = new Texture(fmt::format("{}/body_alb.png", Path));
 		Textures[1] = new Texture(fmt::format("{}/body_nrm.png", Path));
 		Textures[2] = new Texture(fmt::format("{}/body_mix.png", Path));
@@ -133,9 +142,24 @@ void Villager::LoadModel()
 		Textures[6] = new Texture(fmt::format("{}/eye0_alb.png", Path));
 		Textures[7] = new Texture(fmt::format("{}/eye0_nrm.png", Path));
 		Textures[8] = new Texture(fmt::format("{}/eye0_mix.png", Path));
-		Textures[9] = new Texture(fmt::format("{}/mouth0_alb.png", Path));
-		Textures[10] = new Texture(fmt::format("{}/mouth0_nrm.png", Path));
-		Textures[11] = new Texture(fmt::format("{}/mouth0_mix.png", Path));
+		//TODO: load the rest of the eyes.
+		if (!_species->ModeledMuzzle)
+		{
+			Textures[9] = new Texture(fmt::format("{}/mouth0_alb.png", Path));
+			Textures[10] = new Texture(fmt::format("{}/mouth0_nrm.png", Path));
+			Textures[11] = new Texture(fmt::format("{}/mouth0_mix.png", Path));
+			//TODO: load the rest of the mouths.
+		}
+		else
+		{
+			Textures[9] = new Texture(fmt::format("{}/beak_alb.png", Path));
+			Textures[10] = new Texture(fmt::format("{}/beak_nrm.png", Path));
+			Textures[11] = new Texture(fmt::format("{}/beak_mix.png", Path));
+
+			_model->GetMesh("FaceBad__mBeak").Visible = false;
+			_model->GetMesh("FaceGood__mBeak").Visible = true;
+			_model->GetMesh("FaceNothing__mBeak").Visible = false;
+		}
 	}
 
 	/*
@@ -193,7 +217,7 @@ std::string Villager::Nickname(std::string& newNickname)
 }
 
 extern Shader* modelShader;
-void Villager::Draw()
+void Villager::Draw(double)
 {
 	if (_model == nullptr)
 		LoadModel();

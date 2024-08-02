@@ -60,7 +60,7 @@ Species::Species(JSONObject& value, const std::string& filename) : NameableThing
 		Database::Filters.insert_or_assign(filter, setting);
 	}
 	
-	ModeledMuzzle = (value["modeledMuzzle"] != nullptr) ? value["modeledMuzzle"]->AsBool() : false;
+	ModeledMuzzle = (value["hasMuzzle"] != nullptr) ? value["hasMuzzle"]->AsBool() : false;
 }
 
 std::string Species::Name()

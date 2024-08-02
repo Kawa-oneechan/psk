@@ -78,7 +78,7 @@ public:
 	std::string Nickname();
 	std::string Nickname(std::string& newNickname);
 
-	void Draw();
+	void Draw(double dt);
 
 	void Manifest();
 	void Depart();
