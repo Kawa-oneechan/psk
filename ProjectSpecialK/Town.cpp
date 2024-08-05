@@ -38,20 +38,26 @@ void Town::StartNewDay()
 
 		//Now to pick a weather pattern for this day...
 		std::srand(weatherSeed + calNow);
-		//TODO: use a less dipshit way to do a weighted random choice.
-		auto rates = here["rates"]->AsArray();
-		auto pick = 0;
-		auto attempts = 1000;
-		while (--attempts)
+
+		std::vector<int> rates;
+		int rateTotal = 0;
+		for (auto r : here["rates"]->AsArray())
 		{
-			pick = std::rand() % rates.size();
-			int roll = std::rand() % 100;
-			if ((int)rates[pick]->AsNumber() > roll)
-				break;
+			rateTotal += (int)r->AsNumber();
+			rates.push_back((int)r->AsNumber());
 		}
-		if (attempts == 0)
-			conprint(0, "Gave up.");
-		//take this pic
+		auto roll = std::rand() % rateTotal;
+		auto pick = 0;
+		for (int i = 0; i < rates.size(); i++)
+		{
+			if (roll < rates[i])
+			{
+				pick = i;
+				break;
+			}
+			roll -= rates[i];
+		}
+
 		auto patterns = json["patterns"]->AsArray();
 		auto pattern = patterns[pick]->AsObject();
 		conprint(0, "Weather: picked {}, \"{}\".", pick, pattern["id"]->AsString());
