@@ -20,33 +20,60 @@ namespace Database
 	std::map<std::string, bool> Filters;
 
 	std::shared_ptr<Texture> ItemIcons = nullptr;
+	std::shared_ptr<Texture> ReactionIcons = nullptr;
 	//Required to call item icons by name instead of number, like the atlas provided by Texture.
 	std::map<std::string, glm::vec4> ItemIconAtlas;
+	std::map<std::string, glm::vec4> ReactionIconAtlas;
 
-	static const float progressParts = 1.0f / 8.0f;
+	/*
+	1. Item icons
+	2. Reaction icons
+	3. Tools
+	4. Furniture
+	5. Outfits
+	6. Species
+	7. Personalities
+	8. Hobbies
+	9. Villagers
+	Do not forget to keep that divisor up to date.
+	*/
+	static const float progressParts = 1.0f / 9.0f;
 
-	void LoadItemIcons(float* progress)
+	static void loadIconsWorker(float* progress, const std::string& path, std::shared_ptr<Texture>* texture, std::map<std::string, glm::vec4>& atlas)
 	{
-		conprint(0, "ItemIcons: loading...");
+		conprint(0, "Icons: loading {}...", path);
 
 		constexpr int iconSize = 128;
-		constexpr int cols = 16;
-		constexpr int rows = 16;
-		constexpr int sheetW = cols * iconSize;
-		constexpr int sheetH = rows * iconSize;
+		//constexpr int cols = 16;
+		//constexpr int rows = 16;
+		//constexpr int sheetW = cols * iconSize;
+		//constexpr int sheetH = rows * iconSize;
+		int cols = 16;
+		int rows = cols;
 
 		unsigned char* sheet;
 		int width, height, channels;
 
-		sheet = new unsigned char[(sheetW * sheetH) * 4];
-		
-		auto entries = EnumerateVFS("itemicons\\*.png");
+		auto entries = EnumerateVFS(fmt::format("icons\\{}\\*.png", path));
 
 		if (entries.size() >= cols * rows)
 		{
-			conprint(1, "ItemIcons: Too many icons! Got {} but can only fit {}.", entries.size(), cols * rows);
-			entries.erase(entries.begin() + (cols * rows), entries.end());
+			conprint(1, "Icons: Too many icons! Got {} but can only fit {}.", entries.size(), cols * rows);
+			//entries.erase(entries.begin() + (cols * rows), entries.end());
+			bool expandToRight = true;
+			while (entries.size() >= cols * rows)
+			{
+				if (expandToRight)
+					cols *= 2;
+				else
+					rows *= 2;
+				expandToRight = !expandToRight;
+			}
 		}
+
+		int sheetW = cols * iconSize;
+		int sheetH = rows * iconSize;
+		sheet = new unsigned char[(sheetW * sheetH) * 4];
 
 		auto progressStep = progressParts / entries.size();
 
@@ -76,26 +103,32 @@ namespace Database
 			stbi_image_free(data);
 
 			auto filename = entry.path;
-			filename = filename.substr(filename.find('/') + 1);
+			filename = filename.substr(filename.rfind('/') + 1);
 			filename = filename.substr(0, filename.find('.'));
-			ItemIconAtlas[filename] = glm::vec4(l, t, iconSize, iconSize);
+			atlas[filename] = glm::vec4(l, t, iconSize, iconSize);
 
 			*progress += progressStep;
 		}
 
-#ifdef DEBUG
+#if 0 //#ifdef DEBUG
 		{
 			stbi_flip_vertically_on_write(1);
-			stbi_write_png("itemicons.png", sheetW, sheetH, 4, sheet, sheetW * 4);
+			stbi_write_png(fmt::format("{}.png", path).c_str(), sheetW, sheetH, 4, sheet, sheetW * 4);
 		}
 #endif
 
 		//Loading happens in this thread, but making a texture out of it will be delayed.
-		ItemIcons = std::make_shared<Texture>(sheet, sheetW, sheetH, 4);
+		*texture = std::make_shared<Texture>(sheet, sheetW, sheetH, 4);
 		
 		ForgetVFS(entries);
 
-		conprint(0, "ItemIcons: generated a sheet for {} entries.", entries.size());
+		conprint(0, "Icons: generated a sheet for {} entries.", entries.size());
+	}
+
+	void LoadIcons(float* progress)
+	{
+		loadIconsWorker(progress, "items", &ItemIcons, ItemIconAtlas);
+		loadIconsWorker(progress, "reactions", &ReactionIcons, ReactionIconAtlas);
 	}
 
 	void LoadContentFilters()
@@ -233,7 +266,7 @@ namespace Database
 		*progress = 0.0;
 		LoadContentFilters();
 
-		LoadItemIcons(progress);
+		LoadIcons(progress);
 
 		LoadItems(progress);
 		LoadSpecies(progress);
