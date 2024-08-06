@@ -1,4 +1,5 @@
 #include "SpecialK.h"
+#include "support/stb_image.h"
 
 static std::map<std::string, std::tuple<Texture*, int>> cache;
 

@@ -9,13 +9,9 @@
 #include <stack>
 #include <algorithm>
 
-#include "support/glad/glad.h"
-#include <GLFW/glfw3.h>
-
 #include "support/glm/glm.hpp"
 #include "support/glm/gtc/matrix_transform.hpp"
 #include "support/glm/gtc/type_ptr.hpp"
-#include "support/stb_image.h"
 #include "support/JSON/JSON.h"
 #include "support/format.h"
 #include "support/sol.hpp"

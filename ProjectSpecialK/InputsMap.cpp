@@ -1,5 +1,6 @@
 #include "InputsMap.h"
 
+#include <GLFW/glfw3.h>
 
 InputsMap::InputsMap()
 {

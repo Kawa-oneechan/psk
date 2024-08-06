@@ -1,9 +1,6 @@
 #pragma once
 
 #include "support/glad/glad.h"
-#include "support/stb_image.h"
-#include "support/format.h"
-#include "VFS.h"
 
 class Texture
 {
