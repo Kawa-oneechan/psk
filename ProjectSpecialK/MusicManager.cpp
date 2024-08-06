@@ -12,7 +12,7 @@ static std::string currentFile;
 void PlayMusic(const std::string& id)
 {
 	if (library.size() == 0)
-		library = ReadJSON("music/music.json")->AsObject();
+		library = VFS::ReadJSON("music/music.json")->AsObject();
 
 	if (id == currentID)
 		return;
@@ -76,11 +76,11 @@ void PlayMusic(const std::string& id)
 			if (tpos != std::string::npos)
 				file = file.replace(tpos, 9, weather);
 			
-			if (EnumerateVFS(file).size() == 0)
+			if (VFS::Enumerate(file).size() == 0)
 			{
 				//File does not exist. Try sunny weather first.
 				file = preWeather.replace(tpos, 9, "sunny");
-				if (EnumerateVFS(file).size() == 0)
+				if (VFS::Enumerate(file).size() == 0)
 				{
 					//That too? Okay, try *no* weather!
 					file = preWeather.replace(tpos, 9, "");

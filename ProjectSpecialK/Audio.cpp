@@ -63,7 +63,7 @@ Audio::Audio(std::string filename) : filename(filename)
 		status = Status::Invalid;
 		return;
 	}
-	data = ReadVFS(filename, &size);
+	data = VFS::ReadData(filename, &size);
 	if (!data)
 	{
 		conprint(1, "Could not open audio file {}.", filename);

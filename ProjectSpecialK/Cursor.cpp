@@ -3,7 +3,7 @@
 
 Cursor::Cursor()
 {
-	auto hsj = ReadJSON("ui/cursors.json")->AsObject();
+	auto hsj = VFS::ReadJSON("ui/cursors.json")->AsObject();
 	for (auto& hs : hsj["hotspots"]->AsArray())
 		hotspots.push_back(GetJSONVec2(hs));
 

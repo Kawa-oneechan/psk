@@ -2,8 +2,8 @@
 
 Shader::Shader(const std::string& vertexPath, const std::string& fragmentPath)
 {
-	auto vShaderCode = ReadVFSString(vertexPath);
-	auto fShaderCode = ReadVFSString(fragmentPath);
+	auto vShaderCode = VFS::ReadString(vertexPath);
+	auto fShaderCode = VFS::ReadString(fragmentPath);
 
 	unsigned int vertex, fragment;
 	const char* vs = vShaderCode.c_str();

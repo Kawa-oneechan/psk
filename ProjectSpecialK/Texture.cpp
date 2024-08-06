@@ -52,7 +52,7 @@ Texture::Texture(const std::string& texturePath, int repeat, int filter) : file(
 	stbi_set_flip_vertically_on_load(1);
 
 	size_t vfsSize = 0;
-	auto vfsData = ReadVFS(texturePath, &vfsSize);
+	auto vfsData = VFS::ReadData(texturePath, &vfsSize);
 	if (!vfsData || vfsSize == 0)
 	{
 		conprint(1, "Failed to load texture \"{}\" -- no data.", texturePath);

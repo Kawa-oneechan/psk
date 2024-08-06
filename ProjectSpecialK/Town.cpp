@@ -18,7 +18,7 @@ void Town::StartNewDay()
 
 		std::srand(weatherSeed + (month << 8) + (day << 16));
 
-		auto json = ReadJSON("weather.json")->AsObject();
+		auto json = VFS::ReadJSON("weather.json")->AsObject();
 		auto calendar = json[Hemisphere == Hemisphere::North ? "north" : "south"]->AsArray();
 
 		auto here = calendar[0]->AsObject();

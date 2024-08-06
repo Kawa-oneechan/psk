@@ -159,7 +159,7 @@ Model::Model(const std::string& modelPath) : file(modelPath)
 	}
 	
 	size_t vfsSize = 0;
-	auto vfsData = ReadVFS(modelPath, &vfsSize);
+	auto vfsData = VFS::ReadData(modelPath, &vfsSize);
 		
 	ufbx_load_opts options = {};
 	ufbx_error errors;

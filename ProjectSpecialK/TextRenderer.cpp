@@ -44,7 +44,7 @@ void SpriteRenderer::LoadFontBank(int font, int bank)
 {
 	if (!cdata)
 	{
-		auto& fontSettings = ReadJSON("fonts/fonts.json")->AsArray();
+		auto& fontSettings = VFS::ReadJSON("fonts/fonts.json")->AsArray();
 		numFonts = (int)fontSettings.size();
 		if (numFonts > MaxFonts)
 		{
@@ -69,7 +69,7 @@ void SpriteRenderer::LoadFontBank(int font, int bank)
 	if (fontTextures[(font * 256) + bank] != nullptr)
 		return;
 
-	auto ttfData = ReadVFS(fontFiles[font], nullptr);
+	auto ttfData = VFS::ReadData(fontFiles[font], nullptr);
 	auto ttfBitmap = new unsigned char[FontAtlasExtent * FontAtlasExtent];
 	stbtt_BakeFontBitmap((unsigned char*)ttfData.get(), 0, (float)fontSizes[font], ttfBitmap, FontAtlasExtent, FontAtlasExtent, 256 * bank, 256, &cdata[(font * 0xFFFF) + (0x100 * bank)]);
 	FlipImage(ttfBitmap, FontAtlasExtent, FontAtlasExtent);

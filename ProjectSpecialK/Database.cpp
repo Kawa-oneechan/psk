@@ -54,7 +54,7 @@ namespace Database
 		unsigned char* sheet;
 		int width, height, channels;
 
-		auto entries = EnumerateVFS(fmt::format("icons\\{}\\*.png", path));
+		auto entries = VFS::Enumerate(fmt::format("icons\\{}\\*.png", path));
 
 		if (entries.size() >= cols * rows)
 		{
@@ -82,7 +82,7 @@ namespace Database
 		for (const auto& entry : entries)
 		{
 			size_t vfsSize = 0;
-			auto vfsData = ReadVFS(entry.path, &vfsSize);
+			auto vfsData = VFS::ReadData(entry.path, &vfsSize);
 			unsigned char *data = stbi_load_from_memory((unsigned char*)vfsData.get(), (int)vfsSize, &width, &height, &channels, 0);
 
 			int l = (iconNum % cols) * iconSize;
@@ -120,7 +120,7 @@ namespace Database
 		//Loading happens in this thread, but making a texture out of it will be delayed.
 		*texture = std::make_shared<Texture>(sheet, sheetW, sheetH, 4);
 		
-		ForgetVFS(entries);
+		Forget(entries);
 
 		conprint(0, "Icons: generated a sheet for {} entries.", entries.size());
 	}
@@ -136,7 +136,7 @@ namespace Database
 		Filters.clear();
 		FilterCategories.clear();
 		auto settings = UI::settings["contentFilters"]->AsObject();
-		auto doc = ReadJSON("filters.json");
+		auto doc = VFS::ReadJSON("filters.json");
 		for (const auto& f : doc->AsObject())
 		{
 			auto key = f.first;
@@ -161,12 +161,12 @@ namespace Database
 	template<typename T1, typename T2>
 	void loadWorker(float* progress, std::vector<std::shared_ptr<T1>>& target, const std::string& spec, const std::string& whom)
 	{
-		auto entries = EnumerateVFS(spec);
+		auto entries = VFS::Enumerate(spec);
 		auto progressStep = progressParts / entries.size();
 		target.reserve(entries.size());
 		for (const auto& entry : entries)
 		{
-			auto doc = ReadJSON(entry.path);
+			auto doc = VFS::ReadJSON(entry.path);
 
 			if (doc != nullptr)
 			{

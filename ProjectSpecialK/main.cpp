@@ -119,7 +119,7 @@ namespace UI
 
 	static void Load()
 	{
-		json = ReadJSON("ui/ui.json")->AsObject();
+		json = VFS::ReadJSON("ui/ui.json")->AsObject();
 		auto colors = json["colors"]->AsObject();
 		for (auto& ink : colors["theme"]->AsObject())
 		{
@@ -164,7 +164,7 @@ namespace UI
 		Audio::SpeechVolume = (float)settings["speechVolume"]->AsNumber();
 
 
-		auto sounds = ReadJSON("sound/sounds.json")->AsObject();
+		auto sounds = VFS::ReadJSON("sound/sounds.json")->AsObject();
 		for (auto category : sounds)
 		{
 			for (auto sound : category.second->AsObject())
@@ -391,7 +391,7 @@ int main(int, char**)
 	console = new Console();
 	try
 	{
-		InitVFS();
+		VFS::Initialize();
 	}
 	catch (std::runtime_error& x)
 	{
@@ -471,10 +471,10 @@ int main(int, char**)
 	thePlayer.Name = "Kawa";
 	thePlayer.Gender = Gender::BEnby;
 
-	TextAdd(*ReadJSON("datetime.json"));
-	TextAdd(*ReadJSON("fixedform.json"));
-	TextAdd(*ReadJSON("optionsmenu.json"));
-	TextAdd(*ReadJSON("tests.json"));
+	TextAdd(*VFS::ReadJSON("datetime.json"));
+	TextAdd(*VFS::ReadJSON("fixedform.json"));
+	TextAdd(*VFS::ReadJSON("optionsmenu.json"));
+	TextAdd(*VFS::ReadJSON("tests.json"));
 
 	tickables.push_back(new Background());
 	tickables.push_back(new DoomMenu());

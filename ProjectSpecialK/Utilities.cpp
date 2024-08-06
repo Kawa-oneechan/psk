@@ -81,7 +81,7 @@ glm::vec4 GetJSONColor(JSONValue* val)
 
 void GetAtlas(std::vector<glm::vec4> &ret, const std::string& jsonFile)
 {
-	auto rjs = ReadJSON(jsonFile);
+	auto rjs = VFS::ReadJSON(jsonFile);
 	if (!rjs)
 		return;
 	auto doc = rjs->AsObject();
