@@ -23,6 +23,7 @@
 #include "Camera.h"
 #include "Audio.h"
 
+#include "NameableThing.h"
 #include "Item.h"
 #include "Tickable.h"
 #include "Species.h"

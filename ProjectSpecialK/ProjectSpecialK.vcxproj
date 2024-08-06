@@ -152,6 +152,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="MusicManager.cpp" />
+    <ClCompile Include="NameableThing.cpp" />
     <ClCompile Include="PanelLayout.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Sequence.cpp" />
@@ -205,6 +206,7 @@
     <ClInclude Include="InputsMap.h" />
     <ClInclude Include="Item.h" />
     <ClInclude Include="Model.h" />
+    <ClInclude Include="NameableThing.h" />
     <ClInclude Include="PanelLayout.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Sequence.h" />
