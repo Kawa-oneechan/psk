@@ -155,3 +155,24 @@ void SpriteRenderer::DrawSprite(Texture& texture, const glm::vec2 position)
 {
 	DrawSprite(spriteShader, texture, position, glm::vec2(texture.width, texture.height), glm::vec4(0), 0, glm::vec4(1));
 }
+
+void SpriteRenderer::DrawLine(const glm::vec2& from, const glm::vec2& to, const glm::vec4& color)
+{
+	auto l = to - from;
+	
+	auto len = 0.0f;
+	{
+		auto k = (l.x * l.x) + (l.y * l.y);
+		auto n = k / 2;
+		auto i = 0x5F3759DF - ((*(int *)&k) >> 1); //what the fuck?
+		if (k != 0)
+		{
+			k = *(float *)&i;
+			k = k * (1.5f - (n * k * k));
+			len = 1.0f / k;
+		}
+	}
+	auto a = glm::degrees(std::atan2(l.y, l.x));
+
+	sprender->DrawSprite(*whiteRect, from, glm::vec2(len, 1), glm::vec4(0), a, color, SpriteFlags::TopLeft);
+}

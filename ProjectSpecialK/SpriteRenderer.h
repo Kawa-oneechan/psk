@@ -31,6 +31,7 @@ public:
 	void DrawSprite(Texture& texture, const glm::vec2& position, const glm::vec2& size, const glm::vec4& srcRect = glm::vec4(0.0f), float rotate = 0.0f, const glm::vec4& color = glm::vec4(1), SpriteFlags flags = SpriteFlags::NoFlags);
 	void DrawSprite(Shader* shader, Texture& texture, glm::vec2 position);
 	void DrawSprite(Texture& texture, glm::vec2 position);
+	void SpriteRenderer::DrawLine(const glm::vec2& from, const glm::vec2& to, const glm::vec4& color);
 
 	//In TextRenderer.cpp:
 	void DrawText(int font, const std::string& text, glm::vec2 position, const glm::vec4& color = glm::vec4(1), float size = 100, float angle = 0.0f, bool raw = false);
