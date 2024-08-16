@@ -13,7 +13,14 @@ uniform sampler2D normalTexture;
 uniform sampler2D mixTexture;
 uniform sampler2D opacityTexture;
 
-uniform vec3 viewPos; 
+uniform sampler2DArray albedoTextureArray;
+uniform sampler2DArray normalTextureArray;
+uniform sampler2DArray mixTextureArray;
+uniform sampler2DArray opacityTextureArray;
+
+uniform vec3 viewPos;
+
+uniform int arrayIndex;
 
 //lighting
 #define NUMLIGHTS 4
@@ -88,7 +95,7 @@ vec3 calcNormal(vec3 mapCol)
 
 void main()
 {
-	vec4 albedo = texture(albedoTexture, TexCoord);
+	vec4 albedo = (arrayIndex == -1) ? texture(albedoTexture, TexCoord) : texture(albedoTextureArray, vec3(TexCoord, arrayIndex));
 	vec3 normal = texture(normalTexture, TexCoord).rgb;
 	vec4 mix = texture(mixTexture, TexCoord);
 	vec4 opacity = texture(opacityTexture, TexCoord);

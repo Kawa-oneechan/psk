@@ -1,6 +1,8 @@
 #include "SpecialK.h"
 #include "support/stb_image.h"
 
+bool usingArrayTexture = false;
+
 static std::map<std::string, std::tuple<Texture*, int>> cache;
 
 static bool load(const unsigned char* data, unsigned int *id, int width, int height, int channels, int repeat, int filter)
@@ -159,6 +161,7 @@ void Texture::Use(int slot)
 		delayed = false;
 	}
 
+	usingArrayTexture = false;
 	glActiveTexture(GL_TEXTURE0 + slot);
 	glBindTexture(GL_TEXTURE_2D, ID);
 }
@@ -172,4 +175,123 @@ void Texture::SetRepeat(int newRepeat)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, repeat);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, repeat);
 	glBindTexture(GL_TEXTURE_2D, 0);
+}
+
+//------------------------
+
+static bool loadArray(unsigned char** data, unsigned int *id, int width, int height, int channels, int layers, int repeat, int filter)
+{
+	glGenTextures(1, id);
+	if (glGetError())
+		return false;
+
+	int format = (channels == 4) ? GL_RGBA : GL_RGB;
+
+	glBindTexture(GL_TEXTURE_2D_ARRAY, *id);
+	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, repeat);
+	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, repeat);
+	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, filter);
+
+	//glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+	glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, format, width, height, layers, 0, format, GL_UNSIGNED_BYTE, nullptr);
+
+	for (auto l = 0; l < layers; l++)
+		glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, l, width, height, 1, format, GL_UNSIGNED_BYTE, data[l]);
+
+	glGenerateMipmap(GL_TEXTURE_2D_ARRAY);
+	glBindTexture(GL_TEXTURE_2D_ARRAY, 0);
+
+	return true;
+}
+
+TextureArray::TextureArray(const std::string& texturePath, int repeat, int filter) : file(texturePath), repeat(repeat), filter(filter)
+{
+	ID = 0;
+	width = height = channels = 0, layers = 0;
+	data = nullptr;
+
+	/*
+	auto c = cache.find(texturePath);
+	if (c != cache.end())
+	{
+		TextureArray* t;
+		int r;
+		std::tie(t, r) = c->second;
+		ID = t->ID;
+		width = t->width;
+		height = t->height;
+		channels = t->channels;
+		data = t->data;
+		delayed = t->delayed;
+		this->repeat = t->repeat;
+		this->filter = t->filter;
+		r++;
+		cache[file] = std::make_tuple(t, r);
+		return;
+	}
+	*/
+
+	stbi_set_flip_vertically_on_load(1);
+
+	auto entries = VFS::Enumerate(texturePath);
+	layers = (int)entries.size();
+	data = (unsigned char**)std::malloc(layers * sizeof(unsigned char**));
+	std::memset(data, 0, layers);
+	for (auto l = 0; l < layers; l++)
+	{
+		size_t vfsSize = 0;
+		auto vfsData = VFS::ReadData(entries[l].path, &vfsSize);
+		if (!vfsData || vfsSize == 0)
+		{
+			conprint(1, "Failed to load texture array item \"{}\" -- no data.", entries[l].path);
+			return;
+		}
+		data[l] = stbi_load_from_memory((unsigned char*)vfsData.get(), (int)vfsSize, &width, &height, &channels, 0);
+	}
+
+	if (data)
+	{
+		if (!loadArray(data, &ID, width, height, channels, layers, repeat, filter))
+		{
+			conprint(3, "glGenTextures indicates we're threading. Delaying \"{}\"...", texturePath);
+			delayed = true;
+			return;
+		}
+	}
+	else
+	{
+		conprint(1, "Failed to load texture \"{}\" -- invalid data.", texturePath);
+	}
+	for (auto l = 0; l < layers; l++)
+		stbi_image_free(data[l]);
+	std::free(data);
+
+	//cache[file] = std::make_tuple(this, 1);
+}
+
+void TextureArray::Use()
+{
+	Use(0);
+}
+
+void TextureArray::Use(int slot)
+{
+	if (delayed)
+	{
+		conprint(3, "Delayed-loading texture array \"{}\" on first use...", file);
+		if (!loadArray(data, &ID, width, height, channels, layers, repeat, filter))
+		{
+			conprint(2, "glGenTextures indicates we're still threading! WTF?");
+			return;
+		}
+		for (auto l = 0; l < layers; l++)
+			stbi_image_free(data[l]);
+		std::free(data);
+		delayed = false;
+	}
+
+	usingArrayTexture = true;
+	glActiveTexture(GL_TEXTURE0 + slot + 4);
+	glBindTexture(GL_TEXTURE_2D_ARRAY, ID);
 }

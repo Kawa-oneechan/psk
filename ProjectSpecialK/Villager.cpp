@@ -139,15 +139,15 @@ void Villager::LoadModel()
 		Textures[3] = new Texture(fmt::format("{}/body_alb.png", Path));
 		Textures[4] = new Texture(fmt::format("{}/body_nrm.png", Path));
 		Textures[5] = new Texture(fmt::format("{}/body_mix.png", Path));
-		Textures[6] = new Texture(fmt::format("{}/eye0_alb.png", Path));
-		Textures[7] = new Texture(fmt::format("{}/eye0_nrm.png", Path));
-		Textures[8] = new Texture(fmt::format("{}/eye0_mix.png", Path));
+		Textures[6] = new TextureArray(fmt::format("{}/eye*_alb.png", Path));
+		Textures[7] = new TextureArray(fmt::format("{}/eye*_nrm.png", Path));
+		Textures[8] = new TextureArray(fmt::format("{}/eye*_mix.png", Path));
 		//TODO: load the rest of the eyes.
 		if (!_species->ModeledMuzzle)
 		{
-			Textures[9] = new Texture(fmt::format("{}/mouth0_alb.png", Path));
-			Textures[10] = new Texture(fmt::format("{}/mouth0_nrm.png", Path));
-			Textures[11] = new Texture(fmt::format("{}/mouth0_mix.png", Path));
+			Textures[9] = new TextureArray(fmt::format("{}/mouth*_alb.png", Path));
+			Textures[10] = new TextureArray(fmt::format("{}/mouth*_nrm.png", Path));
+			Textures[11] = new TextureArray(fmt::format("{}/mouth*_mix.png", Path));
 			//TODO: load the rest of the mouths.
 		}
 		else

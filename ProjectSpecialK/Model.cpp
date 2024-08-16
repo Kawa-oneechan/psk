@@ -199,11 +199,14 @@ Model::Model(const std::string& modelPath) : file(modelPath)
 	cache[file] = std::make_tuple(this, 1);
 }
 
+extern bool usingArrayTexture;
+
 void Model::Draw()
 {
 	modelShader->Use();
 	for (auto& m : Meshes)
 	{
+		bool arrayTexture = false;
 		if (!m.Visible)
 			continue;
 
@@ -222,9 +225,12 @@ void Model::Draw()
 				else
 				{
 					Textures[texNum + i]->Use(i);
+					if (usingArrayTexture)
+						arrayTexture = true;
 				}
 			}
 		}
+		modelShader->SetInt("arrayIndex", arrayTexture ? 0 : -1); //TODO: use proper index instead of 0
 		m.Draw();
 	}
 

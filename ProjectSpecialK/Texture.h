@@ -22,8 +22,8 @@ public:
 	Texture(unsigned int id, int width, int height, int channels) : ID(id), width(width), height(height), channels(channels), data(nullptr), filter(GL_LINEAR), repeat(GL_REPEAT) {}
 
 	~Texture();
-	void Use();
-	void Use(int slot);
+	virtual void Use();
+	virtual void Use(int slot);
 
 	void SetRepeat(int newRepeat);
 
@@ -31,4 +31,29 @@ public:
 
 	Texture(const Texture &x) = default;
 	Texture &operator=(const Texture &x) = default;
+};
+
+class TextureArray : public Texture
+{
+private:
+	unsigned char** data;
+	std::string file;
+	int filter, repeat;
+
+public:
+	unsigned int ID;
+	int width, height, channels, layers;
+	bool delayed = false;
+
+	TextureArray() = default;
+
+	TextureArray(const std::string& texturePath, int repeat = GL_REPEAT, int filter = GL_LINEAR);
+
+	void Use() override;
+	void Use(int slot) override;
+
+	void SetRepeat(int newRepeat);
+
+	TextureArray(const TextureArray &x) = default;
+	TextureArray &operator=(const TextureArray &x) = default;
 };

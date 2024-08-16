@@ -505,6 +505,10 @@ int main(int, char**)
 	modelShader->SetInt("normalTexture", 1);
 	modelShader->SetInt("mixTexture", 2);
 	modelShader->SetInt("opacityTexture", 3);
+	modelShader->SetInt("albedoTextureArray", 4);
+	modelShader->SetInt("normalTextureArray", 5);
+	modelShader->SetInt("mixTextureArray", 6);
+	modelShader->SetInt("opacityTextureArray", 7);
 
 	auto bob = Database::Find<Villager>("psk:cat00", villagers);
 	bob->defaultOutfitID = "psk:oppai/white";
