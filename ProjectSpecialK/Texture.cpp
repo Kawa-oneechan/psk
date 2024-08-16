@@ -1,8 +1,6 @@
 #include "SpecialK.h"
 #include "support/stb_image.h"
 
-bool usingArrayTexture = false;
-
 static std::map<std::string, std::tuple<Texture*, int>> cache;
 
 static bool load(const unsigned char* data, unsigned int *id, int width, int height, int channels, int repeat, int filter)
@@ -161,7 +159,6 @@ void Texture::Use(int slot)
 		delayed = false;
 	}
 
-	usingArrayTexture = false;
 	glActiveTexture(GL_TEXTURE0 + slot);
 	glBindTexture(GL_TEXTURE_2D, ID);
 }
@@ -291,7 +288,6 @@ void TextureArray::Use(int slot)
 		delayed = false;
 	}
 
-	usingArrayTexture = true;
-	glActiveTexture(GL_TEXTURE0 + slot + 4);
+	glActiveTexture(GL_TEXTURE0 + slot);
 	glBindTexture(GL_TEXTURE_2D_ARRAY, ID);
 }

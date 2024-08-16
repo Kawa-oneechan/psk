@@ -125,41 +125,41 @@ void Villager::LoadModel()
 	if (Textures[0] == nullptr)
 	{
 		/*
-		Suggested ordering:
-		0. body
-		1-16. eyes
-		17-26. mouth, but only 17 for muzzles/beaks
-		27-31. accessories
-		32-N. repeat for normals
-		64-N. repeat for mix
+		Texture order:
+				alb	nml	mix
+		body	0	1	2
+		capvis	3	4	5
+		eyes	6	7	8
+		mouth	9	10	11
+		accs.	12	13	14
+		...
 		*/
-		Textures[0] = new Texture(fmt::format("{}/body_alb.png", Path));
-		Textures[1] = new Texture(fmt::format("{}/body_nrm.png", Path));
-		Textures[2] = new Texture(fmt::format("{}/body_mix.png", Path));
-		Textures[3] = new Texture(fmt::format("{}/body_alb.png", Path));
-		Textures[4] = new Texture(fmt::format("{}/body_nrm.png", Path));
-		Textures[5] = new Texture(fmt::format("{}/body_mix.png", Path));
+		Textures[0] = new TextureArray(fmt::format("{}/body_alb.png", Path));
+		Textures[1] = new TextureArray(fmt::format("{}/body_nrm.png", Path));
+		Textures[2] = new TextureArray(fmt::format("{}/body_mix.png", Path));
+		Textures[3] = Textures[0]; //new TextureArray(fmt::format("{}/body_alb.png", Path));
+		Textures[4] = Textures[1]; //new TextureArray(fmt::format("{}/body_nrm.png", Path));
+		Textures[5] = Textures[2]; //new TextureArray(fmt::format("{}/body_mix.png", Path));
 		Textures[6] = new TextureArray(fmt::format("{}/eye*_alb.png", Path));
 		Textures[7] = new TextureArray(fmt::format("{}/eye*_nrm.png", Path));
 		Textures[8] = new TextureArray(fmt::format("{}/eye*_mix.png", Path));
-		//TODO: load the rest of the eyes.
 		if (!_species->ModeledMuzzle)
 		{
 			Textures[9] = new TextureArray(fmt::format("{}/mouth*_alb.png", Path));
 			Textures[10] = new TextureArray(fmt::format("{}/mouth*_nrm.png", Path));
 			Textures[11] = new TextureArray(fmt::format("{}/mouth*_mix.png", Path));
-			//TODO: load the rest of the mouths.
 		}
 		else
 		{
-			Textures[9] = new Texture(fmt::format("{}/beak_alb.png", Path));
-			Textures[10] = new Texture(fmt::format("{}/beak_nrm.png", Path));
-			Textures[11] = new Texture(fmt::format("{}/beak_mix.png", Path));
+			Textures[9] = new TextureArray(fmt::format("{}/beak_alb.png", Path));
+			Textures[10] = new TextureArray(fmt::format("{}/beak_nrm.png", Path));
+			Textures[11] = new TextureArray(fmt::format("{}/beak_mix.png", Path));
 
 			_model->GetMesh("FaceBad__mBeak").Visible = false;
 			_model->GetMesh("FaceGood__mBeak").Visible = true;
 			_model->GetMesh("FaceNothing__mBeak").Visible = false;
 		}
+		//TODO: detect and load accessories, which take their own sub-model.
 	}
 
 	/*
@@ -241,8 +241,9 @@ void Villager::Draw(double)
 
 	if (_outfitModel && Outfit)
 	{
-		//set textures too
+		//TODO: have Outfit handle its own drawing.
 		Outfit->AssignTextures(_outfitModel);
+		_outfitModel->TexArrayLayers[0] = 0; //variant test
 		_outfitModel->Draw();
 	}
 }

@@ -195,10 +195,16 @@ void InventoryItem::LoadTextures()
 {
 	if (Textures[0] == nullptr)
 	{
-		Textures[0] = new Texture(fmt::format("{}/albedo{}.png", Path, _variant));
-		Textures[1] = new Texture(fmt::format("{}/normal.png", Path));
-		Textures[2] = new Texture(fmt::format("{}/mix.png", Path));
-		Textures[3] = new Texture(fmt::format("{}/opacity.png", Path));
+		/*
+		Texture order:
+				alb	nml	mix	opc
+		body	0	1	2	3
+		...
+		*/
+		Textures[0] = new TextureArray(fmt::format("{}/albedo*.png", Path));
+		Textures[1] = new TextureArray(fmt::format("{}/normal.png", Path));
+		Textures[2] = new TextureArray(fmt::format("{}/mix.png", Path));
+		Textures[3] = new TextureArray(fmt::format("{}/opacity.png", Path));
 	}
 }
 

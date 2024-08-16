@@ -8,19 +8,14 @@ in vec3 Normal;
 in vec3 Tangent;
 in vec3 FragPos;
 
-uniform sampler2D albedoTexture;
-uniform sampler2D normalTexture;
-uniform sampler2D mixTexture;
-uniform sampler2D opacityTexture;
-
-uniform sampler2DArray albedoTextureArray;
-uniform sampler2DArray normalTextureArray;
-uniform sampler2DArray mixTextureArray;
-uniform sampler2DArray opacityTextureArray;
+uniform sampler2DArray albedoTexture;
+uniform sampler2DArray normalTexture;
+uniform sampler2DArray mixTexture;
+uniform sampler2DArray opacityTexture;
 
 uniform vec3 viewPos;
 
-uniform int arrayIndex;
+uniform int layer;
 
 //lighting
 #define NUMLIGHTS 4
@@ -95,10 +90,10 @@ vec3 calcNormal(vec3 mapCol)
 
 void main()
 {
-	vec4 albedo = (arrayIndex == -1) ? texture(albedoTexture, TexCoord) : texture(albedoTextureArray, vec3(TexCoord, arrayIndex));
-	vec3 normal = texture(normalTexture, TexCoord).rgb;
-	vec4 mix = texture(mixTexture, TexCoord);
-	vec4 opacity = texture(opacityTexture, TexCoord);
+	vec4 albedo = texture(albedoTexture, vec3(TexCoord, layer));
+	vec3 normal = texture(normalTexture, vec3(TexCoord, layer)).rgb;
+	vec4 mix = texture(mixTexture, vec3(TexCoord, layer));
+	vec4 opacity = texture(opacityTexture, vec3(TexCoord, layer));
 
 	//normal = normal * 2.0 - 1.0;
 #ifdef TOON

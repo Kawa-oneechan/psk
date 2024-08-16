@@ -145,6 +145,7 @@ const void Model::Mesh::Draw()
 Model::Model(const std::string& modelPath) : file(modelPath)
 {
 	Textures.fill(nullptr);
+	TexArrayLayers.fill(0);
 
 	auto c = cache.find(modelPath);
 	if (c != cache.end())
@@ -199,14 +200,12 @@ Model::Model(const std::string& modelPath) : file(modelPath)
 	cache[file] = std::make_tuple(this, 1);
 }
 
-extern bool usingArrayTexture;
-
 void Model::Draw()
 {
 	modelShader->Use();
+	int j = 0;
 	for (auto& m : Meshes)
 	{
-		bool arrayTexture = false;
 		if (!m.Visible)
 			continue;
 
@@ -220,18 +219,17 @@ void Model::Draw()
 					if (i == 0)
 						fallback.Use(0);
 					else
-						whiteRect->Use(i);
+						white.Use(i);
 				}
 				else
 				{
 					Textures[texNum + i]->Use(i);
-					if (usingArrayTexture)
-						arrayTexture = true;
 				}
 			}
 		}
-		modelShader->SetInt("arrayIndex", arrayTexture ? 0 : -1); //TODO: use proper index instead of 0
+		modelShader->SetInt("layer", TexArrayLayers[j]);
 		m.Draw();
+		j++;
 	}
 
 	glBindVertexArray(0);

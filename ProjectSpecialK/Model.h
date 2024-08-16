@@ -33,11 +33,13 @@ class Model
 
 private:
 	std::string file;
-	Texture fallback{ Texture("fallback.png") };
+	TextureArray fallback{ TextureArray("fallback.png") };
+	TextureArray white{ TextureArray("white.png") };
 
 public:
 	std::vector<Mesh> Meshes;
 	std::array<Texture*, 16> Textures;
+	std::array<int, 4> TexArrayLayers;
 
 	Model() = default;
 	Model(const std::string& modelPath);
