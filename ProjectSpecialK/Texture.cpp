@@ -234,21 +234,21 @@ TextureArray::TextureArray(const std::string& texturePath, int repeat, int filte
 	auto entries = VFS::Enumerate(texturePath);
 	layers = (int)entries.size();
 	data = (unsigned char**)std::malloc(layers * sizeof(unsigned char**));
-	std::memset(data, 0, layers);
-	for (auto l = 0; l < layers; l++)
-	{
-		size_t vfsSize = 0;
-		auto vfsData = VFS::ReadData(entries[l].path, &vfsSize);
-		if (!vfsData || vfsSize == 0)
-		{
-			conprint(1, "Failed to load texture array item \"{}\" -- no data.", entries[l].path);
-			return;
-		}
-		data[l] = stbi_load_from_memory((unsigned char*)vfsData.get(), (int)vfsSize, &width, &height, &channels, 0);
-	}
-
 	if (data)
 	{
+		std::memset(data, 0, layers);
+		for (auto l = 0; l < layers; l++)
+		{
+			size_t vfsSize = 0;
+			auto vfsData = VFS::ReadData(entries[l].path, &vfsSize);
+			if (!vfsData || vfsSize == 0)
+			{
+				conprint(1, "Failed to load texture array item \"{}\" -- no data.", entries[l].path);
+				return;
+			}
+			data[l] = stbi_load_from_memory((unsigned char*)vfsData.get(), (int)vfsSize, &width, &height, &channels, 0);
+		}
+
 		if (!loadArray(data, &ID, width, height, channels, layers, repeat, filter))
 		{
 			conprint(3, "glGenTextures indicates we're threading. Delaying \"{}\"...", texturePath);
@@ -258,7 +258,7 @@ TextureArray::TextureArray(const std::string& texturePath, int repeat, int filte
 	}
 	else
 	{
-		conprint(1, "Failed to load texture \"{}\" -- invalid data.", texturePath);
+		conprint(1, "Failed to load texture \"{}\" -- couldn't allocate data.", texturePath);
 	}
 	for (auto l = 0; l < layers; l++)
 		stbi_image_free(data[l]);

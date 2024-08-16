@@ -41,9 +41,7 @@ private:
 	int filter, repeat;
 
 public:
-	unsigned int ID;
-	int width, height, channels, layers;
-	bool delayed = false;
+	int layers;
 
 	TextureArray() = default;
 
