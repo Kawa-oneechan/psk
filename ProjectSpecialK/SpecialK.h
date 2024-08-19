@@ -72,13 +72,19 @@ extern Texture* whiteRect;
 
 extern sol::state Sol;
 
+//Given a JSON array with two numbers in it, returns a vec2 with those numbers.
 extern glm::vec2 GetJSONVec2(JSONValue* val);
+//Given a JSON array with three numbers in it, returns a vec3 with those numbers.
+extern glm::vec3 GetJSONVec3(JSONValue* val);
+//Given a JSON array with four numbers in it, returns a vec4 with those numbers.
 extern glm::vec4 GetJSONVec4(JSONValue* val);
 //Converts [R,G,B], [R,G,B,A], "#RRGGBB" or "#AARRGGBB" to glm::vec4.
 //Returns an alpha of -1, which is impossible, on error.
 extern glm::vec4 GetJSONColor(JSONValue* val);
 
+//Returns true if point is inside of polygon.
 extern bool PointInPoly(const glm::vec2 point, const std::vector<glm::vec2>& polygon);
+//Returns true if point is in rect.
 extern bool PointInRect(const glm::vec2 point, const glm::vec4 rect);
 
 //Decodes a UTF-8 byte sequence to a codepoint, returns it and the size of the sequence.
@@ -86,9 +92,18 @@ extern std::tuple<unsigned int, size_t> GetChar(const std::string& what, size_t 
 //Encodes a codepoint into a UTF-8 byte sequence and appends it to the given string.
 extern void AppendChar(std::string& where, unsigned int what);
 
+//Renders a set of tabular data to the console in a nice lined table.
 extern void Table(std::vector<std::string> data, size_t stride);
 
+//Given a full path to a file ("data/foo/bar.txt"), returns the path part including the final separator ("data/foo/").
+extern std::string GetDirFromFile(const std::string& path);
+
+//Given a piece of code (shader?) that may contain "#include" statements and a search path, inserts the included files, 
+extern void HandleIncludes(std::string& code, const std::string& path);
+
+//Returns the CRC32 hash for the given text.
 extern unsigned int GetCRC(const std::string& text);
+//Returns the CRC32 hash for the given data.
 extern unsigned int GetCRC(unsigned char *buffer, int len);
 
 namespace UI

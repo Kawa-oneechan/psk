@@ -1,6 +1,5 @@
 ﻿#include "SpecialK.h"
 
-
 glm::vec2 GetJSONVec2(JSONValue* val)
 {
 	if (!val->IsArray())
@@ -11,6 +10,18 @@ glm::vec2 GetJSONVec2(JSONValue* val)
 	if (std::any_of(arr.cbegin(), arr.cend(), [](JSONValue* x) { return !x->IsNumber(); }))
 		throw std::runtime_error(fmt::format("GetJSONVec2: given array {} does not contain only numbers.", val->Stringify()));
 	return glm::vec2(arr[0]->AsNumber(), arr[1]->AsNumber());
+}
+
+glm::vec3 GetJSONVec3(JSONValue* val)
+{
+	if (!val->IsArray())
+		throw std::runtime_error("GetJSONVec3: given value is not an array.");
+	auto arr = val->AsArray();
+	if (arr.size() != 3)
+		throw std::runtime_error(fmt::format("GetJSONVec3: given array has {} entries, not 3.", arr.size()));
+	if (std::any_of(arr.cbegin(), arr.cend(), [](JSONValue* x) { return !x->IsNumber(); }))
+		throw std::runtime_error("GetJSONVec3: given array does not contain only numbers.");
+	return glm::vec3(arr[0]->AsNumber(), arr[1]->AsNumber(), arr[2]->AsNumber());
 }
 
 glm::vec4 GetJSONVec4(JSONValue* val)
@@ -234,6 +245,26 @@ void Table(std::vector<std::string> data, size_t stride)
 	}
 
 	conprint(7, u8"└{}┘", bottom);
+}
+
+std::string GetDirFromFile(const std::string& path)
+{
+	return path.substr(0, path.rfind('/') + 1);
+}
+
+#include <regex>
+void HandleIncludes(std::string& code, const std::string& path)
+{
+	static const std::regex incReg("#include\\s+?\"(.*?)\"");
+	std::smatch incMatch;
+	while (std::regex_search(code, incMatch, incReg))
+	{
+		if (incMatch.size() == 2)
+		{
+			auto includedFile = VFS::ReadString(path + incMatch[1].str());
+			code = std::regex_replace(code, incReg, includedFile);
+		}
+	}
 }
 
 static unsigned int crclut[256] =
