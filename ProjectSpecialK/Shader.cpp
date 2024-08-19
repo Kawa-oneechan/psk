@@ -1,9 +1,22 @@
 #include "SpecialK.h"
+#include <regex>
 
 Shader::Shader(const std::string& vertexPath, const std::string& fragmentPath)
 {
 	auto vShaderCode = VFS::ReadString(vertexPath);
 	auto fShaderCode = VFS::ReadString(fragmentPath);
+
+	//Consider doing this for vertex shaders too
+	std::regex incReg("#include\\s+?\"(.*?)\"");
+	std::smatch incMatch;
+	while (std::regex_search(fShaderCode, incMatch, incReg))
+	{
+		if (incMatch.size() == 2)
+		{
+			auto includedFile = VFS::ReadString(fragmentPath.substr(0, fragmentPath.rfind('/') + 1) + incMatch[1].str());
+			fShaderCode = std::regex_replace(fShaderCode, incReg, includedFile);
+		}
+	}
 
 	unsigned int vertex, fragment;
 	const char* vs = vShaderCode.c_str();
