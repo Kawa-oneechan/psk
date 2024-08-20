@@ -1,7 +1,0 @@
-{
-	"id": "acnhmusic",
-	"friendlyName": "Animal Crossing New Horizons music",
-	"author": "Nintendo",
-	"priority": 1,
-	"namespaces": [ "ac", "acnh" ]
-}

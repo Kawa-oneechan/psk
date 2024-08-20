@@ -1,7 +1,0 @@
-{
-	"id": "animalgrossing",
-	"friendlyName": "Animal Grossing",
-	"author": "Kawa",
-	"priority": 5,
-	"namespaces": [ "ag" ]
-}
