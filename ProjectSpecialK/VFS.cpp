@@ -161,8 +161,10 @@ namespace VFS
 				for (const auto& s : manifestDoc["dependencies"]->AsArray())
 					newSrc.dependencies.push_back(s->AsString());
 			newSrc.priority = manifestDoc["priority"] != nullptr ? (int)manifestDoc["priority"]->AsNumber() : 1;
+			sources.push_back(newSrc);
 		}
-		sources.push_back(newSrc);
+		else
+			conprint(0, "No manifest for {}, so mod is skipped.", newSrc.path);
 	}
 
 	void Initialize()
