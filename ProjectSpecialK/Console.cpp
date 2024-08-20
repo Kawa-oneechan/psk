@@ -6,6 +6,8 @@
 #include "DialogueBox.h"
 #include "PanelLayout.h"
 
+extern float timeScale;
+
 Console::Console()
 {
 	visible = false;
@@ -26,6 +28,10 @@ Console::Console()
 
 	timer = 0.0f;
 	appearState = 0;
+
+	RegisterCVar("timescale", CVar::CVarType::Float, &timeScale);
+	RegisterCVar("playername", CVar::CVarType::String, &thePlayer.Name);
+	RegisterCVar("playerbells", CVar::CVarType::Int, &thePlayer.Bells);
 }
 
 void Console::Print(int color, const std::string& str)
@@ -44,6 +50,53 @@ void Console::Print(const std::string& str)
 
 bool Console::Execute(const std::string& str)
 {
+	auto split = Split((std::string&)str, ' ');
+	if (split.size() >= 1)
+	for (auto& cv : cvars)
+	{
+		if (cv.name == split[0])
+		{
+			if (split.size() == 1)
+			{
+				switch (cv.type)
+				{
+				case CVar::CVarType::Bool: Print(0, fmt::format("{} is {}", cv.name, *cv.asBool)); return true;
+				case CVar::CVarType::Int: Print(0, fmt::format("{} is {}", cv.name, *cv.asInt)); return true;
+				case CVar::CVarType::Float: Print(0, fmt::format("{} is {}", cv.name, *cv.asFloat)); return true;
+				case CVar::CVarType::String: Print(0, fmt::format("{} is \"{}\"", cv.name, *cv.asString)); return true;
+				case CVar::CVarType::Vec2: Print(0, fmt::format("{} is [{}, {}]", cv.name, cv.asVec2->x, cv.asVec2->y)); return true;
+				case CVar::CVarType::Vec3: Print(0, fmt::format("{} is [{}, {}, {}]", cv.name, cv.asVec3->x, cv.asVec3->y, cv.asVec3->z)); return true;
+				case CVar::CVarType::Color:
+				case CVar::CVarType::Vec4: Print(0, fmt::format("{} is [{}, {}, {}, {}]", cv.name, cv.asVec4->x, cv.asVec4->y, cv.asVec4->z, cv.asVec4->w)); return true;
+				}
+			}
+			else
+			{
+				auto second = str.substr(str.find(' '));
+				if (cv.Set(second))
+				{
+					switch (cv.type)
+					{
+					case CVar::CVarType::Bool: Print(0, fmt::format("{} set to {}", cv.name, *cv.asBool)); return true;
+					case CVar::CVarType::Int: Print(0, fmt::format("{} set to {}", cv.name, *cv.asInt)); return true;
+					case CVar::CVarType::Float: Print(0, fmt::format("{} set to {}", cv.name, *cv.asFloat)); return true;
+					case CVar::CVarType::String: Print(0, fmt::format("{} set to \"{}\"", cv.name, *cv.asString)); return true;
+					case CVar::CVarType::Vec2: Print(0, fmt::format("{} set to [{}, {}]", cv.name, cv.asVec2->x, cv.asVec2->y)); return true;
+					case CVar::CVarType::Vec3: Print(0, fmt::format("{} set to [{}, {}, {}]", cv.name, cv.asVec3->x, cv.asVec3->y, cv.asVec3->z)); return true;
+					case CVar::CVarType::Color:
+					case CVar::CVarType::Vec4: Print(0, fmt::format("{} set to [{}, {}, {}, {}]", cv.name, cv.asVec4->x, cv.asVec4->y, cv.asVec4->z, cv.asVec4->w)); return true;
+					}
+				}
+				else
+				{
+					Print(2, fmt::format("Could not set cvar {} to {}", cv.name, second));
+					return false;
+				}
+				return true;
+			}
+		}
+	}
+
 	try
 	{
 		Sol.script(str);
@@ -188,4 +241,22 @@ void Console::Draw(float dt)
 	inputLine->rect = glm::vec4(16, offset.y + (h - 24), width - 8, offset.y + (h - 24) + 20);
 	sprender->DrawText(0, "]", glm::vec2(4, inputLine->rect.y));
 	inputLine->Draw(dt);
+}
+
+void Console::RegisterCVar(const std::string& name, CVar::CVarType type, void* target)
+{
+	for (auto& cv : cvars)
+	{
+		if (cv.name == name)
+		{
+			cv.type = type;
+			cv.asVoid = target;
+			return;
+		}
+	}
+	CVar cv;
+	cv.name = name;
+	cv.type = type;
+	cv.asVoid = target;
+	cvars.push_back(cv);
 }
