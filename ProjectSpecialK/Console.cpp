@@ -4,6 +4,7 @@
 #include "TextField.h"
 #include "InputsMap.h"
 #include "DialogueBox.h"
+#include "PanelLayout.h"
 
 Console::Console()
 {
@@ -15,13 +16,16 @@ Console::Console()
 	Print(3, "-----------------");
 
 	inputLine = new TextField();
-	inputLine->rect = glm::vec4(16, (height / 3) - 24, width - 8, 20);
+	//inputLine->rect = glm::vec4(16, (height / 3) - 24, width - 8, 20);
 	inputLine->font = 0;
 	inputLine->Clear();
 
 	history.clear();
 	historyCursor = 0;
 	scrollCursor = 0;
+
+	timer = 0.0f;
+	appearState = 0;
 }
 
 void Console::Print(int color, const std::string& str)
@@ -60,10 +64,39 @@ bool Console::Character(unsigned int codepoint)
 	return inputLine->Character(codepoint);
 }
 
+void Console::Open()
+{
+	appearState = 1;
+	visible = true;
+}
+
+void Console::Close()
+{
+	appearState = 2;
+	visible = true;
+}
+
 void Console::Tick(float dt)
 {
 	if (!visible)
 		return;
+
+	if (appearState == 1 && timer < 1.0f)
+	{
+		timer += dt * 0.0025f;
+		if (timer >= 1.0f)
+			appearState = 0;
+	}
+	else if (appearState == 2 && timer > 0.0f)
+	{
+		timer -= dt * 0.0025f;
+		if (timer <= 0.0f)
+		{
+			appearState = 0;
+			visible = false;
+		}
+	}
+	timer = clamp(timer, 0.0f, 1.0f);
 
 	if (Inputs.Enter)
 	{
@@ -138,15 +171,21 @@ void Console::Draw(float dt)
 	if (!visible)
 		return;
 
-	sprender->DrawSprite(*whiteRect, glm::vec2(0), glm::vec2(width, height / 3), glm::vec4(0), 0, glm::vec4(0, 0, 0, 0.8));
+	auto h = height / 3;
+	glm::vec2 offset{ 0 };
+	if (appearState != 0)
+		offset.y += glm::mix(-h, 0.0f, glm::linearInterpolation(timer));
 
-	auto pos = glm::vec2(4, (height / 3) - 42);
+	sprender->DrawSprite(*whiteRect, offset, glm::vec2(width, h), glm::vec4(0), 0, glm::vec4(0, 0, 0, 0.8));
+
+	auto pos = offset + glm::vec2(4, h - 42);
 	for (unsigned int i = (unsigned int)buffer.size() - scrollCursor, lines = 21; i-- > 0 && lines-- > 0;)
 	{
 		sprender->DrawText(0, buffer[i].second, pos, colors[buffer[i].first], 100.0f, 0, true);
 		pos.y -= 15;
 	}
 
+	inputLine->rect = glm::vec4(16, offset.y + (h - 24), width - 8, offset.y + (h - 24) + 20);
 	sprender->DrawText(0, "]", glm::vec2(4, inputLine->rect.y));
 	inputLine->Draw(dt);
 }

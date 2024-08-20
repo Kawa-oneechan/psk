@@ -225,7 +225,11 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	scancode;  mods;
 	if (key == GLFW_KEY_GRAVE_ACCENT && action == GLFW_PRESS)
 	{
-		console->visible = !console->visible;
+		if (console->visible)
+			console->Close();
+		else
+			console->Open();
+		//console->visible = !console->visible;
 		return;
 	}
 
@@ -246,6 +250,9 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		char_callback(window, (unsigned int)SpecialKeys::Home);
 	else if (key == GLFW_KEY_END && action == GLFW_PRESS)
 		char_callback(window, (unsigned int)SpecialKeys::End);
+
+	if (console->visible)
+		return;
 
 	//if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 	//	glfwSetWindowShouldClose(window, 1);

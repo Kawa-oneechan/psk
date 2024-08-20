@@ -14,6 +14,8 @@ private:
 	int historyCursor;
 	int scrollCursor;
 	TextField* inputLine;
+	float timer;
+	int appearState;
 
 	std::ofstream hardcopy;
 
@@ -25,6 +27,8 @@ public:
 	void Print(int color, const std::string& str);
 	void Print(const std::string& str);
 	bool Character(unsigned int codepoint);
+	void Open();
+	void Close();
 	void Tick(float dt);
 	void Draw(float dt);
 };
