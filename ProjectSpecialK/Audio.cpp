@@ -172,6 +172,7 @@ void Audio::UpdateVolume()
 	case Type::Sound: v = SoundVolume; break;
 	case Type::Speech: v = SpeechVolume; break;
 	}
+	Volume = clamp(Volume, 0.0f, 1.0f);
 	theChannel->setVolume(v * Volume);
 }
 

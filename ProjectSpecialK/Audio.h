@@ -4,7 +4,6 @@
 
 class Audio
 {
-
 private:
 	static FMOD::System* Audio::system;
 	static std::vector<Audio*> playing;
@@ -52,4 +51,3 @@ public:
 };
 
 extern std::map<std::string, std::map<std::string, std::shared_ptr<Audio>>> generalSounds;
-

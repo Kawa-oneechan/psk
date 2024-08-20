@@ -13,6 +13,7 @@
 #include "PanelLayout.h"
 #include "DateTimePanel.h"
 #include "Town.h"
+#include "MusicManager.h"
 
 #include <thread>
 #include <future>
@@ -486,6 +487,7 @@ int main(int, char**)
 	TextAdd(*VFS::ReadJSON("optionsmenu.json"));
 	TextAdd(*VFS::ReadJSON("tests.json"));
 
+	tickables.push_back(&musicManager);
 	tickables.push_back(new Background());
 	tickables.push_back(new DoomMenu());
 	auto hotbar = new PanelLayout(UI::json["hotbar"]);

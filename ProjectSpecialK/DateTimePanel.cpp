@@ -1,7 +1,6 @@
 #include "DateTimePanel.h"
 #include "Town.h"
 
-//extern Audio* bgm;
 extern void PlayMusic(const std::string& id);
 
 DateTimePanel::DateTimePanel()

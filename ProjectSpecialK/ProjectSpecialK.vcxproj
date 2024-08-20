@@ -206,6 +206,7 @@
     <ClInclude Include="InputsMap.h" />
     <ClInclude Include="Item.h" />
     <ClInclude Include="Model.h" />
+    <ClInclude Include="MusicManager.h" />
     <ClInclude Include="NameableThing.h" />
     <ClInclude Include="PanelLayout.h" />
     <ClInclude Include="Player.h" />

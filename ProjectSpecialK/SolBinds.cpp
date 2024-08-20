@@ -1,6 +1,7 @@
 #include "SpecialK.h"
 #include "DialogueBox.h"
 #include "Player.h"
+#include "MusicManager.h"
 
 namespace SolBinds
 {
@@ -43,7 +44,7 @@ namespace SolBinds
 
 			dlgBox->Text(line, style);
 
-			console->visible = false;
+			console->Close();
 		});
 
 		Sol.new_usertype<Player>(
@@ -99,6 +100,15 @@ namespace SolBinds
 			}
 			conprint(1, "getItem needs one argument, a hash or an ID.");
 			return (ItemP)nullptr;
+		};
+
+		Sol["music"] = [](sol::variadic_args va)
+		{
+			if (va.size() == 1)
+				musicManager.Play(va[0].as<std::string>());
+			else if (va.size() == 2)
+				musicManager.Play(va[0].as<std::string>(), va[1].as<bool>());
+			console->Close();
 		};
 	}
 }

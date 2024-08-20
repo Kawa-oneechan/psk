@@ -1,21 +1,67 @@
-#include "SpecialK.h"
+//#include "SpecialK.h"
+#include "MusicManager.h"
 #include "Town.h"
-
-//TODO: make this a Tickable so it can handle transitions and such.
-
-extern Audio* bgm;
-
-static JSONObject library = JSONObject();
-static std::string currentID;
-static std::string currentFile;
 
 void PlayMusic(const std::string& id)
 {
+	musicManager.Play(id, true);
+}
+
+MusicManager::MusicManager()
+{
+}
+
+void MusicManager::Tick(float dt)
+{
+	if (state == MusicState::FadeOut || state == MusicState::FadeToQueue)
+	{
+		if (bgm->Volume > 0.0f)
+		{
+			bgm->Volume -= dt * 0.0005f;
+			bgm->UpdateVolume();
+		}
+		if (bgm->Volume <= 0.0f)
+		{
+			if (state == MusicState::FadeOut)
+			{
+				bgm->Stop();
+				state = MusicState::Idle;
+			}
+			else if (state == MusicState::FadeToQueue)
+			{
+				Play(queued, true);
+			}
+		}
+	}
+}
+
+void MusicManager::Draw(float)
+{
+	//Music doesn't visual.
+}
+
+void MusicManager::Play(const std::string& id, bool immediate)
+{
+	if (id == currentID)
+		return;
+
 	if (library.size() == 0)
 		library = VFS::ReadJSON("music/music.json")->AsObject();
 
-	if (id == currentID)
+	if (!immediate && !currentID.empty())
+	{
+		queued = id;
+		state = MusicState::FadeToQueue;
 		return;
+	}
+
+	if (id.empty())
+	{
+		delete bgm;
+		currentFile.clear();
+		currentID.clear();
+		return;
+	}
 
 	tm gm;
 	auto now = time(nullptr);
@@ -75,7 +121,7 @@ void PlayMusic(const std::string& id)
 			tpos = file.find("{weather}");
 			if (tpos != std::string::npos)
 				file = file.replace(tpos, 9, weather);
-			
+
 			if (VFS::Enumerate(file).size() == 0)
 			{
 				//File does not exist. Try sunny weather first.
@@ -91,11 +137,20 @@ void PlayMusic(const std::string& id)
 
 	if (currentFile != file)
 	{
-		delete bgm;
+		if (!currentFile.empty())
+			delete bgm;
 		bgm = new Audio(file);
 		bgm->Play();
+		state = MusicState::Playing;
 	}
 
 	currentFile = file;
 	currentID = id;
 }
+
+void MusicManager::FadeOut()
+{
+	Play("");
+}
+
+MusicManager musicManager = MusicManager();
