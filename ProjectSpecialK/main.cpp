@@ -157,6 +157,7 @@ namespace UI
 		DS("ambientVolume", 0.5f);
 		DS("soundVolume", 1.0f);
 		DS("speechVolume", 1.0f);
+		DS("keyBinds", JSONArray());
 #undef DS
 
 		static const Language opt2lan[] = { Language::USen, Language::JPja, Language::EUde, Language::EUes, Language::EUfr, Language::EUit, Language::EUhu, Language::EUnl, Language::EUen };
@@ -167,6 +168,21 @@ namespace UI
 		Audio::SoundVolume = (float)settings["soundVolume"]->AsNumber();
 		Audio::SpeechVolume = (float)settings["speechVolume"]->AsNumber();
 
+		auto keyBinds = settings["keyBinds"]->AsArray();
+		if (keyBinds.size() != sizeof(Binds))
+		{
+			keyBinds.reserve(sizeof(Binds));
+			//Keep these in order!
+			keyBinds.push_back(new JSONValue(glfwGetKeyScancode(GLFW_KEY_UP)));
+			keyBinds.push_back(new JSONValue(glfwGetKeyScancode(GLFW_KEY_DOWN)));
+			keyBinds.push_back(new JSONValue(glfwGetKeyScancode(GLFW_KEY_LEFT)));
+			keyBinds.push_back(new JSONValue(glfwGetKeyScancode(GLFW_KEY_RIGHT)));
+		}
+		for (int i = 0; i < sizeof(Binds); i++)
+		{
+			Inputs.Bindings[i] = (int)keyBinds[i]->AsNumber();
+			//TODO: grab the key names
+		}
 
 		auto sounds = VFS::ReadJSON("sound/sounds.json")->AsObject();
 		for (auto category : sounds)
@@ -182,6 +198,12 @@ namespace UI
 		settings["ambientVolume"] = new JSONValue(Audio::AmbientVolume);
 		settings["soundVolume"] = new JSONValue(Audio::SoundVolume);
 		settings["speechVolume"] = new JSONValue(Audio::SpeechVolume);
+
+		auto binds = JSONArray();
+		for (int i = 0; i < sizeof(Binds); i++)
+			binds.push_back(new JSONValue(Inputs.Bindings[i]));
+		settings["keyBinds"] = new JSONValue(binds);
+
 		try
 		{
 			SaveFile("options.json", JSON::Stringify(new JSONValue(settings)));
@@ -223,6 +245,15 @@ void char_callback(GLFWwindow* window, unsigned int codepoint)
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
+	//TODO: use scancode instead of key, add a remapping feature.
+	/*
+	I'm thinking a simple array, mapping an enum of possible actions to scancodes.
+	Use glfwGetKeyName(GLFW_KEY_UNKNOWN, scancode) in the remap screen to get the key's name.
+	Perhaps have a second list holding these names so as to show them in the button bar?
+	Use glfwGetKeyScancode(key) to generate initial values:
+	>	Inputs.Map[Input::Console] = glfwGetKeyScancode(GLFW_KEY_GRAVE_ACCENT);
+	>	Inputs.Map[Input::Back] = glfwGetKeyScancode(GLFW_KEY_ESCAPE);
+	*/
 	scancode;  mods;
 	if (key == GLFW_KEY_GRAVE_ACCENT && action == GLFW_PRESS)
 	{
@@ -234,7 +265,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		return;
 	}
 
-	Inputs.Process(key, action);
+	Inputs.Process(scancode, action);
 
 	//Passthroughs
 	if (key == GLFW_KEY_BACKSPACE && action == GLFW_PRESS)
@@ -409,6 +440,8 @@ int main(int, char**)
 		FatalError(x.what());
 	}
 
+	glfwInit();
+
 	Audio::Initialize();
 	SolBinds::Setup();
 
@@ -419,7 +452,6 @@ int main(int, char**)
 		town.StartNewDay();
 	}
 
-	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);

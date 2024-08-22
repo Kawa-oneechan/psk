@@ -9,11 +9,20 @@ InputsMap::InputsMap()
 	lastMousePos = MousePosition = glm::vec2(width, height) + 20.0f;
 }
 
-void InputsMap::Process(int key, int action)
+void InputsMap::Process(int scancode, int action)
 {
 	if (action == GLFW_PRESS)
 	{
-		switch (key)
+		if (scancode == Bindings[(int)Binds::Up])
+			Up = true;
+		else if (scancode == Bindings[(int)Binds::Down])
+			Down = true;
+		else if (scancode == Bindings[(int)Binds::Left])
+			Left = true;
+		else if (scancode == Bindings[(int)Binds::Right])
+			Right = true;
+		/*
+		switch (scancode)
 		{
 		case GLFW_KEY_UP: Up = true; break;
 		case GLFW_KEY_DOWN: Down = true; break;
@@ -25,6 +34,7 @@ void InputsMap::Process(int key, int action)
 		case GLFW_KEY_PAGE_DOWN: PgDown = true; break;
 		default: break;
 		}
+		*/
 	}
 }
 

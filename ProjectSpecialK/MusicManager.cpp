@@ -27,7 +27,7 @@ void MusicManager::Tick(float dt)
 				bgm->Stop();
 				state = MusicState::Idle;
 			}
-			else if (state == MusicState::FadeToQueue)
+			else //if (state == MusicState::FadeToQueue)
 			{
 				Play(queued, true);
 			}

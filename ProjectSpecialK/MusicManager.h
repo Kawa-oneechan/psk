@@ -10,13 +10,13 @@ private:
 	enum class MusicState
 	{
 		Idle, Playing, FadeOut, FadeToQueue
-	} state;
+	} state{ MusicState::Idle };
 
 	JSONObject library = JSONObject();
 	std::string currentID;
 	std::string currentFile;
 
-	Audio* bgm;
+	Audio* bgm{ nullptr };
 
 public:
 	MusicManager();
