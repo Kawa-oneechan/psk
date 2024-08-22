@@ -285,9 +285,9 @@ void DoomMenu::Tick(float dt)
 	while (items->items[highlight]->type == DoomMenuItem::Type::Text)
 		highlight++;
 
-	if (Inputs.Escape)
+	if (Inputs.KeyDown(Binds::Back))
 	{
-		Inputs.Escape = false;
+		Inputs.Clear(Binds::Back);
 		if (stack.size() > 1)
 		{
 			highlight = 0;
@@ -298,7 +298,7 @@ void DoomMenu::Tick(float dt)
 		}
 	}
 
-	if (Inputs.Up)
+	if (Inputs.KeyDown(Binds::Up))
 	{
 		Inputs.Clear();
 		if (highlight == 0)
@@ -316,7 +316,7 @@ void DoomMenu::Tick(float dt)
 			highlight = 0;
 		}
 	}
-	else if (Inputs.Down)
+	else if (Inputs.KeyDown(Binds::Down))
 	{
 		Inputs.Clear();
 		highlight++;
@@ -336,7 +336,7 @@ void DoomMenu::Tick(float dt)
 
 	if (item->type == DoomMenuItem::Type::Page)
 	{
-		if (Inputs.Enter || Inputs.MouseLeft)
+		if (Inputs.KeyDown(Binds::Accept) || Inputs.MouseLeft)
 		{
 			stack.push(item->page);
 			items = item->page;
@@ -346,7 +346,7 @@ void DoomMenu::Tick(float dt)
 	}
 	else if (item->type == DoomMenuItem::Type::Back)
 	{
-		if (Inputs.Enter || Inputs.MouseLeft)
+		if (Inputs.KeyDown(Binds::Accept) || Inputs.MouseLeft)
 		{
 			if (stack.size() > 1)
 			{
@@ -360,7 +360,7 @@ void DoomMenu::Tick(float dt)
 	}
 	else if (item->type == DoomMenuItem::Type::Checkbox)
 	{
-		if (Inputs.Enter || Inputs.MouseLeft)
+		if (Inputs.KeyDown(Binds::Accept) || Inputs.MouseLeft)
 		{
 			item->selection ^= 1;
 			item->Beep();
@@ -370,13 +370,13 @@ void DoomMenu::Tick(float dt)
 	}
 	else if (item->type == DoomMenuItem::Type::Options)
 	{
-		if (Inputs.Enter || Inputs.MouseLeft)
+		if (Inputs.KeyDown(Binds::Accept) || Inputs.MouseLeft)
 		{
-			Inputs.Enter = false;
-			Inputs.Right = true;
+			Inputs.Clear(Binds::Accept);
+			Inputs.Keys[(int)Binds::Right].State = true;
 			Inputs.MouseLeft = false;
 		}
-		if (Inputs.Left)
+		if (Inputs.KeyDown(Binds::Accept))
 		{
 			Inputs.Clear();
 			if (item->selection == 0) item->selection = (int)item->options.size();
@@ -384,7 +384,7 @@ void DoomMenu::Tick(float dt)
 			if (item->change != nullptr)
 				item->change(item);
 		}
-		else if (Inputs.Right)
+		else if (Inputs.KeyDown(Binds::Right))
 		{
 			Inputs.Clear();
 			item->selection++;
@@ -395,7 +395,7 @@ void DoomMenu::Tick(float dt)
 	}
 	else if (item->type == DoomMenuItem::Type::Slider)
 	{
-		if (Inputs.Left)
+		if (Inputs.KeyDown(Binds::Left))
 		{
 			Inputs.Clear();
 			if (item->selection > item->minVal)
@@ -406,7 +406,7 @@ void DoomMenu::Tick(float dt)
 					item->change(item);
 			}
 		}
-		else if (Inputs.Right)
+		else if (Inputs.KeyDown(Binds::Right))
 		{
 			Inputs.Clear();
 			if (item->selection < item->maxVal)
@@ -419,7 +419,7 @@ void DoomMenu::Tick(float dt)
 		}
 	}
 
-	Inputs.Enter = false;
+	Inputs.Clear(Binds::Accept);
 	Inputs.MouseLeft = false;
 }
 

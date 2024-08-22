@@ -4,7 +4,18 @@
 
 enum class Binds
 {
-	Up, Down, Left, Right
+	Up, Down, Left, Right,
+	Accept, Back,
+	PageUp, PageDown,
+};
+//Keep this one updated.
+const int NumBinds = 8;
+
+struct InputKey
+{
+	bool State;
+	int ScanCode;
+	std::string Name;
 };
 
 class InputsMap
@@ -13,11 +24,7 @@ private:
 	glm::vec2 lastMousePos;
 
 public:
-	bool Up, Down, Left, Right;
-	bool Enter, Escape;
-	bool PgUp, PgDown;
-
-	int Bindings[sizeof(Binds)]{ 0 };
+	InputKey Keys[NumBinds]{ 0 };
 
 	bool MouseLeft, MouseRight, MouseMiddle;
 	bool MouseHoldLeft, MouseHoldRight, MouseHoldMiddle;
@@ -28,6 +35,9 @@ public:
 	void MouseMove(float x, float y);
 	bool MouseMoved();
 	void Clear();
+
+	bool KeyDown(Binds bind);
+	inline void Clear(Binds bind) { Keys[(int)bind].State = false; }
 };
 extern InputsMap Inputs;
 

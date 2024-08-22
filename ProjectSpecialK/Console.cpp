@@ -151,27 +151,27 @@ void Console::Tick(float dt)
 	}
 	timer = clamp(timer, 0.0f, 1.0f);
 
-	if (Inputs.Enter)
+	if (Inputs.KeyDown(Binds::Accept))
 	{
-		Inputs.Enter = false;
+		Inputs.Clear(Binds::Accept);
 		if (history.size() == 0 || history.back() != inputLine->value)
 			history.emplace_back(inputLine->value);
 		historyCursor = 0;
 		Execute(inputLine->value);
 		inputLine->Clear();
 	}
-	else if (Inputs.Up)
+	else if (Inputs.KeyDown(Binds::Up))
 	{
-		Inputs.Up = false;
+		Inputs.Clear(Binds::Up);
 		if (historyCursor < history.size())
 		{
 			historyCursor++;
 			inputLine->Set(history[history.size() - historyCursor]);
 		}
 	}
-	else if (Inputs.Down)
+	else if (Inputs.KeyDown(Binds::Down))
 	{
-		Inputs.Down = false;
+		Inputs.Clear(Binds::Down);
 		if (historyCursor > 1)
 		{
 			historyCursor--;
@@ -183,9 +183,9 @@ void Console::Tick(float dt)
 			inputLine->Clear();
 		}
 	}
-	else if (Inputs.PgUp)
+	else if (Inputs.KeyDown(Binds::PageUp))
 	{
-		Inputs.PgUp = false;
+		Inputs.Clear(Binds::PageUp);
 		if (scrollCursor < buffer.size())
 		{
 			scrollCursor += 5;
@@ -193,9 +193,9 @@ void Console::Tick(float dt)
 				scrollCursor = (int)buffer.size() - 1;
 		}
 	}
-	else if (Inputs.PgDown)
+	else if (Inputs.KeyDown(Binds::PageDown))
 	{
-		Inputs.PgDown = false;
+		Inputs.Clear(Binds::PageDown);
 		if (scrollCursor > 0)
 		{
 			scrollCursor -= 5;

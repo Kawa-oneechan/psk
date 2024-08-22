@@ -417,9 +417,9 @@ void DialogueBox::Tick(float dt)
 
 	if (state == State::WaitingForKey)
 	{
-		if (Inputs.Enter)
+		if (Inputs.KeyDown(Binds::Accept))
 		{
-			Inputs.Enter = false;
+			Inputs.Clear(Binds::Accept);
 
 			if (displayCursor >= toDisplay.length())
 			{

@@ -160,7 +160,7 @@ namespace UI
 		DS("keyBinds", JSONArray());
 #undef DS
 
-		static const Language opt2lan[] = { Language::USen, Language::JPja, Language::EUde, Language::EUes, Language::EUfr, Language::EUit, Language::EUhu, Language::EUnl, Language::EUen };
+		constexpr Language opt2lan[] = { Language::USen, Language::JPja, Language::EUde, Language::EUes, Language::EUfr, Language::EUit, Language::EUhu, Language::EUnl, Language::EUen };
 		gameLang = opt2lan[(int)settings["language"]->AsNumber()];
 
 		Audio::MusicVolume = (float)settings["musicVolume"]->AsNumber();
@@ -169,19 +169,23 @@ namespace UI
 		Audio::SpeechVolume = (float)settings["speechVolume"]->AsNumber();
 
 		auto keyBinds = settings["keyBinds"]->AsArray();
-		if (keyBinds.size() != sizeof(Binds))
+		if (keyBinds.size() != NumBinds)
 		{
-			keyBinds.reserve(sizeof(Binds));
-			//Keep these in order!
-			keyBinds.push_back(new JSONValue(glfwGetKeyScancode(GLFW_KEY_UP)));
-			keyBinds.push_back(new JSONValue(glfwGetKeyScancode(GLFW_KEY_DOWN)));
-			keyBinds.push_back(new JSONValue(glfwGetKeyScancode(GLFW_KEY_LEFT)));
-			keyBinds.push_back(new JSONValue(glfwGetKeyScancode(GLFW_KEY_RIGHT)));
+			keyBinds.reserve(NumBinds);
+			//Keep these matched to Binds!
+			constexpr int defaults[] = {
+				GLFW_KEY_UP, GLFW_KEY_DOWN, GLFW_KEY_LEFT, GLFW_KEY_RIGHT,
+				GLFW_KEY_ENTER, GLFW_KEY_ESCAPE,
+				GLFW_KEY_PAGE_UP, GLFW_KEY_PAGE_DOWN,
+			};
+			for (auto &k : defaults)
+				keyBinds.push_back(new JSONValue(glfwGetKeyScancode(k)));
 		}
-		for (int i = 0; i < sizeof(Binds); i++)
+		for (int i = 0; i < NumBinds; i++)
 		{
-			Inputs.Bindings[i] = (int)keyBinds[i]->AsNumber();
-			//TODO: grab the key names
+			Inputs.Keys[i].ScanCode = (int)keyBinds[i]->AsNumber();
+			//TODO: Non-printables return null here. Intercept and substitute our own.
+			Inputs.Keys[i].Name = glfwGetKeyName(GLFW_KEY_UNKNOWN, Inputs.Keys[i].ScanCode);
 		}
 
 		auto sounds = VFS::ReadJSON("sound/sounds.json")->AsObject();
@@ -200,8 +204,8 @@ namespace UI
 		settings["speechVolume"] = new JSONValue(Audio::SpeechVolume);
 
 		auto binds = JSONArray();
-		for (int i = 0; i < sizeof(Binds); i++)
-			binds.push_back(new JSONValue(Inputs.Bindings[i]));
+		for (auto& k : Inputs.Keys)
+			binds.push_back(new JSONValue(k.ScanCode));
 		settings["keyBinds"] = new JSONValue(binds);
 
 		try

@@ -13,28 +13,15 @@ void InputsMap::Process(int scancode, int action)
 {
 	if (action == GLFW_PRESS)
 	{
-		if (scancode == Bindings[(int)Binds::Up])
-			Up = true;
-		else if (scancode == Bindings[(int)Binds::Down])
-			Down = true;
-		else if (scancode == Bindings[(int)Binds::Left])
-			Left = true;
-		else if (scancode == Bindings[(int)Binds::Right])
-			Right = true;
-		/*
-		switch (scancode)
+		//It's too bad we can't use switch here...
+		for (auto& k : Keys)
 		{
-		case GLFW_KEY_UP: Up = true; break;
-		case GLFW_KEY_DOWN: Down = true; break;
-		case GLFW_KEY_LEFT: Left = true; break;
-		case GLFW_KEY_RIGHT: Right = true; break;
-		case GLFW_KEY_ENTER: Enter = true; break;
-		case GLFW_KEY_ESCAPE: Escape = true; break;
-		case GLFW_KEY_PAGE_UP: PgUp = true; break;
-		case GLFW_KEY_PAGE_DOWN: PgDown = true; break;
-		default: break;
+			if (scancode == k.ScanCode)
+			{
+				k.State = true;
+				break;
+			}
 		}
-		*/
 	}
 }
 
@@ -54,10 +41,16 @@ bool InputsMap::MouseMoved()
 
 void InputsMap::Clear()
 {
-	Up = Down = Left = Right = Enter = Escape = false;
-	PgUp = PgDown = false;
+	for (auto& k : Keys)
+		k.State = false;
 	MouseLeft = MouseRight = MouseMiddle = false;
 	MouseHoldLeft = MouseHoldRight = MouseHoldMiddle = false;
 }
+
+bool InputsMap::KeyDown(Binds bind)
+{
+	return Keys[(int)bind].State;
+}
+
 InputsMap Inputs = InputsMap();
 
