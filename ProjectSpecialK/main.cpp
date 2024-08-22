@@ -507,10 +507,10 @@ int main(int, char**)
 	thePlayer.Name = "Kawa";
 	thePlayer.Gender = Gender::BEnby;
 
-	TextAdd(*VFS::ReadJSON("datetime.json"));
-	TextAdd(*VFS::ReadJSON("fixedform.json"));
-	TextAdd(*VFS::ReadJSON("optionsmenu.json"));
-	TextAdd(*VFS::ReadJSON("tests.json"));
+	TextAdd(*VFS::ReadJSON("text/datetime.json"));
+	TextAdd(*VFS::ReadJSON("text/fixedform.json"));
+	TextAdd(*VFS::ReadJSON("text/optionsmenu.json"));
+	TextAdd(*VFS::ReadJSON("text/tests.json"));
 
 	tickables.push_back(&musicManager);
 	tickables.push_back(new Background());

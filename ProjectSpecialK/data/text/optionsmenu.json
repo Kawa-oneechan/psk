@@ -15,6 +15,11 @@
 		"hu": "Tartalom kezelő...",
 		"nl": "Contentbeheer..."
 	},
+
+	"menu:options:keybinds": {
+		"en": "Remap keys..."
+	},
+
 	"menu:options:language": {
 		"en": "Language",
 		"jp": "言語",
@@ -143,6 +148,35 @@
 		"en": "Unchecked species will never\nrandomly appear in your town\nas villagers. However, any\nvillager already there will stay\nuntil they move out.",
 		"hu": "A ki nem jelölt fajok soha nem jelennek\nmeg lakosként. Minden eddigi ilyen lakos\nkiutasításig marad.",
 		"nl": "Ongekozen soorten zullen nooit\nwillekeurig in je dorp verschijnen,\nmaar zullen wel blijven tot ze\nverhuizen."
+	},
+
+	"menu:options:head:keybinds": {
+		"en": "Remap keys"
+	},
+	//Keep these in order with InputsMap.h enum Binds
+	"menu:options:keybinds:0": {
+		"en": "Up"
+	},
+	"menu:options:keybinds:1": {
+		"en": "Down"
+	},
+	"menu:options:keybinds:2": {
+		"en": "Left"
+	},
+	"menu:options:keybinds:3": {
+		"en": "Right"
+	},
+	"menu:options:keybinds:4": {
+		"en": "Accept"
+	},
+	"menu:options:keybinds:5": {
+		"en": "Back"
+	},
+	"menu:options:keybinds:6": {
+		"en": "Page Up"
+	},
+	"menu:options:keybinds:7": {
+		"en": "Page Down"
 	},
 
 	"menu:options:head:volume": {
