@@ -249,16 +249,8 @@ void char_callback(GLFWwindow* window, unsigned int codepoint)
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-	//TODO: use scancode instead of key, add a remapping feature.
-	/*
-	I'm thinking a simple array, mapping an enum of possible actions to scancodes.
-	Use glfwGetKeyName(GLFW_KEY_UNKNOWN, scancode) in the remap screen to get the key's name.
-	Perhaps have a second list holding these names so as to show them in the button bar?
-	Use glfwGetKeyScancode(key) to generate initial values:
-	>	Inputs.Map[Input::Console] = glfwGetKeyScancode(GLFW_KEY_GRAVE_ACCENT);
-	>	Inputs.Map[Input::Back] = glfwGetKeyScancode(GLFW_KEY_ESCAPE);
-	*/
 	window, mods;
+	//TODO: make this remappable
 	if (key == GLFW_KEY_GRAVE_ACCENT && action == GLFW_PRESS)
 	{
 		if (console->visible)

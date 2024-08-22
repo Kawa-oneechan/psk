@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "SpecialK.h"
+#include "InputsMap.h"
 
 class DoomMenuPage;
 
@@ -17,7 +18,7 @@ public:
 	int selection{ 0 };
 	enum class Type
 	{
-		Text, Options, Slider, Checkbox, Page, Custom, Back
+		Text, Options, Slider, Checkbox, Page, KeyBind, Custom, Back
 	} type { Type::Text };
 	int minVal{ 0 };
 	int maxVal{ 100 };
@@ -35,6 +36,8 @@ public:
 	DoomMenuItem(const std::string& cap, int val, std::initializer_list<std::string> opts, std::function<void(DoomMenuItem*)> chg);
 
 	DoomMenuItem(const std::string& cap, int fnt = 0, int siz = 100) : key(cap), type(Type::Text), selection(fnt), maxVal(siz), page(nullptr) {}
+
+	DoomMenuItem(const std::string& cap, Binds bind) : key(cap), type(Type::KeyBind), selection((int)bind) {}
 
 	void Translate();
 
@@ -66,8 +69,10 @@ private:
 	int mouseHighlight{ 0 };
 	int scroll{ 0 };
 	int visible{ 12 };
+	int remapping{ -1 };
+	bool remapBounce{ false };
 
-	DoomMenuPage options, content, volume, species;
+	DoomMenuPage options, content, keybinds, volume, species;
 	DoomMenuPage* items{ nullptr };
 
 	std::stack<DoomMenuPage*> stack;
@@ -88,4 +93,5 @@ public:
 	void Translate();
 	void Tick(float dt);
 	void Draw(float dt);
+	bool Scancode(unsigned int scancode);
 };

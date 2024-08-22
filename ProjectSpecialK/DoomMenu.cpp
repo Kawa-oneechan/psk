@@ -64,8 +64,8 @@ void DoomMenuPage::Translate()
 
 void DoomMenu::Build()
 {
-	auto back = new DoomMenuItem("Back", nullptr);
-	back->type = DoomMenuItem::Type::Back;
+	//auto back = new DoomMenuItem("Back", nullptr);
+	//back->type = DoomMenuItem::Type::Back;
 
 	auto minutes = [&](DoomMenuItem* i)
 	{
@@ -84,12 +84,14 @@ void DoomMenu::Build()
 
 	options.items.clear();
 	content.items.clear();
+	keybinds.items.clear();
 	volume.items.clear();
 
 	options.headerKey = "menu:options:head";
-
-	options.items.push_back(new DoomMenuItem("menu:options:content", &content));
-	options.items.push_back(new DoomMenuItem("menu:options:language", lan2opt[(int)gameLang],
+	{
+		options.items.push_back(new DoomMenuItem("menu:options:content", &content));
+		options.items.push_back(new DoomMenuItem("menu:options:keybinds", &keybinds));
+		options.items.push_back(new DoomMenuItem("menu:options:language", lan2opt[(int)gameLang],
 		{
 			"menu:options:language:en",
 			"menu:options:language:jp",
@@ -109,38 +111,48 @@ void DoomMenu::Build()
 			items = &options;
 			dlgBox->Text(TextGet("menu:options:language:taunt"), Database::Find<Villager>("psk:xct", villagers));
 		}
-	));
-	options.items.push_back(new DoomMenuItem("menu:options:continuefrom", (int)UI::settings["continue"]->AsNumber(),
+		));
+		options.items.push_back(new DoomMenuItem("menu:options:continuefrom", (int)UI::settings["continue"]->AsNumber(),
 		{
 			"menu:options:continuefrom:0",
 			"menu:options:continuefrom:1",
 			"menu:options:continuefrom:2",
 			"menu:options:continuefrom:3",
-	},
+		},
 		[&](DoomMenuItem*i) { UI::settings["continue"] = new JSONValue(i->selection); }
-	));
-	options.items.push_back(new DoomMenuItem("menu:options:speech", (int)UI::settings["speech"]->AsNumber(),
+		));
+		options.items.push_back(new DoomMenuItem("menu:options:speech", (int)UI::settings["speech"]->AsNumber(),
 		{
 			"menu:options:speech:0",
 			"menu:options:speech:1",
 			"menu:options:speech:2",
 		},
 		[&](DoomMenuItem*i) { UI::settings["speech"] = new JSONValue(i->selection); }
-	));
-	options.items.push_back(new DoomMenuItem("menu:options:pingrate", 2, 60, (int)UI::settings["pingRate"]->AsNumber(), 1, minutes,
-		[&](DoomMenuItem*i) { UI::settings["pingRate"] = new JSONValue(i->selection); }
-	));
-	options.items.push_back(new DoomMenuItem("menu:options:balloonchance", 10, 60, (int)UI::settings["balloonChance"]->AsNumber(), 5, percent,
-		[&](DoomMenuItem*i) { UI::settings["balloonChance"] = new JSONValue(i->selection); }
-	));
-	options.items.push_back(new DoomMenuItem("menu:options:cursorscale", 50, 150, (int)UI::settings["cursorScale"]->AsNumber(), 10, percent,
-		[&](DoomMenuItem*i)
+		));
+		options.items.push_back(new DoomMenuItem("menu:options:pingrate", 2, 60, (int)UI::settings["pingRate"]->AsNumber(), 1, minutes,
+			[&](DoomMenuItem*i) { UI::settings["pingRate"] = new JSONValue(i->selection); }
+		));
+		options.items.push_back(new DoomMenuItem("menu:options:balloonchance", 10, 60, (int)UI::settings["balloonChance"]->AsNumber(), 5, percent,
+			[&](DoomMenuItem*i) { UI::settings["balloonChance"] = new JSONValue(i->selection); }
+		));
+		options.items.push_back(new DoomMenuItem("menu:options:cursorscale", 50, 150, (int)UI::settings["cursorScale"]->AsNumber(), 10, percent,
+			[&](DoomMenuItem*i)
 		{
 			cursor->SetScale(i->selection);
 			UI::settings["cursorScale"] = new JSONValue(i->selection);
 		}
-	));
-	options.items.push_back(new DoomMenuItem("menu:options:volume", &volume));
+		));
+		options.items.push_back(new DoomMenuItem("menu:options:volume", &volume));
+	}
+
+	keybinds.headerKey = "menu:options:head:keybinds";
+	{
+		for (int i = 0; i < sizeof(Inputs.Keys) / sizeof(InputKey); i++)
+		{
+			auto f = fmt::format("menu:options:keybinds:{}", i);
+			keybinds.items.push_back(new DoomMenuItem(f, (Binds)i));
+		}
+	}
 
 	content.headerKey = "menu:options:head:content";
 	{
@@ -165,7 +177,7 @@ void DoomMenu::Build()
 			}
 			));
 		}
-		species.items.push_back(back);
+		//species.items.push_back(back);
 
 		content.items.push_back(new DoomMenuItem("menu:options:content:species", &species));
 	}
@@ -189,12 +201,12 @@ void DoomMenu::Build()
 			));
 		}
 
-		fcpage->items.push_back(back);
+		//fcpage->items.push_back(back);
 		//TODO: Description field
 
 		content.items.push_back(new DoomMenuItem(fck, fcpage));
 	}
-	content.items.push_back(back);
+	//content.items.push_back(back);
 
 	volume.headerKey = "menu:options:head:volume";
 	volume.items.push_back(new DoomMenuItem("menu:options:volume:music", 0, 100, (int)(Audio::MusicVolume * 100), 10, percent,
@@ -209,7 +221,7 @@ void DoomMenu::Build()
 	volume.items.push_back(new DoomMenuItem("menu:options:volume:speech", 0, 100, (int)(Audio::SpeechVolume * 100), 10, percent,
 		[&](DoomMenuItem*i) { Audio::SpeechVolume = i->selection / 100.0f; }
 	));
-	volume.items.push_back(back);
+	//volume.items.push_back(back);
 }
 
 void DoomMenu::Translate()
@@ -236,6 +248,10 @@ DoomMenu::DoomMenu()
 void DoomMenu::Tick(float dt)
 {
 	dt;
+
+	if (remapping != -1)
+		return; //do not listen while assigning a key.
+
 	if (itemY.size() > 0 && Inputs.MouseMoved())
 	{
 		const int col = (int)(400 * scale);
@@ -356,6 +372,15 @@ void DoomMenu::Tick(float dt)
 				Inputs.Clear();
 				return;
 			}
+		}
+	}
+	else if (item->type == DoomMenuItem::Type::KeyBind)
+	{
+		if (Inputs.KeyDown(Binds::Accept) || Inputs.MouseLeft)
+		{
+			Inputs.Clear();
+			remapping = highlight;
+			remapBounce = true;
 		}
 	}
 	else if (item->type == DoomMenuItem::Type::Checkbox)
@@ -496,7 +521,7 @@ void DoomMenu::Draw(float dt)
 	for (int i = 0; i < shown; i++)
 	{
 		auto item = items->items[i + scroll];
-		const auto color = UI::themeColors["white"];
+		auto color = UI::themeColors["white"];
 		auto offset = glm::vec2(item->type == DoomMenuItem::Type::Checkbox ? (40 * scale) : 0, 0);
 		auto font = 1;
 		auto size = 100 * scale;
@@ -505,6 +530,10 @@ void DoomMenu::Draw(float dt)
 		{
 			font = item->selection;
 			size = item->maxVal * scale;
+		}
+		else if (item->type == DoomMenuItem::Type::KeyBind && i + scroll == remapping)
+		{
+			color = UI::themeColors["yellow"];
 		}
 
 		sprender->DrawText(font, item->caption, pos + offset, color, size);
@@ -520,6 +549,10 @@ void DoomMenu::Draw(float dt)
 				auto fmt = item->format(item);
 				sprender->DrawText(1, fmt, pos + glm::vec2(col + col + (94 * scale), 10), color, size * 0.75f);
 			}
+		}
+		else if (item->type == DoomMenuItem::Type::KeyBind)
+		{
+			sprender->DrawText(1, Inputs.Keys[item->selection].Name, pos + glm::vec2(col, 0), color, size);
 		}
 
 		itemY.push_back(pos.y);
@@ -573,4 +606,31 @@ void DoomMenu::Draw(float dt)
 	{
 		sprender->DrawSprite(*speciesPreviews[highlight], glm::vec2((width * 0.5f) - (speciesPreviews[0]->width * 0.5f), (height * 0.5f) - (speciesPreviews[0]->height * 0.5f)));
 	}
+}
+
+//should use a utility function instead wrt nonprintables.
+extern "C" { __declspec(dllimport) const char* glfwGetKeyName(int key, int scancode); }
+
+bool DoomMenu::Scancode(unsigned int scancode)
+{
+	//Eat shifts, controls, alts, and logo. NEVER accept these as binds.
+	if (scancode == 0x2A || scancode == 0x36 || scancode == 0x1D || scancode == 0x11D || scancode == 0x38 || scancode == 0x138 || scancode == 0x15B)
+		return false;
+
+	if (remapping == -1)
+		return false;
+
+	if (remapBounce)
+	{
+		if (!(Inputs.KeyDown(Binds::Accept) || Inputs.MouseLeft))
+			remapBounce = false;
+		return false;
+	}
+
+	auto item = items->items[remapping];
+	Inputs.Keys[item->selection].ScanCode = scancode;
+	Inputs.Keys[item->selection].Name = glfwGetKeyName(-1, scancode);
+	
+	remapping = -1;
+	return true;
 }
