@@ -117,6 +117,11 @@ bool Console::Character(unsigned int codepoint)
 	return inputLine->Character(codepoint);
 }
 
+bool Console::Scancode(unsigned int scancode)
+{
+	return inputLine->Scancode(scancode);
+}
+
 void Console::Open()
 {
 	appearState = 1;

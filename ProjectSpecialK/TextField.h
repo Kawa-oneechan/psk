@@ -18,6 +18,7 @@ public:
 
 	void Draw(float dt);
 	bool Character(unsigned int codepoint);
+	bool Scancode(unsigned int scancode);
 	void Clear();
 	void Set(const std::string& to);
 };

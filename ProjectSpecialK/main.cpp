@@ -258,7 +258,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	>	Inputs.Map[Input::Console] = glfwGetKeyScancode(GLFW_KEY_GRAVE_ACCENT);
 	>	Inputs.Map[Input::Back] = glfwGetKeyScancode(GLFW_KEY_ESCAPE);
 	*/
-	scancode;  mods;
+	window, mods;
 	if (key == GLFW_KEY_GRAVE_ACCENT && action == GLFW_PRESS)
 	{
 		if (console->visible)
@@ -269,23 +269,20 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		return;
 	}
 
+	if (console->visible)
+	{
+		console->Scancode(scancode);
+		return;
+	}
+
 	Inputs.Process(scancode, action);
 
-	//Passthroughs
-	if (key == GLFW_KEY_BACKSPACE && action == GLFW_PRESS)
-		char_callback(window, '\b');
-	else if (key == GLFW_KEY_LEFT && action == GLFW_PRESS)
-		char_callback(window, (unsigned int)SpecialKeys::Left);
-	else if (key == GLFW_KEY_RIGHT && action == GLFW_PRESS)
-		char_callback(window, (unsigned int)SpecialKeys::Right);
-	else if (key == GLFW_KEY_UP && action == GLFW_PRESS)
-		char_callback(window, (unsigned int)SpecialKeys::Up);
-	else if (key == GLFW_KEY_DOWN && action == GLFW_PRESS)
-		char_callback(window, (unsigned int)SpecialKeys::Down);
-	else if (key == GLFW_KEY_HOME && action == GLFW_PRESS)
-		char_callback(window, (unsigned int)SpecialKeys::Home);
-	else if (key == GLFW_KEY_END && action == GLFW_PRESS)
-		char_callback(window, (unsigned int)SpecialKeys::End);
+	for (unsigned int i = (unsigned int)tickables.size(); i-- > 0; )
+	{
+		auto t = tickables[i];
+		if (t->Scancode(scancode))
+			break;
+	}
 
 	if (console->visible)
 		return;

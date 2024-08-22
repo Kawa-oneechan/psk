@@ -98,6 +98,7 @@ public:
 	void Print(int color, const std::string& str);
 	void Print(const std::string& str);
 	bool Character(unsigned int codepoint);
+	bool Scancode(unsigned int scancode);
 	void Open();
 	void Close();
 	void Tick(float dt);

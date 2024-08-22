@@ -10,6 +10,7 @@ public:
 	virtual void Tick(float) {};
 	virtual void Draw(float) {};
 	virtual bool Character(unsigned int) { return false; }
+	virtual bool Scancode(unsigned int) { return false; }
 };
 
 using TickableP = std::shared_ptr<Tickable>;

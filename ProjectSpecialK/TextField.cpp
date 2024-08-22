@@ -23,9 +23,9 @@ void TextField::Draw(float dt)
 	glDisable(GL_SCISSOR_TEST);
 }
 
-bool TextField::Character(unsigned int codepoint)
+bool TextField::Scancode(unsigned int scancode)
 {
-	if (codepoint == '\b')
+	if (scancode == 14) //Backspace
 	{
 		if (caret > 0)
 		{
@@ -50,7 +50,7 @@ bool TextField::Character(unsigned int codepoint)
 		}
 		return true;
 	}
-	else if ((SpecialKeys)codepoint == SpecialKeys::Left)
+	else if (scancode == 331) //Left
 	{
 		if (caret > 0)
 		{
@@ -71,7 +71,7 @@ bool TextField::Character(unsigned int codepoint)
 		}
 		return true;
 	}
-	else if ((SpecialKeys)codepoint == SpecialKeys::Right)
+	else if (scancode == 333) //Right
 	{
 		if (caret < value.length())
 		{
@@ -84,17 +84,21 @@ bool TextField::Character(unsigned int codepoint)
 		}
 		return true;
 	}
-	else if ((SpecialKeys)codepoint == SpecialKeys::Home)
+	else if (scancode == 71) //Home
 	{
 		caret = 0;
 		return true;
 	}
-	else if ((SpecialKeys)codepoint == SpecialKeys::End)
+	else if (scancode == 79) //End
 	{
 		caret = value.length();
 		return true;
 	}
+	return false;
+}
 
+bool TextField::Character(unsigned int codepoint)
+{
 	std::string inserted;
 	if (codepoint < 0x80)
 		inserted += (char)codepoint;
