@@ -178,6 +178,51 @@
 	"menu:options:keybinds:7": {
 		"en": "Page Down"
 	},
+	"menu:options:keybinds:8": {
+		"en": "Interact"
+	},
+	"menu:options:keybinds:9": {
+		"en": "Pick Up"
+	},
+	"menu:options:keybinds:10": {
+		"en": "Inventory"
+	},
+	"menu:options:keybinds:11": {
+		"en": "Map"
+	},
+	"menu:options:keybinds:12": {
+		"en": "Reactions"
+	},
+	"menu:options:keybinds:13": {
+		"en": "Hotbar 1"
+	},
+	"menu:options:keybinds:14": {
+		"en": "Hotbar 2"
+	},
+	"menu:options:keybinds:15": {
+		"en": "Hotbar 3"
+	},
+	"menu:options:keybinds:16": {
+		"en": "Hotbar 4"
+	},
+	"menu:options:keybinds:17": {
+		"en": "Hotbar 5"
+	},
+	"menu:options:keybinds:18": {
+		"en": "Hotbar 6"
+	},
+	"menu:options:keybinds:19": {
+		"en": "Hotbar 7"
+	},
+	"menu:options:keybinds:20": {
+		"en": "Hotbar 8"
+	},
+	"menu:options:keybinds:21": {
+		"en": "Hotbar 9"
+	},
+	"menu:options:keybinds:22": {
+		"en": "Hotbar 10"
+	},
 
 	"menu:options:head:volume": {
 		"en": "Volume",

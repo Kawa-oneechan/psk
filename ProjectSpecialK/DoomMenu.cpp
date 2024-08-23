@@ -147,7 +147,7 @@ void DoomMenu::Build()
 
 	keybinds.headerKey = "menu:options:head:keybinds";
 	{
-		for (int i = 0; i < sizeof(Inputs.Keys) / sizeof(InputKey); i++)
+		for (int i = 0; i < NumKeyBinds; i++)
 		{
 			auto f = fmt::format("menu:options:keybinds:{}", i);
 			keybinds.items.push_back(new DoomMenuItem(f, (Binds)i));

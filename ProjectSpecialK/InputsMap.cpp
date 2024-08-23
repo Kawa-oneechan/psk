@@ -19,7 +19,7 @@ void InputsMap::Process(int scancode, int action)
 			if (scancode == k.ScanCode)
 			{
 				k.State = true;
-				break;
+				//break;
 			}
 		}
 	}

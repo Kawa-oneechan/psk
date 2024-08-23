@@ -255,7 +255,8 @@ std::string GetDirFromFile(const std::string& path)
 extern "C" { __declspec(dllimport) const char* glfwGetKeyName(int key, int scancode); }
 std::string GetKeyName(int scancode)
 {
-	if (scancode == 1 || scancode == 14 || scancode == 15 || scancode == 28 || scancode == 57)
+	if (scancode == 1 || scancode == 14 || scancode == 15 || scancode == 28 || scancode == 57 ||
+		(scancode >= 71 && scancode <=83) || scancode == 284 || scancode == 309)
 		return TextGet(fmt::format("keys:scan:{}", scancode));
 
 	auto glfw = glfwGetKeyName(-1, scancode);

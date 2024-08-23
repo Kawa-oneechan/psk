@@ -169,19 +169,13 @@ namespace UI
 		Audio::SpeechVolume = (float)settings["speechVolume"]->AsNumber();
 
 		auto keyBinds = settings["keyBinds"]->AsArray();
-		if (keyBinds.size() != NumBinds)
+		if (keyBinds.size() != NumKeyBinds)
 		{
-			keyBinds.reserve(NumBinds);
-			//Keep these matched to Binds!
-			constexpr int defaults[] = {
-				GLFW_KEY_UP, GLFW_KEY_DOWN, GLFW_KEY_LEFT, GLFW_KEY_RIGHT,
-				GLFW_KEY_ENTER, GLFW_KEY_ESCAPE,
-				GLFW_KEY_PAGE_UP, GLFW_KEY_PAGE_DOWN,
-			};
-			for (auto &k : defaults)
+			keyBinds.reserve(NumKeyBinds);
+			for (auto &k : DefaultInputBindings)
 				keyBinds.push_back(new JSONValue(glfwGetKeyScancode(k)));
 		}
-		for (int i = 0; i < NumBinds; i++)
+		for (int i = 0; i < NumKeyBinds; i++)
 			Inputs.Keys[i].ScanCode = (int)keyBinds[i]->AsNumber();
 
 		auto sounds = VFS::ReadJSON("sound/sounds.json")->AsObject();
@@ -510,7 +504,7 @@ int main(int, char**)
 	TextAdd(*VFS::ReadJSON("text/tests.json"));
 
 	//Now that we've loaded the key names we can fill in some blanks.
-	for (int i = 0; i < NumBinds; i++)
+	for (int i = 0; i < NumKeyBinds; i++)
 		Inputs.Keys[i].Name = GetKeyName(Inputs.Keys[i].ScanCode);
 
 	tickables.push_back(&musicManager);
