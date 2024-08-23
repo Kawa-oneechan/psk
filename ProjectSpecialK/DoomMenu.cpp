@@ -608,9 +608,6 @@ void DoomMenu::Draw(float dt)
 	}
 }
 
-//should use a utility function instead wrt nonprintables.
-extern "C" { __declspec(dllimport) const char* glfwGetKeyName(int key, int scancode); }
-
 bool DoomMenu::Scancode(unsigned int scancode)
 {
 	//Eat shifts, controls, alts, and logo. NEVER accept these as binds.
@@ -629,7 +626,7 @@ bool DoomMenu::Scancode(unsigned int scancode)
 
 	auto item = items->items[remapping];
 	Inputs.Keys[item->selection].ScanCode = scancode;
-	Inputs.Keys[item->selection].Name = glfwGetKeyName(-1, scancode);
+	Inputs.Keys[item->selection].Name = GetKeyName(scancode);
 	
 	remapping = -1;
 	return true;

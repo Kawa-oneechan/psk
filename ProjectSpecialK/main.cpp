@@ -182,11 +182,7 @@ namespace UI
 				keyBinds.push_back(new JSONValue(glfwGetKeyScancode(k)));
 		}
 		for (int i = 0; i < NumBinds; i++)
-		{
 			Inputs.Keys[i].ScanCode = (int)keyBinds[i]->AsNumber();
-			//TODO: Non-printables return null here. Intercept and substitute our own.
-			Inputs.Keys[i].Name = glfwGetKeyName(GLFW_KEY_UNKNOWN, Inputs.Keys[i].ScanCode);
-		}
 
 		auto sounds = VFS::ReadJSON("sound/sounds.json")->AsObject();
 		for (auto category : sounds)
@@ -509,8 +505,13 @@ int main(int, char**)
 
 	TextAdd(*VFS::ReadJSON("text/datetime.json"));
 	TextAdd(*VFS::ReadJSON("text/fixedform.json"));
+	TextAdd(*VFS::ReadJSON("text/keynames.json"));
 	TextAdd(*VFS::ReadJSON("text/optionsmenu.json"));
 	TextAdd(*VFS::ReadJSON("text/tests.json"));
+
+	//Now that we've loaded the key names we can fill in some blanks.
+	for (int i = 0; i < NumBinds; i++)
+		Inputs.Keys[i].Name = GetKeyName(Inputs.Keys[i].ScanCode);
 
 	tickables.push_back(&musicManager);
 	tickables.push_back(new Background());

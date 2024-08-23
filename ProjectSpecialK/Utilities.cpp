@@ -252,6 +252,19 @@ std::string GetDirFromFile(const std::string& path)
 	return path.substr(0, path.rfind('/') + 1);
 }
 
+extern "C" { __declspec(dllimport) const char* glfwGetKeyName(int key, int scancode); }
+std::string GetKeyName(int scancode)
+{
+	if (scancode == 1 || scancode == 14 || scancode == 15 || scancode == 28 || scancode == 57)
+		return TextGet(fmt::format("keys:scan:{}", scancode));
+
+	auto glfw = glfwGetKeyName(-1, scancode);
+	if (glfw[0] == '\0')
+		return TextGet(fmt::format("keys:scan:{}", scancode));
+	else
+		return std::string(glfw);
+}
+
 #include <regex>
 void HandleIncludes(std::string& code, const std::string& path)
 {

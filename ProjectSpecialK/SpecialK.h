@@ -104,6 +104,8 @@ extern std::string GetDirFromFile(const std::string& path);
 //Given a piece of code (shader?) that may contain "#include" statements and a search path, inserts the included files, 
 extern void HandleIncludes(std::string& code, const std::string& path);
 
+extern std::string GetKeyName(int scancode);
+
 //Returns the CRC32 hash for the given text.
 extern unsigned int GetCRC(const std::string& text);
 //Returns the CRC32 hash for the given data.

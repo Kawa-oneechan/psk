@@ -186,6 +186,7 @@ std::string TextDateMD(int month, int day)
 
 void StringToLower(std::string& data)
 {
+	//TODO: make this UTF-8 aware... somehow.
 	std::transform(data.begin(), data.end(), data.begin(), [](unsigned char c) { return tolower(c); });
 }
 
