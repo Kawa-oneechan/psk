@@ -2,6 +2,9 @@
 #include "PanelLayout.h"
 #include "InputsMap.h"
 
+#define GLM_ENABLE_EXPERIMENTAL
+#include "support/glm/gtx/rotate_vector.hpp"
+
 void DialogueBox::msbtStr(MSBTParams)
 {
 	if (tags.size() < 2)
@@ -333,10 +336,10 @@ void DialogueBox::Draw(float dt)
 		nametagColor[1].a = alpha;
 
 		const auto tagPosL = tagPos;
-		const auto tagPosM = tagPosL + glm::vec2(cosf(glm::radians(tagAngle)) * tagSize.x, sinf(glm::radians(tagAngle)) * tagSize.x);
-		const auto tagPosR = tagPosM + glm::vec2(cosf(glm::radians(tagAngle)) * nametagWidth, sinf(glm::radians(tagAngle)) * nametagWidth);
-		//TODO: do proper "rotate point around origin point" thing.
-		const auto tagPosT = tagPosL + glm::vec2(cosf(glm::radians(tagAngle)) * (tagSize.x - 16), sinf(glm::radians(tagAngle)) * (tagSize.x - 512));
+		const auto tagPosM = tagPosL + glm::rotate(glm::vec2(tagSize.x, 0), glm::radians(tagAngle));
+		const auto tagPosR = tagPosM + glm::rotate(glm::vec2(nametagWidth, 0), glm::radians(tagAngle));
+		const auto tagPosT = tagPosL + glm::rotate(glm::vec2(tagSize.x - 16, 20), glm::radians(tagAngle));
+
 		sprender->DrawSprite(nametag, tagPosL, tagSize, nametag[0], tagAngle, nametagColor[0], TopLeft);
 		sprender->DrawSprite(nametag, tagPosM, glm::vec2(nametagWidth, tagSize.y), nametag[2], tagAngle, nametagColor[0], TopLeft);
 		sprender->DrawSprite(nametag, tagPosR, tagSize, nametag[1], tagAngle, nametagColor[0], TopLeft);

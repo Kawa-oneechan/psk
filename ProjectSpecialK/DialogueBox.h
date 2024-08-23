@@ -22,7 +22,7 @@ private:
 	size_t displayCursor{ 0 };
 	float time{ 0 };
 	const float tweenTimeScale = { 0.025f };
-	const float wobbleTimeScale{ 0.005f };
+	const float wobbleTimeScale{ 0.0005f };
 	glm::vec4 bubbleColor;
 	glm::vec4 textColor;
 	glm::vec4 nametagColor[2];
