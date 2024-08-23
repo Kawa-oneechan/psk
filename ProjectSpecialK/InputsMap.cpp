@@ -13,7 +13,6 @@ void InputsMap::Process(int scancode, int action)
 {
 	if (action == GLFW_PRESS)
 	{
-		//It's too bad we can't use switch here...
 		for (auto& k : Keys)
 		{
 			if (scancode == k.ScanCode)
@@ -39,10 +38,47 @@ bool InputsMap::MouseMoved()
 	return ret;
 }
 
-void InputsMap::Clear()
+bool InputsMap::UpdateGamepad()
+{
+	if (!HaveGamePad)
+		return false;
+
+	GLFWgamepadstate state;
+	if (glfwGetGamepadState(GLFW_JOYSTICK_1, &state))
+	{
+		//Hardwire the left stick to work for the walking actions
+		//TODO: actually make walking around and moving the cursor separate actions
+		if      (state.axes[0] < -0.2) Keys[(int)Binds::Left].State = true;
+		else if (state.axes[0] >  0.2) Keys[(int)Binds::Right].State = true;
+		if      (state.axes[1] < -0.2) Keys[(int)Binds::Up].State = true;
+		else if (state.axes[1] >  0.2) Keys[(int)Binds::Down].State = true;
+
+		for (int i = 0; i < 15; i++)
+		{
+			trg[i] = state.buttons[i] & (state.buttons[i] ^ cnt[i]);
+			cnt[i] = state.buttons[i];
+		}
+
+		for (auto& k : Keys)
+		{
+			if (k.GamepadButton != -1 && trg[k.GamepadButton])
+			{
+				k.State = true;
+				//break;
+			}
+		}
+		return true;
+	}
+	return false;
+}
+
+void InputsMap::Clear(bool alsoGamepad)
 {
 	for (auto& k : Keys)
 		k.State = false;
+	if (alsoGamepad)
+		for (int i = 0; i < 15; i++)
+			cnt[i] = trg[i] = 0;
 	MouseLeft = MouseRight = MouseMiddle = false;
 	MouseHoldLeft = MouseHoldRight = MouseHoldMiddle = false;
 }

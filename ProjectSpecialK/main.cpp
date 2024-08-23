@@ -370,6 +370,18 @@ void mousebutton_callback(GLFWwindow* window, int button, int action, int mods)
 	}
 }
 
+void joystick_callback(int jid, int event)
+{
+	if (event == GLFW_CONNECTED)
+	{
+		Inputs.HaveGamePad = (jid == GLFW_JOYSTICK_1 && glfwJoystickIsGamepad(jid));
+	}
+	else if (event == GLFW_DISCONNECTED)
+	{
+		// The joystick was disconnected
+	}
+}
+
 void ThreadedLoader(std::function<void(float*)> loader)
 {
 	glDisable(GL_DEPTH_TEST);
@@ -479,6 +491,7 @@ int main(int, char**)
 	glfwSetCharCallback(window, char_callback);
 	glfwSetCursorPosCallback(window, mouse_callback);
 	glfwSetMouseButtonCallback(window, mousebutton_callback);
+	glfwSetJoystickCallback(joystick_callback);
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
@@ -507,7 +520,7 @@ int main(int, char**)
 	sprender = new SpriteRenderer();
 	cursor = std::make_shared<Cursor>();
 
-
+	Inputs.HaveGamePad = (glfwJoystickPresent(GLFW_JOYSTICK_1) && glfwJoystickIsGamepad(GLFW_JOYSTICK_1));
 
 	ThreadedLoader(Database::LoadGlobalStuff);
 
@@ -562,6 +575,7 @@ int main(int, char**)
 	while (!glfwWindowShouldClose(window))
 	{
 		Audio::Update();
+		Inputs.UpdateGamepad();
 
 		int newTime = std::clock();
 		int deltaTime = newTime - oldTime;

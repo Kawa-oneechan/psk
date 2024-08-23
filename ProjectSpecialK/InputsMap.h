@@ -78,7 +78,9 @@ class InputsMap
 {
 private:
 	glm::vec2 lastMousePos;
-
+	unsigned char trg[15];
+	unsigned char cnt[15];
+	
 public:
 	InputKey Keys[NumKeyBinds]{ 0 };
 
@@ -86,14 +88,21 @@ public:
 	bool MouseHoldLeft, MouseHoldRight, MouseHoldMiddle;
 	glm::vec2 MousePosition;
 
+	bool HaveGamePad;
+
 	InputsMap();
 	void Process(int scancode, int action);
 	void MouseMove(float x, float y);
 	bool MouseMoved();
-	void Clear();
+	bool UpdateGamepad();
+	void Clear(bool alsoGamepad = false);
 
 	bool KeyDown(Binds bind);
-	inline void Clear(Binds bind) { Keys[(int)bind].State = false; }
+	inline void Clear(Binds bind)
+	{
+		Keys[(int)bind].State = false;
+		//cnt[Keys[(int)bind].GamepadButton] = 0;
+	}
 };
 extern InputsMap Inputs;
 

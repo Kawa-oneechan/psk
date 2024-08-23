@@ -249,8 +249,41 @@ void DoomMenu::Tick(float dt)
 {
 	dt;
 
+	static bool justSwitchedPage = true;
+
 	if (remapping != -1)
+	{
+		if (Inputs.HaveGamePad)
+		{
+			GLFWgamepadstate state;
+			if (glfwGetGamepadState(GLFW_JOYSTICK_1, &state))
+			{
+				if (remapBounce)
+				{
+					int k = 0;
+					for (int i = 0; i < 15; i++)
+						k += state.buttons[i];
+					remapBounce = (k > 0);
+				}
+				else
+				{
+					for (int i = 0; i < 15; i++)
+					{
+						if (state.buttons[i])
+						{
+							auto item = items->items[remapping];
+							Inputs.Keys[item->selection].GamepadButton = i;
+							//Inputs.Clear((Binds)item->selection);
+							Inputs.Clear();
+							remapping = -1;
+							break;
+						}
+					}
+				}
+			}
+		}
 		return; //do not listen while assigning a key.
+	}
 
 	if (itemY.size() > 0 && Inputs.MouseMoved())
 	{
@@ -301,17 +334,23 @@ void DoomMenu::Tick(float dt)
 	while (items->items[highlight]->type == DoomMenuItem::Type::Text)
 		highlight++;
 
-	if (Inputs.KeyDown(Binds::Back))
+	if (justSwitchedPage)
 	{
-		Inputs.Clear(Binds::Back);
-		if (stack.size() > 1)
+		if (Inputs.HaveGamePad)
 		{
-			highlight = 0;
-			mouseHighlight = -1;
-			stack.pop();
-			items = stack.top();
-			return;
+			GLFWgamepadstate state;
+			if (glfwGetGamepadState(GLFW_JOYSTICK_1, &state))
+			{
+				int k = 0;
+				for (int i = 0; i < 15; i++)
+					k += state.buttons[i];
+				if (k)
+					return;
+			}
 		}
+		justSwitchedPage = false;
+		Inputs.Clear(true);
+		return;
 	}
 
 	if (Inputs.KeyDown(Binds::Up))
@@ -358,27 +397,15 @@ void DoomMenu::Tick(float dt)
 			items = item->page;
 			highlight = 0;
 			mouseHighlight = -1;
-		}
-	}
-	else if (item->type == DoomMenuItem::Type::Back)
-	{
-		if (Inputs.KeyDown(Binds::Accept) || Inputs.MouseLeft)
-		{
-			if (stack.size() > 1)
-			{
-				highlight = 0;
-				stack.pop();
-				items = stack.top();
-				Inputs.Clear();
-				return;
-			}
+			Inputs.Clear(true);
+			justSwitchedPage = true;
 		}
 	}
 	else if (item->type == DoomMenuItem::Type::KeyBind)
 	{
 		if (Inputs.KeyDown(Binds::Accept) || Inputs.MouseLeft)
 		{
-			Inputs.Clear();
+			Inputs.Clear(Binds::Accept);
 			remapping = highlight;
 			remapBounce = true;
 		}
@@ -444,7 +471,21 @@ void DoomMenu::Tick(float dt)
 		}
 	}
 
+	if (Inputs.KeyDown(Binds::Back))
+	{
+		Inputs.Clear(Binds::Back);
+		if (stack.size() > 1)
+		{
+			highlight = 0;
+			mouseHighlight = -1;
+			stack.pop();
+			items = stack.top();
+			return;
+		}
+	}
+
 	Inputs.Clear(Binds::Accept);
+	Inputs.Clear(Binds::Back);
 	Inputs.MouseLeft = false;
 }
 
