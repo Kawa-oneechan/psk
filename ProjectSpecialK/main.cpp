@@ -158,6 +158,7 @@ namespace UI
 		DS("soundVolume", 1.0f);
 		DS("speechVolume", 1.0f);
 		DS("keyBinds", JSONArray());
+		DS("gamepadBinds", JSONArray());
 #undef DS
 
 		constexpr Language opt2lan[] = { Language::USen, Language::JPja, Language::EUde, Language::EUes, Language::EUfr, Language::EUit, Language::EUhu, Language::EUnl, Language::EUen };
@@ -175,8 +176,20 @@ namespace UI
 			for (auto &k : DefaultInputBindings)
 				keyBinds.push_back(new JSONValue(glfwGetKeyScancode(k)));
 		}
+
+		auto padBinds = settings["gamepadBinds"]->AsArray();
+		if (padBinds.size() != NumKeyBinds)
+		{
+			padBinds.reserve(NumKeyBinds);
+			for (auto &k : DefaultInputGamepadBindings)
+				padBinds.push_back(new JSONValue(k));
+		}
+
 		for (int i = 0; i < NumKeyBinds; i++)
+		{
 			Inputs.Keys[i].ScanCode = (int)keyBinds[i]->AsNumber();
+			Inputs.Keys[i].GamepadButton = (int)padBinds[i]->AsNumber();
+		}
 
 		auto sounds = VFS::ReadJSON("sound/sounds.json")->AsObject();
 		for (auto category : sounds)
@@ -197,6 +210,11 @@ namespace UI
 		for (auto& k : Inputs.Keys)
 			binds.push_back(new JSONValue(k.ScanCode));
 		settings["keyBinds"] = new JSONValue(binds);
+
+		binds.clear();
+		for (auto& k : Inputs.Keys)
+			binds.push_back(new JSONValue(k.GamepadButton));
+		settings["gamepadBinds"] = new JSONValue(binds);
 
 		try
 		{

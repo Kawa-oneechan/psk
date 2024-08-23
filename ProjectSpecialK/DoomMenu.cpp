@@ -526,6 +526,8 @@ void DoomMenu::Draw(float dt)
 		auto font = 1;
 		auto size = 100 * scale;
 
+		std::string gamepadThing{ "    " };
+
 		if (item->type == DoomMenuItem::Type::Text)
 		{
 			font = item->selection;
@@ -552,7 +554,17 @@ void DoomMenu::Draw(float dt)
 		}
 		else if (item->type == DoomMenuItem::Type::KeyBind)
 		{
-			sprender->DrawText(1, Inputs.Keys[item->selection].Name, pos + glm::vec2(col, 0), color, size);
+			auto key = Inputs.Keys[item->selection];
+			sprender->DrawText(1,key.Name, pos + glm::vec2(col, 0), color, size);
+			
+			if (key.GamepadButton == -1)
+				gamepadThing = "[none]";
+			else
+			{
+				gamepadThing.clear();
+				AppendChar(gamepadThing, GamepadPUAMap[key.GamepadButton]);
+			}
+			sprender->DrawText(1, gamepadThing, pos + glm::vec2(col * 2, 0), color, size);
 		}
 
 		itemY.push_back(pos.y);

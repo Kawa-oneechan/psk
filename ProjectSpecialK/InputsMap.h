@@ -27,10 +27,50 @@ constexpr int DefaultInputBindings[] = {
 };
 constexpr int NumKeyBinds = sizeof(DefaultInputBindings) / sizeof(int);
 
+constexpr int DefaultInputGamepadBindings[] = {
+	GLFW_GAMEPAD_BUTTON_DPAD_UP, GLFW_GAMEPAD_BUTTON_DPAD_DOWN, GLFW_GAMEPAD_BUTTON_DPAD_LEFT, GLFW_GAMEPAD_BUTTON_DPAD_RIGHT,
+	GLFW_GAMEPAD_BUTTON_A, GLFW_GAMEPAD_BUTTON_B,
+	GLFW_GAMEPAD_BUTTON_LEFT_BUMPER, GLFW_GAMEPAD_BUTTON_RIGHT_BUMPER,
+	GLFW_GAMEPAD_BUTTON_A, GLFW_GAMEPAD_BUTTON_Y,
+	GLFW_GAMEPAD_BUTTON_X, GLFW_GAMEPAD_BUTTON_LEFT_BUMPER, GLFW_GAMEPAD_BUTTON_RIGHT_BUMPER,
+	-1, -1, -1, -1, -1,
+	-1, -1, -1, -1, -1,
+};
+
+//Maps GLFW gamepad buttons to Private Use Area characters. Note that these are raw codepoints, NOT UTF-8.
+constexpr int GamepadPUAMap[] =
+{
+	//ABXY
+	0xE0E0, 0xE0E1, 0xE0E2, 0xE0E3,
+	//Shoulders
+	0xE0E4, 0xE0E5,
+	//Back, Start, Guide
+	0xE0F2, 0xE0F1, 0xE0F4,
+	//Thumbs
+	0xE101, 0xE102,
+	//DPad
+	0xE0EB, 0xE0EE, 0xE0EC, 0xE0ED,
+
+	/* Outlined:
+	//ABXY
+	0xE0A0, 0xE0A1, 0xE0A2, 0xE0A3,
+	//Shoulders
+	0xE0A4, 0xE0A5,
+	//Back, Start, Guide
+	0xE0B4, 0xE0B3, 0xE0B9,
+	//Thumbs
+	0xE0C1, 0xE0C2,
+	//DPad
+	0xE0AF, 0xE0B2, 0xE0B0, 0xE0B1,
+	*/
+};
+constexpr int NumPUAMaps = sizeof(GamepadPUAMap) / sizeof(int);
+
 struct InputKey
 {
 	bool State;
 	int ScanCode;
+	int GamepadButton;
 	std::string Name;
 };
 
