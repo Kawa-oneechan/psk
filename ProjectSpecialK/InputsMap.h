@@ -78,8 +78,8 @@ class InputsMap
 {
 private:
 	glm::vec2 lastMousePos;
-	unsigned char trg[15];
-	unsigned char cnt[15];
+	unsigned char trg[15]{ 0 };
+	unsigned char cnt[15]{ 0 };
 	
 public:
 	InputKey Keys[NumKeyBinds]{ 0 };
@@ -88,7 +88,7 @@ public:
 	bool MouseHoldLeft, MouseHoldRight, MouseHoldMiddle;
 	glm::vec2 MousePosition;
 
-	bool HaveGamePad;
+	bool HaveGamePad = false;
 
 	InputsMap();
 	void Process(int scancode, int action);
