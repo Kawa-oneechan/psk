@@ -519,7 +519,7 @@ int main(int, char**)
 	//auto logoAnim = new PanelLayout(logoJson["logoPanels"]);
 	//tickables.push_back(logoAnim);
 	dlgBox = new DialogueBox();
-	tickables.push_back(dlgBox);
+	//tickables.push_back(dlgBox);
 
 	//tickables.push_back(new TextField());
 
@@ -537,8 +537,8 @@ int main(int, char**)
 
 	auto bob = Database::Find<Villager>("psk:cat00", villagers);
 	bob->defaultOutfitID = "psk:oppai/white";
+	bob->defaultOutfitID = "acnh:djkklogotee/neonpink";
 	bob->Manifest();
-
 
 	int oldTime = 0;
 	while (!glfwWindowShouldClose(window))

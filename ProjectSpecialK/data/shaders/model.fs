@@ -26,6 +26,11 @@ void main()
 	vec4 mix = texture(mixTexture, vec3(TexCoord, layer));
 	vec4 opacity = texture(opacityTexture, vec3(TexCoord, layer));
 
+	if (mix.r == mix.g && mix.g == mix.b)
+	{
+		mix.g = mix.b = 0;
+	}
+
 	//normal = normal * 2.0 - 1.0;
 #ifdef TOON
 	vec3 norm = normalize(Normal);
@@ -41,7 +46,7 @@ void main()
 	//vec3 result = (ambient + diffuse + specular) * albedo.rgb;
 	vec3 result;
 	for (int i = 0; i < NUMLIGHTS; i++)
-		result += getLight(lights[i], albedo.rgb, norm, viewDir, 0.2);
+		result += getLight(lights[i], albedo.rgb, norm, viewDir, mix.b);
 	FragColor = vec4(result, opacity.r);
 
 	//FragColor = texture(albedoTexture, TexCoord);
