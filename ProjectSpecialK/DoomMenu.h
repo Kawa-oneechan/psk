@@ -18,7 +18,7 @@ public:
 	int selection{ 0 };
 	enum class Type
 	{
-		Text, Options, Slider, Checkbox, Page, KeyBind, Custom, Back
+		Text, Options, Slider, Checkbox, Page, KeyBind, Action, Custom
 	} type { Type::Text };
 	int minVal{ 0 };
 	int maxVal{ 100 };
@@ -38,6 +38,8 @@ public:
 	DoomMenuItem(const std::string& cap, int fnt = 0, int siz = 100) : key(cap), type(Type::Text), selection(fnt), maxVal(siz), page(nullptr) {}
 
 	DoomMenuItem(const std::string& cap, Binds bind) : key(cap), type(Type::KeyBind), selection((int)bind) {}
+
+	DoomMenuItem(const std::string& cap, std::function<void(DoomMenuItem*)> chg) : key(cap), type(Type::Action), change(chg) {}
 
 	void Translate();
 

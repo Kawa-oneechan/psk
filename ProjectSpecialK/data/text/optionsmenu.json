@@ -153,6 +153,9 @@
 	"menu:options:head:keybinds": {
 		"en": "Remap keys"
 	},
+	"menu:options:keybinds:reset": {
+		"en": "Reset all"
+	},
 	//Keep these in order with InputsMap.h enum Binds
 	"menu:options:keybinds:0": {
 		"en": "Up"

@@ -64,9 +64,6 @@ void DoomMenuPage::Translate()
 
 void DoomMenu::Build()
 {
-	//auto back = new DoomMenuItem("Back", nullptr);
-	//back->type = DoomMenuItem::Type::Back;
-
 	auto minutes = [&](DoomMenuItem* i)
 	{
 		return fmt::format(i->formatText, i->selection);
@@ -91,6 +88,7 @@ void DoomMenu::Build()
 	{
 		options.items.push_back(new DoomMenuItem("menu:options:content", &content));
 		options.items.push_back(new DoomMenuItem("menu:options:keybinds", &keybinds));
+		options.items.push_back(new DoomMenuItem("menu:options:volume", &volume));
 		options.items.push_back(new DoomMenuItem("menu:options:language", lan2opt[(int)gameLang],
 		{
 			"menu:options:language:en",
@@ -142,7 +140,6 @@ void DoomMenu::Build()
 			UI::settings["cursorScale"] = new JSONValue(i->selection);
 		}
 		));
-		options.items.push_back(new DoomMenuItem("menu:options:volume", &volume));
 	}
 
 	keybinds.headerKey = "menu:options:head:keybinds";
@@ -152,6 +149,16 @@ void DoomMenu::Build()
 			auto f = fmt::format("menu:options:keybinds:{}", i);
 			keybinds.items.push_back(new DoomMenuItem(f, (Binds)i));
 		}
+		keybinds.items.push_back(new DoomMenuItem("menu:options:keybinds:reset", [&](DoomMenuItem*i)
+		{
+			i;
+			for (int j = 0; j < NumKeyBinds; j++)
+			{
+				Inputs.Keys[j].ScanCode = glfwGetKeyScancode(DefaultInputBindings[j]);
+				Inputs.Keys[j].GamepadButton = DefaultInputGamepadBindings[j];
+				Inputs.Keys[j].Name = GetKeyName(Inputs.Keys[j].ScanCode);
+			}
+		}));
 	}
 
 	content.headerKey = "menu:options:head:content";
@@ -177,51 +184,50 @@ void DoomMenu::Build()
 			}
 			));
 		}
-		//species.items.push_back(back);
 
 		content.items.push_back(new DoomMenuItem("menu:options:content:species", &species));
-	}
 
-	for (const auto& fc : Database::FilterCategories)
-	{
-		auto fck = fc.first;
-		
-		auto fcpage = new DoomMenuPage("menu:options:head:content", fck);
-		for (const auto& f : fc.second)
+		for (const auto& fc : Database::FilterCategories)
 		{
+			auto fck = fc.first;
 
-			fcpage->items.push_back(new DoomMenuItem((std::string&)f, Database::Filters[f],
-				[&, f](DoomMenuItem*i)
+			auto fcpage = new DoomMenuPage("menu:options:head:content", fck);
+			for (const auto& f : fc.second)
 			{
-				Database::Filters[f] = i->selection > 0;
-				auto s = UI::settings["contentFilters"]->AsObject(); //-V836 can't be helped for now
-				s.insert_or_assign(f, new JSONValue(Database::Filters[f]));
-				UI::settings["contentFilters"] = new JSONValue(s);
+
+				fcpage->items.push_back(new DoomMenuItem((std::string&)f, Database::Filters[f],
+					[&, f](DoomMenuItem*i)
+				{
+					Database::Filters[f] = i->selection > 0;
+					auto s = UI::settings["contentFilters"]->AsObject(); //-V836 can't be helped for now
+					s.insert_or_assign(f, new JSONValue(Database::Filters[f]));
+					UI::settings["contentFilters"] = new JSONValue(s);
+				}
+				));
 			}
-			));
+
+			//TODO: Description field
+
+			content.items.push_back(new DoomMenuItem(fck, fcpage));
 		}
-
-		//fcpage->items.push_back(back);
-		//TODO: Description field
-
-		content.items.push_back(new DoomMenuItem(fck, fcpage));
 	}
-	//content.items.push_back(back);
 
-	volume.headerKey = "menu:options:head:volume";
-	volume.items.push_back(new DoomMenuItem("menu:options:volume:music", 0, 100, (int)(Audio::MusicVolume * 100), 10, percent,
-		[&](DoomMenuItem*i) { Audio::MusicVolume = i->selection / 100.0f; }
-	));
-	volume.items.push_back(new DoomMenuItem("menu:options:volume:ambience", 0, 100, (int)(Audio::AmbientVolume * 100), 10, percent,
-		[&](DoomMenuItem*i) { Audio::AmbientVolume = i->selection / 100.0f; }
-	));
-	volume.items.push_back(new DoomMenuItem("menu:options:volume:sfx", 0, 100, (int)(Audio::SoundVolume * 100), 10, percent,
-		[&](DoomMenuItem*i) { Audio::SoundVolume = i->selection / 100.0f; }
-	));
-	volume.items.push_back(new DoomMenuItem("menu:options:volume:speech", 0, 100, (int)(Audio::SpeechVolume * 100), 10, percent,
-		[&](DoomMenuItem*i) { Audio::SpeechVolume = i->selection / 100.0f; }
-	));
-	//volume.items.push_back(back);
+
+	{
+		volume.headerKey = "menu:options:head:volume";
+		volume.items.push_back(new DoomMenuItem("menu:options:volume:music", 0, 100, (int)(Audio::MusicVolume * 100), 10, percent,
+			[&](DoomMenuItem*i) { Audio::MusicVolume = i->selection / 100.0f; }
+		));
+		volume.items.push_back(new DoomMenuItem("menu:options:volume:ambience", 0, 100, (int)(Audio::AmbientVolume * 100), 10, percent,
+			[&](DoomMenuItem*i) { Audio::AmbientVolume = i->selection / 100.0f; }
+		));
+		volume.items.push_back(new DoomMenuItem("menu:options:volume:sfx", 0, 100, (int)(Audio::SoundVolume * 100), 10, percent,
+			[&](DoomMenuItem*i) { Audio::SoundVolume = i->selection / 100.0f; }
+		));
+		volume.items.push_back(new DoomMenuItem("menu:options:volume:speech", 0, 100, (int)(Audio::SpeechVolume * 100), 10, percent,
+			[&](DoomMenuItem*i) { Audio::SpeechVolume = i->selection / 100.0f; }
+		));
+	}
 }
 
 void DoomMenu::Translate()
@@ -295,7 +301,7 @@ void DoomMenu::Tick(float dt)
 			{
 				if (Inputs.MousePosition.y >= itemY[i] && Inputs.MousePosition.y < itemY[i + 1])
 				{
-					mouseHighlight = highlight = i;
+					mouseHighlight = highlight = i + scroll;
 					break;
 				}
 			}
@@ -396,9 +402,20 @@ void DoomMenu::Tick(float dt)
 			stack.push(item->page);
 			items = item->page;
 			highlight = 0;
+			scroll = 0;
 			mouseHighlight = -1;
 			Inputs.Clear(true);
 			justSwitchedPage = true;
+		}
+	}
+	else if (item->type == DoomMenuItem::Type::Action)
+	{
+		if (Inputs.KeyDown(Binds::Accept) || Inputs.MouseLeft)
+		{
+			Inputs.Clear(Binds::Accept);
+			item->Beep();
+			if (item->change != nullptr)
+				item->change(item);
 		}
 	}
 	else if (item->type == DoomMenuItem::Type::KeyBind)
@@ -477,6 +494,7 @@ void DoomMenu::Tick(float dt)
 		if (stack.size() > 1)
 		{
 			highlight = 0;
+			scroll = 0;
 			mouseHighlight = -1;
 			stack.pop();
 			items = stack.top();
