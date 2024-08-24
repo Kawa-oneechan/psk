@@ -637,16 +637,16 @@ void DoomMenu::Draw(float dt)
 	for (int i = 0; i < shown; i++)
 	{
 		auto item = i == 0 ? items->items[0] : items->items[i + scroll];
-		auto color = UI::themeColors["white"]; //(scroll + i == highlight) ? UI::themeColors["secondary"] : UI::themeColors["white"];
-		auto offset = glm::vec2(item->type == DoomMenuItem::Type::Checkbox ? (40 * scale) : 0, 0);
+		const auto color = UI::themeColors["white"]; //(scroll + i == highlight) ? UI::themeColors["secondary"] : UI::themeColors["white"];
+		const auto offset = glm::vec2(item->type == DoomMenuItem::Type::Checkbox ? (40 * scale) : 0, 0);
 
 		pos.y = itemY[i];
 
 		if (item->type == DoomMenuItem::Type::Checkbox)
 		{
-			sprender->DrawSprite(controls, pos + glm::vec2(0, 4 * scale), glm::vec2(partSize), controls[4], 0, color);
+			sprender->DrawSprite(controls, pos + glm::vec2(0, 4 * scale), glm::vec2(partSize), controls[4], 0, UI::themeColors["secondary"]);
 			if (item->selection)
-				sprender->DrawSprite(controls, pos + glm::vec2(0, 4 * scale), glm::vec2(partSize), controls[5], 0, color);
+				sprender->DrawSprite(controls, pos + glm::vec2(0, 4 * scale), glm::vec2(partSize), controls[5], 0, UI::themeColors["white"]);
 		}
 		else if (item->type == DoomMenuItem::Type::Slider)
 		{
