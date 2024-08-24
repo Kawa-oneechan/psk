@@ -37,31 +37,31 @@ constexpr int DefaultInputGamepadBindings[] = {
 	-1, -1, -1, -1, -1,
 };
 
-//Maps GLFW gamepad buttons to Private Use Area characters. Note that these are raw codepoints, NOT UTF-8.
-constexpr int GamepadPUAMap[] =
+//Maps GLFW gamepad buttons to Private Use Area characters.
+const std::string GamepadPUAMap[] =
 {
 	//ABXY
-	0xE0E0, 0xE0E1, 0xE0E2, 0xE0E3,
+	u8"\uE0E0", u8"\uE0E1", u8"\uE0E2", u8"\uE0E3",
 	//Shoulders
-	0xE0E4, 0xE0E5,
+	u8"\uE0E4", u8"\uE0E5",
 	//Back, Start, Guide
-	0xE0F2, 0xE0F1, 0xE0F4,
+	u8"\uE0F2", u8"\uE0F1", u8"\uE0F4",
 	//Thumbs
-	0xE101, 0xE102,
+	u8"\uE101", u8"\uE102",
 	//DPad
-	0xE0EB, 0xE0EE, 0xE0EC, 0xE0ED,
+	u8"\uE0EB", u8"\uE0EE", u8"\uE0EC", u8"\uE0ED",
 
 	/* Outlined:
 	//ABXY
-	0xE0A0, 0xE0A1, 0xE0A2, 0xE0A3,
+	u8"\uE0A0", u8"\uE0A1", u8"\uE0A2", u8"\uE0A3",
 	//Shoulders
-	0xE0A4, 0xE0A5,
+	u8"\uE0A4", u8"\uE0A5",
 	//Back, Start, Guide
-	0xE0B4, 0xE0B3, 0xE0B9,
+	u8"\uE0B4", u8"\uE0B3", u8"\uE0B9",
 	//Thumbs
-	0xE0C1, 0xE0C2,
+	u8"\uE0C1", u8"\uE0C2",
 	//DPad
-	0xE0AF, 0xE0B2, 0xE0B0, 0xE0B1,
+	u8"\uE0AF", u8"\uE0B2", u8"\uE0B0", u8"\uE0B1",
 	*/
 };
 constexpr int NumPUAMaps = sizeof(GamepadPUAMap) / sizeof(int);

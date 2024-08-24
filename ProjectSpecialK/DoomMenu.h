@@ -2,6 +2,7 @@
 
 #include "SpecialK.h"
 #include "InputsMap.h"
+#include "ButtonGuide.h"
 
 class DoomMenuPage;
 
@@ -87,6 +88,8 @@ private:
 
 	std::vector<Texture*> speciesPreviews;
 	std::string speciesText;
+
+	ButtonGuide buttonGuide;
 
 	void Build();
 

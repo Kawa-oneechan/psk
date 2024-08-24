@@ -234,6 +234,11 @@ void DoomMenu::Translate()
 {
 	speciesText = TextGet("menu:options:content:species:help");
 	options.Translate();
+
+	buttonGuide.SetButtons({
+		fmt::format(u8"!{} Disco", GamepadPUAMap[3]),
+		fmt::format(u8"{} Back", GamepadPUAMap[1]),
+	});
 }
 
 DoomMenu::DoomMenu()
@@ -611,18 +616,10 @@ void DoomMenu::Draw(float dt)
 		}
 		else if (item->type == DoomMenuItem::Type::KeyBind)
 		{
-			std::string gamepadThing;
 			auto key = Inputs.Keys[item->selection];
 			sprender->DrawText(1,key.Name, pos + glm::vec2(col, 0), color, size);
 			
-			if (key.GamepadButton == -1)
-				gamepadThing = "[none]";
-			else
-			{
-				gamepadThing.clear();
-				AppendChar(gamepadThing, GamepadPUAMap[key.GamepadButton]);
-			}
-			sprender->DrawText(1, gamepadThing, pos + glm::vec2(col * 2, 0), color, size);
+			sprender->DrawText(1, key.GamepadButton == -1 ? "[none]" : GamepadPUAMap[key.GamepadButton], pos + glm::vec2(col * 2, 0), color, size);
 		}
 
 		itemY.push_back(pos.y);
@@ -676,6 +673,8 @@ void DoomMenu::Draw(float dt)
 	{
 		sprender->DrawSprite(*speciesPreviews[highlight], glm::vec2((width * 0.5f) - (speciesPreviews[0]->width * 0.5f), (height * 0.5f) - (speciesPreviews[0]->height * 0.5f)));
 	}
+
+	buttonGuide.Draw();
 }
 
 bool DoomMenu::Scancode(unsigned int scancode)
