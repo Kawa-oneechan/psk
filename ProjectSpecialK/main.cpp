@@ -308,18 +308,36 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	else if (key == GLFW_KEY_Y)
 		lightPos.z += 0.5f;
 
-	if (key == GLFW_KEY_W)
-		camera.Position.z -= 0.5f; //camera.ProcessKeyboard(Camera::Movement::Forward, (mods == GLFW_MOD_SHIFT) ? 0.1f : 0.025f);
-	else if (key == GLFW_KEY_S)
-		camera.Position.z += 0.5f; //camera.ProcessKeyboard(Camera::Movement::Backward, (mods == GLFW_MOD_SHIFT) ? 0.1f : 0.025f);
-	else if (key == GLFW_KEY_A)
-		camera.Position.x -= 0.5f; //camera.ProcessKeyboard(Camera::Movement::Left, (mods == GLFW_MOD_SHIFT) ? 0.1f : 0.025f);
-	else if (key == GLFW_KEY_D)
-		camera.Position.x += 0.5f; //camera.ProcessKeyboard(Camera::Movement::Right, (mods == GLFW_MOD_SHIFT) ? 0.1f : 0.025f);
-	else if (key == GLFW_KEY_Q)
-		camera.Position.y -= 0.5f;
-	else if (key == GLFW_KEY_E)
-		camera.Position.y += 0.5f;
+	if (mods == 0)
+	{
+		if (key == GLFW_KEY_W)
+			camera.Position.z -= 0.5f; //camera.ProcessKeyboard(Camera::Movement::Forward, (mods == GLFW_MOD_SHIFT) ? 0.1f : 0.025f);
+		else if (key == GLFW_KEY_S)
+			camera.Position.z += 0.5f; //camera.ProcessKeyboard(Camera::Movement::Backward, (mods == GLFW_MOD_SHIFT) ? 0.1f : 0.025f);
+		else if (key == GLFW_KEY_A)
+			camera.Position.x -= 0.5f; //camera.ProcessKeyboard(Camera::Movement::Left, (mods == GLFW_MOD_SHIFT) ? 0.1f : 0.025f);
+		else if (key == GLFW_KEY_D)
+			camera.Position.x += 0.5f; //camera.ProcessKeyboard(Camera::Movement::Right, (mods == GLFW_MOD_SHIFT) ? 0.1f : 0.025f);
+		else if (key == GLFW_KEY_Q)
+			camera.Position.y -= 0.5f;
+		else if (key == GLFW_KEY_E)
+			camera.Position.y += 0.5f;
+	}
+	else if (mods == 1)
+	{
+		if (key == GLFW_KEY_W)
+			camera.Target.z -= 0.5f;
+		else if (key == GLFW_KEY_S)
+			camera.Target.z += 0.5f;
+		else if (key == GLFW_KEY_A)
+			camera.Target.x -= 0.5f;
+		else if (key == GLFW_KEY_D)
+			camera.Target.x += 0.5f;
+		else if (key == GLFW_KEY_Q)
+			camera.Target.y -= 0.5f;
+		else if (key == GLFW_KEY_E)
+			camera.Target.y += 0.5f;
+	}
 }
 
 void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
@@ -571,6 +589,9 @@ int main(int, char**)
 	bob->defaultOutfitID = "acnh:djkklogotee/neonpink";
 	bob->Manifest();
 
+	camera.Free = false;
+	camera.Target = glm::vec3(0);
+
 	int oldTime = 0;
 	while (!glfwWindowShouldClose(window))
 	{
@@ -617,9 +638,10 @@ int main(int, char**)
 		bob->Draw(dt * timeScale);
 		glDisable(GL_DEPTH_TEST);
 
-		sprender->DrawText(0, fmt::format("CAMERA\n------\nPos: {} {} {}\nPit/Yaw: {} {}\n\nLIGHT\n-----\nPos: {} {} {}",
+		sprender->DrawText(0, fmt::format("CAMERA\n------\nPos: {} {} {}\nPit/Yaw: {} {}\nTarget: {} {} {}\n\nLIGHT\n-----\nPos: {} {} {}",
 			camera.Position.x, camera.Position.y, camera.Position.z,
 			camera.Pitch, camera.Yaw,
+			camera.Target.x, camera.Target.y, camera.Target.z,
 			lightPos.x, lightPos.y, lightPos.z
 		), glm::vec2(8), glm::vec4(1, 1, 0, 1));
 

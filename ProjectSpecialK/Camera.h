@@ -22,6 +22,9 @@ public:
 	glm::vec3 Up;
 	glm::vec3 Right;
 	glm::vec3 WorldUp;
+	glm::vec3 Target;
+
+	bool Free = true;
 
 	float Yaw;
 	float Pitch;
@@ -50,7 +53,7 @@ public:
 
 	glm::mat4 GetViewMatrix()
 	{
-		return glm::lookAt(Position, Position + Front, Up);
+		return glm::lookAt(Position, Free ? (Position + Front) : Target, Up);
 	}
 
 	void ProcessKeyboard(Movement direction, float deltaTime)
