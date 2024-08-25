@@ -252,7 +252,7 @@ std::string GetDirFromFile(const std::string& path)
 	return path.substr(0, path.rfind('/') + 1);
 }
 
-extern "C" { __declspec(dllimport) const char* glfwGetKeyName(int key, int scancode); }
+extern "C" { const char* glfwGetKeyName(int key, int scancode); }
 std::string GetKeyName(int scancode)
 {
 	if (scancode == 1 || scancode == 14 || scancode == 15 || scancode == 28 || scancode == 57 ||

@@ -64,7 +64,6 @@ const std::string GamepadPUAMap[] =
 	u8"\uE0AF", u8"\uE0B2", u8"\uE0B0", u8"\uE0B1",
 	*/
 };
-constexpr int NumPUAMaps = sizeof(GamepadPUAMap) / sizeof(int);
 
 struct InputKey
 {

@@ -687,7 +687,6 @@ void DoomMenu::Draw(float dt)
 	for (int i = 0; i < shown; i++)
 	{
 		auto item = i == 0 ? items->items[0] : items->items[i + scroll];
-		const auto color = UI::themeColors["white"]; //(scroll + i == highlight) ? UI::themeColors["secondary"] : UI::themeColors["white"];
 		const auto offset = glm::vec2(item->type == DoomMenuItem::Type::Checkbox ? (40 * scale) : 0, 0);
 
 		pos.y = itemY[i];
@@ -700,6 +699,7 @@ void DoomMenu::Draw(float dt)
 		}
 		else if (item->type == DoomMenuItem::Type::Slider)
 		{
+			const auto color = UI::themeColors["white"];
 			auto barLength = col;
 			sprender->DrawSprite(controls, pos + glm::vec2(col, 10 * scale), glm::vec2(partSize), controls[0], 0, color);
 			sprender->DrawSprite(controls, pos + glm::vec2(col + barLength + (partSize * 1), 10 * scale), glm::vec2(partSize), controls[1], 0, color);

@@ -1,11 +1,9 @@
 #include "SpecialK.h"
 #include "Model.h"
-#include "Camera.h"
 #include "support/ufbx.h"
 
 static std::map<std::string, std::tuple<Model*, int>> cache;
 extern Shader* modelShader;
-extern Camera camera;
 
 Model::Mesh::Mesh(ufbx_mesh* mesh) : Texture(-1), Visible(true)
 {
@@ -122,7 +120,7 @@ const void Model::Mesh::Draw()
 	//glm::mat4 view = glm::mat4(1.0f);
 	// note that we're translating the scene in the reverse direction of where we want to move
 	//view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
-	auto view = camera.GetViewMatrix();
+	auto view = MainCamera.GetViewMatrix();
 
 	//ourShader.setMat4("model", model);
 	modelShader->SetMat4("view", view);

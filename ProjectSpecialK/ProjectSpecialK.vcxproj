@@ -141,6 +141,7 @@
     <ClCompile Include="Audio.cpp" />
     <ClCompile Include="Background.cpp" />
     <ClCompile Include="ButtonGuide.cpp" />
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Console.cpp" />
     <ClCompile Include="Cursor.cpp" />
     <ClCompile Include="Database.cpp" />

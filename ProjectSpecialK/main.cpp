@@ -32,8 +32,8 @@ constexpr int WindowHeight = 1080; //720
 extern "C"
 {
 	//why bother including windows headers lol
-	_declspec(dllimport) int __stdcall MessageBoxW(_In_opt_ void* hWnd, _In_opt_ const wchar_t* lpText, _In_opt_ const wchar_t* lpCaption, _In_ unsigned int uType);
-	_declspec(dllimport) int __stdcall MultiByteToWideChar(_In_ unsigned int CodePage, _In_ unsigned long dwFlags, const char* lpMultiByteStr, _In_ int cbMultiByte, wchar_t* lpWideCharStr, _In_ int cchWideChar);
+	int __stdcall MessageBoxW(_In_opt_ void* hWnd, _In_opt_ const wchar_t* lpText, _In_opt_ const wchar_t* lpCaption, _In_ unsigned int uType);
+	int __stdcall MultiByteToWideChar(_In_ unsigned int CodePage, _In_ unsigned long dwFlags, const char* lpMultiByteStr, _In_ int cbMultiByte, wchar_t* lpWideCharStr, _In_ int cchWideChar);
 }
 
 GLFWwindow* window;
@@ -41,7 +41,7 @@ GLFWwindow* window;
 Shader* spriteShader = nullptr;
 Shader* modelShader = nullptr;
 Texture* whiteRect = nullptr;
-Camera camera(glm::vec3(0.0f, 5.0f, 50.0f));
+//Camera camera(glm::vec3(0.0f, 5.0f, 50.0f));
 SpriteRenderer* sprender = nullptr;
 DialogueBox* dlgBox = nullptr;
 CursorP cursor = nullptr;
@@ -311,32 +311,32 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	if (mods == 0)
 	{
 		if (key == GLFW_KEY_W)
-			camera.Position.z -= 0.5f; //camera.ProcessKeyboard(Camera::Movement::Forward, (mods == GLFW_MOD_SHIFT) ? 0.1f : 0.025f);
+			MainCamera.Position.z -= 0.5f;
 		else if (key == GLFW_KEY_S)
-			camera.Position.z += 0.5f; //camera.ProcessKeyboard(Camera::Movement::Backward, (mods == GLFW_MOD_SHIFT) ? 0.1f : 0.025f);
+			MainCamera.Position.z += 0.5f;
 		else if (key == GLFW_KEY_A)
-			camera.Position.x -= 0.5f; //camera.ProcessKeyboard(Camera::Movement::Left, (mods == GLFW_MOD_SHIFT) ? 0.1f : 0.025f);
+			MainCamera.Position.x -= 0.5f;
 		else if (key == GLFW_KEY_D)
-			camera.Position.x += 0.5f; //camera.ProcessKeyboard(Camera::Movement::Right, (mods == GLFW_MOD_SHIFT) ? 0.1f : 0.025f);
+			MainCamera.Position.x += 0.5f;
 		else if (key == GLFW_KEY_Q)
-			camera.Position.y -= 0.5f;
+			MainCamera.Position.y -= 0.5f;
 		else if (key == GLFW_KEY_E)
-			camera.Position.y += 0.5f;
+			MainCamera.Position.y += 0.5f;
 	}
 	else if (mods == 1)
 	{
 		if (key == GLFW_KEY_W)
-			camera.Target.z -= 0.5f;
+			MainCamera.Target.z -= 0.5f;
 		else if (key == GLFW_KEY_S)
-			camera.Target.z += 0.5f;
+			MainCamera.Target.z += 0.5f;
 		else if (key == GLFW_KEY_A)
-			camera.Target.x -= 0.5f;
+			MainCamera.Target.x -= 0.5f;
 		else if (key == GLFW_KEY_D)
-			camera.Target.x += 0.5f;
+			MainCamera.Target.x += 0.5f;
 		else if (key == GLFW_KEY_Q)
-			camera.Target.y -= 0.5f;
+			MainCamera.Target.y -= 0.5f;
 		else if (key == GLFW_KEY_E)
-			camera.Target.y += 0.5f;
+			MainCamera.Target.y += 0.5f;
 	}
 }
 
@@ -362,7 +362,7 @@ void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
 	lastY = ypos;
 
 	if (Inputs.MouseHoldMiddle)
-		camera.ProcessMouseMovement(xoffset, yoffset);
+		MainCamera.ProcessMouseMovement(xoffset, yoffset);
 }
 
 void mousebutton_callback(GLFWwindow* window, int button, int action, int mods)
@@ -578,7 +578,7 @@ int main(int, char**)
 	modelShader->SetVec3("lights[0].color", 1.0f, 1.0f, 1.0f);
 	modelShader->SetVec3("lights[0].pos", lightPos);
 	modelShader->SetFloat("lights[0].strength", 0.25f);
-	modelShader->SetVec3("viewPos", camera.Position);
+	modelShader->SetVec3("viewPos", MainCamera.Position);
 	modelShader->SetInt("albedoTexture", 0);
 	modelShader->SetInt("normalTexture", 1);
 	modelShader->SetInt("mixTexture", 2);
@@ -589,8 +589,9 @@ int main(int, char**)
 	bob->defaultOutfitID = "acnh:djkklogotee/neonpink";
 	bob->Manifest();
 
-	camera.Free = false;
-	camera.Target = glm::vec3(0);
+	MainCamera.Setup(glm::vec3(0.0f, 5.0f, 50.0f));
+	MainCamera.Free = false;
+	MainCamera.Target = glm::vec3(0);
 
 	int oldTime = 0;
 	while (!glfwWindowShouldClose(window))
@@ -639,9 +640,9 @@ int main(int, char**)
 		glDisable(GL_DEPTH_TEST);
 
 		sprender->DrawText(0, fmt::format("CAMERA\n------\nPos: {} {} {}\nPit/Yaw: {} {}\nTarget: {} {} {}\n\nLIGHT\n-----\nPos: {} {} {}",
-			camera.Position.x, camera.Position.y, camera.Position.z,
-			camera.Pitch, camera.Yaw,
-			camera.Target.x, camera.Target.y, camera.Target.z,
+			MainCamera.Position.x, MainCamera.Position.y, MainCamera.Position.z,
+			MainCamera.Pitch, MainCamera.Yaw,
+			MainCamera.Target.x, MainCamera.Target.y, MainCamera.Target.z,
 			lightPos.x, lightPos.y, lightPos.z
 		), glm::vec2(8), glm::vec4(1, 1, 0, 1));
 
