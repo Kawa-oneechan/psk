@@ -6,6 +6,7 @@ static constexpr auto margin = 32.0f;
 void ButtonGuide::SetButtons(std::initializer_list<std::string> labels)
 {
 	texts.clear();
+	widths.clear();
 	highlight = -1;
 	left = width;
 	for (auto l : labels)
@@ -31,7 +32,7 @@ void ButtonGuide::Draw()
 	auto pillSize = glm::vec2(pillWidth, pillHeight);
 	std::vector<glm::vec2> lefts;
 
-	auto pos = glm::vec2(left - pillWidth, height - margin - pillHeight);
+	auto pos = glm::vec2(left, height - margin - pillHeight);
 
 	for (int i = 0; i < texts.size(); i++)
 	{

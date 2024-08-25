@@ -234,11 +234,54 @@ void DoomMenu::Translate()
 {
 	speciesText = TextGet("menu:options:content:species:help");
 	options.Translate();
+}
 
-	buttonGuide.SetButtons({
-		fmt::format(u8"!{} Disco", GamepadPUAMap[3]),
-		fmt::format(u8"{} Back", GamepadPUAMap[1]),
-	});
+void DoomMenu::UpdateButtonGuide()
+{
+	switch(items->items[highlight]->type)
+	{
+	case DoomMenuItem::Type::KeyBind:
+		buttonGuide.SetButtons({
+			fmt::format(u8"!{} Assign", GamepadPUAMap[Inputs.Keys[(int)Binds::Accept].GamepadButton]),
+			fmt::format(u8"{} Back", GamepadPUAMap[Inputs.Keys[(int)Binds::Back].GamepadButton]),
+		});
+		break;
+	case DoomMenuItem::Type::Action:
+		buttonGuide.SetButtons({
+			fmt::format(u8"!{} Activate", GamepadPUAMap[Inputs.Keys[(int)Binds::Accept].GamepadButton]),
+			fmt::format(u8"{} Back", GamepadPUAMap[Inputs.Keys[(int)Binds::Back].GamepadButton]),
+		});
+		break;
+	case DoomMenuItem::Type::Options:
+		buttonGuide.SetButtons({
+			fmt::format(u8"!{} {} Advance", GamepadPUAMap[Inputs.Keys[(int)Binds::Accept].GamepadButton], GamepadPUAMap[Inputs.Keys[(int)Binds::Right].GamepadButton]),
+			fmt::format(u8"{} Previous", GamepadPUAMap[Inputs.Keys[(int)Binds::Left].GamepadButton]),
+			fmt::format(u8"{} Back", GamepadPUAMap[Inputs.Keys[(int)Binds::Back].GamepadButton]),
+		});
+		break;
+	case DoomMenuItem::Type::Slider:
+		buttonGuide.SetButtons({
+			fmt::format(u8"{} {} Change", GamepadPUAMap[Inputs.Keys[(int)Binds::Left].GamepadButton], GamepadPUAMap[Inputs.Keys[(int)Binds::Right].GamepadButton]),
+			fmt::format(u8"{} Back", GamepadPUAMap[Inputs.Keys[(int)Binds::Back].GamepadButton]),
+		});
+		break;
+	case DoomMenuItem::Type::Checkbox:
+		buttonGuide.SetButtons({
+			fmt::format(u8"!{} Toggle", GamepadPUAMap[Inputs.Keys[(int)Binds::Accept].GamepadButton]),
+			fmt::format(u8"{} Back", GamepadPUAMap[Inputs.Keys[(int)Binds::Back].GamepadButton]),
+		});
+		break;
+	case DoomMenuItem::Type::Page:
+		buttonGuide.SetButtons({
+			fmt::format(u8"!{} Go", GamepadPUAMap[Inputs.Keys[(int)Binds::Accept].GamepadButton]),
+			fmt::format(u8"{} Back", GamepadPUAMap[Inputs.Keys[(int)Binds::Back].GamepadButton]),
+		});
+		break;
+	default:
+		buttonGuide.SetButtons({
+			fmt::format(u8"{} Back", GamepadPUAMap[(int)Binds::Back]),
+		});
+	}
 }
 
 DoomMenu::DoomMenu()
@@ -254,6 +297,8 @@ DoomMenu::DoomMenu()
 		if (!s->FilterAs.empty()) continue;
 		speciesPreviews.push_back(new Texture("ui/species/" + s->ID + ".png"));
 	}
+
+	UpdateButtonGuide();
 }
 
 void DoomMenu::Tick(float dt)
@@ -381,6 +426,7 @@ void DoomMenu::Tick(float dt)
 			scroll = 0;
 			highlight = 0;
 		}
+		UpdateButtonGuide();
 	}
 	else if (Inputs.KeyDown(Binds::Down))
 	{
@@ -393,6 +439,7 @@ void DoomMenu::Tick(float dt)
 			highlight = 0;
 			scroll = 0;
 		}
+		UpdateButtonGuide();
 	}
 
 	if (highlight == -1)
@@ -411,6 +458,7 @@ void DoomMenu::Tick(float dt)
 			mouseHighlight = -1;
 			Inputs.Clear(true);
 			justSwitchedPage = true;
+			UpdateButtonGuide();
 		}
 	}
 	else if (item->type == DoomMenuItem::Type::Action)
@@ -450,7 +498,7 @@ void DoomMenu::Tick(float dt)
 			Inputs.Keys[(int)Binds::Right].State = true;
 			Inputs.MouseLeft = false;
 		}
-		if (Inputs.KeyDown(Binds::Accept))
+		if (Inputs.KeyDown(Binds::Left))
 		{
 			Inputs.Clear();
 			if (item->selection == 0) item->selection = (int)item->options.size();
@@ -503,6 +551,8 @@ void DoomMenu::Tick(float dt)
 			mouseHighlight = -1;
 			stack.pop();
 			items = stack.top();
+			justSwitchedPage = true;
+			UpdateButtonGuide();
 			return;
 		}
 	}

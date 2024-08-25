@@ -92,6 +92,7 @@ private:
 	ButtonGuide buttonGuide;
 
 	void Build();
+	void UpdateButtonGuide();
 
 public:
 	DoomMenu();
