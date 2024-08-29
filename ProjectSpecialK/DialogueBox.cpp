@@ -142,11 +142,37 @@ DialogueBox::DialogueBox()
 	wobble.SetInt("gradient1", 1);
 	wobble.SetInt("gradient2", 2);
 
+	auto extensions = VFS::ReadJSON("msbt/content.json");
+	if (extensions)
+	{
+		for (auto extension : extensions->AsObject())
+		{
+			if (!extension.second->IsString())
+			{
+				conprint(2, "MSBT extension {} is not a string.", extension.first);
+				continue;
+			}
+			auto val = extension.second->AsString();
+			if (val.length() < 4 || val.substr(val.length() - 4) != ".lua")
+			{
+				//This is a raw string. Convert it to a Lua thing.
+				//TODO: escape.
+				val = fmt::format("return \"{}\"\r\n", val);
+			}
+			else
+			{
+				val = VFS::ReadString(fmt::format("msbt/{}", val));
+			}
+			msbtPhase1X[extension.first] = val;
+		}
+	}
+
 	//Text(u8"Truth is... <color:1>the game</color> was rigged\nfrom the start.", 0, "Isabelle", glm::vec4(1, 0.98f, 0.56f, 1), glm::vec4(0.96f, 0.67f, 0.05f, 1));
 	//Text(u8"Truth is... <color:1>the game</color> was rigged from the start.",
 	//Text("Are you <color:3><str:player></color>? <delay:1000>Hiii! Welcome to <color:2>Project Special K</color>!",
-	Text(TextGet("dlg:sza:wack"),
-		Database::Find<Villager>("psk:cat00", villagers));
+	//Text(TextGet("dlg:sza:wack"),
+	//	Database::Find<Villager>("psk:cat00", villagers));
+	Text("MSBT JSON/Lua test:\n<test1>\n<test2>", 3);
 
 	//Text("I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I", 0);
 	//Text("IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII", 0);
@@ -166,10 +192,24 @@ void DialogueBox::Preprocess()
 			auto msbtWhole = toDisplay.substr(msbtStart, msbtEnd - msbtStart);
 			auto msbt = Split(msbtWhole, ':');
 			auto func = msbtPhase1.find(msbt[0]);
+			auto start = (int)msbtStart - 1;
+			auto len = (int)(msbtEnd - msbtStart) + 2;
 			if (func != msbtPhase1.end())
 			{
-				std::invoke(func->second, this, msbt, (int)msbtStart - 1, (int)(msbtEnd - msbtStart) + 2);
+				std::invoke(func->second, this, msbt, start, len);
 				i = msbtStart; //-1 because we may have subbed in a new tag.
+			}
+			else
+			{
+				//Is it an extension?
+				auto func2 = msbtPhase1X.find(msbt[0]);
+				if (func2 != msbtPhase1X.end())
+				{
+					//TODO: allow passing arguments
+					Sol.set("msbt", msbt);
+					toDisplay.replace(start, len, Sol.script(func2->second).get<std::string>());
+					i = msbtStart;
+				}
 			}
 		}
 	}

@@ -35,8 +35,6 @@ private:
 
 	float delay{ 0 };
 
-	//std::shared_ptr<Audio> bebebese{ std::make_shared<Audio>("sound/voices/base/Voice_Monology.wav") };
-
 	enum class State
 	{
 		Opening, Writing, WaitingForKey, Closing, Done
@@ -52,6 +50,7 @@ private:
 		{ "str", &DialogueBox::msbtStr },
 		{ "...", &DialogueBox::msbtEllipses },
 	};
+	std::map<std::string, std::string> msbtPhase1X;
 
 	void msbtDelay(MSBTParams);
 	void msbtEmote(MSBTParams);
