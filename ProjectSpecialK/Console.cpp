@@ -119,6 +119,54 @@ bool Console::Character(unsigned int codepoint)
 
 bool Console::Scancode(unsigned int scancode)
 {
+	if (scancode == 28) //enter
+	{
+		if (history.size() == 0 || history.back() != inputLine->value)
+			history.emplace_back(inputLine->value);
+		historyCursor = 0;
+		Execute(inputLine->value);
+		inputLine->Clear();
+		return true;
+	}
+	else if (scancode == 328) //up
+	{
+		if (historyCursor < history.size())
+		{
+			historyCursor++;
+			inputLine->Set(history[history.size() - historyCursor]);
+		}
+	}
+	else if (scancode == 336) //down
+	{
+		if (historyCursor > 1)
+		{
+			historyCursor--;
+			inputLine->Set(history[history.size() - historyCursor]);
+		}
+		else
+		{
+			historyCursor = 0;
+			inputLine->Clear();
+		}
+	}
+	else if (scancode == 329) //pageup
+	{
+		if (scrollCursor < buffer.size())
+		{
+			scrollCursor += 5;
+			if (scrollCursor >= buffer.size())
+				scrollCursor = (int)buffer.size() - 1;
+		}
+	}
+	else if (scancode == 337) //pagedown
+	{
+		if (scrollCursor > 0)
+		{
+			scrollCursor -= 5;
+			if (scrollCursor < 0)
+				scrollCursor = 0;
+		}
+	}
 	return inputLine->Scancode(scancode);
 }
 
@@ -156,58 +204,6 @@ void Console::Tick(float dt)
 	}
 	timer = clamp(timer, 0.0f, 1.0f);
 
-	if (Inputs.KeyDown(Binds::Accept))
-	{
-		Inputs.Clear(Binds::Accept);
-		if (history.size() == 0 || history.back() != inputLine->value)
-			history.emplace_back(inputLine->value);
-		historyCursor = 0;
-		Execute(inputLine->value);
-		inputLine->Clear();
-	}
-	else if (Inputs.KeyDown(Binds::Up))
-	{
-		Inputs.Clear(Binds::Up);
-		if (historyCursor < history.size())
-		{
-			historyCursor++;
-			inputLine->Set(history[history.size() - historyCursor]);
-		}
-	}
-	else if (Inputs.KeyDown(Binds::Down))
-	{
-		Inputs.Clear(Binds::Down);
-		if (historyCursor > 1)
-		{
-			historyCursor--;
-			inputLine->Set(history[history.size() - historyCursor]);
-		}
-		else
-		{
-			historyCursor = 0;
-			inputLine->Clear();
-		}
-	}
-	else if (Inputs.KeyDown(Binds::PageUp))
-	{
-		Inputs.Clear(Binds::PageUp);
-		if (scrollCursor < buffer.size())
-		{
-			scrollCursor += 5;
-			if (scrollCursor >= buffer.size())
-				scrollCursor = (int)buffer.size() - 1;
-		}
-	}
-	else if (Inputs.KeyDown(Binds::PageDown))
-	{
-		Inputs.Clear(Binds::PageDown);
-		if (scrollCursor > 0)
-		{
-			scrollCursor -= 5;
-			if (scrollCursor < 0)
-				scrollCursor = 0;
-		}
-	}
 	inputLine->Tick(dt);
 }
 

@@ -269,7 +269,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		return;
 	}
 
-	if (console->visible)
+	if (console->visible && action == GLFW_PRESS)
 	{
 		console->Scancode(scancode);
 		return;
@@ -568,11 +568,11 @@ int main(int, char**)
 	//auto logoAnim = new PanelLayout(logoJson["logoPanels"]);
 	//tickables.push_back(logoAnim);
 	dlgBox = new DialogueBox();
-	//tickables.push_back(dlgBox);
+	tickables.push_back(dlgBox);
 
 	//tickables.push_back(new TextField());
 
-	//RunTests();
+	RunTests();
 
 	modelShader->Use();
 	modelShader->SetVec3("lights[0].color", 1.0f, 1.0f, 1.0f);
