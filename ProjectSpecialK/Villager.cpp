@@ -294,13 +294,12 @@ void Villager::PickOutfit()
 {
 	if (!memory)
 	{
-		conprint(2, "Tried to pick outfit for unmanifested villager {}.", EnName);
-		return;
+		conprint(2, "Tried to pick outfit for unmanifested villager {}. Choosing default {}.", EnName, defaultOutfitID);
 	}
 
 	DeleteAllThings();
 
-	if (memory->Outfits.size() > 0 && std::rand() % 100 > 25)
+	if (memory && memory->Outfits.size() > 0 && std::rand() % 100 > 25)
 	{
 		if (memory->Outfits.size() == 1)
 		{

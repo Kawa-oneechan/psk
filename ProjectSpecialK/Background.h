@@ -11,5 +11,6 @@ private:
 	const float timeScale{ 0.005f };
 
 public:
+	glm::vec2 Speed{ 0.1f, -0.1f };
 	void Draw(float dt);
 };

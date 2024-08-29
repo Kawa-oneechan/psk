@@ -24,6 +24,9 @@ void TestVillagerGetting()
 	farrah->Manifest();
 	conprint(0, "Current outfit: {}", farrah->Outfit->FullName());
 	farrah->Depart();
+
+	//Deliberately fail. Should pick the default outfit.
+	farrah->PickOutfit();
 }
 
 void TestInventorySystems()
@@ -106,13 +109,11 @@ tm* GetNthWeekdayOfMonth(int month, int dayOfWeek, int howManyth)
 
 void RunTests()
 {
-	/*
 	//test texture re-use
 	auto textureCacheTest = Texture("ui/panels.png");
 
 	TestInventorySystems();
 	TestVillagerGetting();
-	*/
 
 	char ascTime[256] = { 0 };
 	auto thanksGiving = GetNthWeekdayOfMonth(10, 4, 4);
