@@ -23,17 +23,6 @@ namespace Database
 	template<typename T>
 	std::shared_ptr<T> Find(const std::string& target, std::vector<std::shared_ptr<T>>& source)
 	{
-#if 0
-		for (int i = 0; i < source.size(); i++)
-		{
-			auto v = source.at(i);
-			if (v->ID == target)
-			{
-				return v;
-			}
-		}
-		return nullptr;
-#else
 		auto it = std::find_if(source.begin(), source.end(), [&](std::shared_ptr<T> v)
 		{
 			return v->ID == target;
@@ -41,24 +30,12 @@ namespace Database
 		if (it == source.end())
 			return nullptr;
 		return *it;
-#endif
 	}
 
 	//Find a database entry by CRC32 hash.
 	template<typename T>
 	std::shared_ptr<T> Find(unsigned int hash, std::vector<std::shared_ptr<T>>& source)
 	{
-#if 0
-		for (int i = 0; i < source.size(); i++)
-		{
-			auto v = source.at(i);
-			if (v->Hash == hash)
-			{
-				return v;
-			}
-		}
-		return nullptr;
-#else
 		auto it = std::find_if(source.begin(), source.end(), [&](std::shared_ptr<T> v)
 		{
 			return v->Hash == hash;
@@ -66,7 +43,6 @@ namespace Database
 		if (it == source.end())
 			return nullptr;
 		return *it;
-#endif
 	}
 
 	//Find a database entry from a JSONValue. If it's an array of strings, tries each.

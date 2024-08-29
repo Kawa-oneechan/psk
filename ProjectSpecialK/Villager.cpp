@@ -17,7 +17,7 @@ Villager::Villager(JSONObject& value, const std::string& filename) : NameableThi
 		_species = Database::Find<::Species>(sp, species);
 		if (!_species)
 			throw std::runtime_error(fmt::format("Unknown species {} while loading {}.", sp->Stringify(), ID));
-		RefSpecies = fmt::format("species:{}", _species->ID);
+		RefSpecies = fmt::format("name:{}", _species->ID);
 		StringToLower(RefSpecies);
 	}
 	_model = nullptr;
@@ -190,29 +190,39 @@ std::string Villager::Birthday()
 
 std::string Villager::Catchphrase()
 {
-	if (_customCatchphrase.length())
-		return _customCatchphrase;
+	if (memory && !memory->_customCatchphrase.empty())
+		return memory->_customCatchphrase;
 	return TextGet(RefCatchphrase);
 }
 
 std::string Villager::Catchphrase(std::string& newPhrase)
 {
-	const auto oldPhrase = std::string(_customCatchphrase);
-	_customCatchphrase = newPhrase;
+	if (!memory)
+	{
+		conprint(2, "Tried to set catchphrase for unmanifested villager {}.", EnName);
+		return "burp";
+	}
+	const auto oldPhrase = std::string(memory->_customCatchphrase);
+	memory->_customCatchphrase = newPhrase;
 	return oldPhrase;
 }
 
 std::string Villager::Nickname()
 {
-	if (_customNickname.length())
-		return _customNickname;
+	if (memory && !memory->_customNickname.empty())
+		return memory->_customNickname;
 	return thePlayer.Name;
 }
 
 std::string Villager::Nickname(std::string& newNickname)
 {
-	const auto oldNickname = std::string(_customNickname);
-	_customNickname = newNickname;
+	if (!memory)
+	{
+		conprint(2, "Tried to set nickanme for unmanifested villager {}.", EnName);
+		return "Bob";
+	}
+	const auto oldNickname = std::string(memory->_customNickname);
+	memory->_customNickname = newNickname;
 	return oldNickname;
 }
 
@@ -250,6 +260,10 @@ void Villager::Draw(double)
 
 void Villager::Manifest()
 {
+	memory = std::make_shared<VillagerMemory>();
+	//TODO: grab memories from savegame (can't use VFS here)
+	//using Deserialize.
+
 	PickOutfit();
 }
 
@@ -270,22 +284,32 @@ void Villager::DeleteAllThings()
 void Villager::Depart()
 {
 	DeleteAllThings();
+
+	//TODO: store memories to savegame (can't use VFS here)
+	//using Serialize.
+	memory.reset();
 }
 
 void Villager::PickOutfit()
 {
+	if (!memory)
+	{
+		conprint(2, "Tried to pick outfit for unmanifested villager {}.", EnName);
+		return;
+	}
+
 	DeleteAllThings();
 
-	if (Outfits.size() > 0 && std::rand() % 100 > 25)
+	if (memory->Outfits.size() > 0 && std::rand() % 100 > 25)
 	{
-		if (Outfits.size() == 1)
+		if (memory->Outfits.size() == 1)
 		{
-			Outfit = Outfits[0];
+			Outfit = memory->Outfits[0];
 			Outfit->Temporary = false; //just to be sure.
 		}
 		else
 		{
-			for (const auto& i : Outfits)
+			for (const auto& i : memory->Outfits)
 			{
 				if (std::rand() % 100 > 25)
 				{
@@ -311,11 +335,17 @@ void Villager::PickOutfit()
 
 bool Villager::GiveItem(InventoryItemP item)
 {
-	auto target = &Items;
+	if (!memory)
+	{
+		conprint(2, "Tried to give item to unmanifested villager {}.", EnName);
+		return false;
+	}
+
+	auto target = &memory->Items;
 	auto max = _maxFurnitureItems;
 	if (item->IsOutfit())
 	{
-		target = &Outfits;
+		target = &memory->Outfits;
 		max = _maxOutfits;
 	}
 	if (target->size() == max)
@@ -326,16 +356,22 @@ bool Villager::GiveItem(InventoryItemP item)
 
 void Villager::Serialize(JSONObject& target)
 {
+	if (!memory)
+	{
+		conprint(2, "Tried to serialize unmanifested villager {}.", EnName);
+		return;
+	}
+
 	target["id"] = new JSONValue(ID);
-	target["catchphrase"] = new JSONValue(_customCatchphrase);
+	target["catchphrase"] = new JSONValue(memory->_customCatchphrase);
 	auto items = JSONArray();
-	for (const auto& i : Items)
+	for (const auto& i : memory->Items)
 	{
 		items.push_back(new JSONValue(i->FullID()));
 	}
 	target["items"] = new JSONValue(items);
 	auto outfits = JSONArray();
-	for (const auto& i : Outfits)
+	for (const auto& i : memory->Outfits)
 	{
 		outfits.push_back(new JSONValue(i->FullID()));
 	}
@@ -347,17 +383,23 @@ void Villager::Deserialize(JSONObject& source)
 	//ID is used to determine *which* Villager to deserialize *to*.
 	//Still, we might do a sanity check?
 
-	_customCatchphrase = source["catchphrase"]->AsString();
+	if (!memory)
+	{
+		conprint(2, "Tried to deserialize unmanifested villager {}.", EnName);
+		return;
+	}
+
+	memory->_customCatchphrase = source["catchphrase"]->AsString();
 	auto items = source["items"]->AsArray();
-	Items.clear();
+	memory->Items.clear();
 	for (const auto& i : items)
 	{
-		Items.push_back(std::make_shared<InventoryItem>(i->AsString()));
+		memory->Items.push_back(std::make_shared<InventoryItem>(i->AsString()));
 	}
 	auto outfits = source["outfits"]->AsArray();
-	Outfits.clear();
+	memory->Outfits.clear();
 	for (const auto& i : outfits)
 	{
-		Outfits.push_back(std::make_shared<InventoryItem>(i->AsString()));
+		memory->Outfits.push_back(std::make_shared<InventoryItem>(i->AsString()));
 	}
 }

@@ -19,6 +19,21 @@ House stuff, exterior:
 * Player?
 */
 
+class VillagerMemory
+{
+public:
+	std::string _customCatchphrase;
+	std::string _customNickname;
+
+	unsigned char _flags[255]{ 0 };
+	unsigned char _memories[255]{ 0 };
+
+	std::vector<InventoryItemP> Items;
+	std::vector<InventoryItemP> Outfits;
+};
+
+using VillagerMemoryP = std::shared_ptr<VillagerMemory>;
+
 class Villager : public NameableThing, Tickable
 {
 private:
@@ -27,17 +42,15 @@ private:
 	SpeciesP _species{ nullptr };
 	bool _customModel{ false };
 	bool _isSpecial{ false };
-	std::string _customCatchphrase;
-	std::string _customNickname;
 	Gender gender{ Gender::BEnby };
 	unsigned int _birthday[2]{ 1, 1 };
-	unsigned char _flags[255]{ 0 };
-	unsigned char _memories[255]{ 0 };
 
 	static const int _maxFurnitureItems = 8 * 4;
 	static const int _maxOutfits = 8 * 3;
 
 	std::array<Texture*, 16> Textures;
+
+	VillagerMemoryP memory;
 
 	void DeleteAllThings();
 
@@ -62,9 +75,6 @@ public:
 	InventoryItemP Glasses{ nullptr };
 	InventoryItemP Mask{ nullptr };
 	InventoryItemP Outfit{ nullptr };
-
-	std::vector<InventoryItemP> Items;
-	std::vector<InventoryItemP> Outfits;
 
 	Villager(JSONObject& value, const std::string& filename = "");
 	std::string Name();
