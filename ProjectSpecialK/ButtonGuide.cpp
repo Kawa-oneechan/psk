@@ -17,7 +17,7 @@ void ButtonGuide::SetButtons(std::initializer_list<std::string> labels)
 			l = l.substr(1);
 		}
 		texts.push_back(l);
-		auto width = (Sprend.MeasureText(1, l, 100.0f).x + padding);
+		auto width = (sprender.MeasureText(1, l, 100.0f).x + padding);
 		widths.push_back(width);
 		left -= width + (margin / 2);
 	}
@@ -38,17 +38,17 @@ void ButtonGuide::Draw()
 	{
 		lefts.push_back(pos);
 		const auto color = i == highlight ? UI::themeColors["keybarh"] : UI::themeColors["keybar"];
-		Sprend.DrawSprite(controls, pos, pillSize, controls[7], 0, color);
+		sprender.DrawSprite(controls, pos, pillSize, controls[7], 0, color);
 		pos.x += pillWidth;
-		Sprend.DrawSprite(controls, pos, glm::vec2(widths[i] - (pillWidth * 1.5f), pillHeight), controls[9], 0, color);
+		sprender.DrawSprite(controls, pos, glm::vec2(widths[i] - (pillWidth * 1.5f), pillHeight), controls[9], 0, color);
 		pos.x += widths[i] - (pillWidth * 1.5f);
-		Sprend.DrawSprite(controls, pos, pillSize, controls[8], 0, color);
+		sprender.DrawSprite(controls, pos, pillSize, controls[8], 0, color);
 		pos.x += margin / 1.5f;
 	}
 
 	for (int i = 0; i < texts.size(); i++)
 	{
 		pos = lefts[i] + glm::vec2(18 * s, 9 * s);
-		Sprend.DrawText(1, texts[i], pos, i == highlight ? UI::themeColors["keybarhf"] : UI::themeColors["keybarf"], 90.0f * scale);
+		sprender.DrawText(1, texts[i], pos, i == highlight ? UI::themeColors["keybarhf"] : UI::themeColors["keybarf"], 90.0f * scale);
 	}
 }

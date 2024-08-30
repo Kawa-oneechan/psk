@@ -186,4 +186,4 @@ void SpriteRenderer::DrawLine(const glm::vec2& from, const glm::vec2& to, const 
 	DrawSprite(*whiteRect, from, glm::vec2(len, 1), glm::vec4(0), a, color, SpriteFlags::TopLeft);
 }
 
-SpriteRenderer Sprend;
+SpriteRenderer sprender;

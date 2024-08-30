@@ -230,17 +230,17 @@ void Console::Draw(float dt)
 	if (appearState != 0)
 		offset.y += glm::mix(-h, 0.0f, glm::linearInterpolation(timer));
 
-	Sprend.DrawSprite(*whiteRect, offset, glm::vec2(width, h), glm::vec4(0), 0, glm::vec4(0, 0, 0, 0.8));
+	sprender.DrawSprite(*whiteRect, offset, glm::vec2(width, h), glm::vec4(0), 0, glm::vec4(0, 0, 0, 0.8));
 
 	auto pos = offset + glm::vec2(4, h - 42);
 	for (unsigned int i = (unsigned int)buffer.size() - scrollCursor, lines = 21; i-- > 0 && lines-- > 0;)
 	{
-		Sprend.DrawText(0, buffer[i].second, pos, colors[buffer[i].first], 100.0f, 0, true);
+		sprender.DrawText(0, buffer[i].second, pos, colors[buffer[i].first], 100.0f, 0, true);
 		pos.y -= 15;
 	}
 
 	inputLine->rect = glm::vec4(16, offset.y + (h - 24), width - 8, offset.y + (h - 24) + 20);
-	Sprend.DrawText(0, "]", glm::vec2(4, inputLine->rect.y));
+	sprender.DrawText(0, "]", glm::vec2(4, inputLine->rect.y));
 	inputLine->Draw(dt);
 }
 
