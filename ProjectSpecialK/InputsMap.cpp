@@ -88,5 +88,5 @@ bool InputsMap::KeyDown(Binds bind)
 	return Keys[(int)bind].State;
 }
 
-InputsMap Inputs = InputsMap();
+InputsMap Inputs;
 

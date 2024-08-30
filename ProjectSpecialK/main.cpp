@@ -42,7 +42,6 @@ Shader* spriteShader = nullptr;
 Shader* modelShader = nullptr;
 Texture* whiteRect = nullptr;
 //Camera camera(glm::vec3(0.0f, 5.0f, 50.0f));
-SpriteRenderer* sprender = nullptr;
 DialogueBox* dlgBox = nullptr;
 CursorP cursor = nullptr;
 Console* console = nullptr;
@@ -435,14 +434,14 @@ void ThreadedLoader(std::function<void(float*)> loader)
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		sprender->DrawSprite(loadIcon, loadPos, glm::vec2(128), glm::vec4(0), sinf(time) * glm::radians(1000.0f));
+		Sprend.DrawSprite(loadIcon, loadPos, glm::vec2(128), glm::vec4(0), sinf(time) * glm::radians(1000.0f));
 
-		sprender->DrawSprite(*whiteRect, glm::vec2(barLeft - 1, barTop - 1), glm::vec2(barWidth + 2, barHeight + 2), glm::vec4(0), 0.0f, glm::vec4(1, 1, 1, 1));
-		sprender->DrawSprite(*whiteRect, glm::vec2(barLeft, barTop), glm::vec2(barWidth, barHeight), glm::vec4(0), 0.0f, glm::vec4(0.25, 0.25, 0.25, 1));
-		sprender->DrawSprite(*whiteRect, glm::vec2(barLeft, barTop), glm::vec2(barWidth * loadProgress, barHeight), glm::vec4(0), 0.0f, glm::vec4(1, 1, 1, 1));
+		Sprend.DrawSprite(*whiteRect, glm::vec2(barLeft - 1, barTop - 1), glm::vec2(barWidth + 2, barHeight + 2), glm::vec4(0), 0.0f, glm::vec4(1, 1, 1, 1));
+		Sprend.DrawSprite(*whiteRect, glm::vec2(barLeft, barTop), glm::vec2(barWidth, barHeight), glm::vec4(0), 0.0f, glm::vec4(0.25, 0.25, 0.25, 1));
+		Sprend.DrawSprite(*whiteRect, glm::vec2(barLeft, barTop), glm::vec2(barWidth * loadProgress, barHeight), glm::vec4(0), 0.0f, glm::vec4(1, 1, 1, 1));
 
 		cursor->Draw();
-		sprender->Flush();
+		Sprend.Flush();
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
@@ -535,7 +534,6 @@ int main(int, char**)
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	sprender = new SpriteRenderer();
 	cursor = std::make_shared<Cursor>();
 
 	Inputs.HaveGamePad = (glfwJoystickPresent(GLFW_JOYSTICK_1) && glfwJoystickIsGamepad(GLFW_JOYSTICK_1));
@@ -629,7 +627,7 @@ int main(int, char**)
 		for (const auto& t : tickables)
 			t->Draw(dt * timeScale);
 
-		sprender->Flush();
+		Sprend.Flush();
 		glClear(GL_DEPTH_BUFFER_BIT);
 		glEnable(GL_DEPTH_TEST);
 		modelShader->Use();
@@ -639,7 +637,7 @@ int main(int, char**)
 		bob->Draw(dt * timeScale);
 		glDisable(GL_DEPTH_TEST);
 
-		sprender->DrawText(0, fmt::format("CAMERA\n------\nPos: {} {} {}\nPit/Yaw: {} {}\nTarget: {} {} {}\n\nLIGHT\n-----\nPos: {} {} {}",
+		Sprend.DrawText(0, fmt::format("CAMERA\n------\nPos: {} {} {}\nPit/Yaw: {} {}\nTarget: {} {} {}\n\nLIGHT\n-----\nPos: {} {} {}",
 			MainCamera.Position.x, MainCamera.Position.y, MainCamera.Position.z,
 			MainCamera.Pitch, MainCamera.Yaw,
 			MainCamera.Target.x, MainCamera.Target.y, MainCamera.Target.z,
@@ -649,7 +647,7 @@ int main(int, char**)
 		console->Draw(dt);
 		cursor->Draw();
 
-		sprender->Flush();
+		Sprend.Flush();
 
 		tickables.erase(std::remove_if(tickables.begin(), tickables.end(), [](Tickable* i) {
 			return i->dead;

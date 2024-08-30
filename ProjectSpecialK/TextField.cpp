@@ -6,20 +6,20 @@ void TextField::Draw(float dt)
 
 	auto pos = glm::vec2(rect.x, rect.y);
 
-	sprender->Flush();
+	Sprend.Flush();
 	const auto h = (int)(rect.w - rect.y);
 	glScissor((int)rect.x, (int)(height - rect.y) - h, (int)(rect.z - rect.x), h);
 	glEnable(GL_SCISSOR_TEST);
 
-	sprender->DrawText(font, value, pos, color, size, 0.0f, true);
+	Sprend.DrawText(font, value, pos, color, size, 0.0f, true);
 
 	if ((int)time % 1024 < 512)
 	{
-		auto ms = sprender->MeasureText(font, value.substr(0, caret), size, true);
-		sprender->DrawText(font, "_", pos + glm::vec2(ms.x, 0), glm::vec4(1, 1, 0, 1), size, 0.0f, true);
+		auto ms = Sprend.MeasureText(font, value.substr(0, caret), size, true);
+		Sprend.DrawText(font, "_", pos + glm::vec2(ms.x, 0), glm::vec4(1, 1, 0, 1), size, 0.0f, true);
 	}
 
-	sprender->Flush();
+	Sprend.Flush();
 	glDisable(GL_SCISSOR_TEST);
 }
 

@@ -218,7 +218,7 @@ void DialogueBox::Preprocess()
 void DialogueBox::Wrap()
 {
 	size_t lastSpace = 0xFFFF;
-	//auto threeLines = sprender->MeasureText(font, "1\n2\n3\n", 100).y;
+	//auto threeLines = Sprend.MeasureText(font, "1\n2\n3\n", 100).y;
 	for (size_t i = 0; i < toDisplay.length();)
 	{
 		unsigned int ch;
@@ -233,7 +233,7 @@ void DialogueBox::Wrap()
 		if (size == 3 && (ch >= 0x2E80 && ch < 0xF000))
 			lastSpace = i;
 
-		auto space = sprender->MeasureText(font, toDisplay.substr(0, i + size), 100);
+		auto space = Sprend.MeasureText(font, toDisplay.substr(0, i + size), 100);
 		if (space.x > 650)
 		{
 			if (lastSpace == 0xFFFF)
@@ -289,7 +289,7 @@ void DialogueBox::Text(const std::string& text, int style, const std::string& wh
 	if (style != 3)
 	{
 		name = who;
-		nametagWidth = sprender->MeasureText(1, name, 120).x - 32;
+		nametagWidth = Sprend.MeasureText(1, name, 120).x - 32;
 		nametagColor[0] = tagBack;
 		nametagColor[1] = tagInk;
 	}
@@ -313,7 +313,7 @@ void DialogueBox::Text(const std::string& text, VillagerP who)
 	if (who != nullptr)
 	{
 		name = who->Name();
-		nametagWidth = sprender->MeasureText(1, name, 120).x - 32;
+		nametagWidth = Sprend.MeasureText(1, name, 120).x - 32;
 		nametagColor[0] = who->NameTag[0];
 		nametagColor[1] = who->NameTag[1];
 	}
@@ -362,9 +362,9 @@ void DialogueBox::Draw(float dt)
 	gradient[1].Use(2);
 	wobble.SetFloat("time", time);
 
-	sprender->DrawSprite(&wobble, bubble[bubbleNum], glm::vec2(dlgLeft, dlgTop), glm::vec2(dlgWidth * 2, dlgHeight), glm::vec4(0, 0, bubble[bubbleNum].width * 2, bubble[bubbleNum].height), 0, bubbleColor);
+	Sprend.DrawSprite(&wobble, bubble[bubbleNum], glm::vec2(dlgLeft, dlgTop), glm::vec2(dlgWidth * 2, dlgHeight), glm::vec4(0, 0, bubble[bubbleNum].width * 2, bubble[bubbleNum].height), 0, bubbleColor);
 
-	sprender->DrawText(font, displayed, glm::vec2(dlgLeft + (200 * dlgScale), dlgTop + (100 * dlgScale)), textColor, 150 * dlgScale);
+	Sprend.DrawText(font, displayed, glm::vec2(dlgLeft + (200 * dlgScale), dlgTop + (100 * dlgScale)), textColor, 150 * dlgScale);
 
 	if (!name.empty())
 	{
@@ -380,16 +380,16 @@ void DialogueBox::Draw(float dt)
 		const auto tagPosR = tagPosM + glm::rotate(glm::vec2(nametagWidth, 0), glm::radians(tagAngle));
 		const auto tagPosT = tagPosL + glm::rotate(glm::vec2(tagSize.x - 16, 20), glm::radians(tagAngle));
 
-		sprender->DrawSprite(nametag, tagPosL, tagSize, nametag[0], tagAngle, nametagColor[0], TopLeft);
-		sprender->DrawSprite(nametag, tagPosM, glm::vec2(nametagWidth, tagSize.y), nametag[2], tagAngle, nametagColor[0], TopLeft);
-		sprender->DrawSprite(nametag, tagPosR, tagSize, nametag[1], tagAngle, nametagColor[0], TopLeft);
-		sprender->DrawText(1, name, tagPosT, nametagColor[1], 120 * scale, tagAngle);
+		Sprend.DrawSprite(nametag, tagPosL, tagSize, nametag[0], tagAngle, nametagColor[0], TopLeft);
+		Sprend.DrawSprite(nametag, tagPosM, glm::vec2(nametagWidth, tagSize.y), nametag[2], tagAngle, nametagColor[0], TopLeft);
+		Sprend.DrawSprite(nametag, tagPosR, tagSize, nametag[1], tagAngle, nametagColor[0], TopLeft);
+		Sprend.DrawText(1, name, tagPosT, nametagColor[1], 120 * scale, tagAngle);
 	}
 
 	if (state == State::WaitingForKey)
 	{
 		auto arr = (*UI::controls)[6];
-		sprender->DrawSprite(*UI::controls, glm::vec2((width / 2) - (arr.z / 2), height - arr.w - 20), glm::vec2(arr.z, arr.w), arr, 0.0f, UI::themeColors["primary"]);
+		Sprend.DrawSprite(*UI::controls, glm::vec2((width / 2) - (arr.z / 2), height - arr.w - 20), glm::vec2(arr.z, arr.w), arr, 0.0f, UI::themeColors["primary"]);
 	}
 
 	//maybe afterwards port this to the UI Panel system?

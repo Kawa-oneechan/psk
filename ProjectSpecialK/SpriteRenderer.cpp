@@ -20,8 +20,13 @@ static int spriteFlipX[200];
 static int spriteFlipY[200];
 static int instanceCursor = 0;
 
-SpriteRenderer::SpriteRenderer()
+
+
+void SpriteRenderer::Initialize()
 {
+	if (initialized)
+		return;
+
 	unsigned int VBO;
 	//TODO: make this indexed
 	float vertices[] = {
@@ -53,6 +58,8 @@ SpriteRenderer::SpriteRenderer()
 	originalTextRenderSize = textRenderSize = 100;
 	originalTextRenderColor = textRenderColor = UI::textColors[0];
 	originalTextRenderFont = textRenderFont = 0;
+
+	initialized = true;
 }
 
 SpriteRenderer::~SpriteRenderer()
@@ -82,6 +89,8 @@ void SpriteRenderer::Flush()
 
 void SpriteRenderer::DrawSprite(Shader* shader, Texture& texture, glm::vec2 position, glm::vec2 size, glm::vec4 srcRect, float rotate, const glm::vec4& color, SpriteFlags flags)
 {
+	if (!initialized) Initialize();
+
 	glm::mat4 orthoProjection = glm::ortho(0.0f, width, height, 0.0f, -1.0f, 1.0f);
 
 	shader->Use();
@@ -174,5 +183,7 @@ void SpriteRenderer::DrawLine(const glm::vec2& from, const glm::vec2& to, const 
 	}
 	auto a = glm::degrees(std::atan2(l.y, l.x));
 
-	sprender->DrawSprite(*whiteRect, from, glm::vec2(len, 1), glm::vec4(0), a, color, SpriteFlags::TopLeft);
+	DrawSprite(*whiteRect, from, glm::vec2(len, 1), glm::vec4(0), a, color, SpriteFlags::TopLeft);
 }
+
+SpriteRenderer Sprend;

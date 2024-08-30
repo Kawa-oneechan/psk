@@ -7,5 +7,5 @@ void Background::Draw(float dt)
 	scroller.Use();
 	scroller.SetFloat("time", time);
 	scroller.SetVec2("speed", Speed);
-	sprender->DrawSprite(&scroller, wallpaper, glm::vec2(0), glm::vec2(width, height), glm::vec4(0, 0, width, height));
+	Sprend.DrawSprite(&scroller, wallpaper, glm::vec2(0), glm::vec2(width, height), glm::vec4(0, 0, width, height));
 }

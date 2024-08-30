@@ -25,7 +25,7 @@ enum SpriteFlags
 class SpriteRenderer
 {
 public:
-	SpriteRenderer();
+	//SpriteRenderer();
 	~SpriteRenderer();
 	void DrawSprite(Shader* shader, Texture& texture, glm::vec2 position, glm::vec2 size, glm::vec4 srcRect = glm::vec4(0.0f), float rotate = 0.0f, const glm::vec4& color = glm::vec4(1), SpriteFlags flags = SpriteFlags::NoFlags);
 	void DrawSprite(Texture& texture, const glm::vec2& position, const glm::vec2& size, const glm::vec4& srcRect = glm::vec4(0.0f), float rotate = 0.0f, const glm::vec4& color = glm::vec4(1), SpriteFlags flags = SpriteFlags::NoFlags);
@@ -41,6 +41,8 @@ public:
 	void Flush();
 
 private:
+	bool initialized{ false };
+
 	unsigned int quadVAO;
 	glm::vec4 textRenderColor, originalTextRenderColor;
 	float textRenderSize, originalTextRenderSize;
@@ -64,4 +66,7 @@ private:
 	};
 
 	void LoadFontBank(int font, int bank);
+	void Initialize();
 };
+
+extern SpriteRenderer Sprend;

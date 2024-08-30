@@ -26,5 +26,5 @@ void Cursor::SetScale(int newScale)
 
 void Cursor::Draw()
 {
-	sprender->DrawSprite(hand, Inputs.MousePosition - (hotspot * scale), size, frame);
+	Sprend.DrawSprite(hand, Inputs.MousePosition - (hotspot * scale), size, frame);
 }

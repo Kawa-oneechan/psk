@@ -69,7 +69,6 @@ template<typename T> static T clamp(T val, T minval, T maxval) { return std::max
 
 extern void GetAtlas(std::vector<glm::vec4> &ret, const std::string& jsonFile);
 
-extern SpriteRenderer* sprender;
 extern Shader* spriteShader;
 extern Texture* whiteRect;
 
