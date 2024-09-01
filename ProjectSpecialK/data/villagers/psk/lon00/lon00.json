@@ -1,0 +1,32 @@
+{
+  "id" : "psk:lon00",
+  "name" : {
+    "en" : "Teram"
+  },
+  "species" : "lon",
+  "personality" : "jock",
+  "personalitySubtype" : 0,
+  "gender" : "enby-m",
+  "attraction" : "both",
+  "birthday" : [ 11, 10 ],
+  "hobby" : "fitness",
+  "colors" : [ "beige", "brown" ],
+  "nameTag" : [ "#FFFFFF", "#848484" ],
+  "catchphrase" : {
+    "en" : "buddy"
+  },
+  "clothing" : {
+    "default" : "acnh:tank/navyblue",
+    "rain" : [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
+  },
+  "umbrella" : "acnh:redumbrella",
+  "photo" : "psk:teramsphoto",
+  "poster" : "psk:teramsposter",
+  "house" : {
+    "walls" : "acnh:commonwall",
+    "floor" : "acnh:commonflooring",
+    "music" : "acnh:silence",
+    "items" : [
+    ]
+  }
+}

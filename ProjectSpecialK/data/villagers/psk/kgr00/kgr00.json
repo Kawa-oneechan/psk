@@ -1,0 +1,32 @@
+{
+  "id" : "psk:kgr00",
+  "name" : {
+    "en" : "Lucy"
+  },
+  "species" : "kgr",
+  "personality" : "uchi",
+  "personalitySubtype" : 0,
+  "gender" : "girl",
+  "attraction" : "none",
+  "birthday" : [ 8, 8 ],
+  "hobby" : "nature",
+  "colors" : [ "aqua", "white" ],
+  "nameTag" : [ "#FFFFFF", "#848484" ],
+  "catchphrase" : {
+    "en" : "copy"
+  },
+  "clothing" : {
+    "default" : "acnh:tank/navyblue",
+    "rain" : [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
+  },
+  "umbrella" : "acnh:redumbrella",
+  "photo" : "psk:lucysphoto",
+  "poster" : "psk:lucysposter",
+  "house" : {
+    "walls" : "acnh:commonwall",
+    "floor" : "acnh:commonflooring",
+    "music" : "acnh:silence",
+    "items" : [
+    ]
+  }
+}
