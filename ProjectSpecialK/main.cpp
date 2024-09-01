@@ -29,12 +29,14 @@ constexpr int ScreenHeight = 1080;
 constexpr int WindowWidth = 1920; //1280
 constexpr int WindowHeight = 1080; //720
 
+#ifdef _WIN32
 extern "C"
 {
 	//why bother including windows headers lol
 	int __stdcall MessageBoxW(_In_opt_ void* hWnd, _In_opt_ const wchar_t* lpText, _In_opt_ const wchar_t* lpCaption, _In_ unsigned int uType);
 	int __stdcall MultiByteToWideChar(_In_ unsigned int CodePage, _In_ unsigned long dwFlags, const char* lpMultiByteStr, _In_ int cbMultiByte, wchar_t* lpWideCharStr, _In_ int cchWideChar);
 }
+#endif
 
 GLFWwindow* window;
 
@@ -72,9 +74,13 @@ void FatalError(const std::string& message)
 {
 	conprint(1, "Fatal error: {}", message);
 
+#ifdef _WIN32
 	wchar_t w[1024] = { 0 };
 	MultiByteToWideChar(65001, 0, message.c_str(), -1, w, 1024);
 	MessageBoxW(nullptr, w, L"Project Special K", 0x30);
+#else
+	//TODO: report fatal errors some other way on non-Windows systems.
+#endif
 
 	conprint(1, "Exiting...");
 	exit(1);
@@ -97,29 +103,6 @@ namespace UI
 	JSONObject json = JSONObject();
 	JSONObject settings = JSONObject();
 
-	static std::unique_ptr<char*> LoadFile(const std::string &filename, size_t *size)
-	{
-		std::ifstream file(filename, std::ios::binary | std::ios::ate);
-		if (!file.good())
-			throw std::exception("Couldn't open file.");
-		std::streamsize fs = file.tellg();
-		file.seekg(0, std::ios::beg);
-		if (size != nullptr)
-			*size = fs;
-		auto ret = new char[fs + 2]{ 0 };
-		file.read(ret, fs);
-		return std::make_unique<char*>(ret);
-	}
-
-	static void SaveFile(const std::string &filename, const std::string& content)
-	{
-		std::ofstream file(filename, std::ios::trunc | std::ios::binary);
-		if (!file.good())
-			throw std::exception("Couldn't open file.");
-		file << content; //eeugh
-		file.close();
-	}
-
 	static void Load()
 	{
 		json = VFS::ReadJSON("ui/ui.json")->AsObject();
@@ -135,8 +118,7 @@ namespace UI
 
 		try
 		{
-			auto data = LoadFile("options.json", nullptr);
-			settings = JSON::Parse(*data.get())->AsObject();
+			settings = VFS::ReadSaveJSON("options.json")->AsObject();
 		}
 		catch (std::exception&)
 		{
@@ -217,7 +199,7 @@ namespace UI
 
 		try
 		{
-			SaveFile("options.json", JSON::Stringify(new JSONValue(settings)));
+			VFS::WriteSaveJSON("options.json", new JSONValue(settings));
 		}
 		catch (std::exception&)
 		{

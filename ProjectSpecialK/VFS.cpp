@@ -8,11 +8,26 @@
 #include "support/miniz.h"
 #include "Console.h"
 
-
 namespace JSONPatch
 {
 	extern JSONValue* ApplyPatch(JSONValue& source, JSONValue& patch);
 }
+
+#ifdef _WIN32
+extern "C" {
+	typedef struct _GUID
+	{
+		unsigned long  Data1;
+		unsigned short Data2;
+		unsigned short Data3;
+		unsigned char  Data4[8];
+	} GUID;
+	const GUID FOLDERID_SavedGames = { 0x4c5c32ff, 0xbb9d, 0x43b0, 0xb5, 0xb4, 0x2d, 0x72, 0xe5, 0x4e, 0xaa, 0xa4 };
+	int __stdcall SHGetKnownFolderPath(_In_ const GUID* rfid, _In_ unsigned long dwFlags, _In_opt_ void* hToken, _Out_ wchar_t** ppszPath);
+	int __stdcall WideCharToMultiByte(_In_ unsigned int CodePage, _In_ unsigned long dwFlags, const wchar_t* lpWideCharStr, _In_ int cchWideChar, char* lpMultiByteStr, _In_ int cbMultiByte, _In_opt_ char* lpDefaultChar, _Out_opt_ bool* lpUsedDefaultChar);
+	void _stdcall CoTaskMemFree(_In_opt_ void* pv);
+}
+#endif
 
 namespace VFS
 {
@@ -24,6 +39,8 @@ namespace VFS
 
 	static std::vector<Entry> entries;
 	static std::vector<Source> sources;
+
+	static fs::path savePath;
 
 	static void addFileEntry(Entry& entry)
 	{
@@ -167,6 +184,24 @@ namespace VFS
 			conprint(0, "No manifest for {}, so mod is skipped.", newSrc.path);
 	}
 
+	static void findSaveDir()
+	{
+#ifdef _WIN32
+		//Yes, we're assuming this is Vista or better. Fuck you.
+		wchar_t* wp;
+		char mp[1024] = { 0 };
+		SHGetKnownFolderPath(&FOLDERID_SavedGames, 0, nullptr, &wp);
+		WideCharToMultiByte(65001, 0, wp, (int)wcslen(wp), mp, 1024, nullptr, nullptr);
+		CoTaskMemFree(wp);
+		savePath = fs::path(std::string(mp)) / "Project Special K";
+#else
+		//TODO: find a good save path for non-Windows systems.
+#endif
+		fs::create_directory(savePath);
+		fs::create_directory(savePath / "map");
+		fs::create_directory(savePath / "villagers");
+	}
+
 	void Initialize()
 	{
 		conprint(0, "VFS: initializing...");
@@ -259,6 +294,8 @@ namespace VFS
 		}
 
 		conprint(0, "VFS: ended up with {} entries.", entries.size());
+
+		findSaveDir();
 	}
 
 	std::unique_ptr<char[]> ReadData(const Entry& entry, size_t* size)
@@ -414,4 +451,55 @@ namespace VFS
 		conprint(0, "ForgetVFS: went from {} to {} items, forgetting {}.", start, entries.size(), start - entries.size());
 	}
 
+	std::unique_ptr<char[]> ReadSaveData(const std::string& path, size_t* size)
+	{
+		std::ifstream file(savePath / path, std::ios::binary | std::ios::ate);
+		if (!file.good())
+			throw std::exception("Couldn't open file.");
+		std::streamsize fs = file.tellg();
+		file.seekg(0, std::ios::beg);
+		if (size != nullptr)
+			*size = fs;
+		auto ret = std::make_unique<char[]>(fs + 2);
+		file.read(ret.get(), fs);
+		return ret;
+	}
+
+	std::string ReadSaveString(const std::string& path)
+	{
+		return std::string(ReadSaveData(path, nullptr).get());
+	}
+
+	JSONValue* ReadSaveJSON(const std::string& path)
+	{
+		auto data = ReadSaveString(path);
+		auto doc = JSON::Parse(data.c_str());
+		return doc;
+	}
+
+	bool WriteSaveData(const std::string& path, char data[], size_t size)
+	{
+		size;
+		std::ofstream file(savePath / path, std::ios::trunc | std::ios::binary);
+		if (!file.good())
+			throw std::exception("Couldn't open file.");
+		file << data; //eeugh
+		file.close();
+		return true;
+	}
+
+	bool WriteSaveString(const std::string& path, const std::string& data)
+	{
+		std::ofstream file(savePath / path, std::ios::trunc | std::ios::binary);
+		if (!file.good())
+			throw std::exception("Couldn't open file.");
+		file << data; //eeugh
+		file.close();
+		return true;
+	}
+
+	bool WriteSaveJSON(const std::string& path, JSONValue* data)
+	{
+		return WriteSaveString(path, JSON::Stringify(data));
+	}
 }

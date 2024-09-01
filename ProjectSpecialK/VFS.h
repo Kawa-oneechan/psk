@@ -45,4 +45,10 @@ namespace VFS
 	extern std::vector<Entry> Enumerate(const std::string& path);
 	extern void Forget(const std::vector<Entry>& entries);
 
+	extern std::unique_ptr<char[]> ReadSaveData(const std::string& path, size_t* size);
+	extern std::string ReadSaveString(const std::string& path);
+	extern JSONValue* ReadSaveJSON(const std::string& path);
+	extern bool WriteSaveData(const std::string& path, char data[], size_t size);
+	extern bool WriteSaveString(const std::string& path, const std::string& data);
+	extern bool WriteSaveJSON(const std::string& path, JSONValue* data);
 }
