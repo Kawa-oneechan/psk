@@ -198,8 +198,6 @@ namespace VFS
 		//TODO: find a good save path for non-Windows systems.
 #endif
 		fs::create_directory(savePath);
-		fs::create_directory(savePath / "map");
-		fs::create_directory(savePath / "villagers");
 	}
 
 	void Initialize()
@@ -449,6 +447,82 @@ namespace VFS
 		}
 
 		conprint(0, "ForgetVFS: went from {} to {} items, forgetting {}.", start, entries.size(), start - entries.size());
+	}
+
+	std::unique_ptr<char[]> ReadSaveData(const std::string& archive, const std::string& path, size_t* size)
+	{
+		auto p = savePath / archive;
+		auto p2 = p.generic_string();
+
+		mz_zip_archive zip;
+		std::memset(&zip, 0, sizeof(zip));
+		mz_zip_reader_init_file(&zip, p2.c_str(), 0);
+		if (zip.m_zip_type == MZ_ZIP_TYPE_INVALID)
+			return nullptr;
+		int zipFiles = mz_zip_reader_get_num_files(&zip);
+		mz_zip_archive_file_stat zfs;
+		for (int i = 0; i < zipFiles; i++)
+		{
+			if (!mz_zip_reader_file_stat(&zip, i, &zfs))
+				break;
+			if (zfs.m_is_directory)
+				continue;
+			if (!_strcmpi(zfs.m_filename, path.c_str()))
+				continue;
+		}
+
+		const size_t fsize = (size_t)zfs.m_uncomp_size;
+		if (size != nullptr)
+			*size = fsize;
+		auto ret = std::make_unique<char[]>(fsize + 2);
+		mz_zip_reader_extract_to_mem(&zip, zfs.m_file_index, ret.get(), fsize, 0);
+
+		return ret;
+	}
+
+	std::string ReadSaveString(const std::string& archive, const std::string& path)
+	{
+		auto data = ReadSaveData(archive, path, nullptr);
+		if (!data)
+			return "";
+		return std::string(data.get());
+	}
+
+	JSONValue* ReadSaveJSON(const std::string& archive, const std::string& path)
+	{
+		auto data = ReadSaveString(archive, path);
+		if (data.empty())
+			throw std::runtime_error("Blank JSON"); //return nullptr;
+		auto doc = JSON::Parse(data.c_str());
+		return doc;
+	}
+
+	bool WriteSaveData(const std::string& archive, const std::string& path, char data[], size_t size)
+	{
+		auto p = savePath / archive;
+		auto p2 = p.generic_string();
+		auto ret = mz_zip_add_mem_to_archive_file_in_place(p2.c_str(), path.c_str(), data, size, nullptr, 0, MZ_BEST_COMPRESSION);
+		if (!ret)
+			throw std::exception("Couldn't save to archive.");
+		//TODO: make this stronger.
+		return true;
+	}
+
+	bool WriteSaveString(const std::string& archive, const std::string& path, const std::string& data)
+	{
+		auto p = savePath / archive;
+		auto p2 = p.generic_string();
+		auto ret = mz_zip_add_mem_to_archive_file_in_place(p2.c_str(), path.c_str(), data.c_str(), data.length(), nullptr, 0, MZ_BEST_COMPRESSION);
+		if (!ret)
+			throw std::exception("Couldn't save to archive.");
+		//TODO: make this stronger.
+		return true;
+
+	}
+
+	bool WriteSaveJSON(const std::string& archive, const std::string& path, JSONValue* data)
+	{
+		return WriteSaveString(archive, path, JSON::Stringify(data));
 	}
 
 	std::unique_ptr<char[]> ReadSaveData(const std::string& path, size_t* size)
