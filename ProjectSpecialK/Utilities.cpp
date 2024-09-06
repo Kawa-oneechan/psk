@@ -266,6 +266,26 @@ std::string GetKeyName(int scancode)
 		return std::string(glfw);
 }
 
+bool IDIsQualified(const std::string& id)
+{
+	//must have a : but not as the first character.
+	return id.find(':') != std::string::npos && id[0] != ':';
+}
+
+std::string Qualify(const std::string& id, const std::string& ns)
+{
+	//if (id.substr(0, ns.length()) == ns)
+	//	throw std::runtime_error(fmt::format("Qualify: cannot double-qualify \"{}\", already starts with \"{}\".", id, ns));
+	return ns + ':' + id;
+}
+
+std::string UnQualify(const std::string& id)
+{
+	if (IDIsQualified(id))
+		return id.substr(id.find(':') + 1);
+	return id;
+}
+
 #include <regex>
 void HandleIncludes(std::string& code, const std::string& path)
 {

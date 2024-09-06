@@ -48,20 +48,6 @@ enum class LoadSpawnChoice
 	InPlace,
 };
 
-/*
-enum class SpecialKeys : unsigned int
-{
-	Left = 0xFFE0,
-	Right,
-	Up,
-	Down,
-	Home,
-	End,
-	Copy,
-	Paste,
-};
-*/
-
 extern float width, height;
 extern float scale;
 
@@ -104,6 +90,10 @@ extern std::string GetDirFromFile(const std::string& path);
 extern void HandleIncludes(std::string& code, const std::string& path);
 
 extern std::string GetKeyName(int scancode);
+
+extern bool IDIsQualified(const std::string& id);
+extern std::string Qualify(const std::string& id, const std::string& ns);
+extern std::string UnQualify(const std::string& id);
 
 //Returns the CRC32 hash for the given text.
 extern unsigned int GetCRC(const std::string& text);

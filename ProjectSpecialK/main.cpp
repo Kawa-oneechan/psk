@@ -21,8 +21,9 @@
 
 constexpr auto WindowTitle = "Project Special K"
 #ifdef DEBUG
-" (debug build " __DATE__ ")";
+" (debug build " __DATE__ ")"
 #endif
+;
 
 constexpr int ScreenWidth = 1920;
 constexpr int ScreenHeight = 1080;
@@ -120,7 +121,7 @@ namespace UI
 		{
 			settings = VFS::ReadSaveJSON("options.json")->AsObject();
 		}
-		catch (std::exception&)
+		catch (std::runtime_error&)
 		{
 			settings = JSON::Parse("{}")->AsObject();
 		}

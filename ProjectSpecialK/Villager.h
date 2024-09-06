@@ -84,9 +84,9 @@ public:
 	std::string Birthday();
 	bool IsSpecial() { return _isSpecial; }
 	std::string Catchphrase();
-	std::string Catchphrase(std::string& newPhrase);
+	std::string Catchphrase(const std::string& newPhrase);
 	std::string Nickname();
-	std::string Nickname(std::string& newNickname);
+	std::string Nickname(const std::string& newNickname);
 
 	void Draw(double dt);
 

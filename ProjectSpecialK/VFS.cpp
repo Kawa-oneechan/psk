@@ -8,6 +8,18 @@
 #include "support/miniz.h"
 #include "Console.h"
 
+/*
+Saving to an archive file breaks if the entry already exists.
+The new plan:
+1. Open the original file, if any, and a new temporary file.
+2. Iterate through its contents.
+3. If it's the entry we want to save, skip it. Else, copy it as-is to the new file.
+4. Add the new entry.
+5. Delete the old, rename the new.
+6. This may be rather inefficient when handling a town full of villagers in a row.
+Until #6 is reconsidered, use the villagers FOLDER instead.
+*/
+
 namespace JSONPatch
 {
 	extern JSONValue* ApplyPatch(JSONValue& source, JSONValue& patch);
@@ -197,7 +209,9 @@ namespace VFS
 #else
 		//TODO: find a good save path for non-Windows systems.
 #endif
+
 		fs::create_directory(savePath);
+		fs::create_directory(savePath / "villagers");
 	}
 
 	void Initialize()
@@ -449,14 +463,31 @@ namespace VFS
 		conprint(0, "ForgetVFS: went from {} to {} items, forgetting {}.", start, entries.size(), start - entries.size());
 	}
 
+	std::string mangle(const std::string& path)
+	{
+		std::string ret;
+		for (const auto& ch : path)
+		{
+			switch (ch)
+			{
+			case '/': ret += '\\'; break;
+			case ':': ret += "_"; break;
+			default: ret += ch; break;
+			}
+		}
+		return ret;
+	}
+
 	std::unique_ptr<char[]> ReadSaveData(const std::string& archive, const std::string& path, size_t* size)
 	{
+		std::string p2 = mangle(path);
+
 		auto p = savePath / archive;
-		auto p2 = p.generic_string();
+		auto p3 = p.generic_string();
 
 		mz_zip_archive zip;
 		std::memset(&zip, 0, sizeof(zip));
-		mz_zip_reader_init_file(&zip, p2.c_str(), 0);
+		mz_zip_reader_init_file(&zip, p3.c_str(), 0);
 		if (zip.m_zip_type == MZ_ZIP_TYPE_INVALID)
 			return nullptr;
 		int zipFiles = mz_zip_reader_get_num_files(&zip);
@@ -467,7 +498,7 @@ namespace VFS
 				break;
 			if (zfs.m_is_directory)
 				continue;
-			if (!_strcmpi(zfs.m_filename, path.c_str()))
+			if (!_strcmpi(zfs.m_filename, p2.c_str()))
 				continue;
 		}
 
@@ -499,20 +530,23 @@ namespace VFS
 
 	bool WriteSaveData(const std::string& archive, const std::string& path, char data[], size_t size)
 	{
+		std::string p2 = mangle(path);
+
 		auto p = savePath / archive;
-		auto p2 = p.generic_string();
-		auto ret = mz_zip_add_mem_to_archive_file_in_place(p2.c_str(), path.c_str(), data, size, nullptr, 0, MZ_BEST_COMPRESSION);
+		auto p3 = p.generic_string();
+		auto ret = mz_zip_add_mem_to_archive_file_in_place(p2.c_str(), p2.c_str(), data, size, nullptr, 0, MZ_BEST_COMPRESSION);
 		if (!ret)
 			throw std::exception("Couldn't save to archive.");
-		//TODO: make this stronger.
 		return true;
 	}
 
 	bool WriteSaveString(const std::string& archive, const std::string& path, const std::string& data)
 	{
+		std::string p2 = mangle(path);
+
 		auto p = savePath / archive;
-		auto p2 = p.generic_string();
-		auto ret = mz_zip_add_mem_to_archive_file_in_place(p2.c_str(), path.c_str(), data.c_str(), data.length(), nullptr, 0, MZ_BEST_COMPRESSION);
+		auto p3 = p.generic_string();
+		auto ret = mz_zip_add_mem_to_archive_file_in_place(p3.c_str(), p2.c_str(), data.c_str(), data.length(), nullptr, 0, MZ_BEST_COMPRESSION);
 		if (!ret)
 			throw std::exception("Couldn't save to archive.");
 		//TODO: make this stronger.
@@ -527,9 +561,11 @@ namespace VFS
 
 	std::unique_ptr<char[]> ReadSaveData(const std::string& path, size_t* size)
 	{
-		std::ifstream file(savePath / path, std::ios::binary | std::ios::ate);
+		std::string p2 = mangle(path);
+
+		std::ifstream file(savePath / p2, std::ios::binary | std::ios::ate);
 		if (!file.good())
-			throw std::exception("Couldn't open file.");
+			throw std::runtime_error("Couldn't open file.");
 		std::streamsize fs = file.tellg();
 		file.seekg(0, std::ios::beg);
 		if (size != nullptr)
@@ -551,25 +587,21 @@ namespace VFS
 		return doc;
 	}
 
-	bool WriteSaveData(const std::string& path, char data[], size_t size)
+	bool WriteSaveData(const std::string& path, void* data, size_t size)
 	{
-		size;
-		std::ofstream file(savePath / path, std::ios::trunc | std::ios::binary);
+		std::string p2 = mangle(path);
+
+		std::ofstream file(savePath / p2, std::ios::trunc | std::ios::binary);
 		if (!file.good())
-			throw std::exception("Couldn't open file.");
-		file << data; //eeugh
+			throw std::runtime_error("Couldn't open file.");
+		file.write((char*)data, size);
 		file.close();
 		return true;
 	}
 
 	bool WriteSaveString(const std::string& path, const std::string& data)
 	{
-		std::ofstream file(savePath / path, std::ios::trunc | std::ios::binary);
-		if (!file.good())
-			throw std::exception("Couldn't open file.");
-		file << data; //eeugh
-		file.close();
-		return true;
+		return WriteSaveData(path, (void*)data.c_str(), data.length());
 	}
 
 	bool WriteSaveJSON(const std::string& path, JSONValue* data)

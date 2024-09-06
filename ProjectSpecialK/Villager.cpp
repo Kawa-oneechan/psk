@@ -195,7 +195,7 @@ std::string Villager::Catchphrase()
 	return TextGet(RefCatchphrase);
 }
 
-std::string Villager::Catchphrase(std::string& newPhrase)
+std::string Villager::Catchphrase(const std::string& newPhrase)
 {
 	if (!memory)
 	{
@@ -214,7 +214,7 @@ std::string Villager::Nickname()
 	return thePlayer.Name;
 }
 
-std::string Villager::Nickname(std::string& newNickname)
+std::string Villager::Nickname(const std::string& newNickname)
 {
 	if (!memory)
 	{
@@ -263,6 +263,15 @@ void Villager::Manifest()
 	memory = std::make_shared<VillagerMemory>();
 	//TODO: grab memories from savegame (can't use VFS here)
 	//using Deserialize.
+	try
+	{
+		auto json = VFS::ReadSaveJSON(fmt::format("villagers/{}.json", ID));
+		Deserialize((JSONObject&)json->AsObject());
+	}
+	catch (std::runtime_error&)
+	{
+		conprint(1, "Couldn't load memories and such for {}.", ID);
+	}
 
 	PickOutfit();
 }
@@ -287,6 +296,11 @@ void Villager::Depart()
 
 	//TODO: store memories to savegame (can't use VFS here)
 	//using Serialize.
+	JSONObject json;
+	Serialize(json);
+	auto val = JSONValue(json);
+	VFS::WriteSaveJSON(fmt::format("villagers/{}.json", ID), &val);
+
 	memory.reset();
 }
 
