@@ -294,8 +294,6 @@ void Villager::Depart()
 {
 	DeleteAllThings();
 
-	//TODO: store memories to savegame (can't use VFS here)
-	//using Serialize.
 	JSONObject json;
 	Serialize(json);
 	auto val = JSONValue(json);

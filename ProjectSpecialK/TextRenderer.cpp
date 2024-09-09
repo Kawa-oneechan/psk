@@ -21,6 +21,17 @@ static std::string fontFiles[MaxFonts];
 static int fontSizes[MaxFonts];
 static int numFonts = 0;
 
+typedef struct
+{
+	unsigned int codepoint;
+	int font;
+	float angle;
+	glm::vec2 scale;
+	glm::vec2 position;
+	glm::vec4 srcRect;
+	glm::vec4 color;
+} letterToDraw;
+
 static void FlipImage(unsigned char* image, int width, int height)
 {
 	int row;
@@ -160,8 +171,9 @@ void SpriteRenderer::DrawText(int font, const std::string& text, glm::vec2 posit
 
 	auto ogX = position.x;
 	auto ogY = position.y;
-	spriteShader->SetBool("font", true);
 	size_t i = 0;
+
+	std::vector<letterToDraw> toDraw;
 
 	while (text[i] != 0)
 	{
@@ -218,13 +230,29 @@ renderIt:
 		auto adv = bakedChar.xadvance;
 
 		auto chPos = position + glm::vec2(bakedChar.xoff * scaleF, bakedChar.yoff * scaleF);
-		DrawSprite(fontShader, *fontTextures[(textRenderFont * 256) + bank], chPos, stringScale, srcRect, angle, textRenderColor);
+		//DrawSprite(fontShader, *fontTextures[(textRenderFont * 256) + bank], chPos, stringScale, srcRect, angle, textRenderColor);
+		toDraw.push_back({ ch, textRenderFont, angle, stringScale, chPos, srcRect, textRenderColor });
 
 		//position.x += adv * scaleF;
 		position.x += cosf(glm::radians(angle)) * adv * scaleF;
 		position.y += sinf(glm::radians(angle)) * adv * scaleF;
 	}
-	spriteShader->SetBool("font", false);
+
+	if (toDraw.empty()) return;
+	
+	//Sorting everything in codepoint order should minimize the amount of font texture switching.
+	std::sort(toDraw.begin(), toDraw.end(), [](const letterToDraw& a, const letterToDraw& b)
+	{
+		return (a.codepoint < b.codepoint);
+	});
+
+	//TODO: clip
+
+	for (auto& letter : toDraw)
+	{
+		auto bank = letter.codepoint >> 8;
+		DrawSprite(fontShader, *fontTextures[(letter.font * 256) + bank], letter.position, letter.scale, letter.srcRect, letter.angle, letter.color);
+	}
 }
 
 void SpriteRenderer::DrawText(const std::string& text, const glm::vec2& position, const glm::vec4& color, float size, float angle, bool raw)
