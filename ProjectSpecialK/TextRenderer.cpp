@@ -15,10 +15,19 @@ namespace UI
 	extern JSONObject json;
 };
 
+typedef struct
+{
+	std::string file;
+	int size;
+	bool alignToGrid;
+	int puaSource;
+} font;
+
 static stbtt_bakedchar* cdata{ nullptr };
 static Texture** fontTextures;
-static std::string fontFiles[MaxFonts];
-static int fontSizes[MaxFonts];
+//static std::string fontFiles[MaxFonts];
+//static int fontSizes[MaxFonts];
+static font fonts[MaxFonts];
 static int numFonts = 0;
 
 typedef struct
@@ -71,18 +80,20 @@ void SpriteRenderer::LoadFontBank(int font, int bank)
 
 		for (int i = 0; i < numFonts; i++)
 		{
-			auto& thisFont = fontSettings[i]->AsArray();
-			fontFiles[i] = "fonts/" + thisFont[0]->AsString();
-			fontSizes[i] = (int)thisFont[1]->AsNumber();
+			auto thisFont = fontSettings[i]->AsObject();
+			fonts[i].file = "fonts/" + thisFont["file"]->AsString();
+			fonts[i].size = (int)thisFont["size"]->AsNumber();
+			fonts[i].alignToGrid = thisFont["grid"] != nullptr ? thisFont["grid"]->AsBool() : false;
+			fonts[i].puaSource = thisFont["pua"] != nullptr ? (int)thisFont["pua"]->AsNumber() : 0;
 		}
 	}
 
 	if (fontTextures[(font * 256) + bank] != nullptr)
 		return;
 
-	auto ttfData = VFS::ReadData(fontFiles[font], nullptr);
+	auto ttfData = VFS::ReadData(fonts[font].file, nullptr);
 	auto ttfBitmap = new unsigned char[FontAtlasExtent * FontAtlasExtent];
-	stbtt_BakeFontBitmap((unsigned char*)ttfData.get(), 0, (float)fontSizes[font], ttfBitmap, FontAtlasExtent, FontAtlasExtent, 256 * bank, 256, &cdata[(font * 0xFFFF) + (0x100 * bank)]);
+	stbtt_BakeFontBitmap((unsigned char*)ttfData.get(), 0, (float)fonts[font].size, ttfBitmap, FontAtlasExtent, FontAtlasExtent, 256 * bank, 256, &cdata[(font * 0xFFFF) + (0x100 * bank)]);
 	FlipImage(ttfBitmap, FontAtlasExtent, FontAtlasExtent);
 
 	unsigned int fontID;
@@ -167,7 +178,7 @@ void SpriteRenderer::DrawText(int font, const std::string& text, glm::vec2 posit
 	textRenderColor = originalTextRenderColor = color;
 	textRenderSize = originalTextRenderSize = size;
 	textRenderFont = originalTextRenderFont = font;
-	position.y += fontSizes[font] * (textRenderSize / 100.0f);
+	position.y += fonts[font].size * (textRenderSize / 100.0f);
 
 	auto ogX = position.x;
 	auto ogY = position.y;
@@ -183,13 +194,16 @@ void SpriteRenderer::DrawText(int font, const std::string& text, glm::vec2 posit
 		i += chs;
 
 		auto bank = ch >> 8;
-		LoadFontBank(textRenderFont, bank);
+		auto actualFont = textRenderFont;
+		if (bank == 0xE0 && fonts[actualFont].puaSource != 0)
+			actualFont = fonts[actualFont].puaSource;
+		LoadFontBank(actualFont, bank);
 
 		auto scaleF = textRenderSize / 100.0f;
 
 		if (ch == ' ')
 		{
-			auto adv = cdata[(textRenderFont * 0xFFFF) + ' '].xadvance;
+			auto adv = cdata[(actualFont * 0xFFFF) + ' '].xadvance;
 			position.x += cosf(glm::radians(angle)) * adv * scaleF;
 			position.y += sinf(glm::radians(angle)) * adv * scaleF;
 			continue;
@@ -197,7 +211,7 @@ void SpriteRenderer::DrawText(int font, const std::string& text, glm::vec2 posit
 		if (ch == '\n')
 		{
 			position.x = ogX;
-			auto h = cdata[(textRenderFont * 0xFFFF) + 'A'].x1 - cdata[(textRenderFont * 0xFFFF) + 'A'].x0;
+			auto h = cdata[(actualFont * 0xFFFF) + 'A'].x1 - cdata[(actualFont * 0xFFFF) + 'A'].x0;
 			ogY += (h + (h / 1)) * scaleF;
 			position.y = ogY;
 			continue;
@@ -220,7 +234,7 @@ void SpriteRenderer::DrawText(int font, const std::string& text, glm::vec2 posit
 		}
 
 renderIt:
-		auto bakedChar = cdata[(textRenderFont * 0xFFFF) + ch];
+		auto bakedChar = cdata[(actualFont * 0xFFFF) + ch];
 
 		auto w = bakedChar.x1 - bakedChar.x0 + 0.5f;
 		auto h = bakedChar.y1 - bakedChar.y0 + 0.5f;
@@ -231,7 +245,7 @@ renderIt:
 
 		auto chPos = position + glm::vec2(bakedChar.xoff * scaleF, bakedChar.yoff * scaleF);
 		//DrawSprite(fontShader, *fontTextures[(textRenderFont * 256) + bank], chPos, stringScale, srcRect, angle, textRenderColor);
-		toDraw.push_back({ ch, textRenderFont, angle, stringScale, chPos, srcRect, textRenderColor });
+		toDraw.push_back({ ch, actualFont, angle, stringScale, chPos, srcRect, textRenderColor });
 
 		//position.x += adv * scaleF;
 		position.x += cosf(glm::radians(angle)) * adv * scaleF;
@@ -284,14 +298,17 @@ glm::vec2 SpriteRenderer::MeasureText(int font, const std::string& text, float s
 		i += chs;
 
 		auto bank = ch >> 8;
-		LoadFontBank(textRenderFont, bank);
+		auto actualFont = textRenderFont;
+		if (bank == 0xE0 && fonts[actualFont].puaSource != 0)
+			actualFont = fonts[actualFont].puaSource;
+		LoadFontBank(actualFont, bank);
 
 		auto scaleF = textRenderSize / 100.0f;
 
 		if (ch == '\n')
 		{
 			thisLine = 0.0f;
-			auto h = cdata[(textRenderFont * 0xFFFF) + 'A'].x1 - cdata[(textRenderFont * 0xFFFF) + 'A'].x0;
+			auto h = cdata[(actualFont * 0xFFFF) + 'A'].x1 - cdata[(actualFont * 0xFFFF) + 'A'].x0;
 			result.y += (h + (h / 1)) * scaleF;
 			continue;
 		}
@@ -317,7 +334,7 @@ glm::vec2 SpriteRenderer::MeasureText(int font, const std::string& text, float s
 		}
 
 measureIt:
-		auto bakedChar = cdata[(textRenderFont * 0xFFFF) + ch];
+		auto bakedChar = cdata[(actualFont * 0xFFFF) + ch];
 
 		auto w = bakedChar.x1 - bakedChar.x0 + 0.5f;
 		auto h = bakedChar.y1 - bakedChar.y0 + 0.5f;

@@ -491,7 +491,7 @@ namespace VFS
 		if (zip.m_zip_type == MZ_ZIP_TYPE_INVALID)
 			return nullptr;
 		int zipFiles = mz_zip_reader_get_num_files(&zip);
-		mz_zip_archive_file_stat zfs;
+		mz_zip_archive_file_stat zfs = { 0 };
 		for (int i = 0; i < zipFiles; i++)
 		{
 			if (!mz_zip_reader_file_stat(&zip, i, &zfs))

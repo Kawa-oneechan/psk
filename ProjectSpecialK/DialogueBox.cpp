@@ -172,7 +172,8 @@ DialogueBox::DialogueBox()
 	//Text("Are you <color:3><str:player></color>? <delay:1000>Hiii! Welcome to <color:2>Project Special K</color>!",
 	//Text(TextGet("dlg:sza:wack"),
 	//	Database::Find<Villager>("psk:cat00", villagers));
-	Text("MSBT JSON/Lua test:\n<test1>\n<test2>", 3);
+	//Text("MSBT JSON/Lua test:\n<test1>\n<test2>", 3);
+	Text(u8"This is ordinary dialogue with a button image in it: \uE0E2 look at that.", 0);
 
 	//Text("I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I", 0);
 	//Text("IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII", 0);
