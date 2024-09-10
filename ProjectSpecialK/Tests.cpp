@@ -14,19 +14,19 @@ void TestVillagerGetting()
 		return;
 	}
 
-	farrah->defaultOutfitID = "acnh:fronttietee/red";
+	farrah->defaultClothingID = "acnh:fronttietee/red";
 
 	conprint(0, "Villager getting test: {}, a {}, birthday on {}.", farrah->Name(), StripMSBT(farrah->Species()), farrah->Birthday());
 	articlePlease = 0;
-	conprint(0, "Default outfit: {}", farrah->defaultOutfitID);
+	conprint(0, "Default clothing: {}", farrah->defaultClothingID);
 	conprint(0, "Portrait: {}", farrah->portraitID);
 	conprint(0, "Manifesting...");
 	farrah->Manifest();
-	conprint(0, "Current outfit: {}", farrah->Outfit->FullName());
+	conprint(0, "Current clothing: {}", farrah->Clothing->FullName());
 	farrah->Depart();
 
-	//Deliberately fail. Should pick the default outfit.
-	farrah->PickOutfit();
+	//Deliberately fail. Should pick the default clothes.
+	farrah->PickClothing();
 }
 
 void TestInventorySystems()

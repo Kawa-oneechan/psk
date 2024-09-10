@@ -29,7 +29,7 @@ public:
 	unsigned char _memories[255]{ 0 };
 
 	std::vector<InventoryItemP> Items;
-	std::vector<InventoryItemP> Outfits;
+	std::vector<InventoryItemP> Clothing;
 };
 
 using VillagerMemoryP = std::shared_ptr<VillagerMemory>;
@@ -37,7 +37,7 @@ using VillagerMemoryP = std::shared_ptr<VillagerMemory>;
 class Villager : public NameableThing, Tickable
 {
 private:
-	ModelP _model, _outfitModel;
+	ModelP _model, _clothingModel;
 
 	SpeciesP _species{ nullptr };
 	bool _customModel{ false };
@@ -46,7 +46,7 @@ private:
 	unsigned int _birthday[2]{ 1, 1 };
 
 	static const int _maxFurnitureItems = 8 * 4;
-	static const int _maxOutfits = 8 * 3;
+	static const int _maxClothes = 8 * 3;
 
 	std::array<Texture*, 16> Textures;
 
@@ -66,7 +66,7 @@ public:
 	std::string umbrellaID;
 	std::string photoID;
 	std::string portraitID;
-	std::string defaultOutfitID;
+	std::string defaultClothingID;
 	std::string rainCoatID;
 	std::string rainHatID;
 
@@ -74,7 +74,7 @@ public:
 	InventoryItemP Hat{ nullptr };
 	InventoryItemP Glasses{ nullptr };
 	InventoryItemP Mask{ nullptr };
-	InventoryItemP Outfit{ nullptr };
+	InventoryItemP Clothing{ nullptr };
 
 	Villager(JSONObject& value, const std::string& filename = "");
 	std::string Name();
@@ -93,7 +93,7 @@ public:
 	void Manifest();
 	void Depart();
 
-	void PickOutfit();
+	void PickClothing();
 
 	bool Villager::GiveItem(InventoryItemP item);
 

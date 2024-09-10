@@ -25,8 +25,8 @@
 			<Item Name="Special?">_isSpecial</Item>
 			<Item Name="Species" Condition="!_isSpecial &amp;&amp; _species != 0">_species</Item>
 			<Item Name="Model" Condition="_model != 0">_model</Item>
-			<!-- <Item Name="Outfit" Condition="!_isSpecial">defaultOutfitID</Item> -->
-			<Item Name="Outfit" Condition="Outfit != 0">Outfit</Item>
+			<!-- <Item Name="Clothing" Condition="!_isSpecial">defaultClothingID</Item> -->
+			<Item Name="Clothing" Condition="Clothing != 0">Clothing</Item>
 			<Item Name="Personality" Condition="!_isSpecial">personality</Item>
 			<Item Name="Hobby">hobby</Item>
 			<Item Name="CRC32">Hash,Xb</Item>

@@ -34,7 +34,7 @@ public:
 	InventoryItemP Hat{ nullptr };
 	InventoryItemP Glasses{ nullptr };
 	InventoryItemP Mask{ nullptr };
-	InventoryItemP Outfit{ nullptr };
+	InventoryItemP Clothing{ nullptr };
 	InventoryItemP Top{ nullptr };
 	InventoryItemP Bottom{ nullptr };
 	InventoryItemP Socks{ nullptr };

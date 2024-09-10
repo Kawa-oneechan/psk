@@ -91,7 +91,7 @@ Villager::Villager(JSONObject& value, const std::string& filename) : NameableThi
 		return;
 
 	auto clothing = value["clothing"]->AsObject();
-	defaultOutfitID = clothing["default"]->AsString();
+	defaultClothingID = clothing["default"]->AsString();
 	rainCoatID = (clothing["rain"]->AsArray())[0]->AsString();
 	rainHatID = (clothing["rain"]->AsArray())[1]->AsString();
 }
@@ -163,16 +163,16 @@ void Villager::LoadModel()
 	}
 
 	/*
-	Load outfit parts too. Note that we cannot trust InventoryItem::LoadModel here
-	because outfits are tailored to the character. So we must load our own outfit
+	Load clothing parts too. Note that we cannot trust InventoryItem::LoadModel here
+	because clothes are tailored to the character. So we must load our own clothing
 	models.
 	*/
-	if (!_outfitModel && Outfit)
+	if (!_clothingModel && Clothing)
 	{
 		auto style = "ts_short";
-		_outfitModel = std::make_shared<::Model>(fmt::format("{}/{}.fbx", _species->Path, style));
+		_clothingModel = std::make_shared<::Model>(fmt::format("{}/{}.fbx", _species->Path, style));
 
-		Outfit->LoadTextures();
+		Clothing->LoadTextures();
 	}
 }
 
@@ -249,12 +249,12 @@ void Villager::Draw(double)
 
 	_model->Draw();
 
-	if (_outfitModel && Outfit)
+	if (_clothingModel && Clothing)
 	{
-		//TODO: have Outfit handle its own drawing.
-		Outfit->AssignTextures(_outfitModel);
-		_outfitModel->TexArrayLayers[0] = 0; //variant test
-		_outfitModel->Draw();
+		//TODO: have Clothing handle its own drawing.
+		Clothing->AssignTextures(_clothingModel);
+		_clothingModel->TexArrayLayers[0] = 0; //variant test
+		_clothingModel->Draw();
 	}
 }
 
@@ -273,7 +273,7 @@ void Villager::Manifest()
 		conprint(1, "Couldn't load memories and such for {}.", ID);
 	}
 
-	PickOutfit();
+	PickClothing();
 }
 
 void Villager::DeleteAllThings()
@@ -286,8 +286,8 @@ void Villager::DeleteAllThings()
 		Glasses = nullptr;
 	if (Mask && Mask->Temporary)
 		Mask = nullptr;
-	if (Outfit && Outfit->Temporary)
-		Outfit = nullptr;
+	if (Clothing && Clothing->Temporary)
+		Clothing = nullptr;
 }
 
 void Villager::Depart()
@@ -302,30 +302,30 @@ void Villager::Depart()
 	memory.reset();
 }
 
-void Villager::PickOutfit()
+void Villager::PickClothing()
 {
 	if (!memory)
 	{
-		conprint(2, "Tried to pick outfit for unmanifested villager {}. Choosing default {}.", EnName, defaultOutfitID);
+		conprint(2, "Tried to pick clothes for unmanifested villager {}. Choosing default {}.", EnName, defaultClothingID);
 	}
 
 	DeleteAllThings();
 
-	if (memory && memory->Outfits.size() > 0 && std::rand() % 100 > 25)
+	if (memory && memory->Clothing.size() > 0 && std::rand() % 100 > 25)
 	{
-		if (memory->Outfits.size() == 1)
+		if (memory->Clothing.size() == 1)
 		{
-			Outfit = memory->Outfits[0];
-			Outfit->Temporary = false; //just to be sure.
+			Clothing = memory->Clothing[0];
+			Clothing->Temporary = false; //just to be sure.
 		}
 		else
 		{
-			for (const auto& i : memory->Outfits)
+			for (const auto& i : memory->Clothing)
 			{
 				if (std::rand() % 100 > 25)
 				{
-					Outfit = i;
-					Outfit->Temporary = false; //just to be sure.
+					Clothing = i;
+					Clothing->Temporary = false; //just to be sure.
 					break;
 				}
 			}
@@ -333,14 +333,14 @@ void Villager::PickOutfit()
 	}
 	else
 	{
-		//use default outfit
-		Outfit = std::make_shared<InventoryItem>(defaultOutfitID);
-		if (!Outfit->IsOutfit())
+		//use default clothing
+		Clothing = std::make_shared<InventoryItem>(defaultClothingID);
+		if (!Clothing->IsClothing())
 		{
-			conprint(2, "PickOutfit() for {}: \"{}\" may not exist, got a non-outfit item instead.", Name(), defaultOutfitID);
-			Outfit = std::make_shared<InventoryItem>("psk:topsfallback");
+			conprint(2, "PickClothing() for {}: \"{}\" may not exist, got a non-clothing item instead.", Name(), defaultClothingID);
+			Clothing = std::make_shared<InventoryItem>("psk:topsfallback");
 		}
-		Outfit->Temporary = true; //mark as safe to free
+		Clothing->Temporary = true; //mark as safe to free
 	}
 }
 
@@ -354,10 +354,10 @@ bool Villager::GiveItem(InventoryItemP item)
 
 	auto target = &memory->Items;
 	auto max = _maxFurnitureItems;
-	if (item->IsOutfit())
+	if (item->IsClothing())
 	{
-		target = &memory->Outfits;
-		max = _maxOutfits;
+		target = &memory->Clothing;
+		max = _maxClothes;
 	}
 	if (target->size() == max)
 		return false;
@@ -381,12 +381,12 @@ void Villager::Serialize(JSONObject& target)
 		items.push_back(new JSONValue(i->FullID()));
 	}
 	target["items"] = new JSONValue(items);
-	auto outfits = JSONArray();
-	for (const auto& i : memory->Outfits)
+	auto clothes = JSONArray();
+	for (const auto& i : memory->Clothing)
 	{
-		outfits.push_back(new JSONValue(i->FullID()));
+		clothes.push_back(new JSONValue(i->FullID()));
 	}
-	target["outfits"] = new JSONValue(items);
+	target["clothing"] = new JSONValue(items);
 }
 
 void Villager::Deserialize(JSONObject& source)
@@ -407,10 +407,10 @@ void Villager::Deserialize(JSONObject& source)
 	{
 		memory->Items.push_back(std::make_shared<InventoryItem>(i->AsString()));
 	}
-	auto outfits = source["outfits"]->AsArray();
-	memory->Outfits.clear();
-	for (const auto& i : outfits)
+	auto clothes = source["clothing"]->AsArray();
+	memory->Clothing.clear();
+	for (const auto& i : clothes)
 	{
-		memory->Outfits.push_back(std::make_shared<InventoryItem>(i->AsString()));
+		memory->Clothing.push_back(std::make_shared<InventoryItem>(i->AsString()));
 	}
 }

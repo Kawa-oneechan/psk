@@ -28,16 +28,14 @@ namespace Database
 	/*
 	1. Item icons
 	2. Reaction icons
-	3. Tools
-	4. Furniture
-	5. Outfits
-	6. Species
-	7. Personalities
-	8. Hobbies
-	9. Villagers
+	3. Items
+	4. Species
+	5. Personalities
+	6. Hobbies
+	7. Villagers
 	Do not forget to keep that divisor up to date.
 	*/
-	static const float progressParts = 1.0f / 9.0f;
+	static const float progressParts = 1.0f / 7.0f;
 
 	static void loadIconsWorker(float* progress, const std::string& path, std::shared_ptr<Texture>* texture, std::map<std::string, glm::vec4>& atlas)
 	{
@@ -197,15 +195,53 @@ namespace Database
 	void LoadItems(float* progress)
 	{
 		conprint(0, "ItemsDatabase: loading...");
-		loadWorker<Item, Tool>(progress, items, "items/tools/*.json", "ItemsDatabase");
-		loadWorker<Item, Furniture>(progress, items, "items/furniture/*.json", "ItemsDatabase");
-		loadWorker<Item, Outfit>(progress, items, "items/outfits/*.json", "ItemsDatabase");
+		{
+			auto entries = VFS::Enumerate("items/*.json");
+			auto progressStep = progressParts / entries.size();
+			items.reserve(entries.size());
+			for (const auto& entry : entries)
+			{
+				auto doc = VFS::ReadJSON(entry.path);
+
+				if (doc != nullptr)
+				{
+					try
+					{
+						auto docO = doc->AsObject();
+						auto type = docO["type"] != nullptr ? docO["type"]->AsString() : "[missing value]";
+						if (type == "thing")
+							items.emplace_back(std::make_shared<Item>(docO, entry.path));
+						else if (type == "tool")
+							items.emplace_back(std::make_shared<Tool>(docO, entry.path));
+						else if (type == "furniture") 
+							items.emplace_back(std::make_shared<Furniture>(docO, entry.path));
+						else if (type == "clothes" || type == "clothing" || type == "outfit")
+							items.emplace_back(std::make_shared<Clothing>(docO, entry.path));
+					}
+					catch (std::runtime_error& e)
+					{
+						conprint(1, u8" {}", e.what());
+					}
+				}
+				else
+				{
+					conprint(1, "{}: error loading {}.", "ItemsDatabase", entry.path);
+				}
+				delete doc;
+				*progress += progressStep;
+			}
+		}
+
 		auto table = std::vector<std::string>{ "ID", "Name", "Type", "Hash" };
+
+		const char *types[] = {
+			"Thing", "Tool", "Furniture", "Clothing"
+		};
 		for (const auto& item : items)
 		{
 			table.push_back(item->ID);
 			table.push_back(item->EnName);
-			table.emplace_back(fmt::format("{:#b}", item->Type));
+			table.emplace_back(types[(int)item->Type]);
 			table.emplace_back(fmt::format("{:08X}", item->Hash));
 		}
 		Table(table, 4);

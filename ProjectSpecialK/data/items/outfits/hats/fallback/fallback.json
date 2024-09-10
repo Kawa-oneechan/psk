@@ -1,5 +1,7 @@
 {
 	"id": "psk:hatfallback",
 	"name": "(fallback hat item)",
-	"type": "hat"
+	"type": "clothes",
+	"category" : "hat",
+	"price" : 1
 }

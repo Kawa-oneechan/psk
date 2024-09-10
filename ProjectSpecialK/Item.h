@@ -5,12 +5,12 @@
 class Item;
 class Tool;
 class Furniture;
-class Outfit;
+class Clothing;
 
 using ItemP = std::shared_ptr<Item>;
 using ToolP = std::shared_ptr<Tool>;
 using FurnitureP = std::shared_ptr<Furniture>;
-using OutfitP = std::shared_ptr<Outfit>;
+using ClothingP = std::shared_ptr<Clothing>;
 
 class Item : public NameableThing
 {
@@ -21,29 +21,38 @@ public:
 	int FindVariantByName(const std::string& variantName) const;
 	std::vector<std::string> variantNames;
 
-	enum Type
+	enum class Type
 	{
-		Generic = 0b0000'0000'0000'0001,
-		Tool = 0b0000'0000'0000'0011,
-		Furniture = 0b0000'0000'0000'0101,
-		WallPiece = 0b0000'0001'0000'0101,
-		CeilingPiece = 0b0000'0010'0000'0101,
-		Outfit = 0b0000'0000'0000'0111,
-		Tops = 0b0000'0001'0000'0111,
-		Bottom = 0b0000'0010'0000'0111,
-		Dress = 0b0000'0011'0000'0111,
-		//???? = 0b0000'0011'0000'0111,
-		Hat = 0b0000'0100'0000'0111,
-		Shoes = 0b0000'0101'0000'0111,
-	} Type{ Type::Generic };
+		Thing,
+		Tool,
+		Furniture,
+		Clothing,
+	} Type{ Type::Thing };
+
+	int price{ 0 };
+	int stackLimit{ 0 };
+
+	bool canBury{ false };
+	bool canEat{ false };
+	bool canPlace{ false };
+	bool canPlant{ false };
+	bool canDrop{ false };
+	bool canGive{ false };
+	bool canSell{ false };
+	bool canDropOff{ false };
+	bool canStore{ false };
+	bool canTrash{ false };
+	bool canGift{ false };
+	bool canWrap{ false };
+
 	bool IsItem() const;
 	bool IsTool() const;
 	bool IsFurniture() const;
-	bool IsOutfit() const;
+	bool IsClothing() const;
 	ItemP AsItem() const;
 	ToolP AsTool() const;
 	FurnitureP AsFurniture() const;
-	OutfitP AsOutfit() const;
+	ClothingP AsClothing() const;
 };
 
 class Tool : public Item
@@ -55,13 +64,47 @@ public:
 class Furniture : public Item
 {
 public:
-	Furniture(JSONObject& value, const std::string& filename = "") : Item(value, filename) {}
+	enum class Kind
+	{
+		Housewares,
+		Floor = Kind::Housewares,
+		Miscellanous,
+		Upper = Kind::Miscellanous,
+		Wall,
+		Ceiling,
+		RoomWall,
+		RoomFloor,
+		Rug,
+		CeilingRug = Kind::Rug,
+		Creature,
+	} Kind{ Kind::Housewares };
+
+	bool canGoOnWallsOrFloor;
+
+	Furniture(JSONObject& value, const std::string& filename = "");
 };
 
-class Outfit : public Item
+class Clothing : public Item
 {
 public:
-	Outfit(JSONObject& value, const std::string& filename = "") : Item(value, filename) {}
+	enum class Kind
+	{
+		Tops,
+		Bottoms,
+		OnePiece,
+		Dress = Kind::OnePiece,
+		Hat,
+		Cap = Kind::Hat, 
+		Helmet = Kind::Hat,
+		Accessory,
+		Socks,
+		Shoes,
+		Bag,
+		Swimwear,
+		MarineSuit = Kind::Swimwear,
+	} Kind{ Kind::Tops };
+
+	Clothing(JSONObject& value, const std::string& filename = "");
 };
 
 class InventoryItem : public NameableThing
@@ -83,11 +126,11 @@ public:
 	bool IsItem() const;
 	bool IsTool() const;
 	bool IsFurniture() const;
-	bool IsOutfit() const;
+	bool IsClothing() const;
 	ItemP AsItem() const;
 	ToolP AsTool() const;
 	FurnitureP AsFurniture() const;
-	OutfitP AsOutfit() const;
+	ClothingP AsClothing() const;
 
 	void LoadTextures();
 	void AssignTextures(ModelP model);

@@ -566,8 +566,8 @@ int main(int, char**)
 	modelShader->SetInt("opacityTexture", 3);
 
 	auto bob = Database::Find<Villager>("psk:cat00", villagers);
-	bob->defaultOutfitID = "psk:oppai/white";
-	bob->defaultOutfitID = "acnh:djkklogotee/neonpink"; //-V519 this is on purpose daijoubu
+	bob->defaultClothingID = "psk:oppai/white";
+	bob->defaultClothingID = "acnh:djkklogotee/neonpink"; //-V519 this is on purpose daijoubu
 	bob->Manifest();
 
 	MainCamera.Setup(glm::vec3(0.0f, 5.0f, 50.0f));

@@ -1,18 +1,19 @@
 {
-  "id" : "acnh:djkklogotee",
-  "name" : {
-    "en" : "<info::a :the >DJ KK logo tee",
-    "ja" : "DJ K.KのロゴＴシャツ",
-    "ko" : "DJ K.K. 로고 티셔츠",
-    "zh" : "DJ KK Logo T恤",
-    "de" : "<info:der :ein :das >DJ-K.K.-Logo-Shirt<case::::s>",
-    "es" : "<info:una :una :la >camiseta logo DJ KeKe",
-    "fr" : "<info:un :un :le >t-shirt DJ Kéké",
-    "it" : "<info:uno :una :la >maglietta con logo DJ K.K.",
-    "nl" : "<info:de :een :het >DJ K.⁠K.⁠-logo-T⁠-shirt",
-    "ru" : "<info:an ::>футболк<case:а:у:е:и> DJ KK"
-  },
-  "type" : "tops",
-  "price" : 1200,
-  "variants" : [ "neonorange", "neonpink", "neongreen", "neonblue" ]
+	"id" : "acnh:djkklogotee",
+	"name" : {
+		"en" : "<info::a :the >DJ KK logo tee",
+		"ja" : "DJ K.KのロゴＴシャツ",
+		"ko" : "DJ K.K. 로고 티셔츠",
+		"zh" : "DJ KK Logo T恤",
+		"de" : "<info:der :ein :das >DJ-K.K.-Logo-Shirt<case::::s>",
+		"es" : "<info:una :una :la >camiseta logo DJ KeKe",
+		"fr" : "<info:un :un :le >t-shirt DJ Kéké",
+		"it" : "<info:uno :una :la >maglietta con logo DJ K.K.",
+		"nl" : "<info:de :een :het >DJ K.⁠K.⁠-logo-T⁠-shirt",
+		"ru" : "<info:an ::>футболк<case:а:у:е:и> DJ KK"
+	},
+	"type": "clothes",
+	"category" : "tops",
+	"price" : 1200,
+	"variants" : [ "neonorange", "neonpink", "neongreen", "neonblue" ]
 }

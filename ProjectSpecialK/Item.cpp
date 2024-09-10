@@ -12,21 +12,35 @@ int Item::FindVariantByName(const std::string& variantName) const
 
 Item::Item(JSONObject& value, const std::string& filename) : NameableThing(value, filename)
 {
-	auto type = value["type"] != nullptr ? value["type"]->AsString() : "";
-	if (type.empty());
+	auto type = value["type"] != nullptr ? value["type"]->AsString() : "[missing value]";
+	if (type == "thing") Type = Type::Thing;
 	else if (type == "tool") Type = Type::Tool;
 	else if (type == "furniture") Type = Type::Furniture;
-	else if (type == "tops") Type = Type::Tops;
-	else if (type == "bottom") Type = Type::Bottom;
-	else if (type == "bottoms") Type = Type::Bottom;
-	else if (type == "dress") Type = Type::Dress;
-	else if (type == "dressup") Type = Type::Dress;
-	else if (type == "onepiece") Type = Type::Dress;
-	else if (type == "hat") Type = Type::Hat;
-	else if (type == "cap") Type = Type::Hat;
-	else if (type == "shoes") Type = Type::Shoes;
+	else if (type == "clothes") Type = Type::Clothing;
+	else if (type == "clothing") Type = Type::Clothing;
+	else if (type == "outfit") Type = Type::Clothing;
 	else
 		throw std::runtime_error(fmt::format("Don't know what to do with type \"{}\" while loading {}.", type, ID));
+
+	price = value["price"] != nullptr ? (int)value["price"]->AsNumber() : 0;
+
+	if (Type != Type::Clothing)
+	{
+		stackLimit = value["stack"] != nullptr ? (int)value["stack"]->AsNumber() : 0;
+
+		canBury = value["canBury"] != nullptr ? value["canBury"]->AsBool() : false;
+		canEat = value["canEat"] != nullptr ? value["canEat"]->AsBool() : false;
+		canPlace = value["canPlace"] != nullptr ? value["canPlace"]->AsBool() : false;
+		canPlant = value["canPlant"] != nullptr ? value["canPlant"]->AsBool() : false;
+		canDrop = value["canDrop"] != nullptr ? value["canDrop"]->AsBool() : false;
+		canGive = value["canGive"] != nullptr ? value["canGive"]->AsBool() : false;
+		canSell = value["canSell"] != nullptr ? value["canSell"]->AsBool() : (price != 0);
+		canDropOff = value["canDropOff"] != nullptr ? value["canDropOff"]->AsBool() : canSell;
+		canStore = value["canStore"] != nullptr ? value["canStore"]->AsBool() : false;
+		canTrash = value["canTrash"] != nullptr ? value["canTrash"]->AsBool() : false;
+		canGift = value["canGiveBDay"] != nullptr ? value["canGiveBDay"]->AsBool() : false;
+		canWrap = value["canGiftwrap"] != nullptr ? value["canGiftwrap"]->AsBool() : false;
+	}
 
 	auto vars = value["variants"];
 	if (vars != nullptr)
@@ -38,27 +52,26 @@ Item::Item(JSONObject& value, const std::string& filename) : NameableThing(value
 
 bool Item::IsItem() const
 {
-	return Type != 0;
+	return Type == Type::Thing;
 }
 
 bool Item::IsTool() const
 {
-	return (Type & Type::Tool) == Type::Tool;
+	return Type == Type::Tool;
 }
 
 bool Item::IsFurniture() const
 {
-	return (Type & Type::Furniture) == Type::Furniture;
+	return Type == Type::Furniture;
 }
 
-bool Item::IsOutfit() const
+bool Item::IsClothing() const
 {
-	return (Type & Type::Outfit) == Type::Outfit;
+	return Type == Type::Clothing;
 }
 
 ItemP Item::AsItem() const
 {
-	//TODO: CHECK THIS
 	return std::make_shared<Item>(*this);
 }
 
@@ -72,9 +85,51 @@ FurnitureP Item::AsFurniture() const
 	return std::make_shared<::Furniture>(*(::Furniture*)this);
 }
 
-OutfitP Item::AsOutfit() const
+ClothingP Item::AsClothing() const
 {
-	return std::make_shared<::Outfit>(*(::Outfit*)this);
+	return std::make_shared<::Clothing>(*(::Clothing*)this);
+}
+
+
+Furniture::Furniture(JSONObject& value, const std::string& filename) : Item(value, filename)
+{
+	auto kind = value["category"] != nullptr ? value["category"]->AsString() : "[missing value]";
+	if (kind == "housewares") Kind = Kind::Housewares;
+	else if (kind == "floor") Kind = Kind::Housewares;
+	else if (kind == "miscellaneous") Kind = Kind::Miscellanous;
+	else if (kind == "misc") Kind = Kind::Miscellanous;
+	else if (kind == "upper") Kind = Kind::Miscellanous;
+	else if (kind == "wall") Kind = Kind::Wall;
+	else if (kind == "ceiling") Kind = Kind::Ceiling;
+	else if (kind == "roomwall") Kind = Kind::RoomWall;
+	else if (kind == "roomfloor") Kind = Kind::RoomFloor;
+	else if (kind == "rug") Kind = Kind::Rug;
+	else if (kind == "ceilingrug") Kind = Kind::Rug;
+	else if (kind == "creature") Kind = Kind::Creature;
+	else
+		throw std::runtime_error(fmt::format("Don't know what to do with type \"{}\" while loading {}.", kind, ID));
+
+	canGoOnWallsOrFloor = value["canWallFloor"] != nullptr ? value["canWallFloor"]->AsBool() : false;
+}
+
+Clothing::Clothing(JSONObject& value, const std::string& filename) : Item(value, filename)
+{
+	auto kind = value["category"] != nullptr ? value["category"]->AsString() : "[missing value]";
+	if (kind == "tops") Kind = Kind::Tops;
+	else if (kind == "bottoms") Kind = Kind::Bottoms;
+	else if (kind == "onepiece") Kind = Kind::OnePiece;
+	else if (kind == "dress") Kind = Kind::OnePiece;
+	else if (kind == "hat") Kind = Kind::Hat;
+	else if (kind == "cap") Kind = Kind::Cap;
+	else if (kind == "helmet") Kind = Kind::Helmet;
+	else if (kind == "accessory") Kind = Kind::Accessory;
+	else if (kind == "socks") Kind = Kind::Socks;
+	else if (kind == "shoes") Kind = Kind::Shoes;
+	else if (kind == "bag") Kind = Kind::Bag;
+	else if (kind == "swimwear") Kind = Kind::Swimwear;
+	else if (kind == "marinesuit") Kind = Kind::Swimwear;
+	else
+		throw std::runtime_error(fmt::format("Don't know what to do with type \"{}\" while loading {}.", kind, ID));
 }
 
 InventoryItem::InventoryItem(ItemP wrapped, int variant, int pattern)
@@ -166,9 +221,9 @@ bool InventoryItem::IsFurniture() const
 	return _wrapped->IsFurniture();
 }
 
-bool InventoryItem::IsOutfit() const
+bool InventoryItem::IsClothing() const
 {
-	return _wrapped->IsOutfit();
+	return _wrapped->IsClothing();
 }
 
 ItemP InventoryItem::AsItem() const
@@ -186,9 +241,9 @@ FurnitureP InventoryItem::AsFurniture() const
 	return std::static_pointer_cast<Furniture>(_wrapped);
 }
 
-OutfitP InventoryItem::AsOutfit() const
+ClothingP InventoryItem::AsClothing() const
 {
-	return std::static_pointer_cast<Outfit>(_wrapped);
+	return std::static_pointer_cast<Clothing>(_wrapped);
 }
 
 void InventoryItem::LoadTextures()
