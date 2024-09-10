@@ -90,15 +90,16 @@ ClothingP Item::AsClothing() const
 	return std::make_shared<::Clothing>(*(::Clothing*)this);
 }
 
-
 Furniture::Furniture(JSONObject& value, const std::string& filename) : Item(value, filename)
 {
 	auto kind = value["category"] != nullptr ? value["category"]->AsString() : "[missing value]";
-	if (kind == "housewares") Kind = Kind::Housewares;
-	else if (kind == "floor") Kind = Kind::Housewares;
-	else if (kind == "miscellaneous") Kind = Kind::Miscellanous;
-	else if (kind == "misc") Kind = Kind::Miscellanous;
-	else if (kind == "upper") Kind = Kind::Miscellanous;
+	if (kind == "housewares") Kind = Kind::Houseware;
+	else if (kind == "houseware") Kind = Kind::Houseware;
+	else if (kind == "floor") Kind = Kind::Houseware;
+	else if (kind == "miscellaneous") Kind = Kind::Miscellaneous;
+	else if (kind == "others") Kind = Kind::Miscellaneous; //TODO: look into this.
+	else if (kind == "misc") Kind = Kind::Miscellaneous;
+	else if (kind == "upper") Kind = Kind::Miscellaneous;
 	else if (kind == "wall") Kind = Kind::Wall;
 	else if (kind == "ceiling") Kind = Kind::Ceiling;
 	else if (kind == "roomwall") Kind = Kind::RoomWall;
