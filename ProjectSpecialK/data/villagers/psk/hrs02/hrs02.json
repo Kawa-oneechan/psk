@@ -1,32 +1,32 @@
 {
-  "id" : "psk:hrs02",
-  "name" : {
-    "en" : "Oliver"
-  },
-  "species" : "hrs",
-  "personality" : "jock",
-  "personalitySubtype" : 0,
-  "gender" : "enby-b",
-  "attraction" : "none",
-  "birthday" : [ 11, 10 ],
-  "hobby" : "fitness",
-  "colors" : [ "white", "green" ],
-  "nameTag" : [ "#FFFFFF", "#848484" ],
-  "catchphrase" : {
-    "en" : "what"
-  },
-  "clothing" : {
-    "default" : "acnh:tank/navyblue",
-    "rain" : [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
-  },
-  "umbrella" : "acnh:redumbrella",
-  "photo" : "psk:oliversphoto",
-  "poster" : "psk:oliversposter",
-  "house" : {
-    "walls" : "acnh:commonwall",
-    "floor" : "acnh:commonflooring",
-    "music" : "acnh:silence",
-    "items" : [
-    ]
-  }
+	"id": "psk:hrs02",
+	"name": {
+		"en": "Oliver"
+	},
+	"species": "hrs",
+	"personality": "jock",
+	"personalitySubtype": 0,
+	"gender": "enby-b",
+	"attraction": "none",
+	"birthday": [ 11, 10 ],
+	"hobby": "fitness",
+	"colors": [ "white", "green" ],
+	"nameTag": [ "#FFFFFF", "#848484" ],
+	"catchphrase": {
+		"en": "what"
+	},
+	"clothing": {
+		"default": "acnh:tank/navyblue",
+		"rain": [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
+	},
+	"umbrella": "acnh:redumbrella",
+	"photo": "psk:oliversphoto",
+	"poster": "psk:oliversposter",
+	"house": {
+		"walls": "acnh:commonwall",
+		"floor": "acnh:commonflooring",
+		"music": "acnh:silence",
+		"items": [
+		]
+	}
 }

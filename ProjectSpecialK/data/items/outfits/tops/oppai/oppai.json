@@ -1,9 +1,9 @@
 {
-	"id" : "psk:oppai",
-	"name" : { "en" : "<info::a :the >oppai tee" },
+	"id": "psk:oppai",
+	"name": { "en": "<info::a :the >oppai tee" },
 	"type": "clothes",
-	"category" : "tops",
-	"price" : 640,
-	"variants" : [ "black", "white", "gray" ],
+	"category": "tops",
+	"price": 640,
+	"variants": [ "black", "white", "gray" ],
 	"icon": "tops"
 }

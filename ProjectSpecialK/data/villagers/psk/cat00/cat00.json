@@ -1,32 +1,32 @@
 {
-  "id" : "psk:cat00",
-  "name" : {
-    "en" : "Farrah"
-  },
-  "species" : "cat",
-  "personality" : [ "peppy" ],
-  "personalitySubtype" : 0,
-  "gender" : "girl",
-  "attraction" : "both",
-  "birthday" : [ 1, 1 ],
-  "hobby" : "fitness",
-  "colors" : [ "white", "black" ],
-  "nameTag" : [ "#AA6405", "#FFF7CF" ],
-  "catchphrase" : {
-    "en" : ""
-  },
-  "clothing" : {
-    "default" : "acnh:heartsweater/red",
-    "rain" : [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
-  },
-  "umbrella" : "acnh:redumbrella",
-  "photo" : "psk:farrahsphoto",
-  "poster" : "psk:farrahsposter",
-  "house" : {
-    "walls" : "acnh:commonwall",
-    "floor" : "acnh:commonflooring",
-    "music" : "acnh:silence",
-    "items" : [
-    ]
-  }
+	"id": "psk:cat00",
+	"name": {
+		"en": "Farrah"
+	},
+	"species": "cat",
+	"personality": [ "peppy" ],
+	"personalitySubtype": 0,
+	"gender": "girl",
+	"attraction": "both",
+	"birthday": [ 1, 1 ],
+	"hobby": "fitness",
+	"colors": [ "white", "black" ],
+	"nameTag": [ "#AA6405", "#FFF7CF" ],
+	"catchphrase": {
+		"en": ""
+	},
+	"clothing": {
+		"default": "acnh:heartsweater/red",
+		"rain": [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
+	},
+	"umbrella": "acnh:redumbrella",
+	"photo": "psk:farrahsphoto",
+	"poster": "psk:farrahsposter",
+	"house": {
+		"walls": "acnh:commonwall",
+		"floor": "acnh:commonflooring",
+		"music": "acnh:silence",
+		"items": [
+		]
+	}
 }

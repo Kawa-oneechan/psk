@@ -1,19 +1,19 @@
 {
-  "id" : "psk:rcm",
-  "isSpecial" : true,
-  "customModel" : true,
-  "name" : {
-    "en" : "Bobo",
-    "ja" : "ボボさん",
-    "ko" : "보보 씨",
-    "zh" : "波波叔叔"
-  },
-  "gender" : "boy",
-  "birthday" : [ 5, 7 ],
-  "catchphrase" : "'owzit",
-  "hobby" : "nature",
-  "colors" : [ "green", "orange" ],
-  "nameTag" : [ "#EC7D42", "#61300B" ],
-  "photo" : "psk:bobosphoto",
-  "poster" : "psk:bobosposter"
+	"id": "psk:rcm",
+	"isSpecial": true,
+	"customModel": true,
+	"name": {
+		"en": "Bobo",
+		"ja": "ボボさん",
+		"ko": "보보 씨",
+		"zh": "波波叔叔"
+	},
+	"gender": "boy",
+	"birthday": [ 5, 7 ],
+	"catchphrase": "'owzit",
+	"hobby": "nature",
+	"colors": [ "green", "orange" ],
+	"nameTag": [ "#EC7D42", "#61300B" ],
+	"photo": "psk:bobosphoto",
+	"poster": "psk:bobosposter"
 }

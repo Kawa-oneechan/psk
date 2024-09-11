@@ -1,19 +1,19 @@
 {
-  "id" : "psk:tap",
-  "isSpecial" : true,
-  "customModel" : true,
-  "name" : {
-    "en" : "Callisto",
-    "ja" : "カリスト",
-    "ko" : "칼리스토",
-    "zh" : "木卫四",
-    "de" : "Kallisto",
-    "es" : "Calisto"
-  },
-  "gender" : "girl",
-  "birthday" : [ 4, 6 ],
-  "hobby" : "nature",
-  "nameTag" : [ "#EC7D42", "#61300B" ],
-  "photo" : "psk:callistosphoto",
-  "poster" : "psk:callistosposter"
+	"id": "psk:tap",
+	"isSpecial": true,
+	"customModel": true,
+	"name": {
+		"en": "Callisto",
+		"ja": "カリスト",
+		"ko": "칼리스토",
+		"zh": "木卫四",
+		"de": "Kallisto",
+		"es": "Calisto"
+	},
+	"gender": "girl",
+	"birthday": [ 4, 6 ],
+	"hobby": "nature",
+	"nameTag": [ "#EC7D42", "#61300B" ],
+	"photo": "psk:callistosphoto",
+	"poster": "psk:callistosposter"
 }

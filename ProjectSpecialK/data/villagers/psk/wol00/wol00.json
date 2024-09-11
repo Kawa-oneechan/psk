@@ -1,32 +1,32 @@
 {
-  "id" : "psk:wol00",
-  "name" : {
-    "en" : "Retro"
-  },
-  "species" : "wol",
-  "personality" : "smug",
-  "personalitySubtype" : 0,
-  "gender" : "enby-b",
-  "attraction" : "girls",
-  "birthday" : [ 28, 10 ],
-  "hobby" : "education",
-  "colors" : [ "white", "black" ],
-  "nameTag" : [ "#FFFFFF", "#848484" ],
-  "catchphrase" : {
-    "en" : "fuzzies"
-  },
-  "clothing" : {
-    "default" : "acnh:retrosweater/purple",
-    "rain" : [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
-  },
-  "umbrella" : "acnh:redumbrella",
-  "photo" : "psk:retrosphoto",
-  "poster" : "psk:retrosposter",
-  "house" : {
-    "walls" : "acnh:commonwall",
-    "floor" : "acnh:commonflooring",
-    "music" : "acnh:silence",
-    "items" : [
-    ]
-  }
+	"id": "psk:wol00",
+	"name": {
+		"en": "Retro"
+	},
+	"species": "wol",
+	"personality": "smug",
+	"personalitySubtype": 0,
+	"gender": "enby-b",
+	"attraction": "girls",
+	"birthday": [ 28, 10 ],
+	"hobby": "education",
+	"colors": [ "white", "black" ],
+	"nameTag": [ "#FFFFFF", "#848484" ],
+	"catchphrase": {
+		"en": "fuzzies"
+	},
+	"clothing": {
+		"default": "acnh:retrosweater/purple",
+		"rain": [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
+	},
+	"umbrella": "acnh:redumbrella",
+	"photo": "psk:retrosphoto",
+	"poster": "psk:retrosposter",
+	"house": {
+		"walls": "acnh:commonwall",
+		"floor": "acnh:commonflooring",
+		"music": "acnh:silence",
+		"items": [
+		]
+	}
 }

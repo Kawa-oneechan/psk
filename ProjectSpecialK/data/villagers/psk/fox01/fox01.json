@@ -1,32 +1,32 @@
 {
-  "id" : "psk:fox01",
-  "name" : {
-    "en" : "Rea"
-  },
-  "species" : "fox",
-  "personality" : "normal",
-  "personalitySubtype" : 0,
-  "gender" : "girl",
-  "attraction" : "none",
-  "birthday" : [ 12, 11 ],
-  "hobby" : "music",
-  "colors" : [ "purple", "pink" ],
-  "nameTag" : [ "#FFFFFF", "#848484" ],
-  "catchphrase" : {
-    "en" : "heh"
-  },
-  "clothing" : {
-    "default" : "acnh:aranknitsweater/green",
-    "rain" : [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
-  },
-  "umbrella" : "acnh:redumbrella",
-  "photo" : "psk:reasphoto",
-  "poster" : "psk:reasposter",
-  "house" : {
-    "walls" : "acnh:commonwall",
-    "floor" : "acnh:commonflooring",
-    "music" : "acnh:silence",
-    "items" : [
-    ]
-  }
+	"id": "psk:fox01",
+	"name": {
+		"en": "Rea"
+	},
+	"species": "fox",
+	"personality": "normal",
+	"personalitySubtype": 0,
+	"gender": "girl",
+	"attraction": "none",
+	"birthday": [ 12, 11 ],
+	"hobby": "music",
+	"colors": [ "purple", "pink" ],
+	"nameTag": [ "#FFFFFF", "#848484" ],
+	"catchphrase": {
+		"en": "heh"
+	},
+	"clothing": {
+		"default": "acnh:aranknitsweater/green",
+		"rain": [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
+	},
+	"umbrella": "acnh:redumbrella",
+	"photo": "psk:reasphoto",
+	"poster": "psk:reasposter",
+	"house": {
+		"walls": "acnh:commonwall",
+		"floor": "acnh:commonflooring",
+		"music": "acnh:silence",
+		"items": [
+		]
+	}
 }

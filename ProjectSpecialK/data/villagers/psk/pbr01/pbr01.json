@@ -1,32 +1,32 @@
 {
-  "id" : "psk:pbr01",
-  "name" : {
-    "en" : "Valerie"
-  },
-  "species" : "pbr",
-  "personality" : "uchi",
-  "personalitySubtype" : 0,
-  "gender" : "girl",
-  "attraction" : "girls",
-  "birthday" : [ 19, 3 ],
-  "hobby" : "education",
-  "colors" : [ "black", "red" ],
-  "nameTag" : [ "#FFFFFF", "#848484" ],
-  "catchphrase" : {
-    "en" : "comprende"
-  },
-  "clothing" : {
-    "default" : "acnh:aranknitsweater/green",
-    "rain" : [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
-  },
-  "umbrella" : "acnh:redumbrella",
-  "photo" : "psk:valeriesphoto",
-  "poster" : "psk:valeriesposter",
-  "house" : {
-    "walls" : "acnh:commonwall",
-    "floor" : "acnh:commonflooring",
-    "music" : "acnh:silence",
-    "items" : [
-    ]
-  }
+	"id": "psk:pbr01",
+	"name": {
+		"en": "Valerie"
+	},
+	"species": "pbr",
+	"personality": "uchi",
+	"personalitySubtype": 0,
+	"gender": "girl",
+	"attraction": "girls",
+	"birthday": [ 19, 3 ],
+	"hobby": "education",
+	"colors": [ "black", "red" ],
+	"nameTag": [ "#FFFFFF", "#848484" ],
+	"catchphrase": {
+		"en": "comprende"
+	},
+	"clothing": {
+		"default": "acnh:aranknitsweater/green",
+		"rain": [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
+	},
+	"umbrella": "acnh:redumbrella",
+	"photo": "psk:valeriesphoto",
+	"poster": "psk:valeriesposter",
+	"house": {
+		"walls": "acnh:commonwall",
+		"floor": "acnh:commonflooring",
+		"music": "acnh:silence",
+		"items": [
+		]
+	}
 }

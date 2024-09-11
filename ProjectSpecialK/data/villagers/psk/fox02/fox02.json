@@ -1,32 +1,32 @@
 {
-  "id" : "psk:fox02",
-  "name" : {
-    "en" : "Xenia"
-  },
-  "species" : "fox",
-  "personality" : "chill",
-  "personalitySubtype" : 0,
-  "gender" : "enby-g",
-  "attraction" : "none",
-  "birthday" : [ 17, 9 ],
-  "hobby" : "education",
-  "colors" : [ "black", "green" ],
-  "nameTag" : [ "#FFFFFF", "#848484" ],
-  "catchphrase" : {
-    "en" : "beep"
-  },
-  "clothing" : {
-    "default" : "acnh:aranknitsweater/green",
-    "rain" : [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
-  },
-  "umbrella" : "acnh:redumbrella",
-  "photo" : "psk:xeniasphoto",
-  "poster" : "psk:xeniasposter",
-  "house" : {
-    "walls" : "acnh:commonwall",
-    "floor" : "acnh:commonflooring",
-    "music" : "acnh:silence",
-    "items" : [
-    ]
-  }
+	"id": "psk:fox02",
+	"name": {
+		"en": "Xenia"
+	},
+	"species": "fox",
+	"personality": "chill",
+	"personalitySubtype": 0,
+	"gender": "enby-g",
+	"attraction": "none",
+	"birthday": [ 17, 9 ],
+	"hobby": "education",
+	"colors": [ "black", "green" ],
+	"nameTag": [ "#FFFFFF", "#848484" ],
+	"catchphrase": {
+		"en": "beep"
+	},
+	"clothing": {
+		"default": "acnh:aranknitsweater/green",
+		"rain": [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
+	},
+	"umbrella": "acnh:redumbrella",
+	"photo": "psk:xeniasphoto",
+	"poster": "psk:xeniasposter",
+	"house": {
+		"walls": "acnh:commonwall",
+		"floor": "acnh:commonflooring",
+		"music": "acnh:silence",
+		"items": [
+		]
+	}
 }

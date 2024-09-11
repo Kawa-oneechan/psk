@@ -1,19 +1,19 @@
 {
-  "id" : "psk:xct",
-  "isSpecial" : true,
-  "customModel" : true,
-  "name" : {
-    "en" : "Kawa",
-    "ja" : "かワ",
-    "ko" : "카와",
-    "zh" : "卡瓦"
-  },
-  "gender" : "boy",
-  "birthday" : [ 26, 6 ],
-  "catchphrase" : "myeh",
-  "hobby" : "play",
-  "colors" : [ "black", "pink" ],
-  "nameTag" : [ "#EC7D42", "#61300B" ],
-  "photo" : "psk:kawasphoto",
-  "poster" : "psk:kawasposter"
+	"id": "psk:xct",
+	"isSpecial": true,
+	"customModel": true,
+	"name": {
+		"en": "Kawa",
+		"ja": "かワ",
+		"ko": "카와",
+		"zh": "卡瓦"
+	},
+	"gender": "boy",
+	"birthday": [ 26, 6 ],
+	"catchphrase": "myeh",
+	"hobby": "play",
+	"colors": [ "black", "pink" ],
+	"nameTag": [ "#EC7D42", "#61300B" ],
+	"photo": "psk:kawasphoto",
+	"poster": "psk:kawasposter"
 }

@@ -1,32 +1,32 @@
 {
-  "id" : "psk:brd00",
-  "name" : {
-    "en" : "Hoshi"
-  },
-  "species" : "brd",
-  "personality" : "snooty",
-  "personalitySubtype" : 0,
-  "gender" : "girl",
-  "attraction" : "both",
-  "birthday" : [ 15, 11 ],
-  "hobby" : "music",
-  "colors" : [ "blue", "gray" ],
-  "nameTag" : [ "#FFFFFF", "#848484" ],
-  "catchphrase" : {
-    "en" : ""
-  },
-  "clothing" : {
-    "default" : "acnh:aranknitsweater/green",
-    "rain" : [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
-  },
-  "umbrella" : "acnh:redumbrella",
-  "photo" : "psk:hoshisphoto",
-  "poster" : "psk:hoshisposter",
-  "house" : {
-    "walls" : "acnh:commonwall",
-    "floor" : "acnh:commonflooring",
-    "music" : "acnh:silence",
-    "items" : [
-    ]
-  }
+	"id": "psk:brd00",
+	"name": {
+		"en": "Hoshi"
+	},
+	"species": "brd",
+	"personality": "snooty",
+	"personalitySubtype": 0,
+	"gender": "girl",
+	"attraction": "both",
+	"birthday": [ 15, 11 ],
+	"hobby": "music",
+	"colors": [ "blue", "gray" ],
+	"nameTag": [ "#FFFFFF", "#848484" ],
+	"catchphrase": {
+		"en": ""
+	},
+	"clothing": {
+		"default": "acnh:aranknitsweater/green",
+		"rain": [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
+	},
+	"umbrella": "acnh:redumbrella",
+	"photo": "psk:hoshisphoto",
+	"poster": "psk:hoshisposter",
+	"house": {
+		"walls": "acnh:commonwall",
+		"floor": "acnh:commonflooring",
+		"music": "acnh:silence",
+		"items": [
+		]
+	}
 }

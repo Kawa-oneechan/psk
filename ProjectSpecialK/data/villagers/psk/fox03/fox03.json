@@ -1,32 +1,32 @@
 {
-  "id" : "psk:fox03",
-  "name" : {
-    "en" : "Marble"
-  },
-  "species" : "fox",
-  "personality" : "smug",
-  "personalitySubtype" : 0,
-  "gender" : "boy",
-  "attraction" : "both",
-  "birthday" : [ 17, 11 ],
-  "hobby" : "music",
-  "colors" : [ "black", "blue" ],
-  "nameTag" : [ "#FFFFFF", "#848484" ],
-  "catchphrase" : {
-    "en" : "yap on"
-  },
-  "clothing" : {
-    "default" : "acnh:aranknitsweater/green",
-    "rain" : [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
-  },
-  "umbrella" : "acnh:redumbrella",
-  "photo" : "psk:marblesphoto",
-  "poster" : "psk:marblesposter",
-  "house" : {
-    "walls" : "acnh:commonwall",
-    "floor" : "acnh:commonflooring",
-    "music" : "acnh:silence",
-    "items" : [
-    ]
-  }
+	"id": "psk:fox03",
+	"name": {
+		"en": "Marble"
+	},
+	"species": "fox",
+	"personality": "smug",
+	"personalitySubtype": 0,
+	"gender": "boy",
+	"attraction": "both",
+	"birthday": [ 17, 11 ],
+	"hobby": "music",
+	"colors": [ "black", "blue" ],
+	"nameTag": [ "#FFFFFF", "#848484" ],
+	"catchphrase": {
+		"en": "yap on"
+	},
+	"clothing": {
+		"default": "acnh:aranknitsweater/green",
+		"rain": [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
+	},
+	"umbrella": "acnh:redumbrella",
+	"photo": "psk:marblesphoto",
+	"poster": "psk:marblesposter",
+	"house": {
+		"walls": "acnh:commonwall",
+		"floor": "acnh:commonflooring",
+		"music": "acnh:silence",
+		"items": [
+		]
+	}
 }

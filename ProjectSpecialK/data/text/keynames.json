@@ -46,7 +46,7 @@
 	"keys:scan:81":  { "en": "Numpad 3", "nl": "Numeriek 3" },
 	"keys:scan:82":  { "en": "Numpad 0", "nl": "Numeriek 0" },
 	"keys:scan:83":  { "en": "Numpad .", "nl": "Numeriek ." },
-	//"keys:scan:84":  { "en": "Print Screen" }, //?!
+//	"keys:scan:84":  { "en": "Print Screen" }, //?!
 	"keys:scan:87":  { "en": "F11" },
 	"keys:scan:88":  { "en": "F12" },
 	"keys:scan:284": { "en": "Numpad Enter", "nl": "Numeriek Enter" },

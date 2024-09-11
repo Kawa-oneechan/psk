@@ -1,32 +1,32 @@
 {
-  "id" : "psk:hrs00",
-  "name" : {
-    "en" : "Ray"
-  },
-  "species" : "hrs",
-  "personality" : "jock",
-  "personalitySubtype" : 0,
-  "gender" : "boy",
-  "attraction" : "girls",
-  "birthday" : [ 8, 8 ],
-  "hobby" : "fitness",
-  "colors" : [ "blue", "white" ],
-  "nameTag" : [ "#FFFFFF", "#848484" ],
-  "catchphrase" : {
-    "en" : ""
-  },
-  "clothing" : {
-    "default" : "acnh:tank/navyblue",
-    "rain" : [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
-  },
-  "umbrella" : "acnh:redumbrella",
-  "photo" : "psk:raysphoto",
-  "poster" : "psk:raysposter",
-  "house" : {
-    "walls" : "acnh:commonwall",
-    "floor" : "acnh:commonflooring",
-    "music" : "acnh:silence",
-    "items" : [
-    ]
-  }
+	"id": "psk:hrs00",
+	"name": {
+		"en": "Ray"
+	},
+	"species": "hrs",
+	"personality": "jock",
+	"personalitySubtype": 0,
+	"gender": "boy",
+	"attraction": "girls",
+	"birthday": [ 8, 8 ],
+	"hobby": "fitness",
+	"colors": [ "blue", "white" ],
+	"nameTag": [ "#FFFFFF", "#848484" ],
+	"catchphrase": {
+		"en": ""
+	},
+	"clothing": {
+		"default": "acnh:tank/navyblue",
+		"rain": [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
+	},
+	"umbrella": "acnh:redumbrella",
+	"photo": "psk:raysphoto",
+	"poster": "psk:raysposter",
+	"house": {
+		"walls": "acnh:commonwall",
+		"floor": "acnh:commonflooring",
+		"music": "acnh:silence",
+		"items": [
+		]
+	}
 }

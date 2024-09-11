@@ -1,32 +1,32 @@
 {
-  "id" : "psk:cat06",
-  "name" : {
-    "en" : "Socks"
-  },
-  "species" : "cat",
-  "personality" : [ "cranky" ],
-  "personalitySubtype" : 0,
-  "gender" : "enby-b",
-  "attraction" : "both",
-  "birthday" : [ 21, 12 ],
-  "hobby" : "music",
-  "colors" : [ "green", "blue" ],
-  "nameTag" : [ "#FFFFFF", "#848484" ],
-  "catchphrase" : {
-    "en" : "y'know dude"
-  },
-  "clothing" : {
-    "default" : "acnh:heartsweater/red",
-    "rain" : [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
-  },
-  "umbrella" : "acnh:redumbrella",
-  "photo" : "psk:socksphoto",
-  "poster" : "psk:socksposter",
-  "house" : {
-    "walls" : "acnh:commonwall",
-    "floor" : "acnh:commonflooring",
-    "music" : "acnh:silence",
-    "items" : [
-    ]
-  }
+	"id": "psk:cat06",
+	"name": {
+		"en": "Socks"
+	},
+	"species": "cat",
+	"personality": [ "cranky" ],
+	"personalitySubtype": 0,
+	"gender": "enby-b",
+	"attraction": "both",
+	"birthday": [ 21, 12 ],
+	"hobby": "music",
+	"colors": [ "green", "blue" ],
+	"nameTag": [ "#FFFFFF", "#848484" ],
+	"catchphrase": {
+		"en": "y'know dude"
+	},
+	"clothing": {
+		"default": "acnh:heartsweater/red",
+		"rain": [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
+	},
+	"umbrella": "acnh:redumbrella",
+	"photo": "psk:socksphoto",
+	"poster": "psk:socksposter",
+	"house": {
+		"walls": "acnh:commonwall",
+		"floor": "acnh:commonflooring",
+		"music": "acnh:silence",
+		"items": [
+		]
+	}
 }

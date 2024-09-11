@@ -1,32 +1,32 @@
 {
-  "id" : "psk:kal00",
-  "name" : {
-    "en" : "Nitsy"
-  },
-  "species" : "kol",
-  "personality" : "normal",
-  "personalitySubtype" : 0,
-  "gender" : "enby-f",
-  "attraction" : "none",
-  "birthday" : [ 11, 10 ],
-  "hobby" : "play",
-  "colors" : [ "aqua", "white" ],
-  "nameTag" : [ "#FFFFFF", "#848484" ],
-  "catchphrase" : {
-    "en" : "zzz"
-  },
-  "clothing" : {
-    "default" : "acnh:tank/navyblue",
-    "rain" : [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
-  },
-  "umbrella" : "acnh:redumbrella",
-  "photo" : "psk:nitsysphoto",
-  "poster" : "psk:nitsysposter",
-  "house" : {
-    "walls" : "acnh:commonwall",
-    "floor" : "acnh:commonflooring",
-    "music" : "acnh:silence",
-    "items" : [
-    ]
-  }
+	"id": "psk:kal00",
+	"name": {
+		"en": "Nitsy"
+	},
+	"species": "kol",
+	"personality": "normal",
+	"personalitySubtype": 0,
+	"gender": "enby-f",
+	"attraction": "none",
+	"birthday": [ 11, 10 ],
+	"hobby": "play",
+	"colors": [ "aqua", "white" ],
+	"nameTag": [ "#FFFFFF", "#848484" ],
+	"catchphrase": {
+		"en": "zzz"
+	},
+	"clothing": {
+		"default": "acnh:tank/navyblue",
+		"rain": [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
+	},
+	"umbrella": "acnh:redumbrella",
+	"photo": "psk:nitsysphoto",
+	"poster": "psk:nitsysposter",
+	"house": {
+		"walls": "acnh:commonwall",
+		"floor": "acnh:commonflooring",
+		"music": "acnh:silence",
+		"items": [
+		]
+	}
 }

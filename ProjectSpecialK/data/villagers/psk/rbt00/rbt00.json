@@ -1,36 +1,36 @@
 {
-  "id" : "psk:rbt00",
-  "name" : {
-    "en" : "Patch",
-    "ja" : "パッチ",
-    "ko" : "반점",
-    "zh" : "修補",
-    "ru" : "Патч"
-  },
-  "species" : "rbt",
-  "personality" : "uchi",
-  "personalitySubtype" : 0,
-  "gender" : "enby-g",
-  "attraction" : "both",
-  "birthday" : [ 1, 1 ],
-  "hobby" : "music",
-  "colors" : [ "white", "black" ],
-  "nameTag" : [ "#FFFFFF", "#848484" ],
-  "catchphrase" : {
-    "en" : ""
-  },
-  "clothing" : {
-    "default" : "acnh:rabbittee",
-    "rain" : [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
-  },
-  "umbrella" : "acnh:redumbrella",
-  "photo" : "psk:patchsphoto",
-  "poster" : "psk:patchsposter",
-  "house" : {
-    "walls" : "acnh:commonwall",
-    "floor" : "acnh:commonflooring",
-    "music" : "acnh:silence",
-    "items" : [
-    ]
-  }
+	"id": "psk:rbt00",
+	"name": {
+		"en": "Patch",
+		"ja": "パッチ",
+		"ko": "반점",
+		"zh": "修補",
+		"ru": "Патч"
+	},
+	"species": "rbt",
+	"personality": "uchi",
+	"personalitySubtype": 0,
+	"gender": "enby-g",
+	"attraction": "both",
+	"birthday": [ 1, 1 ],
+	"hobby": "music",
+	"colors": [ "white", "black" ],
+	"nameTag": [ "#FFFFFF", "#848484" ],
+	"catchphrase": {
+		"en": ""
+	},
+	"clothing": {
+		"default": "acnh:rabbittee",
+		"rain": [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
+	},
+	"umbrella": "acnh:redumbrella",
+	"photo": "psk:patchsphoto",
+	"poster": "psk:patchsposter",
+	"house": {
+		"walls": "acnh:commonwall",
+		"floor": "acnh:commonflooring",
+		"music": "acnh:silence",
+		"items": [
+		]
+	}
 }

@@ -1,32 +1,32 @@
 {
-  "id" : "psk:cat07",
-  "name" : {
-    "en" : "Semilina"
-  },
-  "species" : "cat",
-  "personality" : [ "uchi" ],
-  "personalitySubtype" : 0,
-  "gender" : "girl",
-  "attraction" : "none",
-  "birthday" : [ 2, 7 ],
-  "hobby" : "nature",
-  "colors" : [ "colorful", "white" ],
-  "nameTag" : [ "#FFFFFF", "#848484" ],
-  "catchphrase" : {
-    "en" : "mrow"
-  },
-  "clothing" : {
-    "default" : "acnh:heartsweater/red",
-    "rain" : [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
-  },
-  "umbrella" : "acnh:redumbrella",
-  "photo" : "psk:semilinasphoto",
-  "poster" : "psk:semilinasposter",
-  "house" : {
-    "walls" : "acnh:commonwall",
-    "floor" : "acnh:commonflooring",
-    "music" : "acnh:silence",
-    "items" : [
-    ]
-  }
+	"id": "psk:cat07",
+	"name": {
+		"en": "Semilina"
+	},
+	"species": "cat",
+	"personality": [ "uchi" ],
+	"personalitySubtype": 0,
+	"gender": "girl",
+	"attraction": "none",
+	"birthday": [ 2, 7 ],
+	"hobby": "nature",
+	"colors": [ "colorful", "white" ],
+	"nameTag": [ "#FFFFFF", "#848484" ],
+	"catchphrase": {
+		"en": "mrow"
+	},
+	"clothing": {
+		"default": "acnh:heartsweater/red",
+		"rain": [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
+	},
+	"umbrella": "acnh:redumbrella",
+	"photo": "psk:semilinasphoto",
+	"poster": "psk:semilinasposter",
+	"house": {
+		"walls": "acnh:commonwall",
+		"floor": "acnh:commonflooring",
+		"music": "acnh:silence",
+		"items": [
+		]
+	}
 }

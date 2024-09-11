@@ -1,32 +1,32 @@
 {
-  "id" : "psk:pbr00",
-  "name" : {
-    "en" : "Meredith"
-  },
-  "species" : "pbr",
-  "personality" : "uchi",
-  "personalitySubtype" : 0,
-  "gender" : "girl",
-  "attraction" : "both",
-  "birthday" : [ 5, 10 ],
-  "hobby" : "music",
-  "colors" : [ "colorful", "blue" ],
-  "nameTag" : [ "#FFFFFF", "#848484" ],
-  "catchphrase" : {
-    "en" : "bwak"
-  },
-  "clothing" : {
-    "default" : "acnh:aranknitsweater/green",
-    "rain" : [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
-  },
-  "umbrella" : "acnh:redumbrella",
-  "photo" : "psk:meredithsphoto",
-  "poster" : "psk:meredithsposter",
-  "house" : {
-    "walls" : "acnh:commonwall",
-    "floor" : "acnh:commonflooring",
-    "music" : "acnh:silence",
-    "items" : [
-    ]
-  }
+	"id": "psk:pbr00",
+	"name": {
+		"en": "Meredith"
+	},
+	"species": "pbr",
+	"personality": "uchi",
+	"personalitySubtype": 0,
+	"gender": "girl",
+	"attraction": "both",
+	"birthday": [ 5, 10 ],
+	"hobby": "music",
+	"colors": [ "colorful", "blue" ],
+	"nameTag": [ "#FFFFFF", "#848484" ],
+	"catchphrase": {
+		"en": "bwak"
+	},
+	"clothing": {
+		"default": "acnh:aranknitsweater/green",
+		"rain": [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
+	},
+	"umbrella": "acnh:redumbrella",
+	"photo": "psk:meredithsphoto",
+	"poster": "psk:meredithsposter",
+	"house": {
+		"walls": "acnh:commonwall",
+		"floor": "acnh:commonflooring",
+		"music": "acnh:silence",
+		"items": [
+		]
+	}
 }

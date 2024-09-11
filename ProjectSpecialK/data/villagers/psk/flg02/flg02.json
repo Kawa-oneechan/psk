@@ -1,32 +1,32 @@
 {
-  "id" : "psk:flg02",
-  "name" : {
-    "en" : "Marta"
-  },
-  "species" : "flg",
-  "personality" : "snooty",
-  "personalitySubtype" : 0,
-  "gender" : "girl",
-  "attraction" : "boys",
-  "birthday" : [ 22, 6 ],
-  "hobby" : "education",
-  "colors" : [ "green", "orange" ],
-  "nameTag" : [ "#FFFFFF", "#848484" ],
-  "catchphrase" : {
-    "en" : "like so"
-  },
-  "clothing" : {
-    "default" : "acnh:aranknitsweater/green",
-    "rain" : [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
-  },
-  "umbrella" : "acnh:redumbrella",
-  "photo" : "psk:martasphoto",
-  "poster" : "psk:martasposter",
-  "house" : {
-    "walls" : "acnh:commonwall",
-    "floor" : "acnh:commonflooring",
-    "music" : "acnh:silence",
-    "items" : [
-    ]
-  }
+	"id": "psk:flg02",
+	"name": {
+		"en": "Marta"
+	},
+	"species": "flg",
+	"personality": "snooty",
+	"personalitySubtype": 0,
+	"gender": "girl",
+	"attraction": "boys",
+	"birthday": [ 22, 6 ],
+	"hobby": "education",
+	"colors": [ "green", "orange" ],
+	"nameTag": [ "#FFFFFF", "#848484" ],
+	"catchphrase": {
+		"en": "like so"
+	},
+	"clothing": {
+		"default": "acnh:aranknitsweater/green",
+		"rain": [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
+	},
+	"umbrella": "acnh:redumbrella",
+	"photo": "psk:martasphoto",
+	"poster": "psk:martasposter",
+	"house": {
+		"walls": "acnh:commonwall",
+		"floor": "acnh:commonflooring",
+		"music": "acnh:silence",
+		"items": [
+		]
+	}
 }

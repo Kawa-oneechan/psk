@@ -1,32 +1,32 @@
 {
-  "id" : "psk:flg01",
-  "name" : {
-    "en" : "Kith"
-  },
-  "species" : "flg",
-  "personality" : "spacey",
-  "personalitySubtype" : 0,
-  "gender" : "enby-b",
-  "attraction" : "none",
-  "birthday" : [ 1, 12 ],
-  "hobby" : "nature",
-  "colors" : [ "aqua", "gray" ],
-  "nameTag" : [ "#FFFFFF", "#848484" ],
-  "catchphrase" : {
-    "en" : "like so"
-  },
-  "clothing" : {
-    "default" : "acnh:aranknitsweater/green",
-    "rain" : [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
-  },
-  "umbrella" : "acnh:redumbrella",
-  "photo" : "psk:kithsphoto",
-  "poster" : "psk:kithsposter",
-  "house" : {
-    "walls" : "acnh:commonwall",
-    "floor" : "acnh:commonflooring",
-    "music" : "acnh:silence",
-    "items" : [
-    ]
-  }
+	"id": "psk:flg01",
+	"name": {
+		"en": "Kith"
+	},
+	"species": "flg",
+	"personality": "spacey",
+	"personalitySubtype": 0,
+	"gender": "enby-b",
+	"attraction": "none",
+	"birthday": [ 1, 12 ],
+	"hobby": "nature",
+	"colors": [ "aqua", "gray" ],
+	"nameTag": [ "#FFFFFF", "#848484" ],
+	"catchphrase": {
+		"en": "like so"
+	},
+	"clothing": {
+		"default": "acnh:aranknitsweater/green",
+		"rain": [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
+	},
+	"umbrella": "acnh:redumbrella",
+	"photo": "psk:kithsphoto",
+	"poster": "psk:kithsposter",
+	"house": {
+		"walls": "acnh:commonwall",
+		"floor": "acnh:commonflooring",
+		"music": "acnh:silence",
+		"items": [
+		]
+	}
 }

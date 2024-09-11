@@ -1,32 +1,32 @@
 {
-  "id" : "psk:elp00",
-  "name" : {
-    "en" : "Brunnhilde"
-  },
-  "species" : "elp",
-  "personality" : "snooty",
-  "personalitySubtype" : 0,
-  "gender" : "girl",
-  "attraction" : "boys",
-  "birthday" : [ 17, 8 ],
-  "hobby" : "music",
-  "colors" : [ "yellow", "brown" ],
-  "nameTag" : [ "#FFFFFF", "#848484" ],
-  "catchphrase" : {
-    "en" : "hojotoho"
-  },
-  "clothing" : {
-    "default" : "acnh:vikingtop/brown",
-    "rain" : [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
-  },
-  "umbrella" : "acnh:redumbrella",
-  "photo" : "psk:brunnhildesphoto",
-  "poster" : "psk:brunnhildesposter",
-  "house" : {
-    "walls" : "acnh:commonwall",
-    "floor" : "acnh:commonflooring",
-    "music" : "acnh:silence",
-    "items" : [
-    ]
-  }
+	"id": "psk:elp00",
+	"name": {
+		"en": "Brunnhilde"
+	},
+	"species": "elp",
+	"personality": "snooty",
+	"personalitySubtype": 0,
+	"gender": "girl",
+	"attraction": "boys",
+	"birthday": [ 17, 8 ],
+	"hobby": "music",
+	"colors": [ "yellow", "brown" ],
+	"nameTag": [ "#FFFFFF", "#848484" ],
+	"catchphrase": {
+		"en": "hojotoho"
+	},
+	"clothing": {
+		"default": "acnh:vikingtop/brown",
+		"rain": [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
+	},
+	"umbrella": "acnh:redumbrella",
+	"photo": "psk:brunnhildesphoto",
+	"poster": "psk:brunnhildesposter",
+	"house": {
+		"walls": "acnh:commonwall",
+		"floor": "acnh:commonflooring",
+		"music": "acnh:silence",
+		"items": [
+		]
+	}
 }

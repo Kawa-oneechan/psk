@@ -1,32 +1,32 @@
 {
-  "id" : "psk:cat02",
-  "name" : {
-    "en" : "Meiki"
-  },
-  "species" : "cat",
-  "personality" : [ "normal" ],
-  "personalitySubtype" : 0,
-  "gender" : "enby-g",
-  "attraction" : "none",
-  "birthday" : [ 22, 7 ],
-  "hobby" : "play",
-  "colors" : [ "white", "yellow" ],
-  "nameTag" : [ "#AA6405", "#FFF7CF" ],
-  "catchphrase" : {
-    "en" : "I think"
-  },
-  "clothing" : {
-    "default" : "acnh:heartsweater/red",
-    "rain" : [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
-  },
-  "umbrella" : "acnh:redumbrella",
-  "photo" : "psk:meikisphoto",
-  "poster" : "psk:meikisposter",
-  "house" : {
-    "walls" : "acnh:commonwall",
-    "floor" : "acnh:commonflooring",
-    "music" : "acnh:silence",
-    "items" : [
-    ]
-  }
+	"id": "psk:cat02",
+	"name": {
+		"en": "Meiki"
+	},
+	"species": "cat",
+	"personality": [ "normal" ],
+	"personalitySubtype": 0,
+	"gender": "enby-g",
+	"attraction": "none",
+	"birthday": [ 22, 7 ],
+	"hobby": "play",
+	"colors": [ "white", "yellow" ],
+	"nameTag": [ "#AA6405", "#FFF7CF" ],
+	"catchphrase": {
+		"en": "I think"
+	},
+	"clothing": {
+		"default": "acnh:heartsweater/red",
+		"rain": [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
+	},
+	"umbrella": "acnh:redumbrella",
+	"photo": "psk:meikisphoto",
+	"poster": "psk:meikisposter",
+	"house": {
+		"walls": "acnh:commonwall",
+		"floor": "acnh:commonflooring",
+		"music": "acnh:silence",
+		"items": [
+		]
+	}
 }

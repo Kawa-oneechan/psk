@@ -1,32 +1,32 @@
 {
-  "id" : "psk:flg00",
-  "name" : {
-    "en" : "Nacay"
-  },
-  "species" : "flg",
-  "personality" : "cranky",
-  "personalitySubtype" : 0,
-  "gender" : "enby-b",
-  "attraction" : "none",
-  "birthday" : [ 20, 4 ],
-  "hobby" : "nature",
-  "colors" : [ "purple", "black" ],
-  "nameTag" : [ "#FFFFFF", "#848484" ],
-  "catchphrase" : {
-    "en" : "in a stitch"
-  },
-  "clothing" : {
-    "default" : "acnh:aranknitsweater/green",
-    "rain" : [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
-  },
-  "umbrella" : "acnh:redumbrella",
-  "photo" : "psk:nacaysphoto",
-  "poster" : "psk:nacaysposter",
-  "house" : {
-    "walls" : "acnh:commonwall",
-    "floor" : "acnh:commonflooring",
-    "music" : "acnh:silence",
-    "items" : [
-    ]
-  }
+	"id": "psk:flg00",
+	"name": {
+		"en": "Nacay"
+	},
+	"species": "flg",
+	"personality": "cranky",
+	"personalitySubtype": 0,
+	"gender": "enby-b",
+	"attraction": "none",
+	"birthday": [ 20, 4 ],
+	"hobby": "nature",
+	"colors": [ "purple", "black" ],
+	"nameTag": [ "#FFFFFF", "#848484" ],
+	"catchphrase": {
+		"en": "in a stitch"
+	},
+	"clothing": {
+		"default": "acnh:aranknitsweater/green",
+		"rain": [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
+	},
+	"umbrella": "acnh:redumbrella",
+	"photo": "psk:nacaysphoto",
+	"poster": "psk:nacaysposter",
+	"house": {
+		"walls": "acnh:commonwall",
+		"floor": "acnh:commonflooring",
+		"music": "acnh:silence",
+		"items": [
+		]
+	}
 }

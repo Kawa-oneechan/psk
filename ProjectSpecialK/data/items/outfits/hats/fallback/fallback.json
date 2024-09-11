@@ -2,7 +2,7 @@
 	"id": "psk:hatfallback",
 	"name": "(fallback hat item)",
 	"type": "clothes",
-	"category" : "hat",
-	"price" : 1,
+	"category": "hat",
+	"price": 1,
 	"icon": "fallback"
 }

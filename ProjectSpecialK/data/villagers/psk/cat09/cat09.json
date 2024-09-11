@@ -1,32 +1,32 @@
 {
-  "id" : "psk:cat09",
-  "name" : {
-    "en" : "Danny"
-  },
-  "species" : "cat",
-  "personality" : [ "uchi" ],
-  "personalitySubtype" : 0,
-  "gender" : "girl",
-  "attraction" : "none",
-  "birthday" : [ 5, 6 ],
-  "hobby" : "nature",
-  "colors" : [ "blue", "gray" ],
-  "nameTag" : [ "#FFFFFF", "#848484" ],
-  "catchphrase" : {
-    "en" : "mow wow"
-  },
-  "clothing" : {
-    "default" : "acnh:heartsweater/red",
-    "rain" : [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
-  },
-  "umbrella" : "acnh:redumbrella",
-  "photo" : "psk:velvetsphoto",
-  "poster" : "psk:velvetsposter",
-  "house" : {
-    "walls" : "acnh:commonwall",
-    "floor" : "acnh:commonflooring",
-    "music" : "acnh:silence",
-    "items" : [
-    ]
-  }
+	"id": "psk:cat09",
+	"name": {
+		"en": "Danny"
+	},
+	"species": "cat",
+	"personality": [ "uchi" ],
+	"personalitySubtype": 0,
+	"gender": "girl",
+	"attraction": "none",
+	"birthday": [ 5, 6 ],
+	"hobby": "nature",
+	"colors": [ "blue", "gray" ],
+	"nameTag": [ "#FFFFFF", "#848484" ],
+	"catchphrase": {
+		"en": "mow wow"
+	},
+	"clothing": {
+		"default": "acnh:heartsweater/red",
+		"rain": [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
+	},
+	"umbrella": "acnh:redumbrella",
+	"photo": "psk:velvetsphoto",
+	"poster": "psk:velvetsposter",
+	"house": {
+		"walls": "acnh:commonwall",
+		"floor": "acnh:commonflooring",
+		"music": "acnh:silence",
+		"items": [
+		]
+	}
 }

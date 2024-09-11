@@ -1,32 +1,32 @@
 {
-  "id" : "psk:brd01",
-  "name" : {
-    "en" : "Veynuz"
-  },
-  "species" : "brd",
-  "personality" : "lazy",
-  "personalitySubtype" : 0,
-  "gender" : "enby-b",
-  "attraction" : "none",
-  "birthday" : [ 8, 10 ],
-  "hobby" : "music",
-  "colors" : [ "green", "yellow" ],
-  "nameTag" : [ "#FFFFFF", "#848484" ],
-  "catchphrase" : {
-    "en" : "yummy"
-  },
-  "clothing" : {
-    "default" : "acnh:aranknitsweater/green",
-    "rain" : [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
-  },
-  "umbrella" : "acnh:redumbrella",
-  "photo" : "psk:veynuzphoto",
-  "poster" : "psk:veynuzposter",
-  "house" : {
-    "walls" : "acnh:commonwall",
-    "floor" : "acnh:commonflooring",
-    "music" : "acnh:silence",
-    "items" : [
-    ]
-  }
+	"id": "psk:brd01",
+	"name": {
+		"en": "Veynuz"
+	},
+	"species": "brd",
+	"personality": "lazy",
+	"personalitySubtype": 0,
+	"gender": "enby-b",
+	"attraction": "none",
+	"birthday": [ 8, 10 ],
+	"hobby": "music",
+	"colors": [ "green", "yellow" ],
+	"nameTag": [ "#FFFFFF", "#848484" ],
+	"catchphrase": {
+		"en": "yummy"
+	},
+	"clothing": {
+		"default": "acnh:aranknitsweater/green",
+		"rain": [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
+	},
+	"umbrella": "acnh:redumbrella",
+	"photo": "psk:veynuzphoto",
+	"poster": "psk:veynuzposter",
+	"house": {
+		"walls": "acnh:commonwall",
+		"floor": "acnh:commonflooring",
+		"music": "acnh:silence",
+		"items": [
+		]
+	}
 }

@@ -1,32 +1,32 @@
 {
-  "id" : "psk:cat05",
-  "name" : {
-    "en" : "Sarta"
-  },
-  "species" : "cat",
-  "personality" : [ "uchi" ],
-  "personalitySubtype" : 0,
-  "gender" : "girl",
-  "attraction" : "both",
-  "birthday" : [ 13, 10 ],
-  "hobby" : "music",
-  "colors" : [ "purple", "blue" ],
-  "nameTag" : [ "#FFFFFF", "#848484" ],
-  "catchphrase" : {
-    "en" : "zipper"
-  },
-  "clothing" : {
-    "default" : "acnh:heartsweater/red",
-    "rain" : [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
-  },
-  "umbrella" : "acnh:redumbrella",
-  "photo" : "psk:sartasphoto",
-  "poster" : "psk:sartasposter",
-  "house" : {
-    "walls" : "acnh:commonwall",
-    "floor" : "acnh:commonflooring",
-    "music" : "acnh:silence",
-    "items" : [
-    ]
-  }
+	"id": "psk:cat05",
+	"name": {
+		"en": "Sarta"
+	},
+	"species": "cat",
+	"personality": [ "uchi" ],
+	"personalitySubtype": 0,
+	"gender": "girl",
+	"attraction": "both",
+	"birthday": [ 13, 10 ],
+	"hobby": "music",
+	"colors": [ "purple", "blue" ],
+	"nameTag": [ "#FFFFFF", "#848484" ],
+	"catchphrase": {
+		"en": "zipper"
+	},
+	"clothing": {
+		"default": "acnh:heartsweater/red",
+		"rain": [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
+	},
+	"umbrella": "acnh:redumbrella",
+	"photo": "psk:sartasphoto",
+	"poster": "psk:sartasposter",
+	"house": {
+		"walls": "acnh:commonwall",
+		"floor": "acnh:commonflooring",
+		"music": "acnh:silence",
+		"items": [
+		]
+	}
 }

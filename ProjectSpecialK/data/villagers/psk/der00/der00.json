@@ -1,32 +1,32 @@
 {
-  "id" : "psk:der00",
-  "name" : {
-    "en" : "Emilio"
-  },
-  "species" : "der",
-  "personality" : "smug",
-  "personalitySubtype" : 0,
-  "gender" : "boy",
-  "attraction" : "boys",
-  "birthday" : [ 1, 9 ],
-  "hobby" : "education",
-  "colors" : [ "white", "pink" ],
-  "nameTag" : [ "#FFFFFF", "#848484" ],
-  "catchphrase" : {
-    "en" : "hart"
-  },
-  "clothing" : {
-    "default" : "acnh:aranknitsweater/green",
-    "rain" : [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
-  },
-  "umbrella" : "acnh:redumbrella",
-  "photo" : "psk:emiliosphoto",
-  "poster" : "psk:emiliosposter",
-  "house" : {
-    "walls" : "acnh:commonwall",
-    "floor" : "acnh:commonflooring",
-    "music" : "acnh:silence",
-    "items" : [
-    ]
-  }
+	"id": "psk:der00",
+	"name": {
+		"en": "Emilio"
+	},
+	"species": "der",
+	"personality": "smug",
+	"personalitySubtype": 0,
+	"gender": "boy",
+	"attraction": "boys",
+	"birthday": [ 1, 9 ],
+	"hobby": "education",
+	"colors": [ "white", "pink" ],
+	"nameTag": [ "#FFFFFF", "#848484" ],
+	"catchphrase": {
+		"en": "hart"
+	},
+	"clothing": {
+		"default": "acnh:aranknitsweater/green",
+		"rain": [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
+	},
+	"umbrella": "acnh:redumbrella",
+	"photo": "psk:emiliosphoto",
+	"poster": "psk:emiliosposter",
+	"house": {
+		"walls": "acnh:commonwall",
+		"floor": "acnh:commonflooring",
+		"music": "acnh:silence",
+		"items": [
+		]
+	}
 }

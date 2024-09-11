@@ -1,32 +1,32 @@
 {
-  "id" : "psk:cat08",
-  "name" : {
-    "en" : "Velvet"
-  },
-  "species" : "cat",
-  "personality" : [ "smug" ],
-  "personalitySubtype" : 0,
-  "gender" : "boy",
-  "attraction" : "boys",
-  "birthday" : [ 8, 11 ],
-  "hobby" : "education",
-  "colors" : [ "blue", "red" ],
-  "nameTag" : [ "#FFFFFF", "#848484" ],
-  "catchphrase" : {
-    "en" : "r-right"
-  },
-  "clothing" : {
-    "default" : "acnh:heartsweater/red",
-    "rain" : [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
-  },
-  "umbrella" : "acnh:redumbrella",
-  "photo" : "psk:velvetsphoto",
-  "poster" : "psk:velvetsposter",
-  "house" : {
-    "walls" : "acnh:commonwall",
-    "floor" : "acnh:commonflooring",
-    "music" : "acnh:silence",
-    "items" : [
-    ]
-  }
+	"id": "psk:cat08",
+	"name": {
+		"en": "Velvet"
+	},
+	"species": "cat",
+	"personality": [ "smug" ],
+	"personalitySubtype": 0,
+	"gender": "boy",
+	"attraction": "boys",
+	"birthday": [ 8, 11 ],
+	"hobby": "education",
+	"colors": [ "blue", "red" ],
+	"nameTag": [ "#FFFFFF", "#848484" ],
+	"catchphrase": {
+		"en": "r-right"
+	},
+	"clothing": {
+		"default": "acnh:heartsweater/red",
+		"rain": [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
+	},
+	"umbrella": "acnh:redumbrella",
+	"photo": "psk:velvetsphoto",
+	"poster": "psk:velvetsposter",
+	"house": {
+		"walls": "acnh:commonwall",
+		"floor": "acnh:commonflooring",
+		"music": "acnh:silence",
+		"items": [
+		]
+	}
 }

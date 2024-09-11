@@ -1,32 +1,32 @@
 {
-  "id" : "psk:dog02",
-  "name" : {
-    "en" : "Zarky"
-  },
-  "species" : "dog",
-  "personality" : "lazy",
-  "personalitySubtype" : 0,
-  "gender" : "enby-b",
-  "attraction" : "both",
-  "birthday" : [ 7, 3 ],
-  "hobby" : "music",
-  "colors" : [ "purple", "aqua" ],
-  "nameTag" : [ "#FFFFFF", "#848484" ],
-  "catchphrase" : {
-    "en" : "wehehe"
-  },
-  "clothing" : {
-    "default" : "acnh:aranknitsweater/green",
-    "rain" : [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
-  },
-  "umbrella" : "acnh:redumbrella",
-  "photo" : "psk:zarkysphoto",
-  "poster" : "psk:zarkysposter",
-  "house" : {
-    "walls" : "acnh:commonwall",
-    "floor" : "acnh:commonflooring",
-    "music" : "acnh:silence",
-    "items" : [
-    ]
-  }
+	"id": "psk:dog02",
+	"name": {
+		"en": "Zarky"
+	},
+	"species": "dog",
+	"personality": "lazy",
+	"personalitySubtype": 0,
+	"gender": "enby-b",
+	"attraction": "both",
+	"birthday": [ 7, 3 ],
+	"hobby": "music",
+	"colors": [ "purple", "aqua" ],
+	"nameTag": [ "#FFFFFF", "#848484" ],
+	"catchphrase": {
+		"en": "wehehe"
+	},
+	"clothing": {
+		"default": "acnh:aranknitsweater/green",
+		"rain": [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
+	},
+	"umbrella": "acnh:redumbrella",
+	"photo": "psk:zarkysphoto",
+	"poster": "psk:zarkysposter",
+	"house": {
+		"walls": "acnh:commonwall",
+		"floor": "acnh:commonflooring",
+		"music": "acnh:silence",
+		"items": [
+		]
+	}
 }

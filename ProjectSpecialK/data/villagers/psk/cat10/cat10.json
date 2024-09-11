@@ -1,32 +1,32 @@
 {
-  "id" : "psk:cat10",
-  "name" : {
-    "en" : "Rockie"
-  },
-  "species" : "cat",
-  "personality" : [ "peppy" ],
-  "personalitySubtype" : 0,
-  "gender" : "girl",
-  "attraction" : "both",
-  "birthday" : [ 9, 6 ],
-  "hobby" : "music",
-  "colors" : [ "pink", "yellow" ],
-  "nameTag" : [ "#FFFFFF", "#848484" ],
-  "catchphrase" : {
-    "en" : "kakeen~"
-  },
-  "clothing" : {
-    "default" : "acnh:heartsweater/red",
-    "rain" : [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
-  },
-  "umbrella" : "acnh:redumbrella",
-  "photo" : "psk:velvetsphoto",
-  "poster" : "psk:velvetsposter",
-  "house" : {
-    "walls" : "acnh:commonwall",
-    "floor" : "acnh:commonflooring",
-    "music" : "acnh:silence",
-    "items" : [
-    ]
-  }
+	"id": "psk:cat10",
+	"name": {
+		"en": "Rockie"
+	},
+	"species": "cat",
+	"personality": [ "peppy" ],
+	"personalitySubtype": 0,
+	"gender": "girl",
+	"attraction": "both",
+	"birthday": [ 9, 6 ],
+	"hobby": "music",
+	"colors": [ "pink", "yellow" ],
+	"nameTag": [ "#FFFFFF", "#848484" ],
+	"catchphrase": {
+		"en": "kakeen~"
+	},
+	"clothing": {
+		"default": "acnh:heartsweater/red",
+		"rain": [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
+	},
+	"umbrella": "acnh:redumbrella",
+	"photo": "psk:velvetsphoto",
+	"poster": "psk:velvetsposter",
+	"house": {
+		"walls": "acnh:commonwall",
+		"floor": "acnh:commonflooring",
+		"music": "acnh:silence",
+		"items": [
+		]
+	}
 }

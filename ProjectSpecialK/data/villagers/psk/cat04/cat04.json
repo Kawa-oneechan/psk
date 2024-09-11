@@ -1,32 +1,32 @@
 {
-  "id" : "psk:cat04",
-  "name" : {
-    "en" : "Felix"
-  },
-  "species" : "cat",
-  "personality" : [ "jock" ],
-  "personalitySubtype" : 0,
-  "gender" : "boy",
-  "attraction" : "both",
-  "birthday" : [ 25, 11 ],
-  "hobby" : "music",
-  "colors" : [ "red", "purple" ],
-  "nameTag" : [ "#FFFFFF", "#848484" ],
-  "catchphrase" : {
-    "en" : "excellent"
-  },
-  "clothing" : {
-    "default" : "acnh:heartsweater/red",
-    "rain" : [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
-  },
-  "umbrella" : "acnh:redumbrella",
-  "photo" : "psk:felixsphoto",
-  "poster" : "psk:felixsposter",
-  "house" : {
-    "walls" : "acnh:commonwall",
-    "floor" : "acnh:commonflooring",
-    "music" : "acnh:silence",
-    "items" : [
-    ]
-  }
+	"id": "psk:cat04",
+	"name": {
+		"en": "Felix"
+	},
+	"species": "cat",
+	"personality": [ "jock" ],
+	"personalitySubtype": 0,
+	"gender": "boy",
+	"attraction": "both",
+	"birthday": [ 25, 11 ],
+	"hobby": "music",
+	"colors": [ "red", "purple" ],
+	"nameTag": [ "#FFFFFF", "#848484" ],
+	"catchphrase": {
+		"en": "excellent"
+	},
+	"clothing": {
+		"default": "acnh:heartsweater/red",
+		"rain": [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
+	},
+	"umbrella": "acnh:redumbrella",
+	"photo": "psk:felixsphoto",
+	"poster": "psk:felixsposter",
+	"house": {
+		"walls": "acnh:commonwall",
+		"floor": "acnh:commonflooring",
+		"music": "acnh:silence",
+		"items": [
+		]
+	}
 }
