@@ -3,5 +3,6 @@
 	"name": "(fallback tops item)",
 	"type": "clothes",
 	"category" : "tops",
-	"price" : 1
+	"price" : 1,
+	"icon": "fallback"
 }

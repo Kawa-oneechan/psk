@@ -4,5 +4,6 @@
 	"type": "clothes",
 	"category" : "tops",
 	"price" : 640,
-	"variants" : [ "black", "white", "gray" ]
+	"variants" : [ "black", "white", "gray" ],
+	"icon": "tops"
 }

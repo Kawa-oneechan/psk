@@ -1,5 +1,6 @@
 {
 	"id": "psk:thingfallback",
 	"name": "(fallback thing item)",
-	"type": "thing"
+	"type": "thing",
+	"icon": "fallback"
 }

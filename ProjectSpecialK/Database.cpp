@@ -195,42 +195,7 @@ namespace Database
 	void LoadItems(float* progress)
 	{
 		conprint(0, "ItemsDatabase: loading...");
-		{
-			auto entries = VFS::Enumerate("items/*.json");
-			auto progressStep = progressParts / entries.size();
-			items.reserve(entries.size());
-			for (const auto& entry : entries)
-			{
-				auto doc = VFS::ReadJSON(entry.path);
-
-				if (doc != nullptr)
-				{
-					try
-					{
-						auto docO = doc->AsObject();
-						auto type = docO["type"] != nullptr ? docO["type"]->AsString() : "[missing value]";
-						if (type == "thing")
-							items.emplace_back(std::make_shared<Item>(docO, entry.path));
-						else if (type == "tool")
-							items.emplace_back(std::make_shared<Tool>(docO, entry.path));
-						else if (type == "furniture") 
-							items.emplace_back(std::make_shared<Furniture>(docO, entry.path));
-						else if (type == "clothes" || type == "clothing" || type == "outfit")
-							items.emplace_back(std::make_shared<Clothing>(docO, entry.path));
-					}
-					catch (std::runtime_error& e)
-					{
-						conprint(1, u8" {}", e.what());
-					}
-				}
-				else
-				{
-					conprint(1, "{}: error loading {}.", "ItemsDatabase", entry.path);
-				}
-				delete doc;
-				*progress += progressStep;
-			}
-		}
+		loadWorker<Item>(progress, items, "items/*.json", "ItemsDatabase");
 
 		auto table = std::vector<std::string>{ "ID", "Name", "Type", "Hash" };
 
