@@ -37,17 +37,17 @@ struct CVar
 		{
 		case CVarType::Bool:
 			if (json->IsNumber())
-				*asBool = (int)(json->AsNumber()) != 0;
+				*asBool = json->AsInteger() != 0;
 			else if (json->IsBool())
 				*asBool = json->AsBool();
 			return true;
 		case CVarType::Int:
 			if (json->IsNumber())
-				*asInt = (int)(json->AsNumber());
+				*asInt = json->AsInteger();
 			return true;
 		case CVarType::Float:
 			if (json->IsNumber())
-				*asFloat = (float)json->AsNumber();
+				*asFloat = json->AsNumber();
 			return true;
 		case CVarType::String:
 			if (json->IsNumber())

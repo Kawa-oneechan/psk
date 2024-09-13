@@ -155,7 +155,7 @@ JSONValue *JSONValue::Parse(const char **data)
 		// Was it neg?
 		if (neg) number *= -1;
 
-		return new JSONValue(number);
+		return new JSONValue((float)number);
 	}
 
 	// An object?
@@ -376,9 +376,9 @@ JSONValue::JSONValue(bool m_bool_value)
  *
  * @access public
  *
- * @param double m_number_value The number to use as the value
+ * @param float m_number_value The number to use as the value
  */
-JSONValue::JSONValue(double m_number_value)
+JSONValue::JSONValue(float m_number_value)
 {
 	type = JSONType_Number;
 	number_value = m_number_value;
@@ -394,7 +394,7 @@ JSONValue::JSONValue(double m_number_value)
 JSONValue::JSONValue(int m_integer_value)
 {
 	type = JSONType_Number;
-	number_value = (double) m_integer_value;
+	number_value = (float) m_integer_value;
 }
 
 /**
@@ -611,11 +611,16 @@ bool JSONValue::AsBool() const
  *
  * @access public
  *
- * @return double Returns the number value
+ * @return float Returns the number value
  */
-double JSONValue::AsNumber() const
+float JSONValue::AsNumber() const
 {
 	return number_value;
+}
+
+int JSONValue::AsInteger() const
+{
+	return (int)AsNumber();
 }
 
 /**

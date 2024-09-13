@@ -189,7 +189,7 @@ namespace VFS
 			if (manifestDoc["dependencies"] != nullptr)
 				for (const auto& s : manifestDoc["dependencies"]->AsArray())
 					newSrc.dependencies.push_back(s->AsString());
-			newSrc.priority = manifestDoc["priority"] != nullptr ? (int)manifestDoc["priority"]->AsNumber() : 1;
+			newSrc.priority = manifestDoc["priority"] != nullptr ? manifestDoc["priority"]->AsInteger() : 1;
 			sources.push_back(newSrc);
 		}
 		else

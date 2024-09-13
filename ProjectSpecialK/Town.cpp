@@ -43,8 +43,8 @@ void Town::StartNewDay()
 		int rateTotal = 0;
 		for (auto r : here["rates"]->AsArray())
 		{
-			rateTotal += (int)r->AsNumber();
-			rates.push_back((int)r->AsNumber());
+			rateTotal += r->AsInteger();
+			rates.push_back(r->AsInteger());
 		}
 		auto roll = std::rand() % rateTotal;
 		auto pick = 0;
@@ -65,8 +65,8 @@ void Town::StartNewDay()
 		auto wind = pattern["wind"]->AsArray();
 		for (int i = 0; i < 24; i++)
 		{
-			weatherRain[i] = (int)rain[i]->AsNumber();
-			weatherWind[i] = (int)wind[i]->AsNumber();
+			weatherRain[i] = rain[i]->AsInteger();
+			weatherWind[i] = wind[i]->AsInteger();
 		}
 	}
 }

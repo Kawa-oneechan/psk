@@ -82,9 +82,9 @@ void SpriteRenderer::LoadFontBank(int font, int bank)
 		{
 			auto thisFont = fontSettings[i]->AsObject();
 			fonts[i].file = "fonts/" + thisFont["file"]->AsString();
-			fonts[i].size = (int)thisFont["size"]->AsNumber();
+			fonts[i].size = thisFont["size"]->AsInteger();
 			fonts[i].alignToGrid = thisFont["grid"] != nullptr ? thisFont["grid"]->AsBool() : false;
-			fonts[i].puaSource = thisFont["pua"] != nullptr ? (int)thisFont["pua"]->AsNumber() : 0;
+			fonts[i].puaSource = thisFont["pua"] != nullptr ? thisFont["pua"]->AsInteger() : 0;
 		}
 	}
 

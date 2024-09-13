@@ -71,17 +71,17 @@ glm::vec4 GetJSONColor(JSONValue* val)
 		float r, g, b, a;
 		if (arr.size() == 3)
 		{
-			r = (float)arr[0]->AsNumber();
-			g = (float)arr[1]->AsNumber();
-			b = (float)arr[2]->AsNumber();
+			r = arr[0]->AsNumber();
+			g = arr[1]->AsNumber();
+			b = arr[2]->AsNumber();
 			a = 1.0f;
 		}
 		else if (arr.size() == 4)
 		{
-			r = (float)arr[0]->AsNumber();
-			g = (float)arr[1]->AsNumber();
-			b = (float)arr[2]->AsNumber();
-			a = (float)arr[3]->AsNumber();
+			r = arr[0]->AsNumber();
+			g = arr[1]->AsNumber();
+			b = arr[2]->AsNumber();
+			a = arr[3]->AsNumber();
 		}
 		else
 			throw std::runtime_error(fmt::format("GetJSONColor: {} is not a valid color.", val->Stringify()));

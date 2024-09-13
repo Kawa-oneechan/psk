@@ -23,11 +23,11 @@ Item::Item(JSONObject& value, const std::string& filename) : NameableThing(value
 		throw std::runtime_error(fmt::format("Don't know what to do with type \"{}\" while loading {}.", type, ID));
 
 	Icon = value["icon"] != nullptr ? value["icon"]->AsString() : "leaf";
-	Price = value["price"] != nullptr ? (int)value["price"]->AsNumber() : 0;
+	Price = value["price"] != nullptr ? value["price"]->AsInteger() : 0;
 
 	if (Type != Type::Clothing)
 	{
-		StackLimit = value["stack"] != nullptr ? (int)value["stack"]->AsNumber() : 0;
+		StackLimit = value["stack"] != nullptr ? value["stack"]->AsInteger() : 0;
 
 		CanBury = value["canBury"] != nullptr ? value["canBury"]->AsBool() : false;
 		CanEat = value["canEat"] != nullptr ? value["canEat"]->AsBool() : false;

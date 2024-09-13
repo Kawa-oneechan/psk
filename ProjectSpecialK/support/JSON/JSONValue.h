@@ -43,7 +43,7 @@ class JSONValue
 		JSONValue(const char *m_char_value);
 		JSONValue(const std::string &m_string_value);
 		JSONValue(bool m_bool_value);
-		JSONValue(double m_number_value);
+		JSONValue(float m_number_value);
 		JSONValue(int m_integer_value);
 		JSONValue(const JSONArray &m_array_value);
 		JSONValue(const JSONObject &m_object_value);
@@ -59,7 +59,8 @@ class JSONValue
 
 		const std::string &AsString() const;
 		bool AsBool() const;
-		double AsNumber() const;
+		float AsNumber() const;
+		int AsInteger() const;
 		const JSONArray &AsArray() const;
 		const JSONObject &AsObject() const;
 
@@ -88,7 +89,7 @@ class JSONValue
 		union
 		{
 			bool bool_value;
-			double number_value;
+			float number_value;
 			std::string *string_value;
 			JSONArray *array_value;
 			JSONObject *object_value;

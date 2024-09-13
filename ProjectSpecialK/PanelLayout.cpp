@@ -8,7 +8,7 @@ PanelLayout::PanelLayout(JSONValue* source)
 	auto& panelsSet = src["panels"]->AsArray();
 
 	Position = src["position"] != nullptr ? GetJSONVec2(src["position"]) : glm::vec2(0);
-	Alpha = src["alpha"] != nullptr ? (float)src["alpha"]->AsNumber() : 1.0f;
+	Alpha = src["alpha"] != nullptr ? src["alpha"]->AsNumber() : 1.0f;
 
 	if (src["textures"] != nullptr)
 	{
@@ -55,15 +55,15 @@ PanelLayout::PanelLayout(JSONValue* source)
 
 		if (panel->Type == PanelType::Image)
 		{
-			panel->Texture = pnl["texture"] != nullptr ? (int)pnl["texture"]->AsNumber() : 0;
-			panel->Frame = pnl["frame"] != nullptr ? (int)pnl["frame"]->AsNumber() : 0;
-			panel->Polygon = pnl["polygon"] != nullptr ? (int)pnl["polygon"]->AsNumber() : -1;
+			panel->Texture = pnl["texture"] != nullptr ? pnl["texture"]->AsInteger() : 0;
+			panel->Frame = pnl["frame"] != nullptr ? pnl["frame"]->AsInteger() : 0;
+			panel->Polygon = pnl["polygon"] != nullptr ? pnl["polygon"]->AsInteger() : -1;
 		}
 		else if (panel->Type == PanelType::Text)
 		{
 			panel->Text = pnl["text"] != nullptr ? pnl["text"]->AsString() : "???";
-			panel->Font = pnl["font"] != nullptr ? (int)pnl["font"]->AsNumber() : 1;
-			panel->Size = pnl["size"] != nullptr ? (float)pnl["size"]->AsNumber() : 100.0f;
+			panel->Font = pnl["font"] != nullptr ? pnl["font"]->AsInteger() : 1;
+			panel->Size = pnl["size"] != nullptr ? pnl["size"]->AsNumber() : 100.0f;
 			panel->Alignment = 0;
 			if (pnl["alignment"] != nullptr)
 			{
@@ -76,8 +76,8 @@ PanelLayout::PanelLayout(JSONValue* source)
 		else if (panel->Type == PanelType::ItemIcon)
 		{
 			panel->Text = pnl["text"] != nullptr ? pnl["text"]->AsString() : "orestone";
-			panel->Size = pnl["size"] != nullptr ? (float)pnl["size"]->AsNumber() : 100.0f;
-			panel->Polygon = pnl["polygon"] != nullptr ? (int)pnl["polygon"]->AsNumber() : -1;
+			panel->Size = pnl["size"] != nullptr ? pnl["size"]->AsNumber() : 100.0f;
+			panel->Polygon = pnl["polygon"] != nullptr ? pnl["polygon"]->AsInteger() : -1;
 		}
 
 		{
@@ -122,7 +122,7 @@ PanelLayout::PanelLayout(JSONValue* source)
 				}
 			}
 			else if(pnl["parent"]->IsNumber())
-				panel->Parent = (int)pnl["parent"]->AsNumber();
+				panel->Parent = pnl["parent"]->AsInteger();
 		}
 
 		panel->Color = glm::vec4(1, 1, 1, 1);
@@ -136,7 +136,7 @@ PanelLayout::PanelLayout(JSONValue* source)
 			else if (pnl["color"]->IsArray())
 				panel->Color = GetJSONColor(pnl["color"]);
 		}
-		panel->Alpha = pnl["alpha"] != nullptr ? (float)pnl["alpha"]->AsNumber() : 1.0f;
+		panel->Alpha = pnl["alpha"] != nullptr ? pnl["alpha"]->AsNumber() : 1.0f;
 		panels.push_back(panel);
 	}
 }

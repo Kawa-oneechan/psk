@@ -110,7 +110,7 @@ void DoomMenu::Build()
 			dlgBox->Text(TextGet("menu:options:language:taunt"), Database::Find<Villager>("psk:xct", villagers));
 		}
 		));
-		options.items.push_back(new DoomMenuItem("menu:options:continuefrom", (int)UI::settings["continue"]->AsNumber(),
+		options.items.push_back(new DoomMenuItem("menu:options:continuefrom", UI::settings["continue"]->AsInteger(),
 		{
 			"menu:options:continuefrom:0",
 			"menu:options:continuefrom:1",
@@ -119,7 +119,7 @@ void DoomMenu::Build()
 		},
 		[&](DoomMenuItem*i) { UI::settings["continue"] = new JSONValue(i->selection); }
 		));
-		options.items.push_back(new DoomMenuItem("menu:options:speech", (int)UI::settings["speech"]->AsNumber(),
+		options.items.push_back(new DoomMenuItem("menu:options:speech", UI::settings["speech"]->AsInteger(),
 		{
 			"menu:options:speech:0",
 			"menu:options:speech:1",
@@ -127,13 +127,13 @@ void DoomMenu::Build()
 		},
 		[&](DoomMenuItem*i) { UI::settings["speech"] = new JSONValue(i->selection); }
 		));
-		options.items.push_back(new DoomMenuItem("menu:options:pingrate", 2, 60, (int)UI::settings["pingRate"]->AsNumber(), 1, minutes,
+		options.items.push_back(new DoomMenuItem("menu:options:pingrate", 2, 60, UI::settings["pingRate"]->AsInteger(), 1, minutes,
 			[&](DoomMenuItem*i) { UI::settings["pingRate"] = new JSONValue(i->selection); }
 		));
-		options.items.push_back(new DoomMenuItem("menu:options:balloonchance", 10, 60, (int)UI::settings["balloonChance"]->AsNumber(), 5, percent,
+		options.items.push_back(new DoomMenuItem("menu:options:balloonchance", 10, 60, UI::settings["balloonChance"]->AsInteger(), 5, percent,
 			[&](DoomMenuItem*i) { UI::settings["balloonChance"] = new JSONValue(i->selection); }
 		));
-		options.items.push_back(new DoomMenuItem("menu:options:cursorscale", 50, 150, (int)UI::settings["cursorScale"]->AsNumber(), 10, percent,
+		options.items.push_back(new DoomMenuItem("menu:options:cursorscale", 50, 150, UI::settings["cursorScale"]->AsInteger(), 10, percent,
 			[&](DoomMenuItem*i)
 		{
 			cursor->SetScale(i->selection);

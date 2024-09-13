@@ -144,12 +144,12 @@ namespace UI
 #undef DS
 
 		constexpr Language opt2lan[] = { Language::USen, Language::JPja, Language::EUde, Language::EUes, Language::EUfr, Language::EUit, Language::EUhu, Language::EUnl, Language::EUen };
-		gameLang = opt2lan[(int)settings["language"]->AsNumber()];
+		gameLang = opt2lan[settings["language"]->AsInteger()];
 
-		Audio::MusicVolume = (float)settings["musicVolume"]->AsNumber();
-		Audio::AmbientVolume = (float)settings["ambientVolume"]->AsNumber();
-		Audio::SoundVolume = (float)settings["soundVolume"]->AsNumber();
-		Audio::SpeechVolume = (float)settings["speechVolume"]->AsNumber();
+		Audio::MusicVolume = settings["musicVolume"]->AsNumber();
+		Audio::AmbientVolume = settings["ambientVolume"]->AsNumber();
+		Audio::SoundVolume = settings["soundVolume"]->AsNumber();
+		Audio::SpeechVolume = settings["speechVolume"]->AsNumber();
 
 		auto keyBinds = settings["keyBinds"]->AsArray();
 		if (keyBinds.size() != NumKeyBinds)
@@ -169,8 +169,8 @@ namespace UI
 
 		for (int i = 0; i < NumKeyBinds; i++)
 		{
-			Inputs.Keys[i].ScanCode = (int)keyBinds[i]->AsNumber();
-			Inputs.Keys[i].GamepadButton = (int)padBinds[i]->AsNumber();
+			Inputs.Keys[i].ScanCode = keyBinds[i]->AsInteger();
+			Inputs.Keys[i].GamepadButton = padBinds[i]->AsInteger();
 		}
 
 		auto sounds = VFS::ReadJSON("sound/sounds.json")->AsObject();

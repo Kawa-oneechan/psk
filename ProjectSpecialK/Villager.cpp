@@ -33,8 +33,8 @@ Villager::Villager(JSONObject& value, const std::string& filename) : NameableThi
 		TextAdd(RefCatchphrase, *val);
 
 	auto birthday = value["birthday"]->AsArray();
-	_birthday[0] = (int)birthday[0]->AsNumber();
-	_birthday[1] = (int)birthday[1]->AsNumber();
+	_birthday[0] = birthday[0]->AsInteger();
+	_birthday[1] = birthday[1]->AsInteger();
 	if (_birthday[0] < 1 || _birthday[0] > 31 || _birthday[1] < 1 || _birthday[1] > 12)
 	{
 		conprint(1, "Villager {} has an out of band birthday: day {}, month {}.", ID, _birthday[0], _birthday[1]);
@@ -71,7 +71,7 @@ Villager::Villager(JSONObject& value, const std::string& filename) : NameableThi
 		if (!personality)
 			throw std::runtime_error(fmt::format("Unknown personality {} while loading {}.", value["personality"]->Stringify(), ID));
 	}
-	personalitySubtype = _isSpecial ? 0 : (int)value["personalitySubtype"]->AsNumber();
+	personalitySubtype = _isSpecial ? 0 : value["personalitySubtype"]->AsInteger();
 
 	{
 		hobby = Database::Find<::Hobby>(value["hobby"], hobbies);
