@@ -95,6 +95,9 @@ Villager::Villager(JSONObject& value, const std::string& filename) : NameableThi
 	defaultClothingID = clothing["default"]->AsString();
 	rainCoatID = (clothing["rain"]->AsArray())[0]->AsString();
 	rainHatID = (clothing["rain"]->AsArray())[1]->AsString();
+
+	face = 0;
+	mouth = 0;
 }
 
 std::string Villager::Name()
@@ -230,6 +233,15 @@ std::string Villager::Nickname(const std::string& newNickname)
 	return oldNickname;
 }
 
+void Villager::SetFace(int index)
+{
+	face = clamp(index, 0, 15);
+}
+void Villager::SetMouth(int index)
+{
+	mouth = clamp(index, 0, 8);
+}
+
 extern Shader* modelShader;
 void Villager::Draw(double)
 {
@@ -251,6 +263,9 @@ void Villager::Draw(double)
 	_model->Textures[13] = Textures[10];
 	_model->Textures[14] = Textures[11];
 
+	_model->TexArrayLayers[2] = face;
+	_model->TexArrayLayers[3] = mouth;
+	
 	_model->Draw();
 
 	if (_clothingModel && Clothing)

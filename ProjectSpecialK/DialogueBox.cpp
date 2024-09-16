@@ -173,7 +173,7 @@ DialogueBox::DialogueBox()
 	//Text(TextGet("dlg:sza:wack"),
 	//	Database::Find<Villager>("psk:cat00", villagers));
 	//Text("MSBT JSON/Lua test:\n<test1>\n<test2>", 3);
-	Text(u8"This is ordinary dialogue with a button image in it: \uE0E2 look at that.", 0);
+	Text(u8"This is ordinary dialogue with a button image in it: \uE0E2 look at that.", Database::Find<Villager>("psk:cat00", villagers));
 
 	//Text("I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I", 0);
 	//Text("IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII", 0);
@@ -451,6 +451,14 @@ void DialogueBox::Tick(float dt)
 		{
 		displayIt:
 			AppendChar(displayed, ch);
+
+			if (speaker)
+			{
+				if (std::isalnum(ch))
+					speaker->SetMouth(rand() % 3);
+				else if (!std::isblank(ch))
+					speaker->SetMouth(0);
+			}
 
 			if (bubbleNum == 3 || Sound == Sound::Bebebese)
 				generalSounds["ui"]["voiceMonology"]->Play(true);

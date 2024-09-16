@@ -107,7 +107,7 @@ void DoomMenu::Build()
 			UI::settings["language"] = new JSONValue(i->selection);
 			Translate();
 			items = &options;
-			dlgBox->Text(TextGet("menu:options:language:taunt"), Database::Find<Villager>("psk:xct", villagers));
+			dlgBox->Text(TextGet("menu:options:language:taunt"), Database::Find<Villager>("psk:cat00", villagers));
 		}
 		));
 		options.items.push_back(new DoomMenuItem("menu:options:continuefrom", UI::settings["continue"]->AsInteger(),

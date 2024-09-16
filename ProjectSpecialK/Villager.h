@@ -51,6 +51,8 @@ private:
 	std::array<Texture*, 16> Textures;
 	std::array<Texture*, 4> ClothingTextures;
 
+	int face, mouth;
+
 	VillagerMemoryP memory;
 
 	void DeleteAllThings();
@@ -88,6 +90,9 @@ public:
 	std::string Catchphrase(const std::string& newPhrase);
 	std::string Nickname();
 	std::string Nickname(const std::string& newNickname);
+
+	void SetFace(int face);
+	void SetMouth(int mouth);
 
 	void Draw(double dt);
 
