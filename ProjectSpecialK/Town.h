@@ -94,6 +94,10 @@ public:
 	float GetHeight(const glm::vec3& pos);
 	//Returns the height of the lowest point at the given tile coordinate.
 	float GetHeight(int x, int y);
+
+#ifdef DEBUG
+	void SaveToPNG();
+#endif
 };
 
 class Town

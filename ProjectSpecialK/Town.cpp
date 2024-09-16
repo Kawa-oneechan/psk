@@ -17,6 +17,28 @@ float Map::GetHeight(int x, int y)
 	return GetHeight(glm::vec3(x, y, 100));
 }
 
+#ifdef DEBUG
+#include "support/stb_image_write.h"
+void Map::SaveToPNG()
+{
+	auto pixels = new unsigned char[(Width * Height) * 4];
+	const glm::vec3 typeColors[] =
+	{
+		{ 0.133, 0.545, 0.133 }
+	};
+	for (int i = 0; i < Width * Height; i++)
+	{
+		auto t = Terrain[i];
+		auto color = typeColors[t.Type];
+		color = glm::mix(color, glm::vec3(1), t.Elevation * 0.25f);
+		pixels[(i * 4) + 0] = color.r * 255;
+		pixels[(i * 4) + 1] = color.g * 255;
+		pixels[(i * 4) + 2] = color.b * 255;
+		pixels[(i * 4) + 3] = 255;
+	}
+	stbi_write_png("map.png", Width, Height, 4, pixels, Width * 4);
+}
+#endif
 
 Town::Town()
 {
@@ -37,6 +59,10 @@ Town::Town()
 	}
 
 	map.UseDrum = true;
+
+#ifdef DEBUG
+	map.SaveToPNG();
+#endif
 }
 
 void Town::GenerateNew(void* generator, int width, int height)
@@ -47,6 +73,10 @@ void Town::GenerateNew(void* generator, int width, int height)
 	map.Height = Map::AcreSize * height;
 
 	map.Terrain = std::make_unique<LiveTerrainTile[]>(map.Width * map.Height);
+
+#ifdef DEBUG
+	//map.SaveToPNG();
+#endif
 }
 
 void Town::Load()
@@ -195,6 +225,7 @@ float Town::GetHeight(const glm::vec3& pos)
 {
 	return map.GetHeight(pos);
 }
+
 float Town::GetHeight(int x, int y)
 {
 	return map.GetHeight(x, y);
