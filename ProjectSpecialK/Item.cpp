@@ -125,7 +125,6 @@ InventoryItem::InventoryItem(ItemP wrapped, int variant, int pattern)
 	EnName = wrapped->EnName;
 	Path = wrapped->Path;
 	Temporary = false;
-	Textures.fill(nullptr);
 }
 
 InventoryItem::InventoryItem(ItemP wrapped, int variant) : InventoryItem(wrapped, variant, 0)
@@ -164,7 +163,6 @@ InventoryItem::InventoryItem(const std::string& reference)
 	RefName = _wrapped->RefName;
 	EnName = _wrapped->EnName;
 	Path = _wrapped->Path;
-	Textures.fill(nullptr);
 	Temporary = false;
 }
 
@@ -216,43 +214,4 @@ bool InventoryItem::IsClothing() const
 std::string InventoryItem::Icon() const
 {
 	return _wrapped->Icon;
-}
-
-void InventoryItem::LoadTextures()
-{
-	if (Textures[0] == nullptr)
-	{
-		/*
-		Texture order:
-				alb	nml	mix	opc
-		body	0	1	2	3
-		...
-		*/
-		Textures[0] = new TextureArray(fmt::format("{}/albedo*.png", Path));
-		Textures[1] = new TextureArray(fmt::format("{}/normal.png", Path));
-		Textures[2] = new TextureArray(fmt::format("{}/mix.png", Path));
-		Textures[3] = new TextureArray(fmt::format("{}/opacity.png", Path));
-	}
-}
-
-void InventoryItem::AssignTextures(ModelP model)
-{
-	model->Textures[0] = Textures[0];
-	model->Textures[1] = Textures[1];
-	model->Textures[2] = Textures[2];
-	model->Textures[3] = Textures[3];
-}
-
-void InventoryItem::LoadModel()
-{
-	if (!_model)
-		_model = std::make_shared<::Model>(fmt::format("{}/model.fbx", Path));
-	LoadTextures();
-}
-
-ModelP InventoryItem::Model()
-{
-	if (!_model)
-		LoadModel();
-	return _model;
 }

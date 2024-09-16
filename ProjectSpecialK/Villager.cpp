@@ -6,6 +6,7 @@ Villager::Villager(JSONObject& value, const std::string& filename) : NameableThi
 	_isSpecial = value["isSpecial"] != nullptr && value["isSpecial"]->IsBool() ? value["isSpecial"]->AsBool() : false;
 	
 	Textures.fill(nullptr);
+	ClothingTextures.fill(nullptr);
 
 	if (_isSpecial)
 	{
@@ -162,17 +163,22 @@ void Villager::LoadModel()
 		//TODO: detect and load accessories, which take their own sub-model.
 	}
 
-	/*
-	Load clothing parts too. Note that we cannot trust InventoryItem::LoadModel here
-	because clothes are tailored to the character. So we must load our own clothing
-	models.
-	*/
 	if (!_clothingModel && Clothing)
 	{
 		auto style = "ts_short";
 		_clothingModel = std::make_shared<::Model>(fmt::format("{}/{}.fbx", _species->Path, style));
 
-		Clothing->LoadTextures();
+		//Clothing->AssignTextures(_clothingModel);
+		/*
+		Texture order:
+		alb	nml	mix	opc
+		body	0	1	2	3
+		...
+		*/
+		ClothingTextures[0] = new TextureArray(fmt::format("{}/albedo*.png", Clothing->Path));
+		ClothingTextures[1] = new TextureArray(fmt::format("{}/normal.png", Clothing->Path));
+		ClothingTextures[2] = new TextureArray(fmt::format("{}/mix.png", Clothing->Path));
+		ClothingTextures[3] = new TextureArray(fmt::format("{}/opacity.png", Clothing->Path));
 	}
 }
 
@@ -251,8 +257,11 @@ void Villager::Draw(double)
 
 	if (_clothingModel && Clothing)
 	{
-		//TODO: have Clothing handle its own drawing.
-		Clothing->AssignTextures(_clothingModel);
+		_clothingModel->Textures[0] = ClothingTextures[0];
+		_clothingModel->Textures[1] = ClothingTextures[1];
+		_clothingModel->Textures[2] = ClothingTextures[2];
+		_clothingModel->Textures[3] = ClothingTextures[3];
+
 		_clothingModel->TexArrayLayers[0] = 0; //variant test
 		_clothingModel->Draw();
 	}

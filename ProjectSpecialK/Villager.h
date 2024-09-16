@@ -49,6 +49,7 @@ private:
 	static const int _maxClothes = 8 * 3;
 
 	std::array<Texture*, 16> Textures;
+	std::array<Texture*, 4> ClothingTextures;
 
 	VillagerMemoryP memory;
 

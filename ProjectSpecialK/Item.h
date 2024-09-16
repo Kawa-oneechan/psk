@@ -120,9 +120,6 @@ class InventoryItem : public NameableThing
 private:
 	ItemP _wrapped;
 	int _variant, _pattern;
-	
-	ModelP _model; //see todo below.	
-	std::array<Texture*, 8> Textures;
 
 public:
 	InventoryItem(ItemP wrapped, int variant, int pattern);
@@ -143,12 +140,6 @@ public:
 	bool IsClothing() const;
 
 	std::string InventoryItem::Icon() const;
-
-	//TODO: split all this visual stuff off into new Tool/Furniture/Clothing classes.
-	void LoadTextures();
-	void AssignTextures(ModelP model);
-	void LoadModel();
-	ModelP Model();
 
 	//Safe to delete if true. If not, DO NOT DELETE.
 	bool Temporary;
