@@ -1,4 +1,5 @@
 ﻿#include <filesystem>
+#include <chrono>
 #include "SpecialK.h"
 
 #include "support/glad/glad.h"
@@ -21,7 +22,7 @@
 
 constexpr auto WindowTitle = "Project Special K"
 #ifdef DEBUG
-" (debug build " __DATE__ ")"
+" (debug build " __DATE__ ")";
 #endif
 ;
 
@@ -69,6 +70,11 @@ float scale = (float)WindowWidth / (float)WindowHeight;
 float timeScale = 0.25f;
 
 int articlePlease;
+
+#ifdef DEBUG
+float uiTime = 0;
+float glTime = 0;
+#endif
 
 __declspec(noreturn)
 void FatalError(const std::string& message)
@@ -574,10 +580,21 @@ int main(int, char**)
 	MainCamera.Free = false;
 	MainCamera.Target = glm::vec3(0);
 
+#ifdef DEBUG
+	auto startingTime = std::chrono::high_resolution_clock::now();
+#endif
+
 	int oldTime = 0;
 	while (!glfwWindowShouldClose(window))
 	{
 		Audio::Update();
+
+#ifdef DEBUG
+		auto endingTime = std::chrono::high_resolution_clock::now();
+		glTime = std::chrono::duration_cast<std::chrono::microseconds>(endingTime - startingTime).count() * 0.001f;
+		startingTime = endingTime;
+#endif
+
 		Inputs.UpdateGamepad();
 
 		int newTime = std::clock();
@@ -607,6 +624,12 @@ int main(int, char**)
 				(*t)->Tick(dt);
 		}
 
+#ifdef DEBUG
+		endingTime = std::chrono::high_resolution_clock::now();
+		uiTime = std::chrono::duration_cast<std::chrono::milliseconds>(endingTime - startingTime).count() * 0.001f;
+		startingTime = endingTime;
+#endif
+
 		for (const auto& t : tickables)
 			t->Draw(dt * timeScale);
 
@@ -635,6 +658,12 @@ int main(int, char**)
 		tickables.erase(std::remove_if(tickables.begin(), tickables.end(), [](Tickable* i) {
 			return i->dead;
 		}), tickables.end());
+
+#ifdef DEBUG
+		sprender.DrawSprite(*whiteRect, glm::vec2(0), glm::vec2(96, 48), glm::vec4(0), 0.0f, glm::vec4(0, 0, 0, 0.9));
+		sprender.DrawText(0, fmt::format("TIMING\nUI: {}\nGL: {}", uiTime, glTime), glm::vec2(2), glm::vec4(1, 0, 1, 1));
+		sprender.Flush();
+#endif
 
 		//turn depth testing back on for 3D shit
 		glEnable(GL_DEPTH_TEST);
