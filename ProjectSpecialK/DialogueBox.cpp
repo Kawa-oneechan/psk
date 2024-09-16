@@ -169,11 +169,15 @@ DialogueBox::DialogueBox()
 
 	//Text(u8"Truth is... <color:1>the game</color> was rigged\nfrom the start.", 0, "Isabelle", glm::vec4(1, 0.98f, 0.56f, 1), glm::vec4(0.96f, 0.67f, 0.05f, 1));
 	//Text(u8"Truth is... <color:1>the game</color> was rigged from the start.",
-	//Text("Are you <color:3><str:player></color>? <delay:1000>Hiii! Welcome to <color:2>Project Special K</color>!",
-	//Text(TextGet("dlg:sza:wack"),
-	//	Database::Find<Villager>("psk:cat00", villagers));
+	//Text("Are you <color:3><str:player></color>? <delay:1000>Hiii! Welcome to <color:2>Project Special K</color>!", 0);
+	//Text(TextGet("dlg:sza:wack"), Database::Find<Villager>("psk:cat00", villagers));
 	//Text("MSBT JSON/Lua test:\n<test1>\n<test2>", 3);
-	Text(u8"This is ordinary dialogue with a button image in it: \uE0E2 look at that.", Database::Find<Villager>("psk:cat00", villagers));
+	//Text(u8"This is ordinary dialogue with a button image in it: \uE0E2 look at that.", Database::Find<Villager>("psk:cat00", villagers));
+	//Text("By the President of the United States of America:\nA Proclamation.<break>Whereas, on the twenty-second day of September, in the year of our Lord one thousand eight hundred and sixty-two, a proclamation was issued by the President of the United States, containing, among other things, the following, to wit:", 0);
+	//Text("Timmy Turner, my name is DougsDaleDimmaDaleDimmaDimmsDomeDoDiDomeDimmsDimmaDimmaDome, owner of the DougDimmsDimmaDaleDimmaDimmsDomeDoDiDimmaDimmsDaleDimmaDimmsDaleDimmaDome.", 0);
+	//Text(u8"<font:0>◗♗♔ⓢ◗ꍏ↳€ ◗♗♔♔ꍏ◗⊙♔€", 0);
+	//Text(u8"シリーズに含まれる作品の範囲については、制作時期・代理店や原作者の違いなどから、当初は『バトルフィーバーJ』（1979年 - 1980年）を起点としてカウントされていたが。", 0);
+	//Text(u8"Je hebt voor <color:1>Nederlands</color> gekozen. Waarom zijn bijna alle namen hetzelfde gebleven?", 0);
 
 	//Text("I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I", 0);
 	//Text("IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII", 0);
@@ -218,51 +222,97 @@ void DialogueBox::Preprocess()
 
 void DialogueBox::Wrap()
 {
-	size_t lastSpace = 0xFFFF;
-	//auto threeLines = sprender.MeasureText(font, "1\n2\n3\n", 100).y;
+	//TODO: needs wrangling for Japanese.
+	size_t lastSpace = 0;
+	size_t start = 0;
+	auto threeLines = sprender.MeasureText(font, "Mg\nMg\nMg\n", 100).y + 0;
+	int lineCount = 0;
 	for (size_t i = 0; i < toDisplay.length();)
 	{
+		if (toDisplay.length() > 7 && toDisplay.substr(i, 7) == "<break>")
+		{
+			i += 7;
+			start = i;
+		}
+
 		unsigned int ch;
 		size_t size;
 		std::tie(ch, size) = GetChar(toDisplay, i);
 
-		if (size == 1 && (std::isblank(ch) || ch == '\n'))
-			lastSpace = i;
+		auto substr = toDisplay.substr(start, i - start + size);
+		auto space = sprender.MeasureText(font, substr, 100);
 
-		//Always break if the current character is ideographic.
-		//Massive hack, absolutely breaks Kinsoku Shori rules. I don't care.
-		if (size == 3 && (ch >= 0x2E80 && ch < 0xF000))
-			lastSpace = i;
-
-		auto space = sprender.MeasureText(font, toDisplay.substr(0, i + size), 100);
 		if (space.x > 650)
 		{
-			if (lastSpace == 0xFFFF)
+			//scan back for a whitespace.
+			bool wasLower = std::islower(ch);
+			bool wantHyphen = false;
+			bool insert = false;
+			size_t newSpacePos = 0xFFFF;
+
+			for (size_t b = i;; b--)
 			{
-				lastSpace = i;
-				toDisplay.insert(toDisplay.begin() + i, '\n');
-				i++;
-			}
-			else
-			{
-				if (std::isblank(toDisplay[lastSpace]))
-					toDisplay[lastSpace] = '\n';
-				else
+				unsigned int bch;
+				size_t bsize;
+				std::tie(bch, bsize) = GetChar(toDisplay, b);
+				if (std::isblank(bch))
 				{
-					toDisplay.insert(toDisplay.begin() + lastSpace, '\n');
-					i++;
+					//found whitespace, replace it.
+					newSpacePos = b;
+					insert = false;
+					wantHyphen = false;
+					break;
+				}
+				else if (b == start || bch == '\n') // || (b > 7 && toDisplay.substr(b - 7, 7) == "<break>"))
+				{
+					//couldn't find anything on this line, insert a space right here instead.
+					newSpacePos = i;
+					insert = true;
+					break;
+				}
+				else if (wasLower && std::isupper(bch) && newSpacePos == 0xFFFF)
+				{
+					//went from lowercase to uppercase.
+					newSpacePos = i;
+					insert = true;
+					wantHyphen = true;
+					//keep looking for better options!
+					//break;
 				}
 			}
+			if (newSpacePos != 0xFFFF)
+			{
+				if (insert)
+				{
+					if (wantHyphen)
+						toDisplay.insert(toDisplay.begin() + newSpacePos - 1, '-');
+					toDisplay.insert(toDisplay.begin() + newSpacePos, '\n');
+				}
+				else
+					toDisplay[newSpacePos] = '\n';
+				lastSpace = newSpacePos;
+				newSpacePos = 0xFFFF;
+				wasLower = false;
+				wantHyphen = false;
+				lineCount++;
+			}
 		}
-		//TODO: This bit needs to be looked into.
-		/*
-		if (space.y >= threeLines)
-		{
-			toDisplay[lastSpace] = '>';
-			toDisplay.insert(lastSpace, "<break");
-		}
-		*/
 		i += size;
+
+		//TODO: This bit needs to be looked into.
+		//We want at least three lines so LOUD SINGLE LINES don't count.
+		if (space.y >= threeLines && lineCount >= 3)
+		{
+			if (toDisplay[lastSpace] == '\n')
+			{
+				toDisplay[lastSpace] = '>';
+				toDisplay.insert(lastSpace, "<break");
+			}
+			else
+				toDisplay.insert(lastSpace, "<break>");
+			i += 7;
+			lineCount = 0;
+		}
 	}
 }
 
@@ -454,7 +504,7 @@ void DialogueBox::Tick(float dt)
 
 			if (speaker)
 			{
-				if (std::isalnum(ch))
+				if (std::isalnum(ch) || (ch >= 0x2E80 && ch < 0xF000))
 					speaker->SetMouth(rand() % 3);
 				else if (!std::isblank(ch))
 					speaker->SetMouth(0);
