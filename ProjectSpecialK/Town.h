@@ -71,6 +71,31 @@ struct LiveTerrainTile
 	unsigned char Elevation;
 };
 
+class Map
+{
+public:
+	//Size of an Acre in full tiles
+	static const int AcreSize = 16t;
+	//TEMP: how tall is a cliff face, roughly?
+	static const int ElevationHeight = 3;
+
+	//Width of the town map in tiles
+	int Width{ 0 };
+	//Height of the town map in tiles
+	int Height{ 0 };
+
+	std::unique_ptr<LiveTerrainTile[]> Terrain{ nullptr };
+
+	std::vector<void*> Objects;
+
+	bool UseDrum{ false };
+
+	//Returns the height of the lowest point from the given coordinate.
+	float GetHeight(const glm::vec3& pos);
+	//Returns the height of the lowest point at the given tile coordinate.
+	float GetHeight(int x, int y);
+};
+
 class Town
 {
 private:
@@ -79,12 +104,12 @@ private:
 	int weatherWind[24] = { 0 };
 	std::map<std::string, int> flags;
 
+	Map map;
+
 public:
 	std::string Name{ "Fuck-All Nowhere" };
 
 	static const int MaxVillagers{ 64 };
-	static const int MaxMapExtent{ 256 };
-	static const int MaxMapSize{ MaxMapExtent * MaxMapExtent };
 
 	enum class Hemisphere
 	{
@@ -99,10 +124,9 @@ public:
 	std::vector<VillagerP> Villagers;
 
 	int Wind{ 0 };
-	LiveTerrainTile Tiles[MaxMapExtent]{ 0 };
-	std::vector<void*> Objects;
 
 	Town();
+	void GenerateNew(void* generator, int width, int height);
 
 	void Load();
 	void Save();
@@ -114,6 +138,11 @@ public:
 	void SetFlag(const std::string& id, bool value);
 	int GetFlag(const std::string& id, int def = 0);
 	bool GetFlag(const std::string& id, bool def = false);
+
+	//Returns the height of the lowest point from the given coordinate.
+	float GetHeight(const glm::vec3& pos);
+	//Returns the height of the lowest point at the given tile coordinate.
+	float GetHeight(int x, int y);
 };
 
 extern Town town;
