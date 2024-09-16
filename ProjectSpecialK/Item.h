@@ -38,7 +38,11 @@ public:
 	//A stack limit of zero is functionally the same as a stack limit of one.
 	int StackLimit{ 0 };
 
+	//The name of the inventory/hotbar icon.
 	std::string Icon;
+
+	//If this item is clothing, and specifically a top or onepiece, the base name for the model.
+	std::string Style;
 
 	//The item is allowed to be buried in the ground.
 	bool CanBury{ false };
@@ -140,6 +144,8 @@ public:
 	bool IsClothing() const;
 
 	std::string InventoryItem::Icon() const;
+	std::string InventoryItem::Style() const;
+	int InventoryItem::Variant() const;
 
 	//Safe to delete if true. If not, DO NOT DELETE.
 	bool Temporary;

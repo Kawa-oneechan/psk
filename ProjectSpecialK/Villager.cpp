@@ -165,10 +165,8 @@ void Villager::LoadModel()
 
 	if (!_clothingModel && Clothing)
 	{
-		auto style = "ts_short";
-		_clothingModel = std::make_shared<::Model>(fmt::format("{}/{}.fbx", _species->Path, style));
+		_clothingModel = std::make_shared<::Model>(fmt::format("{}/{}.fbx", _species->Path, Clothing->Style()));
 
-		//Clothing->AssignTextures(_clothingModel);
 		/*
 		Texture order:
 		alb	nml	mix	opc
@@ -262,7 +260,7 @@ void Villager::Draw(double)
 		_clothingModel->Textures[2] = ClothingTextures[2];
 		_clothingModel->Textures[3] = ClothingTextures[3];
 
-		_clothingModel->TexArrayLayers[0] = 0; //variant test
+		_clothingModel->TexArrayLayers[0] = Clothing->Variant();
 		_clothingModel->Draw();
 	}
 }

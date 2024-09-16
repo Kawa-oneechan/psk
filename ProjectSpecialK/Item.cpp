@@ -84,6 +84,8 @@ Item::Item(JSONObject& value, const std::string& filename) : NameableThing(value
 		else if (kind == "marinesuit") ClothingKind = ClothingKind::Swimwear;
 		else
 			throw std::runtime_error(fmt::format("Don't know what to do with type \"{}\" while loading {}.", kind, ID));
+
+		Style = value["style"] != nullptr ? value["style"]->AsString() : "";
 	}
 	
 	auto vars = value["variants"];
@@ -214,4 +216,14 @@ bool InventoryItem::IsClothing() const
 std::string InventoryItem::Icon() const
 {
 	return _wrapped->Icon;
+}
+
+std::string InventoryItem::Style() const
+{
+	return _wrapped->Style;
+}
+
+int InventoryItem::Variant() const
+{
+	return _variant;
 }

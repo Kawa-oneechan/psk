@@ -16,5 +16,6 @@
 	"category": "tops",
 	"price": 1200,
 	"variants": [ "neonorange", "neonpink", "neongreen", "neonblue" ],
-	"icon": "tops"
+	"icon": "tops",
+	"style": "ts_short"
 }

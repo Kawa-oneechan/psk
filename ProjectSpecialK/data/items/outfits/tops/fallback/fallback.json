@@ -4,5 +4,6 @@
 	"type": "clothes",
 	"category": "tops",
 	"price": 1,
-	"icon": "fallback"
+	"icon": "fallback",
+	"style": "ts_none"
 }
