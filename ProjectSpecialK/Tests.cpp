@@ -1,4 +1,5 @@
 #include "SpecialK.h"
+#include "Town.h"
 
 #ifdef DEBUG
 
@@ -120,6 +121,12 @@ void RunTests()
 	asctime_s(ascTime, thanksGiving);
 	auto blackFriday = GetNthWeekdayOfMonth(10, 5, 4);
 	asctime_s(ascTime, blackFriday);
+
+	town.Load();
+	int i = town.GetFlag("test:numTimesRan", 0);
+	i++;
+	town.SetFlag("test:numTimesRan", i);
+	town.Save();
 
 	return;
 }

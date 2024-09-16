@@ -212,6 +212,7 @@ namespace VFS
 
 		fs::create_directory(savePath);
 		fs::create_directory(savePath / "villagers");
+		fs::create_directory(savePath / "map");
 	}
 
 	void Initialize()

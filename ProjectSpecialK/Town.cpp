@@ -5,6 +5,36 @@ Town::Town()
 	weatherSeed = std::rand();
 }
 
+void Town::Load()
+{
+	try
+	{
+		auto json = VFS::ReadSaveJSON("map/flags.json");
+		flags.clear();
+		for (const auto& f : json->AsObject())
+		{
+			flags[f.first] = f.second->AsInteger();
+		}
+
+	}
+	catch (std::runtime_error&)
+	{ //-V565
+		//Nothing to load.
+		//TODO: DWI
+	}
+}
+
+void Town::Save()
+{
+	JSONObject json;
+	for (const auto& i : flags)
+	{
+		json[i.first] = new JSONValue(i.second);
+	}
+	auto val = JSONValue(json);
+	VFS::WriteSaveJSON("map/flags.json", &val);
+}
+
 void Town::StartNewDay()
 {
 	//Select weather
@@ -92,6 +122,29 @@ void Town::UpdateWeather()
 			windStrength = -windStrength;
 		Wind = windStrength;
 	}
+}
+
+void Town::SetFlag(const std::string& id, int value)
+{
+	flags[id] = value;
+}
+
+void Town::SetFlag(const std::string& id, bool value)
+{
+	SetFlag(id, (int)value);
+}
+
+int Town::GetFlag(const std::string& id, int def)
+{
+	auto v = flags.find(id);
+	if (v == flags.end())
+		return def;
+	return v->second;
+}
+
+bool Town::GetFlag(const std::string& id, bool def)
+{
+	return GetFlag(id, (int)def) > 0;
 }
 
 Town town;

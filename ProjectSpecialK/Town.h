@@ -77,6 +77,7 @@ private:
 	unsigned int weatherSeed{ 0 };
 	int weatherRain[24] = { 0 };
 	int weatherWind[24] = { 0 };
+	std::map<std::string, int> flags;
 
 public:
 	std::string Name{ "Fuck-All Nowhere" };
@@ -96,18 +97,23 @@ public:
 	} Clouds{ Weather::Fine };
 	
 	std::vector<VillagerP> Villagers;
-	
+
 	int Wind{ 0 };
 	LiveTerrainTile Tiles[MaxMapExtent]{ 0 };
 	std::vector<void*> Objects;
 
 	Town();
 
-	void Load(void* data);
-	void* Save();
+	void Load();
+	void Save();
 
 	void StartNewDay();
 	void UpdateWeather();
+
+	void SetFlag(const std::string& id, int value);
+	void SetFlag(const std::string& id, bool value);
+	int GetFlag(const std::string& id, int def = 0);
+	bool GetFlag(const std::string& id, bool def = false);
 };
 
 extern Town town;
