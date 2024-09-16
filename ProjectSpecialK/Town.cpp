@@ -31,9 +31,9 @@ void Map::SaveToPNG()
 		auto t = Terrain[i];
 		auto color = typeColors[t.Type];
 		color = glm::mix(color, glm::vec3(1), t.Elevation * 0.25f);
-		pixels[(i * 4) + 0] = color.r * 255;
-		pixels[(i * 4) + 1] = color.g * 255;
-		pixels[(i * 4) + 2] = color.b * 255;
+		pixels[(i * 4) + 0] = (unsigned char)(color.r * 255);
+		pixels[(i * 4) + 1] = (unsigned char)(color.g * 255);
+		pixels[(i * 4) + 2] = (unsigned char)(color.b * 255);
 		pixels[(i * 4) + 3] = 255;
 	}
 	stbi_write_png("map.png", Width, Height, 4, pixels, Width * 4);

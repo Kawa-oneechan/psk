@@ -1,4 +1,4 @@
-/* stb_image - v2.29 - public domain image loader - http://nothings.org/stb
+/* stb_image - v2.30 - public domain image loader - http://nothings.org/stb
                                   no warranty implied; use at your own risk
 
    Do this:
@@ -48,6 +48,7 @@ LICENSE
 
 RECENT REVISION HISTORY:
 
+      2.30  (2024-05-31) avoid erroneous gcc warning
       2.29  (2023-05-xx) optimizations
       2.28  (2023-01-29) many error fixes, security errors, just tons of stuff
       2.27  (2021-07-11) document stbi_info better, 16-bit PNM support, bug fixes
@@ -726,6 +727,7 @@ typedef unsigned char validate_uint32[sizeof(stbi__uint32)==4 ? 1 : -1];
 
 #ifdef _MSC_VER
 
+#ifndef STBI_NO_JPEG //KAWA: prevent warnings
 #if _MSC_VER >= 1400  // not VC6
 #include <intrin.h> // __cpuid
 static int stbi__cpuid3(void)
@@ -745,6 +747,7 @@ static int stbi__cpuid3(void)
    }
    return res;
 }
+#endif
 #endif
 
 #define STBI_SIMD_ALIGN(type, name) __declspec(align(16)) type name
@@ -1065,6 +1068,7 @@ static void *stbi__malloc_mad4(int a, int b, int c, int d, int add)
 }
 #endif
 
+#ifndef STBI_NO_JPEG //KAWA: prevent warnings
 // returns 1 if the sum of two signed ints is valid (between -2^31 and 2^31-1 inclusive), 0 on overflow.
 static int stbi__addints_valid(int a, int b)
 {
@@ -1081,6 +1085,7 @@ static int stbi__mul2shorts_valid(int a, int b)
    if (b < 0) return a <= SHRT_MIN / b; // same as a * b >= SHRT_MIN
    return a >= SHRT_MIN / b;
 }
+#endif
 
 // stbi__err - error
 // stbi__errpf - error returning pointer to float
@@ -5159,9 +5164,11 @@ static int stbi__parse_png_file(stbi__png *z, int scan, int req_comp)
                // non-paletted with tRNS = constant alpha. if header-scanning, we can stop now.
                if (scan == STBI__SCAN_header) { ++s->img_n; return 1; }
                if (z->depth == 16) {
-                  for (k = 0; k < s->img_n; ++k) tc16[k] = (stbi__uint16)stbi__get16be(s); // copy the values as-is
+                  for (k = 0; k < s->img_n && k < 3; ++k) // extra loop test to suppress false GCC warning
+                     tc16[k] = (stbi__uint16)stbi__get16be(s); // copy the values as-is
                } else {
-                  for (k = 0; k < s->img_n; ++k) tc[k] = (stbi_uc)(stbi__get16be(s) & 255) * stbi__depth_scale_table[z->depth]; // non 8-bit images will be larger
+                  for (k = 0; k < s->img_n && k < 3; ++k)
+                     tc[k] = (stbi_uc)(stbi__get16be(s) & 255) * stbi__depth_scale_table[z->depth]; // non 8-bit images will be larger
                }
             }
             break;

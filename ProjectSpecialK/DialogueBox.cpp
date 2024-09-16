@@ -245,7 +245,7 @@ void DialogueBox::Wrap()
 		if (space.x > 650)
 		{
 			//scan back for a whitespace.
-			bool wasLower = std::islower(ch);
+			bool wasLower = (std::islower(ch) != 0);
 			bool wantHyphen = false;
 			bool insert = false;
 			size_t newSpacePos = 0xFFFF;

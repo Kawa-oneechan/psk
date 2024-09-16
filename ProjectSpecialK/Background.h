@@ -5,7 +5,7 @@
 class Background : public Tickable
 {
 private:
-	Texture wallpaper{ Texture("discobg2.jpg") };
+	Texture wallpaper{ Texture("discobg2.png") };
 	Shader scroller{ Shader("shaders/scroller.fs") };
 	float time{ 0 };
 	const float timeScale{ 0.005f };
