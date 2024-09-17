@@ -53,14 +53,14 @@ JSONValue *JSON::Parse(const char *data)
 	JSONValue *value = JSONValue::Parse(&data);
 	if (value == NULL)
 		throw std::runtime_error("JSON value expected."); //return NULL;
-	
+
 	// Can be white space now and should be at the end of the string then...
 	if (SkipWhitespace(&data))
 	{
 		delete value;
 		return NULL;
 	}
-	
+
 	// We're now at the end of the string
 	return value;
 }
@@ -131,7 +131,7 @@ bool JSON::SkipWhitespace(const char **data)
 			}
 		}
 	}
-	
+
 	return **data != 0;
 }
 
@@ -150,18 +150,18 @@ bool JSON::ExtractString(const char **data, std::string &str)
 {
 	//str = "";
 	str.clear();
-	
+
 	while (**data != 0)
 	{
 		// Save the char so we can change it if need be
 		char next_char = **data;
-		
+
 		// Escaping something?
 		if (next_char == '\\')
 		{
 			// Move over the escape char
 			(*data)++;
-			
+
 			// Deal with the escaped char
 			switch (**data)
 			{
@@ -178,7 +178,7 @@ bool JSON::ExtractString(const char **data, std::string &str)
 					// We need 5 chars (4 hex + the 'u') or its not valid
 					if (!simplejson_wcsnlen(*data, 5))
 						return false;
-					
+
 					// Deal with the chars
 					next_char = 0;
 					for (int i = 0; i < 4; i++)
@@ -186,9 +186,9 @@ bool JSON::ExtractString(const char **data, std::string &str)
 						// Do it first to move off the 'u' and leave us on the
 						// final hex digit as we move on by one later on
 						(*data)++;
-						
+
 						next_char <<= 4;
-						
+
 						// Parse the hex digit
 						if (**data >= '0' && **data <= '9')
 							next_char |= (**data - '0');
@@ -204,13 +204,13 @@ bool JSON::ExtractString(const char **data, std::string &str)
 					}
 					break;
 				}
-				
+
 				// By the spec, only the above cases are allowed
 				default:
 					return false;
 			}
 		}
-		
+
 		// End of the string?
 		else if (next_char == '"')
 		{
@@ -218,7 +218,7 @@ bool JSON::ExtractString(const char **data, std::string &str)
 			str.reserve(); // Remove unused capacity
 			return true;
 		}
-		
+
 		// Disallowed char?
 		/*
 		else if (next_char < ' ' && next_char != '\t')
@@ -227,14 +227,14 @@ bool JSON::ExtractString(const char **data, std::string &str)
 			return false;
 		}
 		*/
-		
+
 		// Add the next char
 		str += next_char;
-		
+
 		// Move on
 		(*data)++;
 	}
-	
+
 	// If we're here, the string ended incorrectly
 	return false;
 }
@@ -250,10 +250,31 @@ bool JSON::ExtractString(const char **data, std::string &str)
  */
 double JSON::ParseInt(const char **data)
 {
+	//KAWA: JSON5 detect and parse hex
+	//VERY UGLY
+	if (**data != 0 && **data == '0')
+	{
+		if (*(*data + 1) == 'x')
+		{
+			(*data) += 2;
+			int integer = 0;
+			while (**data != 0 && ((**data >= '0' && **data <= '9') || (**data >= 'A' && **data <= 'F') || (**data >= 'a' && **data <= 'f')))
+			{
+				if (**data >= '0' && **data <= '9')
+					integer = integer * 16 + (*(*data)++ - '0');
+				else if (**data >= 'A' && **data <= 'F')
+					integer = integer * 16 + ((*(*data)++ - 'A') + 10);
+				else if (**data >= 'a' && **data <= 'f')
+					integer = integer * 16 + ((*(*data)++ - 'a') + 10);
+			}
+			return (double)integer;
+		}
+	}
+
 	double integer = 0;
 	while (**data != 0 && **data >= '0' && **data <= '9')
 		integer = integer * 10 + (*(*data)++ - '0');
-	
+
 	return integer;
 }
 

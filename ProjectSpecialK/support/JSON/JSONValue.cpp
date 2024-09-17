@@ -94,6 +94,26 @@ JSONValue *JSONValue::Parse(const char **data)
 		return new JSONValue();
 	}
 
+	//KAWA: JSON5 Is it NaN?
+	else if (simplejson_wcsnlen(*data, 3) && _strnicmp(*data, "nan", 3) == 0)
+	{
+		(*data) += 3;
+		return new JSONValue(NAN);
+	}
+
+	//KAWA: JSON5 Is it Infinity?
+	else if (simplejson_wcsnlen(*data, 8) && _strnicmp(*data, "infinity", 8) == 0)
+	{
+		(*data) += 8;
+		return new JSONValue(INFINITY);
+	}
+	else if (simplejson_wcsnlen(*data, 9) && _strnicmp(*data, "-infinity", 9) == 0)
+	{
+		(*data) += 9;
+		return new JSONValue(-INFINITY);
+	}
+
+
 	// Is it a number?
 	else if (**data == L'-' || (**data >= L'0' && **data <= L'9'))
 	{
@@ -127,6 +147,12 @@ JSONValue *JSONValue::Parse(const char **data)
 
 			// Save the number
 			number += decimal;
+		}
+		else if (**data == 'x')
+		{
+			//KAWA: JSON5 it's a hex number?
+			(*data)--;
+			number = JSON::ParseInt(data);
 		}
 
 		// Could be an exponent now...
@@ -175,12 +201,15 @@ JSONValue *JSONValue::Parse(const char **data)
 			}
 
 			// Special case - empty object
-			if (object.size() == 0 && **data == L'}')
+			//if (object.size() == 0 && **data == L'}')
+			//KAWA: JSON5 allow trailing comma
+			if (**data == L'}')
 			{
 				(*data)++;
 				return new JSONValue(object);
 			}
 
+			//KAWA: JSON5 TODO allow unquoted keys
 			// We want a string now...
 			std::string name;
 			if (!JSON::ExtractString(&(++(*data)), name))
@@ -197,7 +226,10 @@ JSONValue *JSONValue::Parse(const char **data)
 			}
 
 			// Need a : now
-			if (*((*data)++) != L':')
+			//if (*((*data)++) != L':')
+			//KAWA: allow = too
+			char d = *((*data)++);
+			if (d != L':' && d != L'=')
 			{
 				FREE_OBJECT(object);
 				throw std::runtime_error("JSON: expected a ':' parsing object."); //return NULL;
@@ -269,7 +301,9 @@ JSONValue *JSONValue::Parse(const char **data)
 			}
 
 			// Special case - empty array
-			if (array.size() == 0 && **data == L']')
+			//if (array.size() == 0 && **data == L']')
+			//KAWA: JSON5 allow trailing comma
+			if (**data == L']')
 			{
 				(*data)++;
 				return new JSONValue(array);
