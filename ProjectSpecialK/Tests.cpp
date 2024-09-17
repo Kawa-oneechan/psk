@@ -1,4 +1,4 @@
-#include "SpecialK.h"
+Ôªø#include "SpecialK.h"
 #include "Town.h"
 
 #ifdef DEBUG
@@ -110,6 +110,12 @@ tm* GetNthWeekdayOfMonth(int month, int dayOfWeek, int howManyth)
 
 void RunTests()
 {
+	std::string toLowerTest = u8"Tend≈ç Akane!";
+	StringToLower(toLowerTest);
+	conprint(0, "case folding: {}", toLowerTest);
+	StringToUpper(toLowerTest);
+	conprint(0, "case folding: {}", toLowerTest);
+
 	//test texture re-use
 	auto textureCacheTest = Texture("ui/panels.png");
 
@@ -122,10 +128,10 @@ void RunTests()
 	auto blackFriday = GetNthWeekdayOfMonth(10, 5, 4);
 	asctime_s(ascTime, blackFriday);
 
-	conprint(0, u8"Elevation test: the tile at tile 4◊4 is elevation {}.", town.GetHeight(4t, 4t));
-	conprint(0, u8"Elevation test: the tile at point 0.5◊0.5 is elevation {}.", town.GetHeight(glm::vec3(0.50, 0.50, 10)));
+	conprint(0, u8"Elevation test: the tile at tile 4√ó4 is elevation {}.", town.GetHeight(4t, 4t));
+	conprint(0, u8"Elevation test: the tile at point 0.5√ó0.5 is elevation {}.", town.GetHeight(glm::vec3(0.50, 0.50, 10)));
 	town.GenerateNew(nullptr, 2, 2);
-	conprint(0, u8"Elevation test: on a new blank map, the tile at point 0.5◊0.5 is elevation {}.", town.GetHeight(glm::vec3(0.50, 0.50, 10)));
+	conprint(0, u8"Elevation test: on a new blank map, the tile at point 0.5√ó0.5 is elevation {}.", town.GetHeight(glm::vec3(0.50, 0.50, 10)));
 	town.Load();
 	int i = town.GetFlag("test:numTimesRan", 0);
 	i++;

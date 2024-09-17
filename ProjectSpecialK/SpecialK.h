@@ -130,6 +130,9 @@ std::vector<std::string> Split(std::string& data, char delimiter);
 //Changes a string's characters to lowercase, in place.
 extern void StringToLower(std::string& data);
 
+//Changes a string's characters to uppercase, in place.
+extern void StringToUpper(std::string& data);
+
 //Removes spaces from a string, in place.
 extern void StripSpaces(std::string& data);
 
