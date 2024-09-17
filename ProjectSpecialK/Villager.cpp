@@ -31,7 +31,7 @@ Villager::Villager(JSONObject& value, const std::string& filename) : NameableThi
 	if (val->IsString() && val->AsString()[0] == '#')
 		RefCatchphrase = val->AsString().substr(1);
 	else
-		TextAdd(RefCatchphrase, *val);
+		Text::Add(RefCatchphrase, *val);
 
 	auto birthday = value["birthday"]->AsArray();
 	_birthday[0] = birthday[0]->AsInteger();
@@ -102,15 +102,15 @@ Villager::Villager(JSONObject& value, const std::string& filename) : NameableThi
 
 std::string Villager::Name()
 {
-	return TextGet(RefName);
+	return Text::Get(RefName);
 }
 
 std::string Villager::Species()
 {
 	if (gender == Gender::Girl || gender == Gender::GEnby)
-		return TextGet(RefSpecies + ":f");
+		return Text::Get(RefSpecies + ":f");
 	else
-		return TextGet(RefSpecies + ":m");
+		return Text::Get(RefSpecies + ":m");
 }
 
 void Villager::LoadModel()
@@ -192,14 +192,14 @@ ModelP Villager::Model()
 
 std::string Villager::Birthday()
 {
-	return TextDateMD(_birthday[1], _birthday[0]);
+	return Text::DateMD(_birthday[1], _birthday[0]);
 }
 
 std::string Villager::Catchphrase()
 {
 	if (memory && !memory->_customCatchphrase.empty())
 		return memory->_customCatchphrase;
-	return TextGet(RefCatchphrase);
+	return Text::Get(RefCatchphrase);
 }
 
 std::string Villager::Catchphrase(const std::string& newPhrase)

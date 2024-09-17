@@ -13,11 +13,11 @@ void DialogueBox::msbtStr(MSBTParams)
 		return;
 	}
 	if (tags[1] == "...")
-		toDisplay.replace(start, len, TextGet("str:fix:001"));
+		toDisplay.replace(start, len, Text::Get("str:fix:001"));
 	else if (tags[1] == "player")
 		toDisplay.replace(start, len, thePlayer.Name);
 	else if (tags[1] == "kun")
-		toDisplay.replace(start, len, TextGet("str:kun"));
+		toDisplay.replace(start, len, Text::Get("str:kun"));
 	else if (tags[1] == "vname")
 	{
 		if (speaker == nullptr)
@@ -170,7 +170,7 @@ DialogueBox::DialogueBox()
 	//Text(u8"Truth is... <color:1>the game</color> was rigged\nfrom the start.", 0, "Isabelle", glm::vec4(1, 0.98f, 0.56f, 1), glm::vec4(0.96f, 0.67f, 0.05f, 1));
 	//Text(u8"Truth is... <color:1>the game</color> was rigged from the start.",
 	//Text("Are you <color:3><str:player></color>? <delay:1000>Hiii! Welcome to <color:2>Project Special K</color>!", 0);
-	//Text(TextGet("dlg:sza:wack"), Database::Find<Villager>("psk:cat00", villagers));
+	//Text(Get("dlg:sza:wack"), Database::Find<Villager>("psk:cat00", villagers));
 	//Text("MSBT JSON/Lua test:\n<test1>\n<test2>", 3);
 	//Text(u8"This is ordinary dialogue with a button image in it: \uE0E2 look at that.", Database::Find<Villager>("psk:cat00", villagers));
 	//Text("By the President of the United States of America:\nA Proclamation.<break>Whereas, on the twenty-second day of September, in the year of our Lord one thousand eight hundred and sixty-two, a proclamation was issued by the President of the United States, containing, among other things, the following, to wit:", 0);

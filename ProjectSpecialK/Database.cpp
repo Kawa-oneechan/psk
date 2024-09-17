@@ -140,12 +140,12 @@ namespace Database
 			auto key = f.first;
 			auto val = f.second->AsObject();
 			auto items = std::vector<std::string>();
-			TextAdd(key, *val["name"]);
+			Text::Add(key, *val["name"]);
 			for (const auto& i : val["items"]->AsObject())
 			{
 				auto k = i.first;
 				auto v = i.second->AsObject();
-				TextAdd(k, *v["name"]);
+				Text::Add(k, *v["name"]);
 				items.push_back(k);
 
 				Filters[k] = v["default"] != nullptr ? v["default"]->AsBool() : true;

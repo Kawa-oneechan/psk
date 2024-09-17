@@ -2,7 +2,7 @@
 
 Language gameLang = Language::USen;
 
-static std::map<std::string, TextEntry> textEntries;
+static std::map<std::string, Text::Entry> textEntries;
 
 static Language LangStrToEnum(const std::string &lang)
 {
@@ -18,7 +18,7 @@ static Language LangStrToEnum(const std::string &lang)
 		{ "jpja", JPja },{ "krko", KRko },{ "cnzh", CNzh },{ "twzh", TWzh },
 		{ "eude", EUde },{ "euen", EUen },{ "eues", EUes },{ "eufr", EUfr },
 		{ "euit", EUit },{ "eunl", EUnl },{ "euru", EUru },{ "euhu", EUhu },
-		//Shorter (matches fallbacks in TextEntry::get)
+		//Shorter (matches fallbacks in Entry::get)
 		{ "en", USen },{ "es", USes },{ "fr", USfr },
 		{ "ja", JPja },{ "jp", JPja },{ "ko", KRko },{ "zh", TWzh },
 		{ "de", EUde },{ "it", EUit },{ "nl", EUnl },{ "ru", EUru },{ "hu", EUhu },
@@ -30,12 +30,12 @@ static Language LangStrToEnum(const std::string &lang)
 	return Unknown;
 }
 
-std::string TextEntry::get(Language lang)
+std::string Text::Entry::get(Language lang)
 {
 	if (condition.size())
 	{
 		bool result = Sol.script("return (" + condition + ")");
-		return TextGet(result ? ifTrue : ifElse);
+		return Get(result ? ifTrue : ifElse);
 	}
 
 	auto t = text.find(lang);
@@ -52,14 +52,14 @@ std::string TextEntry::get(Language lang)
 	}
 }
 
-std::string TextEntry::get()
+std::string Text::Entry::get()
 {
 	return get(gameLang);
 }
 
-TextEntry& TextAdd(std::string key, JSONObject& map) //-V813
+Text::Entry& Text::Add(std::string key, JSONObject& map) //-V813
 {
-	auto entry = new TextEntry();
+	auto entry = new Entry();
 
 	for (auto& langs : map)
 	{
@@ -91,46 +91,46 @@ TextEntry& TextAdd(std::string key, JSONObject& map) //-V813
 	return *entry;
 }
 
-TextEntry& TextAdd(std::string key, const std::string& english) //-V813
+Text::Entry& Text::Add(std::string key, const std::string& english) //-V813
 {
 	auto map = new JSONObject();
 	auto p = map->insert(map->begin(), std::pair<std::string, JSONValue*>("USen", new JSONValue(english)));
-	return TextAdd(key, *map);
+	return Add(key, *map);
 }
 
-TextEntry& TextAdd(std::string key, JSONValue& value) //-V813
+Text::Entry& Text::Add(std::string key, JSONValue& value) //-V813
 {
 	if (value.IsObject())
 	{
 		auto obj = value.AsObject();
-		return TextAdd(key, obj);
+		return Add(key, obj);
 	}
 	else if (value.IsString())
 	{
 		auto str = value.AsString();
-		return TextAdd(key, str);
+		return Add(key, str);
 	}
 	throw "TextAdd<Value>: JSONValue is not an Object or String.";
 }
 
 /*
-TextEntry& TextAdd(const char* key, const char* english)
+Entry& Add(const char* key, const char* english)
 {
-	return TextAdd(std::string(key), std::string(english));
+	return Add(std::string(key), std::string(english));
 }
 */
 
-void TextAdd(JSONValue& doc)
+void Text::Add(JSONValue& doc)
 {
 	for (auto& entry : doc.AsObject())
 	{
 		std::string& key = (std::string&)entry.first;
 		auto map = entry.second->AsObject();
-		TextAdd(key, map);
+		Add(key, map);
 	}
 }
 
-std::string TextGet(std::string key, Language lang)
+std::string Text::Get(std::string key, Language lang)
 {
 	auto oldLang = gameLang;
 	if (lang != Language::Default)
@@ -149,16 +149,9 @@ std::string TextGet(std::string key, Language lang)
 	return ret;
 }
 
-/*
-std::string TextGet(const char* key)
+std::string Text::DateMD(int month, int day)
 {
-	return TextGet(std::string(key));
-}
-*/
-
-std::string TextDateMD(int month, int day)
-{
-	auto format = TextGet("month:format"s);
+	auto format = Get("month:format"s);
 	std::string ret;
 	for (int i = 0; i < format.length(); i++)
 	{
@@ -167,7 +160,7 @@ std::string TextDateMD(int month, int day)
 			i++;
 			if (format[i] == 'm')
 			{
-				ret += TextGet(fmt::format("month:{}", std::to_string(month)));
+				ret += Get(fmt::format("month:{}", std::to_string(month)));
 			}
 			else if (format[i] == 'd')
 			{
@@ -181,39 +174,5 @@ std::string TextDateMD(int month, int day)
 		else
 			ret += format[i];
 	}
-	return ret;
-}
-
-void StringToLower(std::string& data)
-{
-	//TODO: make this UTF-8 aware... somehow.
-	std::transform(data.begin(), data.end(), data.begin(), [](unsigned char c) { return tolower(c); });
-}
-
-void StripSpaces(std::string& data)
-{
-	while (data.find(' ') != -1)
-		data.erase(std::find(data.begin(), data.end(), ' '));
-}
-
-std::string StripMSBT(const std::string& data)
-{
-	std::string ret = data;
-	size_t msbtStart;
-	while ((msbtStart = ret.find_first_of('<', 0)) != std::string::npos)
-	{
-		auto msbtEnd = ret.find_first_of('>', msbtStart);
-		ret.replace(msbtStart, msbtEnd - msbtStart + 1, "");
-	}
-	return ret;
-}
-
-std::vector<std::string> Split(std::string& data, char delimiter)
-{
-	std::vector<std::string> ret;
-	std::string part;
-	std::istringstream stream(data);
-	while (std::getline(stream, part, delimiter))
-		ret.push_back(part);
 	return ret;
 }

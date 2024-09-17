@@ -11,16 +11,16 @@ DoomMenuItem::DoomMenuItem(const std::string& cap, int val, std::initializer_lis
 
 void DoomMenuItem::Translate()
 {
-	caption = TextGet(key);
+	caption = Text::Get(key);
 	auto k = key + ":desc";
-	description = TextGet(k);
+	description = Text::Get(k);
 	k = key + ":fmt";
-	formatText = TextGet(k);
+	formatText = Text::Get(k);
 	if (type == Type::Options)
 	{
 		options.clear();
 		for (auto& i : optionKeys)
-			options.emplace_back(TextGet(i));
+			options.emplace_back(Text::Get(i));
 	}
 	if (type == Type::Page && page != nullptr)
 	{
@@ -53,8 +53,8 @@ void DoomMenuItem::Beep()
 
 void DoomMenuPage::Translate()
 {
-	if (!headerKey.empty()) header = TextGet(headerKey);
-	if (!subKey.empty()) subheader = TextGet(subKey);
+	if (!headerKey.empty()) header = Text::Get(headerKey);
+	if (!subKey.empty()) subheader = Text::Get(subKey);
 
 	for (auto i : items)
 	{
@@ -107,7 +107,7 @@ void DoomMenu::Build()
 			UI::settings["language"] = new JSONValue(i->selection);
 			Translate();
 			items = &options;
-			dlgBox->Text(TextGet("menu:options:language:taunt"), Database::Find<Villager>("psk:cat00", villagers));
+			dlgBox->Text(Text::Get("menu:options:language:taunt"), Database::Find<Villager>("psk:cat00", villagers));
 		}
 		));
 		options.items.push_back(new DoomMenuItem("menu:options:continuefrom", UI::settings["continue"]->AsInteger(),
@@ -232,7 +232,7 @@ void DoomMenu::Build()
 
 void DoomMenu::Translate()
 {
-	speciesText = TextGet("menu:options:content:species:help");
+	speciesText = Text::Get("menu:options:content:species:help");
 	options.Translate();
 }
 

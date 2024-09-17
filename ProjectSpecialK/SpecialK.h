@@ -123,6 +123,19 @@ inline constexpr int operator "" t(unsigned long long v) { return (int)v; }
 inline constexpr float operator "" pt(long double v) { return (float)v; }
 #pragma warning(pop)
 
+
+//Splits a string into a vector of strings by the specified delimiter.
+std::vector<std::string> Split(std::string& data, char delimiter);
+
+//Changes a string's characters to lowercase, in place.
+extern void StringToLower(std::string& data);
+
+//Removes spaces from a string, in place.
+extern void StripSpaces(std::string& data);
+
+//Removes MSBT tags from a string.
+extern std::string StripMSBT(const std::string& data);
+
 template<typename T>
 auto StringToEnum(const std::string& s, std::initializer_list<const std::string> opts)
 {
@@ -130,4 +143,22 @@ auto StringToEnum(const std::string& s, std::initializer_list<const std::string>
 	if (it == opts.end())
 		throw std::range_error(fmt::format("StringToEnum: can't find \"{}\" in list \"{}\".", s, join(opts.begin(), opts.end())));
 	return (T)std::distance(opts.begin(), it);
+}
+
+template<typename InputIt>
+std::string join(InputIt begin, InputIt end, const std::string & separator = ", ", const std::string & concluder = "")
+{
+	std::ostringstream ss;
+
+	if (begin != end)
+		ss << *begin++;
+
+	while (begin != end)
+	{
+		ss << separator;
+		ss << *begin++;
+	}
+
+	ss << concluder;
+	return ss.str();
 }

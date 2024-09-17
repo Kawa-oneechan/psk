@@ -32,7 +32,7 @@ void DateTimePanel::Update()
 	auto wd = gm.tm_wday;
 	if (wd == 0) wd = 7; //gm.tm_wday is 0-Sun to 6-Sat. We want 1-Mon to 7-Sun.
 
-	layout.GetPanel("date")->Text = TextDateMD(gm.tm_mon + 1, gm.tm_mday);
+	layout.GetPanel("date")->Text = Text::DateMD(gm.tm_mon + 1, gm.tm_mday);
 
 	if (lastHour == 4 && gm.tm_hour == 5)
 	{

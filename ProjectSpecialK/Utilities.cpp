@@ -257,11 +257,11 @@ std::string GetKeyName(int scancode)
 {
 	if (scancode == 1 || scancode == 14 || scancode == 15 || scancode == 28 || scancode == 57 ||
 		(scancode >= 71 && scancode <=83) || scancode == 284 || scancode == 309)
-		return TextGet(fmt::format("keys:scan:{}", scancode));
+		return Text::Get(fmt::format("keys:scan:{}", scancode));
 
 	auto glfw = glfwGetKeyName(-1, scancode);
 	if (glfw[0] == '\0')
-		return TextGet(fmt::format("keys:scan:{}", scancode));
+		return Text::Get(fmt::format("keys:scan:{}", scancode));
 	else
 		return std::string(glfw);
 }
@@ -284,6 +284,40 @@ std::string UnQualify(const std::string& id)
 	if (IDIsQualified(id))
 		return id.substr(id.find(':') + 1);
 	return id;
+}
+
+void StringToLower(std::string& data)
+{
+	//TODO: make this UTF-8 aware... somehow.
+	std::transform(data.begin(), data.end(), data.begin(), [](unsigned char c) { return tolower(c); });
+}
+
+void StripSpaces(std::string& data)
+{
+	while (data.find(' ') != -1)
+		data.erase(std::find(data.begin(), data.end(), ' '));
+}
+
+std::string StripMSBT(const std::string& data)
+{
+	std::string ret = data;
+	size_t msbtStart;
+	while ((msbtStart = ret.find_first_of('<', 0)) != std::string::npos)
+	{
+		auto msbtEnd = ret.find_first_of('>', msbtStart);
+		ret.replace(msbtStart, msbtEnd - msbtStart + 1, "");
+	}
+	return ret;
+}
+
+std::vector<std::string> Split(std::string& data, char delimiter)
+{
+	std::vector<std::string> ret;
+	std::string part;
+	std::istringstream stream(data);
+	while (std::getline(stream, part, delimiter))
+		ret.push_back(part);
+	return ret;
 }
 
 #include <regex>

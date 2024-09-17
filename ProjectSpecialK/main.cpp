@@ -533,11 +533,11 @@ int main(int, char**)
 	thePlayer.Name = "Kawa";
 	thePlayer.Gender = Gender::BEnby;
 
-	TextAdd(*VFS::ReadJSON("text/datetime.json"));
-	TextAdd(*VFS::ReadJSON("text/fixedform.json"));
-	TextAdd(*VFS::ReadJSON("text/keynames.json"));
-	TextAdd(*VFS::ReadJSON("text/optionsmenu.json"));
-	TextAdd(*VFS::ReadJSON("text/tests.json"));
+	Text::Add(*VFS::ReadJSON("text/datetime.json"));
+	Text::Add(*VFS::ReadJSON("text/fixedform.json"));
+	Text::Add(*VFS::ReadJSON("text/keynames.json"));
+	Text::Add(*VFS::ReadJSON("text/optionsmenu.json"));
+	Text::Add(*VFS::ReadJSON("text/tests.json"));
 
 	//Now that we've loaded the key names we can fill in some blanks.
 	for (int i = 0; i < NumKeyBinds; i++)

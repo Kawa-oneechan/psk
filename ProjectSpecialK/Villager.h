@@ -51,7 +51,7 @@ private:
 	std::array<Texture*, 16> Textures;
 	std::array<Texture*, 4> ClothingTextures;
 
-	int face, mouth;
+	int face{ 0 }, mouth{ 0 };
 
 	VillagerMemoryP memory;
 

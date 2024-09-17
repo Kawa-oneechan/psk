@@ -14,7 +14,7 @@ ModelP Player::Model()
 
 std::string Player::Birthday()
 {
-	return TextDateMD(_birthday[1], _birthday[0]);
+	return Text::DateMD(_birthday[1], _birthday[0]);
 }
 
 int Player::findItemSlot(InventoryItemP target)

@@ -27,14 +27,14 @@ NameableThing::NameableThing(JSONObject& value, const std::string& filename)
 	if (val->IsString() && val->AsString()[0] == '#')
 		RefName = ref = val->AsString().substr(1);
 	else
-		TextAdd(ref, *val);
+		Text::Add(ref, *val);
 
-	EnName = StripMSBT(TextGet(ref, Language::EUen));
+	EnName = StripMSBT(Text::Get(ref, Language::EUen));
 }
 
 std::string NameableThing::Name()
 {
-	auto text = TextGet(RefName);
+	auto text = Text::Get(RefName);
 	if (text.substr(0, 6) == "<info:")
 	{
 		auto msbtEnd = text.find_first_of('>', 7);
