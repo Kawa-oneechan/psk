@@ -140,8 +140,9 @@ void Town::StartNewDay()
 		conprint(0, "Today is {} {}. Let's see.", day, month);
 
 		std::srand(weatherSeed + (month << 8) + (day << 16));
-
-		auto json = VFS::ReadJSON("weather.json")->AsObject();
+		
+		auto doc = VFS::ReadJSON("weather.json");
+		auto json = doc->AsObject();
 		auto calendar = json[Hemisphere == Hemisphere::North ? "north" : "south"]->AsArray();
 
 		auto here = calendar[0]->AsObject();
@@ -191,6 +192,8 @@ void Town::StartNewDay()
 			weatherRain[i] = rain[i]->AsInteger();
 			weatherWind[i] = wind[i]->AsInteger();
 		}
+
+		delete doc;
 	}
 }
 

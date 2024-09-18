@@ -154,6 +154,7 @@ namespace Database
 			}
 			FilterCategories[key] = items;
 		}
+		delete doc;
 	}
 
 	template<typename T1, typename T2>

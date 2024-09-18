@@ -112,7 +112,8 @@ namespace UI
 
 	static void Load()
 	{
-		json = VFS::ReadJSON("ui/ui.json")->AsObject();
+		auto doc = VFS::ReadJSON("ui/ui.json");
+		json = doc->AsObject();
 		auto colors = json["colors"]->AsObject();
 		for (auto& ink : colors["theme"]->AsObject())
 		{
@@ -179,12 +180,14 @@ namespace UI
 			Inputs.Keys[i].GamepadButton = padBinds[i]->AsInteger();
 		}
 
-		auto sounds = VFS::ReadJSON("sound/sounds.json")->AsObject();
+		doc = VFS::ReadJSON("sound/sounds.json");
+		auto sounds = doc->AsObject();
 		for (auto category : sounds)
 		{
 			for (auto sound : category.second->AsObject())
 				generalSounds[category.first][sound.first] = std::make_shared<Audio>(sound.second->AsString());
 		}
+		delete doc;
 	}
 
 	static void Save()

@@ -47,6 +47,7 @@ void MusicManager::Play(const std::string& id, bool immediate)
 
 	if (library.size() == 0)
 		library = VFS::ReadJSON("music/music.json")->AsObject();
+	//don't bother deleting it here and now, we're holding onto this.
 
 	if (!immediate && !currentID.empty())
 	{

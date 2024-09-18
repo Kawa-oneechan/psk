@@ -64,7 +64,8 @@ void SpriteRenderer::LoadFontBank(int font, int bank)
 {
 	if (!cdata)
 	{
-		auto& fontSettings = VFS::ReadJSON("fonts/fonts.json")->AsArray();
+		auto doc = VFS::ReadJSON("fonts/fonts.json");
+		auto fontSettings = doc->AsArray();
 		numFonts = (int)fontSettings.size();
 		if (numFonts > MaxFonts)
 		{
@@ -86,6 +87,7 @@ void SpriteRenderer::LoadFontBank(int font, int bank)
 			fonts[i].alignToGrid = thisFont["grid"] != nullptr ? thisFont["grid"]->AsBool() : false;
 			fonts[i].puaSource = thisFont["pua"] != nullptr ? thisFont["pua"]->AsInteger() : 0;
 		}
+		delete doc;
 	}
 
 	if (fontTextures[(font * 256) + bank] != nullptr)

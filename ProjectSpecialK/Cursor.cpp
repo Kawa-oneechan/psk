@@ -3,9 +3,11 @@
 
 Cursor::Cursor()
 {
-	auto hsj = VFS::ReadJSON("ui/cursors.json")->AsObject();
+	auto doc = VFS::ReadJSON("ui/cursors.json");
+	auto hsj = doc->AsObject();
 	for (auto& hs : hsj["hotspots"]->AsArray())
 		hotspots.push_back(GetJSONVec2(hs));
+	delete doc;
 
 	SetScale(100);
 	Select(0);

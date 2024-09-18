@@ -128,6 +128,7 @@ void Text::Add(JSONValue& doc)
 		auto map = entry.second->AsObject();
 		Add(key, map);
 	}
+	delete &doc;
 }
 
 std::string Text::Get(std::string key, Language lang)

@@ -109,7 +109,6 @@ void GetAtlas(std::vector<glm::vec4> &ret, const std::string& jsonFile)
 				ret.push_back(glm::vec4(x * size[0], y * size[1], size[0], size[1]));
 			}
 		}
-		return;
 	}
 	else if (doc["type"]->AsString() == "atlas")
 	{
@@ -118,10 +117,10 @@ void GetAtlas(std::vector<glm::vec4> &ret, const std::string& jsonFile)
 		{
 			ret.push_back(GetJSONVec4(rect));
 		}
-		return;
 	}
-
-	throw std::runtime_error(fmt::format("GetAtlas: file {} has an unknown type \"{}\".", jsonFile, doc["type"]->AsString()));
+	else
+		throw std::runtime_error(fmt::format("GetAtlas: file {} has an unknown type \"{}\".", jsonFile, doc["type"]->AsString()));
+	delete rjs;
 }
 
 bool PointInPoly(const glm::vec2 point, const std::vector<glm::vec2>& polygon)
