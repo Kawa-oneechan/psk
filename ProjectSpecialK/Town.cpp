@@ -21,22 +21,41 @@ float Map::GetHeight(int x, int y)
 #include "support/stb_image_write.h"
 void Map::SaveToPNG()
 {
-	auto pixels = new unsigned char[(Width * Height) * 4];
-	const glm::vec3 typeColors[] =
+	auto width = Width * 2;
+	auto height = Height * 2;
+	auto pixels = new unsigned long[width * height * 4];
+	const glm::vec4 typeColors[] =
 	{
-		{ 0.133, 0.545, 0.133 }
+		{ 0.133, 0.545, 0.133, 1.0 }
 	};
+
+	auto set = [pixels, width](glm::vec4 color, int x, int y, int w, int h)
+	{
+		auto r = (unsigned char)(color.r * 255);
+		auto g = (unsigned char)(color.g * 255);
+		auto b = (unsigned char)(color.b * 255);
+		auto c = (r) | (g << 8) | (b << 16) | (255 << 24);
+
+		for (int _y = y; _y < y + h; _y++)
+			for (int _x = x; _x < x + w; _x++)
+				pixels[(_y * width) + _x] = c;
+	};
+
 	for (int i = 0; i < Width * Height; i++)
 	{
 		auto t = Terrain[i];
 		auto color = typeColors[t.Type];
-		color = glm::mix(color, glm::vec3(1), t.Elevation * 0.25f);
-		pixels[(i * 4) + 0] = (unsigned char)(color.r * 255);
-		pixels[(i * 4) + 1] = (unsigned char)(color.g * 255);
-		pixels[(i * 4) + 2] = (unsigned char)(color.b * 255);
-		pixels[(i * 4) + 3] = 255;
+		color = glm::mix(color, glm::vec4(1), t.Elevation * 0.25f);
+		set(color, (i % Width) * 2, (i / Width) * 2, 2, 2);
 	}
-	stbi_write_png("map.png", Width, Height, 4, pixels, Width * 4);
+
+	/*
+	Objects on the map should have a size in tiles and a color.
+	If the color's alpha is zero, the object is to be skipped.
+	*/
+	set(glm::vec4(0.75), 1, 1, 5, 3);
+
+	stbi_write_png("map.png", width, height, 4, pixels, width * 4);
 }
 #endif
 
