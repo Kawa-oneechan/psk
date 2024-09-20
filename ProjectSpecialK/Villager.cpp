@@ -128,16 +128,6 @@ void Villager::LoadModel()
 
 	if (Textures[0] == nullptr)
 	{
-		/*
-		Texture order:
-				alb	nml	mix
-		body	0	1	2
-		capvis	3	4	5
-		eyes	6	7	8
-		mouth	9	10	11
-		accs.	12	13	14
-		...
-		*/
 		Textures[0] = new TextureArray(fmt::format("{}/body_alb.png", Path));
 		Textures[1] = new TextureArray(fmt::format("{}/body_nrm.png", Path));
 		Textures[2] = new TextureArray(fmt::format("{}/body_mix.png", Path));

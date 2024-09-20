@@ -1,6 +1,20 @@
 ﻿#pragma once
 #include "SpecialK.h"
 
+/*
+Body texture layout:
+ X. I don't know yet.
+
+Clothing texture layout:
+ 0. Tops (alb, mix, nrm, op) OR Onepiece
+ 4. Bottoms
+ 8. Shoes
+12. Hat
+16. Glasses
+20. Mask
+24. Bag
+*/
+
 constexpr int MaxOnHand = 7; //40
 constexpr int MaxStorage = 5000;
 constexpr int StartingOnHand = 20;
@@ -13,12 +27,21 @@ constexpr int NoItem = -1;
 class Player : public NameableThing, Tickable
 {
 private:
-	ModelP _model{ nullptr };
+	ModelP _model, _hairModel;
+	ModelP _topsModel, _bottomsModel, _onePieceModel;
+	ModelP _hatModel, _glassesModel, _maskModel, _shoesModel, _bagModel;
+
+	std::array<Texture*, 32> Textures;
+	std::array<Texture*, 32> ClothingTextures;
+	glm::vec4 skinColor, hairColor, eyeColor;
+	
 	unsigned char _birthday[2]{ 26, 6 };
 	unsigned char _flags[255]{ 0 };
 
 	int findItemSlot(InventoryItemP target);
 	int findStorageSlot(InventoryItemP target);
+
+	int face{ 0 }, mouth{ 0 };
 
 public:
 	std::string Name{ "Mayor" };
@@ -31,19 +54,25 @@ public:
 	unsigned int Bells{ 0 };
 	
 	InventoryItemP HeldTool{ nullptr };
+	InventoryItemP Tops{ nullptr };
+	InventoryItemP Bottoms{ nullptr };
+	InventoryItemP OnePiece{ nullptr };
 	InventoryItemP Hat{ nullptr };
 	InventoryItemP Glasses{ nullptr };
 	InventoryItemP Mask{ nullptr };
-	InventoryItemP Clothing{ nullptr };
-	InventoryItemP Top{ nullptr };
-	InventoryItemP Bottom{ nullptr };
 	InventoryItemP Socks{ nullptr };
 	InventoryItemP Shoes{ nullptr };
-	InventoryItemP Accessory{ nullptr };
+	InventoryItemP Bag{ nullptr };
 
 	void LoadModel();
 	ModelP Model();
+	ModelP Model(int slot);
 	std::string Birthday();
+
+	void SetFace(int face);
+	void SetMouth(int mouth);
+
+	void Draw(double dt);
 
 	//Returns true if the player has room in their inventory according to their current limit.
 	bool HasInventoryRoom();

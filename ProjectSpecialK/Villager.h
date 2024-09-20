@@ -1,6 +1,14 @@
 #pragma once
-
 #include "Model.h"
+
+/*
+Body texture layout:
+ 0. Body (alb, mix, nrm)
+ 3. CapVis
+ 6. Eyes
+ 9. Mouth
+12. Accessories (may need expansion for glasses et al)
+*/
 
 enum class Gender
 {
