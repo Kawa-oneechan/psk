@@ -373,14 +373,14 @@ void DialogueBox::Text(const std::string& text, VillagerP who)
 
 void DialogueBox::Style(int style)
 {
-	style = clamp(style, 0, 3);
+	style = clamp(style, 0, 4);
 
-	if (style == 3) //system
+	if (style >= 3) //system
 	{
 		bubbleColor = UI::themeColors["primary"];
 		textColor = UI::textColors[8];
-		font = 1;
-		bubbleNum = 3;
+		font = (style == 3) ? 1 : 2;
+		bubbleNum = (style == 3) ? 3 : 0;
 	}
 	else
 	{

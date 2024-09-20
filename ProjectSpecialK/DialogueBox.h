@@ -5,11 +5,11 @@
 class DialogueBox : public Tickable
 {
 private:
-	Texture bubble[4] = {
-		Texture("ui/dialogue/dialogue.png", GL_MIRRORED_REPEAT),
-		Texture("ui/dialogue/exclamation.png", GL_MIRRORED_REPEAT),
-		Texture("ui/dialogue/dream.png", GL_MIRRORED_REPEAT),
-		Texture("ui/dialogue/system.png", GL_MIRRORED_REPEAT),
+	Texture bubble[5] = {
+		Texture("ui/dialogue/dialogue.png", GL_MIRRORED_REPEAT), //regular dialogue
+		Texture("ui/dialogue/exclamation.png", GL_MIRRORED_REPEAT), //WOAG
+		Texture("ui/dialogue/dream.png", GL_MIRRORED_REPEAT), //thoughts and such
+		Texture("ui/dialogue/system.png", GL_MIRRORED_REPEAT), //single squircle, dark
 	};
 	Texture gradient[2] = {
 		Texture("gradient_thin.png"),

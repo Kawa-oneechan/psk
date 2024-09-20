@@ -6,6 +6,8 @@ uniform sampler2D image;
 uniform vec4 sourceRect;
 uniform float time;
 uniform vec2 speed;
+uniform vec4 recolorB;
+uniform vec4 recolorW;
 
 void main()
 {
@@ -14,4 +16,7 @@ void main()
 	uv *= sr.zw;
 	uv += sr.xy;
 	color = texture(image, uv + vec2(time * speed.x, time * speed.y));
+
+    if (recolorB.a != 0.0)
+        color = mix(recolorB, recolorW, color.r);
 }
