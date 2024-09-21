@@ -266,6 +266,17 @@ std::string GetKeyName(int scancode)
 		return std::string(glfw);
 }
 
+bool IsID(const std::string& id)
+{
+	//valid IDs may only contain alphanumerics, :, and _.
+	for (auto& c : id)
+	{
+		if (!(std::isalnum(c) || c == ':' || c == '_'))
+			return false;
+	}
+	return true;
+}
+
 bool IDIsQualified(const std::string& id)
 {
 	//must have a : but not as the first character.
@@ -335,7 +346,6 @@ void StringToUpper(std::string& data)
 	data = ret;
 }
 
-
 void StripSpaces(std::string& data)
 {
 	while (data.find(' ') != -1)
@@ -376,6 +386,21 @@ void HandleIncludes(std::string& code, const std::string& path)
 			code = std::regex_replace(code, incReg, includedFile);
 		}
 	}
+}
+
+#include "support/scale2x/scalebit.h"
+unsigned char* ScaleImage(unsigned char* original, int origWidth, int origHeight, int channels, int targetScale)
+{
+	if (targetScale < 2 || targetScale > 4)
+		throw std::invalid_argument(fmt::format("ScaleImage: targetScale must be 2, 3, or 4, but was {}.", targetScale));
+
+	int newWidth = origWidth * targetScale;
+	int newHeight = origHeight * targetScale;
+
+	auto target = new unsigned char[(newWidth * newHeight) * channels];
+	scalebit(targetScale, target, newWidth  * channels, original, origWidth * channels, channels, origWidth, origHeight, 0);
+
+	return target;
 }
 
 extern unsigned int crcLut[256];

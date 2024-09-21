@@ -3,6 +3,26 @@
 
 #ifdef DEBUG
 
+#include "support/stb_image.h"
+#include "support/stb_image_write.h"
+void TestScaler()
+{
+	const int scale = 4;
+
+	int width, height, channels;
+	size_t vfsSize = 0;
+	auto vfsData = VFS::ReadData("test-1.png", &vfsSize);
+	unsigned char* src = stbi_load_from_memory((unsigned char*)vfsData.get(), (int)vfsSize, &width, &height, &channels, 0);
+	
+	auto dst = ScaleImage(src, width, height, channels, 4);
+
+	stbi_flip_vertically_on_write(true);
+	stbi_write_png("scale2x.png", width * scale, height * scale, channels, dst, (width * scale) * channels);
+	
+	delete dst;
+	stbi_image_free(src);
+}
+
 extern int articlePlease;
 
 void TestVillagerGetting()

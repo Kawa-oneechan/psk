@@ -89,10 +89,19 @@ extern std::string GetDirFromFile(const std::string& path);
 //Given a piece of code (shader?) that may contain "#include" statements and a search path, inserts the included files, 
 extern void HandleIncludes(std::string& code, const std::string& path);
 
+//Invokes Scale2x, 3x, or 4x on an image. Returned pixel data is the caller's responsibility to delete.
+extern unsigned char* ScaleImage(unsigned char* original, int origWidth, int origHeight, int channels, int targetScale);
+
+//Returns the name of a key for the given scancode, using glfwGetKeyName for printables and Text::Get for specials.
 extern std::string GetKeyName(int scancode);
 
+//Checks if a string contains only characters valid for an ID (alhpanumerics, colons, underscores).
+extern bool IsID(const std::string& id);
+//Checks if a string contains a colon, which would mark it as a valid ID.
 extern bool IDIsQualified(const std::string& id);
+//Prepends the given namespace to an ID.
 extern std::string Qualify(const std::string& id, const std::string& ns);
+//Removes the frontmost namespace from an ID.
 extern std::string UnQualify(const std::string& id);
 
 //Returns the CRC32 hash for the given text.
@@ -149,7 +158,7 @@ auto StringToEnum(const std::string& s, std::initializer_list<const std::string>
 }
 
 template<typename InputIt>
-std::string join(InputIt begin, InputIt end, const std::string & separator = ", ", const std::string & concluder = "")
+std::string join(InputIt begin, InputIt end, const std::string& separator = ", ", const std::string& concluder = "")
 {
 	std::ostringstream ss;
 
