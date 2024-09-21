@@ -172,6 +172,9 @@
     <ClCompile Include="support\miniz.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCpp</CompileAs>
     </ClCompile>
+    <ClCompile Include="support\scale2x\scale2x.cpp" />
+    <ClCompile Include="support\scale2x\scale3x.cpp" />
+    <ClCompile Include="support\scale2x\scalebit.cpp" />
     <ClCompile Include="support\stb_image.cpp" />
     <ClCompile Include="support\stb_image_write.cpp" />
     <ClCompile Include="support\stb_truetype.cpp" />
