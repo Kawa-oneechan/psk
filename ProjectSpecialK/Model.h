@@ -38,7 +38,7 @@ private:
 
 public:
 	std::vector<Mesh> Meshes;
-	std::array<Texture*, 16> Textures;
+	std::array<Texture*, 32> Textures;
 	std::array<int, 4> TexArrayLayers;
 
 	Model() = default;

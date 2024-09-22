@@ -3,11 +3,12 @@
 
 /*
 Body texture layout:
- 0. Body (alb, mix, nrm)
- 3. CapVis
- 6. Eyes
- 9. Mouth
-12. Accessories (may need expansion for glasses et al)
+ 0 -  2. Body (alb, mix, nrm)
+ 3 -  5. CapVis
+ 6 -  8. Eyes (16 layers)
+ 9 - 11. Mouth (9 layers, unless Species::ModeledMuzzle is true)
+12 - 15. Accessories 1 (alb, mix, nrm, op)
+16 - 19. Accessories 2
 */
 
 enum class Gender
@@ -56,7 +57,7 @@ private:
 	static const int _maxFurnitureItems = 8 * 4;
 	static const int _maxClothes = 8 * 3;
 
-	std::array<Texture*, 16> Textures;
+	std::array<Texture*, 20> Textures;
 	std::array<Texture*, 4> ClothingTextures;
 
 	int face{ 0 }, mouth{ 0 };

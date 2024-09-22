@@ -3,16 +3,21 @@
 
 /*
 Body texture layout:
- X. I don't know yet.
+ 0 -  2. Body (alb, mix, nrm)
+ 3 -  5. Nose
+ 6 -  8. Cheek (three albedo layers/options)
+ 9 - 11. Eyes (26 options, 16 layers, regular)
+12 - 14. Eyes (stung)
+15 - 17. Mouth (4 options, 9 layers)
 
 Clothing texture layout:
- 0. Tops (alb, mix, nrm, op) OR Onepiece
- 4. Bottoms
- 8. Shoes
-12. Hat
-16. Glasses
-20. Mask
-24. Bag
+ 0 -  3. Tops (alb, mix, nrm, op) OR Onepiece
+ 4 -  7. Bottoms
+ 8 - 11. Shoes
+12 - 15. Hat
+16 - 19. Glasses (may need to rearrange for two-part models)
+20 - 23. Mask
+24 - 27. Bag
 */
 
 constexpr int MaxOnHand = 7; //40
@@ -31,7 +36,7 @@ private:
 	ModelP _topsModel, _bottomsModel, _onePieceModel;
 	ModelP _hatModel, _glassesModel, _maskModel, _shoesModel, _bagModel;
 
-	std::array<Texture*, 32> Textures;
+	std::array<Texture*, 20> Textures;
 	std::array<Texture*, 32> ClothingTextures;
 	glm::vec4 skinColor, hairColor, eyeColor;
 	
@@ -42,6 +47,7 @@ private:
 	int findStorageSlot(InventoryItemP target);
 
 	int face{ 0 }, mouth{ 0 };
+	bool stung{ false };
 
 public:
 	std::string Name{ "Mayor" };

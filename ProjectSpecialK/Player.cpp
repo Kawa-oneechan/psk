@@ -158,12 +158,38 @@ void Player::Draw(double)
 	//TODO: set up and use playerModelShader instead, until it's time to do the clothes.
 	modelShader->Use();
 
+	//Body
 	_model->Textures[0] = Textures[0]; //-V1004 I know LoadModel doesn't actually *set* _model.
 	_model->Textures[1] = Textures[1];
 	_model->Textures[2] = Textures[2];
+	//Nose
+	_model->Textures[4] = Textures[3];
+	_model->Textures[5] = Textures[4];
+	_model->Textures[6] = Textures[5];
+	//Cheek
+	_model->Textures[8] = Textures[6];
+	_model->Textures[9] = Textures[7];
+	_model->Textures[10] = Textures[8];
+	//Eyes
+	if (!stung)
+	{
+		_model->Textures[12] = Textures[9];
+		_model->Textures[13] = Textures[10];
+		_model->Textures[14] = Textures[11];
+	}
+	else
+	{
+		_model->Textures[12] = Textures[12];
+		_model->Textures[13] = Textures[13];
+		_model->Textures[14] = Textures[14];
+	}
+	//Mouths
+	_model->Textures[16] = Textures[15];
+	_model->Textures[17] = Textures[16];
+	_model->Textures[18] = Textures[17];
 
-	_model->TexArrayLayers[2] = face;
-	_model->TexArrayLayers[3] = mouth;
+	_model->TexArrayLayers[3] = face;
+	_model->TexArrayLayers[4] = mouth;
 
 	_model->Draw();
 
