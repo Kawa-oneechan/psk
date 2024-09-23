@@ -12,7 +12,7 @@ Console::Console()
 {
 	visible = false;
 	
-	hardcopy = std::ofstream("console.log", std::ios::trunc | std::ios::binary);
+	hardcopy = std::ofstream("console.log", std::ios::trunc);
 
 	Print(3, "Project Special K");
 	Print(3, "-----------------");
@@ -39,7 +39,8 @@ void Console::Print(int color, const std::string& str)
 	buffer.emplace_back(std::make_pair(clamp(color, 0, 8), str));
 	if (hardcopy.good())
 	{
-		hardcopy << str << std::endl; //eeeugh
+		hardcopy.write(str.c_str(), str.length());
+		hardcopy.write("\n", 1);
 	}
 }
 

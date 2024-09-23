@@ -45,7 +45,6 @@ GLFWwindow* window;
 Shader* spriteShader = nullptr;
 Shader* modelShader = nullptr;
 Texture* whiteRect = nullptr;
-//Camera camera(glm::vec3(0.0f, 5.0f, 50.0f));
 DialogueBox* dlgBox = nullptr;
 CursorP cursor = nullptr;
 Console* console = nullptr;
@@ -256,7 +255,6 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 			console->Close();
 		else
 			console->Open();
-		//console->visible = !console->visible;
 		return;
 	}
 
@@ -278,8 +276,6 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	if (console->visible)
 		return;
 
-	//if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-	//	glfwSetWindowShouldClose(window, 1);
 	if (key == GLFW_KEY_F1 && action == GLFW_PRESS)
 	{
 		wireframe = !wireframe;

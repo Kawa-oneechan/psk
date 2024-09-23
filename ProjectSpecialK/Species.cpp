@@ -68,7 +68,6 @@ std::string Species::Name()
 	return Text::Get(RefName);
 }
 
-
 void Species::LoadModel()
 {
 	if (!_model)

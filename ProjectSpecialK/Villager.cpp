@@ -273,8 +273,6 @@ void Villager::Draw(double)
 void Villager::Manifest()
 {
 	memory = std::make_shared<VillagerMemory>();
-	//TODO: grab memories from savegame (can't use VFS here)
-	//using Deserialize.
 	try
 	{
 		auto json = VFS::ReadSaveJSON(fmt::format("villagers/{}.json", ID));

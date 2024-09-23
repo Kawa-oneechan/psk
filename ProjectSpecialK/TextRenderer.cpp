@@ -25,8 +25,6 @@ typedef struct
 
 static stbtt_bakedchar* cdata{ nullptr };
 static Texture** fontTextures;
-//static std::string fontFiles[MaxFonts];
-//static int fontSizes[MaxFonts];
 static font fonts[MaxFonts];
 static int numFonts = 0;
 
@@ -44,7 +42,7 @@ typedef struct
 static void FlipImage(unsigned char* image, int width, int height)
 {
 	int row;
-	unsigned char temp[2048];
+	unsigned char temp[FontAtlasExtent * 4];
 	unsigned char* bytes = (unsigned char*)image;
 
 	for (row = 0; row < (height >> 1); row++)

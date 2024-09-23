@@ -75,7 +75,6 @@ private:
 		{ "font", &DialogueBox::msbtPass },
 		{ "/font", &DialogueBox::msbtPass },
 	};
-	//TODO: look into using JSON and/or Lua to extend this.
 
 	void Preprocess();
 	void Wrap();

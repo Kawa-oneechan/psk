@@ -5,6 +5,30 @@
 static std::map<std::string, std::tuple<Model*, int>> cache;
 extern Shader* modelShader;
 
+//TODO? Grab this from JSON.
+static std::map<std::string, unsigned int> matMap =
+{
+	//Villagers
+	{ "mBody", 0 },
+	{ "mCapVis", 1 },
+	{ "mEye", 2 },
+	{ "mMouth", 3 },
+
+	//Players
+	{ "mSkin", 0 }, //3
+	{ "mNose", 1 }, //6
+	//{ "mEye", 2 }, //1
+	//{ "mMouth", 3 }, //2
+	{ "mCheek", 4 }, //0
+	{ "mSocks", 5 }, //4
+	{ "mPaint", 6 }, //5
+
+	//Clothing
+	{ "mTops", 0 },
+	//needs more, or fall back to auto-assigner.
+
+};
+
 Model::Mesh::Mesh(ufbx_mesh* mesh) : Texture(-1), Visible(true)
 {
 	Hash = GetCRC(mesh->name.data);
@@ -166,28 +190,41 @@ Model::Model(const std::string& modelPath) : file(modelPath)
 	if (!scene)
 		FatalError(fmt::format("Could not load scene {}: {}", modelPath, errors.description.data));
 	
-	std::vector<std::string> textureNames;
 	conprint(5, "Materials:");
 	for (auto m : scene->materials)
 	{
-		conprint(5, "{}", m->name.data);
-		textureNames.emplace_back(m->name.data);
+		conprint(5, "* {}", m->name.data);
 	}
 
 	conprint(5, "Meshes:");
+	unsigned int matCt = 0;
 	for (size_t i = 0; i < scene->nodes.count; i++)
 	{
 		ufbx_node *node = scene->nodes.data[i];
 		if (node->mesh)
 		{
 			auto m = Mesh(node->mesh);
-			conprint(5, "{}", node->name.data);
 			m.Texture = -1;
 			if (node->mesh->materials.count > 0)
 			{
-				auto m1 = node->mesh->materials[0]->name.data;
-				auto it = std::find(textureNames.cbegin(), textureNames.cend(), m1);
-				m.Texture = (unsigned int)std::distance(textureNames.cbegin(), it);
+				auto& m1 = node->mesh->materials[0]->name.data;
+				auto foundIt = false;
+				for (auto it : matMap)
+				{
+					if (it.first == m1)
+					{
+						m.Texture = it.second;
+						conprint(5, "* {} ({} > {})", node->name.data, it.first, it.second);
+						foundIt = true;
+						break;
+					}
+				}
+				if (!foundIt)
+				{
+					m.Texture = matCt;
+					conprint(5, "* {} (#{})", node->name.data, matCt);
+					matCt++;
+				}
 			}
 			Meshes.emplace_back(m);
 		}

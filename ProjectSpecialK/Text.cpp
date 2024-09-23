@@ -113,13 +113,6 @@ Text::Entry& Text::Add(std::string key, JSONValue& value) //-V813
 	throw "TextAdd<Value>: JSONValue is not an Object or String.";
 }
 
-/*
-Entry& Add(const char* key, const char* english)
-{
-	return Add(std::string(key), std::string(english));
-}
-*/
-
 void Text::Add(JSONValue& doc)
 {
 	for (auto& entry : doc.AsObject())
