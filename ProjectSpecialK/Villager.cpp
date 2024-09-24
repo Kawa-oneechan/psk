@@ -243,15 +243,12 @@ void Villager::Draw(double)
 	_model->Textures[0] = Textures[0];
 	_model->Textures[1] = Textures[1];
 	_model->Textures[2] = Textures[2];
-	_model->Textures[4] = Textures[3];
-	_model->Textures[5] = Textures[4];
-	_model->Textures[6] = Textures[5];
-	_model->Textures[8] = Textures[6];
-	_model->Textures[9] = Textures[7];
-	_model->Textures[10] = Textures[8];
-	_model->Textures[12] = Textures[9];
-	_model->Textures[13] = Textures[10];
-	_model->Textures[14] = Textures[11];
+	_model->Textures[4] = Textures[6];
+	_model->Textures[5] = Textures[7];
+	_model->Textures[6] = Textures[8];
+	_model->Textures[8] = Textures[9];
+	_model->Textures[9] = Textures[10];
+	_model->Textures[10] = Textures[11];
 
 	_model->TexArrayLayers[2] = face;
 	_model->TexArrayLayers[3] = mouth;
