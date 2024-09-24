@@ -20,6 +20,12 @@
 #include <future>
 #include <fstream>
 
+#ifdef DEBUG
+#include "support/ImGUI/imgui.h"
+#include "support/ImGUI/imgui_impl_glfw.h"
+#include "support/ImGUI/imgui_impl_opengl3.h"
+#endif
+
 constexpr auto WindowTitle = "Project Special K"
 #ifdef DEBUG
 " (debug build " __DATE__ ")";
@@ -355,6 +361,15 @@ void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
 void mousebutton_callback(GLFWwindow* window, int button, int action, int mods)
 {
 	window; mods;
+	
+#ifdef DEBUG
+	if (ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow))
+	{
+		Inputs.MouseLeft = false;
+		return;
+	}
+#endif
+
 	if (button == GLFW_MOUSE_BUTTON_LEFT)
 	{
 		Inputs.MouseHoldLeft = action == GLFW_PRESS;
@@ -442,7 +457,6 @@ void ThreadedLoader(std::function<void(float*)> loader)
 	t.join();
 	cursor->Select(0);
 }
-
 int main(int, char**)
 {
 	setlocale(LC_ALL, "en_US.UTF-8");
@@ -512,6 +526,17 @@ int main(int, char**)
 	whiteRect = new Texture("white.png", GL_CLAMP_TO_EDGE);
 	UI::controls = std::make_shared<Texture>("ui/controls.png");
 
+#ifdef DEBUG
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO(); (void)io;
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+	io.ConfigFlags |= ImGuiConfigFlags_NoMouseCursorChange;
+	ImGui::StyleColorsDark();
+	ImGui_ImplGlfw_InitForOpenGL(window, true);
+	ImGui_ImplOpenGL3_Init("#version 130");
+#endif
+
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
 	//glFrontFace(GL_CW);
@@ -574,6 +599,8 @@ int main(int, char**)
 	bob->defaultClothingID = "psk:oppai/white";
 	bob->defaultClothingID = "acnh:djkklogotee/neonpink"; //-V519 this is on purpose daijoubu
 	bob->Manifest();
+	town.Villagers.push_back(bob);
+	town.Villagers.push_back(Database::Find<Villager>("psk:cat01", villagers));
 
 	MainCamera.Setup(glm::vec3(0.0f, 5.0f, 50.0f));
 	MainCamera.Free = false;
@@ -586,6 +613,12 @@ int main(int, char**)
 	int oldTime = 0;
 	while (!glfwWindowShouldClose(window))
 	{
+#ifdef DEBUG
+		ImGui_ImplOpenGL3_NewFrame();
+		ImGui_ImplGlfw_NewFrame();
+		ImGui::NewFrame();
+#endif
+
 		Audio::Update();
 
 #ifdef DEBUG
@@ -642,16 +675,7 @@ int main(int, char**)
 		bob->Draw(dt * timeScale);
 		glDisable(GL_DEPTH_TEST);
 
-		sprender.DrawText(0, fmt::format("CAMERA\n------\nPos: {} {} {}\nPit/Yaw: {} {}\nTarget: {} {} {}\n\nLIGHT\n-----\nPos: {} {} {}",
-			MainCamera.Position.x, MainCamera.Position.y, MainCamera.Position.z,
-			MainCamera.Pitch, MainCamera.Yaw,
-			MainCamera.Target.x, MainCamera.Target.y, MainCamera.Target.z,
-			lightPos.x, lightPos.y, lightPos.z
-		), glm::vec2(8), glm::vec4(1, 1, 0, 1));
-
 		console->Draw(dt);
-		cursor->Draw();
-
 		sprender.Flush();
 
 		tickables.erase(std::remove_if(tickables.begin(), tickables.end(), [](Tickable* i) {
@@ -659,13 +683,63 @@ int main(int, char**)
 		}), tickables.end());
 
 #ifdef DEBUG
-		sprender.DrawSprite(*whiteRect, glm::vec2(0), glm::vec2(96, 48), glm::vec4(0), 0.0f, glm::vec4(0, 0, 0, 0.9));
-		sprender.DrawText(0, fmt::format("TIMING\nUI: {}\nGL: {}", uiTime, glTime), glm::vec2(2), glm::vec4(1, 0, 1, 1));
-		sprender.Flush();
+		ImGui::Begin("Timing");
+		{
+			ImGui::Text("UI: %f\nGL: %f", uiTime, glTime);
+			ImGui::End();
+		}
+
+		ImGui::Begin("Camera");
+		{
+			ImGui::Text("Position: %f %f %f", MainCamera.Position.x, MainCamera.Position.y, MainCamera.Position.z);
+			ImGui::Text("Pitch/Yaw: %f %f", MainCamera.Pitch, MainCamera.Yaw);
+			ImGui::Text("Target: %f %f %f", MainCamera.Target.x, MainCamera.Target.y, MainCamera.Target.z);
+			ImGui::Checkbox("Free", &MainCamera.Free);
+			ImGui::End();
+		}
+		
+		//lightPos.x, lightPos.y, lightPos.z
+
+		static VillagerP debugVillager = town.Villagers[0];
+		ImGui::Begin("Villagers");
+		{
+			ImGui::BeginListBox("##villagers");
+			{
+				auto amount = town.Villagers.size();
+				for (int i = 0; i < amount; i++)
+				{
+					const bool selected = (town.Villagers[i] == debugVillager);
+					if (ImGui::Selectable(town.Villagers[i]->Name().c_str(), selected))
+					{
+						debugVillager = town.Villagers[i];
+					}
+				}
+				ImGui::EndListBox();
+			}
+
+			ImGui::InputInt("Face", &debugVillager->face, 1, 1);
+			ImGui::InputInt("Mouth", &debugVillager->mouth, 1, 1);
+			ImGui::End();
+		}
+
+		ImGui::Begin("Player");
+		{
+			ImGui::InputInt("Bells", (int*)&thePlayer.Bells, 10, 100);
+			ImGui::End();
+		}
 #endif
 
 		//turn depth testing back on for 3D shit
 		glEnable(GL_DEPTH_TEST);
+
+#ifdef DEBUG
+		ImGui::Render();
+		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+#endif
+
+		cursor->Draw();
+		sprender.Flush();
+
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}

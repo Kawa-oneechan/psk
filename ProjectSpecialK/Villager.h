@@ -60,13 +60,19 @@ private:
 	std::array<Texture*, 20> Textures;
 	std::array<Texture*, 4> ClothingTextures;
 
+#ifndef DEBUG
 	int face{ 0 }, mouth{ 0 };
+#endif
 
 	VillagerMemoryP memory;
 
 	void DeleteAllThings();
 
 public:
+#ifdef DEBUG
+	int face{ 0 }, mouth{ 0 };
+#endif
+
 	std::string RefSpecies;
 	std::string RefCatchphrase;
 	glm::vec4 NameTag[2]{};
