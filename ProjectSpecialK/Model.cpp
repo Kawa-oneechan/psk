@@ -10,23 +10,37 @@ static std::map<std::string, unsigned int> matMap =
 {
 	//Villagers
 	{ "mBody", 0 },
-	{ "mCapVis", 1 },
-	{ "mEye", 2 },
-	{ "mMouth", 3 },
+	{ "mCapVis", 0 },
+	{ "mEye", 1 },
+	{ "mMouth", 2 },
+	
+	//Villager accessories
+	{ "mCap", 0 },
+	{ "mGlassCap", 0 },
+	{ "mGlass", 0 },
+	{ "mGlassAlpha", 1 },
 
 	//Players
 	{ "mSkin", 0 }, //3
-	{ "mNose", 1 }, //6
-	//{ "mEye", 2 }, //1
-	//{ "mMouth", 3 }, //2
+	//{ "mEye", 1 }, //1
+	//{ "mMouth", 2 }, //2
 	{ "mCheek", 4 }, //0
+	{ "mNose", 1 }, //6
 	{ "mSocks", 5 }, //4
 	{ "mPaint", 6 }, //5
 
+	{ "mHair", 0 },
+
 	//Clothing
 	{ "mTops", 0 },
-	//needs more, or fall back to auto-assigner.
-
+	{ "mBottoms", 0 },
+	{ "mShoes", 0 },
+	{ "mCap", 0 },
+	{ "mCapHair", 1 },
+	{ "mAccessory", 0 },
+	{ "mAccessoryAlpha", 1 },
+	{ "mBag", 0 },
+	{ "mSoftmesh", 2 },
 };
 
 Model::Mesh::Mesh(ufbx_mesh* mesh) : Texture(-1), Visible(true)

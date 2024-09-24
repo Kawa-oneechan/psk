@@ -23,12 +23,12 @@ void main()
 {
 	vec4 albedo = texture(albedoTexture, vec3(TexCoord, layer));
 	vec3 normal = texture(normalTexture, vec3(TexCoord, layer)).rgb;
-	vec4 mix = texture(mixTexture, vec3(TexCoord, layer));
+	vec4 mixx = texture(mixTexture, vec3(TexCoord, layer));
 	vec4 opacity = texture(opacityTexture, vec3(TexCoord, layer));
 
-	if (mix.r == mix.g && mix.g == mix.b)
+	if (mixx.r == mixx.g && mixx.g == mixx.b)
 	{
-		mix.g = mix.b = 0;
+		mixx.g = mixx.b = 0;
 	}
 
 	//normal = normal * 2.0 - 1.0;
@@ -42,15 +42,15 @@ void main()
 	vec3 viewDir = normalize(viewPos - FragPos);
 
 	//vec3 diffuse = diffuseLight(norm, lightPos, lightColor);
-	//vec3 specular = vec3(0); //specularLight(norm, viewDir, lightPos, lightColor, mix.g);
+	//vec3 specular = vec3(0); //specularLight(norm, viewDir, lightPos, lightColor, mixx.g);
 	//vec3 result = (ambient + diffuse + specular) * albedo.rgb;
 	vec3 result;
 	for (int i = 0; i < NUMLIGHTS; i++)
-		result += getLight(lights[i], albedo.rgb, norm, viewDir, mix.b);
+		result += getLight(lights[i], albedo.rgb, norm, viewDir, mixx.b);
 	FragColor = vec4(result, opacity.r);
 
 	//FragColor = texture(albedoTexture, TexCoord);
 	//FragColor = vec4(norm, 1.0);
-	//FragColor = mix;
+	//FragColor = mixx;
 	if(FragColor.a < 0.1) discard;
 }

@@ -15,9 +15,10 @@ Clothing texture layout:
  4 -  7. Bottoms
  8 - 11. Shoes
 12 - 15. Hat
-16 - 19. Glasses (may need to rearrange for two-part models)
-20 - 23. Mask
-24 - 27. Bag
+16 - 19. Glasses
+20 - 23. Glasses alpha
+24 - 27. Accessories
+28 - 31. Bag
 */
 
 constexpr int MaxOnHand = 7; //40
