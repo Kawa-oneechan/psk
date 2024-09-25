@@ -587,12 +587,12 @@ int main(int, char**)
 	modelShader->SetInt("mixTexture", 2);
 	modelShader->SetInt("opacityTexture", 3);
 
-	auto bob = Database::Find<Villager>("psk:cat00", villagers);
+	auto bob = Database::Find<Villager>("ac:cat00", villagers);
 	bob->defaultClothingID = "psk:oppai/white";
 	bob->defaultClothingID = "acnh:djkklogotee/neonpink"; //-V519 this is on purpose daijoubu
 	bob->Manifest();
 	town.Villagers.push_back(bob);
-	town.Villagers.push_back(Database::Find<Villager>("psk:cat01", villagers));
+	town.Villagers.push_back(Database::Find<Villager>("ac:cat01", villagers));
 
 	MainCamera.Setup(glm::vec3(0.0f, 5.0f, 50.0f));
 	MainCamera.Free = false;

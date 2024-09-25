@@ -94,6 +94,8 @@ public:
 	InventoryItemP Mask{ nullptr };
 	InventoryItemP Clothing{ nullptr };
 
+	Texture* Icon{ nullptr };
+
 	Villager(JSONObject& value, const std::string& filename = "");
 	std::string Name();
 	std::string Species();

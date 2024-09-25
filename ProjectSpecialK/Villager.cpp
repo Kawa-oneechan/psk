@@ -269,6 +269,9 @@ void Villager::Draw(double)
 
 void Villager::Manifest()
 {
+	if (!Icon)
+		Icon = new Texture(fmt::format("{}/icon.png", Path));
+		
 	memory = std::make_shared<VillagerMemory>();
 	try
 	{
@@ -299,6 +302,12 @@ void Villager::DeleteAllThings()
 
 void Villager::Depart()
 {
+	if (Icon)
+	{
+		delete Icon;
+		Icon = nullptr;
+	}
+
 	DeleteAllThings();
 
 	JSONObject json;

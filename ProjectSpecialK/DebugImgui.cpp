@@ -31,13 +31,13 @@ void DoImGui()
 	ImGui_ImplGlfw_NewFrame();
 	ImGui::NewFrame();
 
-	ImGui::Begin("Timing");
+	if (ImGui::Begin("Timing"))
 	{
 		ImGui::Text("UI: %f\nGL: %f", uiTime, glTime);
 		ImGui::End();
 	}
 
-	ImGui::Begin("Camera");
+	if (ImGui::Begin("Camera"))
 	{
 		ImGui::Text("Position: %f %f %f", MainCamera.Position.x, MainCamera.Position.y, MainCamera.Position.z);
 		ImGui::Text("Pitch/Yaw: %f %f", MainCamera.Pitch, MainCamera.Yaw);
@@ -49,28 +49,64 @@ void DoImGui()
 	//lightPos.x, lightPos.y, lightPos.z
 
 	static VillagerP debugVillager = town.Villagers[0];
-	ImGui::Begin("Villagers");
-	{
-		if (ImGui::BeginListBox("##villagers"))
-		{
-			auto amount = town.Villagers.size();
-			for (int i = 0; i < amount; i++)
-			{
-				const bool selected = (town.Villagers[i] == debugVillager);
-				if (ImGui::Selectable(town.Villagers[i]->Name().c_str(), selected))
-				{
-					debugVillager = town.Villagers[i];
-				}
-			}
-			ImGui::EndListBox();
-		}
+	static VillagerP debugAllVillager = villagers[0];
 
-		ImGui::SliderInt("Face", &debugVillager->face, 0, 15);
-		ImGui::SliderInt("Mouth", &debugVillager->mouth, 0, 8);
+	if (ImGui::Begin("Villagers"))
+	{
+		if (ImGui::BeginTabBar("Villagers"))
+		{
+			if (ImGui::BeginTabItem("In town"))
+			{
+				if (ImGui::BeginListBox("##townVillagers", ImVec2(-FLT_MIN, (town.Villagers.size() + 1) * ImGui::GetTextLineHeightWithSpacing())))
+				{
+					auto amount = town.Villagers.size();
+					for (int i = 0; i < amount; i++)
+					{
+						const bool selected = (town.Villagers[i] == debugVillager);
+						if (ImGui::Selectable(town.Villagers[i]->Name().c_str(), selected))
+						{
+							debugVillager = town.Villagers[i];
+						}
+					}
+					ImGui::EndListBox();
+				}
+
+				if (debugVillager->Icon)
+					ImGui::Image((void*)(uintptr_t)debugVillager->Icon->ID, ImVec2(128, 128), ImVec2(0, 1), ImVec2(1, 0));
+
+				ImGui::Text(debugVillager->ID.c_str());
+
+				ImGui::SliderInt("Face", &debugVillager->face, 0, 15);
+				ImGui::SliderInt("Mouth", &debugVillager->mouth, 0, 8);
+
+				ImGui::EndTabItem();
+			}
+
+			if (ImGui::BeginTabItem("All"))
+			{
+				if (ImGui::BeginListBox("##allVillagers", ImVec2(-FLT_MIN, 12 * ImGui::GetTextLineHeightWithSpacing())))
+				{
+					auto amount = villagers.size();
+					for (int i = 0; i < amount; i++)
+					{
+						const bool selected = (villagers[i] == debugAllVillager);
+						if (ImGui::Selectable(villagers[i]->Name().c_str(), selected))
+						{
+							debugAllVillager = villagers[i];
+						}
+					}
+					ImGui::EndListBox();
+				}
+
+				ImGui::EndTabItem();
+			}
+
+			ImGui::EndTabBar();
+		}
 		ImGui::End();
 	}
 
-	ImGui::Begin("Player");
+	if (ImGui::Begin("Player"))
 	{
 		ImGui::InputInt("Bells", (int*)&thePlayer.Bells, 10, 100);
 		ImGui::End();
