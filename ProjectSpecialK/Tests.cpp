@@ -1,8 +1,6 @@
 ﻿#include "SpecialK.h"
 #include "Town.h"
 
-#ifdef DEBUG
-
 #include "support/stb_image.h"
 #include "support/stb_image_write.h"
 void TestScaler()
@@ -160,9 +158,3 @@ void RunTests()
 
 	return;
 }
-#else
-void RunTests()
-{
-	//Nothing in debug mode, bro.
-}
-#endif

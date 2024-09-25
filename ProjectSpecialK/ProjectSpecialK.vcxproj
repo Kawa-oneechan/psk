@@ -149,6 +149,9 @@
     <ClCompile Include="DateTimePanel.cpp" />
     <ClCompile Include="DialogueBox.cpp" />
     <ClCompile Include="DoomMenu.cpp" />
+    <ClCompile Include="DebugImgui.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="InputsMap.cpp" />
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="JsonPatch.cpp" />
@@ -199,7 +202,9 @@
     <ClCompile Include="support\ufbx.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCpp</CompileAs>
     </ClCompile>
-    <ClCompile Include="Tests.cpp" />
+    <ClCompile Include="Tests.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="Text.cpp" />
     <ClCompile Include="TextField.cpp" />
     <ClCompile Include="TextRenderer.cpp" />

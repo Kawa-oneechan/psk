@@ -20,15 +20,14 @@
 #include <future>
 #include <fstream>
 
-#ifdef DEBUG
-#include "support/ImGUI/imgui.h"
-#include "support/ImGUI/imgui_impl_glfw.h"
-#include "support/ImGUI/imgui_impl_opengl3.h"
-#endif
-
 constexpr auto WindowTitle = "Project Special K"
 #ifdef DEBUG
 " (debug build " __DATE__ ")";
+
+extern bool IsImGuiHovered();
+extern void SetupImGui();
+extern void DoImGui();
+extern void RunTests();
 #endif
 ;
 
@@ -102,8 +101,6 @@ namespace SolBinds
 {
 	extern void Setup();
 }
-
-extern void RunTests();
 
 namespace UI
 {
@@ -363,7 +360,7 @@ void mousebutton_callback(GLFWwindow* window, int button, int action, int mods)
 	window; mods;
 	
 #ifdef DEBUG
-	if (ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow))
+	if (IsImGuiHovered())
 	{
 		Inputs.MouseLeft = false;
 		return;
@@ -527,14 +524,7 @@ int main(int, char**)
 	UI::controls = std::make_shared<Texture>("ui/controls.png");
 
 #ifdef DEBUG
-	IMGUI_CHECKVERSION();
-	ImGui::CreateContext();
-	ImGuiIO& io = ImGui::GetIO(); (void)io;
-	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
-	io.ConfigFlags |= ImGuiConfigFlags_NoMouseCursorChange;
-	ImGui::StyleColorsDark();
-	ImGui_ImplGlfw_InitForOpenGL(window, true);
-	ImGui_ImplOpenGL3_Init("#version 130");
+	SetupImGui();
 #endif
 
 	glEnable(GL_DEPTH_TEST);
@@ -583,7 +573,9 @@ int main(int, char**)
 
 	//tickables.push_back(new TextField());
 
+#ifdef DEBUG
 	RunTests();
+#endif
 
 	modelShader->Use();
 	modelShader->SetVec3("lights[0].color", 1.0f, 1.0f, 1.0f);
@@ -613,12 +605,6 @@ int main(int, char**)
 	int oldTime = 0;
 	while (!glfwWindowShouldClose(window))
 	{
-#ifdef DEBUG
-		ImGui_ImplOpenGL3_NewFrame();
-		ImGui_ImplGlfw_NewFrame();
-		ImGui::NewFrame();
-#endif
-
 		Audio::Update();
 
 #ifdef DEBUG
@@ -683,59 +669,11 @@ int main(int, char**)
 		}), tickables.end());
 
 #ifdef DEBUG
-		ImGui::Begin("Timing");
-		{
-			ImGui::Text("UI: %f\nGL: %f", uiTime, glTime);
-			ImGui::End();
-		}
-
-		ImGui::Begin("Camera");
-		{
-			ImGui::Text("Position: %f %f %f", MainCamera.Position.x, MainCamera.Position.y, MainCamera.Position.z);
-			ImGui::Text("Pitch/Yaw: %f %f", MainCamera.Pitch, MainCamera.Yaw);
-			ImGui::Text("Target: %f %f %f", MainCamera.Target.x, MainCamera.Target.y, MainCamera.Target.z);
-			ImGui::Checkbox("Free", &MainCamera.Free);
-			ImGui::End();
-		}
-		
-		//lightPos.x, lightPos.y, lightPos.z
-
-		static VillagerP debugVillager = town.Villagers[0];
-		ImGui::Begin("Villagers");
-		{
-			ImGui::BeginListBox("##villagers");
-			{
-				auto amount = town.Villagers.size();
-				for (int i = 0; i < amount; i++)
-				{
-					const bool selected = (town.Villagers[i] == debugVillager);
-					if (ImGui::Selectable(town.Villagers[i]->Name().c_str(), selected))
-					{
-						debugVillager = town.Villagers[i];
-					}
-				}
-				ImGui::EndListBox();
-			}
-
-			ImGui::InputInt("Face", &debugVillager->face, 1, 1);
-			ImGui::InputInt("Mouth", &debugVillager->mouth, 1, 1);
-			ImGui::End();
-		}
-
-		ImGui::Begin("Player");
-		{
-			ImGui::InputInt("Bells", (int*)&thePlayer.Bells, 10, 100);
-			ImGui::End();
-		}
+		DoImGui();
 #endif
 
 		//turn depth testing back on for 3D shit
 		glEnable(GL_DEPTH_TEST);
-
-#ifdef DEBUG
-		ImGui::Render();
-		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-#endif
 
 		cursor->Draw();
 		sprender.Flush();
