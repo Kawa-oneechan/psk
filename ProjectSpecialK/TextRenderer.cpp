@@ -188,7 +188,7 @@ void SpriteRenderer::DrawText(int font, const std::string& text, glm::vec2 posit
 
 	while (text[i] != 0)
 	{
-		unsigned int ch;
+		rune ch;
 		size_t chs;
 		std::tie(ch, chs) = GetChar(text, i);
 		i += chs;
@@ -292,7 +292,7 @@ glm::vec2 SpriteRenderer::MeasureText(int font, const std::string& text, float s
 
 	while (text[i] != 0)
 	{
-		unsigned int ch;
+		rune ch;
 		size_t chs;
 		std::tie(ch, chs) = GetChar(text, i);
 		i += chs;

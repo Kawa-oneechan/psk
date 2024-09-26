@@ -60,6 +60,8 @@ extern Texture* whiteRect;
 
 extern sol::state Sol;
 
+typedef unsigned int rune;
+
 //Given a JSON array with two numbers in it, returns a vec2 with those numbers.
 extern glm::vec2 GetJSONVec2(JSONValue* val);
 //Given a JSON array with three numbers in it, returns a vec3 with those numbers.
@@ -76,9 +78,9 @@ extern bool PointInPoly(const glm::vec2 point, const std::vector<glm::vec2>& pol
 extern bool PointInRect(const glm::vec2 point, const glm::vec4 rect);
 
 //Decodes a UTF-8 byte sequence to a codepoint, returns it and the size of the sequence.
-extern std::tuple<unsigned int, size_t> GetChar(const std::string& what, size_t where);
+extern std::tuple<rune, size_t> GetChar(const std::string& what, size_t where);
 //Encodes a codepoint into a UTF-8 byte sequence and appends it to the given string.
-extern void AppendChar(std::string& where, unsigned int what);
+extern void AppendChar(std::string& where, rune what);
 
 //Renders a set of tabular data to the console in a nice lined table.
 extern void Table(std::vector<std::string> data, size_t stride);

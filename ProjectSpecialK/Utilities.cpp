@@ -45,6 +45,8 @@ glm::vec4 GetJSONColor(JSONValue* val)
 		int r = 0, g = 0, b = 0, a = 0;
 		if (hex.empty() || hex[0] != '#')
 			return glm::vec4(0, 0, 0, -1);
+		//TODO: consider checking if the value is in UI::themeColors.
+		//That way, colors in panel definitions can be hexcodes or float arrays too.
 		if (hex.length() == 7)
 		{
 			a = 0xFF;
@@ -152,11 +154,11 @@ bool PointInRect(const glm::vec2 point, const glm::vec4 rect)
 		(point.y < rect.y + rect.w);
 }
 
-std::tuple<unsigned int, size_t> GetChar(const std::string& what, size_t where)
+std::tuple<rune, size_t> GetChar(const std::string& what, size_t where)
 {
 	if (where >= what.size())
 		return{ 0, 0 };
-	unsigned int ch = what[where] & 0xFF;
+	rune ch = what[where] & 0xFF;
 	size_t size = 1;
 	if ((ch & 0xE0) == 0xC0)
 		size = 2;
@@ -178,7 +180,7 @@ std::tuple<unsigned int, size_t> GetChar(const std::string& what, size_t where)
 	return{ ch, size };
 }
 
-void AppendChar(std::string& where, unsigned int what)
+void AppendChar(std::string& where, rune what)
 {
 	if (what < 0x80)
 	where += (char)what;
@@ -306,7 +308,7 @@ void StringToLower(std::string& data)
 	ret.reserve(data.length());
 	for (size_t i = 0; i < data.length();)
 	{
-		unsigned int ch;
+		rune ch;
 		size_t size;
 		std::tie(ch, size) = GetChar(data, i);
 		for (int c = 0; c < 2378; c += 2)
@@ -329,7 +331,7 @@ void StringToUpper(std::string& data)
 	ret.reserve(data.length());
 	for (size_t i = 0; i < data.length();)
 	{
-		unsigned int ch;
+		rune ch;
 		size_t size;
 		std::tie(ch, size) = GetChar(data, i);
 		for (int c = 1; c < 2378; c += 2)

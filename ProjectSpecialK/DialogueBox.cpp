@@ -235,7 +235,7 @@ void DialogueBox::Wrap()
 			start = i;
 		}
 
-		unsigned int ch;
+		rune ch;
 		size_t size;
 		std::tie(ch, size) = GetChar(toDisplay, i);
 
@@ -475,7 +475,7 @@ void DialogueBox::Tick(float dt)
 
 		delay = 0;
 
-		unsigned int ch;
+		rune ch;
 		size_t size;
 		std::tie(ch, size) = GetChar(toDisplay, displayCursor);
 		displayCursor += size;
