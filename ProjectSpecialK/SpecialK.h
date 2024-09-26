@@ -61,6 +61,7 @@ extern Texture* whiteRect;
 extern sol::state Sol;
 
 typedef unsigned int rune;
+constexpr int MaxLights = 4;
 
 //Given a JSON array with two numbers in it, returns a vec2 with those numbers.
 extern glm::vec2 GetJSONVec2(JSONValue* val);

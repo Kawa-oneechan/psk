@@ -55,7 +55,9 @@ CursorP cursor = nullptr;
 Console* console = nullptr;
 Audio* bgm = nullptr;
 
-glm::vec3 lightPos(0.0f, 15.0f, 20.0f);
+glm::vec3 lightPos[MaxLights] = { { 0.0f, 15.0f, 20.0f }, { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 } };
+glm::vec3 lightCol[MaxLights] = { { 1.0f, 1.0f, 1.0f }, { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 } };
+float lightStr[MaxLights] = { 0.25f, 0, 0, 0 };
 
 sol::state Sol;
 
@@ -287,6 +289,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		glPolygonMode(GL_FRONT_AND_BACK, wireframe ? GL_LINE : GL_FILL);
 	}
 
+	/*
 	if (key == GLFW_KEY_T)
 		lightPos.y += 0.5f;
 	else if (key == GLFW_KEY_G)
@@ -299,6 +302,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		lightPos.z -= 0.5f;
 	else if (key == GLFW_KEY_Y)
 		lightPos.z += 0.5f;
+	*/
 
 	if (mods == 0)
 	{
@@ -580,9 +584,6 @@ int main(int, char**)
 #endif
 
 	modelShader->Use();
-	modelShader->SetVec3("lights[0].color", 1.0f, 1.0f, 1.0f);
-	modelShader->SetVec3("lights[0].pos", lightPos);
-	modelShader->SetFloat("lights[0].strength", 0.25f);
 	modelShader->SetVec3("viewPos", MainCamera.Position);
 	modelShader->SetInt("albedoTexture", 0);
 	modelShader->SetInt("normalTexture", 1);
@@ -657,7 +658,14 @@ int main(int, char**)
 		glClear(GL_DEPTH_BUFFER_BIT);
 		glEnable(GL_DEPTH_TEST);
 		modelShader->Use();
-		modelShader->SetVec3("lights[0].pos", lightPos);
+
+		for (int i = 0; i < MaxLights; i++)
+		{
+			modelShader->SetVec3(fmt::format("lights[{}].color", i), lightCol[i]);
+			modelShader->SetVec3(fmt::format("lights[{}].pos", i), lightPos[i]);
+			modelShader->SetFloat(fmt::format("lights[{}].strength", i), lightStr[i]);
+		}
+
 		//testModel.Draw();
 		//testModel2.Draw();
 		bob->Draw(dt * timeScale);

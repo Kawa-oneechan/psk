@@ -5,10 +5,14 @@
 #include "support/ImGUI/imgui_impl_glfw.h"
 #include "support/ImGUI/imgui_impl_opengl3.h"
 
-bool debuggerEnabled{ false };
+bool debuggerEnabled{ true };
 
 extern float uiTime, glTime;
 extern GLFWwindow* window;
+
+extern glm::vec3 lightPos[MaxLights];
+extern glm::vec3 lightCol[MaxLights];
+extern float lightStr[MaxLights];
 
 bool IsImGuiHovered()
 {
@@ -114,6 +118,42 @@ void DoImGui()
 	if (ImGui::Begin("Player"))
 	{
 		ImGui::InputInt("Bells", (int*)&thePlayer.Bells, 10, 100);
+		ImGui::End();
+	}
+
+	static int lightIndex = 0;
+	static const char lightLabels[16] = "1\0" "2\0" "3\0" "4\0";
+	if (ImGui::Begin("Lighting"))
+	{
+		for (int i = 0; i < 4; i++)
+		{
+			bool selected = lightIndex == i;
+			if (ImGui::RadioButton(lightLabels + (i * 2), selected))
+			{
+				lightIndex = i;
+			}
+			if (i < 3)
+				ImGui::SameLine();
+		}
+
+		ImGui::SliderFloat("Strength", &lightStr[lightIndex], 0, 1);
+
+		ImGui::Text("Position");
+		{
+			ImGui::SliderFloat("X", &lightPos[lightIndex].x, -50, 50);
+			ImGui::SliderFloat("Y", &lightPos[lightIndex].y, -50, 50);
+			ImGui::SliderFloat("Z", &lightPos[lightIndex].z, -50, 50);
+
+			if (ImGui::Button("Reset"))
+			{
+				lightPos[lightIndex].x = 0;
+				lightPos[lightIndex].y = 15;
+				lightPos[lightIndex].z = 20;
+			}
+		}
+
+		ImGui::ColorPicker3("Color", &lightCol[lightIndex].x);
+
 		ImGui::End();
 	}
 
