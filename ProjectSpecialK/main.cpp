@@ -75,6 +75,8 @@ float timeScale = 0.25f;
 
 int articlePlease;
 
+bool cheatsEnabled;
+
 #ifdef DEBUG
 float uiTime = 0;
 float glTime = 0;

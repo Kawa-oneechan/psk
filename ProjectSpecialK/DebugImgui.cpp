@@ -5,6 +5,8 @@
 #include "support/ImGUI/imgui_impl_glfw.h"
 #include "support/ImGUI/imgui_impl_opengl3.h"
 
+bool debuggerEnabled{ false };
+
 extern float uiTime, glTime;
 extern GLFWwindow* window;
 
@@ -27,6 +29,9 @@ void SetupImGui()
 
 void DoImGui()
 {
+	if (!debuggerEnabled)
+		return;
+
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplGlfw_NewFrame();
 	ImGui::NewFrame();

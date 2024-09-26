@@ -14,7 +14,7 @@ extern glm::vec4 GetJSONColor(JSONValue* val);
 struct CVar
 {
 	std::string name;
-	enum class CVarType
+	enum class Type
 	{
 		Bool, Int, Float, String, Vec2, Vec3, Vec4, Color
 	} type;
@@ -29,45 +29,46 @@ struct CVar
 		glm::vec3* asVec3;
 		glm::vec4* asVec4;
 	};
+	bool cheat;
 
 	bool Set(const std::string& value)
 	{
 		auto json = JSON::Parse(value.c_str());
 		switch (type)
 		{
-		case CVarType::Bool:
+		case Type::Bool:
 			if (json->IsNumber())
 				*asBool = json->AsInteger() != 0;
 			else if (json->IsBool())
 				*asBool = json->AsBool();
 			return true;
-		case CVarType::Int:
+		case Type::Int:
 			if (json->IsNumber())
 				*asInt = json->AsInteger();
 			return true;
-		case CVarType::Float:
+		case Type::Float:
 			if (json->IsNumber())
 				*asFloat = json->AsNumber();
 			return true;
-		case CVarType::String:
+		case Type::String:
 			if (json->IsNumber())
 				*asString = fmt::format("{}", json->AsNumber());
 			else if (json->IsString())
 				*asString = json->AsString();
 			return true;
-		case CVarType::Vec2:
+		case Type::Vec2:
 			if (json->IsArray())
 				*asVec2 = GetJSONVec2(json);
 			return true;
-		case CVarType::Vec3:
+		case Type::Vec3:
 			if (json->IsArray())
 				*asVec3 = GetJSONVec3(json);
 			return true;
-		case CVarType::Vec4:
+		case Type::Vec4:
 			if (json->IsArray())
 				*asVec4 = GetJSONVec4(json);
 			return true;
-		case CVarType::Color:
+		case Type::Color:
 			*asVec4 = GetJSONColor(json);
 			return true;
 		}
@@ -103,6 +104,6 @@ public:
 	void Close();
 	void Tick(float dt);
 	void Draw(float dt);
-	void RegisterCVar(const std::string& name, CVar::CVarType type, void* target);
+	void RegisterCVar(const std::string& name, CVar::Type type, void* target, bool cheat = false);
 };
 extern Console* console;

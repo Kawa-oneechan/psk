@@ -7,6 +7,8 @@
 #include "PanelLayout.h"
 
 extern float timeScale;
+extern bool debuggerEnabled;
+extern bool cheatsEnabled;
 
 Console::Console()
 {
@@ -29,9 +31,13 @@ Console::Console()
 	timer = 0.0f;
 	appearState = 0;
 
-	RegisterCVar("timescale", CVar::CVarType::Float, &timeScale);
-	RegisterCVar("playername", CVar::CVarType::String, &thePlayer.Name);
-	RegisterCVar("playerbells", CVar::CVarType::Int, &thePlayer.Bells);
+	RegisterCVar("timescale", CVar::Type::Float, &timeScale);
+	RegisterCVar("playername", CVar::Type::String, &thePlayer.Name);
+	RegisterCVar("playerbells", CVar::Type::Int, &thePlayer.Bells, true);
+	RegisterCVar("sv_cheats", CVar::Type::Bool, &cheatsEnabled);
+#ifdef DEBUG
+	RegisterCVar("debugger", CVar::Type::Bool, &debuggerEnabled, true);
+#endif
 }
 
 void Console::Print(int color, const std::string& str)
@@ -61,31 +67,36 @@ bool Console::Execute(const std::string& str)
 			{
 				switch (cv.type)
 				{
-				case CVar::CVarType::Bool: Print(0, fmt::format("{} is {}", cv.name, *cv.asBool)); return true;
-				case CVar::CVarType::Int: Print(0, fmt::format("{} is {}", cv.name, *cv.asInt)); return true;
-				case CVar::CVarType::Float: Print(0, fmt::format("{} is {}", cv.name, *cv.asFloat)); return true;
-				case CVar::CVarType::String: Print(0, fmt::format("{} is \"{}\"", cv.name, *cv.asString)); return true;
-				case CVar::CVarType::Vec2: Print(0, fmt::format("{} is [{}, {}]", cv.name, cv.asVec2->x, cv.asVec2->y)); return true;
-				case CVar::CVarType::Vec3: Print(0, fmt::format("{} is [{}, {}, {}]", cv.name, cv.asVec3->x, cv.asVec3->y, cv.asVec3->z)); return true;
-				case CVar::CVarType::Color:
-				case CVar::CVarType::Vec4: Print(0, fmt::format("{} is [{}, {}, {}, {}]", cv.name, cv.asVec4->x, cv.asVec4->y, cv.asVec4->z, cv.asVec4->w)); return true;
+				case CVar::Type::Bool: Print(0, fmt::format("{} is {}", cv.name, *cv.asBool)); return true;
+				case CVar::Type::Int: Print(0, fmt::format("{} is {}", cv.name, *cv.asInt)); return true;
+				case CVar::Type::Float: Print(0, fmt::format("{} is {}", cv.name, *cv.asFloat)); return true;
+				case CVar::Type::String: Print(0, fmt::format("{} is \"{}\"", cv.name, *cv.asString)); return true;
+				case CVar::Type::Vec2: Print(0, fmt::format("{} is [{}, {}]", cv.name, cv.asVec2->x, cv.asVec2->y)); return true;
+				case CVar::Type::Vec3: Print(0, fmt::format("{} is [{}, {}, {}]", cv.name, cv.asVec3->x, cv.asVec3->y, cv.asVec3->z)); return true;
+				case CVar::Type::Color:
+				case CVar::Type::Vec4: Print(0, fmt::format("{} is [{}, {}, {}, {}]", cv.name, cv.asVec4->x, cv.asVec4->y, cv.asVec4->z, cv.asVec4->w)); return true;
 				}
 			}
 			else
 			{
 				auto second = str.substr(str.find(' '));
+				if (cv.cheat && !cheatsEnabled)
+				{
+					Print(1, fmt::format("Changing {} is considered a cheat.", cv.name));
+					return false;
+				}
 				if (cv.Set(second))
 				{
 					switch (cv.type)
 					{
-					case CVar::CVarType::Bool: Print(0, fmt::format("{} set to {}", cv.name, *cv.asBool)); return true;
-					case CVar::CVarType::Int: Print(0, fmt::format("{} set to {}", cv.name, *cv.asInt)); return true;
-					case CVar::CVarType::Float: Print(0, fmt::format("{} set to {}", cv.name, *cv.asFloat)); return true;
-					case CVar::CVarType::String: Print(0, fmt::format("{} set to \"{}\"", cv.name, *cv.asString)); return true;
-					case CVar::CVarType::Vec2: Print(0, fmt::format("{} set to [{}, {}]", cv.name, cv.asVec2->x, cv.asVec2->y)); return true;
-					case CVar::CVarType::Vec3: Print(0, fmt::format("{} set to [{}, {}, {}]", cv.name, cv.asVec3->x, cv.asVec3->y, cv.asVec3->z)); return true;
-					case CVar::CVarType::Color:
-					case CVar::CVarType::Vec4: Print(0, fmt::format("{} set to [{}, {}, {}, {}]", cv.name, cv.asVec4->x, cv.asVec4->y, cv.asVec4->z, cv.asVec4->w)); return true;
+					case CVar::Type::Bool: Print(0, fmt::format("{} set to {}", cv.name, *cv.asBool)); return true;
+					case CVar::Type::Int: Print(0, fmt::format("{} set to {}", cv.name, *cv.asInt)); return true;
+					case CVar::Type::Float: Print(0, fmt::format("{} set to {}", cv.name, *cv.asFloat)); return true;
+					case CVar::Type::String: Print(0, fmt::format("{} set to \"{}\"", cv.name, *cv.asString)); return true;
+					case CVar::Type::Vec2: Print(0, fmt::format("{} set to [{}, {}]", cv.name, cv.asVec2->x, cv.asVec2->y)); return true;
+					case CVar::Type::Vec3: Print(0, fmt::format("{} set to [{}, {}, {}]", cv.name, cv.asVec3->x, cv.asVec3->y, cv.asVec3->z)); return true;
+					case CVar::Type::Color:
+					case CVar::Type::Vec4: Print(0, fmt::format("{} set to [{}, {}, {}, {}]", cv.name, cv.asVec4->x, cv.asVec4->y, cv.asVec4->z, cv.asVec4->w)); return true;
 					}
 				}
 				else
@@ -245,7 +256,7 @@ void Console::Draw(float dt)
 	inputLine->Draw(dt);
 }
 
-void Console::RegisterCVar(const std::string& name, CVar::CVarType type, void* target)
+void Console::RegisterCVar(const std::string& name, CVar::Type type, void* target, bool cheat)
 {
 	for (auto& cv : cvars)
 	{
@@ -253,6 +264,7 @@ void Console::RegisterCVar(const std::string& name, CVar::CVarType type, void* t
 		{
 			cv.type = type;
 			cv.asVoid = target;
+			cv.cheat = cheat;
 			return;
 		}
 	}
@@ -260,5 +272,6 @@ void Console::RegisterCVar(const std::string& name, CVar::CVarType type, void* t
 	cv.name = name;
 	cv.type = type;
 	cv.asVoid = target;
+	cv.cheat = cheat;
 	cvars.push_back(cv);
 }
