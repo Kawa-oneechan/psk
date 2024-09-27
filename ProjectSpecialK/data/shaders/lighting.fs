@@ -1,15 +1,10 @@
 //lighting
 #define NUMLIGHTS 4
 struct light {
-	vec3 pos;
-	vec3 color;
-	float strength;
+	vec4 pos;
+	vec4 color;
 };
 uniform light lights[NUMLIGHTS];
-
-//uniform float ambientStrength;
-//uniform vec3 lightPos; 
-//uniform vec3 lightColor;
 
 const float specPower = 4.0; //32.0;
 
@@ -45,11 +40,11 @@ vec3 specularLight(vec3 normal, vec3 viewDir, vec3 litPos, vec3 litCol, float st
 
 vec3 getLight(light l, vec3 albedo, vec3 norm, vec3 viewDir, float spec)
 {
-	if (l.strength < 0.1) return vec3(0);
+	if (l.color.a < 0.01) return vec3(0);
 
-	vec3 ambient = ambientLight(l.color, l.strength);
-	vec3 diffuse = diffuseLight(norm, l.pos, l.color);
-	vec3 specular = specularLight(norm, viewDir, l.pos, l.color, spec);
+	vec3 ambient = ambientLight(l.color.rgb, l.color.a);
+	vec3 diffuse = diffuseLight(norm, l.pos.xyz, l.color.rgb);
+	vec3 specular = specularLight(norm, viewDir, l.pos.xyz, l.color.rgb, spec);
 	return (ambient + diffuse + specular) * albedo;
 }
 

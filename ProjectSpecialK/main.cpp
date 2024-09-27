@@ -55,9 +55,18 @@ CursorP cursor = nullptr;
 Console* console = nullptr;
 Audio* bgm = nullptr;
 
-glm::vec3 lightPos[MaxLights] = { { 0.0f, 15.0f, 20.0f }, { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 } };
-glm::vec3 lightCol[MaxLights] = { { 1.0f, 1.0f, 1.0f }, { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 } };
-float lightStr[MaxLights] = { 0.25f, 0, 0, 0 };
+glm::vec4 lightPos[MaxLights] = {
+	{ 0.0f, 15.0f, 20.0f, 0 },
+	{ 0, 0, 0, 0 },
+	{ 0, 0, 0, 0 },
+	{ 0, 0, 0, 0 }
+};
+glm::vec4 lightCol[MaxLights] = {
+	{ 1.0f, 1.0f, 1.0f, 0.25f },
+	{ 0, 0, 0, 0 },
+	{ 0, 0, 0, 0 },
+	{ 0, 0, 0, 0 }
+};
 
 sol::state Sol;
 
@@ -287,52 +296,6 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	{
 		wireframe = !wireframe;
 		glPolygonMode(GL_FRONT_AND_BACK, wireframe ? GL_LINE : GL_FILL);
-	}
-
-	/*
-	if (key == GLFW_KEY_T)
-		lightPos.y += 0.5f;
-	else if (key == GLFW_KEY_G)
-		lightPos.y -= 0.5f;
-	else if (key == GLFW_KEY_H)
-		lightPos.x += 0.5f;
-	else if (key == GLFW_KEY_F)
-		lightPos.x -= 0.5f;
-	else if (key == GLFW_KEY_R)
-		lightPos.z -= 0.5f;
-	else if (key == GLFW_KEY_Y)
-		lightPos.z += 0.5f;
-	*/
-
-	if (mods == 0)
-	{
-		if (key == GLFW_KEY_W)
-			MainCamera.Position.z -= 0.5f;
-		else if (key == GLFW_KEY_S)
-			MainCamera.Position.z += 0.5f;
-		else if (key == GLFW_KEY_A)
-			MainCamera.Position.x -= 0.5f;
-		else if (key == GLFW_KEY_D)
-			MainCamera.Position.x += 0.5f;
-		else if (key == GLFW_KEY_Q)
-			MainCamera.Position.y -= 0.5f;
-		else if (key == GLFW_KEY_E)
-			MainCamera.Position.y += 0.5f;
-	}
-	else if (mods == 1)
-	{
-		if (key == GLFW_KEY_W)
-			MainCamera.Target.z -= 0.5f;
-		else if (key == GLFW_KEY_S)
-			MainCamera.Target.z += 0.5f;
-		else if (key == GLFW_KEY_A)
-			MainCamera.Target.x -= 0.5f;
-		else if (key == GLFW_KEY_D)
-			MainCamera.Target.x += 0.5f;
-		else if (key == GLFW_KEY_Q)
-			MainCamera.Target.y -= 0.5f;
-		else if (key == GLFW_KEY_E)
-			MainCamera.Target.y += 0.5f;
 	}
 }
 
@@ -661,9 +624,8 @@ int main(int, char**)
 
 		for (int i = 0; i < MaxLights; i++)
 		{
-			modelShader->SetVec3(fmt::format("lights[{}].color", i), lightCol[i]);
-			modelShader->SetVec3(fmt::format("lights[{}].pos", i), lightPos[i]);
-			modelShader->SetFloat(fmt::format("lights[{}].strength", i), lightStr[i]);
+			modelShader->SetVec4(fmt::format("lights[{}].color", i), lightCol[i]);
+			modelShader->SetVec4(fmt::format("lights[{}].pos", i), lightPos[i]);
 		}
 
 		//testModel.Draw();

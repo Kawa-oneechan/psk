@@ -10,9 +10,8 @@ bool debuggerEnabled{ true };
 extern float uiTime, glTime;
 extern GLFWwindow* window;
 
-extern glm::vec3 lightPos[MaxLights];
-extern glm::vec3 lightCol[MaxLights];
-extern float lightStr[MaxLights];
+extern glm::vec4 lightPos[MaxLights];
+extern glm::vec4 lightCol[MaxLights];
 
 bool IsImGuiHovered()
 {
@@ -43,19 +42,57 @@ void DoImGui()
 	if (ImGui::Begin("Timing"))
 	{
 		ImGui::Text("UI: %f\nGL: %f", uiTime, glTime);
-		ImGui::End();
 	}
+	ImGui::End();
 
 	if (ImGui::Begin("Camera"))
 	{
-		ImGui::Text("Position: %f %f %f", MainCamera.Position.x, MainCamera.Position.y, MainCamera.Position.z);
-		ImGui::Text("Pitch/Yaw: %f %f", MainCamera.Pitch, MainCamera.Yaw);
-		ImGui::Text("Target: %f %f %f", MainCamera.Target.x, MainCamera.Target.y, MainCamera.Target.z);
-		ImGui::Checkbox("Free", &MainCamera.Free);
-		ImGui::End();
-	}
+		if (ImGui::BeginTabBar("Camera"))
+		{
+			if (ImGui::BeginTabItem("Position"))
+			{
+				ImGui::SliderFloat("X", &MainCamera.Position.x, -50, 50);
+				ImGui::SliderFloat("Y", &MainCamera.Position.y, -50, 50);
+				ImGui::SliderFloat("Z", &MainCamera.Position.z, -100, 100);
 
-	//lightPos.x, lightPos.y, lightPos.z
+				ImGui::SliderFloat("Pit", &MainCamera.Pitch, -50, 50);
+				ImGui::SliderFloat("Yaw", &MainCamera.Yaw, -50, 50);
+
+				if (ImGui::Button("Reset"))
+				{
+					MainCamera.Position.x = 0;
+					MainCamera.Position.y = 5;
+					MainCamera.Position.z = 50;
+					MainCamera.Pitch = 0;
+					MainCamera.Yaw = 0;
+				}
+
+				ImGui::EndTabItem();
+			}
+
+			if (ImGui::BeginTabItem("Target"))
+			{
+				ImGui::Checkbox("Free cam", &MainCamera.Free);
+
+				ImGui::SliderFloat("X", &MainCamera.Target.x, -50, 50);
+				ImGui::SliderFloat("Y", &MainCamera.Target.y, -50, 50);
+				ImGui::SliderFloat("Z", &MainCamera.Target.z, -100, 100);
+
+				if (ImGui::Button("Reset"))
+				{
+					MainCamera.Target.x = 0;
+					MainCamera.Target.y = 0;
+					MainCamera.Target.z = 0;
+				}
+
+				ImGui::EndTabItem();
+			}
+
+			ImGui::EndTabBar();
+		}
+
+	}
+	ImGui::End();
 
 	static VillagerP debugVillager = town.Villagers[0];
 	static VillagerP debugAllVillager = villagers[0];
@@ -112,14 +149,14 @@ void DoImGui()
 
 			ImGui::EndTabBar();
 		}
-		ImGui::End();
 	}
+	ImGui::End();
 
 	if (ImGui::Begin("Player"))
 	{
 		ImGui::InputInt("Bells", (int*)&thePlayer.Bells, 10, 100);
-		ImGui::End();
 	}
+	ImGui::End();
 
 	static int lightIndex = 0;
 	static const char lightLabels[16] = "1\0" "2\0" "3\0" "4\0";
@@ -136,8 +173,6 @@ void DoImGui()
 				ImGui::SameLine();
 		}
 
-		ImGui::SliderFloat("Strength", &lightStr[lightIndex], 0, 1);
-
 		ImGui::Text("Position");
 		{
 			ImGui::SliderFloat("X", &lightPos[lightIndex].x, -50, 50);
@@ -152,10 +187,10 @@ void DoImGui()
 			}
 		}
 
-		ImGui::ColorPicker3("Color", &lightCol[lightIndex].x);
+		ImGui::ColorPicker4("Color", &lightCol[lightIndex].x);
 
-		ImGui::End();
 	}
+	ImGui::End();
 
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
