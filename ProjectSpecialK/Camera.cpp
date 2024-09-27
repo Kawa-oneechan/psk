@@ -18,7 +18,7 @@ Camera::Camera(float posX, float posY, float posZ, float upX, float upY, float u
 	WorldUp = glm::vec3(upX, upY, upZ);
 	Yaw = yaw;
 	Pitch = pitch;
-	updateCameraVectors();
+	UpdateCameraVectors();
 }
 
 void Camera::Setup(const glm::vec3& position, const glm::vec3& up, float yaw, float pitch)
@@ -27,7 +27,7 @@ void Camera::Setup(const glm::vec3& position, const glm::vec3& up, float yaw, fl
 	WorldUp = up;
 	Yaw = yaw;
 	Pitch = pitch;
-	updateCameraVectors();
+	UpdateCameraVectors();
 }
 
 glm::mat4 Camera::GetViewMatrix()
@@ -51,7 +51,7 @@ void Camera::ProcessMouseMovement(float xoffset, float yoffset, bool constrainPi
 			Pitch = -89.0f;
 	}
 
-	updateCameraVectors();
+	UpdateCameraVectors();
 }
 
 void Camera::ProcessMouseScroll(float yoffset)
@@ -63,7 +63,7 @@ void Camera::ProcessMouseScroll(float yoffset)
 		Zoom = 45.0f;
 }
 
-void Camera::updateCameraVectors()
+void Camera::UpdateCameraVectors()
 {
 	glm::vec3 front;
 	front.x = cos(glm::radians(Yaw)) * cos(glm::radians(Pitch));

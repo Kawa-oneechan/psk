@@ -55,8 +55,10 @@ void DoImGui()
 				ImGui::SliderFloat("Y", &MainCamera.Position.y, -50, 50);
 				ImGui::SliderFloat("Z", &MainCamera.Position.z, -100, 100);
 
-				ImGui::SliderFloat("Pit", &MainCamera.Pitch, -50, 50);
-				ImGui::SliderFloat("Yaw", &MainCamera.Yaw, -50, 50);
+				if (ImGui::SliderFloat("Pitch", &MainCamera.Pitch, -89, 89))
+					MainCamera.UpdateCameraVectors();
+				if (ImGui::SliderFloat("Yaw", &MainCamera.Yaw, -50, 50))
+					MainCamera.UpdateCameraVectors();
 
 				if (ImGui::Button("Reset"))
 				{
@@ -65,6 +67,7 @@ void DoImGui()
 					MainCamera.Position.z = 50;
 					MainCamera.Pitch = 0;
 					MainCamera.Yaw = 0;
+					MainCamera.UpdateCameraVectors();
 				}
 
 				ImGui::EndTabItem();
