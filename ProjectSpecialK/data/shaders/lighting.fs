@@ -6,6 +6,8 @@ struct light {
 };
 uniform light lights[NUMLIGHTS];
 
+#define LIGHTOFF 0.004
+
 const float specPower = 4.0; //32.0;
 
 vec3 ambientLight(vec3 litCol, float strength)
@@ -40,7 +42,7 @@ vec3 specularLight(vec3 normal, vec3 viewDir, vec3 litPos, vec3 litCol, float st
 
 vec3 getLight(light l, vec3 albedo, vec3 norm, vec3 viewDir, float spec)
 {
-	if (l.color.a < 0.01) return vec3(0);
+	if (l.color.a < LIGHTOFF) return vec3(0);
 
 	vec3 ambient = ambientLight(l.color.rgb, l.color.a);
 	vec3 diffuse = diffuseLight(norm, l.pos.xyz, l.color.rgb);
