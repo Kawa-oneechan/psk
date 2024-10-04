@@ -2,6 +2,7 @@
 #include "Town.h"
 
 #include "support/ImGUI/imgui.h"
+//#include "support/ImGUI/imgui_stdlib.h"
 #include "support/ImGUI/imgui_impl_glfw.h"
 #include "support/ImGUI/imgui_impl_opengl3.h"
 
@@ -96,11 +97,34 @@ void DoImGui()
 		ImGui::SameLine();
 		if (ImGui::Button("Paste JSON"))
 		{
-			auto json = JSON::Parse(ImGui::GetClipboardText());
-			JSONObject& obj = (JSONObject&)json->AsObject();
-			MainCamera.Target(GetJSONVec3(obj["target"]));
-			MainCamera.Angles(GetJSONVec3(obj["angles"]));
-			MainCamera.Distance(obj["distance"]->AsNumber());
+			std::string result = "";
+			try
+			{
+				auto json = JSON::Parse(ImGui::GetClipboardText());
+				if (!json->IsObject())
+					result = "not an object.";
+				else
+				{
+					JSONObject& obj = (JSONObject&)json->AsObject();
+					if (obj["target"] == nullptr || obj["angles"] == nullptr || obj["distance"] == nullptr)
+						result = "not all camera properties accounted for.";
+					else
+					{
+						MainCamera.Target(GetJSONVec3(obj["target"]));
+						MainCamera.Angles(GetJSONVec3(obj["angles"]));
+						if (!obj["distance"]->IsNumber())
+							result = "distance is not a number.";
+						else
+							MainCamera.Distance(obj["distance"]->AsNumber());
+					}
+				}
+			}
+			catch (std::runtime_error& x)
+			{
+				result = x.what();
+			}
+			if (!result.empty())
+				conprint(1, "Could not paste camera setup: {}", result);
 		}
 	}
 	ImGui::End();
@@ -123,6 +147,7 @@ void DoImGui()
 						if (ImGui::Selectable(town.Villagers[i]->Name().c_str(), selected))
 						{
 							debugVillager = town.Villagers[i];
+							debugAllVillager = debugVillager;
 						}
 					}
 					ImGui::EndListBox();
@@ -186,9 +211,9 @@ void DoImGui()
 
 		ImGui::Text("Position");
 		{
-			ImGui::SliderFloat("X", &lightPos[lightIndex].x, -50, 50);
-			ImGui::SliderFloat("Y", &lightPos[lightIndex].y, -50, 50);
-			ImGui::SliderFloat("Z", &lightPos[lightIndex].z, -50, 50);
+			ImGui::DragFloat("X", &lightPos[lightIndex].x, 1.0, -50, 50);
+			ImGui::DragFloat("Y", &lightPos[lightIndex].y, 1.0, -50, 50);
+			ImGui::DragFloat("Z", &lightPos[lightIndex].z, 1.0, -50, 50);
 
 			if (ImGui::Button("Reset"))
 			{
@@ -223,17 +248,42 @@ void DoImGui()
 		ImGui::SameLine();
 		if (ImGui::Button("Paste JSON"))
 		{
-			auto json = JSON::Parse(ImGui::GetClipboardText());
-			auto i = 0;
-			for (auto lobj : json->AsArray())
+			std::string result = "";
+			try
 			{
-				JSONObject& l = (JSONObject&)lobj->AsObject();
-				lightPos[i] = GetJSONVec4(l["pos"]);
-				lightCol[i] = GetJSONColor(l["col"]);
-				i++;
-				if (i == MaxLights)
-					break;
+				auto json = JSON::Parse(ImGui::GetClipboardText());
+				if (!json->IsArray())
+					result = "not an array.";
+				else
+				{
+					auto i = 0;
+					for (auto lobj : json->AsArray())
+					{
+						if (!lobj->IsObject())
+							result = "not an object.";
+						else
+						{
+							JSONObject& l = (JSONObject&)lobj->AsObject();
+							if (l["pos"] == nullptr || l["col"] == nullptr)
+								result = "not all light properties accounted for.";
+							else
+							{
+								lightPos[i] = GetJSONVec4(l["pos"]);
+								lightCol[i] = GetJSONColor(l["col"]);
+							}
+							i++;
+							if (i == MaxLights)
+								break;
+						}
+					}
+				}
 			}
+			catch (std::runtime_error& x)
+			{
+				result = x.what();
+			}
+			if (!result.empty())
+				conprint(1, "Could not paste lighting setup: {}", result);
 		}
 
 	}
