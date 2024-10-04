@@ -51,9 +51,12 @@ void DoImGui()
 		{
 			if (ImGui::BeginTabItem("Position"))
 			{
-				ImGui::SliderFloat("X", &MainCamera.Position.x, -50, 50);
-				ImGui::SliderFloat("Y", &MainCamera.Position.y, -50, 50);
-				ImGui::SliderFloat("Z", &MainCamera.Position.z, -100, 100);
+				if (ImGui::SliderFloat("X", &MainCamera.Position.x, -50, 50))
+					MainCamera.UpdateCameraVectors();
+				if (ImGui::SliderFloat("Y", &MainCamera.Position.y, -50, 50))
+					MainCamera.UpdateCameraVectors();
+				if (ImGui::SliderFloat("Z", &MainCamera.Position.z, -100, 100))
+					MainCamera.UpdateCameraVectors();
 
 				if (ImGui::SliderFloat("Pitch", &MainCamera.Pitch, -89, 89))
 					MainCamera.UpdateCameraVectors();
@@ -162,10 +165,10 @@ void DoImGui()
 	ImGui::End();
 
 	static int lightIndex = 0;
-	static const char lightLabels[16] = "1\0" "2\0" "3\0" "4\0";
+	static const char lightLabels[] = "1\0" "2\0" "3\0" "4\0" "5\0" "6\0" "7\0" "8\0";
 	if (ImGui::Begin("Lighting"))
 	{
-		for (int i = 0; i < 4; i++)
+		for (int i = 0; i < MaxLights; i++)
 		{
 			bool selected = lightIndex == i;
 			if (ImGui::RadioButton(lightLabels + (i * 2), selected))
@@ -191,6 +194,42 @@ void DoImGui()
 		}
 
 		ImGui::ColorPicker4("Color", &lightCol[lightIndex].x);
+
+		if (ImGui::Button("Copy JSON"))
+		{
+			std::string json;
+			std::vector<std::string> blocks;
+			json += "[\n";
+			for (int i = 0; i < MaxLights; i++)
+			{
+				if (lightCol[i][3] == 0)
+					continue;
+				std::string block;
+				block += "\t{\n";
+				block += fmt::format("\t\t\"pos\": [{}, {}, {}, {}],\n", lightPos[i][0], lightPos[i][1], lightPos[i][2], lightPos[i][3]);
+				block += fmt::format("\t\t\"col\": [{}, {}, {}, {}] \n", lightCol[i][0], lightCol[i][1], lightCol[i][2], lightCol[i][3]);
+				block += "\t}";
+				blocks.push_back(block);
+			}
+			json += join(blocks.begin(), blocks.end(), ",\n", "\n");
+			json += "]\n";
+			ImGui::SetClipboardText(json.c_str());
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Paste JSON"))
+		{
+			auto json = JSON::Parse(ImGui::GetClipboardText());
+			auto i = 0;
+			for (auto& lobj : json->AsArray())
+			{
+				auto l = lobj->AsObject();
+				lightPos[i] = GetJSONVec4(l["pos"]);
+				lightCol[i] = GetJSONColor(l["col"]);
+				i++;
+				if (i == MaxLights)
+					break;
+			}
+		}
 
 	}
 	ImGui::End();
