@@ -14,7 +14,7 @@ void TestScaler()
 	
 	auto dst = ScaleImage(src, width, height, channels, 4);
 
-	stbi_flip_vertically_on_write(true);
+	stbi_flip_vertically_on_write(1);
 	stbi_write_png("scale2x.png", width * scale, height * scale, channels, dst, (width * scale) * channels);
 	
 	delete dst;

@@ -309,19 +309,19 @@ void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
 
 	if (firstMouse)
 	{
-		lastX = xpos;
-		lastY = ypos;
+		//lastX = xpos;
+		//lastY = ypos;
 		firstMouse = false;
 	}
 
-	float xoffset = xpos - lastX;
-	float yoffset = lastY - ypos; //reversed since y-coordinates go from bottom to top
+	//float xoffset = xpos - lastX;
+	//float yoffset = lastY - ypos; //reversed since y-coordinates go from bottom to top
 
 	lastX = xpos;
 	lastY = ypos;
 
-	if (Inputs.MouseHoldMiddle)
-		MainCamera.ProcessMouseMovement(xoffset, yoffset);
+	//if (Inputs.MouseHoldMiddle)
+		//MainCamera.ProcessMouseMovement(xoffset, yoffset);
 }
 
 void mousebutton_callback(GLFWwindow* window, int button, int action, int mods)
@@ -547,7 +547,7 @@ int main(int, char**)
 #endif
 
 	modelShader->Use();
-	modelShader->SetVec3("viewPos", MainCamera.Position);
+	modelShader->SetVec3("viewPos", MainCamera.Position());
 	modelShader->SetInt("albedoTexture", 0);
 	modelShader->SetInt("normalTexture", 1);
 	modelShader->SetInt("mixTexture", 2);
@@ -560,9 +560,7 @@ int main(int, char**)
 	town.Villagers.push_back(bob);
 	town.Villagers.push_back(Database::Find<Villager>("ac:cat01", villagers));
 
-	MainCamera.Setup(glm::vec3(0.0f, 5.0f, 50.0f));
-	MainCamera.Free = false;
-	MainCamera.Target = glm::vec3(0);
+	MainCamera.Set(glm::vec3(0), glm::vec3(0), 50.0f);
 
 #ifdef DEBUG
 	auto startingTime = std::chrono::high_resolution_clock::now();

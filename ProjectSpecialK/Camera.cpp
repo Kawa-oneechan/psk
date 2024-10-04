@@ -1,78 +1,95 @@
+#define GLM_ENABLE_EXPERIMENTAL
 #include "Camera.h"
 
 #include "support/glm/gtc/matrix_transform.hpp"
+#include "support/glm/gtx/transform.hpp"
+#include "support/glm/gtx/norm.hpp"
+#include "support/glm/gtx/rotate_vector.hpp"
+#include "support/glm/ext/matrix_transform.hpp"
+#include "support/glm/gtc/matrix_inverse.hpp"
+#include "support/glm/gtx/euler_angles.hpp"
+#include "support/glm/gtx/transform.hpp"
 
-/*
-TODO: have a thing where Targeted mode has an angle and distance from the target to automatically track.
-These angles and distances should be tweenable.
-*/
 
-Camera::Camera(glm::vec3 position, glm::vec3 up, float yaw, float pitch) : Front(glm::vec3(0.0f, 0.0f, -1.0f)), MovementSpeed(2.5f), MouseSensitivity(0.1f), Zoom(45.0f)
+Camera::Camera(glm::vec3 target, glm::vec3 angles, float distance) : _target(target), _angles(angles), _distance(distance), _swapYZ(false)
 {
-	Setup(position, up, yaw, pitch);
 }
 
-Camera::Camera(float posX, float posY, float posZ, float upX, float upY, float upZ, float yaw, float pitch) : Front(glm::vec3(0.0f, 0.0f, -1.0f)), MovementSpeed(2.5f), MouseSensitivity(0.1f), Zoom(45.0f)
+Camera::~Camera()
 {
-	Position = glm::vec3(posX, posY, posZ);
-	WorldUp = glm::vec3(upX, upY, upZ);
-	Yaw = yaw;
-	Pitch = pitch;
-	UpdateCameraVectors();
 }
 
-void Camera::Setup(const glm::vec3& position, const glm::vec3& up, float yaw, float pitch)
+glm::mat4 Camera::ViewMat() const
 {
-	Position = position;
-	WorldUp = up;
-	Yaw = yaw;
-	Pitch = pitch;
-	UpdateCameraVectors();
+	return cameraFromWorld;
 }
 
-glm::mat4 Camera::GetViewMatrix()
+glm::mat4 Camera::ViewMatInv() const
 {
-	return glm::lookAt(Position, Free ? (Position + Front) : Target, Up);
+	return worldFromCamera;
 }
 
-void Camera::ProcessMouseMovement(float xoffset, float yoffset, bool constrainPitch)
+glm::vec3 Camera::Position() const
 {
-	xoffset *= MouseSensitivity;
-	yoffset *= MouseSensitivity;
+	return position;
+}
 
-	Yaw += xoffset;
-	Pitch += yoffset;
+void Camera::Target(const glm::vec3& target)
+{
+	_target = target;
+	Update();
+}
 
-	if (constrainPitch)
+void Camera::Angles(const glm::vec3& angles)
+{
+	_angles = angles;
+	Update();
+}
+
+void Camera::Distance(float distance)
+{
+	_distance = distance;
+	Update();
+}
+
+void Camera::SwapYZ(bool swapYZ)
+{
+	_swapYZ = swapYZ;
+	Update();
+}
+
+void Camera::Set(
+	const glm::vec3& target,
+	const glm::vec3& angles,
+	float distance
+)
+{
+	_target = target;
+	_angles = angles;
+	_distance = distance;
+	Update();
+}
+
+void Camera::Update()
+{
+	worldFromCamera = (
+		glm::translate(_target)
+		* (glm::eulerAngleY(glm::radians(_angles.z)))
+		* (glm::eulerAngleX(glm::radians(-_angles.y)))
+		* (glm::eulerAngleZ(glm::radians(_angles.x)))
+		* glm::translate(glm::vec3(0, 0, _distance))
+		);
+	if (_swapYZ)
 	{
-		if (Pitch > 89.0f)
-			Pitch = 89.0f;
-		if (Pitch < -89.0f)
-			Pitch = -89.0f;
+		worldFromCamera = glm::mat4(
+			1, 0, 0, 0,
+			0, 0, 1, 0,
+			0, -1, 0, 0,
+			0, 0, 0, 1
+		) * worldFromCamera;
 	}
-
-	UpdateCameraVectors();
-}
-
-void Camera::ProcessMouseScroll(float yoffset)
-{
-	Zoom -= (float)yoffset;
-	if (Zoom < 1.0f)
-		Zoom = 1.0f;
-	if (Zoom > 45.0f)
-		Zoom = 45.0f;
-}
-
-void Camera::UpdateCameraVectors()
-{
-	glm::vec3 front;
-	front.x = cos(glm::radians(Yaw)) * cos(glm::radians(Pitch));
-	front.y = sin(glm::radians(Pitch));
-	front.z = sin(glm::radians(Yaw)) * cos(glm::radians(Pitch));
-	Front = glm::normalize(front);
-
-	Right = glm::normalize(glm::cross(Front, WorldUp));
-	Up = glm::normalize(glm::cross(Right, Front));
+	cameraFromWorld = glm::affineInverse(worldFromCamera);
+	position = worldFromCamera * glm::vec4(0, 0, 0, 1);
 }
 
 Camera MainCamera;

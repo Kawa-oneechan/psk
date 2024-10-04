@@ -35,7 +35,7 @@ static std::map<std::string, unsigned int> matMap =
 	{ "mTops", 0 },
 	{ "mBottoms", 0 },
 	{ "mShoes", 0 },
-	{ "mCap", 0 },
+	//{ "mCap", 0 },
 	{ "mCapHair", 1 },
 	{ "mAccessory", 0 },
 	{ "mAccessoryAlpha", 1 },
@@ -158,7 +158,7 @@ const void Model::Mesh::Draw()
 	//glm::mat4 view = glm::mat4(1.0f);
 	// note that we're translating the scene in the reverse direction of where we want to move
 	//view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
-	auto view = MainCamera.GetViewMatrix();
+	auto view = MainCamera.ViewMat();
 
 	//ourShader.setMat4("model", model);
 	modelShader->SetMat4("view", view);

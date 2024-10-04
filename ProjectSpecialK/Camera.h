@@ -3,36 +3,50 @@
 #include "support/glm/glm.hpp"
 //#include "support/glm/gtc/matrix_transform.hpp"
 
-// An abstract camera class that processes input and calculates the corresponding Euler Angles, Vectors and Matrices for use in OpenGL
 class Camera
 {
+protected:
+	glm::vec3 _target{};
+	glm::vec3 _angles{};
+	float _distance = 0;
+
+	glm::vec3 position{};
+
+	bool _swapYZ = false;
+
+	glm::mat4 worldFromCamera = glm::mat4(1);
+	glm::mat4 cameraFromWorld = glm::mat4(1);
+
 public:
-	glm::vec3 Position;
-	glm::vec3 Front;
-	glm::vec3 Up;
-	glm::vec3 Right;
-	glm::vec3 WorldUp;
-	glm::vec3 Target;
+	Camera(const Camera& c) = default;
+	Camera(glm::vec3 target = glm::vec3(0), glm::vec3 angles = glm::vec3(0), float distance = 10);
+	virtual ~Camera();
 
-	bool Free = true;
+	glm::mat4 ViewMat() const;
+	glm::mat4 ViewMatInv() const;
 
-	float Yaw;
-	float Pitch;
+	glm::vec3 Position() const;
+	inline const glm::vec3& Target() const { return _target; }
+	inline const glm::vec3& Angles() const { return _angles; }
+	inline float Distance() const { return _distance; }
+	inline bool SwapYZ() const { return _swapYZ; }
 
-	float MovementSpeed;
-	float MouseSensitivity;
-	float Zoom;
+	void Target(const glm::vec3& target);
+	void Angles(const glm::vec3& angles);
+	void Distance(float distance);
+	void SwapYZ(bool swapYZ);
+	void Set(
+		const glm::vec3& target,
+		const glm::vec3& angles,
+		float distance
+	);
 
-	Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = -90.0, float pitch = 0.0f);
-	Camera(float posX, float posY, float posZ, float upX, float upY, float upZ, float yaw, float pitch);
+	inline glm::vec3& GetTarget() { return _target; }
+	inline glm::vec3& GetAngles() { return _angles; }
+	inline float& GetDistance() { return _distance; }
+	inline bool& GetSwapYZ() { return _swapYZ; }
 
-	void Setup(const glm::vec3& position = glm::vec3(0.0f, 0.0f, 0.0f), const glm::vec3& up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = -90.0, float pitch = 0.0f);
-
-	glm::mat4 GetViewMatrix();
-	void ProcessMouseMovement(float xoffset, float yoffset, bool constrainPitch = true);
-	void ProcessMouseScroll(float yoffset);
-
-	void UpdateCameraVectors();
+	void Update();
 };
 
 extern Camera MainCamera;

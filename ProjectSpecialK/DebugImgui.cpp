@@ -47,56 +47,61 @@ void DoImGui()
 
 	if (ImGui::Begin("Camera"))
 	{
-		if (ImGui::BeginTabBar("Camera"))
+		ImGui::Text("Target");
 		{
-			if (ImGui::BeginTabItem("Position"))
-			{
-				if (ImGui::SliderFloat("X", &MainCamera.Position.x, -50, 50))
-					MainCamera.UpdateCameraVectors();
-				if (ImGui::SliderFloat("Y", &MainCamera.Position.y, -50, 50))
-					MainCamera.UpdateCameraVectors();
-				if (ImGui::SliderFloat("Z", &MainCamera.Position.z, -100, 100))
-					MainCamera.UpdateCameraVectors();
-
-				if (ImGui::SliderFloat("Pitch", &MainCamera.Pitch, -89, 89))
-					MainCamera.UpdateCameraVectors();
-				if (ImGui::SliderFloat("Yaw", &MainCamera.Yaw, -50, 50))
-					MainCamera.UpdateCameraVectors();
-
-				if (ImGui::Button("Reset"))
-				{
-					MainCamera.Position.x = 0;
-					MainCamera.Position.y = 5;
-					MainCamera.Position.z = 50;
-					MainCamera.Pitch = 0;
-					MainCamera.Yaw = 0;
-					MainCamera.UpdateCameraVectors();
-				}
-
-				ImGui::EndTabItem();
-			}
-
-			if (ImGui::BeginTabItem("Target"))
-			{
-				ImGui::Checkbox("Free cam", &MainCamera.Free);
-
-				ImGui::SliderFloat("X", &MainCamera.Target.x, -50, 50);
-				ImGui::SliderFloat("Y", &MainCamera.Target.y, -50, 50);
-				ImGui::SliderFloat("Z", &MainCamera.Target.z, -100, 100);
-
-				if (ImGui::Button("Reset"))
-				{
-					MainCamera.Target.x = 0;
-					MainCamera.Target.y = 0;
-					MainCamera.Target.z = 0;
-				}
-
-				ImGui::EndTabItem();
-			}
-
-			ImGui::EndTabBar();
+			auto& tar = MainCamera.GetTarget();
+			if (ImGui::DragFloat("X", &tar.x, 1.0, -50, 50))
+				MainCamera.Update();
+			if (ImGui::DragFloat("Y", &tar.y, 1.0, -50, 50))
+				MainCamera.Update();
+			if (ImGui::DragFloat("Z", &tar.z, 1.0, -100, 100))
+				MainCamera.Update();
 		}
 
+		if (ImGui::DragFloat("Distance", &MainCamera.GetDistance(), 1.0, -100, 100, "%.3f", ImGuiSliderFlags_Logarithmic))
+			MainCamera.Update();
+
+		ImGui::Text("Angles");
+		{
+			auto& ang = MainCamera.GetAngles();
+			if (ImGui::DragFloat("Pitch", &ang.y, 1.0, -359, 359))
+				MainCamera.Update();
+			if (ImGui::DragFloat("Yaw", &ang.z, 1.0, -359, 359))
+				MainCamera.Update();
+			if (ImGui::DragFloat("Roll", &ang.x, 1.0, -359, 359))
+				MainCamera.Update();
+		}
+			
+		if (ImGui::Button("Reset"))
+		{
+			MainCamera.Target(glm::vec3(0));
+			MainCamera.Angles(glm::vec3(0));
+			MainCamera.Distance(50);
+			MainCamera.Update();
+		}
+
+		if (ImGui::Button("Copy JSON"))
+		{
+			std::string json;
+			json += "{\n";
+			auto tar = MainCamera.GetTarget();
+			auto ang = MainCamera.GetAngles();
+			auto dis = MainCamera.GetDistance();
+			json += fmt::format("\t\"target\": [{}, {}, {}],\n", tar[0], tar[1], tar[2]);
+			json += fmt::format("\t\"angles\": [{}, {}, {}],\n", ang[0], ang[1], ang[2]);
+			json += fmt::format("\t\"distance\": {}\n", dis);
+			json += "}\n";
+			ImGui::SetClipboardText(json.c_str());
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Paste JSON"))
+		{
+			auto json = JSON::Parse(ImGui::GetClipboardText());
+			JSONObject& obj = (JSONObject&)json->AsObject();
+			MainCamera.Target(GetJSONVec3(obj["target"]));
+			MainCamera.Angles(GetJSONVec3(obj["angles"]));
+			MainCamera.Distance(obj["distance"]->AsNumber());
+		}
 	}
 	ImGui::End();
 
@@ -193,7 +198,7 @@ void DoImGui()
 			}
 		}
 
-		ImGui::ColorPicker4("Color", &lightCol[lightIndex].x);
+		ImGui::ColorPicker4("Color", &lightCol[lightIndex].x, ImGuiColorEditFlags_DisplayRGB);
 
 		if (ImGui::Button("Copy JSON"))
 		{
@@ -220,9 +225,9 @@ void DoImGui()
 		{
 			auto json = JSON::Parse(ImGui::GetClipboardText());
 			auto i = 0;
-			for (auto& lobj : json->AsArray())
+			for (auto lobj : json->AsArray())
 			{
-				auto l = lobj->AsObject();
+				JSONObject& l = (JSONObject&)lobj->AsObject();
 				lightPos[i] = GetJSONVec4(l["pos"]);
 				lightCol[i] = GetJSONColor(l["col"]);
 				i++;
