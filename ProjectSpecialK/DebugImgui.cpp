@@ -11,9 +11,6 @@ bool debuggerEnabled{ true };
 extern float uiTime, glTime;
 extern GLFWwindow* window;
 
-extern glm::vec4 lightPos[MaxLights];
-extern glm::vec4 lightCol[MaxLights];
-
 bool IsImGuiHovered()
 {
 	return ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow) || ImGui::IsAnyItemHovered();
@@ -217,9 +214,16 @@ void DoImGui()
 
 			if (ImGui::Button("Reset"))
 			{
-				lightPos[lightIndex].x = 0;
-				lightPos[lightIndex].y = 15;
-				lightPos[lightIndex].z = 20;
+				if (lightIndex == 0)
+				{
+					lightPos[lightIndex] = { 0.0f, 15.0f, 20.0f, 0 };
+					lightCol[lightIndex] = { 1.0f, 1.0f, 1.0f, 0.25f };
+				}
+				else
+				{
+					lightPos[lightIndex] = { 0, 0, 0, 0 };
+					lightCol[lightIndex] = { 0, 0, 0, 0 };
+				}
 			}
 		}
 
@@ -252,38 +256,12 @@ void DoImGui()
 			try
 			{
 				auto json = JSON::Parse(ImGui::GetClipboardText());
-				if (!json->IsArray())
-					result = "not an array.";
-				else
-				{
-					auto i = 0;
-					for (auto lobj : json->AsArray())
-					{
-						if (!lobj->IsObject())
-							result = "not an object.";
-						else
-						{
-							JSONObject& l = (JSONObject&)lobj->AsObject();
-							if (l["pos"] == nullptr || l["col"] == nullptr)
-								result = "not all light properties accounted for.";
-							else
-							{
-								lightPos[i] = GetJSONVec4(l["pos"]);
-								lightCol[i] = GetJSONColor(l["col"]);
-							}
-							i++;
-							if (i == MaxLights)
-								break;
-						}
-					}
-				}
+				LoadLights(json);
 			}
 			catch (std::runtime_error& x)
 			{
 				result = x.what();
 			}
-			if (!result.empty())
-				conprint(1, "Could not paste lighting setup: {}", result);
 		}
 
 	}

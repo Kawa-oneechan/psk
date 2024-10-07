@@ -55,18 +55,8 @@ CursorP cursor = nullptr;
 Console* console = nullptr;
 Audio* bgm = nullptr;
 
-glm::vec4 lightPos[MaxLights] = {
-	{ 0.0f, 15.0f, 20.0f, 0 },
-	{ 0, 0, 0, 0 },
-	{ 0, 0, 0, 0 },
-	{ 0, 0, 0, 0 }
-};
-glm::vec4 lightCol[MaxLights] = {
-	{ 1.0f, 1.0f, 1.0f, 0.25f },
-	{ 0, 0, 0, 0 },
-	{ 0, 0, 0, 0 },
-	{ 0, 0, 0, 0 }
-};
+glm::vec4 lightPos[MaxLights] = { { 0, 0, 0, 0 } };
+glm::vec4 lightCol[MaxLights] = { { 0, 0, 0, 0 } };
 
 sol::state Sol;
 
@@ -528,7 +518,7 @@ int main(int, char**)
 
 	tickables.push_back(&musicManager);
 	tickables.push_back(new Background());
-	tickables.push_back(new DoomMenu());
+	//tickables.push_back(new DoomMenu());
 	auto hotbar = new PanelLayout(UI::json["hotbar"]);
 	tickables.push_back(hotbar);
 	hotbar->Tween(&hotbar->Position.y, -100.0f, 0, 0.002f, glm::bounceEaseOut<float>);
@@ -561,6 +551,11 @@ int main(int, char**)
 	town.Villagers.push_back(Database::Find<Villager>("ac:cat01", villagers));
 
 	MainCamera.Set(glm::vec3(0), glm::vec3(0), 50.0f);
+	if (!LoadLights("lights/initial.json").empty())
+	{
+		lightPos[0] = { 0, 15, 20, 0 };
+		lightCol[0] = { 1, 1, 1, 0.25 };
+	}
 
 #ifdef DEBUG
 	auto startingTime = std::chrono::high_resolution_clock::now();

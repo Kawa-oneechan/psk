@@ -62,6 +62,8 @@ extern sol::state Sol;
 
 typedef unsigned int rune;
 constexpr int MaxLights = 4;
+extern glm::vec4 lightPos[MaxLights];
+extern glm::vec4 lightCol[MaxLights];
 
 //Given a JSON array with two numbers in it, returns a vec2 with those numbers.
 extern glm::vec2 GetJSONVec2(JSONValue* val);
@@ -77,6 +79,9 @@ extern glm::vec4 GetJSONColor(JSONValue* val);
 extern bool PointInPoly(const glm::vec2 point, const std::vector<glm::vec2>& polygon);
 //Returns true if point is in rect.
 extern bool PointInRect(const glm::vec2 point, const glm::vec4 rect);
+
+std::string LoadLights(JSONValue* json);
+std::string LoadLights(const std::string& path);
 
 //Decodes a UTF-8 byte sequence to a codepoint, returns it and the size of the sequence.
 extern std::tuple<rune, size_t> GetChar(const std::string& what, size_t where);

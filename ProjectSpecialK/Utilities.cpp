@@ -154,6 +154,65 @@ bool PointInRect(const glm::vec2 point, const glm::vec4 rect)
 		(point.y < rect.y + rect.w);
 }
 
+std::string LoadLights(JSONValue* json)
+{
+	std::string result = "";
+	try
+	{
+		if (json == nullptr)
+			result = "no data.";
+		else if (!json->IsArray())
+			result = "not an array.";
+		else
+		{
+			auto i = 0;
+			for (auto lobj : json->AsArray())
+			{
+				if (!lobj->IsObject())
+					result = "not an object.";
+				else
+				{
+					JSONObject& l = (JSONObject&)lobj->AsObject();
+					if (l["pos"] == nullptr || l["col"] == nullptr)
+						result = "not all light properties accounted for.";
+					else
+					{
+						lightPos[i] = GetJSONVec4(l["pos"]);
+						lightCol[i] = GetJSONColor(l["col"]);
+					}
+					i++;
+					if (i == MaxLights)
+						break;
+				}
+			}
+		}
+	}
+	catch (std::runtime_error& x)
+	{
+		result = x.what();
+	}
+	if (!result.empty())
+		conprint(1, "Could not load lighting setup: {}", result);
+	return result;
+}
+
+std::string LoadLights(const std::string& path)
+{
+	std::string result = "";
+	try{
+		auto json = VFS::ReadJSON(path);
+		if (json == nullptr)
+			result = "no data.";
+		else
+			LoadLights(json);
+	}
+	catch (std::runtime_error& x)
+	{
+		result = x.what();
+	}
+	return result;
+}
+
 std::tuple<rune, size_t> GetChar(const std::string& what, size_t where)
 {
 	if (where >= what.size())
