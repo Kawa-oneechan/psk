@@ -154,6 +154,62 @@ bool PointInRect(const glm::vec2 point, const glm::vec4 rect)
 		(point.y < rect.y + rect.w);
 }
 
+std::string LoadCamera(JSONValue* json)
+{
+	std::string result = "";
+	try
+	{
+		if (json == nullptr)
+			result = "no data.";
+		else if (!json->IsObject())
+			result = "not an object.";
+		else
+		{
+			JSONObject& obj = (JSONObject&)json->AsObject();
+			if (obj["target"] == nullptr || obj["angles"] == nullptr || obj["distance"] == nullptr)
+				result = "not all required camera properties accounted for.";
+			else
+			{
+				MainCamera.Target(GetJSONVec3(obj["target"]));
+				MainCamera.Angles(GetJSONVec3(obj["angles"]));
+				if (!obj["distance"]->IsNumber())
+					result = "distance is not a number.";
+				else
+					MainCamera.Distance(obj["distance"]->AsNumber());
+				//if (obj["drum"] != nullptr && obj["drum"]->IsBool())
+				//	MainCamera.Drum = obj["drum"]->AsBool();
+				//if (obj["locked"] != nullptr && obj["locked"]->IsBool())
+				//	MainCamera.Locked = obj["locked"]->AsBool();
+			}
+		}
+	}
+	catch (std::runtime_error& x)
+	{
+		result = x.what();
+	}
+	if (!result.empty())
+		conprint(1, "Could not load camera setup: {}", result);
+	return result;
+}
+
+std::string LoadCamera(const std::string& path)
+{
+	std::string result = "";
+	try
+	{
+		auto json = VFS::ReadJSON(path);
+		if (json == nullptr)
+			result = "no data.";
+		else
+			LoadCamera(json);
+	}
+	catch (std::runtime_error& x)
+	{
+		result = x.what();
+	}
+	return result;
+}
+
 std::string LoadLights(JSONValue* json)
 {
 	std::string result = "";

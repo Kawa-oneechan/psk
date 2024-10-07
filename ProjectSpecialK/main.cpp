@@ -550,11 +550,14 @@ int main(int, char**)
 	town.Villagers.push_back(bob);
 	town.Villagers.push_back(Database::Find<Villager>("ac:cat01", villagers));
 
-	MainCamera.Set(glm::vec3(0), glm::vec3(0), 50.0f);
 	if (!LoadLights("lights/initial.json").empty())
 	{
 		lightPos[0] = { 0, 15, 20, 0 };
 		lightCol[0] = { 1, 1, 1, 0.25 };
+	}
+	if (!LoadCamera("lights/field.json").empty())
+	{
+		MainCamera.Set(glm::vec3(0, 6, 0), glm::vec3(0, 20, 0), 60);
 	}
 
 #ifdef DEBUG

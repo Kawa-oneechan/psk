@@ -80,6 +80,9 @@ extern bool PointInPoly(const glm::vec2 point, const std::vector<glm::vec2>& pol
 //Returns true if point is in rect.
 extern bool PointInRect(const glm::vec2 point, const glm::vec4 rect);
 
+std::string LoadCamera(JSONValue* json);
+std::string LoadCamera(const std::string& path);
+
 std::string LoadLights(JSONValue* json);
 std::string LoadLights(const std::string& path);
 

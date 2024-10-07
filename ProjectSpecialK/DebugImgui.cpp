@@ -62,19 +62,25 @@ void DoImGui()
 		ImGui::Text("Angles");
 		{
 			auto& ang = MainCamera.GetAngles();
+			if (ImGui::DragFloat("Roll", &ang.x, 1.0, -359, 359))
+				MainCamera.Update();
 			if (ImGui::DragFloat("Pitch", &ang.y, 1.0, -359, 359))
 				MainCamera.Update();
 			if (ImGui::DragFloat("Yaw", &ang.z, 1.0, -359, 359))
 				MainCamera.Update();
-			if (ImGui::DragFloat("Roll", &ang.x, 1.0, -359, 359))
-				MainCamera.Update();
 		}
+
+		auto dummy = true;
+		ImGui::BeginDisabled();
+		ImGui::Checkbox("Drum", &dummy);
+		ImGui::Checkbox("Locked", &dummy);
+		ImGui::EndDisabled();
 			
 		if (ImGui::Button("Reset"))
 		{
-			MainCamera.Target(glm::vec3(0));
-			MainCamera.Angles(glm::vec3(0));
-			MainCamera.Distance(50);
+			MainCamera.Target(glm::vec3(0, 6, 0));
+			MainCamera.Angles(glm::vec3(0, 20, 0));
+			MainCamera.Distance(60);
 			MainCamera.Update();
 		}
 
@@ -98,30 +104,12 @@ void DoImGui()
 			try
 			{
 				auto json = JSON::Parse(ImGui::GetClipboardText());
-				if (!json->IsObject())
-					result = "not an object.";
-				else
-				{
-					JSONObject& obj = (JSONObject&)json->AsObject();
-					if (obj["target"] == nullptr || obj["angles"] == nullptr || obj["distance"] == nullptr)
-						result = "not all camera properties accounted for.";
-					else
-					{
-						MainCamera.Target(GetJSONVec3(obj["target"]));
-						MainCamera.Angles(GetJSONVec3(obj["angles"]));
-						if (!obj["distance"]->IsNumber())
-							result = "distance is not a number.";
-						else
-							MainCamera.Distance(obj["distance"]->AsNumber());
-					}
-				}
+				LoadCamera(json);
 			}
 			catch (std::runtime_error& x)
 			{
 				result = x.what();
 			}
-			if (!result.empty())
-				conprint(1, "Could not paste camera setup: {}", result);
 		}
 	}
 	ImGui::End();
