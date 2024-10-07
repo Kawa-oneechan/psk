@@ -299,19 +299,24 @@ void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
 
 	if (firstMouse)
 	{
-		//lastX = xpos;
-		//lastY = ypos;
+		lastX = xpos;
+		lastY = ypos;
 		firstMouse = false;
 	}
 
-	//float xoffset = xpos - lastX;
-	//float yoffset = lastY - ypos; //reversed since y-coordinates go from bottom to top
+	float xoffset = xpos - lastX;
+	float yoffset = lastY - ypos;
 
 	lastX = xpos;
 	lastY = ypos;
 
-	//if (Inputs.MouseHoldMiddle)
-		//MainCamera.ProcessMouseMovement(xoffset, yoffset);
+	if (Inputs.MouseHoldMiddle) //&& !MainCamera.Locked
+	{
+		auto angles = MainCamera.GetAngles();
+		angles.z -= xoffset;
+		angles.y -= yoffset;
+		MainCamera.Angles(angles);
+	}
 }
 
 void mousebutton_callback(GLFWwindow* window, int button, int action, int mods)

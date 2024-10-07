@@ -12,7 +12,7 @@ protected:
 
 	glm::vec3 position{};
 
-	bool _swapYZ = false;
+	bool _swapYZ = true;
 
 	glm::mat4 worldFromCamera = glm::mat4(1);
 	glm::mat4 cameraFromWorld = glm::mat4(1);

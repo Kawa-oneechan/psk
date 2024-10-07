@@ -8,8 +8,7 @@ Background::Background(const std::string& file, glm::vec2 speed)
 
 Background::~Background()
 {
-	if (wallpaper)
-		delete wallpaper;
+	delete wallpaper;
 }
 
 void Background::Draw(float dt)

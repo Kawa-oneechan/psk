@@ -42,7 +42,8 @@ void Camera::Target(const glm::vec3& target)
 
 void Camera::Angles(const glm::vec3& angles)
 {
-	_angles = angles;
+	_angles = glm::mod(angles, 360.0f);
+
 	Update();
 }
 
