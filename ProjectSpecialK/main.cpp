@@ -517,7 +517,7 @@ int main(int, char**)
 		Inputs.Keys[i].Name = GetKeyName(Inputs.Keys[i].ScanCode);
 
 	tickables.push_back(&musicManager);
-	tickables.push_back(new Background());
+	tickables.push_back(new Background("discobg2.png"));
 	//tickables.push_back(new DoomMenu());
 	auto hotbar = new PanelLayout(UI::json["hotbar"]);
 	tickables.push_back(hotbar);
