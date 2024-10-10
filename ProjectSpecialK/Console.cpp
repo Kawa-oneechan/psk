@@ -42,6 +42,14 @@ Console::Console()
 
 void Console::Print(int color, const std::string& str)
 {
+	if (str.find('\n') != std::string::npos)
+	{
+		auto lines = Split((std::string&)str, '\n');
+		for (auto& line : lines)
+			Print(color, line);
+		return;
+	}
+
 	buffer.emplace_back(std::make_pair(clamp(color, 0, 8), str));
 	if (hardcopy.good())
 	{
