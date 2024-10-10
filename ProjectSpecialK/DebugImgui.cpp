@@ -70,11 +70,10 @@ void DoImGui()
 				MainCamera.Update();
 		}
 
-		auto dummy = true;
 		ImGui::BeginDisabled();
-		ImGui::Checkbox("Drum", &dummy);
-		ImGui::Checkbox("Locked", &dummy);
+		ImGui::Checkbox("Drum", &MainCamera.Drum);
 		ImGui::EndDisabled();
+		ImGui::Checkbox("Locked", &MainCamera.Locked);
 			
 		if (ImGui::Button("Reset"))
 		{

@@ -38,12 +38,8 @@ void main()
 	vec3 norm = calcNormal(normal);
 #endif
 
-	//vec3 ambient = ambientLight(lightColor);
 	vec3 viewDir = normalize(viewPos - FragPos);
 
-	//vec3 diffuse = diffuseLight(norm, lightPos, lightColor);
-	//vec3 specular = vec3(0); //specularLight(norm, viewDir, lightPos, lightColor, mixx.g);
-	//vec3 result = (ambient + diffuse + specular) * albedo.rgb;
 	vec3 result;
 	for (int i = 0; i < NUMLIGHTS; i++)
 		result += getLight(lights[i], albedo.rgb, norm, viewDir, mixx.b);

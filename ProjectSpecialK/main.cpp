@@ -310,7 +310,7 @@ void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
 	lastX = xpos;
 	lastY = ypos;
 
-	if (Inputs.MouseHoldMiddle) //&& !MainCamera.Locked
+	if (Inputs.MouseHoldMiddle && !MainCamera.Locked)
 	{
 		auto angles = MainCamera.GetAngles();
 		angles.z -= xoffset;

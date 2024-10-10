@@ -93,9 +93,9 @@ public:
 	bool RemoveItem(int slot);
 	//Removes an item from the inventory entirely.
 	bool RemoveItem(InventoryItemP item);
-	//TODO
+	//TODO: document this
 	bool ConsumeItem(int slot);
-	//TODO
+	//TODO: document this
 	bool ConsumeItem(InventoryItemP item);
 
 	bool Store(int slot);

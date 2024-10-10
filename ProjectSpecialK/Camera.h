@@ -1,7 +1,8 @@
 #pragma once
 
 #include "support/glm/glm.hpp"
-//#include "support/glm/gtc/matrix_transform.hpp"
+
+//POSSIBILITY: Make the camera Tickable, have it react to key/button inputs on its own.
 
 class Camera
 {
@@ -47,6 +48,9 @@ public:
 	inline bool& GetSwapYZ() { return _swapYZ; }
 
 	void Update();
+
+	bool Locked = false;
+	bool Drum = false;
 };
 
 extern Camera MainCamera;
