@@ -47,11 +47,16 @@ bool InputsMap::UpdateGamepad()
 	if (glfwGetGamepadState(GLFW_JOYSTICK_1, &state))
 	{
 		//Hardwire the left stick to work for the walking actions
-		//TODO: actually make walking around and moving the cursor separate actions
-		if      (state.axes[0] < -0.2) Keys[(int)Binds::Left].State = true;
-		else if (state.axes[0] >  0.2) Keys[(int)Binds::Right].State = true;
-		if      (state.axes[1] < -0.2) Keys[(int)Binds::Up].State = true;
-		else if (state.axes[1] >  0.2) Keys[(int)Binds::Down].State = true;
+		if      (state.axes[0] < -0.2) Keys[(int)Binds::WalkW].State = true;
+		else if (state.axes[0] >  0.2) Keys[(int)Binds::WalkE].State = true;
+		if      (state.axes[1] < -0.2) Keys[(int)Binds::WalkN].State = true;
+		else if (state.axes[1] >  0.2) Keys[(int)Binds::WalkS].State = true;
+
+		//Hardwire the left stick to work for the camera controls
+		if      (state.axes[0] < -0.2) Keys[(int)Binds::CameraCW].State = true;
+		else if (state.axes[0] >  0.2) Keys[(int)Binds::CameraCCW].State = true;
+		if      (state.axes[1] < -0.2) Keys[(int)Binds::CameraUp].State = true;
+		else if (state.axes[1] >  0.2) Keys[(int)Binds::CameraDown].State = true;
 
 		for (int i = 0; i < 15; i++)
 		{
