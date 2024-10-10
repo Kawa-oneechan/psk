@@ -93,14 +93,18 @@ public:
 	bool RemoveItem(int slot);
 	//Removes an item from the inventory entirely.
 	bool RemoveItem(InventoryItemP item);
-	//TODO: document this
+	//Takes one item from a stack. If it's not stackable or there was only one item, removes it.
 	bool ConsumeItem(int slot);
-	//TODO: document this
+	//Takes one item from a stack. If it's not stackable or there was only one item, removes it.
 	bool ConsumeItem(InventoryItemP item);
 
+	//Moves the specified inventory item from the player's inventory to their storage.
 	bool Store(int slot);
+	//Moves the specified inventory item from the player's inventory to their storage.
 	bool Store(InventoryItemP item);
+	//Moves the specified inventory item from the player's storage to their inventory.
 	bool Retrieve(int slot);
+	//Moves the specified inventory item from the player's storage to their inventory.
 	bool Retrieve(InventoryItemP item);
 
 	void Serialize(JSONObject& target);

@@ -41,7 +41,7 @@ void DateTimePanel::Update()
 	if (lastHour == -1 || (gm.tm_hour != lastHour && gm.tm_min == 0))
 	{
 		lastHour = gm.tm_hour;
-		//TODO: check for events
+		//TODO: check for specific maps and events
 		PlayMusic("clock");
 	}
 }
