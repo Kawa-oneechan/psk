@@ -58,6 +58,8 @@ PanelLayout::PanelLayout(JSONValue* source)
 			panel->Texture = pnl["texture"] != nullptr ? pnl["texture"]->AsInteger() : 0;
 			panel->Frame = pnl["frame"] != nullptr ? pnl["frame"]->AsInteger() : 0;
 			panel->Polygon = pnl["polygon"] != nullptr ? pnl["polygon"]->AsInteger() : -1;
+
+			panel->Enabled = pnl["enabled"] != nullptr ? pnl["enabled"]->AsBool() : panel->Polygon != -1;
 		}
 		else if (panel->Type == PanelType::Text)
 		{
@@ -156,15 +158,34 @@ void PanelLayout::Tick(float dt)
 
 	std::vector<glm::vec2> poly;
 	Panel* newHl = nullptr;
+	//auto prevPoly = -1;
 	for (const auto& panel : panels)
 	{
 		if (panel->Polygon == -1)
 			continue;
-		poly.clear();
-		auto const frame = textures[panel->Texture]->operator[](panel->Frame);
-		auto const size = glm::vec2(frame.z, frame.w);
-		for (const auto& point : polygons[panel->Polygon])
-			poly.emplace_back(((point * size) + Position + panel->Position) * scale);
+
+		if (!panel->Enabled)
+			continue;
+
+		auto parentPos = glm::vec2(0);
+		auto parentID = panel->Parent;
+		while (parentID != -1)
+		{
+			auto& parent = panels[parentID];
+			parentPos += parent->Position;
+			parentID = parent->Parent;
+		}
+
+		//if (panel->Polygon != prevPoly)
+		{
+			poly.clear();
+			auto const frame = textures[panel->Texture]->operator[](panel->Frame);
+			auto const size = glm::vec2(frame.z, frame.w);
+			for (const auto& point : polygons[panel->Polygon])
+				poly.emplace_back(((point * size) + Position + parentPos + panel->Position) * scale);
+
+			//prevPoly = panel->Polygon;
+		}
 
 		if (PointInPoly(Inputs.MousePosition, poly))
 		{
@@ -245,13 +266,16 @@ void PanelLayout::Draw(float dt)
 		}
 		else if (panel->Type == PanelType::ItemIcon)
 		{
+			if (panel->Text.empty())
+				continue;
+
 			auto& texture = *Database::ItemIcons;
 			auto frame = Database::ItemIconAtlas[panel->Text];
 			auto shader = spriteShader;
 
 			sprender.DrawSprite(
 				shader, texture,
-				(Position + panel->Position) * scale,
+				(Position + parentPos + panel->Position) * scale,
 				glm::vec2(frame.z, frame.w) * (panel->Size / 100.0f) * scale,
 				frame,
 				0.0f,

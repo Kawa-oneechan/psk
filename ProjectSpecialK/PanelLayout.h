@@ -56,6 +56,7 @@ class PanelLayout : public Tickable
 		glm::vec4 Color;
 		int Polygon;
 		int Parent;
+		bool Enabled;
 	};
 
 private:
