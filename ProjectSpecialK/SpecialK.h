@@ -132,6 +132,8 @@ namespace UI
 
 #define conprint(C, F, ...) console->Print(C, fmt::format(F, __VA_ARGS__))
 
+#define MSBTParams const std::vector<std::string>& tags, int start, int len
+
 //To make coordinate spaces more explicit, maybe?
 #pragma warning(push)
 #pragma warning(disable: 4455)

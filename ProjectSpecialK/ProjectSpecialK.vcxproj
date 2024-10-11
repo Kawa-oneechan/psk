@@ -208,7 +208,6 @@
     </ClCompile>
     <ClCompile Include="Text.cpp" />
     <ClCompile Include="TextField.cpp" />
-    <ClCompile Include="TextRenderer.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Town.cpp" />
     <ClCompile Include="Traits.cpp" />

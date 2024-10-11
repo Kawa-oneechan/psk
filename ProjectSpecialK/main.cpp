@@ -398,14 +398,14 @@ void ThreadedLoader(std::function<void(float*)> loader)
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		sprender.DrawSprite(loadIcon, loadPos, glm::vec2(128), glm::vec4(0), sinf(time) * glm::radians(1000.0f));
+		Sprite::DrawSprite(loadIcon, loadPos, glm::vec2(128), glm::vec4(0), sinf(time) * glm::radians(1000.0f));
 
-		sprender.DrawSprite(*whiteRect, glm::vec2(barLeft - 1, barTop - 1), glm::vec2(barWidth + 2, barHeight + 2), glm::vec4(0), 0.0f, glm::vec4(1, 1, 1, 1));
-		sprender.DrawSprite(*whiteRect, glm::vec2(barLeft, barTop), glm::vec2(barWidth, barHeight), glm::vec4(0), 0.0f, glm::vec4(0.25, 0.25, 0.25, 1));
-		sprender.DrawSprite(*whiteRect, glm::vec2(barLeft, barTop), glm::vec2(barWidth * loadProgress, barHeight), glm::vec4(0), 0.0f, glm::vec4(1, 1, 1, 1));
+		Sprite::DrawSprite(*whiteRect, glm::vec2(barLeft - 1, barTop - 1), glm::vec2(barWidth + 2, barHeight + 2), glm::vec4(0), 0.0f, glm::vec4(1, 1, 1, 1));
+		Sprite::DrawSprite(*whiteRect, glm::vec2(barLeft, barTop), glm::vec2(barWidth, barHeight), glm::vec4(0), 0.0f, glm::vec4(0.25, 0.25, 0.25, 1));
+		Sprite::DrawSprite(*whiteRect, glm::vec2(barLeft, barTop), glm::vec2(barWidth * loadProgress, barHeight), glm::vec4(0), 0.0f, glm::vec4(1, 1, 1, 1));
 
 		cursor->Draw();
-		sprender.Flush();
+		Sprite::FlushBatch();
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
@@ -619,7 +619,7 @@ int main(int, char**)
 		for (const auto& t : tickables)
 			t->Draw(dt * timeScale);
 
-		sprender.Flush();
+		Sprite::FlushBatch();
 		glClear(GL_DEPTH_BUFFER_BIT);
 		glEnable(GL_DEPTH_TEST);
 		modelShader->Use();
@@ -636,7 +636,7 @@ int main(int, char**)
 		glDisable(GL_DEPTH_TEST);
 
 		console->Draw(dt);
-		sprender.Flush();
+		Sprite::FlushBatch();
 
 		tickables.erase(std::remove_if(tickables.begin(), tickables.end(), [](Tickable* i) {
 			return i->dead;
@@ -650,7 +650,7 @@ int main(int, char**)
 		glEnable(GL_DEPTH_TEST);
 
 		cursor->Draw();
-		sprender.Flush();
+		Sprite::FlushBatch();
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();

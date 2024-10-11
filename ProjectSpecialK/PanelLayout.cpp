@@ -232,7 +232,7 @@ void PanelLayout::Draw(float dt)
 			auto frame = texture[panel->Frame];
 			auto shader = spriteShader;
 
-			sprender.DrawSprite(
+			Sprite::DrawSprite(
 				shader, texture,
 				(Position + parentPos + panel->Position) * scale,
 				glm::vec2(frame.z, frame.w) * scale,
@@ -249,14 +249,14 @@ void PanelLayout::Draw(float dt)
 			auto pos = Position + parentPos + panel->Position;
 			if (panel->Alignment > 0)
 			{
-				auto w = sprender.MeasureText(panel->Font, panel->Text, panel->Size * scale).x;
+				auto w = Sprite::MeasureText(panel->Font, panel->Text, panel->Size * scale).x;
 				if (panel->Alignment == 1)
 					pos.x -= w;
 				else
 					pos.x -= w / 2;
 			}
 
-			sprender.DrawText(
+			Sprite::DrawText(
 				panel->Font,
 				panel->Text,
 				pos * scale,
@@ -273,7 +273,7 @@ void PanelLayout::Draw(float dt)
 			auto frame = Database::ItemIconAtlas[panel->Text];
 			auto shader = spriteShader;
 
-			sprender.DrawSprite(
+			Sprite::DrawSprite(
 				shader, texture,
 				(Position + parentPos + panel->Position) * scale,
 				glm::vec2(frame.z, frame.w) * (panel->Size / 100.0f) * scale,

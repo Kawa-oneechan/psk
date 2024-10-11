@@ -579,24 +579,24 @@ void DoomMenu::Draw(float dt)
 
 	if (!items->header.empty())
 	{
-		auto headerW = sprender.MeasureText(1, items->header, 150).x;
+		auto headerW = Sprite::MeasureText(1, items->header, 150).x;
 		auto headerX = (width / 2) - (headerW / 2);
 
-		sprender.DrawSprite(panels, glm::vec2(headerX - panels[4].z, pos.y) * scale, glm::vec2(panels[4].z, panels[4].w) * scale, panels[4], 0.0f, UI::themeColors["primary"]);
-		sprender.DrawSprite(panels, glm::vec2(headerX, pos.y) * scale, glm::vec2(headerW, panels[3].w) * scale, panels[3], 0.0f, UI::themeColors["primary"]);
-		sprender.DrawSprite(panels, glm::vec2(headerX + headerW, pos.y) * scale, glm::vec2(panels[5].z, panels[5].w) * scale, panels[5], 0.0f, UI::themeColors["primary"]);
+		Sprite::DrawSprite(panels, glm::vec2(headerX - panels[4].z, pos.y) * scale, glm::vec2(panels[4].z, panels[4].w) * scale, panels[4], 0.0f, UI::themeColors["primary"]);
+		Sprite::DrawSprite(panels, glm::vec2(headerX, pos.y) * scale, glm::vec2(headerW, panels[3].w) * scale, panels[3], 0.0f, UI::themeColors["primary"]);
+		Sprite::DrawSprite(panels, glm::vec2(headerX + headerW, pos.y) * scale, glm::vec2(panels[5].z, panels[5].w) * scale, panels[5], 0.0f, UI::themeColors["primary"]);
 
-		sprender.DrawText(1, items->header, glm::vec2(headerX, pos.y + 32), glm::vec4(1), 150);
+		Sprite::DrawText(1, items->header, glm::vec2(headerX, pos.y + 32), glm::vec4(1), 150);
 		pos.y += panels[4].w + 32;
 
 		if (!items->subheader.empty())
 		{
-			auto xy = sprender.MeasureText(1, items->subheader, 120);
+			auto xy = Sprite::MeasureText(1, items->subheader, 120);
 			headerX = (width / 2) - (xy.x / 2);
 
-			sprender.DrawSprite(*whiteRect, glm::vec2(0, pos.y) * scale, glm::vec2(width, xy.y + 16) * scale, glm::vec4(0), 0.0f, UI::themeColors["primary"]);
+			Sprite::DrawSprite(*whiteRect, glm::vec2(0, pos.y) * scale, glm::vec2(width, xy.y + 16) * scale, glm::vec4(0), 0.0f, UI::themeColors["primary"]);
 
-			sprender.DrawText(1, items->subheader, glm::vec2(headerX, pos.y + 8), glm::vec4(1), 120);
+			Sprite::DrawText(1, items->subheader, glm::vec2(headerX, pos.y + 8), glm::vec4(1), 120);
 			pos.y += xy.y + 20;
 		}
 
@@ -610,8 +610,8 @@ void DoomMenu::Draw(float dt)
 
 	itemY.clear();
 
-	sprender.DrawSprite(*whiteRect, glm::vec2(0, startY - 8) * scale, glm::vec2(width, endY - startY - 8) * scale, glm::vec4(0), 0.0f, UI::themeColors["primary"]);
-	sprender.DrawSprite(*whiteRect, glm::vec2(0, endY) * scale, glm::vec2(width, 24) * scale, glm::vec4(0), 0.0f, UI::themeColors["primary"]);
+	Sprite::DrawSprite(*whiteRect, glm::vec2(0, startY - 8) * scale, glm::vec2(width, endY - startY - 8) * scale, glm::vec4(0), 0.0f, UI::themeColors["primary"]);
+	Sprite::DrawSprite(*whiteRect, glm::vec2(0, endY) * scale, glm::vec2(width, 24) * scale, glm::vec4(0), 0.0f, UI::themeColors["primary"]);
 
 	for (int i = 0; i < shown; i++)
 	{
@@ -621,12 +621,12 @@ void DoomMenu::Draw(float dt)
 		if (i + scroll == highlight)
 		{
 			auto offset = glm::vec2(item->type == DoomMenuItem::Type::Checkbox ? (40 * scale) : 0, 0);
-			auto highlightSize = sprender.MeasureText(1, item->caption, 100 * scale);
+			auto highlightSize = Sprite::MeasureText(1, item->caption, 100 * scale);
 			highlightSize.x += 8 * scale;
 			highlightSize.y *= 0.75f;
-			sprender.DrawSprite(controls, pos + offset + glm::vec2(-(highlightSize.y) * scale, 0), glm::vec2(highlightSize.y), controls[7], 0, UI::themeColors["secondary"]);
-			sprender.DrawSprite(controls, pos + offset + glm::vec2(highlightSize.x, 0), glm::vec2(highlightSize.y), controls[8], 0, UI::themeColors["secondary"]);
-			sprender.DrawSprite(controls, pos + offset, highlightSize, controls[9], 0, UI::themeColors["secondary"]);
+			Sprite::DrawSprite(controls, pos + offset + glm::vec2(-(highlightSize.y) * scale, 0), glm::vec2(highlightSize.y), controls[7], 0, UI::themeColors["secondary"]);
+			Sprite::DrawSprite(controls, pos + offset + glm::vec2(highlightSize.x, 0), glm::vec2(highlightSize.y), controls[8], 0, UI::themeColors["secondary"]);
+			Sprite::DrawSprite(controls, pos + offset, highlightSize, controls[9], 0, UI::themeColors["secondary"]);
 			break;
 		}
 	}
@@ -650,26 +650,26 @@ void DoomMenu::Draw(float dt)
 			color = UI::themeColors["yellow"];
 		}
 
-		sprender.DrawText(font, item->caption, pos + offset, color, size);
+		Sprite::DrawText(font, item->caption, pos + offset, color, size);
 
 		if (item->type == DoomMenuItem::Type::Options)
 		{
-			sprender.DrawText(1, item->options[item->selection], pos + glm::vec2(col, 0), color, size);
+			Sprite::DrawText(1, item->options[item->selection], pos + glm::vec2(col, 0), color, size);
 		}
 		else if (item->type == DoomMenuItem::Type::Slider)
 		{
 			if (item->format != nullptr)
 			{
 				auto fmt = item->format(item);
-				sprender.DrawText(1, fmt, pos + glm::vec2(col + col + (94 * scale), 10), color, size * 0.75f);
+				Sprite::DrawText(1, fmt, pos + glm::vec2(col + col + (94 * scale), 10), color, size * 0.75f);
 			}
 		}
 		else if (item->type == DoomMenuItem::Type::KeyBind)
 		{
 			auto key = Inputs.Keys[item->selection];
-			sprender.DrawText(1,key.Name, pos + glm::vec2(col, 0), color, size);
+			Sprite::DrawText(1,key.Name, pos + glm::vec2(col, 0), color, size);
 			
-			sprender.DrawText(1, key.GamepadButton == -1 ? "[none]" : GamepadPUAMap[key.GamepadButton], pos + glm::vec2(col * 2, 0), color, size);
+			Sprite::DrawText(1, key.GamepadButton == -1 ? "[none]" : GamepadPUAMap[key.GamepadButton], pos + glm::vec2(col * 2, 0), color, size);
 		}
 
 		itemY.push_back(pos.y);
@@ -681,7 +681,7 @@ void DoomMenu::Draw(float dt)
 
 	if (items == &species)
 	{
-		sprender.DrawText(1, speciesText, glm::vec2(width * 0.6f, height * 0.4f), glm::vec4(1), 75.0f);
+		Sprite::DrawText(1, speciesText, glm::vec2(width * 0.6f, height * 0.4f), glm::vec4(1), 75.0f);
 	}
 
 	for (int i = 0; i < shown; i++)
@@ -693,17 +693,17 @@ void DoomMenu::Draw(float dt)
 
 		if (item->type == DoomMenuItem::Type::Checkbox)
 		{
-			sprender.DrawSprite(controls, pos + glm::vec2(0, 4 * scale), glm::vec2(partSize), controls[4], 0, UI::themeColors["secondary"]);
+			Sprite::DrawSprite(controls, pos + glm::vec2(0, 4 * scale), glm::vec2(partSize), controls[4], 0, UI::themeColors["secondary"]);
 			if (item->selection)
-				sprender.DrawSprite(controls, pos + glm::vec2(0, 4 * scale), glm::vec2(partSize), controls[5], 0, UI::themeColors["white"]);
+				Sprite::DrawSprite(controls, pos + glm::vec2(0, 4 * scale), glm::vec2(partSize), controls[5], 0, UI::themeColors["white"]);
 		}
 		else if (item->type == DoomMenuItem::Type::Slider)
 		{
 			const auto color = UI::themeColors["white"];
 			auto barLength = col;
-			sprender.DrawSprite(controls, pos + glm::vec2(col, 10 * scale), glm::vec2(partSize), controls[0], 0, color);
-			sprender.DrawSprite(controls, pos + glm::vec2(col + barLength + (partSize * 1), 10 * scale), glm::vec2(partSize), controls[1], 0, color);
-			sprender.DrawSprite(controls, pos + glm::vec2(col + partSize, 10 * scale), glm::vec2(barLength, partSize), controls[2], 0, color);
+			Sprite::DrawSprite(controls, pos + glm::vec2(col, 10 * scale), glm::vec2(partSize), controls[0], 0, color);
+			Sprite::DrawSprite(controls, pos + glm::vec2(col + barLength + (partSize * 1), 10 * scale), glm::vec2(partSize), controls[1], 0, color);
+			Sprite::DrawSprite(controls, pos + glm::vec2(col + partSize, 10 * scale), glm::vec2(barLength, partSize), controls[2], 0, color);
 
 			sliderStart = pos.x + col + partSize;
 			sliderEnd = sliderStart + barLength;
@@ -714,14 +714,14 @@ void DoomMenu::Draw(float dt)
 			auto thumbPos = partSize + ((ccur * (barLength - (partSize * 2))) / range);
 
 			auto thumb = glm::vec2(col + (int)thumbPos, 10 * scale);
-			sprender.DrawSprite(controls, pos + thumb, thumbSize, controls[3], 0, color);
+			Sprite::DrawSprite(controls, pos + thumb, thumbSize, controls[3], 0, color);
 		}
 	}
 
 	//species page special stuff
 	if (items == &species && items->items[highlight]->type == DoomMenuItem::Type::Checkbox)
 	{
-		sprender.DrawSprite(*speciesPreviews[highlight], glm::vec2((width * 0.5f) - (speciesPreviews[0]->width * 0.5f), (height * 0.5f) - (speciesPreviews[0]->height * 0.5f)));
+		Sprite::DrawSprite(*speciesPreviews[highlight], glm::vec2((width * 0.5f) - (speciesPreviews[0]->width * 0.5f), (height * 0.5f) - (speciesPreviews[0]->height * 0.5f)));
 	}
 
 	buttonGuide.Draw();
