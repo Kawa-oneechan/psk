@@ -158,16 +158,16 @@
 	},
 	//Keep these in order with InputsMap.h enum Binds
 	"menu:options:keybinds:0": {
-		"en": "Up"
+		"en": "Cursor Up"
 	},
 	"menu:options:keybinds:1": {
-		"en": "Down"
+		"en": "Cursor Down"
 	},
 	"menu:options:keybinds:2": {
-		"en": "Left"
+		"en": "Cursor Left"
 	},
 	"menu:options:keybinds:3": {
-		"en": "Right"
+		"en": "Cursor Right"
 	},
 	"menu:options:keybinds:4": {
 		"en": "Accept"
@@ -182,49 +182,76 @@
 		"en": "Page Down"
 	},
 	"menu:options:keybinds:8": {
-		"en": "Interact"
+		"en": "Walk North"
 	},
 	"menu:options:keybinds:9": {
-		"en": "Pick Up"
+		"en": "Walk West"
 	},
 	"menu:options:keybinds:10": {
-		"en": "Inventory"
+		"en": "Walk South"
 	},
 	"menu:options:keybinds:11": {
-		"en": "Map"
+		"en": "Walk East"
 	},
 	"menu:options:keybinds:12": {
-		"en": "Reactions"
+		"en": "Interact"
 	},
 	"menu:options:keybinds:13": {
-		"en": "Hotbar 1"
+		"en": "Pick Up"
 	},
 	"menu:options:keybinds:14": {
-		"en": "Hotbar 2"
+		"en": "Camera Clockwise"
 	},
 	"menu:options:keybinds:15": {
-		"en": "Hotbar 3"
+		"en": "Camera Counter"
 	},
 	"menu:options:keybinds:16": {
-		"en": "Hotbar 4"
+		"en": "Camera Up"
 	},
 	"menu:options:keybinds:17": {
-		"en": "Hotbar 5"
+		"en": "Camera Down"
 	},
 	"menu:options:keybinds:18": {
-		"en": "Hotbar 6"
+		"en": "Inventory"
 	},
 	"menu:options:keybinds:19": {
-		"en": "Hotbar 7"
+		"en": "Map"
 	},
 	"menu:options:keybinds:20": {
-		"en": "Hotbar 8"
+		"en": "Reactions"
 	},
 	"menu:options:keybinds:21": {
-		"en": "Hotbar 9"
+		"en": "Hotbar 1"
 	},
 	"menu:options:keybinds:22": {
+		"en": "Hotbar 2"
+	},
+	"menu:options:keybinds:23": {
+		"en": "Hotbar 3"
+	},
+	"menu:options:keybinds:24": {
+		"en": "Hotbar 4"
+	},
+	"menu:options:keybinds:25": {
+		"en": "Hotbar 5"
+	},
+	"menu:options:keybinds:26": {
+		"en": "Hotbar 6"
+	},
+	"menu:options:keybinds:27": {
+		"en": "Hotbar 7"
+	},
+	"menu:options:keybinds:28": {
+		"en": "Hotbar 8"
+	},
+	"menu:options:keybinds:29": {
+		"en": "Hotbar 9"
+	},
+	"menu:options:keybinds:30": {
 		"en": "Hotbar 10"
+	},
+	"menu:options:keybinds:31": {
+		"en": "Console"
 	},
 
 	"menu:options:head:volume": {

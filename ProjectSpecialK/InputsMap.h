@@ -7,16 +7,22 @@
 
 enum class Binds
 {
+	//Cursor controls
 	Up, Down, Left, Right,
 	Accept, Back,
 	PageUp, PageDown,
+	//Player controls
 	WalkN, WalkW, WalkS, WalkE,
 	Interact, PickUp,
+	//Camera controls
 	CameraCW, CameraCCW, CameraUp, CameraDown,
+	//Functions
 	Inventory, Map, React,
+	//Hotbar
 	HotBar1, HotBar2, HotBar3, HotBar4, HotBar5,
 	HotBar6, HotBar7, HotBar8, HotBar9, HotBar10,
-
+	//System stuff
+	Console
 };
 constexpr int DefaultInputBindings[] = {
 	//Cursor controls
@@ -32,7 +38,9 @@ constexpr int DefaultInputBindings[] = {
 	GLFW_KEY_F1, GLFW_KEY_F2, GLFW_KEY_F3,
 	//Hotbar
 	GLFW_KEY_1, GLFW_KEY_2, GLFW_KEY_3, GLFW_KEY_4, GLFW_KEY_5,
-	GLFW_KEY_6, GLFW_KEY_7, GLFW_KEY_8, GLFW_KEY_9, GLFW_KEY_0
+	GLFW_KEY_6, GLFW_KEY_7, GLFW_KEY_8, GLFW_KEY_9, GLFW_KEY_0,
+	//System stuff
+	GLFW_KEY_GRAVE_ACCENT
 };
 constexpr int NumKeyBinds = sizeof(DefaultInputBindings) / sizeof(int);
 
@@ -51,6 +59,8 @@ constexpr int DefaultInputGamepadBindings[] = {
 	//Hotbar
 	-1, -1, -1, -1, -1,
 	-1, -1, -1, -1, -1,
+	//System stuff
+	-1
 };
 
 //Maps GLFW gamepad buttons to Private Use Area characters.
@@ -95,7 +105,7 @@ private:
 	glm::vec2 lastMousePos;
 	unsigned char trg[15]{ 0 };
 	unsigned char cnt[15]{ 0 };
-	
+
 public:
 	InputKey Keys[NumKeyBinds]{ 0 };
 

@@ -255,8 +255,7 @@ void char_callback(GLFWwindow* window, unsigned int codepoint)
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
 	window, mods;
-	//TODO: make this remappable
-	if (key == GLFW_KEY_GRAVE_ACCENT && action == GLFW_PRESS)
+	if (scancode == Inputs.Keys[(int)Binds::Console].ScanCode && action == GLFW_PRESS)
 	{
 		if (console->visible)
 			console->Close();

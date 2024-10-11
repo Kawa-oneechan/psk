@@ -1,4 +1,5 @@
 #include "ItemHotbar.h"
+#include "InputsMap.h"
 #include "Town.h"
 
 ItemHotbar::ItemHotbar()
@@ -14,11 +15,16 @@ ItemHotbar::ItemHotbar()
 	RegisterItem(2, 1);
 #endif
 
+	Update();
 }
 
 void ItemHotbar::Update()
 {
-
+	for (int i = 0; i < 9; i++)
+	{
+		auto panel = layout.GetPanel(fmt::format("hotbarNumber_{}", i));
+		panel->Text = Inputs.Keys[((int)Binds::HotBar1) + i].Name;
+	}
 }
 
 void ItemHotbar::Tick(float dt)
