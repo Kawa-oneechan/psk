@@ -13,6 +13,7 @@
 #include "DialogueBox.h"
 #include "PanelLayout.h"
 #include "DateTimePanel.h"
+#include "ItemHotbar.h"
 #include "Town.h"
 #include "MusicManager.h"
 
@@ -524,11 +525,12 @@ int main(int, char**)
 	tickables.push_back(&musicManager);
 	tickables.push_back(new Background("discobg2.png"));
 	//tickables.push_back(new DoomMenu());
-	auto hotbar = new PanelLayout(UI::json["hotbar"]);
-	tickables.push_back(hotbar);
-	hotbar->Tween(&hotbar->Position.y, -100.0f, 0, 0.002f, glm::bounceEaseOut<float>);
-	hotbar->Tween(&hotbar->Alpha, 0, 0.75f, 0.006f);
+	//auto hotbar = new PanelLayout(UI::json["hotbar"]);
+	//tickables.push_back(hotbar);
+	//hotbar->Tween(&hotbar->Position.y, -100.0f, 0, 0.002f, glm::bounceEaseOut<float>);
+	//hotbar->Tween(&hotbar->Alpha, 0, 0.75f, 0.006f);
 	tickables.push_back(new DateTimePanel());
+	tickables.push_back(new ItemHotbar());
 	//auto logoJson = ReadJSON("cinematics/logo/logo.json")->AsObject();
 	//auto logoAnim = new PanelLayout(logoJson["logoPanels"]);
 	//tickables.push_back(logoAnim);

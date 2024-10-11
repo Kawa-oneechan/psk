@@ -77,7 +77,7 @@ PanelLayout::PanelLayout(JSONValue* source)
 		}
 		else if (panel->Type == PanelType::ItemIcon)
 		{
-			panel->Text = pnl["text"] != nullptr ? pnl["text"]->AsString() : "orestone";
+			panel->Text = pnl["text"] != nullptr ? pnl["text"]->AsString() : "";
 			panel->Size = pnl["size"] != nullptr ? pnl["size"]->AsNumber() : 100.0f;
 			panel->Polygon = pnl["polygon"] != nullptr ? pnl["polygon"]->AsInteger() : -1;
 		}

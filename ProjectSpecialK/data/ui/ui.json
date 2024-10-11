@@ -62,7 +62,7 @@
 		]
 	},
 	//UI test
-	"hotbar": {
+	"itemhotbar": {
 		"textures": [
 			"ui/panels.png"
 		],
@@ -78,23 +78,36 @@
 		"panels": [
 			//{ } //backing panel or whatever
 			{
-				"id": "hotbarButton_1",
+				"id": "hotbarButton_0",
 				"position": [ 0, 0 ],
 				"type": "sprite",
 				"texture": 0, //squares
 				"frame": 1, //extend left
 				"color": "primary",
-				"polygon": 0
+				"polygon": 0,
+				"enabled": false
 			},
 			{
-				"id": "hotbarButton_2",
-				"parent": "hotbarButton_1",
+				"id": "hotbarButton_1",
+				"parent": "hotbarButton_0",
 				"position": [ 100, 0 ],
 				"type": "sprite",
 				"texture": 0,
 				"frame": 0, //regular
 				"color": "primary",
-				"polygon": 0
+				"polygon": 0,
+				"enabled": false
+			},
+			{
+				"id": "hotbarButton_2",
+				"parent": "hotbarButton_1",
+				"position": [ 140, 0 ],
+				"type": "sprite",
+				"texture": 0,
+				//leave the frame for testing.
+				"color": "primary",
+				"polygon": 0,
+				"enabled": false
 			},
 			{
 				"id": "hotbarButton_3",
@@ -102,9 +115,9 @@
 				"position": [ 140, 0 ],
 				"type": "sprite",
 				"texture": 0,
-				//leave the frame for testing.
 				"color": "primary",
-				"polygon": 0
+				"polygon": 0,
+				"enabled": false
 			},
 			{
 				"id": "hotbarButton_4",
@@ -113,7 +126,8 @@
 				"type": "sprite",
 				"texture": 0,
 				"color": "primary",
-				"polygon": 0
+				"polygon": 0,
+				"enabled": false
 			},
 			{
 				"id": "hotbarButton_5",
@@ -122,7 +136,8 @@
 				"type": "sprite",
 				"texture": 0,
 				"color": "primary",
-				"polygon": 0
+				"polygon": 0,
+				"enabled": false
 			},
 			{
 				"id": "hotbarButton_6",
@@ -131,7 +146,8 @@
 				"type": "sprite",
 				"texture": 0,
 				"color": "primary",
-				"polygon": 0
+				"polygon": 0,
+				"enabled": false
 			},
 			{
 				"id": "hotbarButton_7",
@@ -140,7 +156,8 @@
 				"type": "sprite",
 				"texture": 0,
 				"color": "primary",
-				"polygon": 0
+				"polygon": 0,
+				"enabled": false
 			},
 			{
 				"id": "hotbarButton_8",
@@ -149,7 +166,8 @@
 				"type": "sprite",
 				"texture": 0,
 				"color": "primary",
-				"polygon": 0
+				"polygon": 0,
+				"enabled": false
 			},
 			{
 				"id": "hotbarButton_9",
@@ -162,24 +180,22 @@
 				"polygon": 0,
 				"enabled": false
 			},
-			{
-				"id": "hotbarButton_0",
-				"parent": "hotbarButton_9",
-				"position": [ 140, 0 ],
-				"type": "sprite",
-				"texture": 0,
-				"alpha": 0.5,
-				"color": "primary",
-				"polygon": 0,
-				"enabled": false
-			},
 
 			{
-				"id": "hotbarNumber_1",
-				"parent": "hotbarButton_1",
+				"id": "hotbarNumber_0",
+				"parent": "hotbarButton_0",
 				"position": [ 90, 90 ],
 				"type": "text",
 				"text": "1",
+				"size": 50,
+				"alignment": "right"
+			},
+			{
+				"id": "hotbarNumber_1",
+				"parent": "hotbarButton_1",
+				"position": [ 130, 90 ],
+				"type": "text",
+				"text": "2",
 				"size": 50,
 				"alignment": "right"
 			},
@@ -188,7 +204,7 @@
 				"parent": "hotbarButton_2",
 				"position": [ 130, 90 ],
 				"type": "text",
-				"text": "2",
+				"text": "3",
 				"size": 50,
 				"alignment": "right"
 			},
@@ -197,7 +213,7 @@
 				"parent": "hotbarButton_3",
 				"position": [ 130, 90 ],
 				"type": "text",
-				"text": "3",
+				"text": "4",
 				"size": 50,
 				"alignment": "right"
 			},
@@ -206,7 +222,7 @@
 				"parent": "hotbarButton_4",
 				"position": [ 130, 90 ],
 				"type": "text",
-				"text": "4",
+				"text": "5",
 				"size": 50,
 				"alignment": "right"
 			},
@@ -215,7 +231,7 @@
 				"parent": "hotbarButton_5",
 				"position": [ 130, 90 ],
 				"type": "text",
-				"text": "5",
+				"text": "6",
 				"size": 50,
 				"alignment": "right"
 			},
@@ -224,7 +240,7 @@
 				"parent": "hotbarButton_6",
 				"position": [ 130, 90 ],
 				"type": "text",
-				"text": "6",
+				"text": "7",
 				"size": 50,
 				"alignment": "right"
 			},
@@ -233,7 +249,7 @@
 				"parent": "hotbarButton_7",
 				"position": [ 130, 90 ],
 				"type": "text",
-				"text": "7",
+				"text": "8",
 				"size": 50,
 				"alignment": "right"
 			},
@@ -242,7 +258,7 @@
 				"parent": "hotbarButton_8",
 				"position": [ 130, 90 ],
 				"type": "text",
-				"text": "8",
+				"text": "9",
 				"size": 50,
 				"alignment": "right"
 			},
@@ -251,99 +267,80 @@
 				"parent": "hotbarButton_9",
 				"position": [ 130, 90 ],
 				"type": "text",
-				"text": "9",
-				"size": 50,
-				"alignment": "right"
-			},
-			{
-				"id": "hotbarNumber_0",
-				"parent": "hotbarButton_0",
-				"position": [ 130, 90 ],
-				"type": "text",
 				"text": "0",
 				"size": 50,
 				"alignment": "right"
 			},
 
 			{
-				"id": "hotbarIcon_1",
-				"parent": "hotbarButton_1",
+				"id": "hotbarIcon_0",
+				"parent": "hotbarButton_0",
 				"position": [ 12, 16 ],
 				"type": "itemicon",
-				"size": 75,
-				"text": "scoop"
+				"size": 75
+			},
+			{
+				"id": "hotbarIcon_1",
+				"parent": "hotbarButton_1",
+				"position": [ 48, 16 ],
+				"type": "itemicon",
+				"size": 75
 			},
 			{
 				"id": "hotbarIcon_2",
 				"parent": "hotbarButton_2",
 				"position": [ 48, 16 ],
 				"type": "itemicon",
-				"size": 75,
-				"text": "axe"
+				"size": 75
 			},
 			{
 				"id": "hotbarIcon_3",
 				"parent": "hotbarButton_3",
 				"position": [ 48, 16 ],
 				"type": "itemicon",
-				"size": 75,
-				"text": "net"
+				"size": 75
 			},
 			{
 				"id": "hotbarIcon_4",
 				"parent": "hotbarButton_4",
 				"position": [ 48, 16 ],
 				"type": "itemicon",
-				"size": 75,
-				"text": "pachinko"
+				"size": 75
 			},
 			{
 				"id": "hotbarIcon_5",
 				"parent": "hotbarButton_5",
 				"position": [ 48, 16 ],
 				"type": "itemicon",
-				"size": 75,
-				"text": "toolriverjump"
+				"size": 75
 			},
 			{
 				"id": "hotbarIcon_6",
 				"parent": "hotbarButton_6",
 				"position": [ 48, 16 ],
 				"type": "itemicon",
-				"size": 75,
-				"text": "toolladder"
+				"size": 75
 			},
 			{
 				"id": "hotbarIcon_7",
 				"parent": "hotbarButton_7",
 				"position": [ 48, 16 ],
 				"type": "itemicon",
-				"size": 75,
-				"text": "watering"
+				"size": 75
 			},
 			{
 				"id": "hotbarIcon_8",
 				"parent": "hotbarButton_8",
 				"position": [ 48, 16 ],
 				"type": "itemicon",
-				"size": 75,
-				"text": "fishingrod"
+				"size": 75
 			},
 			{
 				"id": "hotbarIcon_9",
 				"parent": "hotbarButton_9",
 				"position": [ 48, 16 ],
 				"type": "itemicon",
-				"size": 75,
-				"text": "" //don't show anything lol
-			},
-			{
-				"id": "hotbarIcon_0",
-				"parent": "hotbarButton_0",
-				"position": [ 48, 16 ],
-				"type": "itemicon",
-				"size": 75,
-				"text": ""
+				"size": 75
 			}
 		]
 	},

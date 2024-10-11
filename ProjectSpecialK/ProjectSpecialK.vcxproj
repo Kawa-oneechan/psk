@@ -154,6 +154,7 @@
     </ClCompile>
     <ClCompile Include="InputsMap.cpp" />
     <ClCompile Include="Item.cpp" />
+    <ClCompile Include="ItemHotbar.cpp" />
     <ClCompile Include="JsonPatch.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Model.cpp" />
@@ -235,6 +236,7 @@
     <ClInclude Include="DoomMenu.h" />
     <ClInclude Include="InputsMap.h" />
     <ClInclude Include="Item.h" />
+    <ClInclude Include="ItemHotbar.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="MusicManager.h" />
     <ClInclude Include="NameableThing.h" />
