@@ -156,7 +156,18 @@ DialogueBox::DialogueBox()
 			if (val.length() < 4 || val.substr(val.length() - 4) != ".lua")
 			{
 				//This is a raw string. Convert it to a Lua thing.
-				//TODO: escape.
+				//And for that, we need to escape quotes!
+				size_t pos = 0;
+				while (true)
+				{
+					pos = val.find("\"", pos);
+					if (pos == std::string::npos)
+						break;
+					val.replace(pos, 1, "\\\"");
+					pos += 2;
+				}
+				//Possibly other things to but IDCRN.
+
 				val = fmt::format("return \"{}\"\r\n", val);
 			}
 			else
@@ -245,17 +256,17 @@ void DialogueBox::Wrap()
 		if (space.x > 650)
 		{
 			//scan back for a whitespace.
-			bool wasLower = (std::islower(ch) != 0);
+			bool wasLower = (iswlower((wint_t)ch) != 0);
 			bool wantHyphen = false;
 			bool insert = false;
 			size_t newSpacePos = 0xFFFF;
 
 			for (size_t b = i;; b--)
 			{
-				unsigned int bch;
+				rune bch;
 				size_t bsize;
 				std::tie(bch, bsize) = GetChar(toDisplay, b);
-				if (std::isblank(bch))
+				if (iswspace(bch))
 				{
 					//found whitespace, replace it.
 					newSpacePos = b;
@@ -270,7 +281,7 @@ void DialogueBox::Wrap()
 					insert = true;
 					break;
 				}
-				else if (wasLower && std::isupper(bch) && newSpacePos == 0xFFFF)
+				else if (wasLower && iswupper(bch) && newSpacePos == 0xFFFF)
 				{
 					//went from lowercase to uppercase.
 					newSpacePos = i;
