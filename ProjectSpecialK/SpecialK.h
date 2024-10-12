@@ -158,6 +158,9 @@ extern void StringToUpper(std::string& data);
 //Removes spaces from a string, in place.
 extern void StripSpaces(std::string& data);
 
+//Finds and replaces all instances of a thing in a string, in place.
+extern void ReplaceAll(std::string& data, const std::string& find, const std::string& replace);
+
 //Removes MSBT tags from a string.
 extern std::string StripMSBT(const std::string& data);
 

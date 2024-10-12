@@ -157,15 +157,7 @@ DialogueBox::DialogueBox()
 			{
 				//This is a raw string. Convert it to a Lua thing.
 				//And for that, we need to escape quotes!
-				size_t pos = 0;
-				while (true)
-				{
-					pos = val.find("\"", pos);
-					if (pos == std::string::npos)
-						break;
-					val.replace(pos, 1, "\\\"");
-					pos += 2;
-				}
+				ReplaceAll(val, "\"", "\\\"");
 				//Possibly other things to but IDCRN.
 
 				val = fmt::format("return \"{}\"\r\n", val);
@@ -266,7 +258,7 @@ void DialogueBox::Wrap()
 				rune bch;
 				size_t bsize;
 				std::tie(bch, bsize) = GetChar(toDisplay, b);
-				if (iswspace(bch))
+				if (iswspace((wint_t)bch))
 				{
 					//found whitespace, replace it.
 					newSpacePos = b;
@@ -281,7 +273,7 @@ void DialogueBox::Wrap()
 					insert = true;
 					break;
 				}
-				else if (wasLower && iswupper(bch) && newSpacePos == 0xFFFF)
+				else if (wasLower && iswupper((wint_t)bch) && newSpacePos == 0xFFFF)
 				{
 					//went from lowercase to uppercase.
 					newSpacePos = i;

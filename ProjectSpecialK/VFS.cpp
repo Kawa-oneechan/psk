@@ -418,17 +418,10 @@ namespace VFS
 		std::vector<Entry> r;
 
 		//Turn "species\\*.json" into "species/(.*?)\.json"
-		std::string pathAsPattern;
-		for (const auto& ch : path)
-		{
-			switch (ch)
-			{
-			case '\\': pathAsPattern += '/'; break;
-			case '*': pathAsPattern += "(.*?)"; break;
-			default: pathAsPattern += ch; break;
-			}
-		}
-		pathAsPattern += '$';
+		std::string pathAsPattern = path + '$';
+		ReplaceAll(pathAsPattern, "\\", "/");
+		ReplaceAll(pathAsPattern, ".", "\\.");
+		ReplaceAll(pathAsPattern, "*", "(.*?)");
 
 		std::regex pattern(pathAsPattern, std::regex_constants::icase);
 
@@ -466,16 +459,9 @@ namespace VFS
 
 	std::string mangle(const std::string& path)
 	{
-		std::string ret;
-		for (const auto& ch : path)
-		{
-			switch (ch)
-			{
-			case '/': ret += '\\'; break;
-			case ':': ret += "_"; break;
-			default: ret += ch; break;
-			}
-		}
+		std::string ret = path;
+		ReplaceAll(ret, "/", "\\");
+		ReplaceAll(ret, ":", "_");
 		return ret;
 	}
 

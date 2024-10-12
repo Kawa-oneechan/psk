@@ -418,7 +418,6 @@ extern unsigned short caseFolding[2378];
 
 void StringToLower(std::string& data)
 {
-	//std::transform(data.begin(), data.end(), data.begin(), [](unsigned char c) { return tolower(c); });
 	std::string ret;
 	ret.reserve(data.length());
 	for (size_t i = 0; i < data.length();)
@@ -467,6 +466,21 @@ void StripSpaces(std::string& data)
 {
 	while (data.find(' ') != -1)
 		data.erase(std::find(data.begin(), data.end(), ' '));
+}
+
+void ReplaceAll(std::string& data, const std::string& find, const std::string& replace)
+{
+	size_t pos = 0;
+	size_t fl = find.length();
+	size_t rl = replace.length();
+	while (true)
+	{
+		pos = data.find(find, pos);
+		if (pos == std::string::npos)
+			break;
+		data.replace(pos, fl, replace);
+		pos += rl;
+	}
 }
 
 std::string StripMSBT(const std::string& data)
