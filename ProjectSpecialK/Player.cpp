@@ -195,9 +195,9 @@ void Player::Draw(double)
 
 	if (_hairModel)
 	{
-		_hairModel->Textures[0] = Textures[3];
-		_hairModel->Textures[1] = Textures[4];
-		_hairModel->Textures[2] = Textures[5];
+		_hairModel->Textures[0] = Textures[18];
+		_hairModel->Textures[1] = Textures[19];
+		_hairModel->Textures[2] = Textures[20];
 		_hairModel->Draw();
 	}
 

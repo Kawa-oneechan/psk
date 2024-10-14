@@ -47,6 +47,7 @@ public:
 
 	TextureArray(const std::string& texturePath, int repeat = GL_REPEAT, int filter = GL_LINEAR);
 
+	virtual ~TextureArray();
 	void Use() override;
 	void Use(int slot) override;
 

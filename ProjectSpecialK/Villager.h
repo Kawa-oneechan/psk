@@ -1,32 +1,10 @@
 #pragma once
 #include "Model.h"
 
-/*
-Body texture layout:
- 0 -  2. Body (alb, mix, nrm)
- 3 -  5. CapVis
- 6 -  8. Eyes (16 layers)
- 9 - 11. Mouth (9 layers, unless Species::ModeledMuzzle is true)
-12 - 15. Accessories 1 (alb, mix, nrm, op)
-16 - 19. Accessories 2
-*/
-
 enum class Gender
 {
 	Boy, Girl, BEnby, GEnby
 };
-
-/*
-House stuff, exterior:
-* Flag
-* Level
-* Status
-* Walls
-* Roof
-* Door
-* Owner
-* Player?
-*/
 
 class VillagerMemory
 {

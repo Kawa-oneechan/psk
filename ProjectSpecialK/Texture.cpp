@@ -2,6 +2,7 @@
 #include "support/stb_image.h"
 
 static std::map<std::string, std::tuple<Texture*, int>> cache;
+static std::map<std::string, std::tuple<TextureArray*, int>> cacheArray;
 
 static bool load(const unsigned char* data, unsigned int *id, int width, int height, int channels, int repeat, int filter)
 {
@@ -208,9 +209,8 @@ TextureArray::TextureArray(const std::string& texturePath, int repeat, int filte
 	width = height = channels = 0, layers = 0;
 	data = nullptr;
 
-	/*
-	auto c = cache.find(texturePath);
-	if (c != cache.end())
+	auto c = cacheArray.find(texturePath);
+	if (c != cacheArray.end())
 	{
 		TextureArray* t;
 		int r;
@@ -224,10 +224,9 @@ TextureArray::TextureArray(const std::string& texturePath, int repeat, int filte
 		this->repeat = t->repeat;
 		this->filter = t->filter;
 		r++;
-		cache[file] = std::make_tuple(t, r);
+		cacheArray[file] = std::make_tuple(t, r);
 		return;
 	}
-	*/
 
 	stbi_set_flip_vertically_on_load(1);
 
@@ -264,7 +263,31 @@ TextureArray::TextureArray(const std::string& texturePath, int repeat, int filte
 		stbi_image_free(data[l]);
 	std::free(data);
 
-	//cache[file] = std::make_tuple(this, 1);
+	cacheArray[file] = std::make_tuple(this, 1);
+}
+
+TextureArray::~TextureArray()
+{
+	if (cacheArray.size() == 0)
+		return;
+	auto c = cacheArray.find(file);
+	if (c != cacheArray.end())
+	{
+		TextureArray* t;
+		int r;
+		std::tie(t, r) = c->second;
+		r--;
+		if (r > 0)
+		{
+			cacheArray[file] = std::make_tuple((TextureArray*)this, r);
+			return;
+		}
+		else
+		{
+			cacheArray.erase(c);
+		}
+	}
+	glDeleteTextures(1, &ID);
 }
 
 void TextureArray::Use()

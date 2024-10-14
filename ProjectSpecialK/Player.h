@@ -1,26 +1,6 @@
 ﻿#pragma once
 #include "SpecialK.h"
 
-/*
-Body texture layout:
- 0 -  2. Body (alb, mix, nrm)
- 3 -  5. Nose
- 6 -  8. Cheek (three albedo layers/options)
- 9 - 11. Eyes (26 options, 16 layers, regular)
-12 - 14. Eyes (stung)
-15 - 17. Mouth (4 options, 9 layers)
-
-Clothing texture layout:
- 0 -  3. Tops (alb, mix, nrm, op) OR Onepiece
- 4 -  7. Bottoms
- 8 - 11. Shoes
-12 - 15. Hat
-16 - 19. Glasses
-20 - 23. Glasses alpha
-24 - 27. Accessories
-28 - 31. Bag
-*/
-
 constexpr int MaxOnHand = 7; //40
 constexpr int MaxStorage = 5000;
 constexpr int StartingOnHand = 20;

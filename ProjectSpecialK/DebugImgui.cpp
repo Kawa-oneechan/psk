@@ -2,7 +2,6 @@
 #include "Town.h"
 
 #include "support/ImGUI/imgui.h"
-//#include "support/ImGUI/imgui_stdlib.h"
 #include "support/ImGUI/imgui_impl_glfw.h"
 #include "support/ImGUI/imgui_impl_opengl3.h"
 
