@@ -561,9 +561,9 @@ int main(int, char**)
 		lightPos[0] = { 0, 15, 20, 0 };
 		lightCol[0] = { 1, 1, 1, 0.25 };
 	}
-	if (!LoadCamera("lights/field.json").empty())
+	if (!LoadCamera("cameras/field.json").empty())
 	{
-		MainCamera.Set(glm::vec3(0, 6, 0), glm::vec3(0, 20, 0), 60);
+		MainCamera.Set(glm::vec3(0, 0, -6), glm::vec3(0, 110, 0), 60);
 	}
 
 #ifdef DEBUG

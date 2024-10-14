@@ -11,7 +11,7 @@
 #include "support/glm/gtx/transform.hpp"
 
 
-Camera::Camera(glm::vec3 target, glm::vec3 angles, float distance) : _target(target), _angles(angles), _distance(distance), _swapYZ(false)
+Camera::Camera(glm::vec3 target, glm::vec3 angles, float distance) : _target(target), _angles(angles), _distance(distance), _swapYZ(true)
 {
 }
 

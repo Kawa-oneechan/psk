@@ -58,13 +58,25 @@ zeemczed
 #Cursors
 Kenney (CC0)
 
+#Sky shader
+Leo Gallatin
+Danil S
+Bastiaan Olij
+Serge Brunier
+
+#Tooling
+Heaven Tool by rafacasari
+Switch Toolbox by KillzXGaming et al
+
 #Third-party libraries
+Dear ImGUI by Omar Cornut
 FMOD Ex by Firelight Technologies
 FMT by Victor Zverovich
 GLAD by David Herberth
 GLFW by Camilla Löwy
 GLM by icaven
 MiniZ by Rich Geldreich
+Scale2X by Thomas Bernard
 SimpleJSON by Mike Anchor
 Sol by Rapptz and ThePhD
 STB tools by Sean Barrett

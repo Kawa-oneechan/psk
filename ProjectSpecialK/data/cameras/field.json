@@ -1,6 +1,6 @@
 {
-	"target": [0, 6, 0],
-	"angles": [0, 20, 0],
+	"target": [0, 0, -6],
+	"angles": [0, 110, 0],
 	"distance": 60,
 	"drum": true,
 	"locked": true
