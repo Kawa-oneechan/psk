@@ -224,25 +224,6 @@ namespace Sprite
 		DrawSprite(*whiteRect, from, glm::vec2(len, 1), glm::vec4(0), a, color, SpriteFlags::TopLeft);
 	}
 
-	static void FlipImage(unsigned char* image, int width, int height)
-	{
-		int row;
-		unsigned char temp[FontAtlasExtent * 4];
-		unsigned char* bytes = (unsigned char*)image;
-
-		for (row = 0; row < (height >> 1); row++)
-		{
-			unsigned char *row0 = bytes + row * width;
-			unsigned char *row1 = bytes + (width - row - 1) * width;
-			//TODO: improve this -- is there some C++17 algo bullshit for this?
-			memcpy(temp, row0, width);
-			memcpy(row0, row1, width);
-			memcpy(row1, temp, width);
-			row0 += width;
-			row1 += width;
-		}
-	}
-
 	static void LoadFontBank(int font, int bank)
 	{
 		if (!cdata)
@@ -279,7 +260,6 @@ namespace Sprite
 		auto ttfData = VFS::ReadData(fonts[font].file, nullptr);
 		auto ttfBitmap = new unsigned char[FontAtlasExtent * FontAtlasExtent];
 		stbtt_BakeFontBitmap((unsigned char*)ttfData.get(), 0, (float)fonts[font].size, ttfBitmap, FontAtlasExtent, FontAtlasExtent, 256 * bank, 256, &cdata[(font * 0xFFFF) + (0x100 * bank)]);
-		//FlipImage(ttfBitmap, FontAtlasExtent, FontAtlasExtent);
 
 		unsigned int fontID;
 		glGenTextures(1, &fontID);
