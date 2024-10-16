@@ -202,7 +202,7 @@ Model::Model(const std::string& modelPath) : file(modelPath)
 	cache[file] = std::make_tuple(this, 1);
 }
 
-void Model::Draw(Shader* shader, glm::vec3 pos, float yaw)
+void Model::Draw(Shader* shader, const glm::vec3& pos, float yaw)
 {
 	shader->Use();
 

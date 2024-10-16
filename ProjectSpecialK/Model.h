@@ -44,7 +44,7 @@ public:
 	Model() = default;
 	Model(const std::string& modelPath);
 
-	void Draw(Shader* shader, glm::vec3 pos = glm::vec3(0), float yaw = 0);
+	void Draw(Shader* shader, const glm::vec3& pos = glm::vec3(0), float yaw = 0);
 	void AllVisible();
 	Mesh& GetMesh(const std::string& name);
 };
