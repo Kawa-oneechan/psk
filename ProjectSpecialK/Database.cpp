@@ -82,6 +82,7 @@ namespace Database
 			auto vfsData = VFS::ReadData(entry.path, &vfsSize);
 			unsigned char *data = stbi_load_from_memory((unsigned char*)vfsData.get(), (int)vfsSize, &width, &height, &channels, 0);
 
+			//TODO: this is fragile.
 			int l = (iconNum % cols) * iconSize;
 			int t = (iconNum / rows) * iconSize;
 			uint32_t* ps = (uint32_t*)data;
