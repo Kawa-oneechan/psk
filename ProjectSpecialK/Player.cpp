@@ -191,14 +191,14 @@ void Player::Draw(double)
 	_model->TexArrayLayers[3] = face;
 	_model->TexArrayLayers[4] = mouth;
 
-	_model->Draw();
+	_model->Draw(modelShader);
 
 	if (_hairModel)
 	{
 		_hairModel->Textures[0] = Textures[18];
 		_hairModel->Textures[1] = Textures[19];
 		_hairModel->Textures[2] = Textures[20];
-		_hairModel->Draw();
+		_hairModel->Draw(modelShader);
 	}
 
 	if (_shoesModel && Shoes)
@@ -209,7 +209,7 @@ void Player::Draw(double)
 		_shoesModel->Textures[3] = ClothingTextures[11];
 
 		_shoesModel->TexArrayLayers[0] = Shoes->Variant();
-		_shoesModel->Draw();
+		_shoesModel->Draw(modelShader);
 	}
 
 	if (_onePieceModel && OnePiece)
@@ -220,7 +220,7 @@ void Player::Draw(double)
 		_onePieceModel->Textures[3] = ClothingTextures[3];
 
 		_onePieceModel->TexArrayLayers[0] = OnePiece->Variant();
-		_onePieceModel->Draw();
+		_onePieceModel->Draw(modelShader);
 	}
 	else
 	{
@@ -232,7 +232,7 @@ void Player::Draw(double)
 			_bottomsModel->Textures[3] = ClothingTextures[7];
 
 			_bottomsModel->TexArrayLayers[0] = Bottoms->Variant();
-			_bottomsModel->Draw();
+			_bottomsModel->Draw(modelShader);
 		}
 		if (_topsModel && Tops)
 		{
@@ -242,7 +242,7 @@ void Player::Draw(double)
 			_topsModel->Textures[3] = ClothingTextures[3];
 
 			_topsModel->TexArrayLayers[0] = Tops->Variant();
-			_topsModel->Draw();
+			_topsModel->Draw(modelShader);
 		}
 	}
 

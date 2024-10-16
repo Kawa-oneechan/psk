@@ -144,6 +144,13 @@ void DoImGui()
 				ImGui::SliderInt("Face", &debugVillager->face, 0, 15);
 				ImGui::SliderInt("Mouth", &debugVillager->mouth, 0, 8);
 
+				ImGui::Text("Position");
+				auto& tar = debugVillager->Position;
+				ImGui::DragFloat("X", &tar.x, 1.0, -50, 50);
+				ImGui::DragFloat("Y", &tar.y, 1.0, -50, 50);
+				ImGui::DragFloat("Z", &tar.z, 1.0, -100, 100);
+				ImGui::DragFloat("Facing", &debugVillager->Facing, 1.0, -100, 100);
+
 				ImGui::EndTabItem();
 			}
 

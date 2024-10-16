@@ -5,43 +5,7 @@
 static std::map<std::string, std::tuple<Model*, int>> cache;
 extern Shader* modelShader;
 
-//TODO? Grab this from JSON.
-static std::map<std::string, unsigned int> matMap =
-{
-	//Villagers
-	{ "mBody", 0 },
-	{ "mCapVis", 0 },
-	{ "mEye", 1 },
-	{ "mMouth", 2 },
-	
-	//Villager accessories
-	{ "mCap", 0 },
-	{ "mGlassCap", 0 },
-	{ "mGlass", 0 },
-	{ "mGlassAlpha", 1 },
-
-	//Players
-	{ "mSkin", 0 }, //3
-	//{ "mEye", 1 }, //1
-	//{ "mMouth", 2 }, //2
-	{ "mCheek", 4 }, //0
-	{ "mNose", 1 }, //6
-	{ "mSocks", 5 }, //4
-	{ "mPaint", 6 }, //5
-
-	{ "mHair", 0 },
-
-	//Clothing
-	{ "mTops", 0 },
-	{ "mBottoms", 0 },
-	{ "mShoes", 0 },
-	//{ "mCap", 0 },
-	{ "mCapHair", 1 },
-	{ "mAccessory", 0 },
-	{ "mAccessoryAlpha", 1 },
-	{ "mBag", 0 },
-	{ "mSoftmesh", 2 },
-};
+static std::map<std::string, unsigned int> matMap;
 
 Model::Mesh::Mesh(ufbx_mesh* mesh) : Texture(-1), Visible(true)
 {
@@ -57,7 +21,7 @@ Model::Mesh::Mesh(ufbx_mesh* mesh) : Texture(-1), Visible(true)
 		for (size_t i = 0; i < num_tris * 3; i++)
 		{
 			auto index = tri_indices[i];
-			
+
 			auto p = mesh->vertex_position[index];
 			auto n = mesh->vertex_normal[index];
 			auto u = mesh->vertex_uv[index];
@@ -117,7 +81,7 @@ Model::Mesh::Mesh(ufbx_mesh* mesh) : Texture(-1), Visible(true)
 	ufbx_vertex_stream streams[1] = {
 		{ vertices.data(), vertices.size(), sizeof(Vertex) },
 	};
-	
+
 	indices.resize(mesh->num_triangles * 3);
 	auto num_vertices = ufbx_generate_indices(streams, 1, indices.data(), indices.size(), nullptr, nullptr);
 
@@ -153,35 +117,24 @@ Model::Mesh::Mesh(ufbx_mesh* mesh) : Texture(-1), Visible(true)
 
 const void Model::Mesh::Draw()
 {
-	glm::mat4 projection = glm::perspective(glm::radians(45.0f), width / height, 0.1f, 100.0f);
-
-	//glm::mat4 view = glm::mat4(1.0f);
-	// note that we're translating the scene in the reverse direction of where we want to move
-	//view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
-	auto view = MainCamera.ViewMat();
-
-	//ourShader.setMat4("model", model);
-	modelShader->SetMat4("view", view);
-	modelShader->SetMat4("projection", projection);
-
-	//texture.Use();
-
-	glm::mat4 model = glm::mat4(1.0f);
-	//model = glm::translate(model, cubePositions[i]);
-	//float angle = 20.0f;
-	//angle = (float)glfwGetTime() * 25.0f;
-	//model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
-	modelShader->SetMat4("model", model);
-
 	glBindVertexArray(VAO);
 	glDrawElements(GL_TRIANGLES, (GLsizei)indices.size(), GL_UNSIGNED_INT, 0);
-
 }
 
 Model::Model(const std::string& modelPath) : file(modelPath)
 {
 	Textures.fill(nullptr);
 	TexArrayLayers.fill(0);
+
+	if (matMap.empty())
+	{
+		auto mapJson = VFS::ReadJSON("matmap.json");
+		for (auto& item : mapJson->AsObject())
+		{
+			matMap.emplace(item.first, item.second->AsInteger());
+		}
+		delete mapJson;
+	}
 
 	auto c = cache.find(modelPath);
 	if (c != cache.end())
@@ -194,16 +147,16 @@ Model::Model(const std::string& modelPath) : file(modelPath)
 		cache[file] = std::make_tuple(m, r);
 		return;
 	}
-	
+
 	size_t vfsSize = 0;
 	auto vfsData = VFS::ReadData(modelPath, &vfsSize);
-		
+
 	ufbx_load_opts options = {};
 	ufbx_error errors;
 	ufbx_scene *scene = ufbx_load_memory(vfsData.get(), vfsSize, &options, &errors);
 	if (!scene)
 		FatalError(fmt::format("Could not load scene {}: {}", modelPath, errors.description.data));
-	
+
 	conprint(5, "Materials:");
 	for (auto m : scene->materials)
 	{
@@ -249,9 +202,21 @@ Model::Model(const std::string& modelPath) : file(modelPath)
 	cache[file] = std::make_tuple(this, 1);
 }
 
-void Model::Draw()
+void Model::Draw(Shader* shader, glm::vec3 pos, float yaw)
 {
-	modelShader->Use();
+	shader->Use();
+
+	auto projection = glm::perspective(glm::radians(45.0f), width / height, 0.1f, 100.0f);
+	auto view = MainCamera.ViewMat();
+
+	shader->SetMat4("view", view);
+	shader->SetMat4("projection", projection);
+
+	glm::mat4 model = glm::mat4(1.0f);
+	model = glm::translate(model, pos);
+	model = glm::rotate(model, glm::radians(yaw), glm::vec3(0, 1, 0));
+	shader->SetMat4("model", model);
+
 	int j = 0;
 	for (auto& m : Meshes)
 	{
@@ -276,7 +241,7 @@ void Model::Draw()
 				}
 			}
 		}
-		modelShader->SetInt("layer", TexArrayLayers[j]);
+		shader->SetInt("layer", TexArrayLayers[j]);
 		m.Draw();
 		j++;
 	}

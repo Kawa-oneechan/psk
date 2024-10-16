@@ -51,6 +51,9 @@ public:
 	int face{ 0 }, mouth{ 0 };
 #endif
 
+	glm::vec3 Position { 0 };
+	float Facing{ 0 };
+
 	std::string RefSpecies;
 	std::string RefCatchphrase;
 	glm::vec4 NameTag[2]{};

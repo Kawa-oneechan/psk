@@ -253,7 +253,7 @@ void Villager::Draw(double)
 	_model->TexArrayLayers[2] = face;
 	_model->TexArrayLayers[3] = mouth;
 	
-	_model->Draw();
+	_model->Draw(modelShader, Position, Facing);
 
 	if (_clothingModel && Clothing)
 	{
@@ -263,7 +263,7 @@ void Villager::Draw(double)
 		_clothingModel->Textures[3] = ClothingTextures[3];
 
 		_clothingModel->TexArrayLayers[0] = Clothing->Variant();
-		_clothingModel->Draw();
+		_clothingModel->Draw(modelShader, Position, Facing);
 	}
 }
 

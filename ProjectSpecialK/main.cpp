@@ -554,7 +554,10 @@ int main(int, char**)
 	bob->defaultClothingID = "acnh:djkklogotee/neonpink"; //-V519 this is on purpose daijoubu
 	bob->Manifest();
 	town.Villagers.push_back(bob);
-	town.Villagers.push_back(Database::Find<Villager>("ac:cat01", villagers));
+	auto cat01 = Database::Find<Villager>("ac:cat01", villagers);
+	cat01->Manifest();
+	town.Villagers.push_back(cat01);
+	//town.Villagers.push_back(Database::Find<Villager>("ac:cat01", villagers));
 
 	if (!LoadLights("lights/initial.json").empty())
 	{
@@ -633,6 +636,7 @@ int main(int, char**)
 		//testModel.Draw();
 		//testModel2.Draw();
 		bob->Draw(dt * timeScale);
+		cat01->Draw(dt * timeScale);
 		glDisable(GL_DEPTH_TEST);
 
 		console->Draw(dt);
