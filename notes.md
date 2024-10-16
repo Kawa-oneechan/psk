@@ -58,7 +58,7 @@ For now though...
 
 ## Coordinate system
 
-The coordinate system is Z-up. I'm not sure if X+ goes left or right, I'll have to figure that out later. For rotation, in a `glm::vec3`, X is roll, Y is pitch, and Z is yaw, or rather that's how it works for the camera. Again, I'm not sure yet how it'd work for models. So consider this whole part a **WIP**.
+The coordinate system is Y+ up, X+ right. For rotation, in a `glm::vec3`, X is roll, Y is pitch, and Z is yaw, or rather that's how it works for the camera. For models, Y is yaw? So consider this whole part a **WIP**.
 
 ## Assorted other crap
 
@@ -71,6 +71,3 @@ House stuff, exterior:
 * Door
 * Owner
 * Player?
-
-
-
