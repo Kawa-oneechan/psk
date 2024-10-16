@@ -138,9 +138,9 @@ void DialogueBox::msbtPass(MSBTParams)
 DialogueBox::DialogueBox()
 {
 	wobble.Use();
-	wobble.SetInt("image", 0);
-	wobble.SetInt("gradient1", 1);
-	wobble.SetInt("gradient2", 2);
+	wobble.Set("image", 0);
+	wobble.Set("gradient1", 1);
+	wobble.Set("gradient2", 2);
 
 	auto extensions = VFS::ReadJSON("msbt/content.json");
 	if (extensions)
@@ -414,7 +414,7 @@ void DialogueBox::Draw(float dt)
 	wobble.Use();
 	gradient[0].Use(1);
 	gradient[1].Use(2);
-	wobble.SetFloat("time", time);
+	wobble.Set("time", time);
 
 	Sprite::DrawSprite(&wobble, bubble[bubbleNum], glm::vec2(dlgLeft, dlgTop), glm::vec2(dlgWidth * 2, dlgHeight), glm::vec4(0, 0, bubble[bubbleNum].width * 2, bubble[bubbleNum].height), 0, bubbleColor);
 

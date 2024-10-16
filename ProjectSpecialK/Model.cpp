@@ -209,13 +209,13 @@ void Model::Draw(Shader* shader, glm::vec3 pos, float yaw)
 	auto projection = glm::perspective(glm::radians(45.0f), width / height, 0.1f, 100.0f);
 	auto view = MainCamera.ViewMat();
 
-	shader->SetMat4("view", view);
-	shader->SetMat4("projection", projection);
+	shader->Set("view", view);
+	shader->Set("projection", projection);
 
 	glm::mat4 model = glm::mat4(1.0f);
 	model = glm::translate(model, pos);
 	model = glm::rotate(model, glm::radians(yaw), glm::vec3(0, 1, 0));
-	shader->SetMat4("model", model);
+	shader->Set("model", model);
 
 	int j = 0;
 	for (auto& m : Meshes)
@@ -241,7 +241,7 @@ void Model::Draw(Shader* shader, glm::vec3 pos, float yaw)
 				}
 			}
 		}
-		shader->SetInt("layer", TexArrayLayers[j]);
+		shader->Set("layer", TexArrayLayers[j]);
 		m.Draw();
 		j++;
 	}

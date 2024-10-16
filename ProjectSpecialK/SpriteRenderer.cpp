@@ -132,8 +132,8 @@ namespace Sprite
 		glm::mat4 orthoProjection = glm::ortho(0.0f, width, height, 0.0f, -1.0f, 1.0f);
 
 		shader->Use();
-		shader->SetInt("image", 0);
-		shader->SetMat4("projection", orthoProjection);
+		shader->Set("image", 0);
+		shader->Set("projection", orthoProjection);
 
 		glm::mat4 model = glm::mat4(1.0f);
 		model = glm::translate(model, glm::vec3(position, 0));

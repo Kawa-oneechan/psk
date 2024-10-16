@@ -543,11 +543,11 @@ int main(int, char**)
 #endif
 
 	modelShader->Use();
-	modelShader->SetVec3("viewPos", MainCamera.Position());
-	modelShader->SetInt("albedoTexture", 0);
-	modelShader->SetInt("normalTexture", 1);
-	modelShader->SetInt("mixTexture", 2);
-	modelShader->SetInt("opacityTexture", 3);
+	modelShader->Set("viewPos", MainCamera.Position());
+	modelShader->Set("albedoTexture", 0);
+	modelShader->Set("normalTexture", 1);
+	modelShader->Set("mixTexture", 2);
+	modelShader->Set("opacityTexture", 3);
 
 	auto bob = Database::Find<Villager>("ac:cat00", villagers);
 	bob->defaultClothingID = "psk:oppai/white";
@@ -629,8 +629,8 @@ int main(int, char**)
 
 		for (int i = 0; i < MaxLights; i++)
 		{
-			modelShader->SetVec4(fmt::format("lights[{}].color", i), lightCol[i]);
-			modelShader->SetVec4(fmt::format("lights[{}].pos", i), lightPos[i]);
+			modelShader->Set(fmt::format("lights[{}].color", i), lightCol[i]);
+			modelShader->Set(fmt::format("lights[{}].pos", i), lightPos[i]);
 		}
 
 		//testModel.Draw();
