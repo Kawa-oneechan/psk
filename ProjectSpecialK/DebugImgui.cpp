@@ -5,7 +5,7 @@
 #include "support/ImGUI/imgui_impl_glfw.h"
 #include "support/ImGUI/imgui_impl_opengl3.h"
 
-bool debuggerEnabled{ false };
+bool debuggerEnabled{ true };
 
 extern float uiTime, glTime;
 extern GLFWwindow* window;

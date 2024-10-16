@@ -1,5 +1,4 @@
 ﻿#include <filesystem>
-#include <chrono>
 #include "SpecialK.h"
 
 #include "support/stb_image.h"
@@ -262,9 +261,6 @@ namespace Database
 
 	void LoadGlobalStuff(float* progress)
 	{
-		conprint(0, "Starting timer.");
-		auto startingTime = std::chrono::high_resolution_clock::now();
-		
 		*progress = 0.0;
 		LoadContentFilters();
 
@@ -274,9 +270,5 @@ namespace Database
 		LoadSpecies(progress);
 		LoadTraits(progress);
 		LoadVillagers(progress);
-
-		auto endingTime = std::chrono::high_resolution_clock::now();
-		auto ms_int = std::chrono::duration_cast<std::chrono::milliseconds>(endingTime - startingTime);
-		conprint(0, "Loading all this took {} milliseconds.", ms_int.count());
 	}
 }

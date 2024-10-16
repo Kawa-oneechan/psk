@@ -15,11 +15,10 @@ static bool load(const unsigned char* data, unsigned int *id, int width, int hei
 	glBindTexture(GL_TEXTURE_2D, *id);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, repeat);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, repeat);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter);
 
-	glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
-	glGenerateMipmap(GL_TEXTURE_2D);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, format, GL_UNSIGNED_BYTE, data);
 	glBindTexture(GL_TEXTURE_2D, 0);
 
 	return true;
@@ -188,16 +187,14 @@ static bool loadArray(unsigned char** data, unsigned int *id, int width, int hei
 	glBindTexture(GL_TEXTURE_2D_ARRAY, *id);
 	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, repeat);
 	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, repeat);
-	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, filter);
 	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, filter);
 
-	//glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
-	glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, format, width, height, layers, 0, format, GL_UNSIGNED_BYTE, nullptr);
+	glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGBA, width, height, layers, 0, format, GL_UNSIGNED_BYTE, nullptr);
 
 	for (auto l = 0; l < layers; l++)
 		glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, l, width, height, 1, format, GL_UNSIGNED_BYTE, data[l]);
 
-	glGenerateMipmap(GL_TEXTURE_2D_ARRAY);
 	glBindTexture(GL_TEXTURE_2D_ARRAY, 0);
 
 	return true;

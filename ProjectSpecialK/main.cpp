@@ -365,6 +365,9 @@ void joystick_callback(int jid, int event)
 
 void ThreadedLoader(std::function<void(float*)> loader)
 {
+	conprint(0, "Starting threaded loader task.");
+	auto startingTime = std::chrono::high_resolution_clock::now();
+
 	glDisable(GL_DEPTH_TEST);
 	cursor->Select(1);
 	auto loadIcon = Texture("loading.png");
@@ -417,7 +420,12 @@ void ThreadedLoader(std::function<void(float*)> loader)
 	}
 	t.join();
 	cursor->Select(0);
+
+	auto endingTime = std::chrono::high_resolution_clock::now();
+	auto ms_int = std::chrono::duration_cast<std::chrono::milliseconds>(endingTime - startingTime);
+	conprint(0, "Threaded loader: task took {} milliseconds.", ms_int.count());
 }
+
 int main(int, char**)
 {
 	setlocale(LC_ALL, "en_US.UTF-8");
