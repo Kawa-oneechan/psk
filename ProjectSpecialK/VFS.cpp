@@ -1,7 +1,6 @@
 #include <vector>
 #include <filesystem>
 #include <fstream>
-#include <regex>
 #include <algorithm>
 
 #include "SpecialK.h"
@@ -416,22 +415,40 @@ namespace VFS
 	std::vector<Entry> Enumerate(const std::string& path)
 	{
 		std::vector<Entry> r;
+		std::string p = path;
+		ReplaceAll(p, "\\", "/");
 
-		//Turn "species\\*.json" into "species/(.*?)\.json"
-		std::string pathAsPattern = path + '$';
-		ReplaceAll(pathAsPattern, "\\", "/");
-		ReplaceAll(pathAsPattern, ".", "\\.");
-		ReplaceAll(pathAsPattern, "*", "(.*?)");
+		const auto splatp = p.find('*');
 
-		std::regex pattern(pathAsPattern, std::regex_constants::icase);
+		if (splatp == p.npos)
+		{
+			for (const auto& entry : entries)
+			{
+				if (entry.path == p)
+				{
+					r.push_back(entry);
+					break;
+				}
+			}
+			return r;
+		}
 
+		const auto prefix = p.substr(0, splatp);
+		const auto suffix = p.substr(splatp + 1);
+		const auto prelen = prefix.length();
+		const auto suflen = suffix.length();
+		const auto plen = p.length();
 		for (const auto& entry : entries)
 		{
-			std::string ep(entry.path);
-			if (ep.length() < path.length())
+			const auto ep = entry.path;
+			const auto eplen = ep.length();
+			if (eplen < plen)
 				continue;
-			if (std::regex_search(ep, pattern))
-				r.push_back(entry);
+			if (ep.substr(0, prelen) != prefix)
+				continue;
+			if (ep.substr(eplen - suflen) != suffix)
+				continue;
+			r.push_back(entry);
 		}
 		return r;
 	}
