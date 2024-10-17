@@ -209,6 +209,7 @@
     <ClCompile Include="Text.cpp" />
     <ClCompile Include="TextField.cpp" />
     <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="ThreadedLoader.cpp" />
     <ClCompile Include="Town.cpp" />
     <ClCompile Include="Traits.cpp" />
     <ClCompile Include="Utilities.cpp" />

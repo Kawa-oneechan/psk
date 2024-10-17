@@ -93,6 +93,9 @@ extern void AppendChar(std::string& where, rune what);
 //Renders a set of tabular data to the console in a nice lined table.
 extern void Table(std::vector<std::string> data, size_t stride);
 
+//Returns a calendar date for things like "the fourth Friday in November".
+tm* GetNthWeekdayOfMonth(int month, int dayOfWeek, int howManyth);
+
 //Given a full path to a file ("data/foo/bar.txt"), returns the path part including the final separator ("data/foo/").
 extern std::string GetDirFromFile(const std::string& path);
 
@@ -132,6 +135,9 @@ namespace UI
 #define conprint(C, F, ...) console->Print(C, fmt::format(F, __VA_ARGS__))
 
 #define MSBTParams const std::vector<std::string>& tags, int start, int len
+
+//Shows a loading screen while running another thread.
+extern void ThreadedLoader(std::function<void(float*)> loader);
 
 //To make coordinate spaces more explicit, maybe?
 #pragma warning(push)

@@ -364,6 +364,40 @@ void Table(std::vector<std::string> data, size_t stride)
 	conprint(7, u8"└{}┘", bottom);
 }
 
+static tm _tm;
+tm* GetNthWeekdayOfMonth(int month, int dayOfWeek, int howManyth)
+{
+	//C++17 doesn't have chrono calendar stuff yet, that's C++20.
+	//So instead we're figuring this out the hard way.
+	tm rightNow;
+	time_t yesNow = std::time(nullptr);
+	gmtime_s(&rightNow, &yesNow);
+	int thisYear = rightNow.tm_year;
+
+	tm novemberFirst = { 0 };
+	novemberFirst.tm_year = thisYear;
+	novemberFirst.tm_mon = month;
+	novemberFirst.tm_mday = 1;
+	novemberFirst.tm_hour = 12;
+	std::mktime(&novemberFirst);
+	time_t t = std::mktime(&novemberFirst);
+	while (true)
+	{
+		tm here;
+		gmtime_s(&here, &t);
+		if (here.tm_wday == dayOfWeek)
+		{
+			t += ((60 * 60 * 24) * 7) * (howManyth - 1); //add a whole week for the amount of thursdays we want
+			if (novemberFirst.tm_wday == dayOfWeek)
+				t += (60 * 60 * 24) * 7; //add one more week if we *started* on a thursday
+			break;
+		}
+		t += (60 * 60 * 24); //add one day
+	}
+	gmtime_s(&_tm, &t);
+	return &_tm;
+}
+
 std::string GetDirFromFile(const std::string& path)
 {
 	return path.substr(0, path.rfind('/') + 1);

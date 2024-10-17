@@ -97,7 +97,7 @@ void Town::GenerateNew(void* generator, int width, int height)
 	Terrain = std::make_unique<LiveTerrainTile[]>(Width * Height);
 
 #ifdef DEBUG
-	SaveToPNG();
+	//SaveToPNG();
 #endif
 }
 
