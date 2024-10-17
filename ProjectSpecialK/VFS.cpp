@@ -305,6 +305,11 @@ namespace VFS
 				addFromFolder(i);
 		}
 
+		std::sort(entries.begin(), entries.end(), [](const Entry& a, const Entry& b)
+		{
+			return a.path.compare(b.path) < 0;
+		});
+
 		conprint(0, "VFS: ended up with {} entries.", entries.size());
 
 		findSaveDir();
@@ -440,6 +445,9 @@ namespace VFS
 		const auto plen = p.length();
 		for (const auto& entry : entries)
 		{
+			if (entry.path[0] != p[0])
+				continue;
+
 			const auto ep = entry.path;
 			const auto eplen = ep.length();
 			if (eplen < plen)

@@ -642,8 +642,10 @@ int main(int, char**)
 
 		//testModel.Draw();
 		//testModel2.Draw();
-		bob->Draw(dt * timeScale);
-		cat01->Draw(dt * timeScale);
+		//bob->Draw(dt * timeScale);
+		//cat01->Draw(dt * timeScale);
+		for (const auto& v : town.Villagers)
+			v->Draw(dt * timeScale);
 		glDisable(GL_DEPTH_TEST);
 
 		console->Draw(dt);
