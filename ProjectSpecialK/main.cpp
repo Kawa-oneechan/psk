@@ -558,7 +558,6 @@ int main(int, char**)
 	modelShader->Set("opacityTexture", 3);
 
 	auto bob = Database::Find<Villager>("ac:cat00", villagers);
-	bob->defaultClothingID = "psk:oppai/white";
 	bob->defaultClothingID = "acnh:djkklogotee/neonpink"; //-V519 this is on purpose daijoubu
 	bob->Manifest();
 	town.Villagers.push_back(bob);

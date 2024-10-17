@@ -11,7 +11,7 @@ private:
 	float left{ 0 };
 
 public:
-	//Replaces the buttons for this Guie entirely. Precede an entry with '!' to highlight it.
+	//Replaces the buttons for this Guide entirely. Precede an entry with '!' to highlight it.
 	void SetButtons(std::initializer_list<std::string>);
 	void Draw();
 };
