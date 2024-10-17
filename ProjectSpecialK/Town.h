@@ -88,7 +88,15 @@ public:
 
 	std::vector<void*> Objects;
 
+	ModelP Model;
+
+	//If true, this map is represented with a single Model, probably an interior.
+	bool UseModel{ false };
+
 	bool UseDrum{ false };
+
+	bool CanOverrideMusic{ false };
+	std::string Music;
 
 	//Returns the height of the lowest point from the given coordinate.
 	float GetHeight(const glm::vec3& pos);
@@ -100,15 +108,13 @@ public:
 #endif
 };
 
-class Town
+class Town : public Map
 {
 private:
 	unsigned int weatherSeed{ 0 };
 	int weatherRain[24] = { 0 };
 	int weatherWind[24] = { 0 };
 	std::map<std::string, int> flags;
-
-	Map map;
 
 public:
 	std::string Name{ "Fuck-All Nowhere" };
@@ -126,10 +132,10 @@ public:
 	} Clouds{ Weather::Fine };
 	
 	std::vector<VillagerP> Villagers;
-
 	int Wind{ 0 };
 
 	Town();
+
 	void GenerateNew(void* generator, int width, int height);
 
 	void Load();
@@ -142,11 +148,6 @@ public:
 	void SetFlag(const std::string& id, bool value);
 	int GetFlag(const std::string& id, int def = 0);
 	bool GetFlag(const std::string& id, bool def = false);
-
-	//Returns the height of the lowest point from the given coordinate.
-	float GetHeight(const glm::vec3& pos);
-	//Returns the height of the lowest point at the given tile coordinate.
-	float GetHeight(int x, int y);
 };
 
 extern Town town;

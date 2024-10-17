@@ -61,26 +61,29 @@ void Map::SaveToPNG()
 
 Town::Town()
 {
+	Music = "clock";
+	CanOverrideMusic = true;
+
 	weatherSeed = std::rand();
 
-	map.Width = Map::AcreSize * 1;
-	map.Height = Map::AcreSize * 1;
+	Width = AcreSize * 1;
+	Height = AcreSize * 1;
 
-	map.Terrain = std::make_unique<LiveTerrainTile[]>(map.Width * map.Height);
-	for (int i = 0; i < map.Width; i++)
+	Terrain = std::make_unique<LiveTerrainTile[]>(Width * Height);
+	for (int i = 0; i < Width; i++)
 	{
-		map.Terrain[i].Elevation = 1;
+		Terrain[i].Elevation = 1;
 	}
-	for (int i = 0; i < map.Height; i++)
+	for (int i = 0; i < Height; i++)
 	{
-		map.Terrain[(i * map.Width)].Elevation = 1;
-		map.Terrain[(i * map.Width) + (map.Width - 1)].Elevation = 1;
+		Terrain[(i * Width)].Elevation = 1;
+		Terrain[(i * Width) + (Width - 1)].Elevation = 1;
 	}
 
-	map.UseDrum = true;
+	UseDrum = true;
 
 #ifdef DEBUG
-	map.SaveToPNG();
+	SaveToPNG();
 #endif
 }
 
@@ -88,13 +91,13 @@ void Town::GenerateNew(void* generator, int width, int height)
 {
 	generator;
 
-	map.Width = Map::AcreSize * width;
-	map.Height = Map::AcreSize * height;
+	Width = AcreSize * width;
+	Height = AcreSize * height;
 
-	map.Terrain = std::make_unique<LiveTerrainTile[]>(map.Width * map.Height);
+	Terrain = std::make_unique<LiveTerrainTile[]>(Width * Height);
 
 #ifdef DEBUG
-	//map.SaveToPNG();
+	SaveToPNG();
 #endif
 }
 
@@ -241,16 +244,6 @@ int Town::GetFlag(const std::string& id, int def)
 bool Town::GetFlag(const std::string& id, bool def)
 {
 	return GetFlag(id, (int)def) > 0;
-}
-
-float Town::GetHeight(const glm::vec3& pos)
-{
-	return map.GetHeight(pos);
-}
-
-float Town::GetHeight(int x, int y)
-{
-	return map.GetHeight(x, y);
 }
 
 Town town;

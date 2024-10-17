@@ -1,5 +1,6 @@
 #include "DateTimePanel.h"
 #include "Town.h"
+#include "MusicManager.h"
 
 extern void PlayMusic(const std::string& id);
 
@@ -42,7 +43,11 @@ void DateTimePanel::Update()
 	{
 		lastHour = gm.tm_hour;
 		//TODO: check for specific maps and events
-		PlayMusic("clock");
+		auto& thisMap = town;
+		if (!thisMap.CanOverrideMusic || musicManager.Override.empty())
+			musicManager.Play(thisMap.Music);
+		else
+			musicManager.Play(musicManager.Override);
 	}
 }
 
