@@ -51,7 +51,11 @@ namespace Database
 		unsigned char* sheet;
 		int width, height, channels;
 
+		auto startingTime = std::chrono::high_resolution_clock::now();
 		auto entries = VFS::Enumerate(fmt::format("icons\\{}\\*.png", path));
+		auto endingTime = std::chrono::high_resolution_clock::now();
+		auto ms_int = std::chrono::duration_cast<std::chrono::milliseconds>(endingTime - startingTime);
+		conprint(0, "IconsWorker: loading {} took {} milliseconds to grab {} items.", path, ms_int.count(), entries.size());
 
 		if (entries.size() >= cols * rows)
 		{

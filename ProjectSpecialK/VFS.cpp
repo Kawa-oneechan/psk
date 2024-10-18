@@ -443,20 +443,29 @@ namespace VFS
 		const auto prelen = prefix.length();
 		const auto suflen = suffix.length();
 		const auto plen = p.length();
+		auto anything = false;
 		for (const auto& entry : entries)
 		{
 			if (entry.path[0] != p[0])
+			{
+				if (anything)
+					return r;
 				continue;
+			}
 
 			const auto ep = entry.path;
 			const auto eplen = ep.length();
-			if (eplen < plen)
+			if (eplen < plen || ep.substr(0, prelen) != prefix)
+			{
+				if (anything)
+					return r;
 				continue;
-			if (ep.substr(0, prelen) != prefix)
-				continue;
+			}
 			if (ep.substr(eplen - suflen) != suffix)
 				continue;
+
 			r.push_back(entry);
+			anything = true;
 		}
 		return r;
 	}
@@ -478,6 +487,8 @@ namespace VFS
 				++e;
 			}
 		}
+
+		entries.shrink_to_fit();
 
 		conprint(0, "ForgetVFS: went from {} to {} items, forgetting {}.", start, entries.size(), start - entries.size());
 	}

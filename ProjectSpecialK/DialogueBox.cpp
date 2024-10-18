@@ -174,7 +174,7 @@ DialogueBox::DialogueBox()
 	//Text(u8"Truth is... <color:1>the game</color> was rigged from the start.",
 	//Text("Are you <color:3><str:player></color>? <delay:1000>Hiii! Welcome to <color:2>Project Special K</color>!", 0);
 	//Text(Get("dlg:sza:wack"), Database::Find<Villager>("psk:cat00", villagers));
-	//Text("MSBT JSON/Lua test:\n<test1>\n<test2>", 3);
+	Text("MSBT JSON/Lua test:\n<test1>\n<test2:bur>", 3);
 	//Text(u8"This is ordinary dialogue with a button image in it: \uE0E2 look at that.", Database::Find<Villager>("psk:cat00", villagers));
 	//Text("By the President of the United States of America:\nA Proclamation.<break>Whereas, on the twenty-second day of September, in the year of our Lord one thousand eight hundred and sixty-two, a proclamation was issued by the President of the United States, containing, among other things, the following, to wit:", 0);
 	//Text("Timmy Turner, my name is DougsDaleDimmaDaleDimmaDimmsDomeDoDiDomeDimmsDimmaDimmaDome, owner of the DougDimmsDimmaDaleDimmaDimmsDomeDoDiDimmaDimmsDaleDimmaDimmsDaleDimmaDome.", 0);
@@ -213,7 +213,6 @@ void DialogueBox::Preprocess()
 				auto func2 = msbtPhase1X.find(msbt[0]);
 				if (func2 != msbtPhase1X.end())
 				{
-					//TODO: allow passing arguments
 					Sol.set("msbt", msbt);
 					toDisplay.replace(start, len, Sol.script(func2->second).get<std::string>());
 					i = msbtStart;

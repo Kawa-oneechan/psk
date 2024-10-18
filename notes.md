@@ -60,6 +60,30 @@ For now though...
 
 The coordinate system is Y+ up, X+ right. For rotation, in a `glm::vec3`, X is roll, Y is pitch, and Z is yaw, or rather that's how it works for the camera. For models, Y is yaw? So consider this whole part a **WIP**.
 
+## MSBT
+
+Why is it still called *Message Studio Binary Text*? It's not done in Message Studio, and it's not binary. This thing needs a rename!
+
+But whatever.
+
+Commands are inserted like fucked-up HTML tags, like `<color:3>` or `<str:player>`.
+
+### Pre-processed
+
+Preprocessed commands purely replace themselves with other text and/or commands, such as `<str:...>`, which substitutes in a particular string like the player's name.
+
+### Live
+
+Live commands affect the text as it gets displayed, or something out of the dialogue box like the speaker's animations, such as `<delay:...>`, `<break>`, `<color:...>`, or `<emote:...>`.
+
+### Custom
+
+By adding entries to `msbt/content.json`, you can hook up your own preprocessed commands.
+
+If the entry is a bare string, the command is replaced by that string. So `"foo": "bar"` means `<foo>` is replaced with `bar`.
+
+If the entry is a string that *specifies a `.lua` file though*, that file's content will be used. The command and all its arguments (as done by splitting on `:`) will be available as the `msbt` variable. The script is expected to return a string. `msbt[1]` will be the command's name, while `msbt[0]` is nothing because Lua is dumb.
+
 ## Assorted other crap
 
 House stuff, exterior:
