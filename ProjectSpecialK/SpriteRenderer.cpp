@@ -70,26 +70,30 @@ namespace Sprite
 		if (initialized)
 			return;
 
-		unsigned int VBO;
-		//TODO: make this indexed
+		unsigned int VBO, EBO;
 		float vertices[] = {
 			//pos	tex
 			0, 1,	0, -1,	//bottom left
 			1, 0,	1,  0,	//top right
 			0, 0,	0,  0,	//top left
-
-			0, 1,	0, -1,	//bottom left
 			1, 1,	1, -1,	//bottom right
-			1, 0,	1,  0,	//top right
+		};
+		int indices[] = {
+			0, 1, 2,
+			0, 3, 1,
 		};
 
 		glGenVertexArrays(1, &quadVAO);
 		glGenBuffers(1, &VBO);
+		glGenBuffers(1, &EBO);
 
 		glBindVertexArray(quadVAO);
 
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
 		glEnableVertexAttribArray(0);
 		glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), 0);
@@ -120,7 +124,9 @@ namespace Sprite
 		glUniform1iv(glGetUniformLocation(currentShader->ID, "flipY"), instanceCursor, &spriteFlipY[0]);
 
 		glBindVertexArray(quadVAO);
-		glDrawArraysInstanced(GL_TRIANGLES, 0, 6, instanceCursor);
+		//glDrawArraysInstanced(GL_TRIANGLES, 0, 6, instanceCursor);
+		//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		glDrawElementsInstanced(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0, instanceCursor);
 		glBindVertexArray(0);
 		instanceCursor = 0;
 	}
