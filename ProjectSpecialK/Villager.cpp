@@ -33,15 +33,9 @@ Villager::Villager(JSONObject& value, const std::string& filename) : NameableThi
 	else
 		Text::Add(RefCatchphrase, *val);
 
-	auto birthday = value["birthday"]->AsArray();
-	_birthday[0] = birthday[0]->AsInteger();
-	_birthday[1] = birthday[1]->AsInteger();
-	if (_birthday[0] < 1 || _birthday[0] > 31 || _birthday[1] < 1 || _birthday[1] > 12)
-	{
-		conprint(1, "Villager {} has an out of band birthday: day {}, month {}.", ID, _birthday[0], _birthday[1]);
-		_birthday[0] = glm::clamp((int)_birthday[0], 1, 31); //mind you, half the months don't go that high
-		_birthday[1] = glm::clamp((int)_birthday[1], 1, 12);
-	}
+	auto birthday = GetJSONDate(value["birthday"]);
+	_birthday[0] = (int)birthday[0];
+	_birthday[1] = (int)birthday[1];
 
 	auto _gender = value["gender"];
 	if (_gender != nullptr)

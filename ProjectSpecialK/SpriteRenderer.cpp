@@ -124,8 +124,6 @@ namespace Sprite
 		glUniform1iv(glGetUniformLocation(currentShader->ID, "flipY"), instanceCursor, &spriteFlipY[0]);
 
 		glBindVertexArray(quadVAO);
-		//glDrawArraysInstanced(GL_TRIANGLES, 0, 6, instanceCursor);
-		//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 		glDrawElementsInstanced(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0, instanceCursor);
 		glBindVertexArray(0);
 		instanceCursor = 0;

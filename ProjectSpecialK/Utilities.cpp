@@ -93,6 +93,37 @@ glm::vec4 GetJSONColor(JSONValue* val)
 	throw std::runtime_error(fmt::format("GetJSONColor: {} is not a valid color.", val->Stringify()));
 }
 
+static glm::vec2 checkDate(glm::vec2 date)
+{
+	date[0] = (float)glm::clamp((int)date[0], 1, 31);
+	date[1] = (float)glm::clamp((int)date[0], 1, 12);
+	return date;
+}
+glm::vec2 GetJSONDate(JSONValue* val)
+{
+	if (val->IsArray())
+		return checkDate(GetJSONVec2(val));
+	if (val->IsString())
+	{
+		auto str = val->AsString();
+		auto split = str.find_last_of(' ');
+		if (split == str.npos)
+			split = str.find_last_of('/');
+		if (split == str.npos)
+			throw std::runtime_error(fmt::format("GetJSONDate: value {} can't split on space or slash.", val->Stringify()));
+		auto day = std::stoi(str.substr(split + 1));
+		auto mon = str.substr(0, 3);
+		StringToLower(mon);
+		static const std::string names[] = { "jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec" };
+		for (int i = 0; i < 12; i++)
+		{
+			if (names[i] == mon)
+				return checkDate(glm::vec2(day, i + 1));
+		}
+	}
+	throw std::runtime_error(fmt::format("GetJSONDate: value {} is not a month/day pair.", val->Stringify()));
+}
+
 void GetAtlas(std::vector<glm::vec4> &ret, const std::string& jsonFile)
 {
 	auto rjs = VFS::ReadJSON(jsonFile);
