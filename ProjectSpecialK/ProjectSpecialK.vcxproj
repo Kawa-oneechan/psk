@@ -218,6 +218,7 @@
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="glm.natvis" />
+    <Natvis Include="imgui.natvis" />
     <Natvis Include="NatvisFile.natvis">
       <SubType>Designer</SubType>
     </Natvis>

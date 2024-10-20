@@ -44,7 +44,7 @@ void DoImGui()
 
 	if (ImGui::Begin("Camera"))
 	{
-		ImGui::Text("Target");
+		ImGui::SeparatorText("Target");
 		{
 			auto& tar = MainCamera.GetTarget();
 			if (ImGui::DragFloat("X", &tar.x, 1.0, -50, 50))
@@ -58,7 +58,7 @@ void DoImGui()
 		if (ImGui::DragFloat("Distance", &MainCamera.GetDistance(), 1.0, -100, 100, "%.3f", ImGuiSliderFlags_Logarithmic))
 			MainCamera.Update();
 
-		ImGui::Text("Angles");
+		ImGui::SeparatorText("Angles");
 		{
 			auto& ang = MainCamera.GetAngles();
 			if (ImGui::DragFloat("Roll", &ang.x, 1.0, -359, 359))
@@ -69,6 +69,7 @@ void DoImGui()
 				MainCamera.Update();
 		}
 
+		ImGui::SeparatorText("Settings");
 		ImGui::BeginDisabled();
 		ImGui::Checkbox("Drum", &MainCamera.Drum);
 		ImGui::EndDisabled();
@@ -112,69 +113,77 @@ void DoImGui()
 	}
 	ImGui::End();
 
+	//TODO: use *current* map.
 	static VillagerP debugVillager = town.Villagers[0];
-	static VillagerP debugAllVillager = villagers[0];
-
 	if (ImGui::Begin("Villagers"))
 	{
-		if (ImGui::BeginTabBar("Villagers"))
+		ImGui::BeginChild("left pane", ImVec2(150, 0), ImGuiChildFlags_Borders | ImGuiChildFlags_ResizeX);
 		{
-			if (ImGui::BeginTabItem("In town"))
+			if (ImGui::BeginListBox("##villagers", ImVec2(0, -ImGui::GetFrameHeightWithSpacing())))
 			{
-				if (ImGui::BeginListBox("##townVillagers", ImVec2(-FLT_MIN, (town.Villagers.size() + 1) * ImGui::GetTextLineHeightWithSpacing())))
+				auto amount = villagers.size();
+				for (int i = 0; i < amount; i++)
 				{
-					auto amount = town.Villagers.size();
-					for (int i = 0; i < amount; i++)
+					const bool selected = (villagers[i] == debugVillager);
+					const bool here = std::find(town.Villagers.begin(), town.Villagers.end(), villagers[i]) != std::end(town.Villagers);
+
+					ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1, 1, here ? 0 : 1, villagers[i]->IsManifest() ? 1 : 0.5f));
+					if (ImGui::Selectable(villagers[i]->Name().c_str(), selected))
 					{
-						const bool selected = (town.Villagers[i] == debugVillager);
-						if (ImGui::Selectable(town.Villagers[i]->Name().c_str(), selected))
-						{
-							debugVillager = town.Villagers[i];
-							debugAllVillager = debugVillager;
-						}
+						debugVillager = villagers[i];
 					}
-					ImGui::EndListBox();
+					ImGui::PopStyleColor(1);
 				}
-
-				if (debugVillager->Icon)
-					ImGui::Image((void*)(uintptr_t)debugVillager->Icon->ID, ImVec2(128, 128), ImVec2(0, 1), ImVec2(1, 0));
-
-				ImGui::Text(debugVillager->ID.c_str());
-
-				ImGui::SliderInt("Face", &debugVillager->face, 0, 15);
-				ImGui::SliderInt("Mouth", &debugVillager->mouth, 0, 8);
-
-				ImGui::Text("Position");
-				auto& tar = debugVillager->Position;
-				ImGui::DragFloat("X", &tar.x, 1.0, -50, 50);
-				ImGui::DragFloat("Y", &tar.y, 1.0, -50, 50);
-				ImGui::DragFloat("Z", &tar.z, 1.0, -100, 100);
-				ImGui::DragFloat("Facing", &debugVillager->Facing, 1.0, -100, 100);
-
-				ImGui::EndTabItem();
+				ImGui::EndListBox();
 			}
-
-			if (ImGui::BeginTabItem("All"))
-			{
-				if (ImGui::BeginListBox("##allVillagers", ImVec2(-FLT_MIN, 12 * ImGui::GetTextLineHeightWithSpacing())))
-				{
-					auto amount = villagers.size();
-					for (int i = 0; i < amount; i++)
-					{
-						const bool selected = (villagers[i] == debugAllVillager);
-						if (ImGui::Selectable(villagers[i]->Name().c_str(), selected))
-						{
-							debugAllVillager = villagers[i];
-						}
-					}
-					ImGui::EndListBox();
-				}
-
-				ImGui::EndTabItem();
-			}
-
-			ImGui::EndTabBar();
 		}
+		ImGui::EndChild();
+
+		ImGui::SameLine();
+
+		ImGui::BeginChild("item view", ImVec2(0, -ImGui::GetFrameHeightWithSpacing()));
+		{
+			ImGui::Text(debugVillager->Name().c_str());
+			ImGui::Separator();
+			
+			const bool here = std::find(town.Villagers.begin(), town.Villagers.end(), debugVillager) != std::end(town.Villagers);
+			
+			if (debugVillager->Icon)
+			{
+				ImGui::Image(debugVillager->Icon->ID, ImVec2(128, 128), ImVec2(0, 1), ImVec2(1, 0));
+				ImGui::SameLine();
+			}
+
+			if (!debugVillager->IsManifest() && ImGui::Button("Manifest"))
+				debugVillager->Manifest();
+			else if (debugVillager->IsManifest() && ImGui::Button("Depart"))
+				debugVillager->Depart();
+			ImGui::SameLine();
+			if (!here && ImGui::Button("Bring in"))
+				town.Villagers.push_back(debugVillager);
+			else if (here && ImGui::Button("Remove"))
+				town.Villagers.erase(std::find(town.Villagers.begin(), town.Villagers.end(), debugVillager));
+
+			ImGui::Text(debugVillager->ID.c_str());
+
+			if (!debugVillager->IsManifest())
+				ImGui::BeginDisabled();
+
+			ImGui::SeparatorText("Animation");
+			ImGui::SliderInt("Face", &debugVillager->face, 0, 15);
+			ImGui::SliderInt("Mouth", &debugVillager->mouth, 0, 8);
+
+			ImGui::SeparatorText("Position");
+			auto& tar = debugVillager->Position;
+			ImGui::DragFloat("X", &tar.x, 1.0, -50, 50);
+			ImGui::DragFloat("Y", &tar.y, 1.0, -50, 50);
+			ImGui::DragFloat("Z", &tar.z, 1.0, -100, 100);
+			ImGui::DragFloat("Facing", &debugVillager->Facing, 1.0, -100, 100);
+
+			if (!debugVillager->IsManifest())
+				ImGui::EndDisabled();
+		}
+		ImGui::EndChild();
 	}
 	ImGui::End();
 

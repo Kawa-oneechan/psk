@@ -5,9 +5,8 @@
 **TODO**: write schemas for all of them, maybe have everything checked against them on load (debug build only).
 
 For now though...
-1. Dates are written as two-number arrays where the *first* item is the day and the *second* item is the month. *This should be consistent!* Perhaps a special date reader could be added that can take `"06-26"` (which is indeed the other way around) and `"Jun 26"` as well as `[ 26, 6 ]`?
+1. Dates are written as two-number arrays where the *first* item is the day and the *second* item is the month. *This should be consistent!* Use `GetJSONDate` to parse both `"06-26"` (which is indeed the other way around) and `"Jun 26"` as well as `[ 26, 6 ]`.
 2. I forgot what I was gonna say here when I finished the dates thing.
-
 
 ## Sampler setups
 

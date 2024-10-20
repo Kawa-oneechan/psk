@@ -77,6 +77,8 @@ public:
 
 	Texture* Icon{ nullptr };
 
+	const bool IsManifest() const { return !(!memory); }
+
 	Villager(JSONObject& value, const std::string& filename = "");
 	std::string Name();
 	std::string Species();
