@@ -21,10 +21,8 @@ For now though...
 | 16 - 19  | 4 - 7   | Accessories 2³                               |        |
 
 ¹: if the model has a muzzle/beak, there are no mouth textures.
-²: uses body textures if `accessoryMapType` is 0.
-³: only if `accessoryMapType` is 3.
-
-Set villager `accessoryMapType` to 0 to use `body`, 1 to load `cap` textures, 2 to load `glass` textures, or 3 to load `glass` and `glassalpha` textures.
+²: uses body textures if `accessoryMapType` is `body`.
+³: only if `accessoryMapType` is `glassalpha`.
 
 ### Player body
 

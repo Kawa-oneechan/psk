@@ -5,9 +5,13 @@ Villager::Villager(JSONObject& value, const std::string& filename) : NameableThi
 	_customModel = value["customModel"] != nullptr && value["customModel"]->IsBool() ? value["customModel"]->AsBool() : false;
 	_isSpecial = value["isSpecial"] != nullptr && value["isSpecial"]->IsBool() ? value["isSpecial"]->AsBool() : false;
 	_customMuzzle = (value["hasMuzzle"] != nullptr) ? value["hasMuzzle"]->AsBool() : false;
-	_customAccessory = (value["customAccessory"] != nullptr) ? value["customAccessory"]->AsBool() : false;
 	_accessoryFixed = (value["accessoryFixed"] != nullptr) ? value["accessoryFixed"]->AsBool() : false;
-	_accessoryMapType = (value["accessoryMapType"] != nullptr) ? value["accessoryMapType"]->AsInteger() : 0;
+
+	_accessoryType = (value["accessoryMapType"] != nullptr) ?
+		StringToEnum<AccessoryType>(value["accessoryMapType"]->AsString(),
+		{ "none", "body", "cap", "glass", "glassalpha" }) :
+		AccessoryType::None;
+	_customAccessory = _accessoryType != AccessoryType::None;
 
 	Textures.fill(nullptr);
 	ClothingTextures.fill(nullptr);
@@ -152,18 +156,18 @@ void Villager::LoadModel()
 			_model->GetMesh("FaceNothing__mBeak").Visible = false;
 		}
 
-		if (_accessoryMapType == 1) //cap
+		if (_accessoryType == AccessoryType::Cap)
 		{
 			Textures[12] = new TextureArray(fmt::format("{}/cap_alb.png", Path));
 			Textures[13] = new TextureArray(fmt::format("{}/cap_nrm.png", Path));
 			Textures[14] = new TextureArray(fmt::format("{}/cap_mix.png", Path));
 		}
-		else if (_accessoryMapType == 2 || _accessoryMapType == 3) //glass
+		else if (_accessoryType == AccessoryType::Glass || _accessoryType == AccessoryType::GlassAlpha)
 		{
 			Textures[12] = new TextureArray(fmt::format("{}/glass_alb.png", Path));
 			Textures[13] = new TextureArray(fmt::format("{}/glass_nrm.png", Path));
 			Textures[14] = new TextureArray(fmt::format("{}/glass_mix.png", Path));
-			if (_accessoryMapType == 3) //glass with alpha
+			if (_accessoryType == AccessoryType::GlassAlpha)
 			{
 				Textures[16] = new TextureArray(fmt::format("{}/glassalpha_alb.png", Path));
 				Textures[17] = new TextureArray(fmt::format("{}/glassalpha_nrm.png", Path));
@@ -294,7 +298,7 @@ void Villager::Draw(double)
 
 	if (_customAccessory && _accessoryModel)
 	{
-		if (_accessoryMapType == 0) //body
+		if (_accessoryType == AccessoryType::Body)
 		{
 			for (auto i = 0; i < 3; i++)
 				_accessoryModel->Textures[i] = Textures[i];
@@ -303,7 +307,7 @@ void Villager::Draw(double)
 		{
 			for (auto i = 0; i < 3; i++)
 				_accessoryModel->Textures[i] = Textures[12 + i];
-			if (_accessoryMapType == 3) //glass with alpha
+			if (_accessoryType == AccessoryType::GlassAlpha)
 			{
 				for (auto i = 0; i < 4; i++)
 					_accessoryModel->Textures[4 + i] = Textures[16 + i];
@@ -347,8 +351,8 @@ void Villager::DeleteAllThings()
 {
 	if (HeldTool && HeldTool->Temporary)
 		HeldTool = nullptr;
-	if (Hat && Hat->Temporary)
-		Hat = nullptr;
+	if (Cap && Cap->Temporary)
+		Cap = nullptr;
 	if (Glasses && Glasses->Temporary)
 		Glasses = nullptr;
 	if (Mask && Mask->Temporary)

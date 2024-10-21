@@ -34,7 +34,11 @@ private:
 	bool _isSpecial{ false };
 	Gender gender{ Gender::BEnby };
 	unsigned int _birthday[2]{ 1, 1 };
-	unsigned int _accessoryMapType{ 0 };
+	enum class AccessoryType
+	{
+		None, Body, Cap, Glass, GlassAlpha
+	};
+	AccessoryType _accessoryType{ AccessoryType::None };
 
 	static const int _maxFurnitureItems = 8 * 4;
 	static const int _maxClothes = 8 * 3;
@@ -75,7 +79,7 @@ public:
 	std::string rainHatID;
 
 	InventoryItemP HeldTool{ nullptr };
-	InventoryItemP Hat{ nullptr };
+	InventoryItemP Cap{ nullptr };
 	InventoryItemP Glasses{ nullptr };
 	InventoryItemP Mask{ nullptr };
 	InventoryItemP Clothing{ nullptr };
