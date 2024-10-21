@@ -1,6 +1,8 @@
 #include "PanelLayout.h"
 #include "InputsMap.h"
 
+bool debugPanelLayoutPolygons = false;
+
 PanelLayout::PanelLayout(JSONValue* source)
 {
 	auto src = source->AsObject();
@@ -231,15 +233,25 @@ void PanelLayout::Draw(float dt)
 			auto& texture = *textures[panel->Texture];
 			auto frame = texture[panel->Frame];
 			auto shader = spriteShader;
+			auto finalPos = Position + parentPos + panel->Position;
 
 			Sprite::DrawSprite(
 				shader, texture,
-				(Position + parentPos + panel->Position) * scale,
+				finalPos * scale,
 				glm::vec2(frame.z, frame.w) * scale,
 				frame,
 				0.0f,
 				color
 			);
+
+			if (debugPanelLayoutPolygons && panel->Polygon != -1)
+			{
+				auto poly = polygons[panel->Polygon];
+				const auto plen = poly.size();
+				const auto size = glm::vec2(frame.z, frame.w);
+				for (auto i = 0; i < plen; i++)
+					Sprite::DrawLine((poly[i] * size) + finalPos, (poly[(i + 1) % plen] * size) + finalPos, glm::vec4(1));
+			}
 		}
 		else if (panel->Type == PanelType::Text)
 		{

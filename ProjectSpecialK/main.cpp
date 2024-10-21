@@ -492,6 +492,7 @@ int main(int, char**)
 	modelShader->Set("mixTexture", 2);
 	modelShader->Set("opacityTexture", 3);
 
+	/*
 	auto bob = Database::Find<Villager>("ac:cat00", villagers);
 	bob->defaultClothingID = "acnh:djkklogotee/neonpink"; //-V519 this is on purpose daijoubu
 	bob->Manifest();
@@ -500,6 +501,7 @@ int main(int, char**)
 	cat01->Manifest();
 	town.Villagers.push_back(cat01);
 	//town.Villagers.push_back(Database::Find<Villager>("ac:cat01", villagers));
+	*/
 
 	if (!LoadLights("lights/initial.json").empty())
 	{

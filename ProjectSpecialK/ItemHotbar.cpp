@@ -7,13 +7,13 @@ ItemHotbar::ItemHotbar()
 	for (int i = 0; i < 9; i++)
 		RegisterItem(i, -1);
 
-#ifdef DEBUG
+//#ifdef DEBUG
 	//For testing only until we get further.
 	thePlayer.GiveItem(std::make_shared<InventoryItem>("acnh:shovel"));
 	thePlayer.GiveItem(std::make_shared<InventoryItem>("psk:toolfallback"));
 	RegisterItem(0, 0);
 	RegisterItem(2, 1);
-#endif
+//#endif
 
 	Update();
 }

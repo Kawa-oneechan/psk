@@ -5,7 +5,7 @@
 #include "support/ImGUI/imgui_impl_glfw.h"
 #include "support/ImGUI/imgui_impl_opengl3.h"
 
-bool debuggerEnabled{ true };
+bool debuggerEnabled{ false };
 
 extern float uiTime, glTime;
 extern GLFWwindow* window;
@@ -165,7 +165,11 @@ void DoImGui()
 			if (!here && ImGui::Button("Bring in"))
 				town.Villagers.push_back(debugVillager);
 			else if (here && ImGui::Button("Remove"))
-				town.Villagers.erase(std::find(town.Villagers.begin(), town.Villagers.end(), debugVillager));
+			{
+				auto here = std::find(town.Villagers.begin(), town.Villagers.end(), debugVillager);
+				if (here != town.Villagers.end())
+					town.Villagers.erase(here);
+			}
 
 			ImGui::Text(debugVillager->ID.c_str());
 

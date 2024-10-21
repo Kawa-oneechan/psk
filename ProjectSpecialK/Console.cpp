@@ -7,6 +7,7 @@
 #include "PanelLayout.h"
 
 extern float timeScale;
+extern bool debugPanelLayoutPolygons;
 extern bool debuggerEnabled;
 extern bool cheatsEnabled;
 
@@ -35,6 +36,7 @@ Console::Console()
 	RegisterCVar("playername", CVar::Type::String, &thePlayer.Name);
 	RegisterCVar("playerbells", CVar::Type::Int, &thePlayer.Bells, true);
 	RegisterCVar("sv_cheats", CVar::Type::Bool, &cheatsEnabled);
+	RegisterCVar("r_polygons", CVar::Type::Bool, &debugPanelLayoutPolygons);
 #ifdef DEBUG
 	RegisterCVar("debugger", CVar::Type::Bool, &debuggerEnabled, true);
 #endif
