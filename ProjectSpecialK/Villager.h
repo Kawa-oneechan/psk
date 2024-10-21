@@ -24,11 +24,13 @@ using VillagerMemoryP = std::shared_ptr<VillagerMemory>;
 class Villager : public NameableThing, Tickable
 {
 private:
-	ModelP _model, _clothingModel;
+	ModelP _model, _clothingModel, _accessoryModel;
 
 	SpeciesP _species{ nullptr };
 	bool _customModel{ false };
 	bool _customMuzzle{ false };
+	bool _customAccessory{ false };
+	bool _accessoryFixed{ false };
 	bool _isSpecial{ false };
 	Gender gender{ Gender::BEnby };
 	unsigned int _birthday[2]{ 1, 1 };

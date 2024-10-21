@@ -5,6 +5,8 @@ Villager::Villager(JSONObject& value, const std::string& filename) : NameableThi
 	_customModel = value["customModel"] != nullptr && value["customModel"]->IsBool() ? value["customModel"]->AsBool() : false;
 	_isSpecial = value["isSpecial"] != nullptr && value["isSpecial"]->IsBool() ? value["isSpecial"]->AsBool() : false;
 	_customMuzzle = (value["hasMuzzle"] != nullptr) ? value["hasMuzzle"]->AsBool() : false;
+	_customAccessory = (value["customAccessory"] != nullptr) ? value["customAccessory"]->AsBool() : false;
+	_accessoryFixed = (value["accessoryFixed"] != nullptr) ? value["accessoryFixed"]->AsBool() : false;
 	
 	Textures.fill(nullptr);
 	ClothingTextures.fill(nullptr);
@@ -113,12 +115,12 @@ void Villager::LoadModel()
 	if (!_model)
 	{
 		if (_customModel)
-		{
-		}
+			_model = std::make_shared<::Model>(fmt::format("{}/model.fbx", Path));
 		else
-		{
 			_model = _species->Model();
-		}
+
+		if (_customAccessory)
+			_accessoryModel = std::make_shared<::Model>(fmt::format("{}/accessory.fbx", Path));
 	}
 
 	if (Textures[0] == nullptr)
@@ -266,6 +268,13 @@ void Villager::Draw(double)
 	_model->TexArrayLayers[3] = mouth;
 	
 	_model->Draw(modelShader, Position, Facing);
+
+	if (_customAccessory && _accessoryModel)
+	{
+		for (auto i = 0; i < 10; i++)
+			_accessoryModel->Textures[i] = _model->Textures[i];
+		_accessoryModel->Draw(modelShader, Position, Facing);
+	}
 
 	if (_clothingModel && Clothing)
 	{

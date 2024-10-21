@@ -5,7 +5,7 @@
 #include "support/ImGUI/imgui_impl_glfw.h"
 #include "support/ImGUI/imgui_impl_opengl3.h"
 
-bool debuggerEnabled{ false };
+bool debuggerEnabled{ true };
 
 extern float uiTime, glTime;
 extern GLFWwindow* window;
@@ -114,7 +114,7 @@ void DoImGui()
 	ImGui::End();
 
 	//TODO: use *current* map.
-	static VillagerP debugVillager = town.Villagers[0];
+	static VillagerP debugVillager = villagers[0];
 	if (ImGui::Begin("Villagers"))
 	{
 		ImGui::BeginChild("left pane", ImVec2(150, 0), ImGuiChildFlags_Borders | ImGuiChildFlags_ResizeX);
