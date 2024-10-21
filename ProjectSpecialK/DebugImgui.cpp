@@ -124,10 +124,13 @@ void DoImGui()
 				auto amount = villagers.size();
 				for (int i = 0; i < amount; i++)
 				{
+					if (villagers[i]->IsSpecial())
+						continue;
+
 					const bool selected = (villagers[i] == debugVillager);
 					const bool here = std::find(town.Villagers.begin(), town.Villagers.end(), villagers[i]) != std::end(town.Villagers);
 
-					ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1, 1, here ? 0 : 1, villagers[i]->IsManifest() ? 1 : 0.5f));
+					ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 1.0f, here ? 0.0f : 1.0f, villagers[i]->IsManifest() ? 1.0f : 0.5f));
 					if (ImGui::Selectable(villagers[i]->Name().c_str(), selected))
 					{
 						debugVillager = villagers[i];
@@ -168,6 +171,9 @@ void DoImGui()
 
 			if (!debugVillager->IsManifest())
 				ImGui::BeginDisabled();
+
+			if (ImGui::Button("Reload textures"))
+				debugVillager->ReloadTextures();
 
 			ImGui::SeparatorText("Animation");
 			ImGui::SliderInt("Face", &debugVillager->face, 0, 15);

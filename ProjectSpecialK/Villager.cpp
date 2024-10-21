@@ -4,6 +4,7 @@ Villager::Villager(JSONObject& value, const std::string& filename) : NameableThi
 {
 	_customModel = value["customModel"] != nullptr && value["customModel"]->IsBool() ? value["customModel"]->AsBool() : false;
 	_isSpecial = value["isSpecial"] != nullptr && value["isSpecial"]->IsBool() ? value["isSpecial"]->AsBool() : false;
+	_customMuzzle = (value["hasMuzzle"] != nullptr) ? value["hasMuzzle"]->AsBool() : false;
 	
 	Textures.fill(nullptr);
 	ClothingTextures.fill(nullptr);
@@ -131,7 +132,7 @@ void Villager::LoadModel()
 		Textures[6] = new TextureArray(fmt::format("{}/eye*_alb.png", Path));
 		Textures[7] = new TextureArray(fmt::format("{}/eye*_nrm.png", Path));
 		Textures[8] = new TextureArray(fmt::format("{}/eye*_mix.png", Path));
-		if (!_species->ModeledMuzzle)
+		if ((_customModel && !_customMuzzle) || !_species->ModeledMuzzle)
 		{
 			Textures[9] = new TextureArray(fmt::format("{}/mouth*_alb.png", Path));
 			Textures[10] = new TextureArray(fmt::format("{}/mouth*_nrm.png", Path));
@@ -173,6 +174,23 @@ ModelP Villager::Model()
 		LoadModel();
 	return _model;
 }
+
+#ifdef DEBUG
+void Villager::ReloadTextures()
+{
+	for (int i = 0; i < Textures.size(); i++)
+	{
+		if (Textures[i] != nullptr)
+		{
+			if (Textures[i]->height >= 0)
+				delete Textures[i];
+			Textures[i] = nullptr;
+		}
+	}
+
+	LoadModel();
+}
+#endif
 
 std::string Villager::Birthday()
 {
@@ -301,8 +319,20 @@ void Villager::Depart()
 		delete Icon;
 		Icon = nullptr;
 	}
+	for (int i = 0; i < Textures.size(); i++)
+	{
+		if (Textures[i] != nullptr)
+		{
+			if (Textures[i]->height >= 0)
+				delete Textures[i];
+			Textures[i] = nullptr;
+		}
+	}
+	_model = nullptr;
 
 	DeleteAllThings();
+
+
 
 	JSONObject json;
 	Serialize(json);

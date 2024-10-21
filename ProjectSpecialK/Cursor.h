@@ -11,6 +11,7 @@ private:
 	glm::vec4 frame;
 	glm::vec2 size;
 	float scale;
+	bool rotate{ false };
 
 public:
 	Cursor();

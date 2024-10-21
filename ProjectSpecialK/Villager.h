@@ -28,6 +28,7 @@ private:
 
 	SpeciesP _species{ nullptr };
 	bool _customModel{ false };
+	bool _customMuzzle{ false };
 	bool _isSpecial{ false };
 	Gender gender{ Gender::BEnby };
 	unsigned int _birthday[2]{ 1, 1 };
@@ -49,6 +50,7 @@ private:
 public:
 #ifdef DEBUG
 	int face{ 0 }, mouth{ 0 };
+	void ReloadTextures();
 #endif
 
 	glm::vec3 Position { 0 };
