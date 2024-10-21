@@ -7,7 +7,8 @@ Villager::Villager(JSONObject& value, const std::string& filename) : NameableThi
 	_customMuzzle = (value["hasMuzzle"] != nullptr) ? value["hasMuzzle"]->AsBool() : false;
 	_customAccessory = (value["customAccessory"] != nullptr) ? value["customAccessory"]->AsBool() : false;
 	_accessoryFixed = (value["accessoryFixed"] != nullptr) ? value["accessoryFixed"]->AsBool() : false;
-	
+	_accessoryMapType = (value["accessoryMapType"] != nullptr) ? value["accessoryMapType"]->AsInteger() : 0;
+
 	Textures.fill(nullptr);
 	ClothingTextures.fill(nullptr);
 
@@ -150,7 +151,26 @@ void Villager::LoadModel()
 			_model->GetMesh("FaceGood__mBeak").Visible = true;
 			_model->GetMesh("FaceNothing__mBeak").Visible = false;
 		}
-		//TODO: detect and load accessories, which take their own sub-model.
+
+		if (_accessoryMapType == 1) //cap
+		{
+			Textures[12] = new TextureArray(fmt::format("{}/cap_alb.png", Path));
+			Textures[13] = new TextureArray(fmt::format("{}/cap_nrm.png", Path));
+			Textures[14] = new TextureArray(fmt::format("{}/cap_mix.png", Path));
+		}
+		else if (_accessoryMapType == 2 || _accessoryMapType == 3) //glass
+		{
+			Textures[12] = new TextureArray(fmt::format("{}/glass_alb.png", Path));
+			Textures[13] = new TextureArray(fmt::format("{}/glass_nrm.png", Path));
+			Textures[14] = new TextureArray(fmt::format("{}/glass_mix.png", Path));
+			if (_accessoryMapType == 3) //glass with alpha
+			{
+				Textures[16] = new TextureArray(fmt::format("{}/glassalpha_alb.png", Path));
+				Textures[17] = new TextureArray(fmt::format("{}/glassalpha_nrm.png", Path));
+				Textures[18] = new TextureArray(fmt::format("{}/glassalpha_mix.png", Path));
+				Textures[19] = new TextureArray(fmt::format("{}/glassalpha_op.png", Path));
+			}
+		}
 	}
 
 	if (!_clothingModel && Clothing)
@@ -254,12 +274,15 @@ void Villager::Draw(double)
 
 	modelShader->Use();
 
+	//Body/capvis
 	_model->Textures[0] = Textures[0];
 	_model->Textures[1] = Textures[1];
 	_model->Textures[2] = Textures[2];
+	//Eyes
 	_model->Textures[4] = Textures[6];
 	_model->Textures[5] = Textures[7];
 	_model->Textures[6] = Textures[8];
+	//Mouth
 	_model->Textures[8] = Textures[9];
 	_model->Textures[9] = Textures[10];
 	_model->Textures[10] = Textures[11];
@@ -271,8 +294,21 @@ void Villager::Draw(double)
 
 	if (_customAccessory && _accessoryModel)
 	{
-		for (auto i = 0; i < 10; i++)
-			_accessoryModel->Textures[i] = _model->Textures[i];
+		if (_accessoryMapType == 0) //body
+		{
+			for (auto i = 0; i < 3; i++)
+				_accessoryModel->Textures[i] = Textures[i];
+		}
+		else
+		{
+			for (auto i = 0; i < 3; i++)
+				_accessoryModel->Textures[i] = Textures[12 + i];
+			if (_accessoryMapType == 3) //glass with alpha
+			{
+				for (auto i = 0; i < 4; i++)
+					_accessoryModel->Textures[4 + i] = Textures[16 + i];
+			}
+		}
 		_accessoryModel->Draw(modelShader, Position, Facing);
 	}
 

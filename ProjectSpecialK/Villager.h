@@ -34,6 +34,7 @@ private:
 	bool _isSpecial{ false };
 	Gender gender{ Gender::BEnby };
 	unsigned int _birthday[2]{ 1, 1 };
+	unsigned int _accessoryMapType{ 0 };
 
 	static const int _maxFurnitureItems = 8 * 4;
 	static const int _maxClothes = 8 * 3;

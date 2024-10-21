@@ -12,15 +12,19 @@ For now though...
 
 ### Villager body
 
-| Source  | Sampler | Use                                          | Layers |
-| ------- | ------- | -------------------------------------------- | ------ |
-| 0 - 2   | 0 - 2   | Body (albedo, mix, normal)                   |        |
-| 6 - 8   | 4 - 6   | Eyes                                         | 16     |
-| 9 - 11  | 8 - 10  | Mouth                                        | 9¹     |
-| 12 - 15 | Not yet | Accessories 1 (albedo, mix, normal, opacity) |        |
-| 16 - 19 | Not yet | Accessories 2                                |        |
+| Source   | Sampler | Use                                          | Layers |
+| -------- | ------- | -------------------------------------------- | ------ |
+| 0 - 2    | 0 - 2   | Body (albedo, mix, normal)                   |        |
+| 6 - 8    | 4 - 6   | Eyes                                         | 16     |
+| 9 - 11   | 8 - 10  | Mouth                                        | 9¹     |
+| 12 - 15² | 0 - 3   | Accessories 1 (albedo, mix, normal, opacity) |        |
+| 16 - 19  | 4 - 7   | Accessories 2³                               |        |
 
 ¹: if the model has a muzzle/beak, there are no mouth textures.
+²: uses body textures if `accessoryMapType` is 0.
+³: only if `accessoryMapType` is 3.
+
+Set villager `accessoryMapType` to 0 to use `body`, 1 to load `cap` textures, 2 to load `glass` textures, or 3 to load `glass` and `glassalpha` textures.
 
 ### Player body
 
