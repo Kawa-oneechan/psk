@@ -1,27 +1,27 @@
 {
-	"id": "psk:wol00",
+	"id": "psk:wol03",
 	"name": {
-		"en": "Retro"
+		"en": "Moira"
 	},
 	"species": "wol",
-	"personality": "smug",
+	"personality": "snooty",
 	"personalitySubtype": 0,
-	"gender": "enby-b",
-	"attraction": "boys",
-	"birthday": [ 28, 10 ],
-	"hobby": "education",
-	"colors": [ "white", "black" ],
+	"gender": "girl",
+	"attraction": "both",
+	"birthday": [ 13, 8 ],
+	"hobby": "music",
+	"colors": [ "green", "brown" ],
 	"nameTag": [ "#FFFFFF", "#848484" ],
 	"catchphrase": {
-		"en": "fuzzies"
+		"en": "yap"
 	},
 	"clothing": {
 		"default": "acnh:retrosweater/purple",
 		"rain": [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
 	},
 	"umbrella": "acnh:redumbrella",
-	"photo": "psk:retrosphoto",
-	"poster": "psk:retrosposter",
+	"photo": "psk:moirasphoto",
+	"poster": "psk:moirasposter",
 	"house": {
 		"walls": "acnh:commonwall",
 		"floor": "acnh:commonflooring",

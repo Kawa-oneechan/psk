@@ -1,27 +1,27 @@
 {
-	"id": "psk:wol00",
+	"id": "psk:wol02",
 	"name": {
-		"en": "Retro"
+		"en": "Ismène"
 	},
 	"species": "wol",
-	"personality": "smug",
+	"personality": "jock",
 	"personalitySubtype": 0,
-	"gender": "enby-b",
+	"gender": "boy",
 	"attraction": "boys",
-	"birthday": [ 28, 10 ],
-	"hobby": "education",
-	"colors": [ "white", "black" ],
+	"birthday": [ 13, 8 ],
+	"hobby": "fitness",
+	"colors": [ "blue", "purple" ],
 	"nameTag": [ "#FFFFFF", "#848484" ],
 	"catchphrase": {
-		"en": "fuzzies"
+		"en": "I mean"
 	},
 	"clothing": {
 		"default": "acnh:retrosweater/purple",
 		"rain": [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
 	},
 	"umbrella": "acnh:redumbrella",
-	"photo": "psk:retrosphoto",
-	"poster": "psk:retrosposter",
+	"photo": "psk:ismenesphoto",
+	"poster": "psk:ismenesposter",
 	"house": {
 		"walls": "acnh:commonwall",
 		"floor": "acnh:commonflooring",

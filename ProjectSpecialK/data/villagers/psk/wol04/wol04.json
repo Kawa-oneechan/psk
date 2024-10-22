@@ -1,27 +1,27 @@
 {
-	"id": "psk:wol00",
+	"id": "psk:wol04",
 	"name": {
-		"en": "Retro"
+		"en": "Coston"
 	},
 	"species": "wol",
-	"personality": "smug",
+	"personality": "snooty",
 	"personalitySubtype": 0,
-	"gender": "enby-b",
-	"attraction": "boys",
-	"birthday": [ 28, 10 ],
+	"gender": "boy",
+	"attraction": "girls",
+	"birthday": [ 11, 3 ],
 	"hobby": "education",
-	"colors": [ "white", "black" ],
+	"colors": [ "green", "gray" ],
 	"nameTag": [ "#FFFFFF", "#848484" ],
 	"catchphrase": {
-		"en": "fuzzies"
+		"en": "hm"
 	},
 	"clothing": {
 		"default": "acnh:retrosweater/purple",
 		"rain": [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
 	},
 	"umbrella": "acnh:redumbrella",
-	"photo": "psk:retrosphoto",
-	"poster": "psk:retrosposter",
+	"photo": "psk:costonsphoto",
+	"poster": "psk:costonsposter",
 	"house": {
 		"walls": "acnh:commonwall",
 		"floor": "acnh:commonflooring",

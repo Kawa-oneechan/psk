@@ -1,0 +1,32 @@
+{
+	"id": "psk:wol05",
+	"name": {
+		"en": "Auya"
+	},
+	"species": "wol",
+	"personality": "uchi",
+	"personalitySubtype": 0,
+	"gender": "girl",
+	"attraction": "both",
+	"birthday": [ 13, 7 ],
+	"hobby": "nature",
+	"colors": [ "orange", "green" ],
+	"nameTag": [ "#B3998B", "#524740" ],
+	"catchphrase": {
+		"en": "taya"
+	},
+	"clothing": {
+		"default": "acnh:tropicalcutandsewtank/orange",
+		"rain": [ "acnh:raincoat/green", "acnh:rainhat/green" ]
+	},
+	"umbrella": "acnh:greenumbrella",
+	"photo": "psk:auyasphoto",
+	"poster": "psk:auyasposter",
+	"house": {
+		"walls": "acnh:cabinwall",
+		"floor": "acnh:modernwoodflooring",
+		"music": "acnh:silence",
+		"items": [
+		]
+	}
+}

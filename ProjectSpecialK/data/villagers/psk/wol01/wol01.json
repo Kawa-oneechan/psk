@@ -1,27 +1,27 @@
 {
-	"id": "psk:wol00",
+	"id": "psk:wol01",
 	"name": {
-		"en": "Retro"
+		"en": "Santiago"
 	},
 	"species": "wol",
 	"personality": "smug",
 	"personalitySubtype": 0,
-	"gender": "enby-b",
-	"attraction": "boys",
-	"birthday": [ 28, 10 ],
-	"hobby": "education",
-	"colors": [ "white", "black" ],
+	"gender": "boy",
+	"attraction": "both",
+	"birthday": [ 13, 10 ],
+	"hobby": "play",
+	"colors": [ "beige", "brown" ],
 	"nameTag": [ "#FFFFFF", "#848484" ],
 	"catchphrase": {
-		"en": "fuzzies"
+		"en": "grrruff"
 	},
 	"clothing": {
 		"default": "acnh:retrosweater/purple",
 		"rain": [ "acnh:raincoat/blue", "acnh:rainhat/blue" ]
 	},
 	"umbrella": "acnh:redumbrella",
-	"photo": "psk:retrosphoto",
-	"poster": "psk:retrosposter",
+	"photo": "psk:santiagosphoto",
+	"poster": "psk:santiagosposter",
 	"house": {
 		"walls": "acnh:commonwall",
 		"floor": "acnh:commonflooring",
