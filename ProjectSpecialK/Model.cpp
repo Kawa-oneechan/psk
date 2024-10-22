@@ -157,10 +157,12 @@ Model::Model(const std::string& modelPath) : file(modelPath)
 	if (!scene)
 		FatalError(fmt::format("Could not load scene {}: {}", modelPath, errors.description.data));
 
+	conprint(5, "Loading {}\n-------------------------------", modelPath);
+
 	conprint(5, "Materials:");
 	for (auto m : scene->materials)
 	{
-		conprint(5, "* {}", m->name.data);
+		conprint(0, "* {}", m->name.data);
 	}
 
 	conprint(5, "Meshes:");
@@ -181,7 +183,7 @@ Model::Model(const std::string& modelPath) : file(modelPath)
 					if (it.first == m1)
 					{
 						m.Texture = it.second;
-						conprint(5, "* {} ({} > {})", node->name.data, it.first, it.second);
+						conprint(0, "* {} ({} > {})", node->name.data, it.first, it.second);
 						foundIt = true;
 						break;
 					}
@@ -189,7 +191,7 @@ Model::Model(const std::string& modelPath) : file(modelPath)
 				if (!foundIt)
 				{
 					m.Texture = matCt;
-					conprint(5, "* {} (#{})", node->name.data, matCt);
+					conprint(0, "* {} (#{})", node->name.data, matCt);
 					matCt++;
 				}
 			}
