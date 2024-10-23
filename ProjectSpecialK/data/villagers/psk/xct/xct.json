@@ -1,13 +1,14 @@
 {
 	"id": "psk:xct",
-	"isSpecial": true,
-	"customModel": true,
 	"name": {
 		"en": "Kawa",
 		"ja": "かワ",
 		"ko": "카와",
 		"zh": "卡瓦"
 	},
+	"isSpecial": true,
+	"customModel": false,
+	"species": "cat",
 	"gender": "boy",
 	"birthday": [ 26, 6 ],
 	"catchphrase": "myeh",
