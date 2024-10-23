@@ -153,6 +153,7 @@ void DoImGui()
 			
 			if (debugVillager->Icon)
 			{
+				debugVillager->Icon->Use();
 				ImGui::Image(debugVillager->Icon->ID, ImVec2(128, 128), ImVec2(0, 1), ImVec2(1, 0));
 				ImGui::SameLine();
 			}

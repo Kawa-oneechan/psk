@@ -72,6 +72,7 @@ Texture::Texture(const std::string& texturePath, int repeat, int filter) : file(
 		{
 			conprint(3, "glGenTextures indicates we're threading. Delaying \"{}\"...", texturePath);
 			delayed = true;
+			cache[file] = std::make_tuple(this, 1);
 			return;
 		}
 	}
