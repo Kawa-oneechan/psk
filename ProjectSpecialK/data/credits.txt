@@ -7,7 +7,7 @@ Letrune
 
 #Translations
 Hungarian:	Letrune
-Dutch:		Kawa
+Dutch:	Kawa
 
 #Ideas
 Andrea le Phrog	beargirlstink
@@ -63,6 +63,10 @@ Leo Gallatin
 Danil S
 Bastiaan Olij
 Serge Brunier
+
+#Special thanks
+Andrea le Phrog	Captain Jistuce
+mikailborg	Screwtape
 
 #Tooling
 Heaven Tool by rafacasari
