@@ -41,15 +41,15 @@ namespace Sprite
 	static int spriteFlipY[200];
 	static int instanceCursor = 0;
 
-	typedef struct
+	struct font
 	{
 		std::string file;
 		int size;
 		bool alignToGrid;
 		int puaSource;
-	} font;
+	};
 
-	typedef struct
+	struct letterToDraw
 	{
 		unsigned int codepoint;
 		int font;
@@ -58,7 +58,7 @@ namespace Sprite
 		glm::vec2 position;
 		glm::vec4 srcRect;
 		glm::vec4 color;
-	} letterToDraw;
+	};
 
 	static stbtt_bakedchar* cdata{ nullptr };
 	static Texture** fontTextures;

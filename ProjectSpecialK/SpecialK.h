@@ -59,7 +59,9 @@ extern Texture* whiteRect;
 
 extern sol::state Sol;
 
-typedef unsigned int rune;
+using rune = unsigned int;
+using hash = unsigned int;
+
 constexpr int MaxLights = 4;
 extern glm::vec4 lightPos[MaxLights];
 extern glm::vec4 lightCol[MaxLights];
@@ -122,9 +124,9 @@ extern std::string Qualify(const std::string& id, const std::string& ns);
 extern std::string UnQualify(const std::string& id);
 
 //Returns the CRC32 hash for the given text.
-extern unsigned int GetCRC(const std::string& text);
+extern hash GetCRC(const std::string& text);
 //Returns the CRC32 hash for the given data.
-extern unsigned int GetCRC(unsigned char *buffer, int len);
+extern hash GetCRC(unsigned char *buffer, int len);
 
 namespace UI
 {

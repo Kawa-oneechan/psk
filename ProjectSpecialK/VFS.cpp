@@ -26,13 +26,13 @@ namespace JSONPatch
 
 #ifdef _WIN32
 extern "C" {
-	typedef struct _GUID
+	using GUID = struct _GUID
 	{
 		unsigned long  Data1;
 		unsigned short Data2;
 		unsigned short Data3;
 		unsigned char  Data4[8];
-	} GUID;
+	};
 	const GUID FOLDERID_SavedGames = { 0x4c5c32ff, 0xbb9d, 0x43b0, 0xb5, 0xb4, 0x2d, 0x72, 0xe5, 0x4e, 0xaa, 0xa4 };
 	int __stdcall SHGetKnownFolderPath(_In_ const GUID* rfid, _In_ unsigned long dwFlags, _In_opt_ void* hToken, _Out_ wchar_t** ppszPath);
 	int __stdcall WideCharToMultiByte(_In_ unsigned int CodePage, _In_ unsigned long dwFlags, const wchar_t* lpWideCharStr, _In_ int cchWideChar, char* lpMultiByteStr, _In_ int cbMultiByte, _In_opt_ char* lpDefaultChar, _Out_opt_ bool* lpUsedDefaultChar);

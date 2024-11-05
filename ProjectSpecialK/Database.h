@@ -34,7 +34,7 @@ namespace Database
 
 	//Find a database entry by CRC32 hash.
 	template<typename T>
-	std::shared_ptr<T> Find(unsigned int hash, std::vector<std::shared_ptr<T>>& source)
+	std::shared_ptr<T> Find(hash hash, std::vector<std::shared_ptr<T>>& source)
 	{
 		auto it = std::find_if(source.begin(), source.end(), [&](std::shared_ptr<T> v)
 		{

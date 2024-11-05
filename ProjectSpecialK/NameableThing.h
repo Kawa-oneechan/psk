@@ -2,6 +2,8 @@
 
 #include "support/JSON/JSON.h"
 
+using hash = unsigned int;
+
 class NameableThing
 {
 public:
@@ -9,7 +11,7 @@ public:
 	std::string RefName;
 	std::string EnName;
 	std::string Path; //To locate specific stuff like models, textures, sounds...
-	unsigned int Hash;
+	hash Hash;
 	NameableThing(JSONObject& value, const std::string& filename = "");
 	NameableThing() = default;
 	std::string Name();

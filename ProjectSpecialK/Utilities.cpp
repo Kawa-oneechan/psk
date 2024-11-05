@@ -601,7 +601,7 @@ unsigned char* ScaleImage(unsigned char* original, int origWidth, int origHeight
 
 extern unsigned int crcLut[256];
 
-unsigned int GetCRC(const std::string& text)
+hash GetCRC(const std::string& text)
 {
 	unsigned int crc = 0xFFFFFFFFL;
 
@@ -611,7 +611,7 @@ unsigned int GetCRC(const std::string& text)
 	return crc ^ 0xFFFFFFFFL;
 }
 
-unsigned int GetCRC(unsigned char *buffer, int len)
+hash GetCRC(unsigned char *buffer, int len)
 {
 	unsigned int crc = 0xFFFFFFFFL;
 

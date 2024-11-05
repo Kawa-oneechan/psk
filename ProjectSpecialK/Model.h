@@ -25,7 +25,7 @@ class Model
 	public:
 		int Texture;
 		bool Visible;
-		unsigned int Hash;
+		hash Hash;
 
 		Mesh(ufbx_mesh* mesh);
 		const void Draw();
