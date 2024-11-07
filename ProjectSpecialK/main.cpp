@@ -16,6 +16,7 @@
 #include "ItemHotbar.h"
 #include "Town.h"
 #include "MusicManager.h"
+#include "Framebuffer.h"
 
 #include <fstream>
 
@@ -465,7 +466,8 @@ int main(int, char**)
 		Inputs.Keys[i].Name = GetKeyName(Inputs.Keys[i].ScanCode);
 
 	tickables.push_back(&musicManager);
-	tickables.push_back(new Background("discobg2.png"));
+	auto background = Background("discobg2.png");
+	//tickables.push_back(new Background("discobg2.png"));
 	//tickables.push_back(new DoomMenu());
 	//auto hotbar = new PanelLayout(UI::json["hotbar"]);
 	//tickables.push_back(hotbar);
@@ -512,6 +514,8 @@ int main(int, char**)
 		MainCamera.Set(glm::vec3(0, 0, -6), glm::vec3(0, 110, 0), 60);
 	}
 
+	auto frameBuffer = Framebuffer("shaders/framebuffer.fs", ScreenWidth, ScreenHeight);
+
 #ifdef DEBUG
 	auto startingTime = std::chrono::high_resolution_clock::now();
 #endif
@@ -554,11 +558,9 @@ int main(int, char**)
 		startingTime = endingTime;
 #endif
 
-		for (const auto& t : tickables)
-			t->Draw(dt * timeScale);
-
-		Sprite::FlushBatch();
-		glClear(GL_DEPTH_BUFFER_BIT);
+		frameBuffer.Use();
+		glClearColor(0.2f, 0.3f, 0.3f, 0.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glEnable(GL_DEPTH_TEST);
 		glPolygonMode(GL_FRONT_AND_BACK, wireframe ? GL_LINE : GL_FILL);
 		modelShader->Use();
@@ -577,6 +579,12 @@ int main(int, char**)
 			v->Draw(dt * timeScale);
 		glDisable(GL_DEPTH_TEST);
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		frameBuffer.Drop();
+		background.Draw(dt * timeScale);
+		frameBuffer.Draw();
+
+		for (const auto& t : tickables)
+			t->Draw(dt * timeScale);
 
 		console->Draw(dt);
 		Sprite::FlushBatch();

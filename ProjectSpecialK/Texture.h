@@ -26,6 +26,7 @@ public:
 	virtual void Use(int slot);
 
 	void SetRepeat(int newRepeat);
+	void SetFilter(int newFilter);
 
 	glm::vec4 operator[](size_t i) const { return (atlas.empty() || i >= atlas.size()) ? atlas[0] : atlas[i]; }
 
@@ -50,8 +51,6 @@ public:
 	virtual ~TextureArray();
 	void Use() override;
 	void Use(int slot) override;
-
-	void SetRepeat(int newRepeat);
 
 	TextureArray(const TextureArray &x) = default;
 	TextureArray &operator=(const TextureArray &x) = default;

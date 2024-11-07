@@ -9,6 +9,7 @@ bool debuggerEnabled{ true };
 
 extern float uiTime, glTime;
 extern GLFWwindow* window;
+extern float boneTester;
 
 bool IsImGuiHovered()
 {
@@ -167,9 +168,9 @@ void DoImGui()
 				town.Villagers.push_back(debugVillager);
 			else if (here && ImGui::Button("Remove"))
 			{
-				auto here = std::find(town.Villagers.begin(), town.Villagers.end(), debugVillager);
-				if (here != town.Villagers.end())
-					town.Villagers.erase(here);
+				auto there = std::find(town.Villagers.begin(), town.Villagers.end(), debugVillager);
+				if (there != town.Villagers.end())
+					town.Villagers.erase(there);
 			}
 
 			ImGui::Text(debugVillager->ID.c_str());
@@ -201,6 +202,7 @@ void DoImGui()
 	if (ImGui::Begin("Player"))
 	{
 		ImGui::InputInt("Bells", (int*)&thePlayer.Bells, 10, 100);
+		ImGui::DragFloat("BONE TESTER", &boneTester, 1.0, -359, 359);
 	}
 	ImGui::End();
 

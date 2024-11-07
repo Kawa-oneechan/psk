@@ -175,6 +175,17 @@ void Texture::SetRepeat(int newRepeat)
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
+void Texture::SetFilter(int newFilter)
+{
+	filter = newFilter;
+	if (delayed)
+		return;
+	glBindTexture(GL_TEXTURE_2D, ID);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter);
+	glBindTexture(GL_TEXTURE_2D, 0);
+}
+
 //------------------------
 
 static bool loadArray(unsigned char** data, unsigned int *id, int width, int height, int channels, int layers, int repeat, int filter)

@@ -23,12 +23,29 @@ inline void kawa_glVertexAttribIPointer(GLuint index, GLint size, GLenum type, G
 
 class Model
 {
+	//Max amount of bones in a mesh
+	static constexpr int MaxBones = 50;
+	//Max amount of bones and weights per vertex
+	static constexpr int MaxWeights = 4;
+	//No bone assigned or found
+	static constexpr int NoBone = -1;
+
 	struct Vertex
 	{
 		glm::vec3 Position;
 		glm::vec3 Normal;
 		glm::vec2 TexCoords;
 		glm::vec3 Tangent;
+		int Bones[Model::MaxWeights];
+		float Weights[Model::MaxWeights];
+	};
+
+	struct Bone
+	{
+		std::string Name;
+		glm::mat4 Offset;
+		glm::mat4 LocalTransform{ glm::mat4(1) };
+		std::vector<int> Children;
 	};
 
 	class Mesh
@@ -41,8 +58,9 @@ class Model
 		int Texture;
 		bool Visible;
 		hash Hash;
+		std::string Name;
 
-		Mesh(ufbx_mesh* mesh);
+		Mesh(ufbx_mesh* mesh, std::vector<Bone>& bones);
 		const void Draw();
 	};
 
@@ -55,6 +73,10 @@ public:
 	std::vector<Mesh> Meshes;
 	std::array<Texture*, 32> Textures;
 	std::array<int, 4> TexArrayLayers;
+	std::vector<Bone> Bones;
+	glm::mat4 finalBoneMatrices[Model::MaxBones];
+
+	const bool IsSkinned() const { return Bones.size() > 0; }
 
 	Model() = default;
 	Model(const std::string& modelPath);
@@ -62,6 +84,10 @@ public:
 	void Draw(Shader* shader, const glm::vec3& pos = glm::vec3(0), float yaw = 0);
 	void AllVisible();
 	Mesh& GetMesh(const std::string& name);
+
+	int FindBone(const std::string& name);
+	void CalculateBoneTransform(int id, const glm::mat4& parentTransform = glm::mat4(1.0f));
+	void MoveBone(int id, float deg, const glm::vec3& rotation, const glm::vec3& transform = glm::vec3(0));
 };
 
 using ModelP = std::shared_ptr<Model>;

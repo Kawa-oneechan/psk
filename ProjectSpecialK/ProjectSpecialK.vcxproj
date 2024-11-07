@@ -152,6 +152,7 @@
     <ClCompile Include="DebugImgui.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="Framebuffer.cpp" />
     <ClCompile Include="InputsMap.cpp" />
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="ItemHotbar.cpp" />
@@ -235,6 +236,7 @@
     <ClInclude Include="DateTimePanel.h" />
     <ClInclude Include="DialogueBox.h" />
     <ClInclude Include="DoomMenu.h" />
+    <ClInclude Include="Framebuffer.h" />
     <ClInclude Include="InputsMap.h" />
     <ClInclude Include="Item.h" />
     <ClInclude Include="ItemHotbar.h" />
@@ -265,6 +267,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="data\shaders\font.fs" />
+    <None Include="data\shaders\framebuffer.fs" />
     <None Include="data\shaders\lighting.fs" />
     <None Include="data\shaders\model.fs" />
     <None Include="data\shaders\model.vs" />
