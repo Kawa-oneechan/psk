@@ -534,15 +534,7 @@ int main(int, char**)
 		oldTime = newTime;
 		float dt = (float)deltaTime;
 
-		if (wireframe)
-		{
-			glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		}
-		else
-		{
-			glClear(GL_DEPTH_BUFFER_BIT);
-		}
+		glClear(GL_DEPTH_BUFFER_BIT);
 
 		//important: disable depth testing to allow multiple sprites to overlap.
 		glDisable(GL_DEPTH_TEST);
@@ -568,6 +560,7 @@ int main(int, char**)
 		Sprite::FlushBatch();
 		glClear(GL_DEPTH_BUFFER_BIT);
 		glEnable(GL_DEPTH_TEST);
+		glPolygonMode(GL_FRONT_AND_BACK, wireframe ? GL_LINE : GL_FILL);
 		modelShader->Use();
 
 		for (int i = 0; i < MaxLights; i++)
@@ -583,6 +576,7 @@ int main(int, char**)
 		for (const auto& v : town.Villagers)
 			v->Draw(dt * timeScale);
 		glDisable(GL_DEPTH_TEST);
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 		console->Draw(dt);
 		Sprite::FlushBatch();

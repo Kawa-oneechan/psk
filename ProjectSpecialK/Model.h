@@ -6,6 +6,21 @@
 #include "support/ufbx.h"
 #include "VFS.h"
 
+//Because void-casting an integer for legacy reasons is silly.
+
+inline void kawa_glVertexAttribPointer(GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei stride, GLsizeiptr offset)
+{
+	glad_glVertexAttribPointer(index, size, type, normalized, stride, (void*)offset);
+}
+inline void kawa_glVertexAttribIPointer(GLuint index, GLint size, GLenum type, GLsizei stride, GLsizeiptr offset)
+{
+	glad_glVertexAttribIPointer(index, size, type, stride, (void*)offset);
+}
+#undef glVertexAttribPointer
+#undef glVertexAttribIPointer
+#define glVertexAttribPointer kawa_glVertexAttribPointer
+#define glVertexAttribIPointer kawa_glVertexAttribIPointer
+
 class Model
 {
 	struct Vertex
