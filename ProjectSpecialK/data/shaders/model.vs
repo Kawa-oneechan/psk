@@ -8,9 +8,9 @@ layout (location = 4) in ivec4 aBones;
 layout (location = 5) in vec4 aWeights;
 
 //Match these to Model.h
-const int MAX_BONES = 50;
-const int MAX_WEIGHTS = 4;
-uniform mat4 finalBonesMatrices[MAX_BONES];
+const int MaxBones = 50;
+const int MaxWeights = 4;
+uniform mat4 finalBonesMatrices[MaxBones];
 
 out vec2 TexCoord;
 out vec3 FragPos;
@@ -24,15 +24,21 @@ uniform mat4 projection;
 void main()
 {
 	vec4 totalPosition = vec4(0.0);
-	for(int i = 0; i < MAX_WEIGHTS; i++)
+	vec3 totalNormal = vec3(0.0);
+	vec4 aPos4 = vec4(aPos, 1.0f);
+	for(int i = 0; i < MaxWeights; i++)
 	{
 		if (aBones[i] == -1) continue;
-		vec4 localPosition = finalBonesMatrices[aBones[i]] * vec4(aPos, 1.0f);
+		
+		vec4 localPosition = finalBonesMatrices[aBones[i]] * aPos4;
 		totalPosition += localPosition * aWeights[i];
+
+		vec3 localNormal = mat3(finalBonesMatrices[aBones[i]]) * aNormal;
+		totalNormal += localNormal * aWeights[i];
 	}
 
-	FragPos = vec3(model * vec4(aPos, 1.0));
-	Normal = mat3(transpose(inverse(model))) * aNormal;
+	FragPos = vec3(model * totalPosition);
+	Normal = mat3(transpose(inverse(model))) * totalNormal;
 	Tangent = mat3(transpose(inverse(model))) * aTangent;
 
 	gl_Position = projection * view * model * totalPosition;
