@@ -267,7 +267,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="data\shaders\font.fs" />
-    <None Include="data\shaders\framebuffer.fs" />
+    <None Include="data\shaders\hdrbuffer.fs" />
+    <None Include="data\shaders\postfxbuffer.fs" />
     <None Include="data\shaders\lighting.fs" />
     <None Include="data\shaders\model.fs" />
     <None Include="data\shaders\model.vs" />

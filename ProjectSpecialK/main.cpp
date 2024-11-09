@@ -556,7 +556,8 @@ int main(int, char**)
 		glBufferSubData(GL_UNIFORM_BUFFER, offsetof(CommonUniforms, Projection), sizeof(glm::mat4), &p);
 	}
 
-	auto frameBuffer = Framebuffer("shaders/framebuffer.fs", width, height);
+	auto hdrBuffer = Framebuffer("shaders/hdrbuffer.fs", width, height);
+	auto postFxBuffer = Framebuffer("shaders/postfxbuffer.fs", width, height);
 
 #ifdef DEBUG
 	auto startingTime = std::chrono::high_resolution_clock::now();
@@ -614,22 +615,29 @@ int main(int, char**)
 
 		if (postFx)
 		{
-			frameBuffer.Use();
+			postFxBuffer.Use();
 			glClearColor(0.2f, 0.3f, 0.3f, 0.0f);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			townDrawer.Draw(dt * timeScale);
-			frameBuffer.Drop();
+			postFxBuffer.Drop();
+			hdrBuffer.Use();
 			background.Draw(dt * timeScale);
-			frameBuffer.Draw();
+			postFxBuffer.Draw();
 		}
 		else
 		{
+			hdrBuffer.Use();
 			background.Draw(dt * timeScale);
 			townDrawer.Draw(dt * timeScale);
 		}
 
 		for (const auto& t : tickables)
 			t->Draw(dt * timeScale);
+
+		Sprite::FlushBatch();
+		hdrBuffer.Drop();
+		hdrBuffer.Draw();
+		Sprite::FlushBatch();
 
 		console->Draw(dt);
 		Sprite::FlushBatch();

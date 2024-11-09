@@ -12,14 +12,14 @@ private:
 	unsigned int rbo = 0;
 	Texture* texture = nullptr;
 	Shader* shader = nullptr;
-	int width, height;
+	int width, height, format;
 	bool isSetup{ false };
 	bool shaderOwned;
 
 	void setup();
 	
 public:
-	Framebuffer(const std::string& fragmentShader, int width, int height);
+	Framebuffer(const std::string& fragmentShader, int width, int height, int format = GL_RGBA16F);
 	Framebuffer(Shader* fragmentShader, int width, int height);
 	~Framebuffer();
 	void Use();
@@ -29,4 +29,5 @@ public:
 	void ChangeShader(const std::string& newFragmentShader);
 	void ChangeShader(Shader* newShader);
 	Texture& GetTexture();
+	Shader& GetShader();
 };

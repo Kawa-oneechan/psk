@@ -7,10 +7,13 @@ void Framebuffer::setup()
 
 	unsigned int textureId;
 
+	glGenFramebuffers(1, &fbo);
 	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 	glGenTextures(1, &textureId);
 	glBindTexture(GL_TEXTURE_2D, textureId);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+	glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, GL_RGBA,
+		(format == GL_RGB16F || format == GL_RGBA16F) ? GL_FLOAT : GL_UNSIGNED_BYTE
+		, NULL);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureId, 0);
@@ -27,16 +30,14 @@ void Framebuffer::setup()
 }
 
 
-Framebuffer::Framebuffer(const std::string& fragmentShader, int width, int height) : width(width), height(height)
+Framebuffer::Framebuffer(const std::string& fragmentShader, int width, int height, int format) : width(width), height(height), format(format)
 {
-	glGenFramebuffers(1, &fbo);
 	shader = new Shader(fragmentShader);
 	shaderOwned = true;
 }
 
 Framebuffer::Framebuffer(Shader* fragmentShader, int width, int height) : width(width), height(height)
 {
-	glGenFramebuffers(1, &fbo);
 	shader = fragmentShader;
 	shaderOwned = false;
 }
@@ -91,4 +92,9 @@ void Framebuffer::ChangeShader(Shader* newShader)
 Texture& Framebuffer::GetTexture()
 {
 	return *texture;
+}
+
+Shader& Framebuffer::GetShader()
+{
+	return *shader;
 }
