@@ -8,7 +8,7 @@ void ButtonGuide::SetButtons(std::initializer_list<std::string> labels)
 	texts.clear();
 	widths.clear();
 	highlight = -1;
-	left = width;
+	left = (float)width;
 	for (auto l : labels)
 	{
 		if (l[0] == '!') //important

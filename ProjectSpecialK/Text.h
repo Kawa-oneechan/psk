@@ -38,7 +38,8 @@ namespace Text
 	//Adds a JSONValue that can be an object *or* a string to the string database.
 	//See Add(std::string& key, JSONObject& map) for details.
 	extern Entry& Add(std::string key, JSONValue& value);
-	//Adds maps or strings from a JSONObject to the string database.
+	//Adds maps or strings from a JSONValue to the string database.
+	//This deletes the original JSONValue afterwards - do NOT delete it yourself.
 	extern void Add(JSONValue& doc);
 	//Returns a localized string.
 	extern std::string Get(std::string key, Language lang = Language::Default);

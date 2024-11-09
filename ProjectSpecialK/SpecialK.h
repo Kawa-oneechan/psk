@@ -39,6 +39,18 @@ using namespace std::literals;
 __declspec(noreturn)
 extern void FatalError(const std::string& message);
 
+struct CommonUniforms
+{
+	//Must match shaders/common.txt
+	float totalTime; //0
+	float deltaTime; //4
+	glm::uvec2 screenRes; //8
+	glm::mat4 View; //16
+	glm::mat4 Projection; //80
+};
+
+extern CommonUniforms commonUniforms;
+
 enum class LoadSpawnChoice
 {
 	FrontDoor,
@@ -47,7 +59,7 @@ enum class LoadSpawnChoice
 	InPlace,
 };
 
-extern float width, height;
+extern int width, height;
 extern float scale;
 
 template<typename T> static T clamp(T val, T minval, T maxval) { return std::max<T>(std::min<T>(val, maxval), minval); }

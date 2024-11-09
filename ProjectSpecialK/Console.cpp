@@ -247,7 +247,7 @@ void Console::Draw(float dt)
 	if (!visible)
 		return;
 
-	auto h = height / 3;
+	auto h = (float)height / 3;
 	glm::vec2 offset{ 0 };
 	if (appearState != 0)
 		offset.y += glm::mix(-h, 0.0f, glm::linearInterpolation(timer));

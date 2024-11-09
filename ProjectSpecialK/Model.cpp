@@ -366,11 +366,8 @@ void Model::Draw(Shader* shader, const glm::vec3& pos, float yaw)
 {
 	shader->Use();
 
-	auto projection = glm::perspective(glm::radians(45.0f), width / height, 0.1f, 100.0f);
-	auto view = MainCamera.ViewMat();
-
-	shader->Set("view", view);
-	shader->Set("projection", projection);
+	//auto projection = glm::perspective(glm::radians(45.0f), width / height, 0.1f, 100.0f);
+	//auto view = MainCamera.ViewMat();
 
 	glm::mat4 model = glm::mat4(1.0f);
 	model = glm::translate(model, pos);

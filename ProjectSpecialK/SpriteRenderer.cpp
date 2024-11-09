@@ -7,7 +7,7 @@
 #include "support/stb_truetype.h"
 #include "support/stb_image_write.h"
 
-extern float width, height;
+extern int width, height;
 extern Shader* spriteShader;
 
 namespace UI
@@ -133,7 +133,7 @@ namespace Sprite
 	{
 		if (!initialized) Initialize();
 
-		glm::mat4 orthoProjection = glm::ortho(0.0f, width, height, 0.0f, -1.0f, 1.0f);
+		glm::mat4 orthoProjection = glm::ortho(0.0f, (float)width, (float)height, 0.0f, -1.0f, 1.0f);
 
 		shader->Use();
 		shader->Set("image", 0);

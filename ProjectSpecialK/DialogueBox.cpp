@@ -407,8 +407,8 @@ void DialogueBox::Draw(float dt)
 
 	auto dlgWidth = bubble[0].width * dlgScale;
 	auto dlgHeight = bubble[0].height * dlgScale;
-	auto dlgLeft = (int)(width / 2) - dlgWidth;
-	auto dlgTop = (int)height - bubble[0].height - 16;
+	auto dlgLeft = (width * 0.5) - dlgWidth;
+	auto dlgTop = height - dlgHeight - 16;
 
 	wobble.Use();
 	gradient[0].Use(1);

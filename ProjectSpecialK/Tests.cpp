@@ -91,6 +91,16 @@ void TestInventorySystems()
 
 void RunTests()
 {
+	{
+		using T = decltype(town);
+		if (std::is_same<T, Town>())
+			conprint(0, "town is a Town, yeah.");
+		if (std::is_same<T, Map>())
+			conprint(0, "town is a Map.");
+		if (std::is_same<T, Player>())
+			conprint(0, "town is a Player?!");
+	}
+
 	std::string toLowerTest = u8"Tendō Akane!";
 	StringToLower(toLowerTest);
 	conprint(0, "case folding: {}", toLowerTest);

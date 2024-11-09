@@ -59,14 +59,15 @@ void Framebuffer::Use()
 void Framebuffer::Drop()
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glViewport(0, 0, ::width, ::height);
 }
 
-void Framebuffer::Draw(glm::vec2 pos)
+void Framebuffer::Draw(const glm::vec2& pos)
 {
 	Sprite::DrawSprite(shader, *texture, pos, glm::vec2(texture->width, texture->height));
 }
 
-void Framebuffer::Draw(glm::vec2 pos, glm::vec2 size)
+void Framebuffer::Draw(const glm::vec2& pos, const glm::vec2& size)
 {
 	Sprite::DrawSprite(shader, *texture, pos, size);
 }

@@ -7,6 +7,10 @@ layout (location = 3) in vec3 aTangent;
 layout (location = 4) in ivec4 aBones; 
 layout (location = 5) in vec4 aWeights;
 
+#include "common.txt"
+
+uniform mat4 model;
+
 //Match these to Model.h
 const int MaxBones = 50;
 const int MaxWeights = 4;
@@ -16,10 +20,6 @@ out vec2 TexCoord;
 out vec3 FragPos;
 out vec3 Normal;
 out vec3 Tangent;
-
-uniform mat4 model;
-uniform mat4 view;
-uniform mat4 projection;
 
 void main()
 {
@@ -41,6 +41,6 @@ void main()
 	Normal = mat3(transpose(inverse(model))) * totalNormal;
 	Tangent = mat3(transpose(inverse(model))) * aTangent;
 
-	gl_Position = projection * view * model * totalPosition;
+	gl_Position = Projection * View * model * totalPosition;
 	TexCoord = aTexCoord;
 }

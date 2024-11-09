@@ -5,6 +5,8 @@ flat in int index;
 
 out vec4 color;
 
+#include "common.txt"
+
 uniform sampler2D image;
 uniform vec4 spriteColor[200];
 uniform vec4 sourceRect[200];
@@ -16,7 +18,7 @@ void main()
 	//color = vec4(1.0 - lol.rgb, lol.a);
 	color = texture(image, TexCoords);
 
-	float y = floor(TexCoords.y * 1080);
+	float y = floor(TexCoords.y * screenRes.y);
 	if (mod(y, 2.0) == 0.0)
 		color.a = 0.0;
 }

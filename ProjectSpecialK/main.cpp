@@ -31,10 +31,8 @@ extern void RunTests();
 #endif
 ;
 
-constexpr int ScreenWidth = 1920;
+constexpr int ScreenWidth = 2920;
 constexpr int ScreenHeight = 1080;
-constexpr int WindowWidth = 1920; //1280
-constexpr int WindowHeight = 1080; //720
 
 #ifdef _WIN32
 extern "C"
@@ -60,17 +58,18 @@ glm::vec4 lightCol[MaxLights] = { { 0, 0, 0, 0 } };
 
 sol::state Sol;
 
-float lastX = ScreenWidth / 2.0f;
-float lastY = ScreenHeight / 2.0f;
+int width = ScreenWidth, height = ScreenHeight;
+float scale = height / 1080.0f;
+
+float lastX = width / 2.0f;
+float lastY = height / 2.0f;
 bool firstMouse = true;
 
 bool wireframe = false;
+bool postFx = false;
 
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
-
-float width = ScreenWidth, height = ScreenHeight;
-float scale = (float)WindowWidth / (float)WindowHeight;
 
 float timeScale = 0.25f;
 
@@ -82,6 +81,8 @@ bool cheatsEnabled;
 float uiTime = 0;
 float glTime = 0;
 #endif
+
+CommonUniforms commonUniforms;
 
 __declspec(noreturn)
 void FatalError(const std::string& message)
@@ -225,16 +226,17 @@ namespace UI
 
 std::vector<Tickable*> tickables;
 
-void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+static void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
 	window;
-	::width = (float)width;
-	::height = (float)height;
-	scale = ::height / ScreenHeight;
+	::width = width;
+	::height = height;
+	scale = ::height / 1080.0f;
 	glViewport(0, 0, width, height);
+	commonUniforms.screenRes = glm::uvec2(width, height);
 }
 
-void char_callback(GLFWwindow* window, unsigned int codepoint)
+static void char_callback(GLFWwindow* window, unsigned int codepoint)
 {
 	window;
 	if (console->visible)
@@ -251,7 +253,7 @@ void char_callback(GLFWwindow* window, unsigned int codepoint)
 	}
 }
 
-void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
 	window, mods;
 	if (scancode == Inputs.Keys[(int)Binds::Console].ScanCode && action == GLFW_PRESS)
@@ -282,13 +284,13 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		return;
 
 	if (key == GLFW_KEY_F1 && action == GLFW_PRESS)
-	{
 		wireframe = !wireframe;
-		glPolygonMode(GL_FRONT_AND_BACK, wireframe ? GL_LINE : GL_FILL);
-	}
+
+	if (key == GLFW_KEY_F2 && action == GLFW_PRESS)
+		postFx = !postFx;
 }
 
-void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
+static void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
 {
 	window;
 	float xpos = static_cast<float>(xposIn);
@@ -318,7 +320,7 @@ void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
 	}
 }
 
-void mousebutton_callback(GLFWwindow* window, int button, int action, int mods)
+static void mousebutton_callback(GLFWwindow* window, int button, int action, int mods)
 {
 	window; mods;
 	
@@ -350,7 +352,7 @@ void mousebutton_callback(GLFWwindow* window, int button, int action, int mods)
 	}
 }
 
-void joystick_callback(int jid, int event)
+static void joystick_callback(int jid, int event)
 {
 	if (event == GLFW_CONNECTED)
 	{
@@ -362,8 +364,59 @@ void joystick_callback(int jid, int event)
 	}
 }
 
+static int InitOpenGL()
+{
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	glfwWindowHint(GLFW_SAMPLES, 2);
+
+	const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+	if (mode->width > width || mode->height == height)
+	{
+		width = mode->width;
+		height = mode->height;
+	}
+	if (mode->width == width && mode->height == height)
+		glfwWindowHint(GLFW_DECORATED, 0);
+	glfwWindowHint(GLFW_RESIZABLE, 0);
+
+	window = glfwCreateWindow(width, height, WindowTitle, NULL, NULL);
+	if (window == NULL)
+	{
+		glfwTerminate();
+		FatalError("Failed to create GLFW window.");
+		return -1;
+	}
+	glfwMakeContextCurrent(window);
+	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+	glfwSetKeyCallback(window, key_callback);
+	glfwSetCharCallback(window, char_callback);
+	glfwSetCursorPosCallback(window, mouse_callback);
+	glfwSetMouseButtonCallback(window, mousebutton_callback);
+	glfwSetJoystickCallback(joystick_callback);
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+
+	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+	{
+		FatalError("Failed to initialize GLAD.");
+		return -1;
+	}
+
+	framebuffer_size_callback(window, width, height);
+
+	glEnable(GL_CULL_FACE);
+
+	//Required for sprites
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	return 0;
+}
+
 class TemporaryTownDrawer : public Tickable
 {
+public:
 	void Draw(float dt)
 	{
 		Sprite::FlushBatch();
@@ -410,62 +463,29 @@ int main(int, char**)
 	UI::Load();
 
 	//test
+	/*
 	{
 		town.StartNewDay();
 	}
+	*/
 
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-	glfwWindowHint(GLFW_SAMPLES, 2);
-
-	if (WindowWidth == ScreenWidth)
-	{
-		const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-		if (mode->width == ScreenWidth && mode->height == ScreenHeight)
-			glfwWindowHint(GLFW_DECORATED, 0);
-		glfwWindowHint(GLFW_RESIZABLE, 0);
-	}
-
-	window = glfwCreateWindow(WindowWidth, WindowHeight, WindowTitle, NULL, NULL);
-	if (window == NULL)
-	{
-		glfwTerminate();
-		FatalError("Failed to create GLFW window.");
-		return -1;
-	}
-	glfwMakeContextCurrent(window);
-	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-	glfwSetKeyCallback(window, key_callback);
-	glfwSetCharCallback(window, char_callback);
-	glfwSetCursorPosCallback(window, mouse_callback);
-	glfwSetMouseButtonCallback(window, mousebutton_callback);
-	glfwSetJoystickCallback(joystick_callback);
-	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
-
-	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-	{
-		FatalError("Failed to initialize GLAD.");
-		return -1;
-	}
-
-	framebuffer_size_callback(window, WindowWidth, WindowHeight);
+	if (auto r = InitOpenGL())
+		return r;
 
 	spriteShader = new Shader("shaders/sprite.fs");
 	modelShader = new Shader("shaders/model.vs", "shaders/model.fs");
 	whiteRect = new Texture("white.png", GL_CLAMP_TO_EDGE);
 	UI::controls = std::make_shared<Texture>("ui/controls.png");
 
+	GLuint commonBind = 1, commonBuffer = 0;
+	glGenBuffers(1, &commonBuffer);
+	glBindBuffer(GL_UNIFORM_BUFFER, commonBuffer);
+	glBufferData(GL_UNIFORM_BUFFER, sizeof(commonUniforms), &commonUniforms, GL_DYNAMIC_DRAW);
+	glBindBufferBase(GL_UNIFORM_BUFFER, commonBind, commonBuffer);
+
 #ifdef DEBUG
 	SetupImGui();
 #endif
-
-	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_CULL_FACE);
-
-	//Required for sprites
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	cursor = std::make_shared<Cursor>();
 
@@ -473,24 +493,18 @@ int main(int, char**)
 
 	ThreadedLoader(Database::LoadGlobalStuff);
 
-
 	thePlayer.Name = "Kawa";
 	thePlayer.Gender = Gender::BEnby;
-
-	Text::Add(*VFS::ReadJSON("text/datetime.json"));
-	Text::Add(*VFS::ReadJSON("text/fixedform.json"));
-	Text::Add(*VFS::ReadJSON("text/keynames.json"));
-	Text::Add(*VFS::ReadJSON("text/optionsmenu.json"));
-	Text::Add(*VFS::ReadJSON("text/tests.json"));
 
 	//Now that we've loaded the key names we can fill in some blanks.
 	for (int i = 0; i < NumKeyBinds; i++)
 		Inputs.Keys[i].Name = GetKeyName(Inputs.Keys[i].ScanCode);
 
 	tickables.push_back(&musicManager);
-	//auto background = Background("discobg2.png");
-	tickables.push_back(new Background("discobg2.png"));
-	tickables.push_back(new TemporaryTownDrawer());
+	auto background = Background("discobg2.png");
+	//tickables.push_back(new Background("discobg2.png"));
+	//tickables.push_back(new TemporaryTownDrawer());
+	auto townDrawer = TemporaryTownDrawer();
 	tickables.push_back(new DateTimePanel());
 	tickables.push_back(new ItemHotbar());
 	//hotbar->Tween(&hotbar->Position.y, -100.0f, 0, 0.002f, glm::bounceEaseOut<float>);
@@ -535,13 +549,22 @@ int main(int, char**)
 		MainCamera.Set(glm::vec3(0, 0, -6), glm::vec3(0, 110, 0), 60);
 	}
 
-	//auto frameBuffer = Framebuffer("shaders/framebuffer.fs", ScreenWidth, ScreenHeight);
+	{
+		//commonUniforms.Projection = glm::perspective(glm::radians(45.0f), width / height, 0.1f, 100.0f);
+		//glBindBuffer(GL_UNIFORM_BUFFER, commonBuffer);
+		auto p = glm::perspective(glm::radians(45.0f), (float)width / (float)height, 0.1f, 100.0f);
+		glBufferSubData(GL_UNIFORM_BUFFER, offsetof(CommonUniforms, Projection), sizeof(glm::mat4), &p);
+	}
+
+	auto frameBuffer = Framebuffer("shaders/framebuffer.fs", width, height);
 
 #ifdef DEBUG
 	auto startingTime = std::chrono::high_resolution_clock::now();
 #endif
 
 	int oldTime = 0;
+	commonUniforms.totalTime = 0.0f;
+
 	while (!glfwWindowShouldClose(window))
 	{
 		Audio::Update();
@@ -558,6 +581,7 @@ int main(int, char**)
 		int deltaTime = newTime - oldTime;
 		oldTime = newTime;
 		float dt = (float)deltaTime;
+		commonUniforms.totalTime += dt;
 
 		glClear(GL_DEPTH_BUFFER_BIT);
 
@@ -573,18 +597,36 @@ int main(int, char**)
 				(*t)->Tick(dt);
 		}
 
+		{
+			glBufferSubData(GL_UNIFORM_BUFFER, offsetof(CommonUniforms, totalTime), sizeof(float), &commonUniforms.totalTime);
+			glBufferSubData(GL_UNIFORM_BUFFER, offsetof(CommonUniforms, deltaTime), sizeof(float), &dt);
+			glBufferSubData(GL_UNIFORM_BUFFER, offsetof(CommonUniforms, screenRes), sizeof(float), &commonUniforms.screenRes);
+			//commonUniforms.View = MainCamera.ViewMat();
+			auto v = MainCamera.ViewMat();
+			glBufferSubData(GL_UNIFORM_BUFFER, offsetof(CommonUniforms, View), sizeof(glm::mat4), &v);
+		}
+		
 #ifdef DEBUG
 		endingTime = std::chrono::high_resolution_clock::now();
 		uiTime = std::chrono::duration_cast<std::chrono::milliseconds>(endingTime - startingTime).count() * 0.001f;
 		startingTime = endingTime;
 #endif
 
-		//frameBuffer.Use();
-		//glClearColor(0.2f, 0.3f, 0.3f, 0.0f);
-		//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		//frameBuffer.Drop();
-		//background.Draw(dt * timeScale);
-		//frameBuffer.Draw();
+		if (postFx)
+		{
+			frameBuffer.Use();
+			glClearColor(0.2f, 0.3f, 0.3f, 0.0f);
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			townDrawer.Draw(dt * timeScale);
+			frameBuffer.Drop();
+			background.Draw(dt * timeScale);
+			frameBuffer.Draw();
+		}
+		else
+		{
+			background.Draw(dt * timeScale);
+			townDrawer.Draw(dt * timeScale);
+		}
 
 		for (const auto& t : tickables)
 			t->Draw(dt * timeScale);

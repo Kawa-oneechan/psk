@@ -27,14 +27,15 @@ namespace Database
 	/*
 	1. Item icons
 	2. Reaction icons
-	3. Items
-	4. Species
-	5. Personalities
-	6. Hobbies
-	7. Villagers
+	3. Text
+	4. Items
+	5. Species
+	6. Personalities
+	7. Hobbies
+	8. Villagers
 	Do not forget to keep that divisor up to date.
 	*/
-	static const float progressParts = 1.0f / 7.0f;
+	static const float progressParts = 1.0f / 8.0f;
 
 	static void loadIconsWorker(float* progress, const std::string& path, std::shared_ptr<Texture>* texture, std::map<std::string, glm::vec4>& atlas)
 	{
@@ -161,6 +162,17 @@ namespace Database
 		delete doc;
 	}
 
+	void LoadText(float* progress)
+	{
+		auto entries = VFS::Enumerate("text/*.json");
+		auto progressStep = progressParts / entries.size();
+		for (const auto& entry : entries)
+		{
+			Text::Add(*VFS::ReadJSON(entry.path));
+			*progress += progressStep;
+		}
+	}
+
 	template<typename T1, typename T2>
 	void loadWorker(float* progress, std::vector<std::shared_ptr<T1>>& target, const std::string& spec, const std::string& whom)
 	{
@@ -271,6 +283,7 @@ namespace Database
 
 		LoadIcons(progress);
 
+		LoadText(progress);
 		LoadItems(progress);
 		LoadSpecies(progress);
 		LoadTraits(progress);
