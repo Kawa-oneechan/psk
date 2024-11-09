@@ -88,7 +88,7 @@ glm::vec4 GetJSONColor(JSONValue* val)
 		}
 		else
 			throw std::runtime_error(fmt::format("GetJSONColor: {} is not a valid color.", val->Stringify()));
-		return glm::vec4(arr[0]->AsNumber(), arr[1]->AsNumber(), arr[2]->AsNumber(), arr[3]->AsNumber());
+		return glm::vec4(r, g, b, a);
 	}
 	throw std::runtime_error(fmt::format("GetJSONColor: {} is not a valid color.", val->Stringify()));
 }
