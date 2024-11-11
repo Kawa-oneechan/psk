@@ -474,6 +474,7 @@ int main(int, char**)
 
 	spriteShader = new Shader("shaders/sprite.fs");
 	modelShader = new Shader("shaders/model.vs", "shaders/model.fs");
+	//auto skyShader = new Shader("shaders/sky.fs");
 	whiteRect = new Texture("white.png", GL_CLAMP_TO_EDGE);
 	UI::controls = std::make_shared<Texture>("ui/controls.png");
 
@@ -625,6 +626,8 @@ int main(int, char**)
 		else
 		{
 			background.Draw(dt * timeScale);
+			//skyShader->Set("pitch", 90); //MainCamera.Angles().y);
+			//Sprite::DrawSprite(skyShader, *whiteRect, glm::vec2(0), glm::vec2(width, height));
 			townDrawer.Draw(dt * timeScale);
 		}
 
