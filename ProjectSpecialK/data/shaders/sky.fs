@@ -27,15 +27,20 @@ void main()
     
 	//#define HORIZON (-(iMouse.y / screenRes.y) + 1.0)
 	//#define HORIZON .50
-	#define HORIZON (((pitch + 90) / 90.0) * 0.1)
+	//#define HORIZON (((pitch + 90) / 90.0) * 0.1)
+	float horizon = 0.5;
+	if (pitch > 0)
+		horizon -= (0.5 * (pitch / 60));
+	else
+		horizon -= (0.5 * (pitch / 30));
     
 	vec3 c = vec3(0);
-	vec3 e = mix(SKY_BOT, SKY_TOP, HORIZON);
+	vec3 e = mix(SKY_BOT, SKY_TOP, horizon);
     
-	if (uv.y < HORIZON)
-		c = mix(SKY_TOP, e, uv.y * (1.0 / HORIZON));
+	if (uv.y < horizon)
+		c = mix(SKY_TOP, e, uv.y * (1.0 / horizon));
 	else
-		c = mix(e, GND_BOT, (uv.y - HORIZON) * 10.0);
+		c = mix(e, GND_BOT, (uv.y - horizon) * 10.0);
 
 	color = vec4(c, 1.0);
 }
