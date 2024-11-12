@@ -109,8 +109,7 @@ namespace VFS
 		Source& src = sources[source];
 		conprint(0, "VFS: from {}...", src.path);
 		{
-			mz_zip_archive zip;
-			std::memset(&zip, 0, sizeof(zip));
+			mz_zip_archive zip{ 0 };
 			mz_zip_reader_init_file(&zip, src.path.c_str(), 0);
 			int zipFiles = mz_zip_reader_get_num_files(&zip);
 			for (int i = 0; i < zipFiles; i++)
@@ -142,8 +141,7 @@ namespace VFS
 		std::unique_ptr<char[]> manifestData = nullptr;
 		if (newSrc.isZip)
 		{
-			mz_zip_archive zip;
-			std::memset(&zip, 0, sizeof(zip));
+			mz_zip_archive zip{ 0 };
 			mz_zip_reader_init_file(&zip, path.string().c_str(), 0);
 			int zipFiles = mz_zip_reader_get_num_files(&zip);
 			for (int i = 0; i < zipFiles; i++)
@@ -207,6 +205,7 @@ namespace VFS
 		savePath = fs::path(std::string(mp)) / "Project Special K";
 #else
 		//TODO: find a good save path for non-Windows systems.
+		//Internet says: ~/.local/share/projectspecialk
 #endif
 
 		fs::create_directory(savePath);
@@ -320,9 +319,7 @@ namespace VFS
 		auto& source = sources[entry.sourceIndex];
 		if (source.isZip)
 		{
-			conprint(2, "DEBUG: getting {} from {}.", entry.path, source.path);
-			mz_zip_archive zip;
-			std::memset(&zip, 0, sizeof(zip));
+			mz_zip_archive zip{ 0 };
 			mz_zip_reader_init_file(&zip, source.path.c_str(), 0);
 			mz_zip_archive_file_stat zfs;
 			if (!mz_zip_reader_file_stat(&zip, entry.zipIndex, &zfs))
@@ -508,8 +505,7 @@ namespace VFS
 		auto p = savePath / archive;
 		auto p3 = p.generic_string();
 
-		mz_zip_archive zip;
-		std::memset(&zip, 0, sizeof(zip));
+		mz_zip_archive zip{ 0 };
 		mz_zip_reader_init_file(&zip, p3.c_str(), 0);
 		if (zip.m_zip_type == MZ_ZIP_TYPE_INVALID)
 			return nullptr;

@@ -80,12 +80,12 @@ void Framebuffer::ChangeShader(const std::string& newFragmentShader)
 	shaderOwned = true;
 }
 
-void Framebuffer::ChangeShader(Shader* newShader)
+void Framebuffer::ChangeShader(Shader* newShader, bool own)
 {
 	if (shaderOwned)
 		delete shader;
 	shader = newShader;
-	shaderOwned = false;
+	shaderOwned = own;
 }
 
 Texture& Framebuffer::GetTexture()

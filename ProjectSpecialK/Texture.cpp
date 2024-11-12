@@ -241,6 +241,7 @@ TextureArray::TextureArray(const std::string& texturePath, int repeat, int filte
 
 	auto entries = VFS::Enumerate(texturePath);
 	layers = (int)entries.size();
+	//TODO: rewrite this to not use malloc -- can't make it work just yet...
 	data = (unsigned char**)std::malloc(layers * sizeof(unsigned char**));
 	if (data)
 	{

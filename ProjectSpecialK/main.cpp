@@ -95,6 +95,7 @@ void FatalError(const std::string& message)
 	MessageBoxW(nullptr, w, L"Project Special K", 0x30);
 #else
 	//TODO: report fatal errors some other way on non-Windows systems.
+	//Internet says: write the error to a file, then xdg-open that file.
 #endif
 
 	conprint(1, "Exiting...");

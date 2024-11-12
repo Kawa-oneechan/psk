@@ -240,12 +240,8 @@ namespace Sprite
 				numFonts = MaxFonts;
 				conprint(2, "Warning: too many font definitions, only doing {}.", MaxFonts);
 			}
-			cdata = (stbtt_bakedchar*)calloc(numFonts * 0x10000, sizeof(stbtt_bakedchar));
-			if (!cdata)
-				throw std::runtime_error("Could not allocate space for font atlases.");
-			fontTextures = (Texture**)calloc(numFonts * 256, sizeof(Texture*));
-			if (!fontTextures)
-				throw std::runtime_error("Could not allocate space for font textures.");
+			cdata = new stbtt_bakedchar[numFonts * 0x10000]{ 0 };
+			fontTextures = new Texture*[numFonts * 256]{ 0 };
 
 			for (int i = 0; i < numFonts; i++)
 			{
@@ -262,6 +258,8 @@ namespace Sprite
 			return;
 
 		auto ttfData = VFS::ReadData(fonts[font].file, nullptr);
+		if (!ttfData)
+			FatalError(fmt::format("Could not load font {}.", fonts[font].file));
 		auto ttfBitmap = new unsigned char[FontAtlasExtent * FontAtlasExtent];
 		stbtt_BakeFontBitmap((unsigned char*)ttfData.get(), 0, (float)fonts[font].size, ttfBitmap, FontAtlasExtent, FontAtlasExtent, 256 * bank, 256, &cdata[(font * 0xFFFF) + (0x100 * bank)]);
 

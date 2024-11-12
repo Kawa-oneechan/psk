@@ -27,6 +27,6 @@ public:
 	void Draw(const glm::vec2& pos = glm::vec2(0));
 	void Draw(const glm::vec2& pos, const glm::vec2& size);
 	void ChangeShader(const std::string& newFragmentShader);
-	void ChangeShader(Shader* newShader);
+	void ChangeShader(Shader* newShader, bool own = false);
 	Texture& GetTexture();
 };

@@ -189,6 +189,7 @@ bool Console::Scancode(unsigned int scancode)
 				scrollCursor = 0;
 		}
 	}
+	//TODO: tab completion. See ImGUI console demo for details.
 	return inputLine->Scancode(scancode);
 }
 

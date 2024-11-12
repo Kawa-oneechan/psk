@@ -69,8 +69,7 @@ Audio::Audio(std::string filename) : filename(filename)
 		conprint(1, "Could not open audio file {}.", filename);
 		return;
 	}
-	auto soundEx = FMOD_CREATESOUNDEXINFO();
-	memset(&soundEx, 0, sizeof(FMOD_CREATESOUNDEXINFO));
+	auto soundEx = FMOD_CREATESOUNDEXINFO { 0 };
 	soundEx.cbsize = sizeof(FMOD_CREATESOUNDEXINFO);
 	soundEx.length = (unsigned int)size;
 	auto mode = FMOD_HARDWARE | FMOD_2D | FMOD_OPENMEMORY;
