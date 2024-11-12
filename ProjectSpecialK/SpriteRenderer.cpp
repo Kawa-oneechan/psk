@@ -21,7 +21,7 @@ namespace UI
 namespace Sprite
 {
 	constexpr int FontAtlasExtent = 512;
-	constexpr int MaxFonts = 4;
+	constexpr int MaxFonts = 6;
 
 	static bool initialized{ false };
 	static unsigned int quadVAO{ 0 };

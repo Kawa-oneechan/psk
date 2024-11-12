@@ -502,7 +502,7 @@ int main(int, char**)
 		Inputs.Keys[i].Name = GetKeyName(Inputs.Keys[i].ScanCode);
 
 	tickables.push_back(&musicManager);
-	auto background = Background("discobg2.png");
+	//auto background = Background("discobg2.png");
 	//tickables.push_back(new Background("discobg2.png"));
 	//tickables.push_back(new TemporaryTownDrawer());
 	auto townDrawer = TemporaryTownDrawer();
@@ -613,23 +613,25 @@ int main(int, char**)
 		startingTime = endingTime;
 #endif
 
+		auto pitch = MainCamera.Angles().y;
+		if (pitch > 180) pitch -= 360;
+		skyShader->Use();
+		skyShader->Set("pitch", pitch);
+
 		if (postFx)
 		{
 			frameBuffer.Use();
 			glClearColor(0.2f, 0.3f, 0.3f, 0.0f);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			Sprite::DrawSprite(skyShader, *whiteRect, glm::vec2(0), glm::vec2(width, height));
 			townDrawer.Draw(dt * timeScale);
 			frameBuffer.Drop();
-			background.Draw(dt * timeScale);
+			//background.Draw(dt * timeScale);
 			frameBuffer.Draw();
 		}
 		else
 		{
 			//background.Draw(dt * timeScale);
-			auto pitch = MainCamera.Angles().y;
-			if (pitch > 180) pitch -= 360;
-			skyShader->Use();
-			skyShader->Set("pitch", pitch);
 			Sprite::DrawSprite(skyShader, *whiteRect, glm::vec2(0), glm::vec2(width, height));
 			townDrawer.Draw(dt * timeScale);
 		}

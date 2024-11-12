@@ -6,15 +6,21 @@
 	},
 	{	//1 - UI
 		"file": "seurat.ttf",
-		"size": 32
+		"size": 32,
+		"pua": 4
 	},
 	{	//2 - Dialogue
 		"file": "rodin.ttf",
 		"size": 32,
-		"pua": 1
+		"pua": 4
 	},
 	{	//3 - ???
 		"file": "backissues.otf",
+		"size": 32,
+		"pua": 4
+	},
+	{	//4 - Icons
+		"file": "icons.ttf",
 		"size": 32
 	}
 ]
