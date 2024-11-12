@@ -352,8 +352,9 @@ void Table(std::vector<std::string> data, size_t stride)
 		for (auto row = 0; row < rows; row++)
 		{
 			const auto& cel = data[row * stride + col];
-			if (cel.length() > width[col])
-				width[col] = cel.length();
+			auto here = cel.length();
+			if (here > width[col])
+				width[col] = here;
 		}
 	}
 
