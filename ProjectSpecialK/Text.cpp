@@ -93,9 +93,9 @@ Text::Entry& Text::Add(std::string key, JSONObject& map) //-V813
 
 Text::Entry& Text::Add(std::string key, const std::string& english) //-V813
 {
-	auto map = new JSONObject();
-	auto p = map->insert(map->begin(), std::pair<std::string, JSONValue*>("USen", new JSONValue(english)));
-	return Add(key, *map);
+	auto map = JSONObject();
+	map["USen"] = new JSONValue(english);
+	return Add(key, map);
 }
 
 Text::Entry& Text::Add(std::string key, JSONValue& value) //-V813
