@@ -241,37 +241,29 @@ TextureArray::TextureArray(const std::string& texturePath, int repeat, int filte
 
 	auto entries = VFS::Enumerate(texturePath);
 	layers = (int)entries.size();
-	//TODO: rewrite this to not use malloc -- can't make it work just yet...
-	data = (unsigned char**)std::malloc(layers * sizeof(unsigned char**));
-	if (data)
+	data = new unsigned char*[layers] { 0 };
+	for (auto l = 0; l < layers; l++)
 	{
-		std::memset(data, 0, layers);
-		for (auto l = 0; l < layers; l++)
+		size_t vfsSize = 0;
+		auto vfsData = VFS::ReadData(entries[l].path, &vfsSize);
+		if (!vfsData || vfsSize == 0)
 		{
-			size_t vfsSize = 0;
-			auto vfsData = VFS::ReadData(entries[l].path, &vfsSize);
-			if (!vfsData || vfsSize == 0)
-			{
-				conprint(1, "Failed to load texture array item \"{}\" -- no data.", entries[l].path);
-				return;
-			}
-			data[l] = stbi_load_from_memory((unsigned char*)vfsData.get(), (int)vfsSize, &width, &height, &channels, 0);
-		}
-
-		if (!loadArray(data, &ID, width, height, channels, layers, repeat, filter))
-		{
-			conprint(3, "glGenTextures indicates we're threading. Delaying \"{}\"...", texturePath);
-			delayed = true;
+			conprint(1, "Failed to load texture array item \"{}\" -- no data.", entries[l].path);
 			return;
 		}
+		data[l] = stbi_load_from_memory((unsigned char*)vfsData.get(), (int)vfsSize, &width, &height, &channels, 0);
 	}
-	else
+
+	if (!loadArray(data, &ID, width, height, channels, layers, repeat, filter))
 	{
-		conprint(1, "Failed to load texture \"{}\" -- couldn't allocate data.", texturePath);
+		conprint(3, "glGenTextures indicates we're threading. Delaying \"{}\"...", texturePath);
+		delayed = true;
+		return;
 	}
 	for (auto l = 0; l < layers; l++)
 		stbi_image_free(data[l]);
-	std::free(data);
+	//std::free(data);
+	delete[] data;
 
 	cacheArray[file] = std::make_tuple(this, 1);
 }
@@ -317,7 +309,7 @@ void TextureArray::Use(int slot)
 		}
 		for (auto l = 0; l < layers; l++)
 			stbi_image_free(data[l]);
-		std::free(data);
+		delete[] data;
 		delayed = false;
 	}
 
