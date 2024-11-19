@@ -1,9 +1,7 @@
-#version 330 core
-
 in vec2 TexCoords;
 flat in int index;
 
-out vec4 color;
+out vec4 fragColor;
 
 uniform sampler2D image;
 uniform sampler2D gradient1;
@@ -40,8 +38,8 @@ void main()
 	float edge = min(abs(sin(time * 6.0) * 0.8) * grad, 1.0);
 	float cutOff = smoothstep(edge, 0.2 + edge, rawBubble);
 
-	color = vec4(spriteColor[index].rgb, cutOff * spriteColor[index].a);
+	fragColor = vec4(spriteColor[index].rgb, cutOff * spriteColor[index].a);
 
 	//debug sliver of gradient
-	//if (uv.x < 0.05) color = vec4(grad, grad, grad, 1.0);
+	//if (uv.x < 0.05) fragColor = vec4(grad, grad, grad, 1.0);
 }

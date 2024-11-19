@@ -1,5 +1,3 @@
-#version 330 core
-
 layout (location = 0) in vec3 aPos;
 layout (location = 1) in vec3 aNormal;
 layout (location = 2) in vec2 aTexCoord;
@@ -7,7 +5,12 @@ layout (location = 3) in vec3 aTangent;
 layout (location = 4) in ivec4 aBones; 
 layout (location = 5) in vec4 aWeights;
 
-#include "common.txt"
+out vec2 TexCoord;
+out vec3 FragPos;
+out vec3 Normal;
+out vec3 Tangent;
+
+#include "common.fs"
 
 uniform mat4 model;
 
@@ -15,11 +18,6 @@ uniform mat4 model;
 const int MaxBones = 50;
 const int MaxWeights = 4;
 uniform mat4 finalBonesMatrices[MaxBones];
-
-out vec2 TexCoord;
-out vec3 FragPos;
-out vec3 Normal;
-out vec3 Tangent;
 
 void main()
 {

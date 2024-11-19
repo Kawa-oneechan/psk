@@ -279,7 +279,7 @@
     <None Include="data\ui\ui.json" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="data\shaders\common.txt" />
+    <Text Include="data\shaders\common.fs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

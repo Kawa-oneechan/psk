@@ -1,9 +1,11 @@
 #include "SpecialK.h"
 
+#define HEADER "#version 330 core\n#define PSK\n"
+
 Shader::Shader(const std::string& vertexPath, const std::string& fragmentPath)
 {
-	auto vShaderCode = VFS::ReadString(vertexPath);
-	auto fShaderCode = VFS::ReadString(fragmentPath);
+	auto vShaderCode = HEADER + VFS::ReadString(vertexPath);
+	auto fShaderCode = HEADER + VFS::ReadString(fragmentPath);
 
 	HandleIncludes(vShaderCode, GetDirFromFile(vertexPath));
 	HandleIncludes(fShaderCode, GetDirFromFile(fragmentPath));

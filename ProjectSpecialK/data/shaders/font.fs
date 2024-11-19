@@ -1,9 +1,7 @@
-#version 330 core
-
 in vec2 TexCoords;
 flat in int index;
 
-out vec4 color;
+out vec4 fragColor;
 
 uniform sampler2D image;
 uniform vec4 spriteColor[200];
@@ -23,6 +21,6 @@ void main()
 		uv += sr.xy;
 	}
 
-	color.rgb = spriteColor[index].rgb;
-	color.a = texture(image, uv).r * spriteColor[index].a;
+	fragColor.rgb = spriteColor[index].rgb;
+	fragColor.a = texture(image, uv).r * spriteColor[index].a;
 }

@@ -1,6 +1,6 @@
-#version 330 core
 in vec2 TexCoords;
-out vec4 color;
+
+out vec4 fragColor;
 
 uniform sampler2D image;
 uniform vec4 sourceRect;
@@ -15,8 +15,8 @@ void main()
 	vec4 sr = sourceRect;
 	uv *= sr.zw;
 	uv += sr.xy;
-	color = texture(image, uv + vec2(time * speed.x, time * speed.y));
+	fragColor = texture(image, uv + vec2(time * speed.x, time * speed.y));
 
     if (recolorB.a != 0.0)
-        color = mix(recolorB, recolorW, color.r);
+        fragColor = mix(recolorB, recolorW, fragColor.r);
 }

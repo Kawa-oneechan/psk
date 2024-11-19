@@ -1,8 +1,8 @@
-#version 330 core
 in vec2 TexCoords;
-out vec4 color;
 
-#include "common.txt"
+out vec4 fragColor;
+
+#include "common.fs"
 
 uniform sampler2D cloudImage;
 uniform sampler2D starsImage;
@@ -49,11 +49,18 @@ void main()
 	vec3 e = mix(SKY_MID, SKY_TOP, horizon);
 	e = mix(e, vec3(1.0), clouds(uv + vec2(0.0, horizon + 0.25)));
 	
-	if (flipped < horizon)
-	{
+	//if (flipped < horizon)
+	//{
 		c = mix(e, SKY_TOP, flipped * (1.0 / horizon));
 		c = mix(stars(uv), c, time); //TODO: needs better easing
-	}
+	//}
+	//else
+	c = clamp(c, vec3(0), vec3(1));
+	if (flipped > horizon)
+		c = mix(c, GND_BOT, (flipped - horizon) * 10.0);
+	//if (flipped > horizon + 0.1)
+	//	c = GND_BOT;
+	
 
-	color = vec4(c, 1.0);
+	fragColor = vec4(c, 1.0);
 }

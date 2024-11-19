@@ -1,12 +1,11 @@
-#version 330 core
 //#define TOON
-
-out vec4 FragColor;
 
 in vec2 TexCoord;
 in vec3 Normal;
 in vec3 Tangent;
 in vec3 FragPos;
+
+out vec4 fragColor;
 
 uniform sampler2DArray albedoTexture;
 uniform sampler2DArray normalTexture;
@@ -14,7 +13,6 @@ uniform sampler2DArray mixTexture;
 uniform sampler2DArray opacityTexture;
 
 uniform vec3 viewPos;
-
 uniform int layer;
 
 #include "lighting.fs"
@@ -43,10 +41,10 @@ void main()
 	vec3 result;
 	for (int i = 0; i < NUMLIGHTS; i++)
 		result += getLight(lights[i], albedo.rgb, norm, viewDir, mixx.b);
-	FragColor = vec4(result, opacity.r);
+	fragColor = vec4(result, opacity.r);
 
-	//FragColor = texture(albedoTexture, TexCoord);
-	//FragColor = vec4(norm, 1.0);
-	//FragColor = mixx;
-	if(FragColor.a < 0.1) discard;
+	//fragColor = texture(albedoTexture, TexCoord);
+	//fragColor = vec4(norm, 1.0);
+	//fragColor = mixx;
+	if(fragColor.a < 0.1) discard;
 }

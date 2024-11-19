@@ -1,4 +1,5 @@
-//lighting
+//---Lighting---
+
 #define NUMLIGHTS 4
 struct light {
 	vec4 pos;
@@ -65,3 +66,5 @@ vec3 calcNormal(vec3 mapCol)
 	newNormal = normalize(newNormal);
 	return newNormal;
 }
+
+//--------------

@@ -1,3 +1,5 @@
+//---Common---
+
 layout (std140) uniform CommonData
 {
 	float totalTime; //0
@@ -6,3 +8,5 @@ layout (std140) uniform CommonData
 	mat4 View; //16
 	mat4 Projection; //80
 };
+
+//------------
