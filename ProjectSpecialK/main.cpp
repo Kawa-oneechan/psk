@@ -469,6 +469,8 @@ int main(int, char**)
 
 	UI::Load();
 
+	glfwInit();
+
 	//test
 	/*
 	{
