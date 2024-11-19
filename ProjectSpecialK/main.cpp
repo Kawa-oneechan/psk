@@ -31,7 +31,7 @@ extern void RunTests();
 #endif
 ;
 
-constexpr int ScreenWidth = 2920;
+constexpr int ScreenWidth = 1920;
 constexpr int ScreenHeight = 1080;
 
 #ifdef _WIN32
@@ -141,6 +141,8 @@ namespace UI
 		}
 
 #define DS(K, V) if (!settings[K]) settings[K] = new JSONValue(V)
+		DS("screenWidth", ScreenWidth);
+		DS("screenHeight", ScreenHeight);
 		DS("language", (int)Language::USen);
 		DS("continue", (int)LoadSpawnChoice::FrontDoor);
 		DS("speech", (int)DialogueBox::Sound::Bebebese);
@@ -156,6 +158,9 @@ namespace UI
 		DS("keyBinds", JSONArray());
 		DS("gamepadBinds", JSONArray());
 #undef DS
+
+		width = settings["screenWidth"]->AsInteger();
+		height = settings["screenHeight"]->AsInteger();
 
 		constexpr Language opt2lan[] = { Language::USen, Language::JPja, Language::EUde, Language::EUes, Language::EUfr, Language::EUit, Language::EUhu, Language::EUnl, Language::EUen };
 		gameLang = opt2lan[settings["language"]->AsInteger()];
@@ -199,6 +204,9 @@ namespace UI
 
 	static void Save()
 	{
+		settings["screenWidth"] = new JSONValue(width);
+		settings["screenHeight"] = new JSONValue(height);
+
 		settings["musicVolume"] = new JSONValue(Audio::MusicVolume);
 		settings["ambientVolume"] = new JSONValue(Audio::AmbientVolume);
 		settings["soundVolume"] = new JSONValue(Audio::SoundVolume);
@@ -373,7 +381,7 @@ static int InitOpenGL()
 	glfwWindowHint(GLFW_SAMPLES, 2);
 
 	const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-	if (mode->width > width || mode->height == height)
+	if (mode->width < width || mode->height < height)
 	{
 		width = mode->width;
 		height = mode->height;
@@ -455,8 +463,6 @@ int main(int, char**)
 	{
 		FatalError(x.what());
 	}
-
-	glfwInit();
 
 	Audio::Initialize();
 	SolBinds::Setup();

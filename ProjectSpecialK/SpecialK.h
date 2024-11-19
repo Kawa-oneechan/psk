@@ -59,7 +59,11 @@ enum class LoadSpawnChoice
 	InPlace,
 };
 
-extern int width, height;
+//Actual current screen width.
+extern int width;
+//Actual current screen height.
+extern int height;
+//Ratio of current screen height over 1080.
 extern float scale;
 
 template<typename T> static T clamp(T val, T minval, T maxval) { return std::max<T>(std::min<T>(val, maxval), minval); }

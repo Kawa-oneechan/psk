@@ -11,6 +11,7 @@ PanelLayout::PanelLayout(JSONValue* source)
 
 	Position = src["position"] != nullptr ? GetJSONVec2(src["position"]) : glm::vec2(0);
 	Alpha = src["alpha"] != nullptr ? src["alpha"]->AsNumber() : 1.0f;
+	Origin = src["origin"] != nullptr ? StringToEnum<CornerOrigin>(src["origin"]->AsString(), { "topleft", "topright", "bottomleft", "bottomright" }) : CornerOrigin::TopLeft;
 
 	if (src["textures"] != nullptr)
 	{
@@ -51,11 +52,11 @@ PanelLayout::PanelLayout(JSONValue* source)
 		panel->Polygon = -1;
 
 		auto& type = pnl["type"]->AsString();
-		if (type == "image") panel->Type = PanelType::Image;
-		else if (type == "text") panel->Type = PanelType::Text;
-		else if (type == "itemicon") panel->Type = PanelType::ItemIcon;
+		if (type == "image") panel->Type = Panel::Type::Image;
+		else if (type == "text") panel->Type = Panel::Type::Text;
+		else if (type == "itemicon") panel->Type = Panel::Type::ItemIcon;
 
-		if (panel->Type == PanelType::Image)
+		if (panel->Type == Panel::Type::Image)
 		{
 			panel->Texture = pnl["texture"] != nullptr ? pnl["texture"]->AsInteger() : 0;
 			panel->Frame = pnl["frame"] != nullptr ? pnl["frame"]->AsInteger() : 0;
@@ -63,7 +64,7 @@ PanelLayout::PanelLayout(JSONValue* source)
 
 			panel->Enabled = pnl["enabled"] != nullptr ? pnl["enabled"]->AsBool() : panel->Polygon != -1;
 		}
-		else if (panel->Type == PanelType::Text)
+		else if (panel->Type == Panel::Type::Text)
 		{
 			panel->Text = pnl["text"] != nullptr ? pnl["text"]->AsString() : "???";
 			panel->Font = pnl["font"] != nullptr ? pnl["font"]->AsInteger() : 1;
@@ -77,7 +78,7 @@ PanelLayout::PanelLayout(JSONValue* source)
 					panel->Alignment = 2;
 			}
 		}
-		else if (panel->Type == PanelType::ItemIcon)
+		else if (panel->Type == Panel::Type::ItemIcon)
 		{
 			panel->Text = pnl["text"] != nullptr ? pnl["text"]->AsString() : "";
 			panel->Size = pnl["size"] != nullptr ? pnl["size"]->AsNumber() : 100.0f;
@@ -88,7 +89,7 @@ PanelLayout::PanelLayout(JSONValue* source)
 			auto pos = pnl["position"]->AsArray();
 			auto w = 0;
 			auto h = 0;
-			if (panel->Type == PanelType::Image)
+			if (panel->Type == Panel::Type::Image)
 			{
 				w = textures[panel->Texture]->width;
 				h = textures[panel->Texture]->height;
@@ -216,6 +217,9 @@ void PanelLayout::Draw(float dt)
 			color *= 3.0f;
 
 		auto parentPos = glm::vec2(0);
+		if (Origin == CornerOrigin::TopRight || Origin == CornerOrigin::BottomRight) parentPos.x = (float)width;
+		else if (Origin == CornerOrigin::BottomLeft || Origin == CornerOrigin::BottomRight) parentPos.y = (float)height;
+
 		auto parentID = panel->Parent;
 		while (parentID != -1)
 		{
@@ -228,7 +232,7 @@ void PanelLayout::Draw(float dt)
 		if (color.a == 0)
 			continue;
 
-		if (panel->Type == PanelType::Image)
+		if (panel->Type == Panel::Type::Image)
 		{
 			auto& texture = *textures[panel->Texture];
 			auto frame = texture[panel->Frame];
@@ -253,7 +257,7 @@ void PanelLayout::Draw(float dt)
 					Sprite::DrawLine((poly[i] * size) + finalPos, (poly[(i + 1) % plen] * size) + finalPos, glm::vec4(1));
 			}
 		}
-		else if (panel->Type == PanelType::Text)
+		else if (panel->Type == Panel::Type::Text)
 		{
 			if (panel->Text.empty())
 				continue;
@@ -276,7 +280,7 @@ void PanelLayout::Draw(float dt)
 				panel->Size * scale
 			);
 		}
-		else if (panel->Type == PanelType::ItemIcon)
+		else if (panel->Type == Panel::Type::ItemIcon)
 		{
 			if (panel->Text.empty())
 				continue;

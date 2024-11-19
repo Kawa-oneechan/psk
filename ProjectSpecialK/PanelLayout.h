@@ -35,17 +35,16 @@ struct Tween
 
 class PanelLayout : public Tickable
 {
-	enum PanelType
-	{
-		Image, Text, ItemIcon,
-	};
 
 	class Panel
 	{
 	public:
 		std::string ID;
 		glm::vec2 Position;
-		PanelType Type;
+		enum class Type
+		{
+			Image, Text, ItemIcon,
+		} Type;
 		float Alpha;
 		int Texture, Shader;
 		int Frame;
@@ -70,6 +69,10 @@ private:
 
 public:
 	glm::vec2 Position;
+	enum class CornerOrigin
+	{
+		TopLeft, TopRight, BottomLeft, BottomRight
+	} Origin;
 	float Alpha;
 
 	PanelLayout(JSONValue* source);

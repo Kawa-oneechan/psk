@@ -355,9 +355,11 @@
 			"ui/datetime.png"
 		],
 		"alpha": 0.75,
+		"origin": "bottomleft",
 		"panels": [
 			{
-				"position": [ 0, 850 ],
+				//"position": [ 0, 850 ],
+				"position": [ 0, -32 ],
 				"type": "sprite",
 				"texture": 0,
 				"frame": 0,
@@ -365,7 +367,9 @@
 			},
 			{
 				"id": "time",
-				"position": [ 180, 870 ],
+				"parent": 0,
+				//"position": [ 180, 870 ],
+				"position": [ 180, 20 ],
 				"type": "text",
 				"text": "00:00",
 				"size": 150.0,
@@ -375,7 +379,9 @@
 			},
 			{
 				"id": "ampm",
-				"position": [ 260, 875 ],
+				"parent": 0,
+				//"position": [ 280, 875 ],
+				"position": [ 280, 25 ],
 				"type": "text",
 				"text": "XM",
 				"size": 100.0,
@@ -384,7 +390,9 @@
 			},
 			{
 				"id": "date",
-				"position": [ 180, 960 ],
+				"parent": 0,
+				//"position": [ 180, 960 ],
+				"position": [ 180, 110 ],
 				"type": "text",
 				"text": "Foo 00, bar.",
 				"size": 80.0,
