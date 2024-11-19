@@ -223,8 +223,9 @@ namespace VFS
 			addSource(mod.path());
 		}
 
-		conprint(0, "Pre-sort:");
 		auto table = std::vector<std::string>{ "ID", "Name", "Author", "Priority" };
+#ifdef DEBUG
+		conprint(0, "Pre-sort:");
 		for (const auto& source : sources)
 		{
 			table.push_back(source.id);
@@ -233,6 +234,7 @@ namespace VFS
 			table.emplace_back(std::to_string(source.priority));
 		}
 		Table(table, 4);
+#endif
 
 		std::sort(sources.begin(), sources.end(), [](const Source& a, const Source& b)
 		{
@@ -284,7 +286,7 @@ namespace VFS
 				depWorker(source);
 		}
 
-		conprint(0, "Post-sort:");
+		debprint(0, "Post-sort:");
 		table = std::vector<std::string>{ "ID", "Name", "Author", "Priority" };
 		for (const auto& source : sources)
 		{
@@ -487,7 +489,7 @@ namespace VFS
 
 		entries.shrink_to_fit();
 
-		conprint(0, "ForgetVFS: went from {} to {} items, forgetting {}.", start, entries.size(), start - entries.size());
+		debprint(0, "ForgetVFS: went from {} to {} items, forgetting {}.", start, entries.size(), start - entries.size());
 	}
 
 	std::string mangle(const std::string& path)

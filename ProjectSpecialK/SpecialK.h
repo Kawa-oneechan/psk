@@ -155,6 +155,11 @@ namespace UI
 };
 
 #define conprint(C, F, ...) console->Print(C, fmt::format(F, __VA_ARGS__))
+#ifdef DEBUG
+#define debprint(C, F, ...) console->Print(C, fmt::format(F, __VA_ARGS__))
+#else
+#define debprint(C, F, ...)
+#endif
 
 #define MSBTParams const std::vector<std::string>& tags, int start, int len
 

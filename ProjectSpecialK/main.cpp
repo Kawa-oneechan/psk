@@ -539,6 +539,12 @@ int main(int, char**)
 	modelShader->Set("mixTexture", 2);
 	modelShader->Set("opacityTexture", 3);
 
+	skyShader->Use();
+	skyShader->Set("cloudImage", 1);
+	skyShader->Set("starsImage", 2);
+	auto cloudImage = Texture("altostratus.png");
+	auto starsImage = Texture("starfield.png");
+
 	/*
 	auto bob = Database::Find<Villager>("ac:cat00", villagers);
 	bob->defaultClothingID = "acnh:djkklogotee/neonpink"; //-V519 this is on purpose daijoubu
@@ -626,6 +632,8 @@ int main(int, char**)
 		if (pitch > 180) pitch -= 360;
 		skyShader->Use();
 		skyShader->Set("pitch", pitch);
+		cloudImage.Use(1);
+		starsImage.Use(2);
 
 		if (postFx)
 		{

@@ -8,8 +8,10 @@ extern GLFWwindow* window;
 
 void ThreadedLoader(std::function<void(float*)> loader)
 {
+#ifdef DEBUG
 	conprint(0, "Starting threaded loader task.");
 	auto startingTime = std::chrono::high_resolution_clock::now();
+#endif
 
 	glDisable(GL_DEPTH_TEST);
 	cursor->Select(1);
@@ -64,7 +66,9 @@ void ThreadedLoader(std::function<void(float*)> loader)
 	t.join();
 	cursor->Select(0);
 
+#ifdef DEBUG
 	auto endingTime = std::chrono::high_resolution_clock::now();
 	auto ms_int = std::chrono::duration_cast<std::chrono::milliseconds>(endingTime - startingTime);
 	conprint(0, "Threaded loader: task took {} milliseconds.", ms_int.count());
+#endif
 }

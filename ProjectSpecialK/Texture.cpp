@@ -70,7 +70,7 @@ Texture::Texture(const std::string& texturePath, int repeat, int filter) : file(
 	{
 		if (!load(data, &ID, width, height, channels, repeat, filter))
 		{
-			conprint(3, "glGenTextures indicates we're threading. Delaying \"{}\"...", texturePath);
+			debprint(3, "glGenTextures indicates we're threading. Delaying \"{}\"...", texturePath);
 			delayed = true;
 			cache[file] = std::make_tuple(this, 1);
 			return;
@@ -99,7 +99,7 @@ Texture::Texture(const unsigned char* externalData, int width, int height, int c
 	{
 		if (!load(externalData, &ID, width, height, channels, repeat, filter))
 		{
-			conprint(3, "glGenTextures indicates we're threading. Delaying load from memory...");
+			debprint(3, "glGenTextures indicates we're threading. Delaying load from memory...");
 			delayed = true;
 			//grab a copy we control for later
 			auto size = width * height * channels;
@@ -148,12 +148,12 @@ void Texture::Use(int slot)
 	if (delayed)
 	{
 		if (file.empty())
-			conprint(3, "Delayed-loading texture on first use...");
+			debprint(3, "Delayed-loading texture on first use...");
 		else
-			conprint(3, "Delayed-loading texture \"{}\" on first use...", file);
+			debprint(3, "Delayed-loading texture \"{}\" on first use...", file);
 		if (!load(data, &ID, width, height, channels, repeat, filter))
 		{
-			conprint(2, "glGenTextures indicates we're still threading! WTF?");
+			debprint(2, "glGenTextures indicates we're still threading! WTF?");
 			return;
 		}
 		delete data;
@@ -301,10 +301,10 @@ void TextureArray::Use(int slot)
 {
 	if (delayed)
 	{
-		conprint(3, "Delayed-loading texture array \"{}\" on first use...", file);
+		debprint(3, "Delayed-loading texture array \"{}\" on first use...", file);
 		if (!loadArray(data, &ID, width, height, channels, layers, repeat, filter))
 		{
-			conprint(2, "glGenTextures indicates we're still threading! WTF?");
+			debprint(2, "glGenTextures indicates we're still threading! WTF?");
 			return;
 		}
 		for (auto l = 0; l < layers; l++)

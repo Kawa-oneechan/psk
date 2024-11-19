@@ -39,7 +39,7 @@ namespace Database
 
 	static void loadIconsWorker(float* progress, const std::string& path, std::shared_ptr<Texture>* texture, std::map<std::string, glm::vec4>& atlas)
 	{
-		conprint(0, "Icons: loading {}...", path);
+		debprint(0, "Icons: loading {}...", path);
 
 		constexpr int iconSize = 128;
 		//constexpr int cols = 16;
@@ -56,11 +56,11 @@ namespace Database
 		auto entries = VFS::Enumerate(fmt::format("icons\\{}\\*.png", path));
 		auto endingTime = std::chrono::high_resolution_clock::now();
 		auto ms_int = std::chrono::duration_cast<std::chrono::milliseconds>(endingTime - startingTime);
-		conprint(0, "IconsWorker: loading {} took {} milliseconds to grab {} items.", path, ms_int.count(), entries.size());
+		debprint(0, "IconsWorker: loading {} took {} milliseconds to grab {} items.", path, ms_int.count(), entries.size());
 
 		if (entries.size() >= cols * rows)
 		{
-			conprint(1, "Icons: Too many icons! Got {} but can only fit {}.", entries.size(), cols * rows);
+			debprint(1, "Icons: Too many icons! Got {} but can only fit {}.", entries.size(), cols * rows);
 			//entries.erase(entries.begin() + (cols * rows), entries.end());
 			bool expandToRight = true;
 			while (entries.size() >= cols * rows)
@@ -125,7 +125,7 @@ namespace Database
 		
 		Forget(entries);
 
-		conprint(0, "Icons: generated a sheet for {} entries.", entries.size());
+		debprint(0, "Icons: generated a sheet for {} entries.", entries.size());
 	}
 
 	void LoadIcons(float* progress)
@@ -211,7 +211,7 @@ namespace Database
 
 	void LoadItems(float* progress)
 	{
-		conprint(0, "ItemsDatabase: loading...");
+		debprint(0, "ItemsDatabase: loading...");
 		loadWorker<Item>(progress, items, "items/*.json", "ItemsDatabase");
 
 		auto table = std::vector<std::string>{ "ID", "Name", "Type", "Hash" };
@@ -227,12 +227,12 @@ namespace Database
 			table.emplace_back(fmt::format("{:08X}", item->Hash));
 		}
 		Table(table, 4);
-		conprint(0, "ItemsDatabase: ended up with {} entries.", items.size());
+		debprint(0, "ItemsDatabase: ended up with {} entries.", items.size());
 	}
 
 	void LoadSpecies(float* progress)
 	{
-		conprint(0, "SpeciesDatabase: loading...");
+		debprint(0, "SpeciesDatabase: loading...");
 		loadWorker<Species>(progress, species, "species/*.json", "SpeciesDatabase");
 		auto table = std::vector<std::string>{ "ID", "Name", "Hash" };
 		for (const auto& spec: species)
@@ -242,12 +242,12 @@ namespace Database
 			table.emplace_back(fmt::format("{:08X}", spec->Hash));
 		}
 		Table(table, 3);
-		conprint(0, "SpeciesDatabase: ended up with {} entries.", species.size());
+		debprint(0, "SpeciesDatabase: ended up with {} entries.", species.size());
 	}
 
 	void LoadTraits(float* progress)
 	{
-		conprint(0, "TraitsDatabase: loading...");
+		debprint(0, "TraitsDatabase: loading...");
 		loadWorker<Personality>(progress, personalities, "personalities/*.json", "TraitsDatabase");
 		auto table = std::vector<std::string>{ "ID", "Name", "Hash" };
 		for (const auto& pers : personalities)
@@ -258,12 +258,12 @@ namespace Database
 		}
 		Table(table, 3);
 		loadWorker<Hobby>(progress, hobbies, "hobbies/*.json", "TraitsDatabase");
-		conprint(0, "TraitsDatabase: ended up with {} personalities and {} hobbies.", personalities.size(), hobbies.size());
+		debprint(0, "TraitsDatabase: ended up with {} personalities and {} hobbies.", personalities.size(), hobbies.size());
 	}
 
 	void LoadVillagers(float* progress)
 	{
-		conprint(0, "VillagerDatabase: loading...");
+		debprint(0, "VillagerDatabase: loading...");
 		loadWorker<Villager>(progress, villagers, "villagers/*.json", "VillagerDatabase");
 		auto table = std::vector<std::string>{ "ID", "Name","Hash" };
 		for (const auto& villager : villagers)
@@ -273,7 +273,7 @@ namespace Database
 			table.emplace_back(fmt::format("{:08X}", villager->Hash));
 		}
 		Table(table, 3);
-		conprint(0, "VillagerDatabase: ended up with {} entries.", villagers.size());
+		debprint(0, "VillagerDatabase: ended up with {} entries.", villagers.size());
 	}
 
 	void LoadGlobalStuff(float* progress)

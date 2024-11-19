@@ -260,17 +260,17 @@ Model::Model(const std::string& modelPath) : file(modelPath)
 	if (!scene)
 		FatalError(fmt::format("Could not load scene {}: {}", modelPath, errors.description.data));
 
-	conprint(5, "Loading {}\n-------------------------------", modelPath);
+	debprint(5, "Loading {}\n-------------------------------", modelPath);
 
-	conprint(5, "Materials:");
+	debprint(5, "Materials:");
 	for (auto m : scene->materials)
 	{
-		conprint(0, "* {}", m->name.data);
+		debprint(0, "* {}", m->name.data);
 	}
 
 	if (scene->skin_clusters.count > 0)
 	{
-		conprint(5, "Bones:");
+		debprint(5, "Bones:");
 		unsigned int boneCt = 0;
 		std::array<int, MaxBones> clusterMap;
 		for (auto i = 0; i < scene->skin_clusters.count; i++)
@@ -289,7 +289,7 @@ Model::Model(const std::string& modelPath) : file(modelPath)
 			}
 			if (exists)
 				continue;
-			conprint(0, "* {}. {}", boneCt, boneName);
+			debprint(0, "* {}. {}", boneCt, boneName);
 			auto b = Bone();
 			b.Name = boneName;
 			b.Offset = ufbxToGlmMat4(bone->geometry_to_node);
@@ -303,8 +303,6 @@ Model::Model(const std::string& modelPath) : file(modelPath)
 			auto cluster = scene->skin_clusters.data[clusterMap[i]];
 			auto bone = cluster->bone_node;
 			auto boneName = std::string(bone->name.data);
-			if (boneName == "Ear_1_R" || boneName == "Ear_1_L")
-				conprint(0, "!");
 			if (bone->parent != nullptr)
 			{
 				auto parentBone = bone->parent->name.data;
@@ -323,7 +321,7 @@ Model::Model(const std::string& modelPath) : file(modelPath)
 			finalBoneMatrices[i] = glm::identity<glm::mat4>(); //Bones[i].Offset; //glm::mat4(1.0f);
 	}
 
-	conprint(5, "Meshes:");
+	debprint(5, "Meshes:");
 	unsigned int matCt = 0;
 	for (size_t i = 0; i < scene->nodes.count; i++)
 	{
@@ -341,7 +339,7 @@ Model::Model(const std::string& modelPath) : file(modelPath)
 					if (it.first == m1)
 					{
 						m.Texture = it.second;
-						conprint(0, "* {} ({} > {})", node->name.data, it.first, it.second);
+						debprint(0, "* {} ({} > {})", node->name.data, it.first, it.second);
 						foundIt = true;
 						break;
 					}
@@ -349,7 +347,7 @@ Model::Model(const std::string& modelPath) : file(modelPath)
 				if (!foundIt)
 				{
 					m.Texture = matCt;
-					conprint(0, "* {} (#{})", node->name.data, matCt);
+					debprint(0, "* {} (#{})", node->name.data, matCt);
 					matCt++;
 				}
 			}

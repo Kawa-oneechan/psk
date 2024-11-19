@@ -140,7 +140,7 @@ void Town::StartNewDay()
 		localtime_s(&gm, &now);
 		const auto month = gm.tm_mon + 1;
 		const auto day = gm.tm_mday;
-		conprint(0, "Today is {} {}. Let's see.", day, month);
+		debprint(0, "Today is {} {}. Let's see.", day, month);
 
 		std::srand(weatherSeed + (month << 8) + (day << 16));
 		
@@ -187,7 +187,7 @@ void Town::StartNewDay()
 
 		auto patterns = json["patterns"]->AsArray();
 		auto pattern = patterns[pick]->AsObject();
-		conprint(0, "Weather: picked {}, \"{}\".", pick, pattern["id"]->AsString());
+		debprint(0, "Weather: picked {}, \"{}\".", pick, pattern["id"]->AsString());
 		auto rain = pattern["rain"]->AsArray();
 		auto wind = pattern["wind"]->AsArray();
 		for (int i = 0; i < 24; i++)
