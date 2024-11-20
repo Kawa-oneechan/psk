@@ -545,6 +545,8 @@ int main(int, char**)
 	auto cloudImage = Texture("altostratus.png");
 	auto starsImage = Texture("starfield.png");
 
+	auto rainLayer = Background("rain.png", glm::vec2(1.0, 2.0));
+
 	/*
 	auto bob = Database::Find<Villager>("ac:cat00", villagers);
 	bob->defaultClothingID = "acnh:djkklogotee/neonpink"; //-V519 this is on purpose daijoubu
@@ -642,6 +644,7 @@ int main(int, char**)
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			Sprite::DrawSprite(skyShader, *whiteRect, glm::vec2(0), glm::vec2(width, height));
 			townDrawer.Draw(dt * timeScale);
+			rainLayer.Draw(dt * timeScale);
 			frameBuffer.Drop();
 			//background.Draw(dt * timeScale);
 			frameBuffer.Draw();
@@ -651,6 +654,7 @@ int main(int, char**)
 			//background.Draw(dt * timeScale);
 			Sprite::DrawSprite(skyShader, *whiteRect, glm::vec2(0), glm::vec2(width, height));
 			townDrawer.Draw(dt * timeScale);
+			rainLayer.Draw(dt * timeScale);
 		}
 
 		for (const auto& t : tickables)
