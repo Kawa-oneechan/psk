@@ -20,7 +20,7 @@ void DialogueBox::msbtStr(MSBTParams)
 		toDisplay.replace(start, len, Text::Get("str:kun"));
 	else if (tags[1] == "vname")
 	{
-		if (speaker == nullptr)
+		if (!speaker)
 		{
 			conprint(2, "MSBT Str called for villager name, but no speaker is set.");
 			toDisplay.replace(start, len, "Buggsy");
@@ -30,7 +30,7 @@ void DialogueBox::msbtStr(MSBTParams)
 	}
 	else if (tags[1] == "vspec")
 	{
-		if (speaker == nullptr)
+		if (!speaker)
 		{
 			conprint(2, "MSBT Str called for villager species, but no speaker is set.");
 			toDisplay.replace(start, len, "bug");
@@ -40,7 +40,7 @@ void DialogueBox::msbtStr(MSBTParams)
 	}
 	else if (tags[1] == "catchphrase")
 	{
-		if (speaker == nullptr)
+		if (!speaker)
 		{
 			conprint(2, "MSBT Str called for villager catchphrase, but no speaker is set.");
 			toDisplay.replace(start, len, "bugbug");
@@ -60,6 +60,63 @@ void DialogueBox::msbtEllipses(MSBTParams)
 	msbtStr(fakeTags, start, len);
 }
 
+void DialogueBox::msbtWordstruct(MSBTParams)
+{
+	if (tags.size() < 2)
+	{
+		conprint(2, "Missing parameter in MSBT Wordstruct: {}", toDisplay.substr(start, len));
+		return;
+	}
+
+	//Grab the entire thing, not just individual tags.
+	//This method is cheaper than re-joining the tags.
+	auto key = toDisplay.substr(start + 1, len - 2);
+
+	auto ppos = key.find('?');
+	if (ppos != key.npos)
+	{
+		//Use speaker's personality, unless there
+		//is no speaker in which case we use "normal".
+		//But if the speaker's personality isn't an option,
+		//reset and use "normal" after all.
+		if (!speaker)
+			key.replace(ppos, 1, "normal");
+		else
+		{
+			key.replace(ppos, 1, speaker->personality->ID);
+			//check if this is available
+			auto result = Text::Get(fmt::format("{}:0", key));
+			if (result.length() >= 3 && result.substr(0, 3) == "???")
+			{
+				//guess not :shrug:
+				key = toDisplay.substr(start + 1, len - 2);
+				key.replace(ppos, 1, "normal");
+			}
+		}
+	}
+
+	//Count the number of options
+	int options = 0;
+	for (int i = 0; i < 32; i++)
+	{
+		auto result = Text::Get(fmt::format("{}:{}", key, i));
+		if (result.length() >= 3 && result.substr(0, 3) == "???")
+		{
+			options = i;
+			break;
+		}
+	}
+	if (options == 0)
+	{
+		conprint(2, "Wordstructor: could not find anything for \"{}\".", key);
+		toDisplay.replace(start, len, "???WS???");
+		return;
+	}
+	
+	int choice = std::rand() % options;
+	toDisplay.replace(start, len, Text::Get(fmt::format("{}:{}", key, choice)));
+}
+
 void DialogueBox::msbtDelay(MSBTParams)
 {
 	len; start;
@@ -74,7 +131,7 @@ void DialogueBox::msbtDelay(MSBTParams)
 	}
 	else
 	{
-		if (speaker == nullptr)
+		if (!speaker)
 		{
 			conprint(2, "MSBT Delay called with personality dependency, but no speaker is set.");
 			return;
@@ -104,7 +161,7 @@ void DialogueBox::msbtDelay(MSBTParams)
 void DialogueBox::msbtEmote(MSBTParams)
 {
 	tags; len; start;
-	if (speaker == nullptr)
+	if (!speaker)
 	{
 		conprint(2, "MSBT Emote called but speaker is set.");
 		return;
@@ -175,12 +232,13 @@ DialogueBox::DialogueBox()
 	//Text("Are you <color:3><str:player></color>? <delay:1000>Hiii! Welcome to <color:2>Project Special K</color>!", 0);
 	//Text(Get("dlg:sza:wack"), Database::Find<Villager>("psk:cat00", villagers));
 	//Text("MSBT JSON/Lua test:\n<test1>\n<test2:bur>", 3);
-	Text(u8"This is ordinary dialogue with a button image in it: \uE0E2 look at that.", Database::Find<Villager>("psk:cat00", villagers));
+	//Text(u8"This is ordinary dialogue with a button image in it: \uE0E2 look at that.", Database::Find<Villager>("psk:cat00", villagers));
 	//Text("By the President of the United States of America:\nA Proclamation.<break>Whereas, on the twenty-second day of September, in the year of our Lord one thousand eight hundred and sixty-two, a proclamation was issued by the President of the United States, containing, among other things, the following, to wit:", 0);
 	//Text("Timmy Turner, my name is DougsDaleDimmaDaleDimmaDimmsDomeDoDiDomeDimmsDimmaDimmaDome, owner of the DougDimmsDimmaDaleDimmaDimmsDomeDoDiDimmaDimmsDaleDimmaDimmsDaleDimmaDome.", 0);
 	//Text(u8"<font:0>◗♗♔ⓢ◗ꍏ↳€ ◗♗♔♔ꍏ◗⊙♔€", 0);
 	//Text(u8"シリーズに含まれる作品の範囲については、制作時期・代理店や原作者の違いなどから、当初は『バトルフィーバーJ』（1979年 - 1980年）を起点としてカウントされていたが。", 0);
 	//Text(u8"Je hebt voor <color:1>Nederlands</color> gekozen. Waarom zijn bijna alle namen hetzelfde gebleven?", 0);
+	Text(u8"<ws:?:greeting>", Database::Find<Villager>("ac:cat01", villagers));
 
 	//Text("I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I", 0);
 	//Text("IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII", 0);
@@ -205,7 +263,7 @@ void DialogueBox::Preprocess()
 			if (func != msbtPhase1.end())
 			{
 				std::invoke(func->second, this, msbt, start, len);
-				i = msbtStart; //-1 because we may have subbed in a new tag.
+				i = -1; //-1 because we may have subbed in a new tag.
 			}
 			else
 			{

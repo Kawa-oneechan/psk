@@ -44,11 +44,13 @@ private:
 
 	void msbtStr(MSBTParams);
 	void msbtEllipses(MSBTParams);
+	void msbtWordstruct(MSBTParams);
 
 	//MSBT functions that actually change the string content.
 	const std::map<std::string, MSBTFunc> msbtPhase1 = {
 		{ "str", &DialogueBox::msbtStr },
 		{ "...", &DialogueBox::msbtEllipses },
+		{ "ws", &DialogueBox::msbtWordstruct },
 	};
 	std::map<std::string, std::string> msbtPhase1X;
 

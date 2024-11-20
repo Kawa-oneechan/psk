@@ -1,0 +1,8 @@
+{
+	"ws:normal:greeting:0": { "en": "<ws:?:init_hello>, <str:player>!" },
+
+	"ws:normal:init_hello:0": { "en": "Hello" },
+	"ws:normal:init_hello:1": { "en": "Hi" },
+	"ws:normal:init_hello:2": { "en": "Hello hello" },
+	"ws:normal:init_hello:3": { "en": "Hey" }
+}
