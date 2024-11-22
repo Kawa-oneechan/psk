@@ -13,5 +13,15 @@
 		"it": "arrogante",
 		"nl": "verwaand",
 		"ru": "самодовольный"
+	},
+	"compatibility": {
+		"normal": 5,
+		"lazy": 3,
+		"peppy": 3,
+		"jock": 2,
+		"snooty": 2,
+		"cranky": 1,
+		"smug": 5,
+		"uchi": 1
 	}
 }

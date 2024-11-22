@@ -13,5 +13,15 @@
 		"it": "sportivo",
 		"nl": "atletisch",
 		"ru": "спортивный"
+	},
+	"compatibility": {
+		"normal": 2,
+		"lazy": 1,
+		"peppy": 5,
+		"jock": 5,
+		"snooty": 1,
+		"cranky": 3,
+		"smug": 2,
+		"uchi": 3
 	}
 }

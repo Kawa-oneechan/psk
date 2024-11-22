@@ -13,5 +13,15 @@
 		"it": "sofisticata",
 		"nl": "hooghartig",
 		"ru": "занудная"
+	},
+	"compatibility": {
+		"normal": 5,
+		"lazy": 3,
+		"peppy": 2,
+		"jock": 1,
+		"snooty": 3,
+		"cranky": 5,
+		"smug": 2,
+		"uchi": 1
 	}
 }

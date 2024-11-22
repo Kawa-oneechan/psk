@@ -1,0 +1,175 @@
+{
+	"signs": {
+		//Sorted by month until I confirm if it works starting from Aries.
+		"aquarius": {
+			"name": {
+				"en": "Aquarius",
+				"jp": "宝瓶宮",
+				"nl": "Waterman",
+				"hu": "Vízöntő"
+			},
+			"unicode": "♒",
+			"element": "air",
+			"from": [ 20, 1 ],
+			"to": [ 18, 2 ]
+		},
+		"pisces": {
+			"name": {
+				"en": "Pisces",
+				"jp": "双魚宮",
+				"nl": "Vissen",
+				"hu": "Halak"
+			},
+			"unicode": "♓",
+			"element": "water",
+			"from": [ 19, 2 ],
+			"to": [ 20, 3 ]
+		},
+		"aries": {
+			"name": {
+				"en": "Aries",
+				"jp": "白羊宮",
+				"nl": "Ram",
+				"hu": "Kos"
+			},
+			"unicode": "♈",
+			"element": "fire",
+			"from": [ 21, 3 ],
+			"to": [ 19, 4 ]
+		},
+		"taurus": {
+			"name": {
+				"en": "Taurus",
+				"jp": "金牛宮",
+				"nl": "Stier",
+				"hu": "Bika"
+			},
+			"unicode": "♉",
+			"element": "earth",
+			"from": [ 20, 4 ],
+			"to": [ 20, 5 ]
+		},
+		"gemini": {
+			"name": {
+				"en": "Gemini",
+				"jp": "双児宮",
+				"nl": "Tweelingen",
+				"hu": "Ikrek"
+			},
+			"unicode": "♊",
+			"element": "air",
+			"from": [ 21, 5 ],
+			"to": [ 21, 6 ]
+		},
+		"cancer": {
+			"name": {
+				"en": "Cancer",
+				"jp": "巨蟹宮",
+				"nl": "Kreeft",
+				"hu": "Rák"
+			},
+			"unicode": "♋",
+			"element": "water",
+			"from": [ 22, 6 ],
+			"to": [ 22, 7 ]
+		},
+		"leo": {
+			"name": {
+				"en": "Leo",
+				"jp": "獅子宮",
+				"nl": "Leeuw",
+				"hu": "Oroszlán"
+			},
+			"unicode": "♌",
+			"element": "fire",
+			"from": [ 23, 7 ],
+			"to": [ 22, 8 ]
+		},
+		"virgo": {
+			"name": {
+				"en": "Virgo",
+				"jp": "処女宮",
+				"nl": "Maagd",
+				"hu": "Szűz"
+			},
+			"unicode": "♍",
+			"element": "earth",
+			"from": [ 23, 8 ],
+			"to": [ 22, 9 ]
+		},
+		"libra": {
+			"name": {
+				"en": "Libra",
+				"jp": "天秤宮",
+				"nl": "Weegschaal",
+				"hu": "Mérleg"
+			},
+			"unicode": "♎",
+			"element": "air",
+			"from": [ 23, 9 ],
+			"to": [ 23, 10 ]
+		},
+		"scorpio": {
+			"name": {
+				"en": "Scorpio",
+				"jp": "天蝎宮",
+				"nl": "Schorpioen",
+				"hu": "Skorpió"
+			},
+			"unicode": "♏",
+			"element": "water",
+			"from": [ 24, 10 ],
+			"to": [ 22, 11 ]
+		},
+		"saggitarius": {
+			"name": {
+				"en": "Saggitarius",
+				"jp": "人馬宮",
+				"nl": "Boogschutter",
+				"hu": "Nyilas"
+			},
+			"unicode": "♐",
+			"element": "fire",
+			"from": [ 23, 11 ],
+			"to": [ 21, 12 ]
+		},
+		"capricorn": {
+			"name": {
+				"en": "Capricorn",
+				"jp": "磨羯宮",
+				"nl": "Steenbok",
+				"hu": "Bak"
+			},
+			"unicode": "♑",
+			"element": "earth",
+			"from": [ 22, 12 ],
+			"to": [ 21, 1 ]
+		}
+	},
+	"compatibility": {
+		"fire": {
+			"fire": 5,
+			"earth": 2,
+			"air": 2,
+			"water": 0
+		},
+		"earth": {
+			"fire": 2,
+			"earth": 5,
+			"air": 0,
+			"water": 2
+		},
+		"air": {
+			"fire": 2,
+			"earth": 0,
+			"air": 5,
+			"water": 2
+		},
+		"water": {
+			"fire": 0,
+			"earth": 2,
+			"air": 2,
+			"water": 5
+		}
+	}
+}

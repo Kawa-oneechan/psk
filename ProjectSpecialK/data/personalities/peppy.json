@@ -13,5 +13,15 @@
 		"it": "senza freni",
 		"nl": "enthousiast",
 		"ru": "подвижная"
+	},
+	"compatibility": {
+		"normal": 1,
+		"lazy": 2,
+		"peppy": 5,
+		"jock": 5,
+		"snooty": 2,
+		"cranky": 1,
+		"smug": 3,
+		"uchi": 3
 	}
 }

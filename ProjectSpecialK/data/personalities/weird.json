@@ -4,5 +4,9 @@
 	"base": "fu",
 	"name": {
 		"en": "weird"
+	},
+	"compatibility": {
+		"weird": 5,
+		"spacey": 3
 	}
 }

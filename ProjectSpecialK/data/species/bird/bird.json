@@ -29,6 +29,9 @@
 		}
 	],
 	"generic": {},
+	"compatibility": {
+		"brd": 3
+	},
 	"parameters": {
 		"handItemOffset": [ 0, 0.113913, -1.131279 ],
 		"accessories": {

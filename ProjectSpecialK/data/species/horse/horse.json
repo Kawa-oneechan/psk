@@ -29,6 +29,10 @@
 		}
 	],
 	"generic": {},
+	"compatibility": {
+		"hrs": 3,
+		"der": 3
+	},
 	"parameters": {
 		"handItemOffset": [ 0, 0.679184, -0.121816 ],
 		"accessories": {

@@ -13,5 +13,15 @@
 		"it": "burbero",
 		"nl": "volwassen",
 		"ru": "капризный"
+	},
+	"compatibility": {
+		"normal": 3,
+		"lazy": 2,
+		"peppy": 1,
+		"jock": 3,
+		"snooty": 5,
+		"cranky": 5,
+		"smug": 1,
+		"uchi": 2
 	}
 }

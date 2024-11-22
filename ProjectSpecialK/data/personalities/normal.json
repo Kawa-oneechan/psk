@@ -13,5 +13,16 @@
 		"it": "dolce",
 		"nl": "vriendelijk",
 		"ru": "обычная"
+	},
+	"compatibility": {
+		"normal": 3,
+		"lazy": 1,
+		"peppy": 1,
+		"jock": 2,
+		"snooty": 5,
+		"cranky": 3,
+		"smug": 5,
+		"uchi": 2,
+		"plain": 3
 	}
 }

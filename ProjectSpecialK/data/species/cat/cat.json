@@ -40,6 +40,12 @@
 		"nl": "katten",
 		"ru": "кошки"
 	},
+	"compatibility": {
+		"cat": 3,
+		"tig": 5,
+		"mus": 0,
+		"ham": 0
+	},
 	"parameters": {
 		"handItemOffset": [ 0, 0.679184, -1.296696 ],
 		"accessories": {

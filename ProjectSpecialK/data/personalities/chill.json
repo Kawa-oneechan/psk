@@ -4,5 +4,16 @@
 	"base": "fu",
 	"name": {
 		"en": "chill"
+	},
+	"compatibility": {
+		"normal": 1,
+		"lazy": 5,
+		"peppy": 2,
+		"jock": 1,
+		"snooty": 3,
+		"cranky": 2,
+		"smug": 3,
+		"uchi": 5,
+		"chill": 5
 	}
 }

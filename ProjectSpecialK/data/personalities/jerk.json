@@ -14,5 +14,9 @@
 		"it": "cattivo",
 		"nl": "gemeen",
 		"ru": "мерзкий"
+	},
+	"compatibility": {
+		"default": 0,
+		"nasty": 3
 	}
 }

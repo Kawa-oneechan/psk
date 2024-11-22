@@ -29,6 +29,9 @@
 		}
 	],
 	"generic": {},
+	"compatibility": {
+		"elp": 3
+	},
 	"parameters": {
 		"handItemOffset": [ 0, 0.185058, 0.226658 ],
 		"accessories": {

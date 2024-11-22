@@ -85,6 +85,18 @@ If the entry is a bare string, the command is replaced by that string. So `"foo"
 
 If the entry is a string that *specifies a `.lua` file though*, that file's content will be used. The command and all its arguments (as done by splitting on `:`) will be available as the `msbt` variable. The script is expected to return a string. `msbt[1]` will be the command's name, while `msbt[0]` is nothing because Lua is dumb.
 
+## Villager compatibility
+
+In the sense of who gets along with whom, not any other sense.
+
+In `starsigns.json`, the twelve Zodiac signs are defined with their names, Unicode, date range, and most importantly classical element. These four elements are what ultimately determines compatibility scores as defined in the `compatibility` list in that file. This is one of three ways to get up to five points.
+
+In each species definition file, another `compatibility` list is included. *Usually* a villager of a given species gets three points when considering another villager of the same species, which is listed first. *By default*, any other combination gets two points, unless a `default` entry is provided. This can get you another five points.
+
+Finally, each personality has a similar `compatibility` list. It works the same way as with species.
+
+This means in total you can have a compatibility rating from 0 to 15, which is subdivided into "bad", "neutral", or "good" results. I don't know exactly how.
+
 ## Assorted other crap
 
 House stuff, exterior:
@@ -96,3 +108,4 @@ House stuff, exterior:
 * Door
 * Owner
 * Player?
+

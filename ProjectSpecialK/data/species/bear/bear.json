@@ -29,6 +29,10 @@
 		}
 	],
 	"generic": {},
+	"compatibility": {
+		"bea": 3,
+		"cbr": 5
+	},
 	"parameters": {
 		"handItemOffset": [ 0, -0.209689, -0.121816 ],
 		"accessories": {

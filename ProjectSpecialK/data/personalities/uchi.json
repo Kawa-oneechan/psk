@@ -13,5 +13,15 @@
 		"it": "sorellona",
 		"nl": "grote zus",
 		"ru": "старшая сестра"
+	},
+	"compatibility": {
+		"normal": 2,
+		"lazy": 5,
+		"peppy": 3,
+		"jock": 3,
+		"snooty": 1,
+		"cranky": 2,
+		"smug": 1,
+		"uchi": 5
 	}
 }

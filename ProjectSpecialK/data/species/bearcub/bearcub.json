@@ -28,6 +28,10 @@
 			"ru": "<info:a ::>медвежон<case:ок:ка:ку:ка>"
 		}
 	],
+	"compatibility": {
+		"cbr": 3,
+		"bea": 5
+	},
 	"parameters": {
 		"handItemOffset": [ 0, -0.004995, -1.298723 ],
 		"accessories": {

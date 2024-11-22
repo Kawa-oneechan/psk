@@ -4,5 +4,9 @@
 	"base": "bo",
 	"name": {
 		"en": "spacey"
+	},
+	"compatibility": {
+		"weird": 3,
+		"spacey": 5
 	}
 }

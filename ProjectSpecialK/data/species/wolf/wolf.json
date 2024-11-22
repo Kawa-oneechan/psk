@@ -29,6 +29,11 @@
 		}
 	],
 	"generic": {},
+	"compatibility": {
+		"wol": 3,
+		"dog": 5,
+		"shp": 0
+	},
 	"parameters": {
 		"handItemOffset": [ 0, 0.679184, -0.998426 ],
 		"accessories": {
