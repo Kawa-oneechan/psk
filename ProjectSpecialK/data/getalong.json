@@ -1,0 +1,276 @@
+{
+	//Maps villager birthdays to starsigns, and from there to elements.
+	//This is then used in the Compatibility table to get the first score
+	//out of three.
+	"signs": {
+		//Sorted by month until I confirm if it works starting from Aries.
+		"aquarius": {
+			"name": {
+				"en": "<info::an :the >Aquarius",
+				"ja": "みずがめ",
+				"ko": "물병",
+				"zh": "水瓶座",
+				"de": "<info:ein :ein :der >Wassermann",
+				"es": "acuario",
+				"fr": "<info:un :du :le >Verseau",
+				"it": "<info:un :dell'⁠:l'⁠>Acquario",
+				"nl": "<info:het :een :de >Waterman",
+				"ru": "<info:a ::>Водолей",
+				"hu": "Vízöntő"
+			},
+			"unicode": "♒",
+			"element": "air",
+			"from": [ 20, 1 ],
+			"to": [ 18, 2 ]
+		},
+		"pisces": {
+			"name": {
+				"en": "<info::a :the >Pisces",
+				"ja": "うお",
+				"ko": "물고기",
+				"zh": "雙魚座",
+				"de": "<info:::die >Fische",
+				"es": "piscis",
+				"fr": "<50,26:4:10:6:205>Poissons",
+				"it": "<info:un :dei :i >Pesci",
+				"nl": "<info:het ::de >Vissen",
+				"ru": "<info:::>Рыбы",
+				"hu": "Halak"
+			},
+			"unicode": "♓",
+			"element": "water",
+			"from": [ 19, 2 ],
+			"to": [ 20, 3 ]
+		},
+		"aries": {
+			"name": {
+				"en": "<info::an :the >Aries",
+				"ja": "おひつじ",
+				"ko": "양",
+				"zh": "牡羊座",
+				"de": "<info:ein :ein :der >Widder",
+				"es": "aries",
+				"fr": "<info:un :du :le >Bélier",
+				"it": "<info:un :dell'⁠:l'⁠>Ariete",
+				"nl": "<info:het :een :de >Ram",
+				"ru": "<info:a ::>Овен",
+				"hu": "Kos"
+			},
+			"unicode": "♈",
+			"element": "fire",
+			"from": [ 21, 3 ],
+			"to": [ 19, 4 ]
+		},
+		"taurus": {
+			"name": {
+				"en": "<info::a :the >Taurus",
+				"ja": "おうし",
+				"ko": "황소",
+				"zh": "金牛座",
+				"de": "<info:ein :ein :der >Stier",
+				"es": "tauro",
+				"fr": "<info:un :du :le >Taureau",
+				"it": "<info:un :del :il >Toro",
+				"nl": "<info:het :een :de >Stier",
+				"ru": "<info:a ::>Телец",
+				"hu": "Bika"
+			},
+			"unicode": "♉",
+			"element": "earth",
+			"from": [ 20, 4 ],
+			"to": [ 20, 5 ]
+		},
+		"gemini": {
+			"name": {
+				"en": "<info::a :the >Gemini",
+				"ja": "ふたご",
+				"ko": "쌍둥이",
+				"zh": "雙子座",
+				"de": "<info:::die >Zwillinge",
+				"es": "géminis",
+				"fr": "<50,26:4:10:6:205>Gémeaux",
+				"it": "<info:un :dei :i >Gemelli",
+				"nl": "<info:het ::de >Tweelingen",
+				"ru": "<info:::>Близнецы",
+				"hu": "Ikrek"
+			},
+			"unicode": "♊",
+			"element": "air",
+			"from": [ 21, 5 ],
+			"to": [ 21, 6 ]
+		},
+		"cancer": {
+			"name": {
+				"en": "<info::a :the >Cancer",
+				"ja": "かに",
+				"ko": "게",
+				"zh": "巨蟹座",
+				"de": "<info:ein :ein :der >Krebs",
+				"es": "cáncer",
+				"fr": "<info:un :du :le >Cancer",
+				"it": "<info:un :del :il >Cancro",
+				"nl": "<info:het :een :de >Kreeft",
+				"ru": "<info:a ::>Рак",
+				"hu": "Rák"
+			},
+			"unicode": "♋",
+			"element": "water",
+			"from": [ 22, 6 ],
+			"to": [ 22, 7 ]
+		},
+		"leo": {
+			"name": {
+				"en": "<info::a :the >Leo",
+				"ja": "しし",
+				"ko": "사자",
+				"zh": "獅子座",
+				"de": "<info:ein :ein :der >Löwe",
+				"es": "leo",
+				"fr": "<info:un :du :le >Lion",
+				"it": "<info:un :del :il >Leone",
+				"nl": "<info:het :een :de >Leeuw",
+				"ru": "<info:a ::>Лев",
+				"hu": "Oroszlán"
+			},
+			"unicode": "♌",
+			"element": "fire",
+			"from": [ 23, 7 ],
+			"to": [ 22, 8 ]
+		},
+		"virgo": {
+			"name": {
+				"en": "<info::a :the >Virgo",
+				"ja": "おとめ",
+				"ko": "처녀",
+				"zh": "處女座",
+				"de": "<info:eine :eine :die >Jungfrau",
+				"es": "virgo",
+				"fr": "<info:une :de la :la >Vierge",
+				"it": "<info:uno :della :la >Vergine",
+				"nl": "<info:het :een :de >Maagd",
+				"ru": "<info:an ::>Дева",
+				"hu": "Szűz"
+			},
+			"unicode": "♍",
+			"element": "earth",
+			"from": [ 23, 8 ],
+			"to": [ 22, 9 ]
+		},
+		"libra": {
+			"name": {
+				"en": "<info::a :the >Libra",
+				"ja": "てんびん",
+				"ko": "천칭",
+				"zh": "天秤座",
+				"de": "<info:eine :eine :die >Waage",
+				"es": "libra",
+				"fr": "<info:une :de la :la >Balance",
+				"it": "<info:uno :della :la >Bilancia",
+				"nl": "<info:het :een :de >Weegschaal",
+				"ru": "<info:::>Весы",
+				"hu": "Mérleg"
+			},
+			"unicode": "♎",
+			"element": "air",
+			"from": [ 23, 9 ],
+			"to": [ 23, 10 ]
+		},
+		"scorpio": {
+			"name": {
+				"en": "<info::a :the >Scorpio",
+				"ja": "さそり",
+				"ko": "전갈",
+				"zh": "天蠍座",
+				"de": "<info:ein :ein :der >Skorpion",
+				"es": "escorpio",
+				"fr": "<info:un :du :le >Scorpion",
+				"it": "<info:un :dello :lo >Scorpione",
+				"nl": "<info:het :een :de >Schorpioen",
+				"ru": "<info:a ::>Скорпион",
+				"hu": "Skorpió"
+			},
+			"unicode": "♏",
+			"element": "water",
+			"from": [ 24, 10 ],
+			"to": [ 22, 11 ]
+		},
+		"saggitarius": {
+			"name": {
+				"en": "<info::a :the >Sagittarius",
+				"ja": "いて",
+				"ko": "사수",
+				"zh": "射手座",
+				"de": "<info:ein :ein :der >Schütze",
+				"es": "sagitario",
+				"fr": "<info:un :du :le >Sagittaire",
+				"it": "<info:un :del :il >Sagittario",
+				"nl": "<info:het :een :de >Boogschutter",
+				"ru": "<info:a ::>Стрелец",
+				"hu": "Nyilas"
+			},
+			"unicode": "♐",
+			"element": "fire",
+			"from": [ 23, 11 ],
+			"to": [ 21, 12 ]
+		},
+		"capricorn": {
+			"name": {
+				"en": "<info::a :the >Capricorn",
+				"ja": "やぎ",
+				"ko": "염소",
+				"zh": "魔羯座",
+				"de": "<info:ein :ein :der >Steinbock",
+				"es": "capricornio",
+				"fr": "<info:un :du :le >Capricorne",
+				"it": "<info:un :del :il >Capricorno",
+				"nl": "<info:het :een :de >Steenbok",
+				"ru": "<info:a ::>Козерог",
+				"hu": "Bak"
+			},
+			"unicode": "♑",
+			"element": "earth",
+			"from": [ 22, 12 ],
+			"to": [ 21, 1 ]
+		}
+	},
+	"compatibility": {
+		"fire": {
+			"fire": 5,
+			"earth": 2,
+			"air": 2,
+			"water": 0
+		},
+		"earth": {
+			"fire": 2,
+			"earth": 5,
+			"air": 0,
+			"water": 2
+		},
+		"air": {
+			"fire": 2,
+			"earth": 0,
+			"air": 5,
+			"water": 2
+		},
+		"water": {
+			"fire": 0,
+			"earth": 2,
+			"air": 2,
+			"water": 5
+		}
+	},
+
+	//Second score of three is determined by the species of the villagers.
+	//This data is stored in the species JSON files.
+
+	//Third score is determined by the villagers' personalities. This too
+	//is stored in the personality JSON files.
+
+	//All in all, this gives you a score from 0 to 15. This now has to be
+	//converted to a "bad", "neutral", or "good" score:
+	"getalong": {
+		"bad": [ 0, 4 ],
+		"neutral": [ 5, 10 ],
+		"good": [ 11, 15 ]
+	}
+}
