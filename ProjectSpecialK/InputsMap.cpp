@@ -22,6 +22,17 @@ void InputsMap::Process(int scancode, int action)
 			}
 		}
 	}
+	else if (action == GLFW_RELEASE)
+	{
+		for (auto& k : Keys)
+		{
+			if (scancode == k.ScanCode)
+			{
+				k.State = false;
+				//break;
+			}
+		}
+	}
 }
 
 void InputsMap::MouseMove(float x, float y)

@@ -637,6 +637,66 @@ int main(int, char**)
 		cloudImage.Use(1);
 		starsImage.Use(2);
 
+		//TEST TEST TEST
+		if (town.Villagers.size() != 0)
+		{
+			auto mitz = town.Villagers[0];
+			auto facing = mitz->Facing;
+			auto anythingPressed = false;
+			
+			if (Inputs.Keys[(int)Binds::WalkS].State == 1)
+			{
+				facing = 0.0;
+				if (Inputs.Keys[(int)Binds::WalkE].State == 1)
+					facing = 45.0;
+				else if (Inputs.Keys[(int)Binds::WalkW].State == 1)
+					facing = -45.0;
+				anythingPressed = true;
+			}
+			else if (Inputs.Keys[(int)Binds::WalkN].State == 1)
+			{
+				facing = 180.0;
+				if (Inputs.Keys[(int)Binds::WalkE].State == 1)
+					facing = 135.0;
+				else if (Inputs.Keys[(int)Binds::WalkW].State == 1)
+					facing = -135.0;
+				anythingPressed = true;
+			}
+			else if (Inputs.Keys[(int)Binds::WalkE].State == 1)
+			{
+				facing = 90.0;
+				anythingPressed = true;
+			}
+			else if (Inputs.Keys[(int)Binds::WalkW].State == 1)
+			{
+				facing = -90.0;
+				anythingPressed = true;
+			}
+
+
+			if (anythingPressed)
+			{
+				facing += MainCamera.Angles().z;
+
+				//TODO: take shorter turns
+				//if (glm::abs(facing - mitz->Facing) > 180.0f)
+				//	facing -= 360.0f;
+
+				if (mitz->Facing > facing)
+				{
+					mitz->Facing -= 10.0f;
+					if (mitz->Facing < facing)
+						mitz->Facing = facing;
+				}
+				else if (mitz->Facing < facing)
+				{
+					mitz->Facing += 10.0f;
+					if (mitz->Facing > facing)
+						mitz->Facing = facing;
+				}
+			}
+		}
+
 		if (postFx)
 		{
 			frameBuffer.Use();
