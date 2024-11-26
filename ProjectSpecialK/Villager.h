@@ -105,6 +105,9 @@ public:
 
 	void Draw(double dt);
 
+	void Turn(float facing); 
+	bool Move(float facing);
+
 	void Manifest();
 	void Depart();
 

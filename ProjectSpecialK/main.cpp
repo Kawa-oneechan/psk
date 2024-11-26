@@ -686,22 +686,11 @@ int main(int, char**)
 
 			if (anythingPressed)
 			{
-				facing += MainCamera.Angles().z;
-
-				auto m = mitz->Facing;
-				if (m < 0) m += 360.0f;
-
-				auto cw = facing - m;
-				if (cw < 0.0) cw += 360.0f;
-				auto ccw = m - facing;
-				if (ccw < 0.0) ccw += 360.0f;
-				
-				auto t = (ccw < cw) ? -glm::min(10.0f, ccw) : glm::min(10.0f, cw);
-				
-				auto f = m + t;
-				if (f < 0) f += 360.0f;
-
-				mitz->Facing = glm::mod(f, 360.0f);
+				mitz->Move(facing + MainCamera.Angles().z);
+				auto& tar = MainCamera.GetTarget();
+				tar.x = mitz->Position.x;
+				tar.z = mitz->Position.z;
+				MainCamera.Update();
 			}
 		}
 

@@ -1,5 +1,8 @@
 #include "SpecialK.h"
 
+#define GLM_ENABLE_EXPERIMENTAL
+#include "support/glm/gtx/rotate_vector.hpp"
+
 Villager::Villager(JSONObject& value, const std::string& filename) : NameableThing(value, filename)
 {
 	_customModel = value["customModel"] != nullptr && value["customModel"]->IsBool() ? value["customModel"]->AsBool() : false;
@@ -326,6 +329,36 @@ void Villager::Draw(double)
 		_clothingModel->TexArrayLayers[0] = Clothing->Variant();
 		_clothingModel->Draw(modelShader, Position, Facing);
 	}
+}
+
+void Villager::Turn(float facing)
+{
+	auto m = Facing;
+	if (m < 0) m += 360.0f;
+
+	auto cw = facing - m;
+	if (cw < 0.0) cw += 360.0f;
+	auto ccw = m - facing;
+	if (ccw < 0.0) ccw += 360.0f;
+
+	auto t = (ccw < cw) ? -glm::min(10.0f, ccw) : glm::min(10.0f, cw);
+
+	auto f = m + t;
+	if (f < 0) f += 360.0f;
+
+	Facing = glm::mod(f, 360.0f);
+}
+
+bool Villager::Move(float facing)
+{
+	Turn(facing);
+	
+	const auto movement = glm::rotate(glm::vec2(0, 0.25f), glm::radians(Facing));
+
+	//TODO: determine collisions.
+	Position.x -= movement.x;
+	Position.z += movement.y;
+	return true;
 }
 
 void Villager::Manifest()
