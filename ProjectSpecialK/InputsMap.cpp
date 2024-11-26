@@ -57,6 +57,14 @@ bool InputsMap::UpdateGamepad()
 	GLFWgamepadstate state;
 	if (glfwGetGamepadState(GLFW_JOYSTICK_1, &state))
 	{
+		const float dead = 0.2f;
+
+		Keys[(int)Binds::WalkW].State = state.axes[0] < -dead;
+		Keys[(int)Binds::WalkE].State = state.axes[0] >  dead;
+		Keys[(int)Binds::WalkN].State = state.axes[1] < -dead;
+		Keys[(int)Binds::WalkS].State = state.axes[1] >  dead;
+
+		/*
 		//Hardwire the left stick to work for the walking actions
 		if      (state.axes[0] < -0.2) Keys[(int)Binds::WalkW].State = true;
 		else if (state.axes[0] >  0.2) Keys[(int)Binds::WalkE].State = true;
@@ -68,6 +76,7 @@ bool InputsMap::UpdateGamepad()
 		else if (state.axes[0] >  0.2) Keys[(int)Binds::CameraCCW].State = true;
 		if      (state.axes[1] < -0.2) Keys[(int)Binds::CameraUp].State = true;
 		else if (state.axes[1] >  0.2) Keys[(int)Binds::CameraDown].State = true;
+		*/
 
 		for (int i = 0; i < 15; i++)
 		{
