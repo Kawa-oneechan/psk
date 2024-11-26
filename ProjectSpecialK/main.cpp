@@ -449,6 +449,17 @@ public:
 	}
 };
 
+
+float degreesLeft(float startDeg, float endDeg)
+{
+	return glm::mod(endDeg - startDeg, 360.0f);
+}
+
+float degreesRight(float startDeg, float endDeg)
+{
+	return glm::mod(startDeg - endDeg, 360.0f);
+}
+
 int main(int, char**)
 {
 	setlocale(LC_ALL, "en_US.UTF-8");
@@ -650,7 +661,7 @@ int main(int, char**)
 				if (Inputs.Keys[(int)Binds::WalkE].State == 1)
 					facing = 45.0;
 				else if (Inputs.Keys[(int)Binds::WalkW].State == 1)
-					facing = -45.0;
+					facing = 315.0; //-45
 				anythingPressed = true;
 			}
 			else if (Inputs.Keys[(int)Binds::WalkN].State == 1)
@@ -659,7 +670,7 @@ int main(int, char**)
 				if (Inputs.Keys[(int)Binds::WalkE].State == 1)
 					facing = 135.0;
 				else if (Inputs.Keys[(int)Binds::WalkW].State == 1)
-					facing = -135.0;
+					facing = 225.0; //-135
 				anythingPressed = true;
 			}
 			else if (Inputs.Keys[(int)Binds::WalkE].State == 1)
@@ -669,31 +680,28 @@ int main(int, char**)
 			}
 			else if (Inputs.Keys[(int)Binds::WalkW].State == 1)
 			{
-				facing = -90.0;
+				facing = 270.0f; //-90
 				anythingPressed = true;
 			}
-
 
 			if (anythingPressed)
 			{
 				facing += MainCamera.Angles().z;
 
-				//TODO: take shorter turns
-				//if (glm::abs(facing - mitz->Facing) > 180.0f)
-				//	facing -= 360.0f;
+				auto m = mitz->Facing;
+				if (m < 0) m += 360.0f;
 
-				if (mitz->Facing > facing)
-				{
-					mitz->Facing -= 10.0f;
-					if (mitz->Facing < facing)
-						mitz->Facing = facing;
-				}
-				else if (mitz->Facing < facing)
-				{
-					mitz->Facing += 10.0f;
-					if (mitz->Facing > facing)
-						mitz->Facing = facing;
-				}
+				auto cw = facing - m;
+				if (cw < 0.0) cw += 360.0f;
+				auto ccw = m - facing;
+				if (ccw < 0.0) ccw += 360.0f;
+				
+				auto t = (ccw < cw) ? -glm::min(10.0f, ccw) : glm::min(10.0f, cw);
+				
+				auto f = m + t;
+				if (f < 0) f += 360.0f;
+
+				mitz->Facing = glm::mod(f, 360.0f);
 			}
 		}
 

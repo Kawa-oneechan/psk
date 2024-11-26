@@ -66,7 +66,8 @@ Serge Brunier
 
 #Special thanks
 Andrea le Phrog	Captain Jistuce
-mikailborg	Screwtape
+katepango	mikailborg
+Screwtape
 
 #Tooling
 Heaven Tool by rafacasari
