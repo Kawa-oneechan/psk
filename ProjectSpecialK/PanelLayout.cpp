@@ -218,7 +218,7 @@ void PanelLayout::Draw(float dt)
 
 		auto parentPos = glm::vec2(0);
 		if (Origin == CornerOrigin::TopRight || Origin == CornerOrigin::BottomRight) parentPos.x = (float)width;
-		else if (Origin == CornerOrigin::BottomLeft || Origin == CornerOrigin::BottomRight) parentPos.y = (float)height;
+		else if (Origin == CornerOrigin::BottomLeft || Origin == CornerOrigin::BottomRight) parentPos.y = (float)height; //-V560
 
 		auto parentID = panel->Parent;
 		while (parentID != -1)

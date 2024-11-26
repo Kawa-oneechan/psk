@@ -302,7 +302,6 @@ Model::Model(const std::string& modelPath) : file(modelPath)
 		{
 			auto cluster = scene->skin_clusters.data[clusterMap[i]];
 			auto bone = cluster->bone_node;
-			auto boneName = std::string(bone->name.data);
 			if (bone->parent != nullptr)
 			{
 				auto parentBone = bone->parent->name.data;
