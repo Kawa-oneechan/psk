@@ -522,6 +522,7 @@ int main(int, char**)
 		Inputs.Keys[i].Name = GetKeyName(Inputs.Keys[i].ScanCode);
 
 	tickables.push_back(&musicManager);
+	tickables.push_back(&MainCamera);
 	//auto background = Background("discobg2.png");
 	//tickables.push_back(new Background("discobg2.png"));
 	//tickables.push_back(new TemporaryTownDrawer());
@@ -654,6 +655,7 @@ int main(int, char**)
 			auto mitz = town.Villagers[0];
 			auto facing = mitz->Facing;
 			auto anythingPressed = false;
+			MainCamera.Target(mitz);
 			
 			if (Inputs.Keys[(int)Binds::WalkS].State == 1)
 			{
@@ -687,10 +689,6 @@ int main(int, char**)
 			if (anythingPressed)
 			{
 				mitz->Move(facing + MainCamera.Angles().z);
-				auto& tar = MainCamera.GetTarget();
-				tar.x = mitz->Position.x;
-				tar.z = mitz->Position.z;
-				MainCamera.Update();
 			}
 		}
 

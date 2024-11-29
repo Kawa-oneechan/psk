@@ -16,6 +16,8 @@
 #include "support/format.h"
 #include "support/sol.hpp"
 
+#include "Tickable.h"
+
 #include "VFS.h"
 #include "Shader.h"
 #include "Texture.h"
@@ -25,7 +27,6 @@
 
 #include "NameableThing.h"
 #include "Item.h"
-#include "Tickable.h"
 #include "Species.h"
 #include "Traits.h"
 #include "Villager.h"

@@ -37,6 +37,7 @@ glm::vec3 Camera::Position() const
 void Camera::Target(const glm::vec3& target)
 {
 	_target = target;
+	_tracking = nullptr;
 	Update();
 }
 
@@ -91,6 +92,30 @@ void Camera::Update()
 	}
 	cameraFromWorld = glm::affineInverse(worldFromCamera);
 	position = worldFromCamera * glm::vec4(0, 0, 0, 1);
+}
+
+void Camera::Target(VillagerP target)
+{
+	_tracking = target.get();
+}
+
+void Camera::Tick(float dt)
+{
+	dt;
+
+	if (_tracking)
+	{
+		_target.x = _tracking->Position.x;
+		_target.z = _tracking->Position.z;
+	}
+
+	//add tweening
+
+	Update();
+}
+
+void Camera::Draw(float)
+{
 }
 
 Camera MainCamera;

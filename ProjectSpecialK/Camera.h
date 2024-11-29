@@ -1,15 +1,18 @@
 #pragma once
 
-#include "support/glm/glm.hpp"
+#include "SpecialK.h"
 
-//POSSIBILITY: Make the camera Tickable, have it react to key/button inputs on its own.
+class Villager;
+using VillagerP = std::shared_ptr<Villager>;
 
-class Camera
+class Camera : public Tickable
 {
 protected:
 	glm::vec3 _target{};
 	glm::vec3 _angles{};
 	float _distance = 0;
+
+	Villager* _tracking{};
 
 	glm::vec3 position{};
 
@@ -51,6 +54,11 @@ public:
 
 	bool Locked = false;
 	bool Drum = false;
+
+	void Target(VillagerP target);
+
+	void Tick(float dt);
+	void Draw(float dt);
 };
 
 extern Camera MainCamera;
