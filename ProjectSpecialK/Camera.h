@@ -2,9 +2,6 @@
 
 #include "SpecialK.h"
 
-class Villager;
-using VillagerP = std::shared_ptr<Villager>;
-
 class Camera : public Tickable
 {
 protected:
@@ -12,7 +9,7 @@ protected:
 	glm::vec3 _angles{};
 	float _distance = 0;
 
-	Villager* _tracking{};
+	glm::vec3* _tracking{};
 
 	glm::vec3 position{};
 
@@ -55,7 +52,7 @@ public:
 	bool Locked = false;
 	bool Drum = false;
 
-	void Target(VillagerP target);
+	void Target(glm::vec3* target);
 
 	void Tick(float dt);
 	void Draw(float dt);

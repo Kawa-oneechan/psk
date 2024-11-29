@@ -94,9 +94,9 @@ void Camera::Update()
 	position = worldFromCamera * glm::vec4(0, 0, 0, 1);
 }
 
-void Camera::Target(VillagerP target)
+void Camera::Target(glm::vec3* target)
 {
-	_tracking = target.get();
+	_tracking = target;
 }
 
 void Camera::Tick(float dt)
@@ -105,8 +105,8 @@ void Camera::Tick(float dt)
 
 	if (_tracking)
 	{
-		_target.x = _tracking->Position.x;
-		_target.z = _tracking->Position.z;
+		_target.x = _tracking->x;
+		_target.z = _tracking->z;
 	}
 
 	//add tweening

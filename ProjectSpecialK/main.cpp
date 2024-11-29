@@ -559,16 +559,6 @@ int main(int, char**)
 
 	auto rainLayer = Background("rain.png", glm::vec2(1.0, 2.0));
 
-	/*
-	auto bob = Database::Find<Villager>("ac:cat00", villagers);
-	bob->defaultClothingID = "acnh:djkklogotee/neonpink"; //-V519 this is on purpose daijoubu
-	bob->Manifest();
-	town.Villagers.push_back(bob);
-	*/
-	auto cat01 = Database::Find<Villager>("ac:cat01", villagers);
-	cat01->Manifest();
-	town.Villagers.push_back(cat01);
-
 	if (!LoadLights("lights/initial.json").empty())
 	{
 		lightPos[0] = { 0, 15, 20, 0 };
@@ -579,10 +569,21 @@ int main(int, char**)
 		MainCamera.Set(glm::vec3(0, 0, -6), glm::vec3(0, 110, 0), 60);
 	}
 
+	/*
+	auto bob = Database::Find<Villager>("ac:cat00", villagers);
+	bob->defaultClothingID = "acnh:djkklogotee/neonpink"; //-V519 this is on purpose daijoubu
+	bob->Manifest();
+	town.Villagers.push_back(bob);
+	*/
+	auto cat01 = Database::Find<Villager>("ac:cat01", villagers);
+	cat01->Manifest();
+	town.Villagers.push_back(cat01);
+	MainCamera.Target(&cat01->Position);
+
 	{
 		//commonUniforms.Projection = glm::perspective(glm::radians(45.0f), width / height, 0.1f, 100.0f);
 		//glBindBuffer(GL_UNIFORM_BUFFER, commonBuffer);
-		auto p = glm::perspective(glm::radians(45.0f), (float)width / (float)height, 0.1f, 100.0f);
+		auto p = glm::perspective(glm::radians(45.0f), (float)width / (float)height, 0.1f, 150.0f);
 		glBufferSubData(GL_UNIFORM_BUFFER, offsetof(CommonUniforms, Projection), sizeof(glm::mat4), &p);
 	}
 
@@ -655,7 +656,6 @@ int main(int, char**)
 			auto mitz = town.Villagers[0];
 			auto facing = mitz->Facing;
 			auto anythingPressed = false;
-			MainCamera.Target(mitz);
 			
 			if (Inputs.Keys[(int)Binds::WalkS].State == 1)
 			{
