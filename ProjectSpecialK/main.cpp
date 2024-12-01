@@ -575,7 +575,7 @@ int main(int, char**)
 	bob->Manifest();
 	town.Villagers.push_back(bob);
 	*/
-	auto cat01 = Database::Find<Villager>("ac:cat01", villagers);
+	auto cat01 = Database::Find<Villager>("ac:sza", villagers);
 	cat01->Manifest();
 	town.Villagers.push_back(cat01);
 	MainCamera.Target(&cat01->Position);

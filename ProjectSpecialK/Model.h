@@ -72,7 +72,7 @@ private:
 public:
 	std::vector<Mesh> Meshes;
 	std::array<Texture*, 32> Textures;
-	std::array<int, 4> TexArrayLayers;
+	std::array<int, 8> TexArrayLayers;
 	std::vector<Bone> Bones;
 	glm::mat4 finalBoneMatrices[Model::MaxBones];
 

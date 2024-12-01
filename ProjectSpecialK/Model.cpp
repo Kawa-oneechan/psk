@@ -297,11 +297,37 @@ Model::Model(const std::string& modelPath) : file(modelPath)
 			clusterMap[boneCt] = i;
 			boneCt++;
 		}
+
+		auto boundBoneCt = boneCt;
+
+		for (auto i = 0; i < scene->bones.count; i++)
+		{
+			auto bone = scene->bones.data[i];
+			auto boneName = bone->name.data;
+			auto exists = false;
+			for (auto& b : Bones)
+			{
+				if (b.Name == boneName)
+				{
+					exists = true;
+					break;
+				}
+			}
+			if (exists)
+				continue;
+			debprint(0, "* {}. {} (extra)", boneCt, boneName);
+			auto b = Bone();
+			b.Name = boneName;
+			Bones.push_back(b);
+			boneCt++;
+		}
+
 		//lap two: parent/child relations
-		for (auto i = 0; i < Bones.size(); i++)
+		for (auto i = 0; i < boundBoneCt; i++)
 		{
 			auto cluster = scene->skin_clusters.data[clusterMap[i]];
 			auto bone = cluster->bone_node;
+			auto boneName = bone->name.data;
 			if (bone->parent != nullptr)
 			{
 				auto parentBone = bone->parent->name.data;
@@ -313,6 +339,42 @@ Model::Model(const std::string& modelPath) : file(modelPath)
 						break;
 					}
 				}
+			}
+
+			Bone* thisBone = nullptr;
+			auto thisBoneIdx = 0;
+			for (auto& b : Bones)
+			{
+				if (b.Name == boneName)
+				{
+					thisBone = &b;
+					break;
+				}
+				thisBoneIdx++;
+			}
+			if (!thisBone)
+				continue;
+			for (auto j = 0; j < bone->children.count; j++)
+			{
+				auto childBone = bone->children.data[j];
+				auto childIndex = 0;
+				for (auto& b : Bones)
+				{
+					if (b.Name == childBone->name.data)
+						break;
+					childIndex++;
+				}
+				auto bur = false;
+				for (auto kek : thisBone->Children)
+				{
+					if (kek == childIndex)
+					{
+						bur = true;
+						break;
+					}
+				}
+				if (!bur)
+					thisBone->Children.push_back(childIndex);
 			}
 		}
 

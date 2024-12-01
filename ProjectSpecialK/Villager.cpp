@@ -180,9 +180,10 @@ void Villager::LoadModel()
 		}
 	}
 
-	if (!_clothingModel && Clothing)
+	if ( !_clothingModel && Clothing)
 	{
-		_clothingModel = std::make_shared<::Model>(fmt::format("{}/{}.fbx", _species->Path, Clothing->Style()));
+		auto path = _customModel ? Path : _species->Path;
+		_clothingModel = std::make_shared<::Model>(fmt::format("{}/{}.fbx", path, Clothing->Style()));
 
 		/*
 		Texture order:
@@ -453,7 +454,7 @@ void Villager::PickClothing()
 			}
 		}
 	}
-	else
+	else if (!_customModel)
 	{
 		//use default clothing
 		Clothing = std::make_shared<InventoryItem>(defaultClothingID);
