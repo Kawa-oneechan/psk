@@ -3,6 +3,8 @@
 #define GLM_ENABLE_EXPERIMENTAL
 #include "support/glm/gtx/rotate_vector.hpp"
 
+//TODO: special characters need support for more than just tops and accessories.
+
 Villager::Villager(JSONObject& value, const std::string& filename) : NameableThing(value, filename)
 {
 	_customModel = value["customModel"] != nullptr && value["customModel"]->IsBool() ? value["customModel"]->AsBool() : false;

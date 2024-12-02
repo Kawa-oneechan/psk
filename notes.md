@@ -8,6 +8,13 @@ For now though...
 1. Dates are written as two-number arrays where the *first* item is the day and the *second* item is the month. *This should be consistent!* Use `GetJSONDate` to parse both `"06-26"` (which is indeed the other way around) and `"Jun 26"` as well as `[ 26, 6 ]`.
 2. I forgot what I was gonna say here when I finished the dates thing.
 
+### Enumerations
+
+* `PanelLayout`: `origin` can be `topleft`, `topright`, `bottomleft`, or `bottomright`. The default is `topleft`.
+* `Villager`: `accessoryMapType` can be `none`, `body`, `cap`, `glass`, `glassalpha`, or `bodycap`. The default is `none`. `bodycap` is a special version of `cap` for when the accessory is baked into the villager's model -- PSK has normal villagers' accessories split from the shared species-level model, but special villagers that don't have a shared model have theirs remain as part of that model.
+* `Villager`: `gender` can be `boy`, `girl`, `enby-b`, or `enby-g`. There is no default; a gender *must* be specified.
+* `Villager`: `attraction` can be be `both`, `none`, `boys`, or `girls`. The default is the opposite of the `gender` value.
+
 ## Sampler setups
 
 ### Villager body
@@ -108,4 +115,5 @@ House stuff, exterior:
 * Door
 * Owner
 * Player?
+
 
