@@ -12,9 +12,9 @@ Villager::Villager(JSONObject& value, const std::string& filename) : NameableThi
 
 	_accessoryType = (value["accessoryMapType"] != nullptr) ?
 		StringToEnum<AccessoryType>(value["accessoryMapType"]->AsString(),
-		{ "none", "body", "cap", "glass", "glassalpha" }) :
+		{ "none", "body", "cap", "glass", "glassalpha", "bodycap" }) :
 		AccessoryType::None;
-	_customAccessory = _accessoryType != AccessoryType::None;
+	_customAccessory = (_accessoryType != AccessoryType::None && _accessoryType != AccessoryType::BodyCap);
 
 	Textures.fill(nullptr);
 	ClothingTextures.fill(nullptr);
@@ -159,7 +159,7 @@ void Villager::LoadModel()
 			_model->GetMesh("FaceNothing__mBeak").Visible = false;
 		}
 
-		if (_accessoryType == AccessoryType::Cap)
+		if (_accessoryType == AccessoryType::Cap || _accessoryType == AccessoryType::BodyCap)
 		{
 			Textures[12] = new TextureArray(fmt::format("{}/cap_alb.png", Path));
 			Textures[13] = new TextureArray(fmt::format("{}/cap_nrm.png", Path));
@@ -294,6 +294,10 @@ void Villager::Draw(double)
 	_model->Textures[8] = Textures[9];
 	_model->Textures[9] = Textures[10];
 	_model->Textures[10] = Textures[11];
+	//Cap
+	_model->Textures[12] = Textures[12];
+	_model->Textures[13] = Textures[13];
+	_model->Textures[14] = Textures[14];
 
 	_model->TexArrayLayers[2] = face;
 	_model->TexArrayLayers[3] = mouth;

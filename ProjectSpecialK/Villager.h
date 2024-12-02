@@ -36,7 +36,7 @@ private:
 	unsigned int _birthday[2]{ 1, 1 };
 	enum class AccessoryType
 	{
-		None, Body, Cap, Glass, GlassAlpha
+		None, Body, Cap, Glass, GlassAlpha, BodyCap
 	};
 	AccessoryType _accessoryType{ AccessoryType::None };
 
