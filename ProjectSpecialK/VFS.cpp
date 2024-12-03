@@ -134,6 +134,12 @@ namespace VFS
 
 	static void addSource(const fs::path& path)
 	{
+		if (!fs::exists(path))
+		{
+			conprint(2, "VFS: can't find asset source {}. Skipping.", path);
+			return;
+		}
+
 		auto newSrc = Source();
 		newSrc.path = path.string();
 		newSrc.isZip = path.extension() == ".zip";
@@ -216,6 +222,23 @@ namespace VFS
 	void Initialize()
 	{
 		conprint(0, "VFS: initializing...");
+
+		//TODO: get a user-editable source list.
+		/*
+		Starbound uses sbinit.config (unless -bootconfig is used)
+		to list where its assets should come from, and where to
+		put savegame data.
+
+		By default, this list is
+		* Everything in /assets
+		  * /assets/packed.pak
+		  * /assets/user
+		* Everything in /mods
+		with Steam Workshop added manually.
+		Saves go in /storage.
+		*/
+
+		addSource("ProjectSpecialK.zip");
 
 		addSource("data");
 		for (const auto& mod : fs::directory_iterator("mods"))

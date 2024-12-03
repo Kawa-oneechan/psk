@@ -191,7 +191,7 @@ namespace Database
 				}
 				catch (std::runtime_error& e)
 				{
-					conprint(1, u8" {}", e.what());
+					conprint(1, u8"{}", e.what());
 				}
 			}
 			else

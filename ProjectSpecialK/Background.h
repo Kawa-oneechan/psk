@@ -5,14 +5,13 @@
 class Background : public Tickable
 {
 private:
-	Texture* wallpaper = nullptr;
+	std::unique_ptr<Texture> wallpaper;
 	Shader scroller{ Shader("shaders/scroller.fs") };
 	float time{ 0 };
 	const float timeScale{ 0.005f };
 
 public:
 	Background(const std::string& file, glm::vec2 speed = { 0.1f, -0.1f });
-	~Background();
 
 	void Draw(float dt);
 

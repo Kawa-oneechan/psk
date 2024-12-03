@@ -3,6 +3,8 @@
 
 bool debugPanelLayoutPolygons = false;
 
+//TODO: animations~
+
 PanelLayout::PanelLayout(JSONValue* source)
 {
 	auto src = source->AsObject();

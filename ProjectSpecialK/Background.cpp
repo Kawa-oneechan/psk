@@ -2,13 +2,8 @@
 
 Background::Background(const std::string& file, glm::vec2 speed)
 {
-	wallpaper = new Texture(file);
+	wallpaper = std::make_unique<Texture>(file);
 	Speed = speed;
-}
-
-Background::~Background()
-{
-	delete wallpaper;
 }
 
 void Background::Draw(float dt)
