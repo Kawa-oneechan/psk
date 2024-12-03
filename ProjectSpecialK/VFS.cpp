@@ -223,27 +223,24 @@ namespace VFS
 	{
 		conprint(0, "VFS: initializing...");
 
-		//TODO: get a user-editable source list.
-		/*
-		Starbound uses sbinit.config (unless -bootconfig is used)
-		to list where its assets should come from, and where to
-		put savegame data.
+		std::ifstream file(UI::initFile, std::ios::binary | std::ios::ate);
+		std::streamsize fsize = file.tellg();
+		file.seekg(0, std::ios::beg);
+		auto initData = std::make_unique<char[]>(fsize + 2);
+		file.read(initData.get(), fsize);
 
-		By default, this list is
-		* Everything in /assets
-		  * /assets/packed.pak
-		  * /assets/user
-		* Everything in /mods
-		with Steam Workshop added manually.
-		Saves go in /storage.
-		*/
-
-		addSource("ProjectSpecialK.zip");
-
-		addSource("data");
-		for (const auto& mod : fs::directory_iterator("mods"))
+		auto initDoc = JSON::Parse(initData.get())->AsObject();
+		for (const auto& source : initDoc["sources"]->AsArray())
 		{
-			addSource(mod.path());
+			for (const auto& mod : fs::directory_iterator(source->AsString()))
+			{
+				auto path = mod.path();
+				auto fn = path.filename();
+				if (fn.string()[0] == '.')
+					continue;
+				if (path.extension() == ".zip" || fs::is_directory(path))
+					addSource(path);
+			}
 		}
 
 		auto table = std::vector<std::string>{ "ID", "Name", "Author", "Priority" };

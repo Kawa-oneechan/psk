@@ -153,6 +153,7 @@ namespace UI
 
 	extern JSONObject json;
 	extern JSONObject settings;
+	extern std::string initFile;
 };
 
 #define conprint(C, F, ...) console->Print(C, fmt::format(F, __VA_ARGS__))
