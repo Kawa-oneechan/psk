@@ -117,6 +117,8 @@ namespace UI
 	JSONObject json = JSONObject();
 	JSONObject settings = JSONObject();
 
+	std::string initFile = "init.json";
+
 	static void Load()
 	{
 		auto doc = VFS::ReadJSON("ui/ui.json");
@@ -460,10 +462,20 @@ float degreesRight(float startDeg, float endDeg)
 	return glm::mod(startDeg - endDeg, 360.0f);
 }
 
-int main(int, char**)
+int main(int argc, char** argv)
 {
 	setlocale(LC_ALL, "en_US.UTF-8");
 	std::srand((unsigned int)std::time(nullptr));
+
+	for (int i = 1; i < argc; i++)
+	{
+		std::string arg = argv[i];
+		if (arg == "-config" && i + 1 < argc)
+		{
+			i++;
+			UI::initFile = argv[i];
+		}
+	}
 
 	console = new Console();
 	try
