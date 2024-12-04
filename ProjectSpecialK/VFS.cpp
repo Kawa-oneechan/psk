@@ -223,13 +223,22 @@ namespace VFS
 	{
 		conprint(0, "VFS: initializing...");
 
+		if (!fs::exists(UI::initFile))
+			FatalError(fmt::format("Could not load init file {}.", UI::initFile));
+
 		std::ifstream file(UI::initFile, std::ios::binary | std::ios::ate);
 		std::streamsize fsize = file.tellg();
 		file.seekg(0, std::ios::beg);
 		auto initData = std::make_unique<char[]>(fsize + 2);
 		file.read(initData.get(), fsize);
 
-		auto initDoc = JSON::Parse(initData.get())->AsObject();
+		auto initJSON = JSON::Parse(initData.get());
+		if (!initJSON)
+			FatalError("Init file parses as blank.");
+
+		auto initDoc = initJSON->AsObject();
+		if (initDoc["sources"]->AsArray().size() == 0)
+			FatalError("No asset sources listed.");
 		for (const auto& source : initDoc["sources"]->AsArray())
 		{
 			for (const auto& mod : fs::directory_iterator(source->AsString()))
@@ -242,6 +251,9 @@ namespace VFS
 					addSource(path);
 			}
 		}
+
+		if (sources.size() == 0)
+			FatalError("No asset sources found.");
 
 		auto table = std::vector<std::string>{ "ID", "Name", "Author", "Priority" };
 #ifdef DEBUG

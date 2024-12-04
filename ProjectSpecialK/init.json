@@ -1,6 +1,13 @@
+/*
+Special debug version. What makerelease.bat produces will
+use release.json instead, renamed to init.json. The main
+difference being that the other one uses the assets folder.
+Using "." as a source is a bit of a hack, but it allows
+the game to find and use the data folder.
+*/
 {
 	"sources": [
-		"assets",
+		".",
 		"mods"
 	]
 }

@@ -122,6 +122,8 @@ namespace UI
 	static void Load()
 	{
 		auto doc = VFS::ReadJSON("ui/ui.json");
+		if (!doc)
+			FatalError("Could not read ui/ui.json. Something is very wrong.");
 		json = doc->AsObject();
 		auto colors = json["colors"]->AsObject();
 		for (auto& ink : colors["theme"]->AsObject())
