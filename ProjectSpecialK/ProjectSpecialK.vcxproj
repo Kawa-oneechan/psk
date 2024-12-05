@@ -158,6 +158,7 @@
     <ClCompile Include="ItemHotbar.cpp" />
     <ClCompile Include="JsonPatch.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Messager.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="MusicManager.cpp" />
     <ClCompile Include="NameableThing.cpp" />
@@ -240,6 +241,7 @@
     <ClInclude Include="InputsMap.h" />
     <ClInclude Include="Item.h" />
     <ClInclude Include="ItemHotbar.h" />
+    <ClInclude Include="Messager.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="MusicManager.h" />
     <ClInclude Include="NameableThing.h" />

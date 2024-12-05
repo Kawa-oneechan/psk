@@ -170,7 +170,7 @@ PanelLayout::PanelLayout(JSONValue* source)
 				newBit.Function = glm::linearInterpolation<float>;
 				if (bitObj["easing"])
 				{
-					auto easing = bitObj["easing"]->AsString();
+					auto& easing = bitObj["easing"]->AsString();
 					if (easing == "bounceOut") newBit.Function = glm::bounceEaseOut<float>;
 				}
 
@@ -186,7 +186,7 @@ PanelLayout::PanelLayout(JSONValue* source)
 
 			//temp
 			if (currentAnimation.empty())
-				currentAnimation = animName;
+				currentAnimation = std::move(animName);
 		}
 	}
 
@@ -249,6 +249,9 @@ void PanelLayout::Tick(float dt)
 				else if (bit.Property == "size")
 					prop = &(panel->Size);
 
+				if (prop == nullptr)
+					continue;
+
 				/*
 				if (animationTime < bit.FromTime)
 				{
@@ -266,7 +269,7 @@ void PanelLayout::Tick(float dt)
 					*prop = glm::mix(bit.FromVal, bit.ToVal, bit.Function(percent));
 
 					if (bit.Property == "frame")
-						panel->Frame = glm::floor(subsitute);
+						panel->Frame = (int)glm::floor(subsitute);
 				}
 			}
 		}
@@ -422,7 +425,7 @@ PanelLayout::Panel* PanelLayout::GetPanel(const std::string& id)
 	return nullptr;
 }
 
-void PanelLayout::Play(std::string anim)
+void PanelLayout::Play(const std::string& anim)
 {
 	if (!hasAnimations)
 	{
