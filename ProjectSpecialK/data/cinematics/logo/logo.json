@@ -26,7 +26,8 @@
 				"type": "image",
 				"texture": 0,
 				"frame": 0, //backing plate
-				"position": [ "middle", 32 ] //automatically figure out that this is (SCREENWIDTH/2)-(747/2).
+				"position": [ 586, 32 ]
+				//"position": [ "middle", 32 ] //automatically figure out that this is (SCREENWIDTH/2)-(747/2).
 			},
 			{
 				"id": "logoS",
@@ -109,7 +110,8 @@
 						"panel": "woodBack",
 						"property": "y",
 						"fromTime": 0.0, "fromVal": -32,
-						"toTime": 0.25, "toVal": 32
+						"toTime": 0.25, "toVal": 64,
+						"easing": "bounceOut"
 					},
 					//Letters appear staggered
 					{

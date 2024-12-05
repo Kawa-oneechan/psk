@@ -167,6 +167,19 @@ PanelLayout::PanelLayout(JSONValue* source)
 				newBit.FromVal = bitObj["fromVal"]->AsNumber();
 				newBit.ToVal = bitObj["toVal"]->AsNumber();
 
+				newBit.Function = glm::linearInterpolation<float>;
+				if (bitObj["easing"])
+				{
+					auto easing = bitObj["easing"]->AsString();
+					if (easing == "bounceOut") newBit.Function = glm::bounceEaseOut<float>;
+				}
+
+				if (newBit.FromTime >= newBit.ToTime)
+				{
+					conprint(2, "Animation: invalid time on {}::{} > {} to {}?", newBit.ID, newBit.Property, newBit.FromTime, newBit.ToTime);
+					continue;
+				}
+
 				newAnim.Bits.push_back(newBit);
 			}
 			animations[animName] = newAnim;
@@ -196,7 +209,7 @@ void PanelLayout::Tick(float dt)
 	{
 		if (dt > 1.0)
 			dt = 0.02f;
-		animationTime += dt * 0.002f;
+		animationTime += dt * 0.0025f;
 		auto anim = animations[currentAnimation];
 		auto endTime = 0.0f;
 		for (auto& bit : anim.Bits)
@@ -207,6 +220,7 @@ void PanelLayout::Tick(float dt)
 		if (animationTime >= endTime)
 		{
 			currentAnimation = anim.Next;
+			animationTime = 0.0;
 		}
 		else
 		{
@@ -221,6 +235,8 @@ void PanelLayout::Tick(float dt)
 						break;
 					}
 				}
+				float subsitute = 0.0;
+
 				float* prop = nullptr;
 				if (bit.Property == "alpha")
 					prop = &(panel->Alpha);
@@ -228,6 +244,10 @@ void PanelLayout::Tick(float dt)
 					prop = &(panel->Position.x);
 				else if (bit.Property == "y")
 					prop = &(panel->Position.y);
+				else if (bit.Property == "frame")
+					prop = &subsitute;
+				else if (bit.Property == "size")
+					prop = &(panel->Size);
 
 				/*
 				if (animationTime < bit.FromTime)
@@ -236,14 +256,17 @@ void PanelLayout::Tick(float dt)
 				}
 				else if (animationTime > bit.ToTime)
 				{
-					*prop = bit.ToVal;
 				}
-				else */
-				if (animationTime >= bit.FromTime && animationTime < bit.ToTime)
+				else
+				*/
+				if (animationTime >= bit.FromTime && animationTime <= bit.ToTime)
 				{
 					//auto duration = bit.ToTime - bit.FromTime;
 					auto percent = (animationTime - bit.FromTime) / (bit.ToTime - bit.FromTime);
-					*prop = glm::mix(bit.FromVal, bit.ToVal, percent);
+					*prop = glm::mix(bit.FromVal, bit.ToVal, bit.Function(percent));
+
+					if (bit.Property == "frame")
+						panel->Frame = glm::floor(subsitute);
 				}
 			}
 		}

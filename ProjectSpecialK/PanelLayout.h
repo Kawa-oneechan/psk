@@ -63,6 +63,7 @@ class PanelLayout : public Tickable
 		std::string Property;
 		float FromTime, ToTime;
 		float FromVal, ToVal;
+		std::function<float(float)> Function;
 	};
 
 	struct Animation
