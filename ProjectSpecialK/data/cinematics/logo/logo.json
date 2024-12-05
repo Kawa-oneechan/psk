@@ -165,6 +165,20 @@
 					}
 					//etc...
 				]
+			},
+			{
+				"name": "bounce",
+				"next": "",
+				"bits": [
+					{
+						//Slightly move the panel down as it appears
+						"panel": "woodBack",
+						"property": "y",
+						"fromTime": 0.0, "fromVal": 32,
+						"toTime": 0.25, "toVal": 64,
+						"easing": "bounceOut"
+					}
+				]
 			}
 		]
 	}

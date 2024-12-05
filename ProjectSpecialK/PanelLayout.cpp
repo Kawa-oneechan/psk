@@ -421,3 +421,22 @@ PanelLayout::Panel* PanelLayout::GetPanel(const std::string& id)
 			return p;
 	return nullptr;
 }
+
+void PanelLayout::Play(std::string anim)
+{
+	if (!hasAnimations)
+	{
+		conprint(2, "Tried to play animation {} on a PanelLayout without animations.", anim);
+		return;
+	}
+	for (auto& a : animations)
+	{
+		if (a.first == anim)
+		{
+			currentAnimation = anim;
+			animationTime = 0.0f;
+			return;
+		}
+	}
+	conprint(2, "Tried to play animation {} on a PanelLayout with no such animation.", anim);
+}

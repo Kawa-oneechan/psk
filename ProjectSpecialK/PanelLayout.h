@@ -99,4 +99,5 @@ public:
 	void Draw(float dt);
 	Panel* GetPanel(const std::string& id);
 	Tween<float>* Tween(float* target, float from, float to, float speed = 0.001f, std::function<float(float)> interpolator = glm::linearInterpolation<float>);
+	void Play(std::string anim);
 };
