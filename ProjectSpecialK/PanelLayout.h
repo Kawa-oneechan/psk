@@ -36,9 +36,8 @@ struct Tween
 class PanelLayout : public Tickable
 {
 
-	class Panel
+	struct Panel
 	{
-	public:
 		std::string ID;
 		glm::vec2 Position;
 		enum class Type
@@ -58,11 +57,30 @@ class PanelLayout : public Tickable
 		bool Enabled;
 	};
 
+	struct AnimationBit
+	{
+		std::string ID;
+		std::string Property;
+		float FromTime, ToTime;
+		float FromVal, ToVal;
+	};
+
+	struct Animation
+	{
+		std::vector<AnimationBit> Bits;
+		std::string Next;
+	};
+
 private:
 	std::vector<Panel*> panels;
 	std::vector<Texture*> textures;
 	std::vector<Shader*> shaders;
-	std::vector < std::vector<glm::vec2>> polygons;
+	std::vector<std::vector<glm::vec2>> polygons;
+
+	bool hasAnimations;
+	float animationTime;
+	std::string currentAnimation;
+	std::map<std::string, Animation> animations;
 
 	std::vector<Tween<float>> tweens;
 	Panel* highlighted = nullptr;

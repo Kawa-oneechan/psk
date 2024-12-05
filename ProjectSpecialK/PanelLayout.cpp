@@ -104,9 +104,9 @@ PanelLayout::PanelLayout(JSONValue* source)
 					if (str == "middle")
 					{
 						if (i == 0)
-							pos[i] = new JSONValue((width * 0.5f) - (w * 0.5f));
+							pos[i] = new JSONValue((1920 * 0.5f) - (w * 0.5f));
 						else
-							pos[i] = new JSONValue((height * 0.5f) - (h * 0.5f));
+							pos[i] = new JSONValue((1080 * 0.5f) - (h * 0.5f));
 					}
 				}
 			}
@@ -146,11 +146,42 @@ PanelLayout::PanelLayout(JSONValue* source)
 		panel->Alpha = pnl["alpha"] != nullptr ? pnl["alpha"]->AsNumber() : 1.0f;
 		panels.push_back(panel);
 	}
+
+	hasAnimations = src["anims"] != nullptr;
+	if (hasAnimations)
+	{
+		for (const auto& _anim : src["anims"]->AsArray())
+		{
+			auto animObj = _anim->AsObject();
+			auto newAnim = Animation();
+			std::string animName = animObj["name"]->AsString();
+			newAnim.Next = animObj["next"]->AsString();
+			for (const auto& _bit : animObj["bits"]->AsArray())
+			{
+				auto bitObj = _bit->AsObject();
+				auto newBit = AnimationBit();
+				newBit.ID = bitObj["panel"]->AsString();
+				newBit.Property = bitObj["property"]->AsString();
+				newBit.FromTime = bitObj["fromTime"]->AsNumber();
+				newBit.ToTime = bitObj["toTime"]->AsNumber();
+				newBit.FromVal = bitObj["fromVal"]->AsNumber();
+				newBit.ToVal = bitObj["toVal"]->AsNumber();
+
+				newAnim.Bits.push_back(newBit);
+			}
+			animations[animName] = newAnim;
+
+			//temp
+			if (currentAnimation.empty())
+				currentAnimation = animName;
+		}
+	}
+
+	animationTime = 0;
 }
 
 void PanelLayout::Tick(float dt)
 {
-	dt;
 	if (tweens.size() > 0)
 	{
 		for (auto i = 0; i < tweens.size(); i++)
@@ -158,6 +189,63 @@ void PanelLayout::Tick(float dt)
 			auto& tween = tweens[i];
 			if (tween.step())
 				tweens.erase(tweens.begin() + i);
+		}
+	}
+
+	if (hasAnimations && !currentAnimation.empty())
+	{
+		if (dt > 1.0)
+			dt = 0.02f;
+		animationTime += dt * 0.002f;
+		auto anim = animations[currentAnimation];
+		auto endTime = 0.0f;
+		for (auto& bit : anim.Bits)
+		{
+			if (bit.ToTime > endTime)
+				endTime = bit.ToTime;
+		}
+		if (animationTime >= endTime)
+		{
+			currentAnimation = anim.Next;
+		}
+		else
+		{
+			for (auto& bit : anim.Bits)
+			{
+				auto* panel = panels[0];
+				for (const auto& p : panels)
+				{
+					if (p->ID == bit.ID)
+					{
+						panel = p;
+						break;
+					}
+				}
+				float* prop = nullptr;
+				if (bit.Property == "alpha")
+					prop = &(panel->Alpha);
+				else if (bit.Property == "x")
+					prop = &(panel->Position.x);
+				else if (bit.Property == "y")
+					prop = &(panel->Position.y);
+
+				/*
+				if (animationTime < bit.FromTime)
+				{
+					*prop = bit.FromVal;
+				}
+				else if (animationTime > bit.ToTime)
+				{
+					*prop = bit.ToVal;
+				}
+				else */
+				if (animationTime >= bit.FromTime && animationTime < bit.ToTime)
+				{
+					//auto duration = bit.ToTime - bit.FromTime;
+					auto percent = (animationTime - bit.FromTime) / (bit.ToTime - bit.FromTime);
+					*prop = glm::mix(bit.FromVal, bit.ToVal, percent);
+				}
+			}
 		}
 	}
 
