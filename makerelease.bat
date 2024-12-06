@@ -16,9 +16,17 @@ if "%DevEnvDir%" == "" (
 )
 if "%DevEnvDir%" == "" goto novs
 
+if "%1" == "clean" goto clean
+goto buildit
+
+:clean
+del ProjectSpecialK\x64\Release\*.obj
+
+:buildit
 echo -----------
 echo BUILD START
 echo -----------
+
 msbuild /nologo /v:m /p:Configuration=Release;Platform=x64 ProjectSpecialK\ProjectSpecialK.vcxproj
 if not errorlevel 0 goto nogood
 
@@ -34,7 +42,7 @@ md release\mods
 copy ProjectSpecialK\fmodex64.dll release > nul
 copy ProjectSpecialK\x64\Release\ProjectSpecialK.exe release > nul
 copy ProjectSpecialK\release.json release\init.json > nul
-copy ProjectSpecialK\mods\mods_go_here release > nul
+copy ProjectSpecialK\mods\mods_go_here release\mods > nul
 cd ProjectSpecialK\data
 7za.exe u -r ..\..\release\assets\pskbase.zip *.* > nul
 cd ..\..
