@@ -5,7 +5,7 @@
 class ButtonGuide
 {
 private:
-	int highlight = -1;
+	int highlight{ -1 };
 	std::vector<std::string> texts;
 	std::vector<float> widths;
 	float left{ 0 };

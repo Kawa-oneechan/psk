@@ -323,7 +323,7 @@ Model::Model(const std::string& modelPath) : file(modelPath)
 		}
 
 		//lap two: parent/child relations
-		for (auto i = 0; i < boundBoneCt; i++)
+		for (auto i = 0u; i < boundBoneCt; i++)
 		{
 			auto cluster = scene->skin_clusters.data[clusterMap[i]];
 			auto bone = cluster->bone_node;

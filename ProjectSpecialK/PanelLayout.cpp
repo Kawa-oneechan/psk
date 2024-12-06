@@ -3,8 +3,6 @@
 
 bool debugPanelLayoutPolygons = false;
 
-//TODO: animations~
-
 PanelLayout::PanelLayout(JSONValue* source)
 {
 	auto src = source->AsObject();
@@ -207,9 +205,7 @@ void PanelLayout::Tick(float dt)
 
 	if (hasAnimations && !currentAnimation.empty())
 	{
-		if (dt > 1.0)
-			dt = 0.02f;
-		animationTime += dt * 0.0025f;
+		animationTime += dt * 1.0f;
 		auto anim = animations[currentAnimation];
 		auto endTime = 0.0f;
 		for (auto& bit : anim.Bits)

@@ -17,11 +17,11 @@ vec3 stars(vec2 uv)
 float clouds(vec2 uv)
 {
 	uv.y -= 0.25;
-	uv.x += totalTime * 0.00005;
+	uv.x += totalTime * 0.0050;
 	float ret = texture(cloudImage, uv).a;
 	uv.y += 0.5;
 	uv.x *= 0.9;
-	uv.x += totalTime * 0.000045;
+	uv.x += totalTime * 0.0045;
 	ret += texture(cloudImage, uv * 1.7).a * 0.25;
 	return ret;
 }

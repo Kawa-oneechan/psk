@@ -117,6 +117,7 @@ public:
 		MarineSuit = ClothingKind::Swimwear,
 	} ClothingKind{ ClothingKind::Tops };
 };
+
 using ItemP = std::shared_ptr<Item>;
 
 class InventoryItem : public NameableThing
@@ -150,4 +151,5 @@ public:
 	//Safe to delete if true. If not, DO NOT DELETE.
 	bool Temporary;
 };
+
 using InventoryItemP = std::shared_ptr<InventoryItem>;

@@ -263,7 +263,7 @@ void DialogueBox::Preprocess()
 			if (func != msbtPhase1.end())
 			{
 				std::invoke(func->second, this, msbt, start, len);
-				i = -1; //-1 because we may have subbed in a new tag.
+				i = (size_t)-1; //-1 because we may have subbed in a new tag.
 			}
 			else
 			{
@@ -524,7 +524,7 @@ void DialogueBox::Tick(float dt)
 	{
 		tween = 1;
 
-		delay -= dt;
+		delay -= dt * 1000.0f;
 		if (delay > 0)
 			return;
 

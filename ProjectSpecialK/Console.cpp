@@ -212,13 +212,13 @@ void Console::Tick(float dt)
 
 	if (appearState == 1 && timer < 1.0f)
 	{
-		timer += dt * 0.0025f;
+		timer += dt * 3.0f;
 		if (timer >= 1.0f)
 			appearState = 0;
 	}
 	else if (appearState == 2 && timer > 0.0f)
 	{
-		timer -= dt * 0.0025f;
+		timer -= dt * 3.0f;
 		if (timer <= 0.0f)
 		{
 			appearState = 0;

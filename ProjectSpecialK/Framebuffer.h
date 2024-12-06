@@ -8,10 +8,10 @@ class Shader;
 class Framebuffer
 {
 private:
-	unsigned int fbo = 0;
-	unsigned int rbo = 0;
-	Texture* texture = nullptr;
-	Shader* shader = nullptr;
+	unsigned int fbo{ 0 };
+	unsigned int rbo{ 0 };
+	Texture* texture{ nullptr };
+	Shader* shader{ nullptr };
 	int width, height;
 	bool isSetup{ false };
 	bool shaderOwned;

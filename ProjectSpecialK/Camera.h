@@ -7,7 +7,7 @@ class Camera : public Tickable
 protected:
 	glm::vec3 _target{};
 	glm::vec3 _angles{};
-	float _distance = 0;
+	float _distance{ 0 };
 
 	glm::vec3* _tracking{};
 

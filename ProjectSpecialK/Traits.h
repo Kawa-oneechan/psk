@@ -25,6 +25,7 @@ public:
 	Personality(JSONObject& value, const std::string& filename = "");
 	Personality() = default;
 };
+
 using PersonalityP = std::shared_ptr<Personality>;
 
 //PLACEHOLDER
@@ -35,4 +36,5 @@ public:
 	Hobby(JSONObject& value, const std::string& filename = "");
 	Hobby() = default;
 };
+
 using HobbyP = std::shared_ptr<Hobby>;

@@ -14,4 +14,3 @@ public:
 };
 
 using TickableP = std::shared_ptr<Tickable>;
-

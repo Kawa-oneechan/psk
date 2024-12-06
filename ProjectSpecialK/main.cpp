@@ -15,6 +15,7 @@
 #include "DateTimePanel.h"
 #include "ItemHotbar.h"
 #include "Town.h"
+#include "Messager.h"
 #include "MusicManager.h"
 #include "Framebuffer.h"
 
@@ -71,7 +72,7 @@ bool postFx = false;
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 
-float timeScale = 0.25f;
+float timeScale = 1.0f;
 
 int articlePlease;
 
@@ -546,11 +547,13 @@ int main(int argc, char** argv)
 	//hotbar->Tween(&hotbar->Position.y, -100.0f, 0, 0.002f, glm::bounceEaseOut<float>);
 	//hotbar->Tween(&hotbar->Alpha, 0, 0.75f, 0.006f);
 	//auto logoJson = VFS::ReadJSON("cinematics/logo/logo.json")->AsObject();
-	//auto logoAnim = new PanelLayout(logoJson["logoPanels"]);
+	//auto logoAnim = new PanelLayout(logoJson["cinematic"]);
 	//tickables.push_back(logoAnim);
 	//tickables.push_back(new DoomMenu());
 	dlgBox = new DialogueBox();
 	tickables.push_back(dlgBox);
+	auto messager = new Messager();
+	tickables.push_back(messager);
 
 	//tickables.push_back(new TextField());
 
@@ -589,7 +592,7 @@ int main(int argc, char** argv)
 	bob->Manifest();
 	town.Villagers.push_back(bob);
 	*/
-	auto cat01 = Database::Find<Villager>("ac:sza", villagers);
+	auto cat01 = Database::Find<Villager>("ac:cat01", villagers);
 	cat01->Manifest();
 	town.Villagers.push_back(cat01);
 	MainCamera.Target(&cat01->Position);
@@ -607,7 +610,7 @@ int main(int argc, char** argv)
 	auto startingTime = std::chrono::high_resolution_clock::now();
 #endif
 
-	int oldTime = 0;
+	auto oldTime = glfwGetTime();
 	commonUniforms.totalTime = 0.0f;
 
 	while (!glfwWindowShouldClose(window))
@@ -622,8 +625,8 @@ int main(int argc, char** argv)
 
 		Inputs.UpdateGamepad();
 
-		int newTime = std::clock();
-		int deltaTime = newTime - oldTime;
+		auto newTime = glfwGetTime();
+		auto deltaTime = newTime - oldTime;
 		oldTime = newTime;
 		float dt = (float)deltaTime;
 		commonUniforms.totalTime += dt;
@@ -735,6 +738,22 @@ int main(int argc, char** argv)
 		tickables.erase(std::remove_if(tickables.begin(), tickables.end(), [](Tickable* i) {
 			return i->dead;
 		}), tickables.end());
+
+		//TEST
+		if (Inputs.KeyDown(Binds::Accept))
+		{
+			Inputs.Clear(Binds::Accept);
+			static std::string lols[] = {
+				"Whatever you say.",
+				"You got crabs!",
+				"And bingo!",
+				"T minus 50 seconds 'til launch.",
+				"Four score and seven apples ago...",
+				"Look. If you had ONE shot...",
+				"---Tom Nook calling---",
+			};
+			messager->Add(lols[rand() % 7]);
+		}
 
 #ifdef DEBUG
 		DoImGui();

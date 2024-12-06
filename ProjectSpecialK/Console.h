@@ -106,4 +106,5 @@ public:
 	void Draw(float dt);
 	void RegisterCVar(const std::string& name, CVar::Type type, void* target, bool cheat = false);
 };
+
 extern Console* console;

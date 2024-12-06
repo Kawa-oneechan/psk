@@ -129,5 +129,5 @@ public:
 		//cnt[Keys[(int)bind].GamepadButton] = 0;
 	}
 };
-extern InputsMap Inputs;
 
+extern InputsMap Inputs;

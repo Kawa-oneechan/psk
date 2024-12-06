@@ -9,7 +9,7 @@ Messager::Message Messager::Add(const std::string& text, bool persist)
 {
 	auto& message = messages[cursor];
 	message.Text = text;
-	message.Lifetime = text.size() * 4.0f;
+	message.Lifetime = text.size() * 1.0f;
 	message.Persistent = persist;
 	conprint(8, text);
 	cursor++;
@@ -24,7 +24,7 @@ void Messager::Tick(float dt)
 	{
 		if (message.Persistent || message.Lifetime <= 0.0f)
 			continue;
-		message.Lifetime -= dt * 0.02f;
+		message.Lifetime -= dt * 5.0f;
 		if (message.Lifetime < 0.0f)
 		{
 			message.Text.clear();
@@ -42,8 +42,8 @@ void Messager::Draw(float dt)
 		if (message.Text.empty())
 			continue;
 		auto color = glm::vec4(1);
-		if (message.Lifetime < 10.0f)
-			color.a = glm::mix(0.0f, 1.0f, message.Lifetime * 0.10f);
+		if (message.Lifetime < 1.0f)
+			color.a = glm::mix(0.0f, 1.0f, message.Lifetime);
 		Sprite::DrawText(1, message.Text, pos, color);
 		pos.y += 32.0f;
 	}
