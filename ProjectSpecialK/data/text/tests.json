@@ -67,7 +67,7 @@ FU				(slight delay for effect)
 	},
 	"dlg:sza:insertions": {
 		"en": "This is an insertion test.\nYou are <str:player>-<str:kun>... <size:200>bitch!</size><break>"
-	}
+	},
 	"dlg:bpt:test": {
 		"en": "Lorem ipsum dolor sit,\nlauren epsum solo shit.\nDougus dippus deltoid dump,\ncrampus krungus Forrest Gump."
 	}
