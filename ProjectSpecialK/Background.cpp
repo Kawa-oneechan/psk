@@ -8,7 +8,7 @@ Background::Background(const std::string& file, glm::vec2 speed)
 
 void Background::Draw(float dt)
 {
-	time += dt * timeScale;
+	time += dt;
 
 	scroller.Use();
 	scroller.Set("time", time);

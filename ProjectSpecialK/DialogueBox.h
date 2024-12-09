@@ -21,8 +21,6 @@ private:
 	std::string toDisplay;
 	size_t displayCursor{ 0 };
 	float time{ 0 };
-	const float tweenTimeScale{ 5.0f };
-	const float wobbleTimeScale{ 0.25f };
 	glm::vec4 bubbleColor;
 	glm::vec4 textColor;
 	glm::vec4 nametagColor[2];

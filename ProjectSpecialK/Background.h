@@ -8,7 +8,6 @@ private:
 	std::unique_ptr<Texture> wallpaper;
 	Shader scroller{ Shader("shaders/scroller.fs") };
 	float time{ 0 };
-	const float timeScale{ 1.0f };
 
 public:
 	Background(const std::string& file, glm::vec2 speed = { 0.1f, -0.1f });
