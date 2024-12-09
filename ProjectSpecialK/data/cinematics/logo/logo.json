@@ -103,65 +103,119 @@
 						"panel": "woodBack",
 						"property": "alpha",
 						"fromTime": 0.0, "fromVal": 0.0,
-						"toTime": 0.25, "toVal": 1.0
+						"toTime": 0.80, "toVal": 1.0
 					},
 					{
 						//Slightly move the panel down as it appears
 						"panel": "woodBack",
 						"property": "y",
 						"fromTime": 0.0, "fromVal": -32,
-						"toTime": 0.25, "toVal": 64,
+						"toTime": 0.80, "toVal": 64,
 						"easing": "bounceOut"
 					},
+
 					//Letters appear staggered
-					{
-						"panel": "logoS",
-						"property": "alpha",
-						"fromTime": 0.20, "fromVal": 0.0,
-						"toTime": 0.50, "toVal": 1.0
-					},
-					//could do a dropping down thing too, maybe rotate a bit
-					{
-						"panel": "logoP",
-						"property": "alpha",
-						"fromTime": 0.25, "fromVal": 0.0,
-						"toTime": 0.55, "toVal": 1.0
-					},
-					{
-						"panel": "logoE",
-						"property": "alpha",
-						"fromTime": 0.30, "fromVal": 0.0,
-						"toTime": 0.60, "toVal": 1.0
-					},
 					{
 						"panel": "logoC",
 						"property": "alpha",
-						"fromTime": 0.35, "fromVal": 0.0,
-						"toTime": 0.65, "toVal": 1.0
+						"fromTime": 0.70, "fromVal": 0.0,
+						"toTime": 1.40, "toVal": 1.0
+					},
+					{
+						"panel": "logoC",
+						"property": "y",
+						"fromTime": 0.70, "fromVal": 99,
+						"toTime": 1.40, "toVal": 147
+					},
+
+					{
+						"panel": "logoE",
+						"property": "alpha",
+						"fromTime": 0.90, "fromVal": 0.0,
+						"toTime": 1.50, "toVal": 1.0
+					},
+					{
+						"panel": "logoE",
+						"property": "y",
+						"fromTime": 0.90, "fromVal": 93,
+						"toTime": 1.50, "toVal": 141
 					},
 					{
 						"panel": "logoI",
 						"property": "alpha",
-						"fromTime": 0.40, "fromVal": 0.0,
-						"toTime": 0.70, "toVal": 1.0
+						"fromTime": 0.90, "fromVal": 0.0,
+						"toTime": 1.50, "toVal": 1.0
+					},
+					{
+						"panel": "logoI",
+						"property": "y",
+						"fromTime": 0.90, "fromVal": 43,
+						"toTime": 1.50, "toVal": 91
+					},
+
+					{
+						"panel": "logoP",
+						"property": "alpha",
+						"fromTime": 1.00, "fromVal": 0.0,
+						"toTime": 1.60, "toVal": 1.0
+					},
+					{
+						"panel": "logoP",
+						"property": "y",
+						"fromTime": 1.00, "fromVal": 68,
+						"toTime": 1.60, "toVal": 116
 					},
 					{
 						"panel": "logoA",
 						"property": "alpha",
-						"fromTime": 0.45, "fromVal": 0.0,
-						"toTime": 0.75, "toVal": 1.0
+						"fromTime": 1.00, "fromVal": 0.0,
+						"toTime": 1.60, "toVal": 1.0
+					},
+					{
+						"panel": "logoA",
+						"property": "y",
+						"fromTime": 1.00, "fromVal": 149,
+						"toTime": 1.60, "toVal": 101
+					},
+
+					{
+						"panel": "logoS",
+						"property": "alpha",
+						"fromTime": 1.10, "fromVal": 0.0,
+						"toTime": 1.70, "toVal": 1.0
+					},
+					{
+						"panel": "logoS",
+						"property": "y",
+						"fromTime": 1.10, "fromVal": 14,
+						"toTime": 1.70, "toVal": 62
 					},
 					{
 						"panel": "logoL",
 						"property": "alpha",
-						"fromTime": 0.50, "fromVal": 0.0,
-						"toTime": 0.80, "toVal": 1.0
+						"fromTime": 1.10, "fromVal": 0.0,
+						"toTime": 1.70, "toVal": 1.0
 					},
+					{
+						"panel": "logoL",
+						"property": "y",
+						"fromTime": 1.10, "fromVal": 44,
+						"toTime": 1.70, "toVal": 92
+					},
+
+
 					{
 						"panel": "logoK",
 						"property": "alpha",
-						"fromTime": 0.55, "fromVal": 0.0,
-						"toTime": 0.85, "toVal": 1.0
+						"fromTime": 2.00, "fromVal": 0.0,
+						"toTime": 2.50, "toVal": 1.0
+					},
+					{
+						"panel": "logoK",
+						"property": "y",
+						"fromTime": 2.00, "fromVal": 77,
+						"toTime": 2.50, "toVal": 125,
+						"easing": "bounceOut"
 					}
 					//etc...
 				]
@@ -175,7 +229,7 @@
 						"panel": "woodBack",
 						"property": "y",
 						"fromTime": 0.0, "fromVal": 32,
-						"toTime": 0.25, "toVal": 64,
+						"toTime": 1.0, "toVal": 64,
 						"easing": "bounceOut"
 					}
 				]
