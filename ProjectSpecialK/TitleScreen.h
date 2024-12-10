@@ -12,7 +12,6 @@ private:
 	{
 		Init, FadeIn, Wait, FadeOut
 	} state{ State::Init };
-	float fade;
 
 public:
 	TitleScreen();

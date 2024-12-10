@@ -6,6 +6,7 @@
 #include "DateTimePanel.h"
 #include "ItemHotbar.h"
 #include "Town.h"
+#include "Iris.h"
 
 extern std::vector<Tickable*> tickables;
 extern std::vector<Tickable*> newTickables;
@@ -24,20 +25,19 @@ TitleScreen::TitleScreen()
 void TitleScreen::Tick(float dt)
 {
 	logoAnim->Tick(dt);
+	iris->Tick(dt);
 
 	if (state == State::Init)
 	{
 		musicManager.Play("title", true);
 		state = State::FadeIn;
-		fade = 0.0f;
+		iris->In();
 	}
 	else if (state == State::FadeIn)
 	{
-		fade += dt;
-		if (fade > 1.0f)
+		if (iris->Done())
 		{
 			state = State::Wait;
-			fade = 1.0f;
 			logoAnim->Play("open");
 		}
 	}
@@ -46,20 +46,20 @@ void TitleScreen::Tick(float dt)
 		if (Inputs.KeyDown(Binds::Accept))
 		{
 			state = State::FadeOut;
-			fade = 0.0f;
 			musicManager.FadeOut();
+			iris->Out();
 		}
 	}
 	else if (state == State::FadeOut)
 	{
-		fade += dt;
-		if (fade > 1.0f)
+		if (iris->Done())
 		{
 			dead = true;
 			dateTimePanel = new DateTimePanel();
 			newTickables.push_back(dateTimePanel);
 			newTickables.push_back(itemHotbar);
 			musicManager.Play(town.Music);
+			iris->In();
 		}
 	}
 }
@@ -72,6 +72,6 @@ TitleScreen::~TitleScreen()
 void TitleScreen::Draw(float dt)
 {
 	logoAnim->Draw(dt);
-	Sprite::DrawText(fmt::format("TitleScreen::fade = {}", fade), glm::vec2(4));
+	iris->Draw(dt);
 }
 

@@ -18,6 +18,7 @@
 #include "Messager.h"
 #include "MusicManager.h"
 #include "Framebuffer.h"
+#include "Iris.h"
 #include "TitleScreen.h"
 
 #include <fstream>
@@ -440,6 +441,8 @@ static int InitOpenGL()
 Framebuffer* frameBuffer;
 Shader* skyShader;
 Background* rainLayer;
+Iris* iris;
+
 static void DrawTown(float dt)
 {
 	Sprite::FlushBatch();
@@ -461,7 +464,14 @@ static void DrawTown(float dt)
 	glDisable(GL_DEPTH_TEST);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
-
+void TemporaryTownDrawer::Tick(float dt)
+{
+	if (!iris->Done())
+	{
+		iris->Tick(dt);
+		//TODO: drop down the items and datetime *now*.
+	}
+}
 void TemporaryTownDrawer::Draw(float dt)
 {
 	if (postFx)
@@ -470,7 +480,6 @@ void TemporaryTownDrawer::Draw(float dt)
 		glClearColor(0.2f, 0.3f, 0.3f, 0.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		Sprite::DrawSprite(skyShader, *whiteRect, glm::vec2(0), glm::vec2(width, height));
-		//townDrawer.Draw(dt * timeScale);
 		DrawTown(dt * timeScale);
 		rainLayer->Draw(dt * timeScale);
 		frameBuffer->Drop();
@@ -481,10 +490,11 @@ void TemporaryTownDrawer::Draw(float dt)
 	{
 		//background.Draw(dt * timeScale);
 		Sprite::DrawSprite(skyShader, *whiteRect, glm::vec2(0), glm::vec2(width, height));
-		//townDrawer.Draw(dt * timeScale);
 		DrawTown(dt * timeScale);
 		rainLayer->Draw(dt * timeScale);
 	}
+	if (!iris->Done())
+		iris->Draw(dt);
 }
 TemporaryTownDrawer townDrawer;
 
@@ -585,6 +595,7 @@ int main(int argc, char** argv)
 	dlgBox = new DialogueBox();
 	//dateTimePanel = new DateTimePanel();
 	itemHotbar = new ItemHotbar();
+	iris = new Iris();
 
 #ifdef DEBUG
 	RunTests();

@@ -155,6 +155,7 @@
     </ClCompile>
     <ClCompile Include="Framebuffer.cpp" />
     <ClCompile Include="InputsMap.cpp" />
+    <ClCompile Include="Iris.cpp" />
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="ItemHotbar.cpp" />
     <ClCompile Include="JsonPatch.cpp" />
@@ -241,6 +242,7 @@
     <ClInclude Include="DoomMenu.h" />
     <ClInclude Include="Framebuffer.h" />
     <ClInclude Include="InputsMap.h" />
+    <ClInclude Include="Iris.h" />
     <ClInclude Include="Item.h" />
     <ClInclude Include="ItemHotbar.h" />
     <ClInclude Include="Messager.h" />
@@ -273,6 +275,7 @@
   <ItemGroup>
     <None Include="data\shaders\font.fs" />
     <None Include="data\shaders\framebuffer.fs" />
+    <None Include="data\shaders\iris.fs" />
     <None Include="data\shaders\lighting.fs" />
     <None Include="data\shaders\model.fs" />
     <None Include="data\shaders\model.vs" />
