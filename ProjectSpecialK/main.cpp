@@ -18,6 +18,7 @@
 #include "Messager.h"
 #include "MusicManager.h"
 #include "Framebuffer.h"
+#include "TitleScreen.h"
 
 #include <fstream>
 
@@ -84,6 +85,10 @@ float glTime = 0;
 #endif
 
 CommonUniforms commonUniforms;
+
+ItemHotbar* itemHotbar;
+DateTimePanel* dateTimePanel;
+Messager messager;
 
 __declspec(noreturn)
 void FatalError(const std::string& message)
@@ -238,7 +243,10 @@ namespace UI
 	}
 };
 
+//Currently active Tickables.
 std::vector<Tickable*> tickables;
+//Tickables to add next cycle.
+std::vector<Tickable*> newTickables;
 
 static void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
@@ -428,42 +436,57 @@ static int InitOpenGL()
 	return 0;
 }
 
-class TemporaryTownDrawer : public Tickable
+
+Framebuffer* frameBuffer;
+Shader* skyShader;
+Background* rainLayer;
+static void DrawTown(float dt)
 {
-public:
-	void Draw(float dt)
+	Sprite::FlushBatch();
+
+	glClear(GL_DEPTH_BUFFER_BIT);
+	glEnable(GL_DEPTH_TEST);
+	glPolygonMode(GL_FRONT_AND_BACK, wireframe ? GL_LINE : GL_FILL);
+	modelShader->Use();
+
+	for (int i = 0; i < MaxLights; i++)
 	{
-		Sprite::FlushBatch();
-
-		glClear(GL_DEPTH_BUFFER_BIT);
-		glEnable(GL_DEPTH_TEST);
-		glPolygonMode(GL_FRONT_AND_BACK, wireframe ? GL_LINE : GL_FILL);
-		modelShader->Use();
-
-		for (int i = 0; i < MaxLights; i++)
-		{
-			modelShader->Set(fmt::format("lights[{}].color", i), lightCol[i]);
-			modelShader->Set(fmt::format("lights[{}].pos", i), lightPos[i]);
-		}
-
-		for (const auto& v : town.Villagers)
-			v->Draw(dt * timeScale);
-
-		glDisable(GL_DEPTH_TEST);
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		modelShader->Set(fmt::format("lights[{}].color", i), lightCol[i]);
+		modelShader->Set(fmt::format("lights[{}].pos", i), lightPos[i]);
 	}
-};
 
+	for (const auto& v : town.Villagers)
+		v->Draw(dt * timeScale);
 
-float degreesLeft(float startDeg, float endDeg)
-{
-	return glm::mod(endDeg - startDeg, 360.0f);
+	glDisable(GL_DEPTH_TEST);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
 
-float degreesRight(float startDeg, float endDeg)
+void TemporaryTownDrawer::Draw(float dt)
 {
-	return glm::mod(startDeg - endDeg, 360.0f);
+	if (postFx)
+	{
+		frameBuffer->Use();
+		glClearColor(0.2f, 0.3f, 0.3f, 0.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		Sprite::DrawSprite(skyShader, *whiteRect, glm::vec2(0), glm::vec2(width, height));
+		//townDrawer.Draw(dt * timeScale);
+		DrawTown(dt * timeScale);
+		rainLayer->Draw(dt * timeScale);
+		frameBuffer->Drop();
+		//background.Draw(dt * timeScale);
+		frameBuffer->Draw();
+	}
+	else
+	{
+		//background.Draw(dt * timeScale);
+		Sprite::DrawSprite(skyShader, *whiteRect, glm::vec2(0), glm::vec2(width, height));
+		//townDrawer.Draw(dt * timeScale);
+		DrawTown(dt * timeScale);
+		rainLayer->Draw(dt * timeScale);
+	}
 }
+TemporaryTownDrawer townDrawer;
 
 int main(int argc, char** argv)
 {
@@ -509,7 +532,7 @@ int main(int argc, char** argv)
 
 	spriteShader = new Shader("shaders/sprite.fs");
 	modelShader = new Shader("shaders/model.vs", "shaders/model.fs");
-	auto skyShader = new Shader("shaders/sky.fs");
+	skyShader = new Shader("shaders/sky.fs");
 	whiteRect = new Texture("white.png", GL_CLAMP_TO_EDGE);
 	UI::controls = std::make_shared<Texture>("ui/controls.png");
 
@@ -536,6 +559,7 @@ int main(int argc, char** argv)
 	for (int i = 0; i < NumKeyBinds; i++)
 		Inputs.Keys[i].Name = GetKeyName(Inputs.Keys[i].ScanCode);
 
+	/*
 	tickables.push_back(&musicManager);
 	tickables.push_back(&MainCamera);
 	//auto background = Background("discobg2.png");
@@ -554,8 +578,13 @@ int main(int argc, char** argv)
 	tickables.push_back(dlgBox);
 	auto messager = new Messager();
 	tickables.push_back(messager);
-
 	//tickables.push_back(new TextField());
+	*/
+
+	//townDrawer = TemporaryTownDrawer();
+	dlgBox = new DialogueBox();
+	//dateTimePanel = new DateTimePanel();
+	itemHotbar = new ItemHotbar();
 
 #ifdef DEBUG
 	RunTests();
@@ -568,7 +597,7 @@ int main(int argc, char** argv)
 	auto cloudImage = Texture("altostratus.png");
 	auto starsImage = Texture("starfield.png");
 
-	auto rainLayer = Background("rain.png", glm::vec2(1.0, 2.0));
+	rainLayer = new Background("rain.png", glm::vec2(1.0, 2.0));
 
 	if (!LoadLights("lights/initial.json").empty())
 	{
@@ -598,7 +627,7 @@ int main(int argc, char** argv)
 		glBufferSubData(GL_UNIFORM_BUFFER, offsetof(CommonUniforms, Projection), sizeof(glm::mat4), &p);
 	}
 
-	auto frameBuffer = Framebuffer("shaders/framebuffer.fs", width, height);
+	frameBuffer = new Framebuffer("shaders/framebuffer.fs", width, height);
 
 #ifdef DEBUG
 	auto startingTime = std::chrono::high_resolution_clock::now();
@@ -606,6 +635,8 @@ int main(int argc, char** argv)
 
 	auto oldTime = glfwGetTime();
 	commonUniforms.totalTime = 0.0f;
+
+	tickables.push_back(new TitleScreen());
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -637,6 +668,7 @@ int main(int argc, char** argv)
 			//a bit ugly but technically still better vis-a-vis iterators
 			for (auto t = tickables.crbegin(); t != tickables.crend(); ++t)
 				(*t)->Tick(dt);
+			//TODO: have Tick return false if it's the last one, known to cover up everything else.
 		}
 
 		{
@@ -703,6 +735,7 @@ int main(int argc, char** argv)
 			}
 		}
 
+		/*
 		if (postFx)
 		{
 			frameBuffer.Use();
@@ -722,6 +755,7 @@ int main(int argc, char** argv)
 			townDrawer.Draw(dt * timeScale);
 			rainLayer.Draw(dt * timeScale);
 		}
+		*/
 
 		for (const auto& t : tickables)
 			t->Draw(dt * timeScale);
@@ -732,8 +766,15 @@ int main(int argc, char** argv)
 		tickables.erase(std::remove_if(tickables.begin(), tickables.end(), [](Tickable* i) {
 			return i->dead;
 		}), tickables.end());
+		if (newTickables.size() > 0)
+		{
+			for (const auto& t : newTickables)
+				tickables.push_back(t);
+			newTickables.clear();
+		}
 
 		//TEST
+		/*
 		if (Inputs.KeyDown(Binds::Accept))
 		{
 			Inputs.Clear(Binds::Accept);
@@ -748,6 +789,7 @@ int main(int argc, char** argv)
 			};
 			messager->Add(lols[rand() % 7]);
 		}
+		*/
 
 #ifdef DEBUG
 		DoImGui();

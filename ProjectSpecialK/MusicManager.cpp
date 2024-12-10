@@ -16,7 +16,7 @@ void MusicManager::Tick(float dt)
 	{
 		if (bgm->Volume > 0.0f)
 		{
-			bgm->Volume -= dt * 0.0005f;
+			bgm->Volume -= dt * 1.0f;
 			bgm->UpdateVolume();
 		}
 		if (bgm->Volume <= 0.0f)

@@ -17,3 +17,5 @@ public:
 	void Tick(float dt);
 	void Draw(float dt);
 };
+
+extern DateTimePanel* dateTimePanel;

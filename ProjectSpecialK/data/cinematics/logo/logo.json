@@ -26,6 +26,7 @@
 				"type": "image",
 				"texture": 0,
 				"frame": 0, //backing plate
+				"alpha": 0.0,
 				"position": [ 586, 32 ]
 				//"position": [ "middle", 32 ] //automatically figure out that this is (SCREENWIDTH/2)-(747/2).
 			},
@@ -95,6 +96,11 @@
 			}
 		],
 		"anims": [
+			{
+				"name": "wait",
+				"next": "",
+				"bits": []
+			},
 			{
 				"name": "open",
 				"next": "",

@@ -213,6 +213,7 @@
     <ClCompile Include="TextField.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="ThreadedLoader.cpp" />
+    <ClCompile Include="TitleScreen.cpp" />
     <ClCompile Include="Town.cpp" />
     <ClCompile Include="Traits.cpp" />
     <ClCompile Include="Utilities.cpp" />
@@ -257,6 +258,7 @@
     <ClInclude Include="TextField.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Tickable.h" />
+    <ClInclude Include="TitleScreen.h" />
     <ClInclude Include="Town.h" />
     <ClInclude Include="Traits.h" />
     <ClInclude Include="VFS.h" />

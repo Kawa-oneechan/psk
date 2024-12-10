@@ -18,3 +18,5 @@ public:
 	void RegisterItem(int slot, int item);
 	void RegisterItem(int slot, InventoryItemP item);
 };
+
+extern ItemHotbar* itemHotbar;
