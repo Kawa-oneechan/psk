@@ -198,9 +198,6 @@ void DialogueBox::msbtPass(MSBTParams)
 DialogueBox::DialogueBox()
 {
 	wobble.Use();
-	wobble.Set("image", 0);
-	wobble.Set("gradient1", 1);
-	wobble.Set("gradient2", 2);
 
 	auto extensions = VFS::ReadJSON("msbt/content.json");
 	if (extensions)

@@ -3,7 +3,7 @@ flat in int index;
 
 out vec4 fragColor;
 
-uniform sampler2D image;
+layout(binding=0) uniform sampler2D image;
 uniform vec4 spriteColor[200];
 uniform vec4 sourceRect[200];
 

@@ -2,7 +2,7 @@ in vec2 TexCoords;
 
 out vec4 fragColor;
 
-uniform sampler2D image;
+layout(binding=0) uniform sampler2D image;
 uniform vec4 sourceRect;
 uniform float time;
 uniform vec2 speed;
@@ -17,6 +17,6 @@ void main()
 	uv += sr.xy;
 	fragColor = texture(image, uv + vec2(time * speed.x, time * speed.y));
 
-    if (recolorB.a != 0.0)
-        fragColor = mix(recolorB, recolorW, fragColor.r);
+	if (recolorB.a != 0.0)
+		fragColor = mix(recolorB, recolorW, fragColor.r);
 }

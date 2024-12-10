@@ -1,6 +1,6 @@
 #include "SpecialK.h"
 
-#define HEADER "#version 330 core\n#define PSK\n"
+#define HEADER "#version 430 core\n#define PSK\n"
 
 Shader::Shader(const std::string& vertexPath, const std::string& fragmentPath)
 {

@@ -380,7 +380,7 @@ static void joystick_callback(int jid, int event)
 
 static int InitOpenGL()
 {
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	glfwWindowHint(GLFW_SAMPLES, 2);
@@ -563,14 +563,8 @@ int main(int argc, char** argv)
 
 	modelShader->Use();
 	modelShader->Set("viewPos", MainCamera.Position());
-	modelShader->Set("albedoTexture", 0);
-	modelShader->Set("normalTexture", 1);
-	modelShader->Set("mixTexture", 2);
-	modelShader->Set("opacityTexture", 3);
 
 	skyShader->Use();
-	skyShader->Set("cloudImage", 1);
-	skyShader->Set("starsImage", 2);
 	auto cloudImage = Texture("altostratus.png");
 	auto starsImage = Texture("starfield.png");
 

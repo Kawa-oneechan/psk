@@ -3,9 +3,9 @@ flat in int index;
 
 out vec4 fragColor;
 
-uniform sampler2D image;
-uniform sampler2D gradient1;
-uniform sampler2D gradient2;
+layout(binding=0) uniform sampler2D image;
+layout(binding=1) uniform sampler2D gradient1;
+layout(binding=2) uniform sampler2D gradient2;
 uniform vec4 spriteColor[200];
 uniform vec4 sourceRect[200];
 uniform bool flipX[200], flipY[200];

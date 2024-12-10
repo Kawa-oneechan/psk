@@ -4,8 +4,8 @@ out vec4 fragColor;
 
 #include "common.fs"
 
-uniform sampler2D cloudImage;
-uniform sampler2D starsImage;
+layout(binding=1) uniform sampler2D cloudImage;
+layout(binding=2) uniform sampler2D starsImage;
 
 uniform float pitch;
 

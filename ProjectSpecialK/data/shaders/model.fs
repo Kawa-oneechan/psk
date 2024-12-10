@@ -7,10 +7,10 @@ in vec3 FragPos;
 
 out vec4 fragColor;
 
-uniform sampler2DArray albedoTexture;
-uniform sampler2DArray normalTexture;
-uniform sampler2DArray mixTexture;
-uniform sampler2DArray opacityTexture;
+layout(binding=0) uniform sampler2DArray albedoTexture;
+layout(binding=1) uniform sampler2DArray normalTexture;
+layout(binding=2) uniform sampler2DArray mixTexture;
+layout(binding=3) uniform sampler2DArray opacityTexture;
 
 uniform vec3 viewPos;
 uniform int layer;
