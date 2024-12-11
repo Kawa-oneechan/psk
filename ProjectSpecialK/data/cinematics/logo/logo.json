@@ -93,7 +93,18 @@
 				"alpha": 0.0,
 				"parent": "woodBack",
 				"position": [ 564, 125 ]
-			}
+			},
+			{
+				"id": "logoJoke",
+				"parent": "woodBack",
+				"position": [ 564, 300 ],
+				"type": "text",
+				"text": "...",
+				"size": 100,
+				"angle": -3,
+				"alpha": 0.0,
+				"alignment": "center"
+			},
 		],
 		"anims": [
 			{
@@ -222,8 +233,14 @@
 						"fromTime": 2.00, "fromVal": 77,
 						"toTime": 2.50, "toVal": 125,
 						"easing": "bounceOut"
+					},
+
+					{
+						"panel": "logoJoke",
+						"property": "alpha",
+						"fromTime": 3.00, "fromVal": 0.0,
+						"toTime": 3.50, "toVal": 1.0
 					}
-					//etc...
 				]
 			},
 			{

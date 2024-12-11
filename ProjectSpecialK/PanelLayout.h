@@ -50,6 +50,7 @@ class PanelLayout : public Tickable
 		int Font;
 		float Size;
 		int Alignment;
+		float Angle;
 		std::string Text;
 		glm::vec4 Color;
 		int Polygon;

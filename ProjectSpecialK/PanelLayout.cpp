@@ -111,6 +111,9 @@ PanelLayout::PanelLayout(JSONValue* source)
 			panel->Position = GetJSONVec2(new JSONValue(pos));
 		}
 
+		if (pnl["angle"] != nullptr)
+			panel->Angle = pnl["angle"]->AsNumber();
+
 		panel->Parent = -1;
 		if (pnl["parent"] != nullptr)
 		{
@@ -356,7 +359,7 @@ void PanelLayout::Draw(float dt)
 				finalPos * scale,
 				glm::vec2(frame.z, frame.w) * scale,
 				frame,
-				0.0f,
+				panel->Angle,
 				color
 			);
 
@@ -389,7 +392,8 @@ void PanelLayout::Draw(float dt)
 				panel->Text,
 				pos * scale,
 				color,
-				panel->Size * scale
+				panel->Size * scale,
+				panel->Angle
 			);
 		}
 		else if (panel->Type == Panel::Type::ItemIcon)
@@ -406,7 +410,7 @@ void PanelLayout::Draw(float dt)
 				(Position + parentPos + panel->Position) * scale,
 				glm::vec2(frame.z, frame.w) * (panel->Size / 100.0f) * scale,
 				frame,
-				0.0f,
+				panel->Angle,
 				color
 			);
 		}

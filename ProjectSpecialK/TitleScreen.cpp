@@ -21,6 +21,66 @@ TitleScreen::TitleScreen()
 	//tickables.push_back(iris);
 	auto logoJson = VFS::ReadJSON("cinematics/logo/logo.json")->AsObject();
 	logoAnim = new PanelLayout(logoJson["cinematic"]);
+
+	auto logoJoke = logoAnim->GetPanel("logoJoke");
+	//TODO: use JSON
+	static std::string lols[] = {
+		"100% pure C++!",
+		"149% more cats than the other one!",
+		"A game within a game within a game!",
+		"Absolutely no homestucks. None. Believe us.",
+		"An exercise in frustration!",
+		"Are you also here to fuck Ankha?",
+		"Because fuck you, and your environment!",
+		"Catgroovin'!",
+		"Cheap imitation!",
+		"Datamined!",
+		"Eject Hippeux from the island.",
+		"FFFFOOOOOOOOOOOOONNNEEEEEE!!!!!!!",
+		"Focus tested on Tumblr!",
+		"Fox-Hunters' Galop!",
+		"From the creators of \"Noxico\"!",
+		"From the creators of \"Of Wildcats and Wolves\"!",
+		"From the creators of \"The Dating Pool\"!",
+		"Hi, Andrea!",
+		"Hi, CJ!",
+		"Hi, Kate!",
+		"Hi, Lancette!",
+		"Hi, Letrune!",
+		"Hi, Mikael!",
+		"Hi, Screwtape!",
+		"Hi, Wareya!",
+		"It's me.",
+		"Made from scratch!",
+		"Me meow!",
+		"Met de groeten aan Kenney!",
+		"Nintendo SWAT team incoming!",
+		"NO RESETTING!",
+		"No one's around to help.",
+		"Not Animal Crossing!",
+		"Not powered by Godot!",
+		"Not powered by Unity!",
+		"Not powered by Unreal!",
+		"One-man Devteam!",
+		u8"Play as a furry! We won't tell ♥",
+		"Powered by FMOD!",
+		"Powered by GLFW!",
+		"Powered by cola!"
+		"Powered by egg!",
+		"Powered by spite!",
+		"Press \uE0E2 to JSON!",
+		"Runs on Doom!",
+		"Runs on potato!",
+		"Runs on pregnancy test!",
+		"Wait, are these guys even paying taxes?",
+		"We got EGG",
+		"You crack me up, li'l buddy!",
+		"Your immigration policy ain't shit, bro.",
+		u8"ゆけ! けけライダー",
+	};
+	logoJoke->Text = lols[rand() % 51];
+
+	LoadCamera("cameras/title.json");
 }
 
 void TitleScreen::Tick(float dt)
