@@ -37,6 +37,18 @@ void ItemHotbar::Draw(float dt)
 	layout.Draw(dt);
 }
 
+void ItemHotbar::Show()
+{
+	if (animating) return;
+	layout.Play("show");
+}
+
+void ItemHotbar::Hide()
+{
+	if (animating) return;
+	layout.Play("hide");
+}
+
 void ItemHotbar::RegisterItem(int slot, int item)
 {
 	if (slot < 0 || slot > 10)

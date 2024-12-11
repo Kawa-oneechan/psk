@@ -9,6 +9,7 @@ private:
 	int lastHour{ -1 };
 	int lastMinute{ -1 };
 	tm gm;
+	bool animating;
 	PanelLayout layout{ PanelLayout(UI::json["datetime"]) };
 
 public:
@@ -16,6 +17,8 @@ public:
 	void Update();
 	void Tick(float dt);
 	void Draw(float dt);
+	void Show();
+	void Hide();
 };
 
 extern DateTimePanel* dateTimePanel;

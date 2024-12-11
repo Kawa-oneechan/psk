@@ -85,7 +85,7 @@
 			//{ } //backing panel or whatever
 			{
 				"id": "hotbarButton_0",
-				"position": [ 0, 0 ],
+				"position": [ 0, -128 ],
 				"type": "sprite",
 				"texture": 0, //squares
 				"frame": 1, //extend left
@@ -348,6 +348,57 @@
 				"type": "itemicon",
 				"size": 75
 			}
+		],
+		"anims": [
+			{
+				"name": "hidden",
+				"next": "",
+				"bits": [
+					{
+						"panel": "hotbarButton_0",
+						"property": "y",
+						"fromTime": 0.0, "fromVal": -128,
+						"toTime": 0.5, "toVal": -128
+					}
+				]
+			},
+			{
+				"name": "shown",
+				"next": "",
+				"bits": [
+					{
+						"panel": "hotbarButton_0",
+						"property": "y",
+						"fromTime": 0.0, "fromVal": 0,
+						"toTime": 0.5, "toVal": 0
+					}
+				]
+			},
+			{
+				"name": "hide",
+				"next": "hidden",
+				"bits": [
+					{
+						"panel": "hotbarButton_0",
+						"property": "y",
+						"fromTime": 0.0, "fromVal": 0,
+						"toTime": 1.0, "toVal": -128
+					}
+				]
+			},
+			{
+				"name": "show",
+				"next": "shown",
+				"bits": [
+					{
+						"panel": "hotbarButton_0",
+						"property": "y",
+						"fromTime": 0.0, "fromVal": -128,
+						"toTime": 1.0, "toVal": 0,
+						"easing": "bounceOut"
+					}
+				]
+			}
 		]
 	},
 	"datetime": {
@@ -358,6 +409,7 @@
 		"origin": "bottomleft",
 		"panels": [
 			{
+				"id": "main",
 				//"position": [ 0, 850 ],
 				"position": [ 0, -32 ],
 				"type": "sprite",
@@ -399,6 +451,57 @@
 				"alpha": 2.0,
 				"alignment": "center",
 				"color": "white"
+			}
+		],
+		"anims": [
+			{
+				"name": "hidden",
+				"next": "",
+				"bits": [
+					{
+						"panel": "main",
+						"property": "y",
+						"fromTime": 0.0, "fromVal": 200,
+						"toTime": 0.5, "toVal": 200
+					}
+				]
+			},
+			{
+				"name": "shown",
+				"next": "",
+				"bits": [
+					{
+						"panel": "hotbarButton_0",
+						"property": "y",
+						"fromTime": 0.0, "fromVal": -32,
+						"toTime": 0.5, "toVal": -32
+					}
+				]
+			},
+			{
+				"name": "hide",
+				"next": "hidden",
+				"bits": [
+					{
+						"panel": "hotbarButton_0",
+						"property": "y",
+						"fromTime": 0.0, "fromVal": -32,
+						"toTime": 1.0, "toVal": 200
+					}
+				]
+			},
+			{
+				"name": "show",
+				"next": "shown",
+				"bits": [
+					{
+						"panel": "hotbarButton_0",
+						"property": "y",
+						"fromTime": 0.0, "fromVal": 200,
+						"toTime": 1.0, "toVal": -32,
+						"easing": "bounceOut"
+					}
+				]
 			}
 		]
 	}

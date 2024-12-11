@@ -1,4 +1,4 @@
-#include "TitleScreen.h"
+﻿#include "TitleScreen.h"
 #include "MusicManager.h"
 #include "Background.h"
 #include "InputsMap.h"
@@ -15,6 +15,7 @@ TitleScreen::TitleScreen()
 {
 	tickables.clear();
 	tickables.push_back(&musicManager);
+	tickables.push_back(&MainCamera);
 	//tickables.push_back(new Background("discobg2.png"));
 	tickables.push_back(&townDrawer);
 	//tickables.push_back(iris);
@@ -59,6 +60,8 @@ void TitleScreen::Tick(float dt)
 			newTickables.push_back(dateTimePanel);
 			newTickables.push_back(itemHotbar);
 			musicManager.Play(town.Music);
+			LoadCamera("cameras/field.json");
+			MainCamera.Target(&(town.Villagers[0]->Position));
 			iris->In();
 		}
 	}

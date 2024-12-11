@@ -68,3 +68,15 @@ void DateTimePanel::Draw(float dt)
 {
 	layout.Draw(dt);
 }
+
+void DateTimePanel::Show()
+{
+	if (animating) return;
+	layout.Play("show");
+}
+
+void DateTimePanel::Hide()
+{
+	if (animating) return;
+	layout.Play("hide");
+}

@@ -469,7 +469,11 @@ void TemporaryTownDrawer::Tick(float dt)
 	if (!iris->Done())
 	{
 		iris->Tick(dt);
-		//TODO: drop down the items and datetime *now*.
+		if (iris->Done() && itemHotbar && dateTimePanel)
+		{
+			itemHotbar->Show();
+			dateTimePanel->Show();
+		}
 	}
 }
 void TemporaryTownDrawer::Draw(float dt)
