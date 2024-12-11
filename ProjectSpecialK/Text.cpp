@@ -113,6 +113,29 @@ Text::Entry& Text::Add(std::string key, JSONValue& value) //-V813
 	throw "TextAdd<Value>: JSONValue is not an Object or String.";
 }
 
+void Text::Forget(const std::string& ns)
+{
+	auto nsl = ns.length();
+	while (true)
+	{
+		auto e = textEntries.begin();
+		auto any = false;
+		while (e != textEntries.end())
+		{
+			auto key = e->first;
+			if (key.length() > nsl && key.substr(0, nsl) == ns)
+			{
+				textEntries.erase(e);
+				any = true;
+				break;
+			}
+			++e;
+		}
+		if (!any)
+			break;
+	}
+}
+
 void Text::Add(JSONValue& doc)
 {
 	for (auto& entry : doc.AsObject())
