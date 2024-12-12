@@ -8,8 +8,11 @@
 
 extern float timeScale;
 extern bool debugPanelLayoutPolygons;
+extern bool postFx, wireframe;
 extern bool debuggerEnabled;
 extern bool cheatsEnabled;
+
+bool noWear; //placeholder
 
 Console::Console()
 {
@@ -33,10 +36,22 @@ Console::Console()
 	appearState = 0;
 
 	RegisterCVar("timescale", CVar::Type::Float, &timeScale);
-	RegisterCVar("playername", CVar::Type::String, &thePlayer.Name);
-	RegisterCVar("playerbells", CVar::Type::Int, &thePlayer.Bells, true);
+
+	RegisterCVar("name", CVar::Type::String, &thePlayer.Name);
+	RegisterCVar("gender", CVar::Type::Int, &thePlayer.Gender, false, 0, 3);
+	RegisterCVar("nowear", CVar::Type::Bool, &noWear);
+
 	RegisterCVar("sv_cheats", CVar::Type::Bool, &cheatsEnabled);
+	RegisterCVar("bells", CVar::Type::Int, &thePlayer.Bells, true);
+
 	RegisterCVar("r_polygons", CVar::Type::Bool, &debugPanelLayoutPolygons);
+	RegisterCVar("r_postfx", CVar::Type::Bool, &postFx);
+	RegisterCVar("r_wireframe", CVar::Type::Bool, &wireframe);
+
+	RegisterCVar("s_ambientvolume", CVar::Type::Float, &Audio::AmbientVolume, false, 0, 100);
+	RegisterCVar("s_effectvolume", CVar::Type::Float, &Audio::SoundVolume, false, 0, 100);
+	RegisterCVar("s_musicvolume", CVar::Type::Float, &Audio::MusicVolume, false, 0, 100);
+	RegisterCVar("s_voicevolume", CVar::Type::Float, &Audio::SpeechVolume, false, 0, 100);
 #ifdef DEBUG
 	RegisterCVar("debugger", CVar::Type::Bool, &debuggerEnabled, true);
 #endif
@@ -267,7 +282,7 @@ void Console::Draw(float dt)
 	inputLine->Draw(dt);
 }
 
-void Console::RegisterCVar(const std::string& name, CVar::Type type, void* target, bool cheat)
+void Console::RegisterCVar(const std::string& name, CVar::Type type, void* target, bool cheat, int min, int max)
 {
 	for (auto& cv : cvars)
 	{
@@ -284,5 +299,7 @@ void Console::RegisterCVar(const std::string& name, CVar::Type type, void* targe
 	cv.type = type;
 	cv.asVoid = target;
 	cv.cheat = cheat;
+	cv.min = min;
+	cv.max = max;
 	cvars.push_back(cv);
 }

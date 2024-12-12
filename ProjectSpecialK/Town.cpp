@@ -261,7 +261,6 @@ bool Town::GetFlag(const std::string& id, bool def)
 void Town::drawWorker(float dt)
 {
 	Sprite::DrawSprite(skyShader, *whiteRect, glm::vec2(0), glm::vec2(width, height));
-
 	Sprite::FlushBatch();
 
 	glClear(GL_DEPTH_BUFFER_BIT);
@@ -282,6 +281,7 @@ void Town::drawWorker(float dt)
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 	rainLayer->Draw(dt * timeScale);
+	Sprite::FlushBatch();
 }
 
 void Town::Draw(float dt)

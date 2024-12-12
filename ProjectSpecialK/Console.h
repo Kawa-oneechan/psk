@@ -29,7 +29,8 @@ struct CVar
 		glm::vec3* asVec3;
 		glm::vec4* asVec4;
 	};
-	bool cheat;
+	bool cheat, readOnlyCheat;
+	int min, max;
 
 	bool Set(const std::string& value)
 	{
@@ -44,11 +45,21 @@ struct CVar
 			return true;
 		case Type::Int:
 			if (json->IsNumber())
-				*asInt = json->AsInteger();
+			{
+				auto i = json->AsInteger();
+				if (!(min == -1 && max == -1))
+					i = glm::clamp(i, min, max);
+				*asInt = i;
+			}
 			return true;
 		case Type::Float:
 			if (json->IsNumber())
-				*asFloat = json->AsNumber();
+			{
+				auto i = json->AsNumber();
+				if (!(min == -1 && max == -1))
+					i = glm::clamp(i, (float)min, (float)max);
+				*asFloat = i;
+			}
 			return true;
 		case Type::String:
 			if (json->IsNumber())
@@ -104,7 +115,7 @@ public:
 	void Close();
 	void Tick(float dt);
 	void Draw(float dt);
-	void RegisterCVar(const std::string& name, CVar::Type type, void* target, bool cheat = false);
+	void RegisterCVar(const std::string& name, CVar::Type type, void* target, bool cheat = false, int min = -1, int max = -1);
 };
 
 extern Console* console;

@@ -13,10 +13,10 @@ void TextField::Draw(float dt)
 
 	Sprite::DrawText(font, value, pos, color, size, 0.0f, true);
 
-	if ((int)time % 1024 < 512)
+	if (glm::mod(time, 1.0f) < 0.5f)
 	{
 		auto ms = Sprite::MeasureText(font, value.substr(0, caret), size, true);
-		Sprite::DrawText(font, "_", pos + glm::vec2(ms.x, 0), glm::vec4(1, 1, 0, 1), size, 0.0f, true);
+		Sprite::DrawText(font, u8"\u258F", pos + glm::vec2(ms.x, 0), glm::vec4(0, 1, 0, 1), size, 0.0f, true);
 	}
 
 	Sprite::FlushBatch();
@@ -84,12 +84,12 @@ bool TextField::Scancode(unsigned int scancode)
 		}
 		return true;
 	}
-	else if (scancode == 71) //Home
+	else if (scancode == 327) //Home
 	{
 		caret = 0;
 		return true;
 	}
-	else if (scancode == 79) //End
+	else if (scancode == 335) //End
 	{
 		caret = value.length();
 		return true;
