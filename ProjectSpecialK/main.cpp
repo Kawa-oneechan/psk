@@ -443,65 +443,6 @@ Shader* skyShader;
 Background* rainLayer;
 Iris* iris;
 
-static void DrawTown(float dt)
-{
-	Sprite::FlushBatch();
-
-	glClear(GL_DEPTH_BUFFER_BIT);
-	glEnable(GL_DEPTH_TEST);
-	glPolygonMode(GL_FRONT_AND_BACK, wireframe ? GL_LINE : GL_FILL);
-	modelShader->Use();
-
-	for (int i = 0; i < MaxLights; i++)
-	{
-		modelShader->Set(fmt::format("lights[{}].color", i), lightCol[i]);
-		modelShader->Set(fmt::format("lights[{}].pos", i), lightPos[i]);
-	}
-
-	for (const auto& v : town.Villagers)
-		v->Draw(dt * timeScale);
-
-	glDisable(GL_DEPTH_TEST);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-}
-void TemporaryTownDrawer::Tick(float dt)
-{
-	if (!iris->Done())
-	{
-		iris->Tick(dt);
-		if (iris->Done() && itemHotbar && dateTimePanel)
-		{
-			itemHotbar->Show();
-			dateTimePanel->Show();
-		}
-	}
-}
-void TemporaryTownDrawer::Draw(float dt)
-{
-	if (postFx)
-	{
-		frameBuffer->Use();
-		glClearColor(0.2f, 0.3f, 0.3f, 0.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		Sprite::DrawSprite(skyShader, *whiteRect, glm::vec2(0), glm::vec2(width, height));
-		DrawTown(dt * timeScale);
-		rainLayer->Draw(dt * timeScale);
-		frameBuffer->Drop();
-		//background.Draw(dt * timeScale);
-		frameBuffer->Draw();
-	}
-	else
-	{
-		//background.Draw(dt * timeScale);
-		Sprite::DrawSprite(skyShader, *whiteRect, glm::vec2(0), glm::vec2(width, height));
-		DrawTown(dt * timeScale);
-		rainLayer->Draw(dt * timeScale);
-	}
-	if (!iris->Done())
-		iris->Draw(dt);
-}
-TemporaryTownDrawer townDrawer;
-
 int main(int argc, char** argv)
 {
 	setlocale(LC_ALL, "en_US.UTF-8");

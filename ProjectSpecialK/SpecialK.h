@@ -224,15 +224,3 @@ std::string join(InputIt begin, InputIt end, const std::string& separator = ", "
 	ss << concluder;
 	return ss.str();
 }
-
-
-
-class TemporaryTownDrawer : public Tickable
-{
-public:
-	void Tick(float dt);
-	void Draw(float dt);
-};
-extern TemporaryTownDrawer townDrawer;
-
-

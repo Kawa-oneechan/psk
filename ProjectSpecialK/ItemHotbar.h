@@ -8,7 +8,6 @@ class ItemHotbar : public Tickable
 private:
 	PanelLayout layout{ PanelLayout(UI::json["itemhotbar"]) };
 	std::array<int, 10> items;
-	bool animating;
 
 public:
 	ItemHotbar();

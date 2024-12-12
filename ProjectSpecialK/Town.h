@@ -71,7 +71,7 @@ struct LiveTerrainTile
 	unsigned char Elevation;
 };
 
-class Map
+class Map : public Tickable
 {
 public:
 	//Size of an Acre in full tiles
@@ -103,6 +103,9 @@ public:
 	//Returns the height of the lowest point at the given tile coordinate.
 	float GetHeight(int x, int y);
 
+	void Draw(float) {};
+	void Tick(float) {};
+
 #ifdef DEBUG
 	void SaveToPNG();
 #endif
@@ -115,6 +118,8 @@ private:
 	int weatherRain[24] = { 0 };
 	int weatherWind[24] = { 0 };
 	std::map<std::string, int> flags;
+
+	void drawWorker(float dt);
 
 public:
 	std::string Name{ "Fuck-All Nowhere" };
@@ -148,6 +153,9 @@ public:
 	void SetFlag(const std::string& id, bool value);
 	int GetFlag(const std::string& id, int def = 0);
 	bool GetFlag(const std::string& id, bool def = false);
+
+	void Tick(float dt);
+	void Draw(float dt);
 };
 
 extern Town town;

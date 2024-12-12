@@ -1,4 +1,9 @@
 #include "Town.h"
+#include "Framebuffer.h"
+#include "Background.h"
+#include "Iris.h"
+#include "DateTimePanel.h"
+#include "ItemHotbar.h"
 
 float Map::GetHeight(const glm::vec3& pos)
 {
@@ -58,6 +63,13 @@ void Map::SaveToPNG()
 	stbi_write_png("map.png", width, height, 4, pixels, width * 4);
 }
 #endif
+
+extern float timeScale;
+extern bool wireframe, postFx;
+extern Shader* modelShader;
+extern Shader* skyShader;
+extern Background* rainLayer;
+extern Framebuffer* frameBuffer;
 
 Town::Town()
 {
@@ -244,6 +256,66 @@ int Town::GetFlag(const std::string& id, int def)
 bool Town::GetFlag(const std::string& id, bool def)
 {
 	return GetFlag(id, (int)def) > 0;
+}
+
+void Town::drawWorker(float dt)
+{
+	Sprite::DrawSprite(skyShader, *whiteRect, glm::vec2(0), glm::vec2(width, height));
+
+	Sprite::FlushBatch();
+
+	glClear(GL_DEPTH_BUFFER_BIT);
+	glEnable(GL_DEPTH_TEST);
+	glPolygonMode(GL_FRONT_AND_BACK, wireframe ? GL_LINE : GL_FILL);
+	modelShader->Use();
+
+	for (int i = 0; i < MaxLights; i++)
+	{
+		modelShader->Set(fmt::format("lights[{}].color", i), lightCol[i]);
+		modelShader->Set(fmt::format("lights[{}].pos", i), lightPos[i]);
+	}
+
+	for (const auto& v : town.Villagers)
+		v->Draw(dt * timeScale);
+
+	glDisable(GL_DEPTH_TEST);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+	rainLayer->Draw(dt * timeScale);
+}
+
+void Town::Draw(float dt)
+{
+	if (postFx)
+	{
+		frameBuffer->Use();
+		glClearColor(0.2f, 0.3f, 0.3f, 0.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		drawWorker(dt * timeScale);
+		frameBuffer->Drop();
+		//background.Draw(dt * timeScale);
+		frameBuffer->Draw();
+	}
+	else
+	{
+		//background.Draw(dt * timeScale);
+		drawWorker(dt * timeScale);
+	}
+	if (!iris->Done())
+		iris->Draw(dt);
+}
+
+void Town::Tick(float dt)
+{
+	if (!iris->Done())
+	{
+		iris->Tick(dt);
+		if (iris->Done() && itemHotbar && dateTimePanel)
+		{
+			itemHotbar->Show();
+			dateTimePanel->Show();
+		}
+	}
 }
 
 Town town;

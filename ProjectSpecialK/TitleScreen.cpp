@@ -18,7 +18,7 @@ TitleScreen::TitleScreen()
 	tickables.push_back(&musicManager);
 	tickables.push_back(&MainCamera);
 	//tickables.push_back(new Background("discobg2.png"));
-	tickables.push_back(&townDrawer);
+	tickables.push_back(&town);
 	//tickables.push_back(iris);
 	auto logoJson = VFS::ReadJSON("cinematics/logo/logo.json")->AsObject();
 	logoAnim = new PanelLayout(logoJson["cinematic"]);

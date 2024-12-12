@@ -39,13 +39,13 @@ void ItemHotbar::Draw(float dt)
 
 void ItemHotbar::Show()
 {
-	if (animating) return;
+	if (layout.Playing()) return;
 	layout.Play("show");
 }
 
 void ItemHotbar::Hide()
 {
-	if (animating) return;
+	if (layout.Playing()) return;
 	layout.Play("hide");
 }
 
