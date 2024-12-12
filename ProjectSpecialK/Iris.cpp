@@ -17,7 +17,7 @@ void Iris::Tick(float dt)
 		return;
 	if (state == State::Out)
 	{
-		time += dt * 0.5f;
+		time += dt;
 		if (time >= 1.0)
 		{
 			time = 1.0;
@@ -26,7 +26,7 @@ void Iris::Tick(float dt)
 	}
 	else
 	{
-		time -= dt * 0.5f;
+		time -= dt;
 		if (time <= 0.0)
 		{
 			time = 0.0;

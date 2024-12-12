@@ -5,6 +5,7 @@
 
 #include "DateTimePanel.h"
 #include "ItemHotbar.h"
+#include "DialogueBox.h"
 #include "Town.h"
 #include "Iris.h"
 
@@ -86,6 +87,7 @@ void TitleScreen::Tick(float dt)
 			dateTimePanel = new DateTimePanel();
 			newTickables.push_back(dateTimePanel);
 			newTickables.push_back(itemHotbar);
+			newTickables.push_back(dlgBox);
 			musicManager.Play(town.Music);
 			LoadCamera("cameras/field.json");
 			MainCamera.Target(&(town.Villagers[0]->Position));
