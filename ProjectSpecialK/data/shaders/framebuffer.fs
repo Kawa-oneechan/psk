@@ -24,9 +24,26 @@ void main()
 		fragColor.a = 0.0;
 */
 
-    float r = texture(image, TexCoords + vec2(pixSize, 0)).r;
-    float g = texture(image, TexCoords).g;
-    float b = texture(image, TexCoords + vec2(-pixSize, 0)).b;
+/*
+	float r = texture(image, TexCoords + vec2(pixSize, 0)).r;
+	float g = texture(image, TexCoords).g;
+	float b = texture(image, TexCoords + vec2(-pixSize, 0)).b;
 
-    fragColor = vec4(r, g, b, 1.0);
+	fragColor = vec4(r, g, b, 1.0);
+*/
+
+	const vec2 pixelSize = vec2(320.0, 240.0);
+	vec2 uv = floor(TexCoords * pixelSize);
+	uv /= pixelSize;
+	fragColor = texture(image, uv);
+
+/*
+	vec4 color = texture(image, TexCoords);
+	float strength = 16.0;
+	float x = (TexCoords.x + 4.0 ) * (TexCoords.y + 4.0 ) * (totalTime * 10.0);
+	vec4 grain = vec4(mod((mod(x, 13.0) + 1.0) * (mod(x, 123.0) + 1.0), 0.01)-0.005) * strength;
+	//grain = 1.0 - grain;
+	//fragColor = color * grain;
+	fragColor = color + grain;
+*/
 }

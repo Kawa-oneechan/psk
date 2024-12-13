@@ -667,7 +667,7 @@ void DoomMenu::Draw(float dt)
 		else if (item->type == DoomMenuItem::Type::KeyBind)
 		{
 			auto key = Inputs.Keys[item->selection];
-			Sprite::DrawText(1,key.Name, pos + glm::vec2(col, 0), color, size);
+			Sprite::DrawText(1, key.Name, pos + glm::vec2(col, 0), color, size);
 			
 			Sprite::DrawText(1, key.GamepadButton == -1 ? "[none]" : GamepadPUAMap[key.GamepadButton], pos + glm::vec2(col * 2, 0), color, size);
 		}

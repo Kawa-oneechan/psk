@@ -12,6 +12,9 @@
 extern std::vector<Tickable*> tickables;
 extern std::vector<Tickable*> newTickables;
 
+static std::string psText;
+static glm::vec2 psSize;
+
 TitleScreen::TitleScreen()
 {
 	tickables.clear();
@@ -49,6 +52,10 @@ TitleScreen::TitleScreen()
 	}
 	
 	LoadCamera("cameras/title.json");
+
+	auto key = Inputs.Keys[(int)Binds::Accept];
+	psText = fmt::format(Text::Get("title:pressstart"), key.Name, GamepadPUAMap[key.GamepadButton]);
+	psSize = Sprite::MeasureText(1, psText, 100);
 }
 
 void TitleScreen::Tick(float dt)
@@ -104,6 +111,11 @@ TitleScreen::~TitleScreen()
 void TitleScreen::Draw(float dt)
 {
 	logoAnim->Draw(dt);
+	//if (logoAnim->Playing())
+	Sprite::DrawText(1, psText, (glm::vec2(width, height) - psSize) * 0.5f, glm::vec4(1, 1, 1, glm::abs(glm::sin((float)glfwGetTime())) * 1.0f), 100.0f);
+#ifdef DEBUG
+	Sprite::DrawText(0, "Debug build " __DATE__, glm::vec2(8, height - 24), glm::vec4(1, 1, 1, 0.5));
+#endif
 	iris->Draw(dt);
 }
 

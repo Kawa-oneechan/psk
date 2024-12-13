@@ -1,4 +1,6 @@
 {
+	"title:pressstart": { "en": "Press {} or {} to start" },
+
 	"logojoke:0": { "en": "100% Generative AI free!" },
 	"logojoke:1": { "en": "100% pure C++!" },
 	"logojoke:2": { "en": "149% more cats than the other one!" },

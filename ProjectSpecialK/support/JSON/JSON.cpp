@@ -180,28 +180,43 @@ bool JSON::ExtractString(const char **data, std::string &str)
 						return false;
 
 					// Deal with the chars
-					next_char = 0;
+					//KAWA: I want UTF-8 PLEASE
+					long rune = 0;
 					for (int i = 0; i < 4; i++)
 					{
 						// Do it first to move off the 'u' and leave us on the
 						// final hex digit as we move on by one later on
 						(*data)++;
 
-						next_char <<= 4;
+						rune <<= 4;
 
 						// Parse the hex digit
 						if (**data >= '0' && **data <= '9')
-							next_char |= (**data - '0');
+							rune |= (**data - '0');
 						else if (**data >= 'A' && **data <= 'F')
-							next_char |= (10 + (**data - 'A'));
+							rune |= (10 + (**data - 'A'));
 						else if (**data >= 'a' && **data <= 'f')
-							next_char |= (10 + (**data - 'a'));
+							rune |= (10 + (**data - 'a'));
 						else
 						{
 							// Invalid hex digit = invalid JSON
 							return false;
 						}
 					}
+					if (rune < 0x80)
+						str += (char)rune;
+					else if (rune < 0x0800)
+					{
+						str += (char)(((rune >> 6) & 0x1F) | 0xC0);
+						str += (char)(((rune >> 0) & 0x3F) | 0x80);
+					}
+					else if (rune < 0x10000)
+					{
+						str += (char)(((rune >> 12) & 0x0F) | 0xE0);
+						str += (char)(((rune >> 6) & 0x3F) | 0x80);
+						str += (char)(((rune >> 0) & 0x3F) | 0x80);
+					}
+					next_char = 0;
 					break;
 				}
 
@@ -229,6 +244,7 @@ bool JSON::ExtractString(const char **data, std::string &str)
 		*/
 
 		// Add the next char
+		if (next_char != 0)
 		str += next_char;
 
 		// Move on
