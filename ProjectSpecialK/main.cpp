@@ -23,7 +23,7 @@
 
 #include <fstream>
 
-constexpr auto WindowTitle = "Project Special K"
+constexpr auto WindowTitle = "Project Special K - " VERSIONJOKE
 #ifdef DEBUG
 " (debug build " __DATE__ ")";
 

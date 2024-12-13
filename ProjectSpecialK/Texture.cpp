@@ -29,9 +29,6 @@ Texture::Texture(const std::string& texturePath, int repeat, int filter) : file(
 	ID = 0;
 	width = height = channels = 0;
 	data = nullptr;
-
-	if (texturePath == "ui/panels.png")
-		conprint(0, "!");
 	
 	auto c = cache.find(texturePath);
 	if (c != cache.end())

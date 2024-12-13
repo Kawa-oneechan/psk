@@ -29,7 +29,7 @@ struct CVar
 		glm::vec3* asVec3;
 		glm::vec4* asVec4;
 	};
-	bool cheat, readOnlyCheat;
+	bool cheat;
 	int min, max;
 
 	bool Set(const std::string& value)

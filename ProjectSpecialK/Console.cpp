@@ -6,6 +6,13 @@
 #include "DialogueBox.h"
 #include "PanelLayout.h"
 
+//For version information
+#include "support/miniz.h"
+#include <fmod.h>
+#ifdef DEBUG
+#include "support/ImGUI/imgui.h"
+#endif
+
 extern float timeScale;
 extern bool debugPanelLayoutPolygons;
 extern bool postFx, wireframe;
@@ -17,7 +24,7 @@ bool noWear; //placeholder
 Console::Console()
 {
 	visible = false;
-	
+
 	hardcopy = std::ofstream("console.log", std::ios::trunc);
 
 	Print(3, "Project Special K");
@@ -35,26 +42,33 @@ Console::Console()
 	timer = 0.0f;
 	appearState = 0;
 
-	RegisterCVar("timescale", CVar::Type::Float, &timeScale);
-
-	RegisterCVar("name", CVar::Type::String, &thePlayer.Name);
-	RegisterCVar("gender", CVar::Type::Int, &thePlayer.Gender, false, 0, 3);
-	RegisterCVar("nowear", CVar::Type::Bool, &noWear);
-
-	RegisterCVar("sv_cheats", CVar::Type::Bool, &cheatsEnabled);
-	RegisterCVar("bells", CVar::Type::Int, &thePlayer.Bells, true);
-
+#ifdef DEBUG
+	RegisterCVar("debugger", CVar::Type::Bool, &debuggerEnabled, true);
+#endif
 	RegisterCVar("r_polygons", CVar::Type::Bool, &debugPanelLayoutPolygons);
 	RegisterCVar("r_postfx", CVar::Type::Bool, &postFx);
 	RegisterCVar("r_wireframe", CVar::Type::Bool, &wireframe);
-
 	RegisterCVar("s_ambientvolume", CVar::Type::Float, &Audio::AmbientVolume, false, 0, 100);
 	RegisterCVar("s_effectvolume", CVar::Type::Float, &Audio::SoundVolume, false, 0, 100);
 	RegisterCVar("s_musicvolume", CVar::Type::Float, &Audio::MusicVolume, false, 0, 100);
 	RegisterCVar("s_voicevolume", CVar::Type::Float, &Audio::SpeechVolume, false, 0, 100);
-#ifdef DEBUG
-	RegisterCVar("debugger", CVar::Type::Bool, &debuggerEnabled, true);
-#endif
+	RegisterCVar("sv_cheats", CVar::Type::Bool, &cheatsEnabled);
+	RegisterCVar("timescale", CVar::Type::Float, &timeScale, true);
+
+	RegisterCVar("bells", CVar::Type::Int, &thePlayer.Bells, true);
+	RegisterCVar("gender", CVar::Type::Int, &thePlayer.Gender, false, 0, 3);
+	RegisterCVar("name", CVar::Type::String, &thePlayer.Name);
+	RegisterCVar("nowear", CVar::Type::Bool, &noWear, true);
+
+	//RegisterCVar("ai_disable", CVar::Type::Bool, &);
+	//RegisterCVar("cl_showpos", CVar::Type::Bool, &);
+	//RegisterCVar("noclip", CVar::Type::Bool, &, true);
+	//RegisterCVar("r_acredistance", CVar::Type::Int, &, false, 1, 6);
+	//RegisterCVar("r_drawgui", CVar::Type::Bool, &, true);
+	//RegisterCVar("r_drum", CVar::Type::Bool, &);
+	//RegisterCVar("r_drumexp", CVar::Type::Float, &);
+	//RegisterCVar("r_farz", CVar::Type::float, &, yes);
+	//RegisterCVar("r_toon", CVar::Type::Bool, &);
 }
 
 void Console::Print(int color, const std::string& str)
@@ -82,53 +96,108 @@ void Console::Print(const std::string& str)
 
 bool Console::Execute(const std::string& str)
 {
+	Print(8, fmt::format("]{}", str));
+
 	auto split = Split((std::string&)str, ' ');
 	if (split.size() >= 1)
-	for (auto& cv : cvars)
 	{
-		if (cv.name == split[0])
+		for (auto& cv : cvars)
 		{
-			if (split.size() == 1)
+			if (cv.name == split[0])
 			{
-				switch (cv.type)
-				{
-				case CVar::Type::Bool: Print(0, fmt::format("{} is {}", cv.name, *cv.asBool)); return true;
-				case CVar::Type::Int: Print(0, fmt::format("{} is {}", cv.name, *cv.asInt)); return true;
-				case CVar::Type::Float: Print(0, fmt::format("{} is {}", cv.name, *cv.asFloat)); return true;
-				case CVar::Type::String: Print(0, fmt::format("{} is \"{}\"", cv.name, *cv.asString)); return true;
-				case CVar::Type::Vec2: Print(0, fmt::format("{} is [{}, {}]", cv.name, cv.asVec2->x, cv.asVec2->y)); return true;
-				case CVar::Type::Vec3: Print(0, fmt::format("{} is [{}, {}, {}]", cv.name, cv.asVec3->x, cv.asVec3->y, cv.asVec3->z)); return true;
-				case CVar::Type::Color:
-				case CVar::Type::Vec4: Print(0, fmt::format("{} is [{}, {}, {}, {}]", cv.name, cv.asVec4->x, cv.asVec4->y, cv.asVec4->z, cv.asVec4->w)); return true;
-				}
-			}
-			else
-			{
-				auto second = str.substr(str.find(' '));
-				if (cv.cheat && !cheatsEnabled)
-				{
-					Print(1, fmt::format("Changing {} is considered a cheat.", cv.name));
-					return false;
-				}
-				if (cv.Set(second))
+				if (split.size() == 1)
 				{
 					switch (cv.type)
 					{
-					case CVar::Type::Bool: Print(0, fmt::format("{} set to {}", cv.name, *cv.asBool)); return true;
-					case CVar::Type::Int: Print(0, fmt::format("{} set to {}", cv.name, *cv.asInt)); return true;
-					case CVar::Type::Float: Print(0, fmt::format("{} set to {}", cv.name, *cv.asFloat)); return true;
-					case CVar::Type::String: Print(0, fmt::format("{} set to \"{}\"", cv.name, *cv.asString)); return true;
-					case CVar::Type::Vec2: Print(0, fmt::format("{} set to [{}, {}]", cv.name, cv.asVec2->x, cv.asVec2->y)); return true;
-					case CVar::Type::Vec3: Print(0, fmt::format("{} set to [{}, {}, {}]", cv.name, cv.asVec3->x, cv.asVec3->y, cv.asVec3->z)); return true;
+					case CVar::Type::Bool: Print(0, fmt::format("{} is {}", cv.name, *cv.asBool)); return true;
+					case CVar::Type::Int: Print(0, fmt::format("{} is {}", cv.name, *cv.asInt)); return true;
+					case CVar::Type::Float: Print(0, fmt::format("{} is {}", cv.name, *cv.asFloat)); return true;
+					case CVar::Type::String: Print(0, fmt::format("{} is \"{}\"", cv.name, *cv.asString)); return true;
+					case CVar::Type::Vec2: Print(0, fmt::format("{} is [{}, {}]", cv.name, cv.asVec2->x, cv.asVec2->y)); return true;
+					case CVar::Type::Vec3: Print(0, fmt::format("{} is [{}, {}, {}]", cv.name, cv.asVec3->x, cv.asVec3->y, cv.asVec3->z)); return true;
 					case CVar::Type::Color:
-					case CVar::Type::Vec4: Print(0, fmt::format("{} set to [{}, {}, {}, {}]", cv.name, cv.asVec4->x, cv.asVec4->y, cv.asVec4->z, cv.asVec4->w)); return true;
+					case CVar::Type::Vec4: Print(0, fmt::format("{} is [{}, {}, {}, {}]", cv.name, cv.asVec4->x, cv.asVec4->y, cv.asVec4->z, cv.asVec4->w)); return true;
 					}
 				}
 				else
 				{
-					Print(2, fmt::format("Could not set cvar {} to {}", cv.name, second));
-					return false;
+					auto second = str.substr(str.find(' '));
+					if (cv.cheat && !cheatsEnabled)
+					{
+						Print(1, fmt::format("Changing {} is considered a cheat.", cv.name));
+						return false;
+					}
+					if (cv.Set(second))
+					{
+						switch (cv.type)
+						{
+						case CVar::Type::Bool: Print(0, fmt::format("{} set to {}", cv.name, *cv.asBool)); return true;
+						case CVar::Type::Int: Print(0, fmt::format("{} set to {}", cv.name, *cv.asInt)); return true;
+						case CVar::Type::Float: Print(0, fmt::format("{} set to {}", cv.name, *cv.asFloat)); return true;
+						case CVar::Type::String: Print(0, fmt::format("{} set to \"{}\"", cv.name, *cv.asString)); return true;
+						case CVar::Type::Vec2: Print(0, fmt::format("{} set to [{}, {}]", cv.name, cv.asVec2->x, cv.asVec2->y)); return true;
+						case CVar::Type::Vec3: Print(0, fmt::format("{} set to [{}, {}, {}]", cv.name, cv.asVec3->x, cv.asVec3->y, cv.asVec3->z)); return true;
+						case CVar::Type::Color:
+						case CVar::Type::Vec4: Print(0, fmt::format("{} set to [{}, {}, {}, {}]", cv.name, cv.asVec4->x, cv.asVec4->y, cv.asVec4->z, cv.asVec4->w)); return true;
+						}
+					}
+					else
+					{
+						Print(2, fmt::format("Could not set cvar {} to {}", cv.name, second));
+						return false;
+					}
+					return true;
 				}
+			}
+		}
+		if (split.size() == 1)
+		{
+			if (split[0] == "clear")
+			{
+				buffer.clear();
+				return true;
+			}
+			if (split[0] == "version")
+			{
+				Print(8, "Project Special K - " VERSIONJOKE);
+#ifdef DEBUG
+				Print(7, "Debug version: " __DATE__);
+#endif
+#ifdef _MSC_VER
+				Print(7, fmt::format("Microsoft Visual C++ version {}.{}.", (_MSC_VER / 100), (_MSC_VER % 100));
+#endif
+				Print(7, fmt::format("OpenGL: {}", glGetString(GL_VERSION));
+				Print(7, fmt::format("Vendor: {}", glGetString(GL_VENDOR)));
+				Print(7, fmt::format("GLSL {}", glGetString(GL_SHADING_LANGUAGE_VERSION)));
+				Print(7, fmt::format("Renderer: {}", glGetString(GL_RENDERER)));
+				Print(7, fmt::format("GLFW: {}", glfwGetVersionString()));
+				Print(7, "MiniZip: " MZ_VERSION);
+				Print(7, fmt::format("FMOD: {}.{}.{}", (FMOD_VERSION >> 16) & 0xFFFF, (FMOD_VERSION >> 8) & 0xFF, FMOD_VERSION & 0xFF));
+				Print(7, fmt::format("STB_Image: 2.30"));
+				Print(7, fmt::format("STB_Image_Write: 1.16"));
+				Print(7, fmt::format("STB_TrueType: 1.26"));
+#ifdef DEBUG
+				Print(7, "ImGUI version: " IMGUI_VERSION);
+#endif
+				return true;
+			}
+			else if (split[0] == "cvarlist")
+			{
+				for (auto& cv : cvars)
+				{
+					switch (cv.type)
+					{
+					case CVar::Type::Bool: Print(0, fmt::format("{} : {}", cv.name, *cv.asBool)); break;
+					case CVar::Type::Int: Print(0, fmt::format("{} : {}", cv.name, *cv.asInt)); break;
+					case CVar::Type::Float: Print(0, fmt::format("{} : {}", cv.name, *cv.asFloat)); break;
+					case CVar::Type::String: Print(0, fmt::format("{} : \"{}\"", cv.name, *cv.asString)); break;
+					case CVar::Type::Vec2: Print(0, fmt::format("{} : [{}, {}]", cv.name, cv.asVec2->x, cv.asVec2->y)); break;
+					case CVar::Type::Vec3: Print(0, fmt::format("{} : [{}, {}, {}]", cv.name, cv.asVec3->x, cv.asVec3->y, cv.asVec3->z)); break;
+					case CVar::Type::Color:
+					case CVar::Type::Vec4: Print(0, fmt::format("{} : [{}, {}, {}, {}]", cv.name, cv.asVec4->x, cv.asVec4->y, cv.asVec4->z, cv.asVec4->w)); break;
+					}
+				}
+				Print(0, fmt::format("{} cvars", cvars.size()));
 				return true;
 			}
 		}
