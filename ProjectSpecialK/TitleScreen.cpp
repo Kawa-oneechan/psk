@@ -2,7 +2,8 @@
 #include "MusicManager.h"
 #include "Background.h"
 #include "InputsMap.h"
-
+#include "PanelLayout.h"
+#include "DoomMenu.h"
 #include "DateTimePanel.h"
 #include "ItemHotbar.h"
 #include "DialogueBox.h"
@@ -14,6 +15,8 @@ extern std::vector<Tickable*> newTickables;
 
 static std::string psText;
 static glm::vec2 psSize;
+static PanelLayout* logoAnim;
+static DoomMenu* optionsMenu;
 
 TitleScreen::TitleScreen()
 {
@@ -79,11 +82,29 @@ void TitleScreen::Tick(float dt)
 	}
 	else if (state == State::Wait)
 	{
-		if (Inputs.KeyDown(Binds::Accept))
+		if (!optionsMenu)
 		{
-			state = State::FadeOut;
-			musicManager.FadeOut();
-			iris->Out();
+			if (Inputs.KeyDown(Binds::Accept))
+			{
+				Inputs.Clear();
+				state = State::FadeOut;
+				musicManager.FadeOut();
+				iris->Out();
+			}
+			else if (Inputs.KeyDown(Binds::Back))
+			{
+				Inputs.Clear();
+				optionsMenu = new DoomMenu();
+			}
+		}
+		else
+		{
+			optionsMenu->Tick(dt);
+			if (optionsMenu->dead)
+			{
+				delete optionsMenu;
+				optionsMenu = nullptr;
+			}
 		}
 	}
 	else if (state == State::FadeOut)
@@ -106,13 +127,23 @@ void TitleScreen::Tick(float dt)
 TitleScreen::~TitleScreen()
 {
 	delete logoAnim;
+	if (optionsMenu)
+		delete optionsMenu;
 }
 
 void TitleScreen::Draw(float dt)
 {
-	logoAnim->Draw(dt);
-	//if (logoAnim->Playing())
-	Sprite::DrawText(1, psText, (glm::vec2(width, height) - psSize) * 0.5f, glm::vec4(1, 1, 1, glm::abs(glm::sin((float)glfwGetTime())) * 1.0f), 100.0f);
+	if (!optionsMenu)
+	{
+		logoAnim->Draw(dt);
+		//if (logoAnim->Playing())
+		Sprite::DrawText(1, psText, (glm::vec2(width, height) - psSize) * 0.5f, glm::vec4(1, 1, 1, glm::abs(glm::sin((float)glfwGetTime())) * 1.0f), 100.0f);
+	}
+	else
+	{
+		optionsMenu->Draw(dt);
+	}
+
 #ifdef DEBUG
 	Sprite::DrawText(0, "Debug build " __DATE__, glm::vec2(8, height - 24), glm::vec4(1, 1, 1, 0.5));
 #endif

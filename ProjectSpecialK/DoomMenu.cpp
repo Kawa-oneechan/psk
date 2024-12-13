@@ -555,6 +555,10 @@ void DoomMenu::Tick(float dt)
 			UpdateButtonGuide();
 			return;
 		}
+		else
+		{
+			dead = true;
+		}
 	}
 
 	Inputs.Clear(Binds::Accept);
@@ -565,11 +569,14 @@ void DoomMenu::Tick(float dt)
 void DoomMenu::Draw(float dt)
 {
 	dt;
+	auto width = 1980.0f;
+	auto height = 1080.0f;
+
 	const int col = (int)(400 * scale);
 
-	const float startX = (width * 0.5f) - ((col * 3) * 0.5f);
+	const float startX = (width * 0.22f) * scale;
 	float startY = 56 * scale;
-	float endY = height - (176 * scale);
+	float endY = (height - 150) * scale;
 	
 	auto pos = glm::vec2(startX, startY);
 	
@@ -580,27 +587,27 @@ void DoomMenu::Draw(float dt)
 	if (!items->header.empty())
 	{
 		auto headerW = Sprite::MeasureText(1, items->header, 150).x;
-		auto headerX = (width / 2) - (headerW / 2);
+		auto headerX = (width - headerW) / 2;
 
 		Sprite::DrawSprite(panels, glm::vec2(headerX - panels[4].z, pos.y) * scale, glm::vec2(panels[4].z, panels[4].w) * scale, panels[4], 0.0f, UI::themeColors["primary"]);
 		Sprite::DrawSprite(panels, glm::vec2(headerX, pos.y) * scale, glm::vec2(headerW, panels[3].w) * scale, panels[3], 0.0f, UI::themeColors["primary"]);
 		Sprite::DrawSprite(panels, glm::vec2(headerX + headerW, pos.y) * scale, glm::vec2(panels[5].z, panels[5].w) * scale, panels[5], 0.0f, UI::themeColors["primary"]);
 
-		Sprite::DrawText(1, items->header, glm::vec2(headerX, pos.y + 32), glm::vec4(1), 150);
-		pos.y += panels[4].w + 32;
+		Sprite::DrawText(1, items->header, glm::vec2(headerX, pos.y + 32) * scale, glm::vec4(1), 150 * scale);
+		pos.y += panels[4].w + (32 * scale);
 
 		if (!items->subheader.empty())
 		{
 			auto xy = Sprite::MeasureText(1, items->subheader, 120);
-			headerX = (width / 2) - (xy.x / 2);
+			headerX = (width - xy.x) / 2;
 
 			Sprite::DrawSprite(*whiteRect, glm::vec2(0, pos.y) * scale, glm::vec2(width, xy.y + 16) * scale, glm::vec4(0), 0.0f, UI::themeColors["primary"]);
 
-			Sprite::DrawText(1, items->subheader, glm::vec2(headerX, pos.y + 8), glm::vec4(1), 120);
-			pos.y += xy.y + 20;
+			Sprite::DrawText(1, items->subheader, glm::vec2(headerX, pos.y + 8) * scale, glm::vec4(1), 120 * scale);
+			pos.y += xy.y + (20 * scale);
 		}
 
-		startY = pos.y + 24;
+		startY = pos.y + (24 * scale);
 	}
 
 	const auto shown = std::min(visible, (int)items->items.size() - scroll);
@@ -681,7 +688,7 @@ void DoomMenu::Draw(float dt)
 
 	if (items == &species)
 	{
-		Sprite::DrawText(1, speciesText, glm::vec2(width * 0.6f, height * 0.4f), glm::vec4(1), 75.0f);
+		Sprite::DrawText(1, speciesText, glm::vec2(width * 0.6f, height * 0.4f) * scale, glm::vec4(1), 75.0f);
 	}
 
 	for (int i = 0; i < shown; i++)
@@ -721,7 +728,7 @@ void DoomMenu::Draw(float dt)
 	//species page special stuff
 	if (items == &species && items->items[highlight]->type == DoomMenuItem::Type::Checkbox)
 	{
-		Sprite::DrawSprite(*speciesPreviews[highlight], glm::vec2((width * 0.5f) - (speciesPreviews[0]->width * 0.5f), (height * 0.5f) - (speciesPreviews[0]->height * 0.5f)));
+		Sprite::DrawSprite(*speciesPreviews[highlight], glm::vec2((width * 0.5f) - (speciesPreviews[0]->width * 0.5f), (height * 0.5f) - (speciesPreviews[0]->height * 0.5f)) * scale);
 	}
 
 	buttonGuide.Draw();

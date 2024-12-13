@@ -14,6 +14,7 @@ public:
 	unsigned int ID;
 	int width, height, channels;
 	bool delayed = false;
+	int refCount{ 0 };
 
 	Texture() = default;
 
@@ -28,7 +29,10 @@ public:
 	void SetRepeat(int newRepeat);
 	void SetFilter(int newFilter);
 
-	glm::vec4 operator[](size_t i) const { return (atlas.empty() || i >= atlas.size()) ? atlas[0] : atlas[i]; }
+	glm::vec4 operator[](size_t i) const
+	{
+		return (atlas.empty() || i >= atlas.size()) ? atlas[0] : atlas[i];
+	}
 
 	Texture(const Texture &x) = default;
 	Texture &operator=(const Texture &x) = default;

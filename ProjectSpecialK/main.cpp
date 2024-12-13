@@ -507,6 +507,9 @@ int main(int argc, char** argv)
 
 	ThreadedLoader(Database::LoadGlobalStuff);
 
+	auto panels = new Texture("ui/panels.png");
+	panels->Use();
+
 	thePlayer.Name = "Kawa";
 	thePlayer.Gender = Gender::BEnby;
 

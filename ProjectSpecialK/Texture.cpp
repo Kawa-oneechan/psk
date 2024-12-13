@@ -1,8 +1,8 @@
 #include "SpecialK.h"
 #include "support/stb_image.h"
 
-static std::map<std::string, std::tuple<Texture*, int>> cache;
-static std::map<std::string, std::tuple<TextureArray*, int>> cacheArray;
+static std::map<std::string, Texture*> cache;
+static std::map<std::string, TextureArray*> cacheArray;
 
 static bool load(const unsigned char* data, unsigned int *id, int width, int height, int channels, int repeat, int filter)
 {
@@ -30,12 +30,13 @@ Texture::Texture(const std::string& texturePath, int repeat, int filter) : file(
 	width = height = channels = 0;
 	data = nullptr;
 
+	if (texturePath == "ui/panels.png")
+		conprint(0, "!");
+	
 	auto c = cache.find(texturePath);
 	if (c != cache.end())
 	{
-		Texture* t;
-		int r;
-		std::tie(t, r) = c->second;
+		Texture* t = c->second;
 		ID = t->ID;
 		width = t->width;
 		height = t->height;
@@ -45,11 +46,12 @@ Texture::Texture(const std::string& texturePath, int repeat, int filter) : file(
 		this->repeat = t->repeat;
 		this->filter = t->filter;
 		atlas = t->atlas;
-		r++;
-		cache[file] = std::make_tuple(t, r);
+		t->refCount++;
+		refCount = t->refCount;
 		return;
 	}
 
+	refCount = 1;
 	stbi_set_flip_vertically_on_load(1);
 
 	size_t vfsSize = 0;
@@ -72,7 +74,7 @@ Texture::Texture(const std::string& texturePath, int repeat, int filter) : file(
 		{
 			debprint(3, "glGenTextures indicates we're threading. Delaying \"{}\"...", texturePath);
 			delayed = true;
-			cache[file] = std::make_tuple(this, 1);
+			cache[file] = this;
 			return;
 		}
 	}
@@ -82,7 +84,7 @@ Texture::Texture(const std::string& texturePath, int repeat, int filter) : file(
 	}
 	stbi_image_free(data);
 
-	cache[file] = std::make_tuple(this, 1);
+	cache[file] = this;
 }
 
 Texture::Texture(const unsigned char* externalData, int width, int height, int channels, int repeat, int filter) : data(nullptr), width(width), height(height), channels(channels), repeat(repeat), filter(filter)
@@ -121,19 +123,12 @@ Texture::~Texture()
 	auto c = cache.find(file);
 	if (c != cache.end())
 	{
-		Texture* t;
-		int r;
-		std::tie(t, r) = c->second;
-		r--;
-		if (r > 0)
-		{
-			cache[file] = std::make_tuple((Texture*)this, r);
+		Texture* t = c->second;
+		t->refCount--;
+		if (t->refCount > 0)
 			return;
-		}
 		else
-		{
 			cache.erase(c);
-		}
 	}
 	glDeleteTextures(1, &ID);
 }
@@ -221,9 +216,7 @@ TextureArray::TextureArray(const std::string& texturePath, int repeat, int filte
 	auto c = cacheArray.find(texturePath);
 	if (c != cacheArray.end())
 	{
-		TextureArray* t;
-		int r;
-		std::tie(t, r) = c->second;
+		TextureArray* t = c->second;
 		ID = t->ID;
 		width = t->width;
 		height = t->height;
@@ -232,10 +225,12 @@ TextureArray::TextureArray(const std::string& texturePath, int repeat, int filte
 		delayed = t->delayed;
 		this->repeat = t->repeat;
 		this->filter = t->filter;
-		r++;
-		cacheArray[file] = std::make_tuple(t, r);
+		t->refCount++;
+		refCount = t->refCount;
 		return;
 	}
+
+	refCount = 1;
 
 	stbi_set_flip_vertically_on_load(1);
 
@@ -265,7 +260,7 @@ TextureArray::TextureArray(const std::string& texturePath, int repeat, int filte
 	//std::free(data);
 	delete[] data;
 
-	cacheArray[file] = std::make_tuple(this, 1);
+	cacheArray[file] = this;
 }
 
 TextureArray::~TextureArray()
@@ -275,19 +270,12 @@ TextureArray::~TextureArray()
 	auto c = cacheArray.find(file);
 	if (c != cacheArray.end())
 	{
-		TextureArray* t;
-		int r;
-		std::tie(t, r) = c->second;
-		r--;
-		if (r > 0)
-		{
-			cacheArray[file] = std::make_tuple((TextureArray*)this, r);
+		TextureArray* t = c->second;
+		t->refCount--;
+		if (t->refCount > 0)
 			return;
-		}
 		else
-		{
 			cacheArray.erase(c);
-		}
 	}
 	glDeleteTextures(1, &ID);
 }

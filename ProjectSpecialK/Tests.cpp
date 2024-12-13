@@ -272,7 +272,7 @@ void RunTests()
 	conprint(0, "case folding: {}", toLowerTest);
 
 	//test texture re-use
-	auto textureCacheTest = Texture("ui/panels.png");
+	//auto textureCacheTest = Texture("ui/panels.png");
 
 	TestInventorySystems();
 	TestVillagerGetting();
