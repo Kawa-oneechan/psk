@@ -164,9 +164,9 @@ bool Console::Execute(const std::string& str)
 				Print(7, "Debug version: " __DATE__);
 #endif
 #ifdef _MSC_VER
-				Print(7, fmt::format("Microsoft Visual C++ version {}.{}.", (_MSC_VER / 100), (_MSC_VER % 100));
+				Print(7, fmt::format("Microsoft Visual C++ version {}.{}.", (_MSC_VER / 100), (_MSC_VER % 100)));
 #endif
-				Print(7, fmt::format("OpenGL: {}", glGetString(GL_VERSION));
+				Print(7, fmt::format("OpenGL: {}", glGetString(GL_VERSION)));
 				Print(7, fmt::format("Vendor: {}", glGetString(GL_VENDOR)));
 				Print(7, fmt::format("GLSL {}", glGetString(GL_SHADING_LANGUAGE_VERSION)));
 				Print(7, fmt::format("Renderer: {}", glGetString(GL_RENDERER)));

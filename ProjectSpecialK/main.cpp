@@ -437,6 +437,39 @@ static int InitOpenGL()
 	return 0;
 }
 
+#ifdef DEBUG
+void GLAPIENTRY MessageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam)
+{
+	length;
+	userParam;
+
+	static std::map<int, std::string> sources = {
+		{ GL_DEBUG_SOURCE_API, "API" },
+		{ GL_DEBUG_SOURCE_WINDOW_SYSTEM, "window system" },
+		{ GL_DEBUG_SOURCE_SHADER_COMPILER, "shader compiler" },
+		{ GL_DEBUG_SOURCE_THIRD_PARTY, "third party" },
+		{ GL_DEBUG_SOURCE_APPLICATION, "application" },
+	};
+	static std::map<int, std::string> types = {
+		{ GL_DEBUG_TYPE_ERROR, "error" },
+		{ GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR, "deprecated behavior" },
+		{ GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR, "undefined behavior" },
+		{ GL_DEBUG_TYPE_PORTABILITY, "portability issue" },
+		{ GL_DEBUG_TYPE_PERFORMANCE, "performance issue" },
+		{ GL_DEBUG_TYPE_MARKER, "marker" },
+		{ GL_DEBUG_TYPE_PUSH_GROUP, "group push" },
+		{ GL_DEBUG_TYPE_POP_GROUP, "group pop" },
+		{ GL_DEBUG_TYPE_OTHER, "other" },
+	};
+	static std::map<int, std::string> severities = {
+		{ GL_DEBUG_SEVERITY_HIGH, "high" },
+		{ GL_DEBUG_SEVERITY_MEDIUM, "medium" },
+		{ GL_DEBUG_SEVERITY_LOW, "low" },
+		{ GL_DEBUG_SEVERITY_NOTIFICATION, "notification" },
+	};
+	conprint(5, "Message from OpenGL: ID {:X}, source {}, type {}, severity {}:  {}", id, sources[source], types[type], severities[severity], message);
+}
+#endif
 
 Framebuffer* frameBuffer;
 Shader* skyShader;
@@ -484,6 +517,11 @@ int main(int argc, char** argv)
 
 	if (auto r = InitOpenGL())
 		return r;
+
+#ifdef DEBUG
+	glEnable(GL_DEBUG_OUTPUT);
+	glDebugMessageCallback(MessageCallback, 0);
+#endif
 
 	spriteShader = new Shader("shaders/sprite.fs");
 	modelShader = new Shader("shaders/model.vs", "shaders/model.fs");
