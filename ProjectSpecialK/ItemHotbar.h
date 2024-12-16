@@ -6,7 +6,7 @@
 class ItemHotbar : public Tickable
 {
 private:
-	PanelLayout layout{ PanelLayout(UI::json["itemhotbar"]) };
+	PanelLayout layout;
 	std::array<int, 10> items;
 
 public:

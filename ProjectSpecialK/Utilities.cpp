@@ -131,6 +131,12 @@ void GetAtlas(std::vector<glm::vec4> &ret, const std::string& jsonFile)
 		return;
 	auto doc = rjs->AsObject();
 	ret.clear();
+	if (doc["type"] == nullptr)
+	{
+		delete rjs;
+		return;
+	}
+
 	if (doc["type"]->AsString() == "simple")
 	{
 		auto size = GetJSONVec2(doc["size"]);

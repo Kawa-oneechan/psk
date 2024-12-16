@@ -6,6 +6,9 @@ extern void PlayMusic(const std::string& id);
 
 DateTimePanel::DateTimePanel()
 {
+	auto json = VFS::ReadJSON("ui/datetime.json")->AsObject();
+	layout = PanelLayout(json["datetime"]);
+
 	auto now = time(nullptr);
 	localtime_s(&gm, &now);
 

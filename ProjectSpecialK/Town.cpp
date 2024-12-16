@@ -280,7 +280,9 @@ void Town::drawWorker(float dt)
 	glDisable(GL_DEPTH_TEST);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-	rainLayer->Draw(dt * timeScale);
+	if ((int)Clouds >= (int)Town::Weather::RainClouds)
+		rainLayer->Draw(dt * timeScale);
+
 	Sprite::FlushBatch();
 }
 
@@ -293,12 +295,10 @@ void Town::Draw(float dt)
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		drawWorker(dt * timeScale);
 		frameBuffer->Drop();
-		//background.Draw(dt * timeScale);
 		frameBuffer->Draw();
 	}
 	else
 	{
-		//background.Draw(dt * timeScale);
 		drawWorker(dt * timeScale);
 	}
 	if (!iris->Done())

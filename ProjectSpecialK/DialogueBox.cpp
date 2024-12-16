@@ -506,7 +506,7 @@ void DialogueBox::Draw(float dt)
 	if (state == State::WaitingForKey)
 	{
 		auto arr = (*UI::controls)[6];
-		Sprite::DrawSprite(*UI::controls, glm::vec2((width / 2) - (arr.z / 2), height - arr.w - 20), glm::vec2(arr.z, arr.w), arr, 0.0f, UI::themeColors["primary"]);
+		Sprite::DrawSprite(*UI::controls, glm::vec2((width / 2) - (arr.z / 2), height - arr.w - 20), glm::vec2(arr.z, arr.w), arr, 0.0f, UI::themeColors["arrow"]);
 	}
 
 	//maybe afterwards port this to the UI Panel system?

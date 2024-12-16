@@ -1,0 +1,106 @@
+{
+	"datetime": {
+		"textures": [
+			"ui/datetime.png"
+		],
+		"alpha": 0.75,
+		"origin": "bottomleft",
+		"panels": [
+			{
+				"id": "main",
+				//"position": [ 0, 850 ],
+				"position": [ 0, -32 ],
+				"type": "sprite",
+				"texture": 0,
+				"frame": 0,
+				"color": "primary"
+			},
+			{
+				"id": "time",
+				"parent": 0,
+				//"position": [ 180, 870 ],
+				"position": [ 180, 20 ],
+				"type": "text",
+				"text": "00:00",
+				"size": 150.0,
+				"alpha": 2.0,
+				"alignment": "center",
+				"color": "white"
+			},
+			{
+				"id": "ampm",
+				"parent": 0,
+				//"position": [ 280, 875 ],
+				"position": [ 280, 25 ],
+				"type": "text",
+				"text": "XM",
+				"size": 100.0,
+				"alpha": 2.0,
+				"color": "white"
+			},
+			{
+				"id": "date",
+				"parent": 0,
+				//"position": [ 180, 960 ],
+				"position": [ 180, 110 ],
+				"type": "text",
+				"text": "Foo 00, bar.",
+				"size": 80.0,
+				"alpha": 2.0,
+				"alignment": "center",
+				"color": "white"
+			}
+		],
+		"anims": [
+			{
+				"name": "hidden",
+				"next": "",
+				"bits": [
+					{
+						"panel": "main",
+						"property": "y",
+						"fromTime": 0.0, "fromVal": 200,
+						"toTime": 0.5, "toVal": 200
+					}
+				]
+			},
+			{
+				"name": "shown",
+				"next": "",
+				"bits": [
+					{
+						"panel": "main",
+						"property": "y",
+						"fromTime": 0.0, "fromVal": -32,
+						"toTime": 0.5, "toVal": -32
+					}
+				]
+			},
+			{
+				"name": "hide",
+				"next": "hidden",
+				"bits": [
+					{
+						"panel": "main",
+						"property": "y",
+						"fromTime": 0.0, "fromVal": -32,
+						"toTime": 1.0, "toVal": 200
+					}
+				]
+			},
+			{
+				"name": "show",
+				"next": "shown",
+				"bits": [
+					{
+						"panel": "main",
+						"property": "y",
+						"fromTime": 0.0, "fromVal": 200,
+						"toTime": 1.0, "toVal": -32,
+						"easing": "bounceOut"
+					}
+				]
+			}
+		]
+	}
+}

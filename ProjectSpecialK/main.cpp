@@ -732,28 +732,6 @@ int main(int argc, char** argv)
 			}
 		}
 
-		/*
-		if (postFx)
-		{
-			frameBuffer.Use();
-			glClearColor(0.2f, 0.3f, 0.3f, 0.0f);
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-			Sprite::DrawSprite(skyShader, *whiteRect, glm::vec2(0), glm::vec2(width, height));
-			townDrawer.Draw(dt * timeScale);
-			rainLayer.Draw(dt * timeScale);
-			frameBuffer.Drop();
-			//background.Draw(dt * timeScale);
-			frameBuffer.Draw();
-		}
-		else
-		{
-			//background.Draw(dt * timeScale);
-			Sprite::DrawSprite(skyShader, *whiteRect, glm::vec2(0), glm::vec2(width, height));
-			townDrawer.Draw(dt * timeScale);
-			rainLayer.Draw(dt * timeScale);
-		}
-		*/
-
 		for (const auto& t : tickables)
 			t->Draw(dt * timeScale);
 

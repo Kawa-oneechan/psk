@@ -95,6 +95,7 @@ public:
 	} Origin;
 	float Alpha;
 
+	PanelLayout() = default;
 	PanelLayout(JSONValue* source);
 	void Tick(float dt);
 	void Draw(float dt);
