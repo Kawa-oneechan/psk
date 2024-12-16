@@ -171,6 +171,7 @@ bool Console::Execute(const std::string& str)
 				Print(7, fmt::format("GLSL {}", glGetString(GL_SHADING_LANGUAGE_VERSION)));
 				Print(7, fmt::format("Renderer: {}", glGetString(GL_RENDERER)));
 				Print(7, fmt::format("GLFW: {}", glfwGetVersionString()));
+				Print(7, fmt::format("UFBX: {}.{}.{}", ufbx_version_major(UFBX_VERSION), ufbx_version_minor(UFBX_VERSION), ufbx_version_patch(UFBX_VERSION)));
 				Print(7, "MiniZip: " MZ_VERSION);
 				Print(7, fmt::format("FMOD: {}.{}.{}", (FMOD_VERSION >> 16) & 0xFFFF, (FMOD_VERSION >> 8) & 0xFF, FMOD_VERSION & 0xFF));
 				Print(7, fmt::format("STB_Image: 2.30"));

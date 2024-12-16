@@ -5,11 +5,13 @@
 			"secondary": "#E12A89D9",
 			"dialogue":  "#FFFFF9E3",
 			"arrow":     "#FFFFB600",
+			"choicebox": "#FFFDEC9F",
+			"choicebar": "#FFFFCE00",
 
 			"keybar":    "#FFF5F7E0",
-			"keybarf":   "#FF837256",
+			"keybarf":   "#FF8A7B67",
 
-			"keybarh":   "#FF00B6A9",
+			"keybarh":   "#FF00b6A9",
 			"keybarhf":  "#FFFFFFF1",
 
 
