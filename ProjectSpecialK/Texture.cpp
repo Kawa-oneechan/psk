@@ -233,6 +233,13 @@ TextureArray::TextureArray(const std::string& texturePath, int repeat, int filte
 
 	auto entries = VFS::Enumerate(texturePath);
 	layers = (int)entries.size();
+	if (layers == 0)
+	{
+		//No textures found at all.
+		cacheArray[file] = this;
+		return;
+	}
+
 	data = new unsigned char*[layers] { 0 };
 	for (auto l = 0; l < layers; l++)
 	{
