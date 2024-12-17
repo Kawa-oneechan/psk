@@ -675,6 +675,8 @@ int main(int argc, char** argv)
 			//commonUniforms.View = MainCamera.ViewMat();
 			auto v = MainCamera.ViewMat();
 			glBufferSubData(GL_UNIFORM_BUFFER, offsetof(CommonUniforms, View), sizeof(glm::mat4), &v);
+			v = MainCamera.ViewMatInv();
+			glBufferSubData(GL_UNIFORM_BUFFER, offsetof(CommonUniforms, InvView), sizeof(glm::mat4), &v);
 		}
 		
 #ifdef DEBUG

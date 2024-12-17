@@ -50,6 +50,7 @@ struct CommonUniforms
 	glm::uvec2 screenRes; //8
 	glm::mat4 View; //16
 	glm::mat4 Projection; //80
+	glm::mat4 InvView; //144
 };
 
 extern CommonUniforms commonUniforms;

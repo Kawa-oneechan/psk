@@ -10,6 +10,11 @@ out vec3 FragPos;
 out vec3 Normal;
 out vec3 Tangent;
 
+//TODO: uniform these, probably in Common.
+const float curveAmount = 0.005;
+const float curvePower = 1.75;
+const bool enableCurve = true;
+
 #include "common.fs"
 
 uniform mat4 model;
@@ -39,6 +44,15 @@ void main()
 	Normal = mat3(transpose(inverse(model))) * totalNormal;
 	Tangent = mat3(transpose(inverse(model))) * aTangent;
 
-	gl_Position = Projection * View * model * totalPosition;
+	vec4 tm = View * model * totalPosition;
+
+	if (enableCurve)
+	{
+		vec4 delta = tm - vec4(InvView);
+		tm.y += (-curveAmount * pow(delta.z, curvePower));
+	}
+
+	gl_Position = Projection * tm;
 	TexCoord = aTexCoord;
+
 }
