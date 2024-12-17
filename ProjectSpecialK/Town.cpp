@@ -4,6 +4,7 @@
 #include "Iris.h"
 #include "DateTimePanel.h"
 #include "ItemHotbar.h"
+#include "Model.h"
 
 float Map::GetHeight(const glm::vec3& pos)
 {
@@ -70,6 +71,9 @@ extern Shader* modelShader;
 extern Shader* skyShader;
 extern Background* rainLayer;
 extern Framebuffer* frameBuffer;
+
+ModelP groundTile;
+TextureArray* groundTexture;
 
 Town::Town()
 {
@@ -277,6 +281,17 @@ void Town::drawWorker(float dt)
 	for (const auto& v : town.Villagers)
 		v->Draw(dt * timeScale);
 
+	//just doing a single _fake_ acre, no whammies...
+	groundTile->Textures[0] = groundTexture;
+	for (int y = 0; y < AcreSize; y++)
+	{
+		for (int x = 0; x < AcreSize; x++)
+		{
+			//probably got the x/y flipped lol we'll see
+			groundTile->Draw(modelShader, glm::vec3(x * 10, 0, y * 10));
+		}
+	}
+
 	glDisable(GL_DEPTH_TEST);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
@@ -288,6 +303,12 @@ void Town::drawWorker(float dt)
 
 void Town::Draw(float dt)
 {
+	if (!groundTile)
+	{
+		groundTile = std::make_shared<::Model>("field/ground/unit.fbx");
+		groundTexture = new TextureArray("field/ground/mGrass_Mix.png"); //testing
+	}
+
 	if (postFx)
 	{
 		frameBuffer->Use();
