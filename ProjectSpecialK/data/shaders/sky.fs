@@ -17,19 +17,19 @@ vec3 stars(vec2 uv)
 float clouds(vec2 uv)
 {
 	uv.y -= 0.25;
-	uv.x += totalTime * 0.0050;
+	uv.x += TotalTime * 0.0050;
 	float ret = texture(cloudImage, uv).a;
 	uv.y += 0.5;
 	uv.x *= 0.9;
-	uv.x += totalTime * 0.0045;
+	uv.x += TotalTime * 0.0045;
 	ret += texture(cloudImage, uv * 1.7).a * 0.25;
 	return ret;
 }
 
 void main()
 {
-	vec2 uv = gl_FragCoord.xy / screenRes.xy;
-	float time = 1.0; //abs(sin(totalTime * 0.000025));
+	vec2 uv = gl_FragCoord.xy / ScreenRes.xy;
+	float time = 1.0; //abs(sin(TotalTime * 0.000025));
 
 	float flipped = -uv.y + 1.0;
 

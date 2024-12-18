@@ -71,7 +71,7 @@ bool firstMouse = true;
 bool wireframe = false;
 bool postFx = false;
 
-float deltaTime = 0.0f;
+float DeltaTime = 0.0f;
 float lastFrame = 0.0f;
 
 float timeScale = 1.0f;
@@ -86,6 +86,7 @@ float glTime = 0;
 #endif
 
 CommonUniforms commonUniforms;
+unsigned int commonBuffer = 0;
 
 ItemHotbar* itemHotbar;
 DateTimePanel* dateTimePanel;
@@ -256,7 +257,7 @@ static void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 	::height = height;
 	scale = ::height / 1080.0f;
 	glViewport(0, 0, width, height);
-	commonUniforms.screenRes = glm::uvec2(width, height);
+	commonUniforms.ScreenRes = glm::uvec2(width, height);
 }
 
 static void char_callback(GLFWwindow* window, unsigned int codepoint)
@@ -529,11 +530,13 @@ int main(int argc, char** argv)
 	whiteRect = new Texture("white.png", GL_CLAMP_TO_EDGE);
 	UI::controls = std::make_shared<Texture>("ui/controls.png");
 
-	GLuint commonBind = 1, commonBuffer = 0;
+	GLuint commonBind = 1;
 	glGenBuffers(1, &commonBuffer);
 	glBindBuffer(GL_UNIFORM_BUFFER, commonBuffer);
 	glBufferData(GL_UNIFORM_BUFFER, sizeof(commonUniforms), &commonUniforms, GL_DYNAMIC_DRAW);
 	glBindBufferBase(GL_UNIFORM_BUFFER, commonBind, commonBuffer);
+	int toon = 0;
+	glBufferSubData(GL_UNIFORM_BUFFER, offsetof(CommonUniforms, Toon), sizeof(int), &toon);
 
 #ifdef DEBUG
 	SetupImGui();
@@ -618,9 +621,8 @@ int main(int argc, char** argv)
 	MainCamera.Target(&cat01->Position);
 
 	{
-		//commonUniforms.Projection = glm::perspective(glm::radians(45.0f), width / height, 0.1f, 100.0f);
-		//glBindBuffer(GL_UNIFORM_BUFFER, commonBuffer);
 		auto p = glm::perspective(glm::radians(45.0f), (float)width / (float)height, 0.1f, 150.0f);
+		glBindBuffer(GL_UNIFORM_BUFFER, commonBuffer);
 		glBufferSubData(GL_UNIFORM_BUFFER, offsetof(CommonUniforms, Projection), sizeof(glm::mat4), &p);
 	}
 
@@ -631,7 +633,7 @@ int main(int argc, char** argv)
 #endif
 
 	auto oldTime = glfwGetTime();
-	commonUniforms.totalTime = 0.0f;
+	commonUniforms.TotalTime = 0.0f;
 
 	tickables.push_back(new TitleScreen());
 
@@ -648,10 +650,10 @@ int main(int argc, char** argv)
 		Inputs.UpdateGamepad();
 
 		auto newTime = glfwGetTime();
-		auto deltaTime = newTime - oldTime;
+		auto DeltaTime = newTime - oldTime;
 		oldTime = newTime;
-		float dt = (float)deltaTime;
-		commonUniforms.totalTime += dt;
+		float dt = (float)DeltaTime;
+		commonUniforms.TotalTime += dt;
 
 		glClear(GL_DEPTH_BUFFER_BIT);
 
@@ -669,14 +671,10 @@ int main(int argc, char** argv)
 		}
 
 		{
-			glBufferSubData(GL_UNIFORM_BUFFER, offsetof(CommonUniforms, totalTime), sizeof(float), &commonUniforms.totalTime);
-			glBufferSubData(GL_UNIFORM_BUFFER, offsetof(CommonUniforms, deltaTime), sizeof(float), &dt);
-			glBufferSubData(GL_UNIFORM_BUFFER, offsetof(CommonUniforms, screenRes), sizeof(float), &commonUniforms.screenRes);
-			//commonUniforms.View = MainCamera.ViewMat();
-			auto v = MainCamera.ViewMat();
-			glBufferSubData(GL_UNIFORM_BUFFER, offsetof(CommonUniforms, View), sizeof(glm::mat4), &v);
-			v = MainCamera.ViewMatInv();
-			glBufferSubData(GL_UNIFORM_BUFFER, offsetof(CommonUniforms, InvView), sizeof(glm::mat4), &v);
+			glBindBuffer(GL_UNIFORM_BUFFER, commonBuffer);
+			glBufferSubData(GL_UNIFORM_BUFFER, offsetof(CommonUniforms, TotalTime), sizeof(float), &commonUniforms.TotalTime);
+			glBufferSubData(GL_UNIFORM_BUFFER, offsetof(CommonUniforms, DeltaTime), sizeof(float), &dt);
+			glBufferSubData(GL_UNIFORM_BUFFER, offsetof(CommonUniforms, ScreenRes), sizeof(float), &commonUniforms.ScreenRes);
 		}
 		
 #ifdef DEBUG

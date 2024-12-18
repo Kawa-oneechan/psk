@@ -1,12 +1,5 @@
 //---Lighting---
 
-#define NUMLIGHTS 4
-struct light {
-	vec4 pos;
-	vec4 color;
-};
-uniform light lights[NUMLIGHTS];
-
 #define LIGHTOFF 0.004
 
 const float specPower = 4.0; //32.0;
@@ -21,14 +14,15 @@ vec3 diffuseLight(vec3 normal, vec3 litPos, vec3 litCol)
 	vec3 litDir = normalize(litPos - FragPos);
 	float diff = max(dot(normal, litDir), 0.0);
 
-#ifdef TOON
-	//Toon shading for lol
-	     if (diff < 0.15) diff = 0.15;
-	else if (diff < 0.20) diff = 0.20;
-	else if (diff < 0.50) diff = 0.50;
-	else if (diff < 0.90) diff = 0.90;
-	else             diff = 1.00;
-#endif
+	if (Toon)
+	{
+		//Toon shading for lol
+			 if (diff < 0.15) diff = 0.15;
+		else if (diff < 0.20) diff = 0.20;
+		else if (diff < 0.50) diff = 0.50;
+		else if (diff < 0.90) diff = 0.90;
+		else             diff = 1.00;
+	}
 
 	return diff * litCol;
 }

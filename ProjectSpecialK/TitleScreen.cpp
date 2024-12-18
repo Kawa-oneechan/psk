@@ -127,8 +127,7 @@ void TitleScreen::Tick(float dt)
 TitleScreen::~TitleScreen()
 {
 	delete logoAnim;
-	if (optionsMenu)
-		delete optionsMenu;
+	delete optionsMenu;
 }
 
 void TitleScreen::Draw(float dt)

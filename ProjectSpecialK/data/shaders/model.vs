@@ -11,9 +11,9 @@ out vec3 Normal;
 out vec3 Tangent;
 
 //TODO: uniform these, probably in Common.
-const float curveAmount = 0.005;
-const float curvePower = 1.75;
-const bool enableCurve = true;
+//const float curveAmount = 0.005;
+//const float curvePower = 1.75;
+//const bool enableCurve = true;
 
 #include "common.fs"
 
@@ -46,10 +46,10 @@ void main()
 
 	vec4 tm = View * model * totalPosition;
 
-	if (enableCurve)
+	if (Curve)
 	{
 		vec4 delta = tm - vec4(InvView);
-		tm.y += (-curveAmount * pow(delta.z, curvePower));
+		tm.y += (-CurveAmount * pow(delta.z, CurvePower));
 	}
 
 	gl_Position = Projection * tm;

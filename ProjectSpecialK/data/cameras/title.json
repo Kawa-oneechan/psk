@@ -2,6 +2,6 @@
 	"target": [0, 0, 0],
 	"angles": [0, 40, 0],
 	"distance": 90,
-	"drum": true,
+	"drum": false,
 	"locked": true
 }

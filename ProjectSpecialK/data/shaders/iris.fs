@@ -13,9 +13,9 @@ const float SQRT_2 = 1.414213562373;
 
 void main()
 {
-	vec2 uv = gl_FragCoord.xy / screenRes.xy;
+	vec2 uv = gl_FragCoord.xy / ScreenRes.xy;
 
-//	vec2 ratio2 = vec2(1.0, 1.0 / (screenRes.x / screenRes.y));
+//	vec2 ratio2 = vec2(1.0, 1.0 / (ScreenRes.x / ScreenRes.y));
 //	float dist = length((uv - 0.5) * ratio2);
 
 //	float m = smoothstep(progress - smoothness, progress, dist);

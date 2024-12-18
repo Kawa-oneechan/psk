@@ -10,6 +10,7 @@
 #include "support/glm/gtx/euler_angles.hpp"
 #include "support/glm/gtx/transform.hpp"
 
+extern unsigned int commonBuffer;
 
 Camera::Camera(glm::vec3 target, glm::vec3 angles, float distance) : _target(target), _angles(angles), _distance(distance), _swapYZ(false)
 {
@@ -92,6 +93,14 @@ void Camera::Update()
 	}
 	cameraFromWorld = glm::affineInverse(worldFromCamera);
 	position = worldFromCamera * glm::vec4(0, 0, 0, 1);
+
+	glBindBuffer(GL_UNIFORM_BUFFER, commonBuffer);
+	glBufferSubData(GL_UNIFORM_BUFFER, offsetof(CommonUniforms, View), sizeof(glm::mat4), &cameraFromWorld);
+	glBufferSubData(GL_UNIFORM_BUFFER, offsetof(CommonUniforms, InvView), sizeof(glm::mat4), &worldFromCamera);
+	int d = (int)Drum;
+	glBufferSubData(GL_UNIFORM_BUFFER, offsetof(CommonUniforms, CurveEnabled), sizeof(int), &d);
+	glBufferSubData(GL_UNIFORM_BUFFER, offsetof(CommonUniforms, CurveAmount), sizeof(float), &DrumAmount);
+	glBufferSubData(GL_UNIFORM_BUFFER, offsetof(CommonUniforms, CurvePower), sizeof(float), &DrumPower);
 }
 
 void Camera::Target(glm::vec3* target)

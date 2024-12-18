@@ -1,4 +1,4 @@
-﻿#include <regex>
+﻿//#include <regex>
 #include "SpecialK.h"
 
 glm::vec2 GetJSONVec2(JSONValue* val)
@@ -213,8 +213,12 @@ std::string LoadCamera(JSONValue* json)
 					result = "distance is not a number.";
 				else
 					MainCamera.Distance(obj["distance"]->AsNumber());
-				//if (obj["drum"] != nullptr && obj["drum"]->IsBool())
-				//	MainCamera.Drum = obj["drum"]->AsBool();
+				if (obj["drum"] != nullptr && obj["drum"]->IsBool())
+					MainCamera.Drum = obj["drum"]->AsBool();
+				if (obj["drumAmount"] != nullptr && obj["drumAmount"]->IsNumber())
+					MainCamera.DrumAmount = obj["drumAmount"]->AsNumber();
+				if (obj["drumPower"] != nullptr && obj["drumPower"]->IsNumber())
+					MainCamera.DrumPower = obj["drumPower"]->AsNumber();
 				//if (obj["locked"] != nullptr && obj["locked"]->IsBool())
 				//	MainCamera.Locked = obj["locked"]->AsBool();
 			}
@@ -579,15 +583,16 @@ std::vector<std::string> Split(std::string& data, char delimiter)
 
 void HandleIncludes(std::string& code, const std::string& path)
 {
-	static const std::regex incReg("#include\\s+?\"(.*?)\"");
-	std::smatch incMatch;
-	while (std::regex_search(code, incMatch, incReg))
+	while (true)
 	{
-		if (incMatch.size() == 2)
-		{
-			auto includedFile = VFS::ReadString(path + incMatch[1].str());
-			code = std::regex_replace(code, incReg, includedFile);
-		}
+		auto incPos = code.find("#include \"");
+		if (incPos == std::string::npos)
+			break;
+		auto incStr = incPos + 10;
+		auto incEnd = code.find('\"', incStr);
+		auto file = code.substr(incStr, incEnd - incStr);
+		auto includedFile = VFS::ReadString(path + file);
+		code = code.replace(incPos, incEnd - incPos + 1, includedFile);
 	}
 }
 

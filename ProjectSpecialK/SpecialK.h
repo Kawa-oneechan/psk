@@ -42,18 +42,33 @@ using namespace std::literals;
 __declspec(noreturn)
 extern void FatalError(const std::string& message);
 
-struct CommonUniforms
+constexpr int MaxLights = 4;
+
+struct Light
 {
-	//Must match shaders/common.txt
-	float totalTime; //0
-	float deltaTime; //4
-	glm::uvec2 screenRes; //8
-	glm::mat4 View; //16
-	glm::mat4 Projection; //80
-	glm::mat4 InvView; //144
+	glm::vec4 pos;
+	glm::vec4 color;
 };
 
+struct CommonUniforms
+{
+	//Must match shaders/common.fs
+	float TotalTime; //0
+	float DeltaTime; //4
+	float CurveAmount; //8
+	float CurvePower; //12
+	int CurveEnabled; //16
+	int Toon; //20
+	glm::uvec2 ScreenRes; //24
+	glm::mat4 View; //32
+	glm::mat4 Projection; //96
+	glm::mat4 InvView; //160
+	Light Lights[MaxLights]; //224
+};
 extern CommonUniforms commonUniforms;
+
+extern glm::vec4 lightPos[MaxLights];
+extern glm::vec4 lightCol[MaxLights];
 
 enum class LoadSpawnChoice
 {
@@ -81,10 +96,6 @@ extern sol::state Sol;
 
 using rune = unsigned int;
 using hash = unsigned int;
-
-constexpr int MaxLights = 4;
-extern glm::vec4 lightPos[MaxLights];
-extern glm::vec4 lightCol[MaxLights];
 
 //Given a JSON array with two numbers in it, returns a vec2 with those numbers.
 extern glm::vec2 GetJSONVec2(JSONValue* val);

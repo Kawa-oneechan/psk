@@ -15,6 +15,7 @@ layout(binding=3) uniform sampler2DArray opacityTexture;
 uniform vec3 viewPos;
 uniform int layer;
 
+#include "common.fs"
 #include "lighting.fs"
 
 void main()
@@ -40,7 +41,7 @@ void main()
 
 	vec3 result;
 	for (int i = 0; i < NUMLIGHTS; i++)
-		result += getLight(lights[i], albedo.rgb, norm, viewDir, mixx.b);
+		result += getLight(Lights[i], albedo.rgb, norm, viewDir, mixx.b);
 	fragColor = vec4(result, opacity.r);
 
 	//fragColor = texture(albedoTexture, TexCoord);

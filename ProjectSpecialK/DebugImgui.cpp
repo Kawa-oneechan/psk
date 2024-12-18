@@ -5,7 +5,7 @@
 #include "support/ImGUI/imgui_impl_glfw.h"
 #include "support/ImGUI/imgui_impl_opengl3.h"
 
-bool debuggerEnabled{ false };
+bool debuggerEnabled{ true };
 
 extern float uiTime, glTime;
 extern GLFWwindow* window;
@@ -58,9 +58,9 @@ static void DoCamera()
 		}
 
 		ImGui::SeparatorText("Settings");
-		ImGui::BeginDisabled();
 		ImGui::Checkbox("Drum", &MainCamera.Drum);
-		ImGui::EndDisabled();
+		ImGui::DragFloat("Drum amount", &MainCamera.DrumAmount, 0.001, -1.0, 1.0);
+		ImGui::DragFloat("Drum power", &MainCamera.DrumPower, 0.25, -2.0, 2.0);
 		ImGui::Checkbox("Locked", &MainCamera.Locked);
 
 		if (ImGui::Button("Reset"))
@@ -80,7 +80,10 @@ static void DoCamera()
 			auto dis = MainCamera.GetDistance();
 			json += fmt::format("\t\"target\": [{}, {}, {}],\n", tar[0], tar[1], tar[2]);
 			json += fmt::format("\t\"angles\": [{}, {}, {}],\n", ang[0], ang[1], ang[2]);
-			json += fmt::format("\t\"distance\": {}\n", dis);
+			json += fmt::format("\t\"distance\": {},\n", dis);
+			json += fmt::format("\t\"drum\": {},\n", MainCamera.Drum);
+			json += fmt::format("\t\"drumAmount\": {},\n", MainCamera.DrumAmount);
+			json += fmt::format("\t\"drumPower\": {}\n", MainCamera.DrumPower);
 			json += "}\n";
 			ImGui::SetClipboardText(json.c_str());
 		}

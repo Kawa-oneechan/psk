@@ -51,7 +51,9 @@ public:
 
 	bool Locked = false;
 	bool Drum = false;
-
+	float DrumAmount = 0.005f;
+	float DrumPower = 1.75f;
+	
 	void Target(glm::vec3* target);
 
 	void Tick(float dt);
