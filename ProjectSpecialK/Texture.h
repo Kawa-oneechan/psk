@@ -49,7 +49,7 @@ public:
 	int layers;
 
 	TextureArray() = default;
-
+	TextureArray(const std::vector<std::string>& entries, int repeat = GL_REPEAT, int filter = GL_LINEAR);
 	TextureArray(const std::string& texturePath, int repeat = GL_REPEAT, int filter = GL_LINEAR);
 
 	virtual ~TextureArray();

@@ -619,6 +619,7 @@ int main(int argc, char** argv)
 	cat01->Manifest();
 	town.Villagers.push_back(cat01);
 	MainCamera.Target(&cat01->Position);
+	cat01->Position = glm::vec3(30, 0, 30);
 
 	{
 		auto p = glm::perspective(glm::radians(45.0f), (float)width / (float)height, 0.1f, 150.0f);

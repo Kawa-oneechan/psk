@@ -49,7 +49,7 @@ void main()
 	if (Curve)
 	{
 		vec4 delta = tm - vec4(InvView);
-		tm.y += (-CurveAmount * pow(delta.z, CurvePower));
+		tm.y += -CurveAmount * pow(abs(delta.z), CurvePower);
 	}
 
 	gl_Position = Projection * tm;

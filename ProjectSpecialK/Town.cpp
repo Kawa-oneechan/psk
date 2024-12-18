@@ -32,7 +32,8 @@ void Map::SaveToPNG()
 	auto pixels = new unsigned long[width * height * 4];
 	const glm::vec4 typeColors[] =
 	{
-		{ 0.133, 0.545, 0.133, 1.0 }
+		{ 0.133, 0.545, 0.133, 1.0 },
+		{ 0.81, 0.59, 0.28, 1.0 }
 	};
 
 	auto set = [pixels, width](glm::vec4 color, int x, int y, int w, int h)
@@ -75,7 +76,7 @@ extern Framebuffer* frameBuffer;
 extern unsigned int commonBuffer;
 
 ModelP groundTile;
-TextureArray* groundTexture;
+TextureArray* groundTextureAlbs;
 
 Town::Town()
 {
@@ -97,6 +98,7 @@ Town::Town()
 		Terrain[(i * Width)].Elevation = 1;
 		Terrain[(i * Width) + (Width - 1)].Elevation = 1;
 	}
+	Terrain[(4 * Width) + 2].Type = 1;
 
 	UseDrum = true;
 
@@ -287,13 +289,15 @@ void Town::drawWorker(float dt)
 		v->Draw(dt * timeScale);
 
 	//just doing a single _fake_ acre, no whammies...
-	groundTile->Textures[0] = groundTexture;
+	groundTile->Textures[0] = groundTextureAlbs;
 	for (int y = 0; y < AcreSize; y++)
 	{
 		for (int x = 0; x < AcreSize; x++)
 		{
 			//probably got the x/y flipped lol we'll see
-			groundTile->Draw(modelShader, glm::vec3(x * 10, 0, y * 10));
+			auto tile = Terrain[(y * Width) + x];
+			groundTile->TexArrayLayers[0] = tile.Type;
+			groundTile->Draw(modelShader, glm::vec3(x * 10, tile.Elevation * 10, y * 10));
 		}
 	}
 
@@ -311,7 +315,13 @@ void Town::Draw(float dt)
 	if (!groundTile)
 	{
 		groundTile = std::make_shared<::Model>("field/ground/unit.fbx");
-		groundTexture = new TextureArray("field/ground/mGrass_Mix.png"); //testing
+		std::vector<std::string> groundAlbs, groundMixs;
+		for (auto& d : VFS::Enumerate("field/ground/design*_alb.png"))
+			groundAlbs.push_back(d.path);
+		//for (auto& d : VFS::Enumerate("field/ground/design*_alb.png"))
+		//	groundMixs.push_back(d.path);
+		//also add user designs somehow.
+		groundTextureAlbs = new TextureArray(groundAlbs);
 	}
 
 	if (postFx)

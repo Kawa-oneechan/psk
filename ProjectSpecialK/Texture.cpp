@@ -204,6 +204,64 @@ static bool loadArray(unsigned char** data, unsigned int *id, int width, int hei
 	return true;
 }
 
+TextureArray::TextureArray(const std::vector<std::string>& entries, int repeat, int filter) : repeat(repeat), filter(filter)
+{
+	ID = 0;
+	width = height = channels = 0, layers = 0;
+	data = nullptr;
+
+	file = entries[0];
+
+	auto c = cacheArray.find(file);
+	if (c != cacheArray.end())
+	{
+		TextureArray* t = c->second;
+		ID = t->ID;
+		width = t->width;
+		height = t->height;
+		channels = t->channels;
+		data = t->data;
+		delayed = t->delayed;
+		this->repeat = t->repeat;
+		this->filter = t->filter;
+		t->refCount++;
+		refCount = t->refCount;
+		return;
+	}
+
+	refCount = 1;
+
+	stbi_set_flip_vertically_on_load(1);
+
+	layers = (int)entries.size();
+
+	data = new unsigned char*[layers] { 0 };
+	for (auto l = 0; l < layers; l++)
+	{
+		size_t vfsSize = 0;
+		auto vfsData = VFS::ReadData(entries[l], &vfsSize);
+		if (!vfsData || vfsSize == 0)
+		{
+			conprint(1, "Failed to load texture array item \"{}\" -- no data.", entries[l]);
+			return;
+		}
+		data[l] = stbi_load_from_memory((unsigned char*)vfsData.get(), (int)vfsSize, &width, &height, &channels, 0);
+	}
+
+	if (!loadArray(data, &ID, width, height, channels, layers, repeat, filter))
+	{
+		conprint(3, "glGenTextures indicates we're threading. Delaying \"{}\"...", file);
+		delayed = true;
+		return;
+	}
+	for (auto l = 0; l < layers; l++)
+		stbi_image_free(data[l]);
+	//std::free(data);
+	delete[] data;
+
+	cacheArray[file] = this;
+}
+
 TextureArray::TextureArray(const std::string& texturePath, int repeat, int filter) : file(texturePath), repeat(repeat), filter(filter)
 {
 	ID = 0;
