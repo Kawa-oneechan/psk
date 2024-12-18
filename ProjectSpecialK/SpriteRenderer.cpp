@@ -10,6 +10,8 @@
 extern int width, height;
 extern Shader* spriteShader;
 
+extern unsigned int currentVAO;
+
 namespace UI
 {
 	extern glm::vec4 primaryColor;
@@ -123,9 +125,13 @@ namespace Sprite
 		glUniform1iv(glGetUniformLocation(currentShader->ID, "flipX"), instanceCursor, &spriteFlipX[0]);
 		glUniform1iv(glGetUniformLocation(currentShader->ID, "flipY"), instanceCursor, &spriteFlipY[0]);
 
-		glBindVertexArray(quadVAO);
+		if (currentVAO != quadVAO)
+		{
+			glBindVertexArray(quadVAO);
+			currentVAO = quadVAO;
+		}
 		glDrawElementsInstanced(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0, instanceCursor);
-		glBindVertexArray(0);
+		//glBindVertexArray(0);
 		instanceCursor = 0;
 	}
 

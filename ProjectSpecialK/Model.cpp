@@ -9,6 +9,8 @@ extern Shader* modelShader;
 
 static std::map<std::string, unsigned int> matMap;
 
+unsigned int currentVAO = 0;
+
 Model::Mesh::Mesh(ufbx_mesh* mesh, std::vector<Bone>& bones) : Texture(-1), Visible(true)
 {
 	Hash = GetCRC(mesh->name.data);
@@ -206,7 +208,11 @@ Model::Mesh::Mesh(ufbx_mesh* mesh, std::vector<Bone>& bones) : Texture(-1), Visi
 
 const void Model::Mesh::Draw()
 {
-	glBindVertexArray(VAO);
+	//if (currentVAO != VAO)
+	{
+		glBindVertexArray(VAO);
+		currentVAO = VAO;
+	}
 	glDrawElements(GL_TRIANGLES, (GLsizei)indices.size(), GL_UNSIGNED_INT, 0);
 }
 

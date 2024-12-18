@@ -4,6 +4,9 @@
 static std::map<std::string, Texture*> cache;
 static std::map<std::string, TextureArray*> cacheArray;
 
+static unsigned int currentTextureSlot = 0;
+static unsigned int currentTexture[32]{ 0 };
+
 static bool load(const unsigned char* data, unsigned int *id, int width, int height, int channels, int repeat, int filter)
 {
 	glGenTextures(1, id);
@@ -152,8 +155,12 @@ void Texture::Use(int slot)
 		delayed = false;
 	}
 
-	glActiveTexture(GL_TEXTURE0 + slot);
-	glBindTexture(GL_TEXTURE_2D, ID);
+	if (currentTexture[slot] != ID)
+	{
+		glActiveTexture(GL_TEXTURE0 + slot);
+		glBindTexture(GL_TEXTURE_2D, ID);
+		currentTexture[slot] = ID;
+	}
 }
 
 void Texture::SetRepeat(int newRepeat)
@@ -363,6 +370,10 @@ void TextureArray::Use(int slot)
 		delayed = false;
 	}
 
-	glActiveTexture(GL_TEXTURE0 + slot);
-	glBindTexture(GL_TEXTURE_2D_ARRAY, ID);
+	if (currentTexture[slot] != ID)
+	{
+		glActiveTexture(GL_TEXTURE0 + slot);
+		glBindTexture(GL_TEXTURE_2D_ARRAY, ID);
+		currentTexture[slot] = ID;
+	}
 }

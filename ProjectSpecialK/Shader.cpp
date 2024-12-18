@@ -2,6 +2,8 @@
 
 #define HEADER "#version 430 core\n#define PSK\n"
 
+static unsigned int currentShader;
+
 Shader::Shader(const std::string& vertexPath, const std::string& fragmentPath)
 {
 	auto vShaderCode = HEADER + VFS::ReadString(vertexPath);
@@ -48,7 +50,11 @@ Shader::~Shader()
 
 void Shader::Use()
 {
-	glUseProgram(ID);
+	if (currentShader != ID)
+	{
+		glUseProgram(ID);
+		currentShader = ID;
+	}
 }
 
 void Shader::Set(const std::string& name, bool value) const
