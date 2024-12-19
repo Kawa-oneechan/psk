@@ -154,6 +154,14 @@ extern std::string Qualify(const std::string& id, const std::string& ns);
 //Removes the frontmost namespace from an ID.
 extern std::string UnQualify(const std::string& id);
 
+namespace NookCode
+{
+	std::string Encode(std::array<unsigned char, 8>& d);
+	std::string Encode(hash itemHash, int variant, int pattern);
+	std::array<unsigned char, 8> Decode(const std::string& code);
+	void Decode(const std::string& code, hash& itemHash, int& variant, int& pattern);
+}
+
 //Returns the CRC32 hash for the given text.
 extern hash GetCRC(const std::string& text);
 //Returns the CRC32 hash for the given data.
