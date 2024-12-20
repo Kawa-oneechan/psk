@@ -284,6 +284,8 @@
     <None Include="data\shaders\sprite.fs" />
     <None Include="data\shaders\sprite.vs" />
     <None Include="data\shaders\wobble.fs" />
+    <None Include="data\ui\datetime.json" />
+    <None Include="data\ui\itemhotbar.json" />
     <None Include="data\ui\ui.json" />
   </ItemGroup>
   <ItemGroup>

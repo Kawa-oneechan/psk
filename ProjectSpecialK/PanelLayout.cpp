@@ -332,8 +332,8 @@ void PanelLayout::Draw(float dt)
 			color *= 3.0f;
 
 		auto parentPos = glm::vec2(0);
-		if (Origin == CornerOrigin::TopRight || Origin == CornerOrigin::BottomRight) parentPos.x = (float)width;
-		else if (Origin == CornerOrigin::BottomLeft || Origin == CornerOrigin::BottomRight) parentPos.y = (float)height; //-V560
+		if (Origin == CornerOrigin::TopRight || Origin == CornerOrigin::BottomRight) parentPos.x = 1920; //(float)width;
+		else if (Origin == CornerOrigin::BottomLeft || Origin == CornerOrigin::BottomRight) parentPos.y = 1080; //(float)height; //-V560
 
 		auto parentID = panel->Parent;
 		while (parentID != -1)

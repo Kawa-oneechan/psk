@@ -9,7 +9,7 @@
 			{
 				"id": "main",
 				//"position": [ 0, 850 ],
-				"position": [ 0, -32 ],
+				"position": [ 0, -200 ],
 				"type": "sprite",
 				"texture": 0,
 				"frame": 0,
@@ -59,8 +59,8 @@
 					{
 						"panel": "main",
 						"property": "y",
-						"fromTime": 0.0, "fromVal": 200,
-						"toTime": 0.5, "toVal": 200
+						"fromTime": 0.0, "fromVal": 100,
+						"toTime": 0.5, "toVal": 100
 					}
 				]
 			},
@@ -71,8 +71,8 @@
 					{
 						"panel": "main",
 						"property": "y",
-						"fromTime": 0.0, "fromVal": -32,
-						"toTime": 0.5, "toVal": -32
+						"fromTime": 0.0, "fromVal": -200,
+						"toTime": 0.5, "toVal": -200
 					}
 				]
 			},
@@ -83,8 +83,8 @@
 					{
 						"panel": "main",
 						"property": "y",
-						"fromTime": 0.0, "fromVal": -32,
-						"toTime": 1.0, "toVal": 200
+						"fromTime": 0.0, "fromVal": -200,
+						"toTime": 1.0, "toVal": 100
 					}
 				]
 			},
@@ -95,8 +95,8 @@
 					{
 						"panel": "main",
 						"property": "y",
-						"fromTime": 0.0, "fromVal": 200,
-						"toTime": 1.0, "toVal": -32,
+						"fromTime": 0.0, "fromVal": 100,
+						"toTime": 1.0, "toVal": -200,
 						"easing": "bounceOut"
 					}
 				]
