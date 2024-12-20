@@ -238,7 +238,8 @@ DialogueBox::DialogueBox()
 	//Text(u8"<font:0>◗♗♔ⓢ◗ꍏ↳€ ◗♗♔♔ꍏ◗⊙♔€", 0);
 	//Text(u8"シリーズに含まれる作品の範囲については、制作時期・代理店や原作者の違いなどから、当初は『バトルフィーバーJ』（1979年 - 1980年）を起点としてカウントされていたが。", 0);
 	//Text(u8"Je hebt voor <color:1>Nederlands</color> gekozen. Waarom zijn bijna alle namen hetzelfde gebleven?", 0);
-	Text(u8"<ws:?:greeting>", Database::Find<Villager>("ac:cat01", villagers));
+	//Text(u8"<ws:?:greeting>", Database::Find<Villager>("ac:cat01", villagers));
+	Text(u8"If I wore shoes—<size:75>weird<size:100>—I'd wear these\n<color:2>high-tops</color>, and\nstomp around like a shoe guy!", Database::Find<Villager>("ac:cat01", villagers));
 
 	//Text("I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I", 0);
 	//Text("IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII", 0);

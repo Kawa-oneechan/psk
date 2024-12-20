@@ -304,7 +304,7 @@ namespace Sprite
 	{
 		start; len;
 		if (tags[0] == "/size")
-			textRenderSize = originalTextRenderSize;
+			textRenderSize = 1.0f; //originalTextRenderSize;
 		else if (tags.size() < 2)
 		{
 			//conprint(2, "Missing parameter in MSBT Size");
@@ -314,9 +314,9 @@ namespace Sprite
 		{
 			int size = std::stoi(tags[1]);
 			if (size == -1)
-				textRenderSize = originalTextRenderSize;
+				textRenderSize = 1.0f; //originalTextRenderSize;
 			else
-				textRenderSize = (float)size;
+				textRenderSize = (float)size / 100.0f;
 		}
 	}
 
@@ -360,9 +360,11 @@ namespace Sprite
 			return;
 
 		textRenderColor = originalTextRenderColor = color;
-		textRenderSize = originalTextRenderSize = size;
+		//textRenderSize = originalTextRenderSize = size;
+		originalTextRenderSize = size;
+		textRenderSize = 1.0; //percentage of originalTextRenderSize!
 		textRenderFont = originalTextRenderFont = font;
-		position.y += fonts[font].size * (textRenderSize / 100.0f);
+		position.y += fonts[font].size * (originalTextRenderSize / 100.0f);
 
 		auto ogX = position.x;
 		auto ogY = position.y;
@@ -383,7 +385,8 @@ namespace Sprite
 				actualFont = fonts[actualFont].puaSource;
 			LoadFontBank(actualFont, bank);
 
-			auto scaleF = textRenderSize / 100.0f;
+			//auto scaleF = textRenderSize / 100.0f;
+			auto scaleF = (originalTextRenderSize * textRenderSize) / 100.0f;
 
 			if (ch == ' ')
 			{
@@ -466,7 +469,9 @@ namespace Sprite
 		if (text.empty())
 			return glm::vec2(0);
 
-		textRenderSize = originalTextRenderSize = size;
+		//textRenderSize = originalTextRenderSize = size;
+		originalTextRenderSize = size;
+		textRenderSize = 1.0; //percentage!
 		textRenderFont = originalTextRenderFont = font;
 
 		glm::vec2 result{ 0 };
@@ -487,7 +492,8 @@ namespace Sprite
 				actualFont = fonts[actualFont].puaSource;
 			LoadFontBank(actualFont, bank);
 
-			auto scaleF = textRenderSize / 100.0f;
+			//auto scaleF = textRenderSize / 100.0f;
+			auto scaleF = (originalTextRenderSize * textRenderSize) / 100.0f;
 
 			if (ch == '\n')
 			{
