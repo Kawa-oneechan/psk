@@ -62,5 +62,13 @@
 			"#5D5D66",   //CampGameBlack
 			"#D6FAFC"    //System
 		]
+	},
+	"metrics": {
+		"dialogueScale": 1.0,
+		"dialogueGap": 40,
+		"dialogueTagLeft": 250,
+		"dialogueTagAngle": -7,
+		"dialogueTextTop": 90,
+		"dialogueTextLeft": 160
 	}
 }

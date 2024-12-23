@@ -465,7 +465,9 @@ void DialogueBox::Draw(float dt)
 
 	time += dt * wobbleTimeScale;
 
-	auto dlgScale = 0.98f * scale;
+	auto metrics = UI::json["metrics"]->AsObject();
+
+	auto dlgScale = metrics["dialogueScale"]->AsNumber() * scale;
 
 	if (state == State::Opening || state == State::Closing)
 		dlgScale *= glm::mix(0.0f, 1.0f, tween);
@@ -473,7 +475,7 @@ void DialogueBox::Draw(float dt)
 	auto dlgWidth = bubble[0].width * dlgScale;
 	auto dlgHeight = bubble[0].height * dlgScale;
 	auto dlgLeft = (width * 0.5) - dlgWidth;
-	auto dlgTop = height - dlgHeight - 40;
+	auto dlgTop = height - dlgHeight - metrics["dialogueGap"]->AsNumber();
 
 	wobble.Use();
 	gradient[0].Use(1);
@@ -482,12 +484,12 @@ void DialogueBox::Draw(float dt)
 
 	Sprite::DrawSprite(&wobble, bubble[bubbleNum], glm::vec2(dlgLeft, dlgTop), glm::vec2(dlgWidth * 2, dlgHeight), glm::vec4(0, 0, bubble[bubbleNum].width * 2, bubble[bubbleNum].height), 0, bubbleColor);
 
-	Sprite::DrawText(font, displayed, glm::vec2(dlgLeft + (160 * dlgScale), dlgTop + (100 * dlgScale)), textColor, 160 * dlgScale);
+	Sprite::DrawText(font, displayed, glm::vec2(dlgLeft + (metrics["dialogueTextLeft"]->AsNumber() * dlgScale), dlgTop + (metrics["dialogueTextTop"]->AsNumber() * dlgScale)), textColor, 170.0f * dlgScale);
 
 	if (!name.empty())
 	{
-		const auto tagAngle = -2.0f;
-		const auto tagPos = glm::vec2((int)(width / 2) - bubble[0].width + (150 * scale), dlgTop + (sinf(time * 2) * 10) * scale);
+		const auto tagAngle = metrics["dialogueTagAngle"]->AsNumber();
+		const auto tagPos = glm::vec2((int)(width / 2) - bubble[0].width + (metrics["dialogueTagLeft"]->AsNumber() * scale), dlgTop + (sinf(time * 2) * 10) * scale);
 		const auto tagSize = glm::vec2(nametag[0].z, nametag[0].w) * scale;
 		const auto alpha = glm::clamp((tween * 2.0f) - 0.75f, 0.0f, 1.0f);
 		nametagColor[0].a = alpha;
