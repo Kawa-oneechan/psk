@@ -209,6 +209,7 @@ std::string LoadCamera(JSONValue* json)
 			{
 				MainCamera.Target(GetJSONVec3(obj["target"]));
 				MainCamera.Angles(GetJSONVec3(obj["angles"]));
+				MainCamera.Offset(GetJSONVec3(obj["offset"]));
 				if (!obj["distance"]->IsNumber())
 					result = "distance is not a number.";
 				else

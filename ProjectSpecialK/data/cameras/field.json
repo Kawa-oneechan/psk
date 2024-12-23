@@ -1,8 +1,9 @@
 {
 	"target": [0, 0, 0],
-	"angles": [0, 20, 0],
+	"angles": [0, 46, 0],
+	"offset": [-1.2, 0, 14],
 	"distance": 60,
 	"drum": true,
-	"drumAmount": 0.005,
+	"drumAmount": 0.009,
 	"drumPower": 1.75
 }

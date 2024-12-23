@@ -43,9 +43,6 @@ static void DoCamera()
 				MainCamera.Update();
 		}
 
-		if (ImGui::DragFloat("Distance", &MainCamera.GetDistance(), 1.0, -100, 100, "%.3f", ImGuiSliderFlags_Logarithmic))
-			MainCamera.Update();
-
 		ImGui::SeparatorText("Angles");
 		{
 			auto& ang = MainCamera.GetAngles();
@@ -57,17 +54,35 @@ static void DoCamera()
 				MainCamera.Update();
 		}
 
+		ImGui::SeparatorText("Offset");
+		{
+			auto& off = MainCamera.GetOffset();
+			if (ImGui::DragFloat("X##ox", &off.x, 1.0, -50, 50))
+				MainCamera.Update();
+			if (ImGui::DragFloat("Y##oy", &off.y, 1.0, -50, 50))
+				MainCamera.Update();
+			if (ImGui::DragFloat("Z##oz", &off.z, 1.0, -100, 100))
+				MainCamera.Update();
+		}
+		
+
+		ImGui::Separator();
+		if (ImGui::DragFloat("Distance", &MainCamera.GetDistance(), 1.0, -100, 100, "%.3f", ImGuiSliderFlags_Logarithmic))
+			MainCamera.Update();
+
+
 		ImGui::SeparatorText("Settings");
 		ImGui::Checkbox("Drum", &MainCamera.Drum);
-		ImGui::DragFloat("Drum amount", &MainCamera.DrumAmount, 0.001, -1.0, 1.0);
+		ImGui::DragFloat("Drum amount", &MainCamera.DrumAmount, 0.001f, -1.0, 1.0);
 		ImGui::DragFloat("Drum power", &MainCamera.DrumPower, 0.25, -2.0, 2.0);
 		ImGui::Checkbox("Locked", &MainCamera.Locked);
 
 		if (ImGui::Button("Reset"))
 		{
-			MainCamera.Target(glm::vec3(0, 6, 0));
-			MainCamera.Angles(glm::vec3(0, 20, 0));
-			MainCamera.Distance(60);
+			MainCamera.Target(glm::vec3(0, 0, 0));
+			MainCamera.Angles(glm::vec3(0, 41, 0));
+			MainCamera.Offset(glm::vec3(0, -3, 0));
+			MainCamera.Distance(70);
 			MainCamera.Update();
 		}
 
@@ -77,9 +92,11 @@ static void DoCamera()
 			json += "{\n";
 			auto tar = MainCamera.GetTarget();
 			auto ang = MainCamera.GetAngles();
+			auto off = MainCamera.GetOffset();
 			auto dis = MainCamera.GetDistance();
 			json += fmt::format("\t\"target\": [{}, {}, {}],\n", tar[0], tar[1], tar[2]);
 			json += fmt::format("\t\"angles\": [{}, {}, {}],\n", ang[0], ang[1], ang[2]);
+			json += fmt::format("\t\"offset\": [{}, {}, {}],\n", off[0], off[1], off[2]);
 			json += fmt::format("\t\"distance\": {},\n", dis);
 			json += fmt::format("\t\"drum\": {},\n", MainCamera.Drum);
 			json += fmt::format("\t\"drumAmount\": {},\n", MainCamera.DrumAmount);

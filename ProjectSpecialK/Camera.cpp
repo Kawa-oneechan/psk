@@ -45,10 +45,14 @@ void Camera::Target(const glm::vec3& target)
 void Camera::Angles(const glm::vec3& angles)
 {
 	_angles = glm::mod(angles, 360.0f);
-
 	Update();
 }
 
+void Camera::Offset(const glm::vec3& offset)
+{
+	_offset = offset;
+	Update();
+}
 void Camera::Distance(float distance)
 {
 	_distance = distance;
@@ -64,11 +68,13 @@ void Camera::SwapYZ(bool swapYZ)
 void Camera::Set(
 	const glm::vec3& target,
 	const glm::vec3& angles,
+	const glm::vec3& offset,
 	float distance
 )
 {
 	_target = target;
 	_angles = angles;
+	_offset = offset;
 	_distance = distance;
 	Update();
 }
@@ -76,7 +82,7 @@ void Camera::Set(
 void Camera::Update()
 {
 	worldFromCamera = (
-		glm::translate(_target)
+		glm::translate(_target + _offset)
 		* (glm::eulerAngleY(glm::radians(_angles.z)))
 		* (glm::eulerAngleX(glm::radians(-_angles.y)))
 		* (glm::eulerAngleZ(glm::radians(_angles.x)))
