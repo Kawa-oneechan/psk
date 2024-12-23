@@ -465,7 +465,7 @@ void DialogueBox::Draw(float dt)
 
 	time += dt * wobbleTimeScale;
 
-	auto dlgScale = scale;
+	auto dlgScale = 0.98f * scale;
 
 	if (state == State::Opening || state == State::Closing)
 		dlgScale *= glm::mix(0.0f, 1.0f, tween);
@@ -473,7 +473,7 @@ void DialogueBox::Draw(float dt)
 	auto dlgWidth = bubble[0].width * dlgScale;
 	auto dlgHeight = bubble[0].height * dlgScale;
 	auto dlgLeft = (width * 0.5) - dlgWidth;
-	auto dlgTop = height - dlgHeight - 16;
+	auto dlgTop = height - dlgHeight - 40;
 
 	wobble.Use();
 	gradient[0].Use(1);
@@ -482,7 +482,7 @@ void DialogueBox::Draw(float dt)
 
 	Sprite::DrawSprite(&wobble, bubble[bubbleNum], glm::vec2(dlgLeft, dlgTop), glm::vec2(dlgWidth * 2, dlgHeight), glm::vec4(0, 0, bubble[bubbleNum].width * 2, bubble[bubbleNum].height), 0, bubbleColor);
 
-	Sprite::DrawText(font, displayed, glm::vec2(dlgLeft + (200 * dlgScale), dlgTop + (100 * dlgScale)), textColor, 150 * dlgScale);
+	Sprite::DrawText(font, displayed, glm::vec2(dlgLeft + (160 * dlgScale), dlgTop + (100 * dlgScale)), textColor, 160 * dlgScale);
 
 	if (!name.empty())
 	{

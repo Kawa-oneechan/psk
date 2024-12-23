@@ -137,7 +137,7 @@ void TitleScreen::Draw(float dt)
 	{
 		logoAnim->Draw(dt);
 		//if (logoAnim->Playing())
-		Sprite::DrawText(1, psText, (glm::vec2(width, height) - psSize) * 0.5f, glm::vec4(1, 1, 1, glm::abs(glm::sin((float)glfwGetTime())) * 1.0f), 100.0f);
+		Sprite::DrawText(1, psText, (glm::vec2(width, height) - psSize) * glm::vec2(0.5f, 0.86f), glm::vec4(1, 1, 1, glm::abs(glm::sin((float)glfwGetTime())) * 1.0f), 150.0f * scale);
 	}
 	else
 	{
