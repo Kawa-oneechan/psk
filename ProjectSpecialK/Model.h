@@ -87,7 +87,7 @@ public:
 
 	int FindBone(const std::string& name);
 	void CalculateBoneTransform(int id, const glm::mat4& parentTransform = glm::mat4(1.0f));
-	void MoveBone(int id, float deg, const glm::vec3& rotation, const glm::vec3& transform = glm::vec3(0));
+	void MoveBone(int id, const glm::vec3& rotation, const glm::vec3& transform = glm::vec3(0), const glm::vec3& scale = glm::vec3(1));
 };
 
 using ModelP = std::shared_ptr<Model>;

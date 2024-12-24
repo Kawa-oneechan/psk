@@ -2,7 +2,7 @@
 #include "Model.h"
 #include "support/ufbx.h"
 
-float boneTester = 11.0f;
+float boneTester = 0.0f;
 
 static std::map<std::string, std::tuple<Model*, int>> cache;
 extern Shader* modelShader;
@@ -444,7 +444,7 @@ void Model::Draw(Shader* shader, const glm::vec3& pos, float yaw)
 		//TEST TEST TEST TEST
 		auto head = FindBone("Head");
 		if (head != NoBone)
-			MoveBone(head, boneTester, glm::vec3(0, 1, 0));
+			MoveBone(head, glm::vec3(0, boneTester, 0));
 		CalculateBoneTransform(0);
 		//TEST TEST TEST TEST
 
@@ -520,12 +520,13 @@ void Model::CalculateBoneTransform(int id, const glm::mat4& parentTransform)
 		CalculateBoneTransform(i, globalTransformation);
 }
 
-void Model::MoveBone(int id, float deg, const glm::vec3& rotation, const glm::vec3& transform)
+void Model::MoveBone(int id, const glm::vec3& rotation, const glm::vec3& transform, const glm::vec3& scale)
 {
 	if (id == NoBone)
 		return;
+
 	auto t = glm::translate(glm::mat4(1), transform);
-	auto r = glm::rotate(glm::mat4(1), glm::radians(deg), rotation);
-	auto s = glm::scale(glm::mat4(1), glm::vec3(1));
+	auto r = (glm::mat4)glm::quat(rotation);
+	auto s = glm::scale(glm::mat4(1), scale);
 	Bones[id].LocalTransform = t * r * s;
 }
