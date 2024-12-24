@@ -427,7 +427,7 @@ Model::Model(const std::string& modelPath) : file(modelPath)
 	cache[file] = std::make_tuple(this, 1);
 }
 
-void Model::Draw(Shader* shader, const glm::vec3& pos, float yaw)
+void Model::Draw(Shader* shader, const glm::vec3& pos, float yaw, int mesh)
 {
 	shader->Use();
 
@@ -439,6 +439,7 @@ void Model::Draw(Shader* shader, const glm::vec3& pos, float yaw)
 	model = glm::rotate(model, glm::radians(yaw), glm::vec3(0, 1, 0));
 	shader->Set("model", model);
 
+	/*
 	if (Bones.size() > 0)
 	{
 		//TEST TEST TEST TEST
@@ -448,14 +449,19 @@ void Model::Draw(Shader* shader, const glm::vec3& pos, float yaw)
 		CalculateBoneTransform(0);
 		//TEST TEST TEST TEST
 
+	}
+	*/
+
+	if (Bones.size() > 0)
 		for (int i = 0; i < Bones.size(); i++)
 			shader->Set(fmt::format("finalBonesMatrices[{}]", i), finalBoneMatrices[i]);
-	}
 
 	int j = 0;
 	for (auto& m : Meshes)
 	{
 		if (!m.Visible)
+			continue;
+		if (mesh != -1 && mesh != j)
 			continue;
 
 		if (m.Texture != -1 && m.Texture < Textures.size())
