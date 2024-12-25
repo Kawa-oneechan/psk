@@ -89,6 +89,157 @@ void TestInventorySystems()
 	conprint(0, "------------");
 }
 
+
+int GetLetterScore(const std::string& text)
+{
+	//TODO: do this in UTF8, without the std::is____ functions.
+
+	auto trigrams = VFS::ReadString("mailcheck/trigrams.txt");
+	int score = 0;
+
+	//Check A: punctuation and capital letters.
+	{
+		auto last = *(text.end() - 1);
+		if (last == '.' || last == '!' || last == '?')
+		{
+			score += 20;
+		}
+
+		auto checkFor = [&score, text](char pct)
+		{
+			size_t pos = text.find(pct, 0);
+			while (pos != std::string::npos)
+			{
+				if (pos != 0)
+					pos++;
+				if (pos + 3 >= text.length())
+					break;
+				bool yea = false;
+				for (int i = 0; i < 3; i++)
+				{
+					if (std::isupper(text[pos + i]))
+					{
+						score += 10;
+						yea = true;
+						break;
+					}
+				}
+				if (!yea)
+					score -= 10;
+				pos = text.find(pct, pos);
+				if (pos == 0)
+					pos++;
+			}
+		};
+
+		checkFor('.');
+		checkFor('!');
+		checkFor('?');
+	}
+
+	//Check B: trigrams
+	{
+		size_t pos = 0;
+		int trisFound = 0;
+		while (pos != std::string::npos)
+		{
+			if (pos != 0)
+				pos++;
+			if (pos + 3 >= text.length())
+				break;
+			auto tri = text.substr(pos, 3);
+			StringToLower(tri);
+			auto triPos = trigrams.find(tri);
+			if (triPos != std::string::npos)
+				trisFound++;
+			pos = text.find(' ', pos);
+		}
+		score += trisFound * 3;
+	}
+
+	//Check C: first letter is a capital
+	{
+		for (auto i = 0; i < text.length(); i++)
+		{
+			auto c = text[i];
+			if (std::isblank(c))
+				continue;
+			if (std::isupper(c))
+				score += 20;
+			else if (std::islower(c))
+				score -= 10;
+			break;
+		}
+	}
+
+	//Check D: repeated characters
+	{
+		for (auto i = 0; i < text.length(); i++)
+		{
+			auto c = text[i];
+			auto a = 0;
+			for (auto j = i + 1; j < text.length() && j < i + 3; j++, i++)
+			{
+				if (text[j] == c)
+					a++;
+				else
+					break;
+			}
+			if (a == 2)
+			{
+				score -= 50;
+				break;
+			}
+		}
+	}
+
+	//Check E: space/non-space ratio
+	{
+		int spaces = 0;
+		int nonspaces = 0;
+		for (auto i = 0; i < text.length(); i++)
+		{
+			auto c = text[i];
+			if (std::isblank(c))
+				spaces++;
+			else
+				nonspaces++;
+		}
+		if (nonspaces == 0 || ((spaces * 100) / nonspaces < 20))
+			score -= 20;
+		else
+			score += 20;
+	}
+
+	//Check F: no punctuation within 75 characters
+	{
+		if (text.length() >= 75)
+		{
+			auto first = text.substr(0, 75);
+			if (first.find('.') == std::string::npos && first.find('!') == std::string::npos && first.find('?') == std::string::npos)
+				score -= 150;
+		}
+	}
+
+	//Check G: at least one space per 32 character cluster
+	{
+		int i = 0;
+		while (i < text.length())
+		{
+			int l = 32;
+			if (i + l > text.length())
+				l = text.length() - i;
+			auto chunk = text.substr(i, l);
+			if (chunk.find(' ') == std::string::npos)
+				score -= 20;
+			i += 32;
+		}
+	}
+
+	return score;
+}
+
+
 void RunTests()
 {
 	{
