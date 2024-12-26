@@ -56,9 +56,6 @@ CursorP cursor = nullptr;
 Console* console = nullptr;
 Audio* bgm = nullptr;
 
-glm::vec4 lightPos[MaxLights] = { { 0, 0, 0, 0 } };
-glm::vec4 lightCol[MaxLights] = { { 0, 0, 0, 0 } };
-
 sol::state Sol;
 
 int width = ScreenWidth, height = ScreenHeight;
@@ -535,8 +532,6 @@ int main(int argc, char** argv)
 	glBindBuffer(GL_UNIFORM_BUFFER, commonBuffer);
 	glBufferData(GL_UNIFORM_BUFFER, sizeof(commonUniforms), &commonUniforms, GL_DYNAMIC_DRAW);
 	glBindBufferBase(GL_UNIFORM_BUFFER, commonBind, commonBuffer);
-	int toon = 0;
-	glBufferSubData(GL_UNIFORM_BUFFER, offsetof(CommonUniforms, Toon), sizeof(int), &toon);
 
 #ifdef DEBUG
 	SetupImGui();
@@ -601,8 +596,8 @@ int main(int argc, char** argv)
 
 	if (!LoadLights("lights/initial.json").empty())
 	{
-		lightPos[0] = { 0, 15, 20, 0 };
-		lightCol[0] = { 1, 1, 1, 0.25 };
+		commonUniforms.Lights[0].pos = { 0, 15, 20, 0 };
+		commonUniforms.Lights[0].color = { 1, 1, 1, 0.25 };
 	}
 	if (!LoadCamera("cameras/field.json").empty())
 	{
@@ -621,11 +616,7 @@ int main(int argc, char** argv)
 	MainCamera.Target(&cat01->Position);
 	cat01->Position = glm::vec3(30, 0, 30);
 
-	{
-		auto p = glm::perspective(glm::radians(45.0f), (float)width / (float)height, 0.1f, 150.0f);
-		glBindBuffer(GL_UNIFORM_BUFFER, commonBuffer);
-		glBufferSubData(GL_UNIFORM_BUFFER, offsetof(CommonUniforms, Projection), sizeof(glm::mat4), &p);
-	}
+	commonUniforms.Projection = glm::perspective(glm::radians(45.0f), (float)width / (float)height, 0.1f, 300.0f);
 
 	frameBuffer = new Framebuffer("shaders/framebuffer.fs", width, height);
 
@@ -637,6 +628,8 @@ int main(int argc, char** argv)
 	commonUniforms.TotalTime = 0.0f;
 
 	tickables.push_back(new TitleScreen());
+
+	//auto layoutOverlay = new Texture("layoutoverlay.png");
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -655,6 +648,7 @@ int main(int argc, char** argv)
 		oldTime = newTime;
 		float dt = (float)DeltaTime;
 		commonUniforms.TotalTime += dt;
+		commonUniforms.DeltaTime = dt;
 
 		glClear(GL_DEPTH_BUFFER_BIT);
 
@@ -671,12 +665,8 @@ int main(int argc, char** argv)
 			//TODO: have Tick return false if it's the last one, known to cover up everything else.
 		}
 
-		{
-			glBindBuffer(GL_UNIFORM_BUFFER, commonBuffer);
-			glBufferSubData(GL_UNIFORM_BUFFER, offsetof(CommonUniforms, TotalTime), sizeof(float), &commonUniforms.TotalTime);
-			glBufferSubData(GL_UNIFORM_BUFFER, offsetof(CommonUniforms, DeltaTime), sizeof(float), &dt);
-			glBufferSubData(GL_UNIFORM_BUFFER, offsetof(CommonUniforms, ScreenRes), sizeof(float), &commonUniforms.ScreenRes);
-		}
+		glBindBuffer(GL_UNIFORM_BUFFER, commonBuffer);
+		glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(CommonUniforms), &commonUniforms);
 		
 #ifdef DEBUG
 		endingTime = std::chrono::high_resolution_clock::now();
@@ -735,6 +725,8 @@ int main(int argc, char** argv)
 
 		for (const auto& t : tickables)
 			t->Draw(dt * timeScale);
+
+		//Sprite::DrawSprite(*layoutOverlay, glm::vec2(0), glm::vec2(width, height), glm::vec4(0), 0.0f, glm::vec4(1, 1, 1, 0.5));
 
 		console->Draw(dt);
 		Sprite::FlushBatch();

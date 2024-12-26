@@ -20,16 +20,6 @@ Camera::~Camera()
 {
 }
 
-glm::mat4 Camera::ViewMat() const
-{
-	return cameraFromWorld;
-}
-
-glm::mat4 Camera::ViewMatInv() const
-{
-	return worldFromCamera;
-}
-
 glm::vec3 Camera::Position() const
 {
 	return position;
@@ -81,7 +71,7 @@ void Camera::Set(
 
 void Camera::Update()
 {
-	worldFromCamera = (
+	commonUniforms.InvView = (
 		glm::translate(_target + _offset)
 		* (glm::eulerAngleY(glm::radians(_angles.z)))
 		* (glm::eulerAngleX(glm::radians(-_angles.y)))
@@ -90,23 +80,15 @@ void Camera::Update()
 		);
 	if (_swapYZ)
 	{
-		worldFromCamera = glm::mat4(
+		commonUniforms.InvView = glm::mat4(
 			1, 0, 0, 0,
 			0, 0, 1, 0,
 			0, -1, 0, 0,
 			0, 0, 0, 1
-		) * worldFromCamera;
+		) * commonUniforms.InvView;
 	}
-	cameraFromWorld = glm::affineInverse(worldFromCamera);
-	position = worldFromCamera * glm::vec4(0, 0, 0, 1);
-
-	glBindBuffer(GL_UNIFORM_BUFFER, commonBuffer);
-	glBufferSubData(GL_UNIFORM_BUFFER, offsetof(CommonUniforms, View), sizeof(glm::mat4), &cameraFromWorld);
-	glBufferSubData(GL_UNIFORM_BUFFER, offsetof(CommonUniforms, InvView), sizeof(glm::mat4), &worldFromCamera);
-	int d = (int)Drum;
-	glBufferSubData(GL_UNIFORM_BUFFER, offsetof(CommonUniforms, CurveEnabled), sizeof(int), &d);
-	glBufferSubData(GL_UNIFORM_BUFFER, offsetof(CommonUniforms, CurveAmount), sizeof(float), &DrumAmount);
-	glBufferSubData(GL_UNIFORM_BUFFER, offsetof(CommonUniforms, CurvePower), sizeof(float), &DrumPower);
+	commonUniforms.View = glm::affineInverse(commonUniforms.InvView);
+	position = commonUniforms.InvView * glm::vec4(0, 0, 0, 1);
 }
 
 void Camera::Target(glm::vec3* target)

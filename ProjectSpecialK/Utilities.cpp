@@ -215,11 +215,11 @@ std::string LoadCamera(JSONValue* json)
 				else
 					MainCamera.Distance(obj["distance"]->AsNumber());
 				if (obj["drum"] != nullptr && obj["drum"]->IsBool())
-					MainCamera.Drum = obj["drum"]->AsBool();
+					commonUniforms.CurveEnabled = (int)obj["drum"]->AsBool();
 				if (obj["drumAmount"] != nullptr && obj["drumAmount"]->IsNumber())
-					MainCamera.DrumAmount = obj["drumAmount"]->AsNumber();
+					commonUniforms.CurveAmount = obj["drumAmount"]->AsNumber();
 				if (obj["drumPower"] != nullptr && obj["drumPower"]->IsNumber())
-					MainCamera.DrumPower = obj["drumPower"]->AsNumber();
+					commonUniforms.CurvePower = obj["drumPower"]->AsNumber();
 				//if (obj["locked"] != nullptr && obj["locked"]->IsBool())
 				//	MainCamera.Locked = obj["locked"]->AsBool();
 			}
@@ -275,8 +275,8 @@ std::string LoadLights(JSONValue* json)
 						result = "not all light properties accounted for.";
 					else
 					{
-						lightPos[i] = GetJSONVec4(l["pos"]);
-						lightCol[i] = GetJSONColor(l["col"]);
+						commonUniforms.Lights[i].pos = GetJSONVec4(l["pos"]);
+						commonUniforms.Lights[i].color = GetJSONColor(l["col"]);
 					}
 					i++;
 					if (i == MaxLights)

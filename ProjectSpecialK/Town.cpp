@@ -276,15 +276,6 @@ void Town::drawWorker(float dt)
 	glPolygonMode(GL_FRONT_AND_BACK, wireframe ? GL_LINE : GL_FILL);
 	modelShader->Use();
 
-	glBindBuffer(GL_UNIFORM_BUFFER, commonBuffer);
-	for (int i = 0; i < MaxLights; i++)
-	{
-		glBufferSubData(GL_UNIFORM_BUFFER, offsetof(CommonUniforms, Lights[i].pos), sizeof(glm::vec4), &lightPos[i]);
-		glBufferSubData(GL_UNIFORM_BUFFER, offsetof(CommonUniforms, Lights[i].color), sizeof(glm::vec4), &lightCol[i]);
-		//modelShader->Set(fmt::format("lights[{}].color", i), lightCol[i]);
-		//modelShader->Set(fmt::format("lights[{}].pos", i), lightPos[i]);
-	}
-
 	for (const auto& v : town.Villagers)
 		v->Draw(dt * timeScale);
 

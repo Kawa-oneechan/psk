@@ -72,9 +72,11 @@ static void DoCamera()
 
 
 		ImGui::SeparatorText("Settings");
-		ImGui::Checkbox("Drum", &MainCamera.Drum);
-		ImGui::DragFloat("Drum amount", &MainCamera.DrumAmount, 0.001f, -1.0, 1.0);
-		ImGui::DragFloat("Drum power", &MainCamera.DrumPower, 0.25, -2.0, 2.0);
+		bool drum = commonUniforms.CurveEnabled == 1;
+		if (ImGui::Checkbox("Drum", &drum))
+			commonUniforms.CurveEnabled = drum;
+		ImGui::DragFloat("Drum amount", &commonUniforms.CurveAmount, 0.001f, -1.0, 1.0);
+		ImGui::DragFloat("Drum power", &commonUniforms.CurvePower, 0.25, -2.0, 2.0);
 		ImGui::Checkbox("Locked", &MainCamera.Locked);
 
 		if (ImGui::Button("Reset"))
@@ -98,9 +100,9 @@ static void DoCamera()
 			json += fmt::format("\t\"angles\": [{}, {}, {}],\n", ang[0], ang[1], ang[2]);
 			json += fmt::format("\t\"offset\": [{}, {}, {}],\n", off[0], off[1], off[2]);
 			json += fmt::format("\t\"distance\": {},\n", dis);
-			json += fmt::format("\t\"drum\": {},\n", MainCamera.Drum);
-			json += fmt::format("\t\"drumAmount\": {},\n", MainCamera.DrumAmount);
-			json += fmt::format("\t\"drumPower\": {}\n", MainCamera.DrumPower);
+			json += fmt::format("\t\"drum\": {},\n", commonUniforms.CurveEnabled == 1);
+			json += fmt::format("\t\"drumAmount\": {},\n", commonUniforms.CurveAmount);
+			json += fmt::format("\t\"drumPower\": {}\n", commonUniforms.CurvePower);
 			json += "}\n";
 			ImGui::SetClipboardText(json.c_str());
 		}
@@ -139,28 +141,30 @@ static void DoLights()
 				ImGui::SameLine();
 		}
 
+		auto& l = commonUniforms.Lights[lightIndex];
+
 		ImGui::Text("Position");
 		{
-			ImGui::DragFloat("X", &lightPos[lightIndex].x, 1.0, -50, 50);
-			ImGui::DragFloat("Y", &lightPos[lightIndex].y, 1.0, -50, 50);
-			ImGui::DragFloat("Z", &lightPos[lightIndex].z, 1.0, -50, 50);
+			ImGui::DragFloat("X", &l.pos.x, 1.0, -50, 50);
+			ImGui::DragFloat("Y", &l.pos.y, 1.0, -50, 50);
+			ImGui::DragFloat("Z", &l.pos.z, 1.0, -50, 50);
 
 			if (ImGui::Button("Reset"))
 			{
 				if (lightIndex == 0)
 				{
-					lightPos[lightIndex] = { 0.0f, 15.0f, 20.0f, 0 };
-					lightCol[lightIndex] = { 1.0f, 1.0f, 1.0f, 0.25f };
+					l.pos = { 0.0f, 15.0f, 20.0f, 0 };
+					l.color = { 1.0f, 1.0f, 1.0f, 0.25f };
 				}
 				else
 				{
-					lightPos[lightIndex] = { 0, 0, 0, 0 };
-					lightCol[lightIndex] = { 0, 0, 0, 0 };
+					l.pos = { 0, 0, 0, 0 };
+					l.color = { 0, 0, 0, 0 };
 				}
 			}
 		}
 
-		ImGui::ColorPicker4("Color", &lightCol[lightIndex].x, ImGuiColorEditFlags_DisplayRGB);
+		ImGui::ColorPicker4("Color", &l.color.x, ImGuiColorEditFlags_DisplayRGB);
 
 		if (ImGui::Button("Copy JSON"))
 		{
@@ -169,12 +173,13 @@ static void DoLights()
 			json += "[\n";
 			for (int i = 0; i < MaxLights; i++)
 			{
-				if (lightCol[i][3] == 0)
+				l = commonUniforms.Lights[i];
+				if (l.color[3] == 0)
 					continue;
 				std::string block;
 				block += "\t{\n";
-				block += fmt::format("\t\t\"pos\": [{}, {}, {}, {}],\n", lightPos[i][0], lightPos[i][1], lightPos[i][2], lightPos[i][3]);
-				block += fmt::format("\t\t\"col\": [{}, {}, {}, {}] \n", lightCol[i][0], lightCol[i][1], lightCol[i][2], lightCol[i][3]);
+				block += fmt::format("\t\t\"pos\": [{}, {}, {}, {}],\n", l.pos[0], l.pos[1], l.pos[2], l.pos[3]);
+				block += fmt::format("\t\t\"col\": [{}, {}, {}, {}] \n", l.color[0], l.color[1], l.color[2], l.color[3]);
 				block += "\t}";
 				blocks.push_back(block);
 			}

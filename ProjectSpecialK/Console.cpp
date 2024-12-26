@@ -48,6 +48,7 @@ Console::Console()
 	RegisterCVar("r_polygons", CVar::Type::Bool, &debugPanelLayoutPolygons);
 	RegisterCVar("r_postfx", CVar::Type::Bool, &postFx);
 	RegisterCVar("r_wireframe", CVar::Type::Bool, &wireframe);
+	RegisterCVar("r_toon", CVar::Type::Bool, &commonUniforms.Toon);
 	RegisterCVar("s_ambientvolume", CVar::Type::Float, &Audio::AmbientVolume, false, 0, 100);
 	RegisterCVar("s_effectvolume", CVar::Type::Float, &Audio::SoundVolume, false, 0, 100);
 	RegisterCVar("s_musicvolume", CVar::Type::Float, &Audio::MusicVolume, false, 0, 100);

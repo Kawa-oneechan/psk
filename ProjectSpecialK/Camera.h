@@ -16,16 +16,10 @@ protected:
 
 	bool _swapYZ;
 
-	glm::mat4 worldFromCamera = glm::mat4(1);
-	glm::mat4 cameraFromWorld = glm::mat4(1);
-
 public:
 	Camera(const Camera& c) = default;
 	Camera(glm::vec3 target = glm::vec3(0), glm::vec3 angles = glm::vec3(0), float distance = 10);
 	virtual ~Camera();
-
-	glm::mat4 ViewMat() const;
-	glm::mat4 ViewMatInv() const;
 
 	glm::vec3 Position() const;
 	inline const glm::vec3& Target() const { return _target; }
@@ -55,9 +49,6 @@ public:
 	void Update();
 
 	bool Locked = false;
-	bool Drum = false;
-	float DrumAmount = 0.005f;
-	float DrumPower = 1.75f;
 	
 	void Target(glm::vec3* target);
 

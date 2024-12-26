@@ -67,9 +67,6 @@ struct CommonUniforms
 };
 extern CommonUniforms commonUniforms;
 
-extern glm::vec4 lightPos[MaxLights];
-extern glm::vec4 lightCol[MaxLights];
-
 enum class LoadSpawnChoice
 {
 	FrontDoor,
