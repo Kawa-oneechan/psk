@@ -223,10 +223,10 @@ int GetLetterScore(const std::string& text)
 
 	//Check G: at least one space per 32 character cluster
 	{
-		int i = 0;
+		size_t i = 0;
 		while (i < text.length())
 		{
-			int l = 32;
+			size_t l = 32;
 			if (i + l > text.length())
 				l = text.length() - i;
 			auto chunk = text.substr(i, l);

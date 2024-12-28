@@ -1,7 +1,6 @@
 {
 	"target": [0, 0, 0],
 	"angles": [0, 40, 0],
-	"offset": [0, -3, 0],
 	"distance": 90,
 	"drum": false,
 	"locked": true

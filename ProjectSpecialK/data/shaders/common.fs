@@ -1,6 +1,6 @@
 //---Common---
 
-#define NUMLIGHTS 4
+#define NUMLIGHTS 8
 
 struct light {
 	vec4 pos;

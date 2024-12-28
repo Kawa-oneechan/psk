@@ -209,13 +209,12 @@ std::string LoadCamera(JSONValue* json)
 			{
 				MainCamera.Target(GetJSONVec3(obj["target"]));
 				MainCamera.Angles(GetJSONVec3(obj["angles"]));
-				MainCamera.Offset(GetJSONVec3(obj["offset"]));
 				if (!obj["distance"]->IsNumber())
 					result = "distance is not a number.";
 				else
 					MainCamera.Distance(obj["distance"]->AsNumber());
 				if (obj["drum"] != nullptr && obj["drum"]->IsBool())
-					commonUniforms.CurveEnabled = (int)obj["drum"]->AsBool();
+					commonUniforms.CurveEnabled = obj["drum"]->AsBool();
 				if (obj["drumAmount"] != nullptr && obj["drumAmount"]->IsNumber())
 					commonUniforms.CurveAmount = obj["drumAmount"]->AsNumber();
 				if (obj["drumPower"] != nullptr && obj["drumPower"]->IsNumber())

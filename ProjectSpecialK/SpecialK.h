@@ -42,7 +42,7 @@ using namespace std::literals;
 __declspec(noreturn)
 extern void FatalError(const std::string& message);
 
-constexpr int MaxLights = 4;
+constexpr int MaxLights = 8;
 
 struct Light
 {
@@ -57,8 +57,10 @@ struct CommonUniforms
 	float DeltaTime; //4
 	float CurveAmount; //8
 	float CurvePower; //12
-	int CurveEnabled; //16
-	int Toon; //20
+	bool CurveEnabled; //16
+	char _a[3];
+	bool Toon; //20
+	char _b[3];
 	glm::uvec2 ScreenRes; //24
 	glm::mat4 View; //32
 	glm::mat4 Projection; //96

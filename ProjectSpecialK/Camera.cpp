@@ -38,11 +38,6 @@ void Camera::Angles(const glm::vec3& angles)
 	Update();
 }
 
-void Camera::Offset(const glm::vec3& offset)
-{
-	_offset = offset;
-	Update();
-}
 void Camera::Distance(float distance)
 {
 	_distance = distance;
@@ -58,13 +53,11 @@ void Camera::SwapYZ(bool swapYZ)
 void Camera::Set(
 	const glm::vec3& target,
 	const glm::vec3& angles,
-	const glm::vec3& offset,
 	float distance
 )
 {
 	_target = target;
 	_angles = angles;
-	_offset = offset;
 	_distance = distance;
 	Update();
 }
@@ -72,7 +65,7 @@ void Camera::Set(
 void Camera::Update()
 {
 	commonUniforms.InvView = (
-		glm::translate(_target + _offset)
+		glm::translate(_target)
 		* (glm::eulerAngleY(glm::radians(_angles.z)))
 		* (glm::eulerAngleX(glm::radians(-_angles.y)))
 		* (glm::eulerAngleZ(glm::radians(_angles.x)))
@@ -103,6 +96,7 @@ void Camera::Tick(float dt)
 	if (_tracking)
 	{
 		_target.x = _tracking->x;
+		_target.y = _tracking->y;
 		_target.z = _tracking->z;
 	}
 

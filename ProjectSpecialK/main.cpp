@@ -601,7 +601,7 @@ int main(int argc, char** argv)
 	}
 	if (!LoadCamera("cameras/field.json").empty())
 	{
-		MainCamera.Set(glm::vec3(0, 0, -6), glm::vec3(0, 110, 0), glm::vec3(0), 60);
+		MainCamera.Set(glm::vec3(0, 0, -6), glm::vec3(0, 110, 0), 60);
 	}
 
 	/*
