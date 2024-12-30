@@ -4,25 +4,26 @@
 
 unsigned int currentVAO = 0;
 
-struct MeshInABucket
-{
-	unsigned int VAO;
-	Shader* Shader;
-	TextureArray* Textures[4];
-	int Layer;
-	glm::vec3 Position;
-	glm::quat Rotation;
-	glm::mat4 Bones[MaxBones];
-	size_t BoneCount;
-	size_t Indices;
-};
-
-static constexpr int meshBucketSize = 32;
-static int meshesInBucket;
-static std::array<MeshInABucket, meshBucketSize> meshBucket;
-
 namespace MeshBucket
 {
+	static constexpr int meshBucketSize = 32;
+
+	struct MeshInABucket
+	{
+		unsigned int VAO;
+		Shader* Shader;
+		TextureArray* Textures[4];
+		int Layer;
+		glm::vec3 Position;
+		glm::quat Rotation;
+		glm::mat4 Bones[MaxBones];
+		size_t BoneCount;
+		size_t Indices;
+	};
+
+	static int meshesInBucket;
+	static std::array<MeshInABucket, meshBucketSize> meshBucket;
+
 	void Flush()
 	{
 		std::sort(meshBucket.begin(), meshBucket.begin() + meshesInBucket, [](const MeshInABucket& a, const MeshInABucket& b)
@@ -69,10 +70,6 @@ namespace MeshBucket
 				m.Shader->Set("model", model);
 			}
 
-			//for (auto j = 0; j < m.BoneCount; j++)
-			//{
-			//	m.Shader->Set(fmt::format("finalBonesMatrices[{}]", j), m.Bones[j]);
-			//}
 			m.Shader->Set("finalBonesMatrices", m.Bones[0], m.BoneCount);
 
 			for (auto j = 0; j < 4; j++)
