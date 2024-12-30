@@ -120,6 +120,7 @@ void TitleScreen::Tick(float dt)
 			musicManager.Play(town.Music);
 			LoadCamera("cameras/field.json");
 			MainCamera.Target(&(town.Villagers[0]->Position));
+			//dlgBox->Text(fmt::format("<color:1>Your NookCode is <color:2>{}<color:1>.", NookCode::Encode(0x543CA469, 0, 0)), 3);
 			iris->In();
 		}
 	}

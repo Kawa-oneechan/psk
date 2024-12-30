@@ -9,7 +9,6 @@ bool debuggerEnabled{ true };
 
 extern float uiTime, glTime;
 extern GLFWwindow* window;
-extern float boneTester;
 
 bool IsImGuiHovered()
 {
@@ -284,7 +283,6 @@ static void DoPlayer()
 	if (ImGui::Begin("Player"))
 	{
 		ImGui::InputInt("Bells", (int*)&thePlayer.Bells, 10, 100);
-		ImGui::DragFloat("BONE TESTER", &boneTester, 1.0, -359, 359);
 	}
 	ImGui::End();
 }

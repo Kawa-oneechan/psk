@@ -43,8 +43,8 @@ private:
 	static const int _maxFurnitureItems = 8 * 4;
 	static const int _maxClothes = 8 * 3;
 
-	std::array<Texture*, 20> Textures;
-	std::array<Texture*, 4> ClothingTextures;
+	std::array<TextureArray*, 20> Textures;
+	std::array<TextureArray*, 4> ClothingTextures;
 
 #ifndef DEBUG
 	int face{ 0 }, mouth{ 0 };

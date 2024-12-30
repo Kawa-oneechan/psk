@@ -2,14 +2,133 @@
 #include "Model.h"
 #include "support/ufbx.h"
 
-float boneTester = 0.0f;
+unsigned int currentVAO = 0;
+
+struct MeshInABucket
+{
+	unsigned int VAO;
+	Shader* Shader;
+	TextureArray* Textures[4];
+	int Layer;
+	glm::vec3 Position;
+	glm::quat Rotation;
+	glm::mat4 Bones[MaxBones];
+	size_t BoneCount;
+	size_t Indices;
+};
+
+static constexpr int meshBucketSize = 32;
+static int meshesInBucket;
+static std::array<MeshInABucket, meshBucketSize> meshBucket;
+
+namespace MeshBucket
+{
+	void Flush()
+	{
+		std::sort(meshBucket.begin(), meshBucket.begin() + meshesInBucket, [](const MeshInABucket& a, const MeshInABucket& b)
+		{
+			if (a.Shader < b.Shader)
+				return true;
+			else if (a.Shader > b.Shader)
+				return false;
+			else if (a.Textures[0] < b.Textures[0])
+				return true;
+			else if (a.Textures[0] > b.Textures[0])
+				return false;
+			else if (a.Layer < b.Layer)
+				return true;
+			else
+				return false;
+		});
+
+		unsigned int currentShader = (unsigned int)-1;
+		glm::vec3 currentPos;
+		glm::quat currentRot;
+		unsigned int currentTextures[4]{ currentShader, currentShader, currentShader, currentShader };
+		int currentLayer = -1;
+
+		for (auto i = 0; i < meshesInBucket; i++)
+		{
+			auto& m = meshBucket[i];
+			if (m.Shader->ID != currentShader)
+			{
+				currentShader = m.Shader->ID;
+				m.Shader->Use();
+			}
+
+			if (m.Position != currentPos || m.Rotation != currentRot)
+			{
+				currentPos = m.Position;
+				currentRot = m.Rotation;
+
+				auto t = glm::translate(glm::mat4(1), m.Position);
+				auto r = (glm::mat4)m.Rotation;
+				//auto s = glm::scale(glm::mat4(1), scale);
+				auto model = t * r; //* s;
+
+				m.Shader->Set("model", model);
+			}
+
+			//for (auto j = 0; j < m.BoneCount; j++)
+			//{
+			//	m.Shader->Set(fmt::format("finalBonesMatrices[{}]", j), m.Bones[j]);
+			//}
+			m.Shader->Set("finalBonesMatrices", m.Bones[0], m.BoneCount);
+
+			for (auto j = 0; j < 4; j++)
+			{
+				if (m.Textures[j]->ID != currentTextures[j])
+				{
+					currentTextures[j] = m.Textures[j]->ID;
+					m.Textures[j]->Use(j);
+				}
+			}
+
+			if (m.Layer != currentLayer)
+			{
+				currentLayer = m.Layer;
+				m.Shader->Set("layer", m.Layer);
+			}
+
+			if (m.VAO != currentVAO)
+			{
+				currentVAO = m.VAO;
+				glBindVertexArray(m.VAO);
+			}
+			glDrawElements(GL_TRIANGLES, (GLsizei)m.Indices, GL_UNSIGNED_INT, 0);
+		}
+
+		glBindVertexArray(0);
+		currentVAO = 0;
+
+		meshesInBucket = 0;
+		std::memset(&meshBucket, 0, sizeof(MeshInABucket) * meshBucketSize);
+	}
+
+	void Draw(unsigned int vao, TextureArray* textures[], int layer, Shader* shader, const glm::vec3& position, const glm::quat& rotation, const glm::mat4 bones[], size_t indices, size_t boneCt)
+	{
+		meshBucket[meshesInBucket].VAO = vao;
+		meshBucket[meshesInBucket].Shader = shader;
+		meshBucket[meshesInBucket].Position = position;
+		meshBucket[meshesInBucket].Rotation = rotation;
+		meshBucket[meshesInBucket].Indices = indices;
+		meshBucket[meshesInBucket].BoneCount = boneCt;
+		meshBucket[meshesInBucket].Layer = layer;
+		for (auto i = 0; i < 4; i++)
+			meshBucket[meshesInBucket].Textures[i] = textures[i];
+		for (auto i = 0; i < MaxBones; i++)
+			meshBucket[meshesInBucket].Bones[i] = bones[i];
+
+		meshesInBucket++;
+		if (meshesInBucket == meshBucketSize)
+			Flush();
+	};
+}
 
 static std::map<std::string, std::tuple<Model*, int>> cache;
 extern Shader* modelShader;
 
 static std::map<std::string, unsigned int> matMap;
-
-unsigned int currentVAO = 0;
 
 Model::Mesh::Mesh(ufbx_mesh* mesh, std::vector<Bone>& bones) : Texture(-1), Visible(true)
 {
@@ -204,16 +323,6 @@ Model::Mesh::Mesh(ufbx_mesh* mesh, std::vector<Bone>& bones) : Texture(-1), Visi
 	glEnableVertexAttribArray(5);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-}
-
-const void Model::Mesh::Draw()
-{
-	//if (currentVAO != VAO)
-	{
-		glBindVertexArray(VAO);
-		currentVAO = VAO;
-	}
-	glDrawElements(GL_TRIANGLES, (GLsizei)indices.size(), GL_UNSIGNED_INT, 0);
 }
 
 #pragma warning(push)
@@ -429,34 +538,23 @@ Model::Model(const std::string& modelPath) : file(modelPath)
 
 void Model::Draw(Shader* shader, const glm::vec3& pos, float yaw, int mesh)
 {
-	shader->Use();
-
-	//auto projection = glm::perspective(glm::radians(45.0f), width / height, 0.1f, 100.0f);
-	//auto view = MainCamera.ViewMat();
-
-	glm::mat4 model = glm::mat4(1.0f);
-	model = glm::translate(model, pos);
-	model = glm::rotate(model, glm::radians(yaw), glm::vec3(0, 1, 0));
-	shader->Set("model", model);
-
 	/*
 	if (Bones.size() > 0)
 	{
 		//TEST TEST TEST TEST
 		auto head = FindBone("Head");
 		if (head != NoBone)
-			MoveBone(head, glm::vec3(0, boneTester, 0));
+			MoveBone(head, glm::vec3(0, glm::radians(11.0f), 0));
 		CalculateBoneTransform(0);
 		//TEST TEST TEST TEST
-
 	}
 	*/
 
-	if (Bones.size() > 0)
-		for (int i = 0; i < Bones.size(); i++)
-			shader->Set(fmt::format("finalBonesMatrices[{}]", i), finalBoneMatrices[i]);
-
 	int j = 0;
+	TextureArray* texs[4];
+	for (int i = 0; i < 4; i++)
+		texs[i] = nullptr;
+
 	for (auto& m : Meshes)
 	{
 		if (!m.Visible)
@@ -472,18 +570,18 @@ void Model::Draw(Shader* shader, const glm::vec3& pos, float yaw, int mesh)
 				if (Textures[texNum + i] == nullptr)
 				{
 					if (i == 0)
-						fallback.Use(0);
+						texs[0] = &fallback;
 					else
-						white.Use(i);
+						texs[i] = &white;
 				}
 				else
 				{
-					Textures[texNum + i]->Use(i);
+					texs[i] = Textures[texNum + i];
 				}
 			}
 		}
-		shader->Set("layer", TexArrayLayers[j]);
-		m.Draw();
+		glm::vec3 r(0, glm::radians(yaw), 0);
+		MeshBucket::Draw(m.VAO, texs, TexArrayLayers[j], shader, pos, glm::quat(r), finalBoneMatrices, m.Indices(), Bones.size());
 		j++;
 	}
 

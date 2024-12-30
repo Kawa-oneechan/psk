@@ -155,10 +155,16 @@ extern std::string UnQualify(const std::string& id);
 
 namespace NookCode
 {
-	std::string Encode(std::array<unsigned char, 8>& d);
-	std::string Encode(hash itemHash, int variant, int pattern);
-	std::array<unsigned char, 8> Decode(const std::string& code);
-	void Decode(const std::string& code, hash& itemHash, int& variant, int& pattern);
+	extern std::string Encode(std::array<unsigned char, 8>& d);
+	extern std::string Encode(hash itemHash, int variant, int pattern);
+	extern std::array<unsigned char, 8> Decode(const std::string& code);
+	extern void Decode(const std::string& code, hash& itemHash, int& variant, int& pattern);
+}
+
+namespace MeshBucket
+{
+	extern void Flush();
+	extern void Draw(unsigned int vao, TextureArray* textures[], int layer, Shader* shader, const glm::vec3& position, const glm::quat& rotation, const glm::mat4 bones[], size_t indices, size_t boneCt);
 }
 
 //Returns the CRC32 hash for the given text.

@@ -21,10 +21,11 @@ inline void kawa_glVertexAttribIPointer(GLuint index, GLint size, GLenum type, G
 #define glVertexAttribPointer kawa_glVertexAttribPointer
 #define glVertexAttribIPointer kawa_glVertexAttribIPointer
 
+//Max amount of bones in a mesh
+static constexpr int MaxBones = 50;
+
 class Model
 {
-	//Max amount of bones in a mesh
-	static constexpr int MaxBones = 50;
 	//Max amount of bones and weights per vertex
 	static constexpr int MaxWeights = 4;
 	//No bone assigned or found
@@ -51,10 +52,11 @@ class Model
 	class Mesh
 	{
 	private:
-		unsigned int VBO, VAO, EBO;
+		unsigned int VBO, EBO;
 		std::vector<Vertex> vertices;
 		std::vector<unsigned int> indices;
 	public:
+		unsigned int VAO;
 		int Texture;
 		bool Visible;
 		hash Hash;
@@ -62,6 +64,7 @@ class Model
 
 		Mesh(ufbx_mesh* mesh, std::vector<Bone>& bones);
 		const void Draw();
+		const size_t Indices() { return indices.size(); }
 	};
 
 private:
@@ -71,10 +74,10 @@ private:
 
 public:
 	std::vector<Mesh> Meshes;
-	std::array<Texture*, 32> Textures;
+	std::array<TextureArray*, 32> Textures;
 	std::array<int, 8> TexArrayLayers;
 	std::vector<Bone> Bones;
-	glm::mat4 finalBoneMatrices[Model::MaxBones];
+	glm::mat4 finalBoneMatrices[MaxBones];
 
 	const bool IsSkinned() const { return Bones.size() > 0; }
 

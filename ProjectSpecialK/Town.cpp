@@ -278,6 +278,7 @@ void Town::drawWorker(float dt)
 
 	for (const auto& v : town.Villagers)
 		v->Draw(dt * timeScale);
+	//MeshBucket::Flush();
 
 	//just doing a single _fake_ acre, no whammies...
 	groundTile->Textures[0] = groundTextureAlbs;
@@ -291,6 +292,7 @@ void Town::drawWorker(float dt)
 			groundTile->Draw(modelShader, glm::vec3(x * 10, tile.Elevation * 10, y * 10));
 		}
 	}
+	MeshBucket::Flush();
 
 	glDisable(GL_DEPTH_TEST);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);

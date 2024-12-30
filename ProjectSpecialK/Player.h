@@ -17,8 +17,8 @@ private:
 	ModelP _topsModel, _bottomsModel, _onePieceModel;
 	ModelP _hatModel, _glassesModel, _maskModel, _shoesModel, _bagModel;
 
-	std::array<Texture*, 20> Textures;
-	std::array<Texture*, 32> ClothingTextures;
+	std::array<TextureArray*, 20> Textures;
+	std::array<TextureArray*, 32> ClothingTextures;
 	glm::vec4 skinColor, hairColor, eyeColor;
 	
 	unsigned char _birthday[2]{ 26, 6 };

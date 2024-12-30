@@ -119,6 +119,11 @@ namespace Sprite
 		currentShader->Use();
 		currentTexture->Use(0);
 
+		glm::mat4 orthoProjection = glm::ortho(0.0f, (float)width, (float)height, 0.0f, -1.0f, 1.0f);
+		currentShader->Use();
+		currentShader->Set("image", 0);
+		currentShader->Set("projection", orthoProjection);
+
 		glUniformMatrix4fv(glGetUniformLocation(currentShader->ID, "model"), instanceCursor, GL_FALSE, &models[0][0][0]);
 		glUniform4fv(glGetUniformLocation(currentShader->ID, "sourceRect"), instanceCursor, &sourceRects[0][0]);
 		glUniform4fv(glGetUniformLocation(currentShader->ID, "spriteColor"), instanceCursor, &spriteColors[0][0]);
@@ -131,19 +136,12 @@ namespace Sprite
 			currentVAO = quadVAO;
 		}
 		glDrawElementsInstanced(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0, instanceCursor);
-		//glBindVertexArray(0);
 		instanceCursor = 0;
 	}
 
 	void DrawSprite(Shader* shader, Texture& texture, glm::vec2 position, glm::vec2 size, glm::vec4 srcRect, float rotate, const glm::vec4& color, SpriteFlags flags)
 	{
 		if (!initialized) Initialize();
-
-		glm::mat4 orthoProjection = glm::ortho(0.0f, (float)width, (float)height, 0.0f, -1.0f, 1.0f);
-
-		shader->Use();
-		shader->Set("image", 0);
-		shader->Set("projection", orthoProjection);
 
 		glm::mat4 model = glm::mat4(1.0f);
 		model = glm::translate(model, glm::vec3(position, 0));

@@ -474,6 +474,8 @@ Shader* skyShader;
 Background* rainLayer;
 Iris* iris;
 
+//extern int GetLetterScore(const std::string& text, bool checkSpaces = true);
+
 int main(int argc, char** argv)
 {
 	setlocale(LC_ALL, "en_US.UTF-8");
@@ -507,6 +509,10 @@ int main(int argc, char** argv)
 	glfwInit();
 
 	//test
+	//GetLetterScore(u8"Hello friend Bob. How are you? See ya!"); //should be 101
+	//GetLetterScore(u8"こんにちは、ボブさん。元気ですか？またね！", false); //should be 40
+	//GetLetterScore("L!L!L!L!L!L! L!L!L!L!L!L!L! L!L!L!L!L!L!L! L!L!L!L!L!L! L!L!L!L!L!L!L! L!L!L!L!L!L!L!L!L!L!L!L! L!L!L!L!L!L!L!L!L! L!L!L!L! L!L!L!L! L!L!L! L!L!L! L!L!L!"); //should be 710
+	//GetLetterScore("!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i"); //should be -820
 	/*
 	{
 		town.StartNewDay();
@@ -629,7 +635,7 @@ int main(int argc, char** argv)
 
 	tickables.push_back(new TitleScreen());
 
-	//auto layoutOverlay = new Texture("layoutoverlay.png");
+	auto layoutOverlay = new Texture("layoutoverlay.png");
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -650,7 +656,8 @@ int main(int argc, char** argv)
 		commonUniforms.TotalTime += dt;
 		commonUniforms.DeltaTime = dt;
 
-		glClear(GL_DEPTH_BUFFER_BIT);
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
 		//important: disable depth testing to allow multiple sprites to overlap.
 		glDisable(GL_DEPTH_TEST);
@@ -764,7 +771,7 @@ int main(int argc, char** argv)
 #endif
 
 		//turn depth testing back on for 3D shit
-		glEnable(GL_DEPTH_TEST);
+		//glEnable(GL_DEPTH_TEST);
 
 		cursor->Draw();
 		Sprite::FlushBatch();
