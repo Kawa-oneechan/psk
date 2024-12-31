@@ -1,9 +1,7 @@
 {
 	"mGrass": {
 		"shader": "grass",
-		"albedo": "design*_alb.png",
-		"mix": "design*_mix.png",
-		"normal": "design*_nrm.png",
-		"opacity": "grasscolors.png" //not opacity
+		//Albedo, mix, and normal maps are handled by the game.
+		"opacity": "grasscolors.png" //piggyback into opacity.
 	}
 }

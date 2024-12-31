@@ -134,6 +134,7 @@ Model::Mesh::Mesh(ufbx_mesh* mesh, std::vector<Bone>& bones) : Visible(true)
 	Hash = GetCRC(mesh->name.data);
 	Name = mesh->name.data;
 	Shader = modelShader; //by default
+	std::fill_n(Textures, 4, nullptr);
 
 	std::vector<unsigned int> tri_indices;
 	tri_indices.resize(mesh->max_face_triangles * 3);
@@ -557,39 +558,13 @@ Model::Model(const std::string& modelPath) : file(modelPath)
 						if (mat["opacity"])
 							m.Textures[3] = new TextureArray(basePath + mat["opacity"]->AsString());
 
-						debprint(0, "* #{}: {} > {}",  matCt, node->name.data, m1);
 						foundIt = true;
 						break;
 					}
 				}
-				if (!foundIt)
-					debprint(0, "* #{}: {} > {} (Unmapped)", matCt, node->name.data, m1);
+				debprint(0, "* #{}: {} > {}{}", matCt, node->name.data, m1, foundIt ? "" : " (Unmapped)");
 				matCt++;
 			}
-			/*
-			m.Texture = -1;
-			if (node->mesh->materials.count > 0)
-			{
-				auto& m1 = node->mesh->materials[0]->name.data;
-				auto foundIt = false;
-				for (auto it : matMap)
-				{
-					if (it.first == m1)
-					{
-						//m.Texture = it.second;
-						debprint(0, "* {} ({} > {})", node->name.data, it.first, it.second);
-						foundIt = true;
-						break;
-					}
-				}
-				if (!foundIt)
-				{
-					//m.Texture = matCt;
-					debprint(0, "* {} (#{})", node->name.data, matCt);
-					matCt++;
-				}
-			}
-			*/
 			Meshes.emplace_back(m);
 		}
 	}

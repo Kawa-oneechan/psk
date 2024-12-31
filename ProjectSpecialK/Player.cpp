@@ -149,10 +149,9 @@ void Player::SetMouth(int index)
 	mouth = clamp(index, 0, 8);
 }
 
-extern Shader* modelShader;
 void Player::Draw(double)
 {
-	if (_model == nullptr)
+	if (!_model)
 		LoadModel();
 
 	//TODO: do here what I just did in Villager::Draw.

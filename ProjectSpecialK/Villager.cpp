@@ -276,7 +276,6 @@ void Villager::SetMouth(int index)
 	mouth = clamp(index, 0, 8);
 }
 
-extern Shader* modelShader;
 void Villager::Draw(double)
 {
 	if (_model == nullptr)
