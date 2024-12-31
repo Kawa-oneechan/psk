@@ -36,6 +36,7 @@ extern unsigned int commonBuffer;
 
 float grassColor = 0.5f;
 
+/*
 TextureArray* groundTextureAlbs{ nullptr };
 TextureArray* groundTextureNrms{ nullptr };
 TextureArray* groundTextureMixs{ nullptr };
@@ -43,6 +44,7 @@ TextureArray* cliffSideAlb{ nullptr };
 TextureArray* cliffSideNrm{ nullptr };
 TextureArray* grassColors{ nullptr };
 TextureArray* snowMix{ nullptr };
+*/
 
 Shader* grassShader;
 
@@ -61,9 +63,9 @@ static void LoadModels()
 
 		for (auto& mesh : model->Meshes)
 		{
-			if (mesh.Name.find("_mGrass") != std::string::npos)
+			/*if (mesh.Name.find("_mGrass") != std::string::npos)
 				mesh.Shader = grassShader;
-			else if (mesh.Name == "GrassOP__mGrassCliffXlu" || mesh.Name == "PGrassBA__mProcGrass")
+			else*/ if (mesh.Name == "GrassOP__mGrassCliffXlu" || mesh.Name == "PGrassBA__mProcGrass")
 				mesh.Visible = false;
 		}
 	}
@@ -351,41 +353,24 @@ void Town::drawWorker(float dt)
 			//probably got the x/y flipped lol we'll see
 			auto tile = Terrain[(y * Width) + x];
 			auto model = tileModels[tile.Model];
-			model->Textures[0] = groundTextureAlbs;
-			model->Textures[1] = groundTextureNrms;
-			model->Textures[2] = groundTextureMixs;
-			if (tile.Type == 0 && (grassColor < 0.025f || grassColor > 0.87f))
-				model->Textures[2] = snowMix;
-			model->Textures[3] = grassColors;
-			model->TexArrayLayers[0] = tile.Type;
+			//model->Textures[0] = groundTextureAlbs;
+			//model->Textures[1] = groundTextureNrms;
+			//model->Textures[2] = groundTextureMixs;
+			//if (tile.Type == 0 && (grassColor < 0.025f || grassColor > 0.87f))
+			//	model->Textures[2] = snowMix;
+			//model->Textures[3] = grassColors;
+			//model->TexArrayLayers[0] = tile.Type;
 
 			auto pos = glm::vec3(x * 10, tile.Elevation * ElevationHeight, y * 10);
 			auto rot = tile.Rotation * 90.0f;
 
 			if (tile.Model > 0 && tile.Model <= 44)
 			{
-				model->Textures[4] = cliffSideAlb;
-				model->Textures[5] = cliffSideNrm;
+				//model->Textures[4] = cliffSideAlb;
+				//model->Textures[5] = cliffSideNrm;
 			}
 			
 			model->Draw(pos, rot);
-			/*
-			if (tile.Model == 0)
-			{
-				model->Draw(grassShader, pos, rot, 0);
-			}
-			else if (tile.Model <= 44)
-			{
-				model->Textures[4] = cliffSideAlb;
-				model->Textures[5] = cliffSideNrm;
-				//TODO: make a Model::AttachShader(mesh, shader) and remove the shader parameter from Model::Draw.
-				//That'll also remove -V525
-				model->Draw(modelShader, pos, rot, 0);
-				model->Draw(grassShader, pos, rot, 1);
-				model->Draw(grassShader, pos, rot, 3);
-			}
-			//Handle river tiles
-			*/
 		}
 	}
 	MeshBucket::Flush();
@@ -401,6 +386,7 @@ void Town::drawWorker(float dt)
 
 void Town::Draw(float dt)
 {
+	/*
 	if (groundTextureAlbs == nullptr)
 	{
 		std::vector<std::string> groundAlbs, groundNrms, groundMixs;
@@ -419,6 +405,7 @@ void Town::Draw(float dt)
 		grassColors = new TextureArray("field/ground/grasscolors.png", GL_CLAMP_TO_EDGE, GL_NEAREST);
 		snowMix = new TextureArray("field/ground/snow_mix.png");
 	}
+	*/
 	if (!tileModels[0])
 		LoadModels();
 	

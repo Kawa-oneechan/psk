@@ -155,9 +155,9 @@ void Player::Draw(double)
 	if (_model == nullptr)
 		LoadModel();
 
-	//TODO: set up and use playerModelShader instead, until it's time to do the clothes.
-	modelShader->Use();
+	//TODO: do here what I just did in Villager::Draw.
 
+	/*
 	//Body
 	_model->Textures[0] = Textures[0]; //-V1004 I know LoadModel doesn't actually *set* _model.
 	_model->Textures[1] = Textures[1];
@@ -187,6 +187,7 @@ void Player::Draw(double)
 	_model->Textures[16] = Textures[15];
 	_model->Textures[17] = Textures[16];
 	_model->Textures[18] = Textures[17];
+	*/
 
 	_model->TexArrayLayers[3] = face;
 	_model->TexArrayLayers[4] = mouth;
@@ -195,30 +196,34 @@ void Player::Draw(double)
 
 	if (_hairModel)
 	{
+		/*
 		_hairModel->Textures[0] = Textures[18];
 		_hairModel->Textures[1] = Textures[19];
 		_hairModel->Textures[2] = Textures[20];
+		*/
 		_hairModel->Draw();
 	}
 
 	if (_shoesModel && Shoes)
 	{
+		/*
 		_shoesModel->Textures[0] = ClothingTextures[8];
 		_shoesModel->Textures[1] = ClothingTextures[9];
 		_shoesModel->Textures[2] = ClothingTextures[10];
 		_shoesModel->Textures[3] = ClothingTextures[11];
-
+		*/
 		_shoesModel->TexArrayLayers[0] = Shoes->Variant();
 		_shoesModel->Draw();
 	}
 
 	if (_onePieceModel && OnePiece)
 	{
+		/*
 		_onePieceModel->Textures[0] = ClothingTextures[0];
 		_onePieceModel->Textures[1] = ClothingTextures[1];
 		_onePieceModel->Textures[2] = ClothingTextures[2];
 		_onePieceModel->Textures[3] = ClothingTextures[3];
-
+		*/
 		_onePieceModel->TexArrayLayers[0] = OnePiece->Variant();
 		_onePieceModel->Draw();
 	}
@@ -226,21 +231,23 @@ void Player::Draw(double)
 	{
 		if (_bottomsModel && Bottoms)
 		{
+			/*
 			_bottomsModel->Textures[0] = ClothingTextures[4];
 			_bottomsModel->Textures[1] = ClothingTextures[5];
 			_bottomsModel->Textures[2] = ClothingTextures[6];
 			_bottomsModel->Textures[3] = ClothingTextures[7];
-
+			*/
 			_bottomsModel->TexArrayLayers[0] = Bottoms->Variant();
 			_bottomsModel->Draw();
 		}
 		if (_topsModel && Tops)
 		{
+			/*
 			_topsModel->Textures[0] = ClothingTextures[0];
 			_topsModel->Textures[1] = ClothingTextures[1];
 			_topsModel->Textures[2] = ClothingTextures[2];
 			_topsModel->Textures[3] = ClothingTextures[3];
-
+			*/
 			_topsModel->TexArrayLayers[0] = Tops->Variant();
 			_topsModel->Draw();
 		}

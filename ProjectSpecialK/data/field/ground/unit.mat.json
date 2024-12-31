@@ -1,0 +1,10 @@
+{
+	"mGrass": {
+		"slot": 0,
+		"shader": "grass",
+		"albedo": "design*_alb.png",
+		"mix": "design*_mix.png",
+		"normal": "design*_nrm.png",
+		"opacity": "grasscolors.png" //not opacity
+	}
+}

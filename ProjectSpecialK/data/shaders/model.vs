@@ -10,11 +10,6 @@ out vec3 FragPos;
 out vec3 Normal;
 out vec3 Tangent;
 
-//TODO: uniform these, probably in Common.
-//const float curveAmount = 0.005;
-//const float curvePower = 1.75;
-//const bool enableCurve = true;
-
 #include "common.fs"
 
 uniform mat4 model;

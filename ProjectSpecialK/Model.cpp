@@ -125,10 +125,11 @@ namespace MeshBucket
 
 static std::map<std::string, std::tuple<Model*, int>> cache;
 extern Shader* modelShader;
+extern Shader* grassShader;
 
-static std::map<std::string, unsigned int> matMap;
+//static std::map<std::string, unsigned int> matMap;
 
-Model::Mesh::Mesh(ufbx_mesh* mesh, std::vector<Bone>& bones) : Texture(-1), Visible(true)
+Model::Mesh::Mesh(ufbx_mesh* mesh, std::vector<Bone>& bones) : Visible(true)
 {
 	Hash = GetCRC(mesh->name.data);
 	Name = mesh->name.data;
@@ -340,9 +341,10 @@ static glm::mat4 ufbxToGlmMat4(const ufbx_matrix& mat)
 
 Model::Model(const std::string& modelPath) : file(modelPath)
 {
-	Textures.fill(nullptr);
+	//Textures.fill(nullptr);
 	TexArrayLayers.fill(0);
 
+	/*
 	if (matMap.empty())
 	{
 		auto mapJson = VFS::ReadJSON("matmap.json");
@@ -352,6 +354,7 @@ Model::Model(const std::string& modelPath) : file(modelPath)
 		}
 		delete mapJson;
 	}
+	*/
 
 	auto c = cache.find(modelPath);
 	if (c != cache.end())
@@ -373,8 +376,28 @@ Model::Model(const std::string& modelPath) : file(modelPath)
 	ufbx_scene *scene = ufbx_load_memory(vfsData.get(), vfsSize, &options, &errors);
 	if (!scene)
 		FatalError(fmt::format("Could not load scene {}: {}", modelPath, errors.description.data));
-
+	
 	debprint(5, "Loading {}\n-------------------------------", modelPath);
+
+	auto basePath = modelPath.substr(0, modelPath.rfind('/') + 1);
+	auto matMapFile = modelPath.substr(0, modelPath.rfind('.')) + ".mat.json";
+	auto matMap = VFS::ReadJSON(matMapFile);
+	if (!matMap)
+	{
+		matMapFile = matMapFile.substr(0, modelPath.rfind('/')) + "/default.mat.json";
+		matMap = VFS::ReadJSON(matMapFile);
+		while (!matMap)
+		{
+			if (matMapFile.find('/') != std::string::npos)
+			{
+				//FatalError("No material map? How?");
+				matMap = JSON::Parse("{}");
+				break;
+			}
+			matMapFile = matMapFile.substr(0, matMapFile.rfind('/'));
+			matMapFile = matMapFile.substr(0, matMapFile.rfind('/')) + "/default.mat.json";
+		}
+	}
 
 	debprint(5, "Materials:");
 	for (auto m : scene->materials)
@@ -504,6 +527,46 @@ Model::Model(const std::string& modelPath) : file(modelPath)
 		if (node->mesh)
 		{
 			auto m = Mesh(node->mesh, Bones);
+			m.Shader = modelShader;
+			m.Textures[0] = &fallback;
+			m.Textures[1] = &white;
+			m.Textures[2] = &white;
+			m.Textures[3] = &white;
+
+			if (node->mesh->materials.count > 0)
+			{
+				auto& m1 = node->mesh->materials[0]->name.data;
+				bool foundIt = false;
+				for (auto it : matMap->AsObject())
+				{
+					if (it.first == m1)
+					{
+						auto mat = it.second->AsObject();
+						if (mat["shader"])
+						{
+							auto s = mat["shader"]->AsString();
+							if (s == "grass")
+								m.Shader = grassShader;
+						}
+						if (mat["albedo"])
+							m.Textures[0] = new TextureArray(basePath + mat["albedo"]->AsString());
+						if (mat["normal"])
+							m.Textures[1] = new TextureArray(basePath + mat["normal"]->AsString());
+						if (mat["mix"])
+							m.Textures[2] = new TextureArray(basePath + mat["mix"]->AsString());
+						if (mat["opacity"])
+							m.Textures[3] = new TextureArray(basePath + mat["opacity"]->AsString());
+
+						debprint(0, "* #{}: {} > {}",  matCt, node->name.data, m1);
+						foundIt = true;
+						break;
+					}
+				}
+				if (!foundIt)
+					debprint(0, "* #{}: {} > {} (Unmapped)", matCt, node->name.data, m1);
+				matCt++;
+			}
+			/*
 			m.Texture = -1;
 			if (node->mesh->materials.count > 0)
 			{
@@ -513,7 +576,7 @@ Model::Model(const std::string& modelPath) : file(modelPath)
 				{
 					if (it.first == m1)
 					{
-						m.Texture = it.second;
+						//m.Texture = it.second;
 						debprint(0, "* {} ({} > {})", node->name.data, it.first, it.second);
 						foundIt = true;
 						break;
@@ -521,11 +584,12 @@ Model::Model(const std::string& modelPath) : file(modelPath)
 				}
 				if (!foundIt)
 				{
-					m.Texture = matCt;
+					//m.Texture = matCt;
 					debprint(0, "* {} (#{})", node->name.data, matCt);
 					matCt++;
 				}
 			}
+			*/
 			Meshes.emplace_back(m);
 		}
 	}
@@ -564,6 +628,7 @@ void Model::Draw(const glm::vec3& pos, float yaw, int mesh)
 			continue;
 		}
 
+		/*
 		if (m.Texture != -1 && m.Texture < Textures.size())
 		{
 			auto texNum = m.Texture * 4;
@@ -582,8 +647,10 @@ void Model::Draw(const glm::vec3& pos, float yaw, int mesh)
 				}
 			}
 		}
+		*/
 		glm::vec3 r(0, glm::radians(yaw), 0);
-		MeshBucket::Draw(m.VAO, texs, TexArrayLayers[j], m.Shader, pos, glm::quat(r), finalBoneMatrices, m.Indices(), Bones.size());
+		//MeshBucket::Draw(m.VAO, texs, TexArrayLayers[j], m.Shader, pos, glm::quat(r), finalBoneMatrices, m.Indices(), Bones.size());
+		MeshBucket::Draw(m.VAO, m.Textures, TexArrayLayers[j], m.Shader, pos, glm::quat(r), finalBoneMatrices, m.Indices(), Bones.size());
 		j++;
 	}
 

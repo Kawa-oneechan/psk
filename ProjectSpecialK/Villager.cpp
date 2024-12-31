@@ -282,24 +282,11 @@ void Villager::Draw(double)
 	if (_model == nullptr)
 		LoadModel();
 
-	modelShader->Use();
-
-	//Body/capvis
-	_model->Textures[0] = Textures[0];
-	_model->Textures[1] = Textures[1];
-	_model->Textures[2] = Textures[2];
-	//Eyes
-	_model->Textures[4] = Textures[6];
-	_model->Textures[5] = Textures[7];
-	_model->Textures[6] = Textures[8];
-	//Mouth
-	_model->Textures[8] = Textures[9];
-	_model->Textures[9] = Textures[10];
-	_model->Textures[10] = Textures[11];
-	//Cap
-	_model->Textures[12] = Textures[12];
-	_model->Textures[13] = Textures[13];
-	_model->Textures[14] = Textures[14];
+	std::copy(&Textures[0], &Textures[2], _model->GetMesh("Body__mBody").Textures);
+	std::copy(&Textures[0], &Textures[2], _model->GetMesh("Body__mCapVis").Textures);
+	std::copy(&Textures[6], &Textures[8], _model->GetMesh("Body__mEye").Textures);
+	std::copy(&Textures[9], &Textures[11], _model->GetMesh("Body__mMouth").Textures);
+	//std::copy(&Textures[12], &Textures[14], _model->GetMesh("???").Textures);
 
 	_model->TexArrayLayers[2] = face;
 	_model->TexArrayLayers[3] = mouth;
@@ -310,17 +297,14 @@ void Villager::Draw(double)
 	{
 		if (_accessoryType == AccessoryType::Body)
 		{
-			for (auto i = 0; i < 3; i++)
-				_accessoryModel->Textures[i] = Textures[i];
+			std::copy(&Textures[0], &Textures[2], _accessoryModel->GetMesh(0).Textures);
 		}
 		else
 		{
-			for (auto i = 0; i < 3; i++)
-				_accessoryModel->Textures[i] = Textures[12 + i];
+			std::copy(&Textures[12], &Textures[14], _accessoryModel->GetMesh(0).Textures);
 			if (_accessoryType == AccessoryType::GlassAlpha)
 			{
-				for (auto i = 0; i < 4; i++)
-					_accessoryModel->Textures[4 + i] = Textures[16 + i];
+				std::copy(&Textures[16], &Textures[20], _accessoryModel->GetMesh(1).Textures);
 			}
 		}
 		_accessoryModel->Draw(Position, Facing);
@@ -328,11 +312,7 @@ void Villager::Draw(double)
 
 	if (_clothingModel && Clothing)
 	{
-		_clothingModel->Textures[0] = ClothingTextures[0];
-		_clothingModel->Textures[1] = ClothingTextures[1];
-		_clothingModel->Textures[2] = ClothingTextures[2];
-		_clothingModel->Textures[3] = ClothingTextures[3];
-
+		std::copy(&ClothingTextures[0], &ClothingTextures[3], _clothingModel->GetMesh(0).Textures);
 		_clothingModel->TexArrayLayers[0] = Clothing->Variant();
 		_clothingModel->Draw(Position, Facing);
 	}

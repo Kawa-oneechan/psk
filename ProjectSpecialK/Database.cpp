@@ -181,6 +181,10 @@ namespace Database
 		target.reserve(entries.size());
 		for (const auto& entry : entries)
 		{
+			auto kek = entry.path.substr(entry.path.length() - 9);
+			if (kek == ".mat.json")
+				continue;
+
 			auto doc = VFS::ReadJSON(entry.path);
 
 			if (doc != nullptr)

@@ -57,7 +57,8 @@ class Model
 		std::vector<unsigned int> indices;
 	public:
 		unsigned int VAO;
-		int Texture;
+		//int Texture;
+		TextureArray* Textures[4];
 		bool Visible;
 		hash Hash;
 		std::string Name;
@@ -75,7 +76,7 @@ private:
 
 public:
 	std::vector<Mesh> Meshes;
-	std::array<TextureArray*, 32> Textures;
+	//std::array<TextureArray*, 32> Textures;
 	std::array<int, 8> TexArrayLayers;
 	std::vector<Bone> Bones;
 	glm::mat4 finalBoneMatrices[MaxBones];
