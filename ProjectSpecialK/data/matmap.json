@@ -36,5 +36,9 @@
 	"mAccessory": 0,
 	"mAccessoryAlpha": 1,
 	"mBag": 0,
-	"mSoftmesh": 2
+	"mSoftmesh": 2,
+	
+	//Ground
+	"mGrass": 0,
+	"mCliff": 1
 }

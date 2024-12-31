@@ -6,6 +6,8 @@
 #include "ItemHotbar.h"
 #include "Model.h"
 
+static std::array<ModelP, 64> tileModels;
+
 float Map::GetHeight(const glm::vec3& pos)
 {
 	/*
@@ -21,6 +23,20 @@ float Map::GetHeight(const glm::vec3& pos)
 float Map::GetHeight(int x, int y)
 {
 	return GetHeight(glm::vec3(x, y, 100));
+}
+
+static void LoadModels()
+{
+	tileModels[0] = std::make_shared<::Model>("field/ground/unit.fbx");
+	tileModels[1] = std::make_shared<::Model>("field/ground/cliff-147.fbx");
+}
+
+void Map::WorkOutModels()
+{
+	if (!tileModels[0])
+		LoadModels();
+
+	//TODO
 }
 
 #ifdef DEBUG
@@ -75,8 +91,10 @@ extern Framebuffer* frameBuffer;
 
 extern unsigned int commonBuffer;
 
-ModelP groundTile;
-TextureArray* groundTextureAlbs;
+TextureArray* groundTextureAlbs{ nullptr };
+TextureArray* groundTextureNrms{ nullptr };
+TextureArray* cliffSideAlb{ nullptr };
+TextureArray* cliffSideNrm{ nullptr };
 
 Town::Town()
 {
@@ -88,17 +106,32 @@ Town::Town()
 	Width = AcreSize * 1;
 	Height = AcreSize * 1;
 
+	//TEST
 	Terrain = std::make_unique<LiveTerrainTile[]>(Width * Height);
 	for (int i = 0; i < Width; i++)
 	{
+		//Top
 		Terrain[i].Elevation = 1;
+		Terrain[i].Model = 1;
+		Terrain[i].Rotation = 1;
 	}
 	for (int i = 0; i < Height; i++)
 	{
+		//Left
 		Terrain[(i * Width)].Elevation = 1;
+		Terrain[(i * Width)].Model = 1;
+		Terrain[(i * Width)].Rotation = 2;
+		//Right
 		Terrain[(i * Width) + (Width - 1)].Elevation = 1;
+		Terrain[(i * Width) + (Width - 1)].Model = 1;
+		Terrain[(i * Width) + (Width - 1)].Rotation = 0;
 	}
+	Terrain[0].Model = 0; //left corner
+	Terrain[0].Rotation = 0;
+	Terrain[Width - 1].Model = 0; //right corner
+	Terrain[Width - 1].Rotation = 0;
 	Terrain[(4 * Width) + 2].Type = 1;
+	//end test
 
 	UseDrum = true;
 
@@ -138,6 +171,8 @@ void Town::Load()
 		//Nothing to load.
 		//TODO: DWI
 	}
+
+	WorkOutModels();
 }
 
 void Town::Save()
@@ -274,22 +309,42 @@ void Town::drawWorker(float dt)
 	glClear(GL_DEPTH_BUFFER_BIT);
 	glEnable(GL_DEPTH_TEST);
 	glPolygonMode(GL_FRONT_AND_BACK, wireframe ? GL_LINE : GL_FILL);
-	modelShader->Use();
+	//modelShader->Use();
+
+	auto grassShader = modelShader;
 
 	for (const auto& v : town.Villagers)
 		v->Draw(dt * timeScale);
 	//MeshBucket::Flush();
 
 	//just doing a single _fake_ acre, no whammies...
-	groundTile->Textures[0] = groundTextureAlbs;
 	for (int y = 0; y < AcreSize; y++)
 	{
 		for (int x = 0; x < AcreSize; x++)
 		{
 			//probably got the x/y flipped lol we'll see
 			auto tile = Terrain[(y * Width) + x];
-			groundTile->TexArrayLayers[0] = tile.Type;
-			groundTile->Draw(modelShader, glm::vec3(x * 10, tile.Elevation * 10, y * 10));
+			auto model = tileModels[tile.Model];
+			model->Textures[0] = groundTextureAlbs;
+			model->Textures[1] = groundTextureNrms;
+			model->TexArrayLayers[0] = tile.Type;
+			auto pos = glm::vec3(x * 10, tile.Elevation * ElevationHeight, y * 10);
+			auto rot = tile.Rotation * 90.0f;
+			if (tile.Model == 0)
+			{
+				model->Draw(grassShader, pos, rot, 0);
+			}
+			else if (tile.Model <= 44)
+			{
+				model->Textures[4] = cliffSideAlb;
+				model->Textures[5] = cliffSideNrm;
+				//TODO: make a Model::AttachShader(mesh, shader) and remove the shader parameter from Model::Draw.
+				//That'll also remove -V525
+				model->Draw(modelShader, pos, rot, 0);
+				model->Draw(grassShader, pos, rot, 1);
+				model->Draw(grassShader, pos, rot, 3);
+			}
+			//Handle river tiles
 		}
 	}
 	MeshBucket::Flush();
@@ -305,18 +360,22 @@ void Town::drawWorker(float dt)
 
 void Town::Draw(float dt)
 {
-	if (!groundTile)
+	if (groundTextureAlbs == nullptr)
 	{
-		groundTile = std::make_shared<::Model>("field/ground/unit.fbx");
-		std::vector<std::string> groundAlbs, groundMixs;
+		std::vector<std::string> groundAlbs, groundNrms;
 		for (auto& d : VFS::Enumerate("field/ground/design*_alb.png"))
 			groundAlbs.push_back(d.path);
-		//for (auto& d : VFS::Enumerate("field/ground/design*_alb.png"))
-		//	groundMixs.push_back(d.path);
+		for (auto& d : VFS::Enumerate("field/ground/design*_nrm.png"))
+			groundNrms.push_back(d.path);
 		//also add user designs somehow.
 		groundTextureAlbs = new TextureArray(groundAlbs);
+		groundTextureNrms = new TextureArray(groundNrms);
+		cliffSideAlb = new TextureArray("field/ground/cliff_alb.png");
+		cliffSideNrm = new TextureArray("field/ground/cliff_nrm.png");
 	}
-
+	if (!tileModels[0])
+		LoadModels();
+	
 	if (postFx)
 	{
 		frameBuffer->Use();

@@ -66,9 +66,10 @@ struct SavedTerrainTile
 struct LiveTerrainTile
 {
 	unsigned char Type;
-	unsigned char Variation;
+	unsigned char Model;
 	unsigned char Corners;
 	unsigned char Elevation;
+	unsigned char Rotation;
 };
 
 class Map : public Tickable
@@ -77,7 +78,7 @@ public:
 	//Size of an Acre in full tiles
 	static const int AcreSize = 16t;
 	//TEMP: how tall is a cliff face, roughly?
-	static const int ElevationHeight = 3;
+	static const int ElevationHeight = 15;
 
 	//Width of the town map in tiles
 	int Width{ 0 };
@@ -97,6 +98,8 @@ public:
 
 	bool CanOverrideMusic{ false };
 	std::string Music;
+
+	void WorkOutModels();
 
 	//Returns the height of the lowest point from the given coordinate.
 	float GetHeight(const glm::vec3& pos);

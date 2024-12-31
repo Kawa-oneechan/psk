@@ -557,7 +557,10 @@ void Model::Draw(Shader* shader, const glm::vec3& pos, float yaw, int mesh)
 		if (!m.Visible)
 			continue;
 		if (mesh != -1 && mesh != j)
+		{
+			j++;
 			continue;
+		}
 
 		if (m.Texture != -1 && m.Texture < Textures.size())
 		{
