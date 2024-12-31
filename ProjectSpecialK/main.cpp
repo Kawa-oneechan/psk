@@ -618,6 +618,7 @@ int main(int argc, char** argv)
 	town.Villagers.push_back(cat01);
 	MainCamera.Target(&cat01->Position);
 	cat01->Position = glm::vec3(30, 0, 30);
+	thePlayer.Position = glm::vec3(40, 0, 30);
 
 	commonUniforms.Projection = glm::perspective(glm::radians(45.0f), (float)width / (float)height, 0.1f, 300.0f);
 
@@ -684,48 +685,6 @@ int main(int argc, char** argv)
 		skyShader->Set("pitch", pitch);
 		cloudImage.Use(1);
 		starsImage.Use(2);
-
-		//TEST TEST TEST
-		if (town.Villagers.size() != 0)
-		{
-			auto mitz = town.Villagers[0];
-			auto facing = mitz->Facing;
-			auto anythingPressed = false;
-			
-			if (Inputs.Keys[(int)Binds::WalkS].State == 1)
-			{
-				facing = 0.0;
-				if (Inputs.Keys[(int)Binds::WalkE].State == 1)
-					facing = 45.0;
-				else if (Inputs.Keys[(int)Binds::WalkW].State == 1)
-					facing = 315.0; //-45
-				anythingPressed = true;
-			}
-			else if (Inputs.Keys[(int)Binds::WalkN].State == 1)
-			{
-				facing = 180.0;
-				if (Inputs.Keys[(int)Binds::WalkE].State == 1)
-					facing = 135.0;
-				else if (Inputs.Keys[(int)Binds::WalkW].State == 1)
-					facing = 225.0; //-135
-				anythingPressed = true;
-			}
-			else if (Inputs.Keys[(int)Binds::WalkE].State == 1)
-			{
-				facing = 90.0;
-				anythingPressed = true;
-			}
-			else if (Inputs.Keys[(int)Binds::WalkW].State == 1)
-			{
-				facing = 270.0f; //-90
-				anythingPressed = true;
-			}
-
-			if (anythingPressed)
-			{
-				mitz->Move(facing + MainCamera.Angles().z);
-			}
-		}
 
 		for (const auto& t : tickables)
 			t->Draw(dt * timeScale);

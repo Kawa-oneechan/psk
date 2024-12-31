@@ -1,0 +1,22 @@
+{
+	"mSkin": {
+		"shader": "playerskin"
+	},
+	"mEye": {
+		"shader": "playereyes"
+	},
+	"mMouth": {
+		"shader": "playermouth"
+	},
+	"mCheek": {
+		"shader": "playercheek"
+	},
+	"mNose": {
+	},
+	"mSocks": {
+		"shader": "playersocks"
+	},
+	"mPaint": {
+		"visible": false
+	}
+}

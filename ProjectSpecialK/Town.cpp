@@ -367,9 +367,10 @@ void Town::drawWorker(float dt)
 	grassShader->Set("color", grassColor);
 	UpdateGrass();
 
+	thePlayer.Draw(dt * timeScale);
 	for (const auto& v : town.Villagers)
 		v->Draw(dt * timeScale);
-	//MeshBucket::Flush();
+	MeshBucket::Flush();
 
 	//just doing a single _fake_ acre, no whammies...
 	for (int y = 0; y < AcreSize; y++)
@@ -379,23 +380,8 @@ void Town::drawWorker(float dt)
 			//probably got the x/y flipped lol we'll see
 			auto tile = Terrain[(y * Width) + x];
 			auto model = tileModels[tile.Model];
-			//model->Textures[0] = groundTextureAlbs;
-			//model->Textures[1] = groundTextureNrms;
-			//model->Textures[2] = groundTextureMixs;
-			//if (tile.Type == 0 && (grassColor < 0.025f || grassColor > 0.87f))
-			//	model->Textures[2] = snowMix;
-			//model->Textures[3] = grassColors;
-			//model->TexArrayLayers[0] = tile.Type;
-
 			auto pos = glm::vec3(x * 10, tile.Elevation * ElevationHeight, y * 10);
 			auto rot = tile.Rotation * 90.0f;
-
-			if (tile.Model > 0 && tile.Model <= 44)
-			{
-				//model->Textures[4] = cliffSideAlb;
-				//model->Textures[5] = cliffSideNrm;
-			}
-			
 			model->Draw(pos, rot);
 		}
 	}
@@ -463,6 +449,8 @@ void Town::Tick(float dt)
 			dateTimePanel->Show();
 		}
 	}
+
+	thePlayer.Tick(dt);
 }
 
 Town town;

@@ -276,7 +276,7 @@ void Villager::SetMouth(int index)
 	mouth = clamp(index, 0, 8);
 }
 
-void Villager::Draw(double)
+void Villager::Draw(float)
 {
 	if (_model == nullptr)
 		LoadModel();
@@ -315,6 +315,11 @@ void Villager::Draw(double)
 		_clothingModel->TexArrayLayers[0] = Clothing->Variant();
 		_clothingModel->Draw(Position, Facing);
 	}
+}
+
+void Villager::Tick(float)
+{
+	//TODO
 }
 
 void Villager::Turn(float facing)

@@ -34,6 +34,9 @@ public:
 	std::string Name{ "Mayor" };
 	Gender Gender{ Gender::BEnby };
 
+	glm::vec3 Position{ 0 };
+	float Facing{ 0 };
+
 	std::array<InventoryItemP, MaxOnHand> OnHand{ nullptr };
 	std::vector<InventoryItemP> Storage;
 	int OnHandLimit{ StartingOnHand };
@@ -59,7 +62,11 @@ public:
 	void SetFace(int face);
 	void SetMouth(int mouth);
 
-	void Draw(double dt);
+	void Draw(float dt);
+	void Tick(float dt);
+
+	void Turn(float facing);
+	bool Move(float facing);
 
 	//Returns true if the player has room in their inventory according to their current limit.
 	bool HasInventoryRoom();

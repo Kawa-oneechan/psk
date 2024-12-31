@@ -1,8 +1,15 @@
 #include "SpecialK.h"
+#include "InputsMap.h"
+
+#define GLM_ENABLE_EXPERIMENTAL
+#include "support/glm/gtx/rotate_vector.hpp"
 
 void Player::LoadModel()
 {
-
+	if (!_model)
+	{
+		_model = std::make_shared<::Model>("player/model.fbx");
+	}
 }
 
 ModelP Player::Model()
@@ -149,7 +156,38 @@ void Player::SetMouth(int index)
 	mouth = clamp(index, 0, 8);
 }
 
-void Player::Draw(double)
+
+void Player::Turn(float facing)
+{
+	auto m = Facing;
+	if (m < 0) m += 360.0f;
+
+	auto cw = facing - m;
+	if (cw < 0.0) cw += 360.0f;
+	auto ccw = m - facing;
+	if (ccw < 0.0) ccw += 360.0f;
+
+	auto t = (ccw < cw) ? -glm::min(10.0f, ccw) : glm::min(10.0f, cw);
+
+	auto f = m + t;
+	if (f < 0) f += 360.0f;
+
+	Facing = glm::mod(f, 360.0f);
+}
+
+bool Player::Move(float facing)
+{
+	Turn(facing);
+
+	const auto movement = glm::rotate(glm::vec2(0, 0.25f), glm::radians(Facing));
+
+	//TODO: determine collisions.
+	Position.x -= movement.x;
+	Position.z += movement.y;
+	return true;
+}
+
+void Player::Draw(float)
 {
 	if (!_model)
 		LoadModel();
@@ -191,7 +229,7 @@ void Player::Draw(double)
 	_model->TexArrayLayers[3] = face;
 	_model->TexArrayLayers[4] = mouth;
 
-	_model->Draw();
+	_model->Draw(Position, Facing);
 
 	if (_hairModel)
 	{
@@ -255,6 +293,46 @@ void Player::Draw(double)
 	//TODO: handle hats, glasses, masks, and bags.
 	//Note that certain "glasses" may cover the whole face and disable "masks".
 	//Or is that vice versa?
+}
+
+void Player::Tick(float dt)
+{
+	auto facing = Facing;
+	auto anythingPressed = false;
+
+	if (Inputs.Keys[(int)Binds::WalkS].State == 1)
+	{
+		facing = 0.0;
+		if (Inputs.Keys[(int)Binds::WalkE].State == 1)
+			facing = 45.0;
+		else if (Inputs.Keys[(int)Binds::WalkW].State == 1)
+			facing = 315.0; //-45
+		anythingPressed = true;
+	}
+	else if (Inputs.Keys[(int)Binds::WalkN].State == 1)
+	{
+		facing = 180.0;
+		if (Inputs.Keys[(int)Binds::WalkE].State == 1)
+			facing = 135.0;
+		else if (Inputs.Keys[(int)Binds::WalkW].State == 1)
+			facing = 225.0; //-135
+		anythingPressed = true;
+	}
+	else if (Inputs.Keys[(int)Binds::WalkE].State == 1)
+	{
+		facing = 90.0;
+		anythingPressed = true;
+	}
+	else if (Inputs.Keys[(int)Binds::WalkW].State == 1)
+	{
+		facing = 270.0f; //-90
+		anythingPressed = true;
+	}
+
+	if (anythingPressed)
+	{
+		Move(facing + MainCamera.Angles().z);
+	}
 }
 
 Player thePlayer;

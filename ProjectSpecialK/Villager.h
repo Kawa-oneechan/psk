@@ -103,7 +103,8 @@ public:
 	void SetFace(int face);
 	void SetMouth(int mouth);
 
-	void Draw(double dt);
+	void Draw(float dt);
+	void Tick(float dt);
 
 	void Turn(float facing); 
 	bool Move(float facing);
