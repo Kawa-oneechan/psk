@@ -12,6 +12,7 @@ layout(binding=3) uniform sampler2DArray opacityTexture;
 
 uniform vec3 viewPos;
 uniform int layer;
+uniform float color;
 
 #include "common.fs"
 #include "lighting.fs"
@@ -22,6 +23,14 @@ void main()
 	vec3 normal = texture(normalTexture, vec3(TexCoord, layer)).rgb;
 	vec4 mixx = texture(mixTexture, vec3(TexCoord, layer));
 	vec4 opacity = texture(opacityTexture, vec3(TexCoord, layer));
+
+	if (layer == 0)
+	{
+		//Special grass mode. Opacity will contain color map.
+		float design = mixx.a;
+		vec3 color = texture(opacityTexture, vec3(design, color, 0)).rgb;
+		albedo.rgb = color;
+	}
 
 	if (mixx.r == mixx.g && mixx.g == mixx.b)
 	{
@@ -35,7 +44,7 @@ void main()
 	vec3 result;
 	for (int i = 0; i < NUMLIGHTS; i++)
 		result += getLight(Lights[i], albedo.rgb, norm, viewDir, mixx.b);
-	fragColor = vec4(result, opacity.r);
+	fragColor = vec4(result, 1.0);
 
 	//fragColor = texture(albedoTexture, TexCoord);
 	//fragColor = vec4(norm, 1.0);

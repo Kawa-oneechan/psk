@@ -591,9 +591,6 @@ int main(int argc, char** argv)
 	RunTests();
 #endif
 
-	modelShader->Use();
-	modelShader->Set("viewPos", MainCamera.Position());
-
 	skyShader->Use();
 	auto cloudImage = Texture("altostratus.png");
 	auto starsImage = Texture("starfield.png");

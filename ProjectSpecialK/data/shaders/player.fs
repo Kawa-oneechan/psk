@@ -45,11 +45,7 @@ void main( out vec4 fragColor, in vec2 fragCoord )
 
 	vec3 normal = texture(normalTexture, vec3(TexCoord, layer)).rgb;
 
-#ifdef TOON
-	vec3 norm = normalize(Normal);
-#else
-	vec3 norm = calcNormal(normal);
-#endif
+	vec3 norm = Toon ? normalize(Normal) : calcNormal(normal);
 
 	vec3 viewDir = normalize(viewPos - FragPos);
 	vec3 result;

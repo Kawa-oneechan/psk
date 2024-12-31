@@ -61,6 +61,7 @@ class Model
 		bool Visible;
 		hash Hash;
 		std::string Name;
+		Shader* Shader;
 
 		Mesh(ufbx_mesh* mesh, std::vector<Bone>& bones);
 		const void Draw();
@@ -84,9 +85,10 @@ public:
 	Model() = default;
 	Model(const std::string& modelPath);
 
-	void Draw(Shader* shader, const glm::vec3& pos = glm::vec3(0), float yaw = 0, int mesh = -1);
+	void Draw(const glm::vec3& pos = glm::vec3(0), float yaw = 0, int mesh = -1);
 	void AllVisible();
 	Mesh& GetMesh(const std::string& name);
+	Mesh& GetMesh(int index);
 
 	int FindBone(const std::string& name);
 	void CalculateBoneTransform(int id, const glm::mat4& parentTransform = glm::mat4(1.0f));

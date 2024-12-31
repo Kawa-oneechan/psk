@@ -25,10 +25,48 @@ float Map::GetHeight(int x, int y)
 	return GetHeight(glm::vec3(x, y, 100));
 }
 
+extern float timeScale;
+extern bool wireframe, postFx;
+extern Shader* modelShader;
+extern Shader* skyShader;
+extern Background* rainLayer;
+extern Framebuffer* frameBuffer;
+
+extern unsigned int commonBuffer;
+
+float grassColor = 0.5f;
+
+TextureArray* groundTextureAlbs{ nullptr };
+TextureArray* groundTextureNrms{ nullptr };
+TextureArray* groundTextureMixs{ nullptr };
+TextureArray* cliffSideAlb{ nullptr };
+TextureArray* cliffSideNrm{ nullptr };
+TextureArray* grassColors{ nullptr };
+TextureArray* snowMix{ nullptr };
+
+Shader* grassShader;
+
 static void LoadModels()
 {
+	//TODO
+	grassShader = new Shader("shaders/model.vs", "shaders/grass.fs");;
+
 	tileModels[0] = std::make_shared<::Model>("field/ground/unit.fbx");
 	tileModels[1] = std::make_shared<::Model>("field/ground/cliff-147.fbx");
+
+	for (auto& model : tileModels)
+	{
+		if (!model)
+			continue;
+
+		for (auto& mesh : model->Meshes)
+		{
+			if (mesh.Name.find("_mGrass") != std::string::npos)
+				mesh.Shader = grassShader;
+			else if (mesh.Name == "GrassOP__mGrassCliffXlu" || mesh.Name == "PGrassBA__mProcGrass")
+				mesh.Visible = false;
+		}
+	}
 }
 
 void Map::WorkOutModels()
@@ -82,20 +120,6 @@ void Map::SaveToPNG()
 }
 #endif
 
-extern float timeScale;
-extern bool wireframe, postFx;
-extern Shader* modelShader;
-extern Shader* skyShader;
-extern Background* rainLayer;
-extern Framebuffer* frameBuffer;
-
-extern unsigned int commonBuffer;
-
-TextureArray* groundTextureAlbs{ nullptr };
-TextureArray* groundTextureNrms{ nullptr };
-TextureArray* cliffSideAlb{ nullptr };
-TextureArray* cliffSideNrm{ nullptr };
-
 Town::Town()
 {
 	Music = "clock";
@@ -130,7 +154,8 @@ Town::Town()
 	Terrain[0].Rotation = 0;
 	Terrain[Width - 1].Model = 0; //right corner
 	Terrain[Width - 1].Rotation = 0;
-	Terrain[(4 * Width) + 2].Type = 1;
+
+	Terrain[(4 * Width) + 2].Type = 1; //single sand tile
 	//end test
 
 	UseDrum = true;
@@ -311,7 +336,8 @@ void Town::drawWorker(float dt)
 	glPolygonMode(GL_FRONT_AND_BACK, wireframe ? GL_LINE : GL_FILL);
 	//modelShader->Use();
 
-	auto grassShader = modelShader;
+	grassShader->Use();
+	grassShader->Set("color", grassColor);
 
 	for (const auto& v : town.Villagers)
 		v->Draw(dt * timeScale);
@@ -327,9 +353,23 @@ void Town::drawWorker(float dt)
 			auto model = tileModels[tile.Model];
 			model->Textures[0] = groundTextureAlbs;
 			model->Textures[1] = groundTextureNrms;
+			model->Textures[2] = groundTextureMixs;
+			if (tile.Type == 0 && (grassColor < 0.025f || grassColor > 0.87f))
+				model->Textures[2] = snowMix;
+			model->Textures[3] = grassColors;
 			model->TexArrayLayers[0] = tile.Type;
+
 			auto pos = glm::vec3(x * 10, tile.Elevation * ElevationHeight, y * 10);
 			auto rot = tile.Rotation * 90.0f;
+
+			if (tile.Model > 0 && tile.Model <= 44)
+			{
+				model->Textures[4] = cliffSideAlb;
+				model->Textures[5] = cliffSideNrm;
+			}
+			
+			model->Draw(pos, rot);
+			/*
 			if (tile.Model == 0)
 			{
 				model->Draw(grassShader, pos, rot, 0);
@@ -345,6 +385,7 @@ void Town::drawWorker(float dt)
 				model->Draw(grassShader, pos, rot, 3);
 			}
 			//Handle river tiles
+			*/
 		}
 	}
 	MeshBucket::Flush();
@@ -362,16 +403,21 @@ void Town::Draw(float dt)
 {
 	if (groundTextureAlbs == nullptr)
 	{
-		std::vector<std::string> groundAlbs, groundNrms;
+		std::vector<std::string> groundAlbs, groundNrms, groundMixs;
 		for (auto& d : VFS::Enumerate("field/ground/design*_alb.png"))
 			groundAlbs.push_back(d.path);
 		for (auto& d : VFS::Enumerate("field/ground/design*_nrm.png"))
 			groundNrms.push_back(d.path);
+		for (auto& d : VFS::Enumerate("field/ground/design*_mix.png"))
+			groundMixs.push_back(d.path);
 		//also add user designs somehow.
 		groundTextureAlbs = new TextureArray(groundAlbs);
 		groundTextureNrms = new TextureArray(groundNrms);
+		groundTextureMixs = new TextureArray(groundMixs);
 		cliffSideAlb = new TextureArray("field/ground/cliff_alb.png");
 		cliffSideNrm = new TextureArray("field/ground/cliff_nrm.png");
+		grassColors = new TextureArray("field/ground/grasscolors.png", GL_CLAMP_TO_EDGE, GL_NEAREST);
+		snowMix = new TextureArray("field/ground/snow_mix.png");
 	}
 	if (!tileModels[0])
 		LoadModels();

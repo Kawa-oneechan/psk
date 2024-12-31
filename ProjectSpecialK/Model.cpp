@@ -54,6 +54,7 @@ namespace MeshBucket
 			if (m.Shader->ID != currentShader)
 			{
 				currentShader = m.Shader->ID;
+				currentLayer = -1;
 				m.Shader->Use();
 			}
 
@@ -131,6 +132,7 @@ Model::Mesh::Mesh(ufbx_mesh* mesh, std::vector<Bone>& bones) : Texture(-1), Visi
 {
 	Hash = GetCRC(mesh->name.data);
 	Name = mesh->name.data;
+	Shader = modelShader; //by default
 
 	std::vector<unsigned int> tri_indices;
 	tri_indices.resize(mesh->max_face_triangles * 3);
@@ -533,7 +535,7 @@ Model::Model(const std::string& modelPath) : file(modelPath)
 	cache[file] = std::make_tuple(this, 1);
 }
 
-void Model::Draw(Shader* shader, const glm::vec3& pos, float yaw, int mesh)
+void Model::Draw(const glm::vec3& pos, float yaw, int mesh)
 {
 	/*
 	if (Bones.size() > 0)
@@ -581,7 +583,7 @@ void Model::Draw(Shader* shader, const glm::vec3& pos, float yaw, int mesh)
 			}
 		}
 		glm::vec3 r(0, glm::radians(yaw), 0);
-		MeshBucket::Draw(m.VAO, texs, TexArrayLayers[j], shader, pos, glm::quat(r), finalBoneMatrices, m.Indices(), Bones.size());
+		MeshBucket::Draw(m.VAO, texs, TexArrayLayers[j], m.Shader, pos, glm::quat(r), finalBoneMatrices, m.Indices(), Bones.size());
 		j++;
 	}
 
@@ -603,6 +605,13 @@ Model::Mesh& Model::GetMesh(const std::string& name)
 			return m;
 	}
 	throw std::runtime_error(fmt::format("Model::GetMesh(): could not find a mesh with name \"{}\" in \"{}\".", name, file));
+}
+
+Model::Mesh& Model::GetMesh(int index)
+{
+	if (index >= 0 && index < Meshes.size())
+		return Meshes[index];
+	throw std::runtime_error(fmt::format("Model::GetMesh(): could not find a mesh with number {} in \"{}\".", index, file));
 }
 
 int Model::FindBone(const std::string& name)

@@ -14,6 +14,7 @@
 #endif
 
 extern float timeScale;
+extern float grassColor;
 extern bool debugPanelLayoutPolygons;
 extern bool postFx, wireframe;
 extern bool debuggerEnabled;
@@ -60,6 +61,8 @@ Console::Console()
 	RegisterCVar("gender", CVar::Type::Int, &thePlayer.Gender, false, 0, 3);
 	RegisterCVar("name", CVar::Type::String, &thePlayer.Name);
 	RegisterCVar("nowear", CVar::Type::Bool, &noWear, true);
+	
+	RegisterCVar("grass", CVar::Type::Float, &grassColor, false);
 
 	//RegisterCVar("ai_disable", CVar::Type::Bool, &);
 	//RegisterCVar("cl_showpos", CVar::Type::Bool, &);
