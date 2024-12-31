@@ -1,6 +1,5 @@
 {
 	"mGrass": {
-		"slot": 0,
 		"shader": "grass",
 		"albedo": "design*_alb.png",
 		"mix": "design*_mix.png",
@@ -8,7 +7,6 @@
 		"opacity": "grasscolors.png" //not opacity
 	},
 	"mCliff": {
-		"slot": 1,
 		"albedo": "cliff_alb.png",
 		"mix": "cliff_mix.png",
 		"normal": "cliff_nrm.png"

@@ -1,6 +1,5 @@
 {
 	"mGrass": {
-		"slot": 0,
 		"shader": "grass",
 		"albedo": "design*_alb.png",
 		"mix": "design*_mix.png",
