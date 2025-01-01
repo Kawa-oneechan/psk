@@ -15,7 +15,7 @@ void Player::LoadModel()
 		_model = std::make_shared<::Model>("player/model.fbx");
 	}
 
-	_model->GetMesh("Nose01__mNose").Visible = true;
+	_model->SetVisibility("Nose01__mNose");
 
 	_hairModel = nullptr;
 	_shoesModel = nullptr;
@@ -216,15 +216,15 @@ void Player::Draw(float)
 	if (!_model)
 		LoadModel();
 
-	std::copy(&Textures[0], &Textures[3], _model->GetMesh("Body__mEye").Textures);
-	std::copy(&Textures[3], &Textures[6], _model->GetMesh("Body__mMouth").Textures);
-	//std::copy(&Textures[6], &Textures[9], _model->GetMesh("Body__mCheek").Textures);
-	_model->GetMesh("Body__mCheek").Textures[0] = Textures[6];
+	//TODO: Model::SetTexture method, yo!
+	std::copy(&Textures[0], &Textures[3], _model->GetMesh("_mEye").Textures);
+	std::copy(&Textures[3], &Textures[6], _model->GetMesh("_mMouth").Textures);
+	//std::copy(&Textures[6], &Textures[9], _model->GetMesh("_mCheek").Textures);
+	_model->GetMesh("_mCheek").Textures[0] = Textures[6];
 
-	//TODO: need a better way to map layers to meshes.
-	_model->TexArrayLayers[0] = cheeks;
-	_model->TexArrayLayers[1] = face;
-	_model->TexArrayLayers[2] = mouth;
+	_model->SetLayer("_mCheek", cheeks);
+	_model->SetLayer("_mEye", face);
+	_model->SetLayer("_mMouth", mouth);
 
 	commonUniforms.PlayerSkin = SkinTone;
 	commonUniforms.PlayerEyes = EyeColor;
@@ -251,7 +251,7 @@ void Player::Draw(float)
 		_shoesModel->Textures[2] = ClothingTextures[10];
 		_shoesModel->Textures[3] = ClothingTextures[11];
 		*/
-		_shoesModel->TexArrayLayers[0] = Shoes->Variant();
+		_shoesModel->SetLayer(Shoes->Variant());
 		_shoesModel->Draw();
 	}
 
@@ -263,7 +263,7 @@ void Player::Draw(float)
 		_onePieceModel->Textures[2] = ClothingTextures[2];
 		_onePieceModel->Textures[3] = ClothingTextures[3];
 		*/
-		_onePieceModel->TexArrayLayers[0] = OnePiece->Variant();
+		_onePieceModel->SetLayer(OnePiece->Variant());
 		_onePieceModel->Draw();
 	}
 	else
@@ -276,7 +276,7 @@ void Player::Draw(float)
 			_bottomsModel->Textures[2] = ClothingTextures[6];
 			_bottomsModel->Textures[3] = ClothingTextures[7];
 			*/
-			_bottomsModel->TexArrayLayers[0] = Bottoms->Variant();
+			_bottomsModel->SetLayer(Bottoms->Variant());
 			_bottomsModel->Draw();
 		}
 		if (_topsModel && Tops)
@@ -287,7 +287,7 @@ void Player::Draw(float)
 			_topsModel->Textures[2] = ClothingTextures[2];
 			_topsModel->Textures[3] = ClothingTextures[3];
 			*/
-			_topsModel->TexArrayLayers[0] = Tops->Variant();
+			_topsModel->SetLayer(Tops->Variant());
 			_topsModel->Draw();
 		}
 	}

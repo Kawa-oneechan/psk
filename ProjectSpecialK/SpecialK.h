@@ -170,7 +170,7 @@ namespace NookCode
 namespace MeshBucket
 {
 	extern void Flush();
-	extern void Draw(unsigned int vao, TextureArray* textures[], int layer, Shader* shader, const glm::vec3& position, const glm::quat& rotation, const glm::mat4 bones[], size_t indices, size_t boneCt);
+	extern void Draw(Model::Mesh& mesh, const glm::vec3& position, const glm::quat& rotation, const glm::mat4 bones[], size_t boneCt);
 }
 
 //Returns the CRC32 hash for the given text.

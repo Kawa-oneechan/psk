@@ -358,13 +358,12 @@ void Town::drawWorker(float dt)
 	{
 		for (int x = 0; x < AcreSize; x++)
 		{
-			//probably got the x/y flipped lol we'll see
 			auto tile = Terrain[(y * Width) + x];
 			auto model = tileModels[tile.Model];
 			auto pos = glm::vec3(x * 10, tile.Elevation * ElevationHeight, y * 10);
 			auto rot = tile.Rotation * 90.0f;
-			model->TexArrayLayers[0] = tile.Type;
-			model->TexArrayLayers[2] = tile.Type; //temporary for cliffs
+			model->SetLayer("_mGrass", tile.Type);
+			//still not right, this affects the grass on the *bottom* of cliffs too.
 			model->Draw(pos, rot);
 		}
 	}

@@ -106,18 +106,18 @@ namespace MeshBucket
 		std::memset(&meshBucket, 0, sizeof(MeshInABucket) * meshBucketSize);
 	}
 
-	void Draw(unsigned int vao, TextureArray* textures[], int layer, Shader* shader, const glm::vec3& position, const glm::quat& rotation, const glm::mat4 bones[], size_t indices, size_t boneCt)
+	void Draw(Model::Mesh& mesh, const glm::vec3& position, const glm::quat& rotation, const glm::mat4 bones[], size_t boneCt)
 	{
-		meshBucket[meshesInBucket].VAO = vao;
-		meshBucket[meshesInBucket].Shader = shader;
+		meshBucket[meshesInBucket].VAO = mesh.VAO;
+		meshBucket[meshesInBucket].Shader = mesh.Shader;
 		meshBucket[meshesInBucket].Position = position;
 		meshBucket[meshesInBucket].Rotation = rotation;
-		meshBucket[meshesInBucket].Indices = indices;
+		meshBucket[meshesInBucket].Indices = mesh.Indices();
 		meshBucket[meshesInBucket].BoneCount = boneCt;
-		meshBucket[meshesInBucket].Layer = layer;
+		meshBucket[meshesInBucket].Layer = mesh.Layer;
 		for (auto i = 0; i < 4; i++)
-			meshBucket[meshesInBucket].Textures[i] = textures[i];
-		for (auto i = 0; i < MaxBones; i++)
+			meshBucket[meshesInBucket].Textures[i] = mesh.Textures[i];
+		for (auto i = 0; i < boneCt; i++)
 			meshBucket[meshesInBucket].Bones[i] = bones[i];
 
 		meshesInBucket++;
@@ -136,10 +136,17 @@ extern Shader* playerCheekShader;
 
 //static std::map<std::string, unsigned int> matMap;
 
-Model::Mesh::Mesh(ufbx_mesh* mesh, std::vector<Bone>& bones) : Visible(true)
+Model::Mesh::Mesh(ufbx_mesh* mesh, std::vector<Bone>& bones) : Visible(true), Layer(0)
 {
-	Hash = GetCRC(mesh->name.data);
 	Name = mesh->name.data;
+	Hash = MatHash = GetCRC(Name);
+	
+	{
+		auto lastUnder = Name.rfind('_');
+		if (lastUnder != std::string::npos)
+			MatHash = GetCRC(Name.substr(lastUnder));
+	}
+
 	Shader = modelShader; //by default
 	std::fill_n(Textures, 4, nullptr);
 
@@ -349,9 +356,6 @@ static glm::mat4 ufbxToGlmMat4(const ufbx_matrix& mat)
 
 Model::Model(const std::string& modelPath) : file(modelPath)
 {
-	//Textures.fill(nullptr);
-	TexArrayLayers.fill(0);
-
 	auto c = cache.find(modelPath);
 	if (c != cache.end())
 	{
@@ -607,17 +611,53 @@ void Model::Draw(const glm::vec3& pos, float yaw, int mesh)
 		}
 
 		glm::vec3 r(0, glm::radians(yaw), 0);
-		MeshBucket::Draw(m.VAO, m.Textures, TexArrayLayers[j], m.Shader, pos, glm::quat(r), finalBoneMatrices, m.Indices(), Bones.size());
+		MeshBucket::Draw(m,  pos, glm::quat(r), finalBoneMatrices, Bones.size());
 		j++;
 	}
 
 	glBindVertexArray(0);
 }
 
-void Model::AllVisible()
+void Model::SetVisibility(bool visible)
 {
 	for (auto& m : Meshes)
-		m.Visible = true;
+		m.Visible = visible;
+}
+
+void Model::SetVisibility(const std::string& name, bool visible)
+{
+	auto hash = GetCRC(name);
+	for (auto& m : Meshes)
+	{
+		if (m.MatHash == hash)
+			m.Visible = visible;
+	}
+}
+
+void Model::SetVisibility(int index, bool visible)
+{
+	GetMesh(index).Visible = visible;
+}
+
+void Model::SetLayer(int layer)
+{
+	for (auto& m : Meshes)
+		m.Layer = layer;
+}
+
+void Model::SetLayer(const std::string& name, int layer)
+{
+	auto hash = GetCRC(name);
+	for (auto& m : Meshes)
+	{
+		if (m.MatHash == hash)
+			m.Layer = layer;
+	}
+}
+
+void Model::SetLayer(int index, int layer)
+{
+	GetMesh(index).Layer = layer;
 }
 
 Model::Mesh& Model::GetMesh(const std::string& name)
@@ -625,7 +665,7 @@ Model::Mesh& Model::GetMesh(const std::string& name)
 	auto hash = GetCRC(name);
 	for (auto& m : Meshes)
 	{
-		if (m.Hash == hash)
+		if (m.Hash == hash || m.MatHash == hash)
 			return m;
 	}
 	throw std::runtime_error(fmt::format("Model::GetMesh(): could not find a mesh with name \"{}\" in \"{}\".", name, file));

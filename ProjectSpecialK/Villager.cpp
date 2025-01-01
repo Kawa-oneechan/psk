@@ -156,9 +156,9 @@ void Villager::LoadModel()
 			Textures[10] = new TextureArray(fmt::format("{}/beak_nrm.png", Path));
 			Textures[11] = new TextureArray(fmt::format("{}/beak_mix.png", Path));
 
-			_model->GetMesh("FaceBad__mBeak").Visible = false;
-			_model->GetMesh("FaceGood__mBeak").Visible = true;
-			_model->GetMesh("FaceNothing__mBeak").Visible = false;
+			_model->SetVisibility("FaceBad__mBeak", false);
+			_model->SetVisibility("FaceGood__mBeak", true);
+			_model->SetVisibility("FaceNothing__mBeak", false);
 		}
 
 		if (_accessoryType == AccessoryType::Cap || _accessoryType == AccessoryType::BodyCap)
@@ -281,14 +281,14 @@ void Villager::Draw(float)
 	if (_model == nullptr)
 		LoadModel();
 
-	std::copy(&Textures[0], &Textures[2], _model->GetMesh("Body__mBody").Textures);
-	std::copy(&Textures[0], &Textures[2], _model->GetMesh("Body__mCapVis").Textures);
-	std::copy(&Textures[6], &Textures[8], _model->GetMesh("Body__mEye").Textures);
-	std::copy(&Textures[9], &Textures[11], _model->GetMesh("Body__mMouth").Textures);
+	std::copy(&Textures[0], &Textures[2], _model->GetMesh("_mBody").Textures);
+	std::copy(&Textures[0], &Textures[2], _model->GetMesh("_mCapVis").Textures);
+	std::copy(&Textures[6], &Textures[8], _model->GetMesh("_mEye").Textures);
+	std::copy(&Textures[9], &Textures[11], _model->GetMesh("_mMouth").Textures);
 	//std::copy(&Textures[12], &Textures[14], _model->GetMesh("???").Textures);
 
-	_model->TexArrayLayers[2] = face;
-	_model->TexArrayLayers[3] = mouth;
+	_model->SetLayer("_mEye", face);
+	_model->SetLayer("_mMouth", mouth);
 	
 	_model->Draw(Position, Facing);
 
@@ -312,7 +312,7 @@ void Villager::Draw(float)
 	if (_clothingModel && Clothing)
 	{
 		std::copy(&ClothingTextures[0], &ClothingTextures[3], _clothingModel->GetMesh(0).Textures);
-		_clothingModel->TexArrayLayers[0] = Clothing->Variant();
+		_clothingModel->SetLayer(Clothing->Variant());
 		_clothingModel->Draw(Position, Facing);
 	}
 }

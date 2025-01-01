@@ -49,6 +49,7 @@ class Model
 		std::vector<int> Children;
 	};
 
+public:
 	class Mesh
 	{
 	private:
@@ -60,9 +61,10 @@ class Model
 		//int Texture;
 		TextureArray* Textures[4];
 		bool Visible;
-		hash Hash;
+		hash Hash, MatHash;
 		std::string Name;
 		Shader* Shader;
+		int Layer;
 
 		Mesh(ufbx_mesh* mesh, std::vector<Bone>& bones);
 		const void Draw();
@@ -78,7 +80,6 @@ private:
 public:
 	std::vector<Mesh> Meshes;
 	//std::array<TextureArray*, 32> Textures;
-	std::array<int, 16> TexArrayLayers;
 	std::vector<Bone> Bones;
 	glm::mat4 finalBoneMatrices[MaxBones];
 
@@ -87,11 +88,27 @@ public:
 	Model() = default;
 	Model(const std::string& modelPath);
 
+	//Queues the model for drawing at the specified position and rotation. If the mesh argument is -1, the entire model is drawn.
 	void Draw(const glm::vec3& pos = glm::vec3(0), float yaw = 0, int mesh = -1);
-	void AllVisible();
+	//Sets the visibility of all parts of the model.
+	void SetVisibility(bool visible = true);
+	//Sets the visibility of a given mesh part, specified by material name.
+	void SetVisibility(const std::string& name, bool visible = true);
+	//Sets the visibility of a given mesh part, specified by index.
+	void SetVisibility(int index, bool visible = true);
+	//Sets the TextureArray layer index for all parts of the model.
+	void SetLayer(int layer = 0);
+	//Sets the TextureArray layer index of a given mesh part, specified by material name.
+	void SetLayer(const std::string& name, int layer);
+	//Sets the TextureArray layer index of a given mesh part, specified by index.
+	void SetLayer(int index, int layer);
+
+	//Returns a reference to a Mesh by name, which can be either the full mesh or the material part.
 	Mesh& GetMesh(const std::string& name);
+	//Returns a reference to a Mesh by index.
 	Mesh& GetMesh(int index);
 
+	//Returns the index of a bone for this model by name.
 	int FindBone(const std::string& name);
 	void CalculateBoneTransform(int id, const glm::mat4& parentTransform = glm::mat4(1.0f));
 	void MoveBone(int id, const glm::vec3& rotation, const glm::vec3& transform = glm::vec3(0), const glm::vec3& scale = glm::vec3(1));
