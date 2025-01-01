@@ -32,6 +32,8 @@ void Player::LoadModel()
 		Textures[3] = new TextureArray("player/mouth/0/mouth*_alb.png");
 		Textures[4] = new TextureArray("player/mouth/0/mouth*_nrm.png");
 		Textures[5] = new TextureArray("player/mouth/0/mouth*_mix.png");
+
+		Textures[6] = new TextureArray("player/cheek*_alb.png");
 	}
 }
 
@@ -214,48 +216,19 @@ void Player::Draw(float)
 	if (!_model)
 		LoadModel();
 
-	//TODO: do here what I just did in Villager::Draw.
-
-	/*
-	//Body
-	_model->Textures[0] = Textures[0]; //-V1004 I know LoadModel doesn't actually *set* _model.
-	_model->Textures[1] = Textures[1];
-	_model->Textures[2] = Textures[2];
-	//Nose
-	_model->Textures[4] = Textures[3];
-	_model->Textures[5] = Textures[4];
-	_model->Textures[6] = Textures[5];
-	//Cheek
-	_model->Textures[8] = Textures[6];
-	_model->Textures[9] = Textures[7];
-	_model->Textures[10] = Textures[8];
-	//Eyes
-	if (!stung)
-	{
-		_model->Textures[12] = Textures[9];
-		_model->Textures[13] = Textures[10];
-		_model->Textures[14] = Textures[11];
-	}
-	else
-	{
-		_model->Textures[12] = Textures[12];
-		_model->Textures[13] = Textures[13];
-		_model->Textures[14] = Textures[14];
-	}
-	//Mouths
-	_model->Textures[16] = Textures[15];
-	_model->Textures[17] = Textures[16];
-	_model->Textures[18] = Textures[17];
-	*/
-
 	std::copy(&Textures[0], &Textures[3], _model->GetMesh("Body__mEye").Textures);
 	std::copy(&Textures[3], &Textures[6], _model->GetMesh("Body__mMouth").Textures);
+	//std::copy(&Textures[6], &Textures[9], _model->GetMesh("Body__mCheek").Textures);
+	_model->GetMesh("Body__mCheek").Textures[0] = Textures[6];
 
-	_model->TexArrayLayers[3] = face;
-	_model->TexArrayLayers[4] = mouth;
+	//TODO: need a better way to map layers to meshes.
+	_model->TexArrayLayers[0] = cheeks;
+	_model->TexArrayLayers[1] = face;
+	_model->TexArrayLayers[2] = mouth;
 
 	commonUniforms.PlayerSkin = SkinTone;
 	commonUniforms.PlayerEyes = EyeColor;
+	commonUniforms.PlayerCheeks = CheekColor;
 	commonUniforms.PlayerHair = HairColor;
 
 	_model->Draw(Position, Facing);

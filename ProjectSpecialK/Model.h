@@ -72,6 +72,7 @@ class Model
 private:
 	std::string file;
 	TextureArray fallback{ TextureArray("fallback.png") };
+	TextureArray fallbackNormal{ TextureArray("fallback_nrm.png") };
 	TextureArray white{ TextureArray("white.png") };
 
 public:

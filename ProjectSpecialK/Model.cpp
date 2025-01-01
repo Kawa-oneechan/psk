@@ -132,6 +132,7 @@ extern Shader* grassShader;
 extern Shader* playerBodyShader;
 extern Shader* playerEyesShader;
 extern Shader* playerMouthShader;
+extern Shader* playerCheekShader;
 
 //static std::map<std::string, unsigned int> matMap;
 
@@ -351,18 +352,6 @@ Model::Model(const std::string& modelPath) : file(modelPath)
 	//Textures.fill(nullptr);
 	TexArrayLayers.fill(0);
 
-	/*
-	if (matMap.empty())
-	{
-		auto mapJson = VFS::ReadJSON("matmap.json");
-		for (auto& item : mapJson->AsObject())
-		{
-			matMap.emplace(item.first, item.second->AsInteger());
-		}
-		delete mapJson;
-	}
-	*/
-
 	auto c = cache.find(modelPath);
 	if (c != cache.end())
 	{
@@ -536,7 +525,7 @@ Model::Model(const std::string& modelPath) : file(modelPath)
 			auto m = Mesh(node->mesh, Bones);
 			m.Shader = modelShader;
 			m.Textures[0] = &fallback;
-			m.Textures[1] = &white;
+			m.Textures[1] = &fallbackNormal;
 			m.Textures[2] = &white;
 			m.Textures[3] = &white;
 
@@ -560,6 +549,8 @@ Model::Model(const std::string& modelPath) : file(modelPath)
 								m.Shader = playerEyesShader;
 							else if (s == "playermouth")
 								m.Shader = playerMouthShader;
+							else if (s == "playercheek")
+								m.Shader = playerCheekShader;
 						}
 						if (mat["albedo"])
 							m.Textures[0] = new TextureArray(basePath + mat["albedo"]->AsString());
@@ -604,9 +595,6 @@ void Model::Draw(const glm::vec3& pos, float yaw, int mesh)
 	*/
 
 	int j = 0;
-	TextureArray* texs[4];
-	for (int i = 0; i < 4; i++)
-		texs[i] = nullptr;
 
 	for (auto& m : Meshes)
 	{
@@ -618,28 +606,7 @@ void Model::Draw(const glm::vec3& pos, float yaw, int mesh)
 			continue;
 		}
 
-		/*
-		if (m.Texture != -1 && m.Texture < Textures.size())
-		{
-			auto texNum = m.Texture * 4;
-			for (auto i = 0; i < 4; i++)
-			{
-				if (Textures[texNum + i] == nullptr)
-				{
-					if (i == 0)
-						texs[0] = &fallback;
-					else
-						texs[i] = &white;
-				}
-				else
-				{
-					texs[i] = Textures[texNum + i];
-				}
-			}
-		}
-		*/
 		glm::vec3 r(0, glm::radians(yaw), 0);
-		//MeshBucket::Draw(m.VAO, texs, TexArrayLayers[j], m.Shader, pos, glm::quat(r), finalBoneMatrices, m.Indices(), Bones.size());
 		MeshBucket::Draw(m.VAO, m.Textures, TexArrayLayers[j], m.Shader, pos, glm::quat(r), finalBoneMatrices, m.Indices(), Bones.size());
 		j++;
 	}

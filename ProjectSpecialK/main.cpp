@@ -478,6 +478,7 @@ Shader* grassShader;
 Shader* playerBodyShader;
 Shader* playerEyesShader;
 Shader* playerMouthShader;
+Shader* playerCheekShader;
 
 //extern int GetLetterScore(const std::string& text, bool checkSpaces = true);
 
@@ -541,7 +542,7 @@ int main(int argc, char** argv)
 	playerBodyShader = new Shader("shaders/model.vs", "shaders/playerbody.fs");
 	playerEyesShader = new Shader("shaders/model.vs", "shaders/playereyes.fs");
 	playerMouthShader = new Shader("shaders/model.vs", "shaders/playermouth.fs");
-	//playerCheekShader = new Shader("shaders/model.vs", "shaders/playercheeks.fs");
+	playerCheekShader = new Shader("shaders/model.vs", "shaders/playercheek.fs");
 	//playerLegsShader = new Shader("shaders/model.vs", "shaders/playerlegs.fs");
 
 	grassShader = new Shader("shaders/model.vs", "shaders/grass.fs");;

@@ -26,7 +26,7 @@ private:
 	int findItemSlot(InventoryItemP target);
 	int findStorageSlot(InventoryItemP target);
 
-	int face{ 0 }, mouth{ 0 };
+	int face{ 0 }, mouth{ 0 }, cheeks{ 2 };
 	bool stung{ false };
 
 public:
@@ -35,6 +35,7 @@ public:
 
 	glm::vec4 SkinTone{ 1.0f, 0.67f, 0.51f, 1.0f };
 	glm::vec4 EyeColor{ 0.75f, 0.15f, 0.17f, 1.0f };
+	glm::vec4 CheekColor{ 0.87f, 0.48f, 0.29f, 1.0f };
 	glm::vec4 HairColor{ 0.73f, 0.11f, 0.31f, 1.0f };
 
 	glm::vec3 Position{ 0 };
