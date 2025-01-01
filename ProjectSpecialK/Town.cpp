@@ -39,8 +39,6 @@ float lastGrassColor = 100.0f;
 TextureArray* groundTextureAlbs{ nullptr };
 TextureArray* groundTextureNrms{ nullptr };
 TextureArray* groundTextureMixs{ nullptr };
-TextureArray* cliffSideAlb{ nullptr };
-TextureArray* cliffSideNrm{ nullptr };
 TextureArray* grassColors{ nullptr };
 TextureArray* snowMix{ nullptr };
 
@@ -166,6 +164,7 @@ Town::Town()
 	Terrain[Width - 1].Rotation = 0;
 
 	Terrain[(4 * Width) + 2].Type = 1; //single sand tile
+	Terrain[(0 * Width) + 2].Type = 2; //single stone tile on cliff
 	//end test
 
 	UseDrum = true;
@@ -365,6 +364,7 @@ void Town::drawWorker(float dt)
 			auto pos = glm::vec3(x * 10, tile.Elevation * ElevationHeight, y * 10);
 			auto rot = tile.Rotation * 90.0f;
 			model->TexArrayLayers[0] = tile.Type;
+			model->TexArrayLayers[2] = tile.Type; //temporary for cliffs
 			model->Draw(pos, rot);
 		}
 	}
@@ -394,8 +394,6 @@ void Town::Draw(float dt)
 		groundTextureAlbs = new TextureArray(groundAlbs);
 		groundTextureNrms = new TextureArray(groundNrms);
 		groundTextureMixs = new TextureArray(groundMixs);
-		cliffSideAlb = new TextureArray("field/ground/cliff_alb.png");
-		cliffSideNrm = new TextureArray("field/ground/cliff_nrm.png");
 		grassColors = new TextureArray("field/ground/grasscolors.png", GL_CLAMP_TO_EDGE, GL_NEAREST);
 		groundMixs[0] = "field/ground/snow_mix.png";
 		snowMix = new TextureArray(groundMixs);
