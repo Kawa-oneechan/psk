@@ -311,7 +311,7 @@ void Villager::Draw(float)
 
 	if (_clothingModel && Clothing)
 	{
-		std::copy(&ClothingTextures[0], &ClothingTextures[3], _clothingModel->GetMesh(0).Textures);
+		std::copy(&ClothingTextures[0], &ClothingTextures[3], _clothingModel->GetMesh("_mTops").Textures);
 		_clothingModel->SetLayer(Clothing->Variant());
 		_clothingModel->Draw(Position, Facing);
 	}

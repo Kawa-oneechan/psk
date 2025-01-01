@@ -86,6 +86,12 @@ Item::Item(JSONObject& value, const std::string& filename) : NameableThing(value
 			throw std::runtime_error(fmt::format("Don't know what to do with type \"{}\" while loading {}.", kind, ID));
 
 		Style = value["style"] != nullptr ? value["style"]->AsString() : "";
+		//TODO: regenerate as "playerModel"
+		if (value["xx_unparsedParam"])
+		{
+			auto params = value["xx_unparsedParam"]->AsObject();
+			PlayerModel = params["45_ItemPlayerTopsBottomsForm"]->AsString();
+		}
 	}
 	
 	auto vars = value["variants"];
@@ -221,6 +227,11 @@ std::string InventoryItem::Icon() const
 std::string InventoryItem::Style() const
 {
 	return _wrapped->Style;
+}
+
+std::string InventoryItem::PlayerModel() const
+{
+	return _wrapped->PlayerModel;
 }
 
 int InventoryItem::Variant() const

@@ -627,6 +627,7 @@ int main(int argc, char** argv)
 	town.Villagers.push_back(cat01);
 	cat01->Position = glm::vec3(30, 0, 30);
 	thePlayer.Position = glm::vec3(40, 0, 30);
+	thePlayer.OnePiece = std::make_shared<InventoryItem>("acnh:gumdropdress");
 
 	commonUniforms.Projection = glm::perspective(glm::radians(45.0f), (float)width / (float)height, 0.1f, 300.0f);
 

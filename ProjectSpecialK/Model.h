@@ -92,14 +92,16 @@ public:
 	void Draw(const glm::vec3& pos = glm::vec3(0), float yaw = 0, int mesh = -1);
 	//Sets the visibility of all parts of the model.
 	void SetVisibility(bool visible = true);
-	//Sets the visibility of a given mesh part, specified by material name.
+	//Sets the visibility of a given mesh part, specified by mesh name.
 	void SetVisibility(const std::string& name, bool visible = true);
 	//Sets the visibility of a given mesh part, specified by index.
 	void SetVisibility(int index, bool visible = true);
 	//Sets the TextureArray layer index for all parts of the model.
 	void SetLayer(int layer = 0);
-	//Sets the TextureArray layer index of a given mesh part, specified by material name.
+	//Sets the TextureArray layer index of a given mesh part, specified by mesh name.
 	void SetLayer(const std::string& name, int layer);
+	//Sets the TextureArray layer index of a given mesh part, specified by material name.
+	void SetLayerByMat(const std::string& name, int layer);
 	//Sets the TextureArray layer index of a given mesh part, specified by index.
 	void SetLayer(int index, int layer);
 

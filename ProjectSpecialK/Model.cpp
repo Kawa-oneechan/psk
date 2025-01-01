@@ -629,7 +629,7 @@ void Model::SetVisibility(const std::string& name, bool visible)
 	auto hash = GetCRC(name);
 	for (auto& m : Meshes)
 	{
-		if (m.MatHash == hash)
+		if (m.Hash == hash)
 			m.Visible = visible;
 	}
 }
@@ -646,6 +646,16 @@ void Model::SetLayer(int layer)
 }
 
 void Model::SetLayer(const std::string& name, int layer)
+{
+	auto hash = GetCRC(name);
+	for (auto& m : Meshes)
+	{
+		if (m.Hash == hash)
+			m.Layer = layer;
+	}
+}
+
+void Model::SetLayerByMat(const std::string& name, int layer)
 {
 	auto hash = GetCRC(name);
 	for (auto& m : Meshes)

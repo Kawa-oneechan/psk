@@ -15,7 +15,7 @@ void Player::LoadModel()
 		_model = std::make_shared<::Model>("player/model.fbx");
 	}
 
-	_model->SetVisibility("Nose01__mNose");
+	_model->SetVisibility("Nose01__mNose", true);
 
 	_hairModel = nullptr;
 	_shoesModel = nullptr;
@@ -34,6 +34,22 @@ void Player::LoadModel()
 		Textures[5] = new TextureArray("player/mouth/0/mouth*_mix.png");
 
 		Textures[6] = new TextureArray("player/cheek*_alb.png");
+	}
+
+	if (!_onePieceModel && OnePiece)
+	{
+		_onePieceModel = std::make_shared<::Model>(fmt::format("player/outfits/{}.fbx", OnePiece->PlayerModel()));
+
+		/*
+		Texture order:
+		alb	nml	mix	opc
+		body	0	1	2	3
+		...
+		*/
+		ClothingTextures[0] = new TextureArray(fmt::format("{}/albedo*.png", OnePiece->Path));
+		ClothingTextures[1] = new TextureArray(fmt::format("{}/normal.png", OnePiece->Path));
+		ClothingTextures[2] = new TextureArray(fmt::format("{}/mix.png", OnePiece->Path));
+		ClothingTextures[3] = new TextureArray(fmt::format("{}/opacity.png", OnePiece->Path));
 	}
 }
 
@@ -240,7 +256,7 @@ void Player::Draw(float)
 		_hairModel->Textures[1] = Textures[19];
 		_hairModel->Textures[2] = Textures[20];
 		*/
-		_hairModel->Draw();
+		_hairModel->Draw(Position, Facing);
 	}
 
 	if (_shoesModel && Shoes)
@@ -252,7 +268,7 @@ void Player::Draw(float)
 		_shoesModel->Textures[3] = ClothingTextures[11];
 		*/
 		_shoesModel->SetLayer(Shoes->Variant());
-		_shoesModel->Draw();
+		_shoesModel->Draw(Position, Facing);
 	}
 
 	if (_onePieceModel && OnePiece)
@@ -263,8 +279,9 @@ void Player::Draw(float)
 		_onePieceModel->Textures[2] = ClothingTextures[2];
 		_onePieceModel->Textures[3] = ClothingTextures[3];
 		*/
+		std::copy(&ClothingTextures[0], &ClothingTextures[3], _onePieceModel->GetMesh("_mTops").Textures);
 		_onePieceModel->SetLayer(OnePiece->Variant());
-		_onePieceModel->Draw();
+		_onePieceModel->Draw(Position, Facing);
 	}
 	else
 	{
@@ -277,7 +294,7 @@ void Player::Draw(float)
 			_bottomsModel->Textures[3] = ClothingTextures[7];
 			*/
 			_bottomsModel->SetLayer(Bottoms->Variant());
-			_bottomsModel->Draw();
+			_bottomsModel->Draw(Position, Facing);
 		}
 		if (_topsModel && Tops)
 		{
@@ -288,7 +305,7 @@ void Player::Draw(float)
 			_topsModel->Textures[3] = ClothingTextures[3];
 			*/
 			_topsModel->SetLayer(Tops->Variant());
-			_topsModel->Draw();
+			_topsModel->Draw(Position, Facing);
 		}
 	}
 

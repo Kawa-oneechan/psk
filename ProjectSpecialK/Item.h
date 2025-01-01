@@ -41,8 +41,10 @@ public:
 	//The name of the inventory/hotbar icon.
 	std::string Icon;
 
-	//If this item is clothing, and specifically a top or onepiece, the base name for the model.
+	//If this item is clothing, and specifically a top or onepiece, the base name for the model to be worn by Villagers.
 	std::string Style;
+	//If this item is clothing, the base name for the model to be worn by Players.
+	std::string PlayerModel;
 
 	//The item is allowed to be buried in the ground.
 	bool CanBury{ false };
@@ -146,6 +148,7 @@ public:
 
 	std::string InventoryItem::Icon() const;
 	std::string InventoryItem::Style() const;
+	std::string InventoryItem::PlayerModel() const;
 	int InventoryItem::Variant() const;
 
 	//Safe to delete if true. If not, DO NOT DELETE.

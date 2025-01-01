@@ -362,8 +362,10 @@ void Town::drawWorker(float dt)
 			auto model = tileModels[tile.Model];
 			auto pos = glm::vec3(x * 10, tile.Elevation * ElevationHeight, y * 10);
 			auto rot = tile.Rotation * 90.0f;
-			model->SetLayer("_mGrass", tile.Type);
-			//still not right, this affects the grass on the *bottom* of cliffs too.
+			if (tile.Model == 0 || tile.Model < 44)
+				model->SetLayerByMat("mGrass", tile.Type); //ground, river, or waterfall.
+			else if (tile.Model < 44)
+				model->SetLayer("GrassT__mGrass", tile.Type); //cliffs should only have the top grass changed.
 			model->Draw(pos, rot);
 		}
 	}
