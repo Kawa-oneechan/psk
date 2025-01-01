@@ -23,16 +23,12 @@ void main()
 	vec4 mixx = texture(mixTexture, vec3(TexCoord, layer));
 	vec4 opacity = texture(opacityTexture, vec3(TexCoord, layer));
 
-	if (layer == 0)
-	{
-		//Special grass mode. Opacity will contain color map.
-		albedo.rgb = texture(opacityTexture, vec3(mixx.a, GrassColor, 0)).rgb;
-	}
-
 	if (mixx.r == mixx.g && mixx.g == mixx.b)
 	{
 		mixx.g = mixx.b = 0;
 	}
+	
+	albedo.rgb = mix(albedo.rgb, PlayerSkin.rgb, mixx.r);;
 
 	vec3 norm = Toon ? normalize(Normal) : calcNormal(normal);
 
@@ -41,7 +37,7 @@ void main()
 	vec3 result;
 	for (int i = 0; i < NUMLIGHTS; i++)
 		result += getLight(Lights[i], albedo.rgb, norm, viewDir, mixx.b);
-	fragColor = vec4(result, 1.0);
+	fragColor = vec4(result, opacity.r);
 
 	//fragColor = texture(albedoTexture, TexCoord);
 	//fragColor = vec4(norm, 1.0);

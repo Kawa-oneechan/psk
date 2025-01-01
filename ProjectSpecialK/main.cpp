@@ -474,6 +474,11 @@ Shader* skyShader;
 Background* rainLayer;
 Iris* iris;
 
+Shader* grassShader;
+Shader* playerBodyShader;
+Shader* playerEyesShader;
+Shader* playerMouthShader;
+
 //extern int GetLetterScore(const std::string& text, bool checkSpaces = true);
 
 int main(int argc, char** argv)
@@ -532,6 +537,15 @@ int main(int argc, char** argv)
 	skyShader = new Shader("shaders/sky.fs");
 	whiteRect = new Texture("white.png", GL_CLAMP_TO_EDGE);
 	UI::controls = std::make_shared<Texture>("ui/controls.png");
+
+	playerBodyShader = new Shader("shaders/model.vs", "shaders/playerbody.fs");
+	playerEyesShader = new Shader("shaders/model.vs", "shaders/playereyes.fs");
+	playerMouthShader = new Shader("shaders/model.vs", "shaders/playermouth.fs");
+	//playerCheekShader = new Shader("shaders/model.vs", "shaders/playercheeks.fs");
+	//playerLegsShader = new Shader("shaders/model.vs", "shaders/playerlegs.fs");
+
+	grassShader = new Shader("shaders/model.vs", "shaders/grass.fs");;
+	commonUniforms.GrassColor = 0.5f;
 
 	GLuint commonBind = 1;
 	glGenBuffers(1, &commonBuffer);
@@ -607,16 +621,9 @@ int main(int argc, char** argv)
 		MainCamera.Set(glm::vec3(0, 0, -6), glm::vec3(0, 110, 0), 60);
 	}
 
-	/*
-	auto bob = Database::Find<Villager>("ac:cat00", villagers);
-	bob->defaultClothingID = "acnh:djkklogotee/neonpink"; //-V519 this is on purpose daijoubu
-	bob->Manifest();
-	town.Villagers.push_back(bob);
-	*/
 	auto cat01 = Database::Find<Villager>("ac:cat01", villagers);
 	cat01->Manifest();
 	town.Villagers.push_back(cat01);
-	MainCamera.Target(&cat01->Position);
 	cat01->Position = glm::vec3(30, 0, 30);
 	thePlayer.Position = glm::vec3(40, 0, 30);
 
@@ -685,6 +692,9 @@ int main(int argc, char** argv)
 		skyShader->Set("pitch", pitch);
 		cloudImage.Use(1);
 		starsImage.Use(2);
+
+		//modelShader->Use();
+		//modelShader->Set("viewPos", MainCamera.Position());
 
 		for (const auto& t : tickables)
 			t->Draw(dt * timeScale);

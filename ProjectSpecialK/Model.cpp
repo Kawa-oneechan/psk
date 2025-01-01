@@ -43,22 +43,25 @@ namespace MeshBucket
 		});
 
 		unsigned int currentShader = (unsigned int)-1;
-		glm::vec3 currentPos;
-		glm::quat currentRot;
+		glm::vec3 currentPos{ 0 };
+		auto currentRot = glm::quat();
 		unsigned int currentTextures[4]{ currentShader, currentShader, currentShader, currentShader };
 		int currentLayer = -1;
 
 		for (auto i = 0; i < meshesInBucket; i++)
 		{
+			bool justSwitchedShaders = false;
+
 			auto& m = meshBucket[i];
 			if (m.Shader->ID != currentShader)
 			{
+				justSwitchedShaders = true;
 				currentShader = m.Shader->ID;
 				currentLayer = -1;
 				m.Shader->Use();
 			}
 
-			if (m.Position != currentPos || m.Rotation != currentRot)
+			if (m.Position != currentPos || m.Rotation != currentRot || justSwitchedShaders)
 			{
 				currentPos = m.Position;
 				currentRot = m.Rotation;
@@ -126,6 +129,9 @@ namespace MeshBucket
 static std::map<std::string, std::tuple<Model*, int>> cache;
 extern Shader* modelShader;
 extern Shader* grassShader;
+extern Shader* playerBodyShader;
+extern Shader* playerEyesShader;
+extern Shader* playerMouthShader;
 
 //static std::map<std::string, unsigned int> matMap;
 
@@ -548,6 +554,12 @@ Model::Model(const std::string& modelPath) : file(modelPath)
 							auto s = mat["shader"]->AsString();
 							if (s == "grass")
 								m.Shader = grassShader;
+							else if (s == "playerbody")
+								m.Shader = playerBodyShader;
+							else if (s == "playereyes")
+								m.Shader = playerEyesShader;
+							else if (s == "playermouth")
+								m.Shader = playerMouthShader;
 						}
 						if (mat["albedo"])
 							m.Textures[0] = new TextureArray(basePath + mat["albedo"]->AsString());
@@ -557,6 +569,9 @@ Model::Model(const std::string& modelPath) : file(modelPath)
 							m.Textures[2] = new TextureArray(basePath + mat["mix"]->AsString());
 						if (mat["opacity"])
 							m.Textures[3] = new TextureArray(basePath + mat["opacity"]->AsString());
+
+						if (mat["visible"])
+							m.Visible = mat["visible"]->AsBool();
 
 						foundIt = true;
 						break;

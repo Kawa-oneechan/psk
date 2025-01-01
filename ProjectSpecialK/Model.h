@@ -77,7 +77,7 @@ private:
 public:
 	std::vector<Mesh> Meshes;
 	//std::array<TextureArray*, 32> Textures;
-	std::array<int, 8> TexArrayLayers;
+	std::array<int, 16> TexArrayLayers;
 	std::vector<Bone> Bones;
 	glm::mat4 finalBoneMatrices[MaxBones];
 

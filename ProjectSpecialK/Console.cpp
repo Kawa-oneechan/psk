@@ -14,7 +14,6 @@
 #endif
 
 extern float timeScale;
-extern float grassColor;
 extern bool debugPanelLayoutPolygons;
 extern bool postFx, wireframe;
 extern bool debuggerEnabled;
@@ -62,7 +61,7 @@ Console::Console()
 	RegisterCVar("name", CVar::Type::String, &thePlayer.Name);
 	RegisterCVar("nowear", CVar::Type::Bool, &noWear, true);
 	
-	RegisterCVar("grass", CVar::Type::Float, &grassColor, false);
+	RegisterCVar("grass", CVar::Type::Float, &commonUniforms.GrassColor, false);
 
 	//RegisterCVar("ai_disable", CVar::Type::Bool, &);
 	//RegisterCVar("cl_showpos", CVar::Type::Bool, &);
@@ -72,7 +71,6 @@ Console::Console()
 	//RegisterCVar("r_drum", CVar::Type::Bool, &);
 	//RegisterCVar("r_drumexp", CVar::Type::Float, &);
 	//RegisterCVar("r_farz", CVar::Type::float, &, yes);
-	//RegisterCVar("r_toon", CVar::Type::Bool, &);
 }
 
 void Console::Print(int color, const std::string& str)

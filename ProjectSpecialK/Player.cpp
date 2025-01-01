@@ -4,11 +4,34 @@
 #define GLM_ENABLE_EXPERIMENTAL
 #include "support/glm/gtx/rotate_vector.hpp"
 
+extern Shader* playerBodyShader;
+extern Shader* playerEyesShader;
+extern Shader* playerMouthShader;
+
 void Player::LoadModel()
 {
 	if (!_model)
 	{
 		_model = std::make_shared<::Model>("player/model.fbx");
+	}
+
+	_model->GetMesh("Nose01__mNose").Visible = true;
+
+	_hairModel = nullptr;
+	_shoesModel = nullptr;
+	_onePieceModel = nullptr;
+	_bottomsModel = nullptr;
+	_topsModel = nullptr;
+
+	if (Textures[0] == nullptr)
+	{
+		Textures[0] = new TextureArray("player/eyes/0/eye*_alb.png");
+		Textures[1] = new TextureArray("player/eyes/0/eye*_nrm.png");
+		Textures[2] = new TextureArray("player/eyes/0/eye*_mix.png");
+
+		Textures[3] = new TextureArray("player/mouth/0/mouth*_alb.png");
+		Textures[4] = new TextureArray("player/mouth/0/mouth*_nrm.png");
+		Textures[5] = new TextureArray("player/mouth/0/mouth*_mix.png");
 	}
 }
 
@@ -156,7 +179,6 @@ void Player::SetMouth(int index)
 	mouth = clamp(index, 0, 8);
 }
 
-
 void Player::Turn(float facing)
 {
 	auto m = Facing;
@@ -226,8 +248,15 @@ void Player::Draw(float)
 	_model->Textures[18] = Textures[17];
 	*/
 
+	std::copy(&Textures[0], &Textures[3], _model->GetMesh("Body__mEye").Textures);
+	std::copy(&Textures[3], &Textures[6], _model->GetMesh("Body__mMouth").Textures);
+
 	_model->TexArrayLayers[3] = face;
 	_model->TexArrayLayers[4] = mouth;
+
+	commonUniforms.PlayerSkin = SkinTone;
+	commonUniforms.PlayerEyes = EyeColor;
+	commonUniforms.PlayerHair = HairColor;
 
 	_model->Draw(Position, Facing);
 

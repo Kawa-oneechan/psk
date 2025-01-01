@@ -19,7 +19,6 @@ private:
 
 	std::array<TextureArray*, 20> Textures;
 	std::array<TextureArray*, 32> ClothingTextures;
-	glm::vec4 skinColor, hairColor, eyeColor;
 	
 	unsigned char _birthday[2]{ 26, 6 };
 	unsigned char _flags[255]{ 0 };
@@ -33,6 +32,10 @@ private:
 public:
 	std::string Name{ "Mayor" };
 	Gender Gender{ Gender::BEnby };
+
+	glm::vec4 SkinTone{ 1.0f, 0.67f, 0.51f, 1.0f };
+	glm::vec4 EyeColor{ 0.75f, 0.15f, 0.17f, 1.0f };
+	glm::vec4 HairColor{ 0.73f, 0.11f, 0.31f, 1.0f };
 
 	glm::vec3 Position{ 0 };
 	float Facing{ 0 };

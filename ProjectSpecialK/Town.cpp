@@ -34,8 +34,7 @@ extern Framebuffer* frameBuffer;
 
 extern unsigned int commonBuffer;
 
-float grassColor = 0.5f;
-float lastGrassColor = 0.0f;
+float lastGrassColor = 100.0f;
 
 TextureArray* groundTextureAlbs{ nullptr };
 TextureArray* groundTextureNrms{ nullptr };
@@ -45,37 +44,21 @@ TextureArray* cliffSideNrm{ nullptr };
 TextureArray* grassColors{ nullptr };
 TextureArray* snowMix{ nullptr };
 
-Shader* grassShader;
-
 static void LoadModels()
 {
-	//TODO
-	grassShader = new Shader("shaders/model.vs", "shaders/grass.fs");;
-
+	//TODO: use a JSON file
 	tileModels[0] = std::make_shared<::Model>("field/ground/unit.fbx");
 	tileModels[1] = std::make_shared<::Model>("field/ground/cliff-147.fbx");
-
-	for (auto& model : tileModels)
-	{
-		if (!model)
-			continue;
-
-		for (auto& mesh : model->Meshes)
-		{
-			if (mesh.Name == "GrassOP__mGrassCliffXlu" || mesh.Name == "PGrassBA__mProcGrass")
-				mesh.Visible = false;
-		}
-	}
 }
 
 static void UpdateGrass()
 {
-	if (glm::abs(lastGrassColor - grassColor) < glm::epsilon<float>())
+	if (glm::abs(lastGrassColor - commonUniforms.GrassColor) < glm::epsilon<float>())
 		return;
 
-	lastGrassColor = grassColor;
+	lastGrassColor = commonUniforms.GrassColor;
 	auto newMix = groundTextureMixs;
-	if (grassColor <= 0.052f || grassColor >= 0.865f)
+	if (commonUniforms.GrassColor <= 0.052f || commonUniforms.GrassColor >= 0.865f)
 		newMix = snowMix;
 
 	for (auto& model : tileModels)
@@ -363,11 +346,10 @@ void Town::drawWorker(float dt)
 	glPolygonMode(GL_FRONT_AND_BACK, wireframe ? GL_LINE : GL_FILL);
 	//modelShader->Use();
 
-	grassShader->Use();
-	grassShader->Set("color", grassColor);
 	UpdateGrass();
 
 	thePlayer.Draw(dt * timeScale);
+	MeshBucket::Flush();
 	for (const auto& v : town.Villagers)
 		v->Draw(dt * timeScale);
 	MeshBucket::Flush();
@@ -382,6 +364,7 @@ void Town::drawWorker(float dt)
 			auto model = tileModels[tile.Model];
 			auto pos = glm::vec3(x * 10, tile.Elevation * ElevationHeight, y * 10);
 			auto rot = tile.Rotation * 90.0f;
+			model->TexArrayLayers[0] = tile.Type;
 			model->Draw(pos, rot);
 		}
 	}

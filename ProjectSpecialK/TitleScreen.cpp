@@ -70,7 +70,7 @@ void TitleScreen::Tick(float dt)
 	{
 		musicManager.Play("title", true);
 		state = State::FadeIn;
-		MainCamera.Target(&(town.Villagers[0]->Position));
+		//MainCamera.Target(&(town.Villagers[0]->Position));
 		iris->In();
 	}
 	else if (state == State::FadeIn)

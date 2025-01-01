@@ -1,6 +1,9 @@
 {
 	"mSkin": {
-		"shader": "playerskin"
+		"shader": "playerbody",
+		"albedo": "skin_alb.png",
+		"mix": "skin_mix.png",
+		"normal": "skin_nrm.png"
 	},
 	"mEye": {
 		"shader": "playereyes"
@@ -12,6 +15,10 @@
 		"shader": "playercheek"
 	},
 	"mNose": {
+		"albedo": "nose_alb.png",
+		"mix": "nose_mix.png",
+		"normal": "nose_nrm.png",
+		"visible": false
 	},
 	"mSocks": {
 		"shader": "playersocks"

@@ -66,6 +66,12 @@ struct CommonUniforms
 	glm::mat4 Projection; //96
 	glm::mat4 InvView; //160
 	Light Lights[MaxLights]; //224
+	glm::vec4 PlayerSkin; //480
+	glm::vec4 PlayerEyes; //496
+	glm::vec4 PlayerCheeks; //512
+	glm::vec4 PlayerHair; //528
+	glm::vec4 PlayerHairHi; //544
+	float GrassColor; //560
 };
 extern CommonUniforms commonUniforms;
 

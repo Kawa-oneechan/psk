@@ -20,6 +20,12 @@ layout (std140) uniform CommonData
 	mat4 Projection; //96
 	mat4 InvView; //160
 	light Lights[NUMLIGHTS]; //224
+	vec4 PlayerSkin; //480
+	vec4 PlayerEyes; //496
+	vec4 PlayerCheeks; //512
+	vec4 PlayerHair; //528
+	vec4 PlayerHairHi; //544
+	float GrassColor; //560
 };
 
 //------------

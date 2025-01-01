@@ -10,5 +10,11 @@
 		"albedo": "cliff_alb.png",
 		"mix": "cliff_mix.png",
 		"normal": "cliff_nrm.png"
+	},
+	"mGrassCliffXlu": {
+		"visible": false
+	},
+	"mProcGrass": {
+		"visible": false
 	}
 }
