@@ -4,10 +4,6 @@
 #define GLM_ENABLE_EXPERIMENTAL
 #include "support/glm/gtx/rotate_vector.hpp"
 
-extern Shader* playerBodyShader;
-extern Shader* playerEyesShader;
-extern Shader* playerMouthShader;
-
 void Player::LoadModel()
 {
 	if (!_model)
@@ -36,20 +32,36 @@ void Player::LoadModel()
 		Textures[6] = new TextureArray("player/cheek*_alb.png");
 	}
 
+	/*
+	Clothing texture order:
+			alb	nml	mix	opc
+	top/1p	0	1	2	3
+	bottom	4	5	6	7
+	shoes	8	9	10	11
+	socks	12	13	14	15
+	...
+	*/
+
 	if (!_onePieceModel && OnePiece)
 	{
 		_onePieceModel = std::make_shared<::Model>(fmt::format("player/outfits/{}.fbx", OnePiece->PlayerModel()));
 
-		/*
-		Texture order:
-		alb	nml	mix	opc
-		body	0	1	2	3
-		...
-		*/
 		ClothingTextures[0] = new TextureArray(fmt::format("{}/albedo*.png", OnePiece->Path));
 		ClothingTextures[1] = new TextureArray(fmt::format("{}/normal.png", OnePiece->Path));
 		ClothingTextures[2] = new TextureArray(fmt::format("{}/mix.png", OnePiece->Path));
 		ClothingTextures[3] = new TextureArray(fmt::format("{}/opacity.png", OnePiece->Path));
+	}
+
+	if (!Socks)
+	{
+		ClothingTextures[12] = new TextureArray("player/nosocks_alb.png");
+		ClothingTextures[13] = new TextureArray("fallback_nrm.png");
+		ClothingTextures[14] = new TextureArray("white.png");
+		ClothingTextures[15] = new TextureArray("white.png");
+	}
+	else
+	{
+		//Actually load the sock textures.
 	}
 }
 
@@ -235,12 +247,13 @@ void Player::Draw(float)
 	//TODO: Model::SetTexture method, yo!
 	std::copy(&Textures[0], &Textures[3], _model->GetMesh("_mEye").Textures);
 	std::copy(&Textures[3], &Textures[6], _model->GetMesh("_mMouth").Textures);
-	//std::copy(&Textures[6], &Textures[9], _model->GetMesh("_mCheek").Textures);
 	_model->GetMesh("_mCheek").Textures[0] = Textures[6];
 
 	_model->SetLayer("_mCheek", cheeks);
 	_model->SetLayer("_mEye", face);
 	_model->SetLayer("_mMouth", mouth);
+
+	std::copy(&ClothingTextures[12], &ClothingTextures[15], _model->GetMesh("_mSocks").Textures);
 
 	commonUniforms.PlayerSkin = SkinTone;
 	commonUniforms.PlayerEyes = EyeColor;
@@ -251,35 +264,18 @@ void Player::Draw(float)
 
 	if (_hairModel)
 	{
-		/*
-		_hairModel->Textures[0] = Textures[18];
-		_hairModel->Textures[1] = Textures[19];
-		_hairModel->Textures[2] = Textures[20];
-		*/
 		_hairModel->Draw(Position, Facing);
 	}
 
 	if (_shoesModel && Shoes)
 	{
-		/*
-		_shoesModel->Textures[0] = ClothingTextures[8];
-		_shoesModel->Textures[1] = ClothingTextures[9];
-		_shoesModel->Textures[2] = ClothingTextures[10];
-		_shoesModel->Textures[3] = ClothingTextures[11];
-		*/
 		_shoesModel->SetLayer(Shoes->Variant());
 		_shoesModel->Draw(Position, Facing);
 	}
 
 	if (_onePieceModel && OnePiece)
 	{
-		/*
-		_onePieceModel->Textures[0] = ClothingTextures[0];
-		_onePieceModel->Textures[1] = ClothingTextures[1];
-		_onePieceModel->Textures[2] = ClothingTextures[2];
-		_onePieceModel->Textures[3] = ClothingTextures[3];
-		*/
-		std::copy(&ClothingTextures[0], &ClothingTextures[3], _onePieceModel->GetMesh("_mTops").Textures);
+		std::copy(&ClothingTextures[0], &ClothingTextures[4], _onePieceModel->GetMesh("_mTops").Textures);
 		_onePieceModel->SetLayer(OnePiece->Variant());
 		_onePieceModel->Draw(Position, Facing);
 	}
@@ -287,23 +283,11 @@ void Player::Draw(float)
 	{
 		if (_bottomsModel && Bottoms)
 		{
-			/*
-			_bottomsModel->Textures[0] = ClothingTextures[4];
-			_bottomsModel->Textures[1] = ClothingTextures[5];
-			_bottomsModel->Textures[2] = ClothingTextures[6];
-			_bottomsModel->Textures[3] = ClothingTextures[7];
-			*/
 			_bottomsModel->SetLayer(Bottoms->Variant());
 			_bottomsModel->Draw(Position, Facing);
 		}
 		if (_topsModel && Tops)
 		{
-			/*
-			_topsModel->Textures[0] = ClothingTextures[0];
-			_topsModel->Textures[1] = ClothingTextures[1];
-			_topsModel->Textures[2] = ClothingTextures[2];
-			_topsModel->Textures[3] = ClothingTextures[3];
-			*/
 			_topsModel->SetLayer(Tops->Variant());
 			_topsModel->Draw(Position, Facing);
 		}

@@ -21,7 +21,7 @@
 		"visible": false
 	},
 	"mSocks": {
-		"shader": "playersocks"
+		"shader": "playerlegs"
 	},
 	"mPaint": {
 		"visible": false

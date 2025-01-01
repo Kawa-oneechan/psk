@@ -479,6 +479,7 @@ Shader* playerBodyShader;
 Shader* playerEyesShader;
 Shader* playerMouthShader;
 Shader* playerCheekShader;
+Shader* playerLegsShader;
 
 //extern int GetLetterScore(const std::string& text, bool checkSpaces = true);
 
@@ -543,7 +544,7 @@ int main(int argc, char** argv)
 	playerEyesShader = new Shader("shaders/model.vs", "shaders/playereyes.fs");
 	playerMouthShader = new Shader("shaders/model.vs", "shaders/playermouth.fs");
 	playerCheekShader = new Shader("shaders/model.vs", "shaders/playercheek.fs");
-	//playerLegsShader = new Shader("shaders/model.vs", "shaders/playerlegs.fs");
+	playerLegsShader = new Shader("shaders/model.vs", "shaders/playerlegs.fs");
 
 	grassShader = new Shader("shaders/model.vs", "shaders/grass.fs");;
 	commonUniforms.GrassColor = 0.5f;
@@ -627,7 +628,7 @@ int main(int argc, char** argv)
 	town.Villagers.push_back(cat01);
 	cat01->Position = glm::vec3(30, 0, 30);
 	thePlayer.Position = glm::vec3(40, 0, 30);
-	thePlayer.OnePiece = std::make_shared<InventoryItem>("acnh:gumdropdress");
+	thePlayer.OnePiece = std::make_shared<InventoryItem>("acnh:palatialtankdress");
 
 	commonUniforms.Projection = glm::perspective(glm::radians(45.0f), (float)width / (float)height, 0.1f, 300.0f);
 
