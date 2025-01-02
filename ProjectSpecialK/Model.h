@@ -45,6 +45,7 @@ class Model
 	{
 		std::string Name;
 		glm::mat4 Offset;
+		glm::mat4 NodeToWorld;
 		glm::mat4 LocalTransform{ glm::mat4(1) };
 		std::vector<int> Children;
 	};

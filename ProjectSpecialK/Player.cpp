@@ -9,11 +9,11 @@ void Player::LoadModel()
 	if (!_model)
 	{
 		_model = std::make_shared<::Model>("player/model.fbx");
+		_hairModel = std::make_shared<::Model>(fmt::format("player/hair/{}/model.fbx", 0));
 	}
 
 	_model->SetVisibility("Nose01__mNose", true);
 
-	_hairModel = nullptr;
 	_shoesModel = nullptr;
 	_onePieceModel = nullptr;
 	_bottomsModel = nullptr;
@@ -51,6 +51,26 @@ void Player::LoadModel()
 		ClothingTextures[2] = new TextureArray(fmt::format("{}/mix.png", OnePiece->Path));
 		ClothingTextures[3] = new TextureArray(fmt::format("{}/opacity.png", OnePiece->Path));
 	}
+	else if (!_topsModel && Tops)
+	{
+		_topsModel = std::make_shared<::Model>(fmt::format("player/outfits/{}.fbx", Tops->PlayerModel()));
+
+		ClothingTextures[0] = new TextureArray(fmt::format("{}/albedo*.png", Tops->Path));
+		ClothingTextures[1] = new TextureArray(fmt::format("{}/normal.png", Tops->Path));
+		ClothingTextures[2] = new TextureArray(fmt::format("{}/mix.png", Tops->Path));
+		ClothingTextures[3] = new TextureArray(fmt::format("{}/opacity.png", Tops->Path));
+	}
+
+	if (!_bottomsModel && Bottoms)
+	{
+		_bottomsModel = std::make_shared<::Model>(fmt::format("player/outfits/{}.fbx", Bottoms->PlayerModel()));
+
+		ClothingTextures[4] = new TextureArray(fmt::format("{}/albedo*.png", Bottoms->Path));
+		ClothingTextures[5] = new TextureArray(fmt::format("{}/normal.png", Bottoms->Path));
+		ClothingTextures[6] = new TextureArray(fmt::format("{}/mix.png", Bottoms->Path));
+		ClothingTextures[7] = new TextureArray(fmt::format("{}/opacity.png", Bottoms->Path));
+	}
+
 
 	if (!Socks)
 	{
@@ -260,11 +280,20 @@ void Player::Draw(float)
 	commonUniforms.PlayerCheeks = CheekColor;
 	commonUniforms.PlayerHair = HairColor;
 
+	//_model->MoveBone(_model->FindBone("Head"), glm::vec3(0, glm::radians(-45.0f), 0));
+	//_model->MoveBone(_model->FindBone("Spine_1"), glm::vec3(sinf((float)glfwGetTime()) * glm::radians(16.0f), 0, 0));
+	_model->MoveBone(_model->FindBone("Spine_1"), glm::vec3(glm::radians(-15.0f), 0, 0));
+	_model->CalculateBoneTransform(_model->FindBone("Skl_Root"));
 	_model->Draw(Position, Facing);
 
 	if (_hairModel)
 	{
-		_hairModel->Draw(Position, Facing);
+		//TODO: figure out how to ATTACH shit!
+		auto headMat = _model->finalBoneMatrices[_model->FindBone("Head")];
+		auto headBone = _hairModel->Bones[_hairModel->FindBone("Root")];
+		headBone.LocalTransform = headMat;
+		_hairModel->CalculateBoneTransform(0);
+		//_hairModel->Draw(Position, Facing);
 	}
 
 	if (_shoesModel && Shoes)
@@ -283,11 +312,13 @@ void Player::Draw(float)
 	{
 		if (_bottomsModel && Bottoms)
 		{
+			std::copy(&ClothingTextures[4], &ClothingTextures[8], _bottomsModel->GetMesh("_mBottoms").Textures);
 			_bottomsModel->SetLayer(Bottoms->Variant());
 			_bottomsModel->Draw(Position, Facing);
 		}
 		if (_topsModel && Tops)
 		{
+			std::copy(&ClothingTextures[0], &ClothingTextures[4], _topsModel->GetMesh("_mTops").Textures);
 			_topsModel->SetLayer(Tops->Variant());
 			_topsModel->Draw(Position, Facing);
 		}

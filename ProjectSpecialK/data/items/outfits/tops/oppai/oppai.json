@@ -6,5 +6,8 @@
 	"price": 640,
 	"variants": [ "black", "white", "gray" ],
 	"icon": "tops",
-	"style": "ts_short"
+	"style": "ts_short",
+	"xx_unparsedParam": {
+		"45_ItemPlayerTopsBottomsForm": "PlayerTopsTopTshirtsH"
+	}
 }

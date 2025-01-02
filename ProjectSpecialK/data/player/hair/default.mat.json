@@ -1,0 +1,8 @@
+{
+	"mHair": {
+		"shader": "playerhair",
+		"albedo": "albgry.png",
+		"mix": "mix.png",
+		"normal": "normal.png"
+	}
+}

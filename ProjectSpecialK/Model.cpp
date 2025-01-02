@@ -353,6 +353,16 @@ static glm::mat4 ufbxToGlmMat4(const ufbx_matrix& mat)
 	};
 	return glm::make_mat4(ret);
 }
+
+static glm::vec3 ufbxToGlmVec(const ufbx_vec3& vec)
+{
+	return glm::vec3(vec.x, vec.y, vec.z);
+}
+
+static glm::quat ufbxToGlmQuat(const ufbx_quat& qua)
+{
+	return glm::make_quat(&qua.x);
+}
 #pragma warning(pop)
 
 Model::Model(const std::string& modelPath) : file(modelPath)
@@ -431,6 +441,16 @@ Model::Model(const std::string& modelPath) : file(modelPath)
 			auto b = Bone();
 			b.Name = boneName;
 			b.Offset = ufbxToGlmMat4(bone->geometry_to_node);
+			b.NodeToWorld = ufbxToGlmMat4(bone->node_to_world);
+			/*
+			{
+				auto tr = glm::translate(glm::mat4(1), ufbxToGlmVec(bone->local_transform.translation));
+				auto ro = (glm::mat4)ufbxToGlmQuat(bone->local_transform.rotation);
+				auto sc = glm::scale(glm::mat4(1), ufbxToGlmVec(bone->local_transform.scale));
+
+				b.Offset = tr * ro * sc;
+			}
+			*/
 			Bones.push_back(b);
 			clusterMap[boneCt] = i;
 			boneCt++;
