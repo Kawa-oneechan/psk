@@ -287,8 +287,23 @@ void Player::Draw(float)
 	//_model->CalculateBoneTransform(0);
 	_model->Draw(Position, Facing);
 
-	auto headBone = _model->Bones[0];
-	Sprite::DrawText(fmt::format("Head bone!\nOrigin:\n   {} {} {} {}\n   {} {} {} {}\n   {} {} {} {}\n   {} {} {} {}\nFinal Matrix:\n   {} {} {} {}\n   {} {} {} {}\n   {} {} {} {}\n   {} {} {} {}", headBone.Offset[0][0], headBone.Offset[0][1], headBone.Offset[0][2], headBone.Offset[0][3], headBone.Offset[1][0], headBone.Offset[1][1], headBone.Offset[1][2], headBone.Offset[1][3], headBone.Offset[2][0], headBone.Offset[2][1], headBone.Offset[2][2], headBone.Offset[2][3], headBone.Offset[3][0], headBone.Offset[3][1], headBone.Offset[3][2], headBone.Offset[3][3], _model->finalBoneMatrices[0][0][0], _model->finalBoneMatrices[0][0][1], _model->finalBoneMatrices[0][0][2], _model->finalBoneMatrices[0][0][3], _model->finalBoneMatrices[0][1][0], _model->finalBoneMatrices[0][1][1], _model->finalBoneMatrices[0][1][2], _model->finalBoneMatrices[0][1][3], _model->finalBoneMatrices[0][2][0], _model->finalBoneMatrices[0][2][1], _model->finalBoneMatrices[0][2][2], _model->finalBoneMatrices[0][2][3], _model->finalBoneMatrices[0][3][0], _model->finalBoneMatrices[0][3][1], _model->finalBoneMatrices[0][3][2], _model->finalBoneMatrices[0][3][3]), glm::vec2(64), glm::vec4(1, 0, 0, 1));
+	auto headBone = _model->Bones[0].Offset;
+	auto headLocal = _model->Bones[0].LocalTransform;
+	auto finalBone = _model->finalBoneMatrices[0];
+	Sprite::DrawText(fmt::format("HEAD BONE\n---------\nOrigin:\n   {} {} {} {}\n   {} {} {} {}\n   {} {} {} {}\n   {} {} {} {}\nLocal Transform:\n   {} {} {} {}\n   {} {} {} {}\n   {} {} {} {}\nFinal Matrix:\n   {} {} {} {}\n   {} {} {} {}\n   {} {} {} {}\n   {} {} {} {}",
+		headBone[0][0], headBone[1][0], headBone[2][0], headBone[3][0],
+		headBone[0][1], headBone[1][1], headBone[2][1], headBone[3][1],
+		headBone[0][2], headBone[1][2], headBone[2][2], headBone[3][2],
+		headBone[0][3], headBone[1][3], headBone[2][3], headBone[3][3],
+		headLocal[0][0], headLocal[1][0], headLocal[2][0], headLocal[3][0],
+		headLocal[0][1], headLocal[1][1], headLocal[2][1], headLocal[3][1],
+		headLocal[0][2], headLocal[1][2], headLocal[2][2], headLocal[3][2],
+		headLocal[0][3], headLocal[1][3], headLocal[2][3], headLocal[3][3],
+		finalBone[0][0], finalBone[1][0], finalBone[2][0], finalBone[3][0],
+		finalBone[0][1], finalBone[1][1], finalBone[2][1], finalBone[3][1],
+		finalBone[0][2], finalBone[1][2], finalBone[2][2], finalBone[3][2],
+		finalBone[0][3], finalBone[1][3], finalBone[2][3], finalBone[3][3]
+	), glm::vec2(128), glm::vec4(1, 1, 0, 1));
 
 	if (_hairModel)
 	{

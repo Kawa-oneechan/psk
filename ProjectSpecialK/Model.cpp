@@ -69,8 +69,7 @@ namespace MeshBucket
 				auto t = glm::translate(glm::mat4(1), m.Position);
 				auto r = (glm::mat4)m.Rotation;
 				//auto s = glm::scale(glm::mat4(1), scale);
-				//auto model = t * r; //* s;
-				auto model = glm::mat4(1);
+				auto model = t * r; // * s;
 
 				m.Shader->Set("model", model);
 			}

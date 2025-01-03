@@ -623,10 +623,10 @@ int main(int argc, char** argv)
 		MainCamera.Set(glm::vec3(0, 0, -6), glm::vec3(0, 110, 0), 60);
 	}
 
-	auto cat01 = Database::Find<Villager>("ac:cat01", villagers);
-	cat01->Manifest();
-	town.Villagers.push_back(cat01);
-	cat01->Position = glm::vec3(30, 0, 30);
+	//auto cat01 = Database::Find<Villager>("ac:cat01", villagers);
+	//cat01->Manifest();
+	//town.Villagers.push_back(cat01);
+	//cat01->Position = glm::vec3(30, 0, 30);
 	//thePlayer.Position = glm::vec3(40, 0, 30);
 	//thePlayer.Tops = std::make_shared<InventoryItem>("psk:oppai");
 	//thePlayer.Bottoms = std::make_shared<InventoryItem>("acnh:denimcutoffs/lightblue");
