@@ -69,7 +69,8 @@ namespace MeshBucket
 				auto t = glm::translate(glm::mat4(1), m.Position);
 				auto r = (glm::mat4)m.Rotation;
 				//auto s = glm::scale(glm::mat4(1), scale);
-				auto model = t * r; //* s;
+				//auto model = t * r; //* s;
+				auto model = glm::mat4(1);
 
 				m.Shader->Set("model", model);
 			}
@@ -361,7 +362,8 @@ static glm::vec3 ufbxToGlmVec(const ufbx_vec3& vec)
 
 static glm::quat ufbxToGlmQuat(const ufbx_quat& qua)
 {
-	return glm::make_quat(&qua.x);
+	//return glm::make_quat(&qua.x);
+	return glm::quat(qua.x, qua.y, qua.z, qua.w);
 }
 #pragma warning(pop)
 
@@ -442,15 +444,16 @@ Model::Model(const std::string& modelPath) : file(modelPath)
 			b.Name = boneName;
 			b.Offset = ufbxToGlmMat4(bone->geometry_to_node);
 			b.NodeToWorld = ufbxToGlmMat4(bone->node_to_world);
-			/*
+			b.NodeToParent = ufbxToGlmMat4(bone->node_to_parent);
+			//*
 			{
 				auto tr = glm::translate(glm::mat4(1), ufbxToGlmVec(bone->local_transform.translation));
 				auto ro = (glm::mat4)ufbxToGlmQuat(bone->local_transform.rotation);
 				auto sc = glm::scale(glm::mat4(1), ufbxToGlmVec(bone->local_transform.scale));
 
-				b.Offset = tr * ro * sc;
+				b.Offset = tr;// * sc * ro;
 			}
-			*/
+			//*/
 			Bones.push_back(b);
 			clusterMap[boneCt] = i;
 			boneCt++;
@@ -724,6 +727,8 @@ int Model::FindBone(const std::string& name)
 
 void Model::CalculateBoneTransform(int id, const glm::mat4& parentTransform)
 {
+	if (id == 0)
+		id = 0;
 	auto globalTransformation = parentTransform * Bones[id].LocalTransform;
 
 	finalBoneMatrices[id] = globalTransformation * Bones[id].Offset;
@@ -736,8 +741,36 @@ void Model::MoveBone(int id, const glm::vec3& rotation, const glm::vec3& transfo
 	if (id == NoBone)
 		return;
 
+	//*
 	auto t = glm::translate(glm::mat4(1), transform);
 	auto r = (glm::mat4)glm::quat(rotation);
 	auto s = glm::scale(glm::mat4(1), scale);
-	Bones[id].LocalTransform = t * r * s;
+	Bones[id].LocalTransform = s * r * t;
+	/*/
+	/*
+	auto t = glm::translate(glm::mat4(1), transform);
+	auto rx = glm::rotate(glm::mat4(1), rotation.x, glm::vec3(1, 0, 0));
+	auto ry = glm::rotate(glm::mat4(1), rotation.y, glm::vec3(0, 1, 0));
+	auto rz = glm::rotate(glm::mat4(1), rotation.z, glm::vec3(0, 0, 1));
+	auto r = rx * ry * rz;
+	auto s = glm::scale(glm::mat4(1), scale);
+	Bones[id].LocalTransform = t * s * r;
+	*/
+	/*
+	auto t = glm::translate(glm::mat4(1), transform);
+	auto rx = glm::rotate(t, rotation.x, glm::vec3(1, 0, 0));
+	auto ry = glm::rotate(rx, rotation.y, glm::vec3(0, 1, 0));
+	auto rz = glm::rotate(ry, rotation.z, glm::vec3(0, 0, 1));
+	auto s = glm::scale(rz, scale);
+	Bones[id].LocalTransform = s;
+	*/
+	/*
+	auto m = glm::mat4(1);
+	m = glm::translate(m, transform);
+	m = glm::scale(m, scale);
+	m = glm::rotate(m, rotation.x, glm::vec3(1, 0, 0));
+	//m = glm::rotate(m, rotation.y, glm::vec3(0, 1, 0));
+	//m = glm::rotate(m, rotation.z, glm::vec3(0, 0, 1));
+	Bones[id].LocalTransform = m;
+	*/
 }

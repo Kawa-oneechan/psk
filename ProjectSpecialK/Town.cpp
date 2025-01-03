@@ -366,7 +366,7 @@ void Town::drawWorker(float dt)
 				model->SetLayerByMat("mGrass", tile.Type); //ground, river, or waterfall.
 			else if (tile.Model < 44)
 				model->SetLayer("GrassT__mGrass", tile.Type); //cliffs should only have the top grass changed.
-			model->Draw(pos, rot);
+			//model->Draw(pos, rot);
 		}
 	}
 	MeshBucket::Flush();

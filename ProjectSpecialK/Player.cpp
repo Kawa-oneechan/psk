@@ -280,11 +280,15 @@ void Player::Draw(float)
 	commonUniforms.PlayerCheeks = CheekColor;
 	commonUniforms.PlayerHair = HairColor;
 
-	//_model->MoveBone(_model->FindBone("Head"), glm::vec3(0, glm::radians(-45.0f), 0));
+	_model->MoveBone(_model->FindBone("Head"), glm::vec3(glm::radians(-90.0f), 0, 0));
 	//_model->MoveBone(_model->FindBone("Spine_1"), glm::vec3(sinf((float)glfwGetTime()) * glm::radians(16.0f), 0, 0));
-	_model->MoveBone(_model->FindBone("Spine_1"), glm::vec3(glm::radians(-15.0f), 0, 0));
+	//_model->MoveBone(_model->FindBone("Spine_1"), glm::vec3(0, 0, glm::radians(45.0f)));
 	_model->CalculateBoneTransform(_model->FindBone("Skl_Root"));
+	//_model->CalculateBoneTransform(0);
 	_model->Draw(Position, Facing);
+
+	auto headBone = _model->Bones[0];
+	Sprite::DrawText(fmt::format("Head bone!\nOrigin:\n   {} {} {} {}\n   {} {} {} {}\n   {} {} {} {}\n   {} {} {} {}\nFinal Matrix:\n   {} {} {} {}\n   {} {} {} {}\n   {} {} {} {}\n   {} {} {} {}", headBone.Offset[0][0], headBone.Offset[0][1], headBone.Offset[0][2], headBone.Offset[0][3], headBone.Offset[1][0], headBone.Offset[1][1], headBone.Offset[1][2], headBone.Offset[1][3], headBone.Offset[2][0], headBone.Offset[2][1], headBone.Offset[2][2], headBone.Offset[2][3], headBone.Offset[3][0], headBone.Offset[3][1], headBone.Offset[3][2], headBone.Offset[3][3], _model->finalBoneMatrices[0][0][0], _model->finalBoneMatrices[0][0][1], _model->finalBoneMatrices[0][0][2], _model->finalBoneMatrices[0][0][3], _model->finalBoneMatrices[0][1][0], _model->finalBoneMatrices[0][1][1], _model->finalBoneMatrices[0][1][2], _model->finalBoneMatrices[0][1][3], _model->finalBoneMatrices[0][2][0], _model->finalBoneMatrices[0][2][1], _model->finalBoneMatrices[0][2][2], _model->finalBoneMatrices[0][2][3], _model->finalBoneMatrices[0][3][0], _model->finalBoneMatrices[0][3][1], _model->finalBoneMatrices[0][3][2], _model->finalBoneMatrices[0][3][3]), glm::vec2(64), glm::vec4(1, 0, 0, 1));
 
 	if (_hairModel)
 	{

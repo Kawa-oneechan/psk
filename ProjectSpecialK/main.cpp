@@ -627,7 +627,7 @@ int main(int argc, char** argv)
 	cat01->Manifest();
 	town.Villagers.push_back(cat01);
 	cat01->Position = glm::vec3(30, 0, 30);
-	thePlayer.Position = glm::vec3(40, 0, 30);
+	//thePlayer.Position = glm::vec3(40, 0, 30);
 	//thePlayer.Tops = std::make_shared<InventoryItem>("psk:oppai");
 	//thePlayer.Bottoms = std::make_shared<InventoryItem>("acnh:denimcutoffs/lightblue");
 
