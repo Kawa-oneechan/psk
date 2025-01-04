@@ -282,7 +282,7 @@ void Player::Draw(float)
 
 	//_model->MoveBone(_model->FindBone("Head"), glm::vec3(0, glm::radians(-45.0f), 0));
 	//_model->MoveBone(_model->FindBone("Spine_1"), glm::vec3(sinf((float)glfwGetTime()) * glm::radians(16.0f), 0, 0));
-	_model->MoveBone(_model->FindBone("Spine_1"), glm::vec3(glm::radians(-15.0f), 0, 0));
+	//_model->MoveBone(_model->FindBone("Head"), glm::vec3(glm::radians(-45.0f), 0, 0));
 	_model->CalculateBoneTransform(_model->FindBone("Skl_Root"));
 	_model->Draw(Position, Facing);
 

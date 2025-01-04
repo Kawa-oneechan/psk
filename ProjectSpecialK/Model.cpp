@@ -440,8 +440,8 @@ Model::Model(const std::string& modelPath) : file(modelPath)
 			debprint(0, "* {}. {}", boneCt, boneName);
 			auto b = Bone();
 			b.Name = boneName;
-			b.Offset = ufbxToGlmMat4(bone->geometry_to_node);
-			b.NodeToWorld = ufbxToGlmMat4(bone->node_to_world);
+			b.Offset = ufbxToGlmMat4(ufbx_matrix_invert(&bone->node_to_parent));
+			b.NodeToWorld = ufbxToGlmMat4(ufbx_matrix_invert(&bone->node_to_world));
 			/*
 			{
 				auto tr = glm::translate(glm::mat4(1), ufbxToGlmVec(bone->local_transform.translation));
@@ -726,7 +726,7 @@ void Model::CalculateBoneTransform(int id, const glm::mat4& parentTransform)
 {
 	auto globalTransformation = parentTransform * Bones[id].LocalTransform;
 
-	finalBoneMatrices[id] = globalTransformation * Bones[id].Offset;
+	finalBoneMatrices[id] = globalTransformation * Bones[id].NodeToWorld;
 	for (auto i : Bones[id].Children)
 		CalculateBoneTransform(i, globalTransformation);
 }
