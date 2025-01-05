@@ -46,7 +46,10 @@ static void LoadModels()
 {
 	//TODO: use a JSON file
 	tileModels[0] = std::make_shared<::Model>("field/ground/unit.fbx");
-	tileModels[1] = std::make_shared<::Model>("field/ground/cliff-147.fbx");
+	tileModels[1] = std::make_shared<::Model>("field/ground/cliff-12346789.fbx");
+	tileModels[2] = std::make_shared<::Model>("field/ground/cliff-147.fbx");
+	tileModels[3] = std::make_shared<::Model>("field/ground/cliff-14789.fbx");
+	tileModels[4] = std::make_shared<::Model>("field/ground/cliff-1.fbx");
 }
 
 static void UpdateGrass()
@@ -144,27 +147,55 @@ Town::Town()
 	{
 		//Top
 		Terrain[i].Elevation = 1;
-		Terrain[i].Model = 1;
+		Terrain[i].Model = 2;
 		Terrain[i].Rotation = 1;
 	}
 	for (int i = 0; i < Height; i++)
 	{
 		//Left
 		Terrain[(i * Width)].Elevation = 1;
-		Terrain[(i * Width)].Model = 1;
+		Terrain[(i * Width)].Model = 2;
 		Terrain[(i * Width)].Rotation = 2;
 		//Right
 		Terrain[(i * Width) + (Width - 1)].Elevation = 1;
-		Terrain[(i * Width) + (Width - 1)].Model = 1;
+		Terrain[(i * Width) + (Width - 1)].Model = 2;
 		Terrain[(i * Width) + (Width - 1)].Rotation = 0;
 	}
-	Terrain[0].Model = 0; //left corner
-	Terrain[0].Rotation = 0;
-	Terrain[Width - 1].Model = 0; //right corner
+	Terrain[0].Model = 4; //left corner
+	Terrain[0].Rotation = 1;
+	Terrain[Width - 1].Model = 4; //right corner
 	Terrain[Width - 1].Rotation = 0;
 
 	Terrain[(4 * Width) + 2].Type = 1; //single sand tile
 	Terrain[(0 * Width) + 2].Type = 2; //single stone tile on cliff
+	
+	Terrain[(8 * Width) + 5].Model = 1; //single column
+	Terrain[(8 * Width) + 5].Elevation = 2;
+	Terrain[(7 * Width) + 4].Model = 3; //surroundings
+	Terrain[(7 * Width) + 4].Elevation = 1;
+	Terrain[(7 * Width) + 4].Rotation = 0;
+	Terrain[(7 * Width) + 5].Model = 2;
+	Terrain[(7 * Width) + 5].Elevation = 1;
+	Terrain[(7 * Width) + 5].Rotation = 3;
+	Terrain[(7 * Width) + 6].Model = 3;
+	Terrain[(7 * Width) + 6].Elevation = 1;
+	Terrain[(7 * Width) + 6].Rotation = 3;
+	Terrain[(8 * Width) + 4].Model = 2;
+	Terrain[(8 * Width) + 4].Elevation = 1;
+	Terrain[(8 * Width) + 4].Rotation = 0;
+	Terrain[(8 * Width) + 6].Model = 2;
+	Terrain[(8 * Width) + 6].Elevation = 1;
+	Terrain[(8 * Width) + 6].Rotation = 2;
+	Terrain[(9 * Width) + 4].Model = 3;
+	Terrain[(9 * Width) + 4].Elevation = 1;
+	Terrain[(9 * Width) + 4].Rotation = 1;
+	Terrain[(9 * Width) + 5].Model = 2;
+	Terrain[(9 * Width) + 5].Elevation = 1;
+	Terrain[(9 * Width) + 5].Rotation = 1;
+	Terrain[(9 * Width) + 6].Model = 3;
+	Terrain[(9 * Width) + 6].Elevation = 1;
+	Terrain[(9 * Width) + 6].Rotation = 2;
+
 	//end test
 
 	UseDrum = true;
@@ -362,8 +393,8 @@ void Town::drawWorker(float dt)
 			auto model = tileModels[tile.Model];
 			auto pos = glm::vec3(x * 10, tile.Elevation * ElevationHeight, y * 10);
 			auto rot = tile.Rotation * 90.0f;
-			if (tile.Model == 0 || tile.Model < 44)
-				model->SetLayerByMat("mGrass", tile.Type); //ground, river, or waterfall.
+			if (tile.Model == 0 || tile.Model > 44)
+				model->SetLayerByMat("_mGrass", tile.Type); //ground, river, or waterfall.
 			else if (tile.Model < 44)
 				model->SetLayer("GrassT__mGrass", tile.Type); //cliffs should only have the top grass changed.
 			model->Draw(pos, rot);
