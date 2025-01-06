@@ -18,7 +18,7 @@ Messager::Message Messager::Add(const std::string& text, bool persist)
 	return message;
 }
 
-void Messager::Tick(float dt)
+bool Messager::Tick(float dt)
 {
 	for (auto& message : messages)
 	{
@@ -31,6 +31,7 @@ void Messager::Tick(float dt)
 			message.Lifetime = 0.0f;
 		}
 	}
+	return true;
 }
 
 void Messager::Draw(float dt)

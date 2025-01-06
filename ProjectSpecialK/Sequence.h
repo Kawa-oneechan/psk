@@ -11,7 +11,7 @@ private:
 
 public:
 	Sequence(std::initializer_list<TickableP> tickables);
-	void Tick(float dt);
+	bool Tick(float dt);
 	void Draw(float dt);
 };
 
@@ -22,5 +22,5 @@ private:
 
 public:
 	FuncAsTickable(std::function<void()> function) : wrapped(function) {}
-	void Tick(float dt);
+	bool Tick(float dt);
 };

@@ -12,8 +12,6 @@ ItemHotbar::ItemHotbar()
 
 //#ifdef DEBUG
 	//For testing only until we get further.
-	thePlayer.GiveItem(std::make_shared<InventoryItem>("acnh:shovel"));
-	thePlayer.GiveItem(std::make_shared<InventoryItem>("psk:toolfallback"));
 	RegisterItem(0, 0);
 	RegisterItem(2, 1);
 //#endif
@@ -30,9 +28,10 @@ void ItemHotbar::Update()
 	}
 }
 
-void ItemHotbar::Tick(float dt)
+bool ItemHotbar::Tick(float dt)
 {
-	layout.Tick(dt);
+	//TODO: respond to clicks
+	return layout.Tick(dt);
 }
 
 void ItemHotbar::Draw(float dt)

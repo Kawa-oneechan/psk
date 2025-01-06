@@ -10,7 +10,7 @@ MusicManager::MusicManager()
 {
 }
 
-void MusicManager::Tick(float dt)
+bool MusicManager::Tick(float dt)
 {
 	if (state == MusicState::FadeOut || state == MusicState::FadeToQueue)
 	{
@@ -32,6 +32,7 @@ void MusicManager::Tick(float dt)
 			}
 		}
 	}
+	return true;
 }
 
 void MusicManager::Draw(float)

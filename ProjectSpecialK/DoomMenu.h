@@ -97,7 +97,7 @@ private:
 public:
 	DoomMenu();
 	void Translate();
-	void Tick(float dt);
+	bool Tick(float dt);
 	void Draw(float dt);
 	bool Scancode(unsigned int scancode);
 };

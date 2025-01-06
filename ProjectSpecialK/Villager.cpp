@@ -317,9 +317,10 @@ void Villager::Draw(float)
 	}
 }
 
-void Villager::Tick(float)
+bool Villager::Tick(float)
 {
 	//TODO
+	return true;
 }
 
 void Villager::Turn(float facing)

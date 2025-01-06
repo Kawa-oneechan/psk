@@ -92,7 +92,7 @@ public:
 	void Text(const std::string& text, VillagerP speaker);
 	void Style(int style);
 	void Draw(float dt);
-	void Tick(float dt);
+	bool Tick(float dt);
 };
 
 extern DialogueBox* dlgBox;

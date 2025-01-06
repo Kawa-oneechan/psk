@@ -107,7 +107,7 @@ public:
 	float GetHeight(int x, int y);
 
 	void Draw(float) {};
-	void Tick(float) {};
+	bool Tick(float) { return true; };
 
 #ifdef DEBUG
 	void SaveToPNG();
@@ -157,7 +157,7 @@ public:
 	int GetFlag(const std::string& id, int def = 0);
 	bool GetFlag(const std::string& id, bool def = false);
 
-	void Tick(float dt);
+	bool Tick(float dt);
 	void Draw(float dt);
 };
 

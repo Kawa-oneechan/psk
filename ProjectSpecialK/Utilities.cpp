@@ -1,5 +1,6 @@
 ﻿//#include <regex>
 #include "SpecialK.h"
+#include "InputsMap.h"
 
 glm::vec2 GetJSONVec2(JSONValue* val)
 {
@@ -457,6 +458,33 @@ std::string GetKeyName(int scancode)
 		return Text::Get(fmt::format("keys:scan:{}", scancode));
 	else
 		return std::string(glfw);
+}
+
+bool RevAllTickables(std::vector<Tickable*> tickables, float dt)
+{
+	//for (auto t = tickables.crbegin(); t != tickables.crend(); ++t)
+	for (unsigned int i = (unsigned int)tickables.size(); i-- > 0; )
+	{
+		auto t = tickables[i];
+		if (!t->Enabled)
+			continue;
+		if (!t->Tick(dt))
+			Inputs.Clear();
+			//return false;
+		//t->Tick(dt);
+		//(*t)->Tick(dt);
+	}
+	return true;
+}
+
+void DrawAllTickables(std::vector<Tickable*> tickables, float dt)
+{
+	for (const auto& t : tickables)
+	{
+		if (!t->Visible)
+			continue;
+		t->Draw(dt);
+	}
 }
 
 bool IsID(const std::string& id)

@@ -47,7 +47,7 @@ public:
 	
 	void Target(glm::vec3* target);
 
-	void Tick(float dt);
+	bool Tick(float dt);
 	void Draw(float dt);
 };
 

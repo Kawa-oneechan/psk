@@ -2,18 +2,18 @@
 
 #include "SpecialK.h"
 
-class TitleScreen : public Tickable
+class InGame : public Tickable
 {
 private:
 	enum class State
 	{
-		Init, FadeIn, Wait, FadeOut
+		Init, FadeIn, Playing
 	} state{ State::Init };
 
 public:
-	TitleScreen();
-	~TitleScreen();
-	
+	InGame();
+	~InGame();
+
 	bool Tick(float dt);
 	void Draw(float dt);
 };

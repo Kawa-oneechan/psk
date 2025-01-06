@@ -14,7 +14,7 @@ private:
 public:
 	DateTimePanel();
 	void Update();
-	void Tick(float dt);
+	bool Tick(float dt);
 	void Draw(float dt);
 	void Show();
 	void Hide();

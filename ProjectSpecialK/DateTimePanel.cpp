@@ -54,7 +54,7 @@ void DateTimePanel::Update()
 	}
 }
 
-void DateTimePanel::Tick(float dt)
+bool DateTimePanel::Tick(float dt)
 {
 	layout.Tick(dt);
 
@@ -65,6 +65,7 @@ void DateTimePanel::Tick(float dt)
 		Update();
 		lastMinute = gm.tm_min;
 	}
+	return true;
 }
 
 void DateTimePanel::Draw(float dt)

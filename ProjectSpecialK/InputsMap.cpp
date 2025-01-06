@@ -99,8 +99,12 @@ bool InputsMap::UpdateGamepad()
 
 void InputsMap::Clear(bool alsoGamepad)
 {
-	for (auto& k : Keys)
-		k.State = false;
+	for (int i = 0; i < NumKeyBinds; i++)
+	{
+		if (i >= (int)Binds::WalkN && i <= (int)Binds::WalkE)
+			continue;
+		Keys[i].State = false;
+	}
 	if (alsoGamepad)
 		for (int i = 0; i < 15; i++)
 			cnt[i] = trg[i] = 0;

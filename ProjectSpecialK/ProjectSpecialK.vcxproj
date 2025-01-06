@@ -154,6 +154,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="Framebuffer.cpp" />
+    <ClCompile Include="InGame.cpp" />
     <ClCompile Include="InputsMap.cpp" />
     <ClCompile Include="Iris.cpp" />
     <ClCompile Include="Item.cpp" />
@@ -241,6 +242,7 @@
     <ClInclude Include="DialogueBox.h" />
     <ClInclude Include="DoomMenu.h" />
     <ClInclude Include="Framebuffer.h" />
+    <ClInclude Include="InGame.h" />
     <ClInclude Include="InputsMap.h" />
     <ClInclude Include="Iris.h" />
     <ClInclude Include="Item.h" />

@@ -19,7 +19,7 @@ private:
 public:
 	Messager();
 	Message Add(const std::string& text, bool persist = false);
-	void Tick(float dt);
+	bool Tick(float dt);
 	void Draw(float dt);
 };
 

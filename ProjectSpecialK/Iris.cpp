@@ -11,10 +11,10 @@ Iris::~Iris()
 	delete shader;
 }
 
-void Iris::Tick(float dt)
+bool Iris::Tick(float dt)
 {
 	if (state == State::Idle)
-		return;
+		return true;
 	if (state == State::Out)
 	{
 		time += dt;
@@ -33,6 +33,7 @@ void Iris::Tick(float dt)
 			state = State::Idle;
 		}
 	}
+	return false;
 }
 
 void Iris::Draw(float dt)

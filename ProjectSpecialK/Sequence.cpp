@@ -8,18 +8,19 @@ Sequence::Sequence(std::initializer_list<TickableP> tickables)
 	waiting = parts.size() > 0;
 }
 
-void Sequence::Tick(float dt)
+bool Sequence::Tick(float dt)
 {
 	if (parts.size() == 0)
-		return;
+		return true;
 	if (cursor >= parts.size())
-		return;
+		return true;
 
+	auto ret = false;
 	if (waiting)
 	{
 		auto now = parts[cursor];
 		now->mutex = &waiting;
-		now->Tick(dt);
+		ret = now->Tick(dt);
 	}
 	//No longer waiting?
 	if (!waiting)
@@ -31,6 +32,7 @@ void Sequence::Tick(float dt)
 				*mutex = false;
 		}
 	}
+	return ret;
 }
 
 void Sequence::Draw(float dt)
@@ -48,11 +50,12 @@ void Sequence::Draw(float dt)
 	}
 }
 
-void FuncAsTickable::Tick(float dt)
+bool FuncAsTickable::Tick(float dt)
 {
 	dt;
 	if (wrapped != nullptr)
 		wrapped();
 	if (mutex != nullptr)
 		*mutex = false;
+	return true;
 }

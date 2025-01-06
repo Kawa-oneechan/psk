@@ -301,7 +301,7 @@ DoomMenu::DoomMenu()
 	UpdateButtonGuide();
 }
 
-void DoomMenu::Tick(float dt)
+bool DoomMenu::Tick(float dt)
 {
 	dt;
 
@@ -338,7 +338,7 @@ void DoomMenu::Tick(float dt)
 				}
 			}
 		}
-		return; //do not listen while assigning a key.
+		return false; //do not listen while assigning a key.
 	}
 
 	if (itemY.size() > 0 && Inputs.MouseMoved())
@@ -401,12 +401,12 @@ void DoomMenu::Tick(float dt)
 				for (int i = 0; i < 15; i++)
 					k += state.buttons[i];
 				if (k)
-					return;
+					return false;
 			}
 		}
 		justSwitchedPage = false;
 		Inputs.Clear(true);
-		return;
+		return false;
 	}
 
 	if (Inputs.KeyDown(Binds::Up))
@@ -443,7 +443,7 @@ void DoomMenu::Tick(float dt)
 	}
 
 	if (highlight == -1)
-		return;
+		return true;
 
 	auto item = items->items[highlight];
 
@@ -553,7 +553,7 @@ void DoomMenu::Tick(float dt)
 			items = stack.top();
 			justSwitchedPage = true;
 			UpdateButtonGuide();
-			return;
+			return false;
 		}
 		else
 		{
@@ -561,9 +561,11 @@ void DoomMenu::Tick(float dt)
 		}
 	}
 
+	//returning false should clear all inputs
 	Inputs.Clear(Binds::Accept);
 	Inputs.Clear(Binds::Back);
 	Inputs.MouseLeft = false;
+	return false;
 }
 
 void DoomMenu::Draw(float dt)

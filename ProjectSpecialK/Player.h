@@ -67,7 +67,7 @@ public:
 	void SetMouth(int mouth);
 
 	void Draw(float dt);
-	void Tick(float dt);
+	bool Tick(float dt);
 
 	void Turn(float facing);
 	bool Move(float facing);

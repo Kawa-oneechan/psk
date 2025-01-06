@@ -194,7 +194,7 @@ PanelLayout::PanelLayout(JSONValue* source)
 	animationTime = 0;
 }
 
-void PanelLayout::Tick(float dt)
+bool PanelLayout::Tick(float dt)
 {
 	if (tweens.size() > 0)
 	{
@@ -313,6 +313,8 @@ void PanelLayout::Tick(float dt)
 	}
 	if (newHl != highlighted)
 		highlighted = newHl;
+
+	return true;
 }
 
 Tween<float>* PanelLayout::Tween(float* target, float from, float to, float speed, std::function<float(float)> interpolator)

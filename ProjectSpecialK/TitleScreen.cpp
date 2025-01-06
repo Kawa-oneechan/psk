@@ -1,13 +1,10 @@
 ﻿#include "TitleScreen.h"
 #include "MusicManager.h"
-#include "Background.h"
 #include "InputsMap.h"
 #include "PanelLayout.h"
 #include "DoomMenu.h"
-#include "DateTimePanel.h"
-#include "ItemHotbar.h"
-#include "DialogueBox.h"
 #include "Town.h"
+#include "InGame.h"
 #include "Iris.h"
 
 extern std::vector<Tickable*> tickables;
@@ -21,10 +18,6 @@ static DoomMenu* optionsMenu;
 TitleScreen::TitleScreen()
 {
 	tickables.clear();
-	tickables.push_back(&musicManager);
-	tickables.push_back(&MainCamera);
-	//tickables.push_back(new Background("discobg2.png"));
-	tickables.push_back(&town);
 	//tickables.push_back(iris);
 	auto logoJson = VFS::ReadJSON("cinematics/logo/logo.json")->AsObject();
 	logoAnim = new PanelLayout(logoJson["cinematic"]);
@@ -61,8 +54,10 @@ TitleScreen::TitleScreen()
 	psSize = Sprite::MeasureText(1, psText, 100);
 }
 
-void TitleScreen::Tick(float dt)
+bool TitleScreen::Tick(float dt)
 {
+	RevAllTickables(tickables, dt);
+
 	logoAnim->Tick(dt);
 	iris->Tick(dt);
 
@@ -113,17 +108,11 @@ void TitleScreen::Tick(float dt)
 		if (iris->Done())
 		{
 			dead = true;
-			dateTimePanel = new DateTimePanel();
-			newTickables.push_back(dateTimePanel);
-			newTickables.push_back(itemHotbar);
-			newTickables.push_back(dlgBox);
-			musicManager.Play(town.Music);
-			LoadCamera("cameras/field.json");
-			MainCamera.Target(&(thePlayer.Position));
-			//dlgBox->Text(fmt::format("<color:1>Your NookCode is <color:2>{}<color:1>.", NookCode::Encode(0x543CA469, 0, 0)), 3);
-			iris->In();
+			::tickables.push_back(new InGame());
 		}
 	}
+
+	return true;
 }
 
 TitleScreen::~TitleScreen()
@@ -134,6 +123,8 @@ TitleScreen::~TitleScreen()
 
 void TitleScreen::Draw(float dt)
 {
+	DrawAllTickables(tickables, dt);
+
 	if (!optionsMenu)
 	{
 		logoAnim->Draw(dt);
@@ -150,4 +141,3 @@ void TitleScreen::Draw(float dt)
 #endif
 	iris->Draw(dt);
 }
-

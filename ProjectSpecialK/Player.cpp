@@ -329,7 +329,7 @@ void Player::Draw(float)
 	//Or is that vice versa?
 }
 
-void Player::Tick(float dt)
+bool Player::Tick(float dt)
 {
 	auto facing = Facing;
 	auto anythingPressed = false;
@@ -367,6 +367,8 @@ void Player::Tick(float dt)
 	{
 		Move(facing + MainCamera.Angles().z);
 	}
+
+	return !anythingPressed;
 }
 
 Player thePlayer;

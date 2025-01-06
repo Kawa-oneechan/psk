@@ -17,7 +17,7 @@ private:
 public:
 	Iris();
 	~Iris();
-	void Tick(float dt);
+	bool Tick(float dt);
 	void Draw(float dt);
 	void In();
 	void Out();

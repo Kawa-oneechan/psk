@@ -22,7 +22,7 @@ public:
 	std::string Override;
 
 	MusicManager();
-	void Tick(float dt);
+	bool Tick(float dt);
 	void Draw(float dt);
 	void Play(const std::string& id, bool immediate = false);
 	void FadeOut();

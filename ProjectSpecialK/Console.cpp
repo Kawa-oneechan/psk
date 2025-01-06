@@ -292,10 +292,10 @@ void Console::Close()
 	visible = true;
 }
 
-void Console::Tick(float dt)
+bool Console::Tick(float dt)
 {
 	if (!visible)
-		return;
+		return false;
 
 	if (appearState == 1 && timer < 1.0f)
 	{
@@ -314,7 +314,7 @@ void Console::Tick(float dt)
 	}
 	timer = clamp(timer, 0.0f, 1.0f);
 
-	inputLine->Tick(dt);
+	return inputLine->Tick(dt);
 }
 
 void Console::Draw(float dt)

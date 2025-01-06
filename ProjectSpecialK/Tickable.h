@@ -5,9 +5,12 @@ class Tickable
 public:
 	bool* mutex{ nullptr };
 	bool dead{ false };
+	bool Visible{ true };
+	bool Enabled{ true };
+	std::vector<Tickable*> tickables;
 
 	virtual ~Tickable() {}
-	virtual void Tick(float) {};
+	virtual bool Tick(float) { return true; };
 	virtual void Draw(float) {};
 	virtual bool Character(unsigned int) { return false; }
 	virtual bool Scancode(unsigned int) { return false; }

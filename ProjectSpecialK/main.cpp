@@ -20,6 +20,7 @@
 #include "Framebuffer.h"
 #include "Iris.h"
 #include "TitleScreen.h"
+#include "InGame.h"
 
 #include <fstream>
 
@@ -597,10 +598,7 @@ int main(int argc, char** argv)
 	//tickables.push_back(new TextField());
 	*/
 
-	//townDrawer = TemporaryTownDrawer();
 	dlgBox = new DialogueBox();
-	//dateTimePanel = new DateTimePanel();
-	itemHotbar = new ItemHotbar();
 	iris = new Iris();
 
 #ifdef DEBUG
@@ -642,7 +640,11 @@ int main(int argc, char** argv)
 	auto oldTime = glfwGetTime();
 	commonUniforms.TotalTime = 0.0f;
 
-	tickables.push_back(new TitleScreen());
+	tickables.push_back(&musicManager);
+	tickables.push_back(&MainCamera);
+	tickables.push_back(&town);
+	//tickables.push_back(new TitleScreen());
+	tickables.push_back(new InGame());
 
 	auto layoutOverlay = new Texture("layoutoverlay.png");
 
@@ -676,8 +678,9 @@ int main(int argc, char** argv)
 		else
 		{
 			//a bit ugly but technically still better vis-a-vis iterators
-			for (auto t = tickables.crbegin(); t != tickables.crend(); ++t)
-				(*t)->Tick(dt);
+			//for (auto t = tickables.crbegin(); t != tickables.crend(); ++t)
+			//	(*t)->Tick(dt);
+			RevAllTickables(tickables, dt);
 			//TODO: have Tick return false if it's the last one, known to cover up everything else.
 		}
 
@@ -700,8 +703,9 @@ int main(int argc, char** argv)
 		//modelShader->Use();
 		//modelShader->Set("viewPos", MainCamera.Position());
 
-		for (const auto& t : tickables)
-			t->Draw(dt * timeScale);
+		//for (const auto& t : tickables)
+		//	t->Draw(dt * timeScale);
+		DrawAllTickables(tickables, dt * timeScale);
 
 		//Sprite::DrawSprite(*layoutOverlay, glm::vec2(0), glm::vec2(width, height), glm::vec4(0), 0.0f, glm::vec4(1, 1, 1, 0.5));
 

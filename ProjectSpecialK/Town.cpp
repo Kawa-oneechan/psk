@@ -451,19 +451,9 @@ void Town::Draw(float dt)
 		iris->Draw(dt);
 }
 
-void Town::Tick(float dt)
+bool Town::Tick(float dt)
 {
-	if (!iris->Done())
-	{
-		iris->Tick(dt);
-		if (iris->Done() && itemHotbar && dateTimePanel)
-		{
-			itemHotbar->Show();
-			dateTimePanel->Show();
-		}
-	}
-
-	thePlayer.Tick(dt);
+	return thePlayer.Tick(dt);
 }
 
 Town town;

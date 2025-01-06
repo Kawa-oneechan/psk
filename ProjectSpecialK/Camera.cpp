@@ -89,7 +89,7 @@ void Camera::Target(glm::vec3* target)
 	_tracking = target;
 }
 
-void Camera::Tick(float dt)
+bool Camera::Tick(float dt)
 {
 	dt;
 
@@ -103,6 +103,8 @@ void Camera::Tick(float dt)
 	//TODO: add tweening
 
 	Update();
+	
+	return true;
 }
 
 void Camera::Draw(float)

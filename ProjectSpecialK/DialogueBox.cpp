@@ -515,7 +515,7 @@ void DialogueBox::Draw(float dt)
 	//maybe afterwards port this to the UI Panel system?
 }
 
-void DialogueBox::Tick(float dt)
+bool DialogueBox::Tick(float dt)
 {
 	if (state == State::Done)
 	{
@@ -535,7 +535,7 @@ void DialogueBox::Tick(float dt)
 
 		delay -= dt * 1000.0f;
 		if (delay > 0)
-			return;
+			return true;
 
 		if (displayCursor >= toDisplay.length())
 		{
@@ -608,6 +608,7 @@ void DialogueBox::Tick(float dt)
 				state = State::Writing;
 			}
 		}
+		return false;
 	}
 
 	if (state == State::Closing)
@@ -616,4 +617,6 @@ void DialogueBox::Tick(float dt)
 		if (tween <= 0.0f)
 			state = State::Done;
 	}
+
+	return true;
 }

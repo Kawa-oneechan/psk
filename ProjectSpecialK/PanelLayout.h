@@ -97,7 +97,7 @@ public:
 
 	PanelLayout() = default;
 	PanelLayout(JSONValue* source);
-	void Tick(float dt);
+	bool Tick(float dt);
 	void Draw(float dt);
 	Panel* GetPanel(const std::string& id);
 	Tween<float>* Tween(float* target, float from, float to, float speed = 0.001f, std::function<float(float)> interpolator = glm::linearInterpolation<float>);

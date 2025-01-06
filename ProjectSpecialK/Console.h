@@ -113,7 +113,7 @@ public:
 	bool Scancode(unsigned int scancode);
 	void Open();
 	void Close();
-	void Tick(float dt);
+	bool Tick(float dt);
 	void Draw(float dt);
 	void RegisterCVar(const std::string& name, CVar::Type type, void* target, bool cheat = false, int min = -1, int max = -1);
 };
