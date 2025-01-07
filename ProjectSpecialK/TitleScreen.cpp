@@ -14,11 +14,11 @@ static std::string psText;
 static glm::vec2 psSize;
 static PanelLayout* logoAnim;
 static DoomMenu* optionsMenu;
+static Iris* iris;
 
 TitleScreen::TitleScreen()
 {
 	tickables.clear();
-	//tickables.push_back(iris);
 	auto logoJson = VFS::ReadJSON("cinematics/logo/logo.json")->AsObject();
 	logoAnim = new PanelLayout(logoJson["cinematic"]);
 
@@ -52,14 +52,21 @@ TitleScreen::TitleScreen()
 	auto key = Inputs.Keys[(int)Binds::Accept];
 	psText = fmt::format(Text::Get("title:pressstart"), key.Name, GamepadPUAMap[key.GamepadButton]);
 	psSize = Sprite::MeasureText(1, psText, 100);
+
+	optionsMenu = new DoomMenu();
+	optionsMenu->Enabled = false;
+	optionsMenu->Visible = false;
+
+	iris = new Iris();
+
+	tickables.push_back(logoAnim);
+	tickables.push_back(optionsMenu);
+	tickables.push_back(iris);
 }
 
 bool TitleScreen::Tick(float dt)
 {
 	RevAllTickables(tickables, dt);
-
-	logoAnim->Tick(dt);
-	iris->Tick(dt);
 
 	if (state == State::Init)
 	{
@@ -78,28 +85,30 @@ bool TitleScreen::Tick(float dt)
 	}
 	else if (state == State::Wait)
 	{
-		if (!optionsMenu)
+		if (!optionsMenu->Visible)
 		{
 			if (Inputs.KeyDown(Binds::Accept))
 			{
-				Inputs.Clear();
 				state = State::FadeOut;
 				musicManager.FadeOut();
 				iris->Out();
+				return false;
 			}
 			else if (Inputs.KeyDown(Binds::Back))
 			{
-				Inputs.Clear();
-				optionsMenu = new DoomMenu();
+				optionsMenu->Visible = true;
+				optionsMenu->Enabled = true;
+				return false;
 			}
 		}
 		else
 		{
-			optionsMenu->Tick(dt);
 			if (optionsMenu->dead)
 			{
-				delete optionsMenu;
-				optionsMenu = nullptr;
+				optionsMenu->dead = false;
+				optionsMenu->Visible = false;
+				optionsMenu->Enabled = false;
+				return false;
 			}
 		}
 	}
@@ -119,21 +128,16 @@ TitleScreen::~TitleScreen()
 {
 	delete logoAnim;
 	delete optionsMenu;
+	delete iris;
 }
 
 void TitleScreen::Draw(float dt)
 {
 	DrawAllTickables(tickables, dt);
 
-	if (!optionsMenu)
+	if (!optionsMenu->Visible)
 	{
-		logoAnim->Draw(dt);
-		//if (logoAnim->Playing())
 		Sprite::DrawText(1, psText, (glm::vec2(width, height) - psSize) * glm::vec2(0.5f, 0.86f), glm::vec4(1, 1, 1, glm::abs(glm::sin((float)glfwGetTime())) * 1.0f), 150.0f * scale);
-	}
-	else
-	{
-		optionsMenu->Draw(dt);
 	}
 
 #ifdef DEBUG

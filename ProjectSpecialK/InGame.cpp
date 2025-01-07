@@ -4,29 +4,33 @@
 #include "DialogueBox.h"
 #include "Iris.h"
 
+static Iris* iris;
+
 InGame::InGame()
 {
 	dateTimePanel = new DateTimePanel();
 	itemHotbar = new ItemHotbar();
+	iris = new Iris();
 
 	tickables.clear();
 	tickables.push_back(dateTimePanel);
 	tickables.push_back(itemHotbar);
 	tickables.push_back(dlgBox);
-	//tickables.push_back(iris);
+	tickables.push_back(iris);
 	LoadCamera("cameras/field.json");
 	MainCamera.Target(&(thePlayer.Position));
 }
 
 InGame::~InGame()
 {
+	delete iris;
+	delete dateTimePanel;
+	delete itemHotbar;
 }
 
 bool InGame::Tick(float dt)
 {
 	RevAllTickables(tickables, dt);
-
-	iris->Tick(dt);
 
 	if (state == State::Init)
 	{

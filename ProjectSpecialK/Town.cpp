@@ -1,7 +1,6 @@
 #include "Town.h"
 #include "Framebuffer.h"
 #include "Background.h"
-#include "Iris.h"
 #include "DateTimePanel.h"
 #include "ItemHotbar.h"
 #include "Model.h"
@@ -447,8 +446,6 @@ void Town::Draw(float dt)
 	{
 		drawWorker(dt * timeScale);
 	}
-	if (!iris->Done())
-		iris->Draw(dt);
 }
 
 bool Town::Tick(float dt)

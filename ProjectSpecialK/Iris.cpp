@@ -3,7 +3,7 @@
 Iris::Iris()
 {
 	shader = new Shader("shaders/iris.fs");
-	time = 0.0;
+	time = 1.0f; //assume we're all black, irising IN
 }
 
 Iris::~Iris()
@@ -18,18 +18,18 @@ bool Iris::Tick(float dt)
 	if (state == State::Out)
 	{
 		time += dt;
-		if (time >= 1.0)
+		if (time >= 1.0f)
 		{
-			time = 1.0;
+			time = 1.0f;
 			state = State::Idle;
 		}
 	}
 	else
 	{
 		time -= dt;
-		if (time <= 0.0)
+		if (time <= 0.0f)
 		{
-			time = 0.0;
+			time = 0.0f;
 			state = State::Idle;
 		}
 	}

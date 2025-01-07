@@ -18,7 +18,6 @@
 #include "Messager.h"
 #include "MusicManager.h"
 #include "Framebuffer.h"
-#include "Iris.h"
 #include "TitleScreen.h"
 #include "InGame.h"
 
@@ -473,7 +472,6 @@ void GLAPIENTRY MessageCallback(GLenum source, GLenum type, GLuint id, GLenum se
 Framebuffer* frameBuffer;
 Shader* skyShader;
 Background* rainLayer;
-Iris* iris;
 
 Shader* grassShader;
 Shader* playerBodyShader;
@@ -599,7 +597,6 @@ int main(int argc, char** argv)
 	*/
 
 	dlgBox = new DialogueBox();
-	iris = new Iris();
 
 #ifdef DEBUG
 	RunTests();
@@ -643,8 +640,8 @@ int main(int argc, char** argv)
 	tickables.push_back(&musicManager);
 	tickables.push_back(&MainCamera);
 	tickables.push_back(&town);
-	//tickables.push_back(new TitleScreen());
-	tickables.push_back(new InGame());
+	tickables.push_back(new TitleScreen());
+	//tickables.push_back(new InGame());
 
 	auto layoutOverlay = new Texture("layoutoverlay.png");
 
