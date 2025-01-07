@@ -10,11 +10,11 @@ ItemHotbar::ItemHotbar()
 	for (int i = 0; i < 9; i++)
 		RegisterItem(i, -1);
 
-//#ifdef DEBUG
+#ifdef DEBUG
 	//For testing only until we get further.
 	RegisterItem(0, 0);
 	RegisterItem(2, 1);
-//#endif
+#endif
 
 	Update();
 }
