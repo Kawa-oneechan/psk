@@ -323,7 +323,7 @@ bool Villager::Tick(float)
 	return true;
 }
 
-void Villager::Turn(float facing)
+void Villager::Turn(float facing, float dt)
 {
 	auto m = Facing;
 	if (m < 0) m += 360.0f;
@@ -333,23 +333,28 @@ void Villager::Turn(float facing)
 	auto ccw = m - facing;
 	if (ccw < 0.0) ccw += 360.0f;
 
-	auto t = (ccw < cw) ? -glm::min(10.0f, ccw) : glm::min(10.0f, cw);
+	constexpr auto radius = 45.0f;
+	constexpr auto timeScale = 20.0f;
 
-	auto f = m + t;
+	auto t = (ccw < cw) ? -glm::min(radius, ccw) : glm::min(radius, cw);
+
+	auto f = m + (t * (dt * timeScale));
 	if (f < 0) f += 360.0f;
 
 	Facing = glm::mod(f, 360.0f);
 }
 
-bool Villager::Move(float facing)
+bool Villager::Move(float facing, float dt)
 {
 	Turn(facing);
 	
-	const auto movement = glm::rotate(glm::vec2(0, 0.25f), glm::radians(Facing));
+	const auto movement = glm::rotate(glm::vec2(0, 0.25f), glm::radians(Facing)) * dt;
+
+	constexpr auto speed = 120.0f;
 
 	//TODO: determine collisions.
-	Position.x -= movement.x;
-	Position.z += movement.y;
+	Position.x -= movement.x * speed;
+	Position.z += movement.y * speed;
 	return true;
 }
 

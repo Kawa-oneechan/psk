@@ -106,8 +106,8 @@ public:
 	void Draw(float dt);
 	bool Tick(float dt);
 
-	void Turn(float facing); 
-	bool Move(float facing);
+	void Turn(float facing, float dt);
+	bool Move(float facing, float dt);
 
 	void Manifest();
 	void Depart();

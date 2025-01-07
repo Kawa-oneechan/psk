@@ -69,8 +69,8 @@ public:
 	void Draw(float dt);
 	bool Tick(float dt);
 
-	void Turn(float facing);
-	bool Move(float facing);
+	void Turn(float facing, float dt);
+	bool Move(float facing, float dt);
 
 	//Returns true if the player has room in their inventory according to their current limit.
 	bool HasInventoryRoom();
