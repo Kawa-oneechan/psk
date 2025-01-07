@@ -51,7 +51,7 @@ GLFWwindow* window;
 Shader* spriteShader = nullptr;
 Shader* modelShader = nullptr;
 Texture* whiteRect = nullptr;
-DialogueBox* dlgBox = nullptr;
+std::shared_ptr<DialogueBox> dlgBox = nullptr;
 CursorP cursor = nullptr;
 Console* console = nullptr;
 Audio* bgm = nullptr;
@@ -85,9 +85,12 @@ float glTime = 0;
 CommonUniforms commonUniforms;
 unsigned int commonBuffer = 0;
 
-ItemHotbar* itemHotbar;
-DateTimePanel* dateTimePanel;
-Messager messager;
+std::shared_ptr<Camera> MainCamera;
+std::shared_ptr<ItemHotbar> itemHotbar;
+std::shared_ptr<DateTimePanel> dateTimePanel;
+std::shared_ptr<Messager> messager;
+std::shared_ptr<MusicManager> musicManager;
+std::shared_ptr<Town> town;
 
 __declspec(noreturn)
 void FatalError(const std::string& message)
@@ -243,9 +246,9 @@ namespace UI
 };
 
 //Currently active Tickables.
-std::vector<Tickable*> tickables;
+std::vector<TickableP> tickables;
 //Tickables to add next cycle.
-std::vector<Tickable*> newTickables;
+std::vector<TickableP> newTickables;
 
 static void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
@@ -332,12 +335,12 @@ static void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
 	lastX = xpos;
 	lastY = ypos;
 
-	if (Inputs.MouseHoldMiddle && !MainCamera.Locked)
+	if (Inputs.MouseHoldMiddle && !MainCamera->Locked)
 	{
-		auto angles = MainCamera.GetAngles();
+		auto angles = MainCamera->GetAngles();
 		angles.z -= xoffset;
 		angles.y -= yoffset;
-		MainCamera.Angles(angles);
+		MainCamera->Angles(angles);
 	}
 }
 
@@ -559,6 +562,8 @@ int main(int argc, char** argv)
 #endif
 
 	cursor = std::make_shared<Cursor>();
+	MainCamera = std::make_shared<Camera>();
+	musicManager = std::make_shared<MusicManager>();
 
 	Inputs.HaveGamePad = (glfwJoystickPresent(GLFW_JOYSTICK_1) && glfwJoystickIsGamepad(GLFW_JOYSTICK_1));
 
@@ -596,7 +601,8 @@ int main(int argc, char** argv)
 	//tickables.push_back(new TextField());
 	*/
 
-	dlgBox = new DialogueBox();
+	town = std::make_shared<Town>();
+	dlgBox = std::make_shared<DialogueBox>();
 
 #ifdef DEBUG
 	RunTests();
@@ -615,12 +621,12 @@ int main(int argc, char** argv)
 	}
 	if (!LoadCamera("cameras/field.json").empty())
 	{
-		MainCamera.Set(glm::vec3(0, 0, -6), glm::vec3(0, 110, 0), 60);
+		MainCamera->Set(glm::vec3(0, 0, -6), glm::vec3(0, 110, 0), 60);
 	}
 
 	auto cat01 = Database::Find<Villager>("ac:cat01", villagers);
 	cat01->Manifest();
-	town.Villagers.push_back(cat01);
+	town->Villagers.push_back(cat01);
 	cat01->Position = glm::vec3(30, 0, 30);
 	thePlayer.Position = glm::vec3(40, 0, 30);
 	//thePlayer.Tops = std::make_shared<InventoryItem>("psk:oppai");
@@ -637,10 +643,10 @@ int main(int argc, char** argv)
 	auto oldTime = glfwGetTime();
 	commonUniforms.TotalTime = 0.0f;
 
-	tickables.push_back(&musicManager);
-	tickables.push_back(&MainCamera);
-	tickables.push_back(&town);
-	tickables.push_back(new TitleScreen());
+	tickables.push_back(musicManager);
+	tickables.push_back(MainCamera);
+	tickables.push_back(town);
+	tickables.push_back(std::make_shared<TitleScreen>());
 	//tickables.push_back(new InGame());
 
 	auto layoutOverlay = new Texture("layoutoverlay.png");
@@ -690,7 +696,7 @@ int main(int argc, char** argv)
 		startingTime = endingTime;
 #endif
 
-		auto pitch = MainCamera.Angles().y;
+		auto pitch = MainCamera->Angles().y;
 		if (pitch > 180) pitch -= 360;
 		skyShader->Use();
 		skyShader->Set("pitch", pitch);
@@ -709,7 +715,7 @@ int main(int argc, char** argv)
 		console->Draw(dt);
 		Sprite::FlushBatch();
 
-		tickables.erase(std::remove_if(tickables.begin(), tickables.end(), [](Tickable* i) {
+		tickables.erase(std::remove_if(tickables.begin(), tickables.end(), [](TickableP i) {
 			return i->dead;
 		}), tickables.end());
 		if (newTickables.size() > 0)

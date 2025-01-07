@@ -7,7 +7,7 @@ public:
 	bool dead{ false };
 	bool Visible{ true };
 	bool Enabled{ true };
-	std::vector<Tickable*> tickables;
+	std::vector<std::shared_ptr<Tickable>> tickables;
 
 	virtual ~Tickable() {}
 	virtual bool Tick(float) { return true; };

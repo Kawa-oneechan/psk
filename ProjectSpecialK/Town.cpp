@@ -379,7 +379,7 @@ void Town::drawWorker(float dt)
 
 	thePlayer.Draw(dt * timeScale);
 	MeshBucket::Flush();
-	for (const auto& v : town.Villagers)
+	for (const auto& v : town->Villagers)
 		v->Draw(dt * timeScale);
 	MeshBucket::Flush();
 
@@ -453,4 +453,3 @@ bool Town::Tick(float dt)
 	return thePlayer.Tick(dt);
 }
 
-Town town;

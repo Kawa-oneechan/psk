@@ -61,5 +61,3 @@ bool Iris::Done()
 {
 	return state == State::Idle;
 }
-
-extern Iris* iris;

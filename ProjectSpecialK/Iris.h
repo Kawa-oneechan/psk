@@ -23,5 +23,3 @@ public:
 	void Out();
 	bool Done();
 };
-
-extern Iris* iris;

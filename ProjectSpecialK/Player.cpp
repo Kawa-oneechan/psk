@@ -371,7 +371,7 @@ bool Player::Tick(float dt)
 
 	if (anythingPressed)
 	{
-		Move(facing + MainCamera.Angles().z, dt);
+		Move(facing + MainCamera->Angles().z, dt);
 	}
 
 	return !anythingPressed;

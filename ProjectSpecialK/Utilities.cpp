@@ -208,12 +208,12 @@ std::string LoadCamera(JSONValue* json)
 				result = "not all required camera properties accounted for.";
 			else
 			{
-				MainCamera.Target(GetJSONVec3(obj["target"]));
-				MainCamera.Angles(GetJSONVec3(obj["angles"]));
+				MainCamera->Target(GetJSONVec3(obj["target"]));
+				MainCamera->Angles(GetJSONVec3(obj["angles"]));
 				if (!obj["distance"]->IsNumber())
 					result = "distance is not a number.";
 				else
-					MainCamera.Distance(obj["distance"]->AsNumber());
+					MainCamera->Distance(obj["distance"]->AsNumber());
 				if (obj["drum"] != nullptr && obj["drum"]->IsBool())
 					commonUniforms.CurveEnabled = obj["drum"]->AsBool();
 				if (obj["drumAmount"] != nullptr && obj["drumAmount"]->IsNumber())
@@ -460,7 +460,7 @@ std::string GetKeyName(int scancode)
 		return std::string(glfw);
 }
 
-bool RevAllTickables(std::vector<Tickable*> tickables, float dt)
+bool RevAllTickables(std::vector<TickableP> tickables, float dt)
 {
 	//for (auto t = tickables.crbegin(); t != tickables.crend(); ++t)
 	for (unsigned int i = (unsigned int)tickables.size(); i-- > 0; )
@@ -477,7 +477,7 @@ bool RevAllTickables(std::vector<Tickable*> tickables, float dt)
 	return true;
 }
 
-void DrawAllTickables(std::vector<Tickable*> tickables, float dt)
+void DrawAllTickables(std::vector<TickableP> tickables, float dt)
 {
 	for (const auto& t : tickables)
 	{

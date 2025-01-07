@@ -51,4 +51,4 @@ public:
 	void Draw(float dt);
 };
 
-extern Camera MainCamera;
+extern std::shared_ptr<Camera> MainCamera;

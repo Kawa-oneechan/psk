@@ -7,20 +7,19 @@
 #include "InGame.h"
 #include "Iris.h"
 
-extern std::vector<Tickable*> tickables;
-extern std::vector<Tickable*> newTickables;
+extern std::vector<TickableP> newTickables;
 
 static std::string psText;
 static glm::vec2 psSize;
-static PanelLayout* logoAnim;
-static DoomMenu* optionsMenu;
-static Iris* iris;
+static std::shared_ptr<PanelLayout> logoAnim;
+static std::shared_ptr<DoomMenu> optionsMenu;
+static std::shared_ptr<Iris> iris;
 
 TitleScreen::TitleScreen()
 {
 	tickables.clear();
 	auto logoJson = VFS::ReadJSON("cinematics/logo/logo.json")->AsObject();
-	logoAnim = new PanelLayout(logoJson["cinematic"]);
+	logoAnim = std::make_shared<PanelLayout>(logoJson["cinematic"]);
 
 	{
 		auto logoJoke = logoAnim->GetPanel("logoJoke");
@@ -53,11 +52,11 @@ TitleScreen::TitleScreen()
 	psText = fmt::format(Text::Get("title:pressstart"), key.Name, GamepadPUAMap[key.GamepadButton]);
 	psSize = Sprite::MeasureText(1, psText, 100);
 
-	optionsMenu = new DoomMenu();
+	optionsMenu = std::make_shared<DoomMenu>();
 	optionsMenu->Enabled = false;
 	optionsMenu->Visible = false;
 
-	iris = new Iris();
+	iris = std::make_shared<Iris>();
 
 	tickables.push_back(logoAnim);
 	tickables.push_back(optionsMenu);
@@ -70,7 +69,7 @@ bool TitleScreen::Tick(float dt)
 
 	if (state == State::Init)
 	{
-		musicManager.Play("title", true);
+		musicManager->Play("title", true);
 		state = State::FadeIn;
 		//MainCamera.Target(&(town.Villagers[0]->Position));
 		iris->In();
@@ -90,7 +89,7 @@ bool TitleScreen::Tick(float dt)
 			if (Inputs.KeyDown(Binds::Accept))
 			{
 				state = State::FadeOut;
-				musicManager.FadeOut();
+				musicManager->FadeOut();
 				iris->Out();
 				return false;
 			}
@@ -117,18 +116,11 @@ bool TitleScreen::Tick(float dt)
 		if (iris->Done())
 		{
 			dead = true;
-			::tickables.push_back(new InGame());
+			::newTickables.push_back(std::make_shared<InGame>());
 		}
 	}
 
 	return true;
-}
-
-TitleScreen::~TitleScreen()
-{
-	delete logoAnim;
-	delete optionsMenu;
-	delete iris;
 }
 
 void TitleScreen::Draw(float dt)
@@ -143,5 +135,4 @@ void TitleScreen::Draw(float dt)
 #ifdef DEBUG
 	Sprite::DrawText(0, "Debug build " __DATE__, glm::vec2(8, height - 24), glm::vec4(1, 1, 1, 0.5));
 #endif
-	iris->Draw(dt);
 }

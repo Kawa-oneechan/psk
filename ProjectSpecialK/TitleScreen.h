@@ -12,7 +12,6 @@ private:
 
 public:
 	TitleScreen();
-	~TitleScreen();
 	
 	bool Tick(float dt);
 	void Draw(float dt);

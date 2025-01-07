@@ -23,4 +23,4 @@ public:
 	void Draw(float dt);
 };
 
-extern Messager messager;
+extern std::shared_ptr<Messager> messager;

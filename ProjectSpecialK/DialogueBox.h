@@ -95,4 +95,4 @@ public:
 	bool Tick(float dt);
 };
 
-extern DialogueBox* dlgBox;
+extern std::shared_ptr<DialogueBox> dlgBox;

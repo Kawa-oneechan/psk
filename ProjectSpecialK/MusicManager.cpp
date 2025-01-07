@@ -3,7 +3,7 @@
 
 void PlayMusic(const std::string& id)
 {
-	musicManager.Play(id, true);
+	musicManager->Play(id, true);
 }
 
 MusicManager::MusicManager()
@@ -111,7 +111,7 @@ void MusicManager::Play(const std::string& id, bool immediate)
 
 	{
 		auto weather = "sunny";
-		if (town.Clouds >= Town::Weather::RainClouds)
+		if (town->Clouds >= Town::Weather::RainClouds)
 			weather = "rainy";
 		auto tpos = file.find("{time}");
 		if (tpos != std::string::npos)
@@ -153,5 +153,3 @@ void MusicManager::FadeOut()
 {
 	Play("");
 }
-
-MusicManager musicManager = MusicManager();

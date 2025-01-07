@@ -141,8 +141,8 @@ tm* GetNthWeekdayOfMonth(int month, int dayOfWeek, int howManyth);
 //Given a full path to a file ("data/foo/bar.txt"), returns the path part including the final separator ("data/foo/").
 extern std::string GetDirFromFile(const std::string& path);
 
-extern bool RevAllTickables(std::vector<Tickable*> tickables, float dt);
-extern void DrawAllTickables(std::vector<Tickable*> tickables, float dt);
+extern bool RevAllTickables(std::vector<TickableP> tickables, float dt);
+extern void DrawAllTickables(std::vector<TickableP> tickables, float dt);
 
 //Given a piece of code (shader?) that may contain "#include" statements and a search path, inserts the included files, 
 extern void HandleIncludes(std::string& code, const std::string& path);

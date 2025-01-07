@@ -4,13 +4,13 @@
 #include "DialogueBox.h"
 #include "Iris.h"
 
-static Iris* iris;
+static std::shared_ptr<Iris> iris;
 
 InGame::InGame()
 {
-	dateTimePanel = new DateTimePanel();
-	itemHotbar = new ItemHotbar();
-	iris = new Iris();
+	dateTimePanel = std::make_shared<DateTimePanel>();
+	itemHotbar = std::make_shared<ItemHotbar>();
+	iris = std::make_shared<Iris>();
 
 	tickables.clear();
 	tickables.push_back(dateTimePanel);
@@ -18,14 +18,11 @@ InGame::InGame()
 	tickables.push_back(dlgBox);
 	tickables.push_back(iris);
 	LoadCamera("cameras/field.json");
-	MainCamera.Target(&(thePlayer.Position));
+	MainCamera->Target(&(thePlayer.Position));
 }
 
 InGame::~InGame()
 {
-	delete iris;
-	delete dateTimePanel;
-	delete itemHotbar;
 }
 
 bool InGame::Tick(float dt)

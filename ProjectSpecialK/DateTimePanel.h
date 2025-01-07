@@ -20,4 +20,4 @@ public:
 	void Hide();
 };
 
-extern DateTimePanel* dateTimePanel;
+extern std::shared_ptr<DateTimePanel> dateTimePanel;

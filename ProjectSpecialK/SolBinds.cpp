@@ -105,9 +105,9 @@ namespace SolBinds
 		Sol["music"] = [](sol::variadic_args va)
 		{
 			if (va.size() == 1)
-				musicManager.Play(va[0].as<std::string>());
+				musicManager->Play(va[0].as<std::string>());
 			else if (va.size() == 2)
-				musicManager.Play(va[0].as<std::string>(), va[1].as<bool>());
+				musicManager->Play(va[0].as<std::string>(), va[1].as<bool>());
 			console->Close();
 		};
 	}

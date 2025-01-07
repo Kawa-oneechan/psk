@@ -161,4 +161,4 @@ public:
 	void Draw(float dt);
 };
 
-extern Town town;
+extern std::shared_ptr<Town> town;

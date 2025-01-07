@@ -346,7 +346,7 @@ void Villager::Turn(float facing, float dt)
 
 bool Villager::Move(float facing, float dt)
 {
-	Turn(facing);
+	Turn(facing, dt);
 	
 	const auto movement = glm::rotate(glm::vec2(0, 0.25f), glm::radians(Facing)) * dt;
 

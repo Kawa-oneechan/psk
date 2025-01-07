@@ -33,52 +33,52 @@ static void DoCamera()
 	{
 		ImGui::SeparatorText("Target");
 		{
-			auto& tar = MainCamera.GetTarget();
+			auto& tar = MainCamera->GetTarget();
 			if (ImGui::DragFloat("X", &tar.x, 1.0, -50, 50))
-				MainCamera.Update();
+				MainCamera->Update();
 			if (ImGui::DragFloat("Y", &tar.y, 1.0, -50, 50))
-				MainCamera.Update();
+				MainCamera->Update();
 			if (ImGui::DragFloat("Z", &tar.z, 1.0, -100, 100))
-				MainCamera.Update();
+				MainCamera->Update();
 		}
 
 		ImGui::SeparatorText("Angles");
 		{
-			auto& ang = MainCamera.GetAngles();
+			auto& ang = MainCamera->GetAngles();
 			if (ImGui::DragFloat("Roll", &ang.x, 1.0, -359, 359))
-				MainCamera.Update();
+				MainCamera->Update();
 			if (ImGui::DragFloat("Pitch", &ang.y, 1.0, -359, 359))
-				MainCamera.Update();
+				MainCamera->Update();
 			if (ImGui::DragFloat("Yaw", &ang.z, 1.0, -359, 359))
-				MainCamera.Update();
+				MainCamera->Update();
 		}
 
 		ImGui::Separator();
-		if (ImGui::DragFloat("Distance", &MainCamera.GetDistance(), 1.0, -100, 100, "%.3f", ImGuiSliderFlags_Logarithmic))
-			MainCamera.Update();
+		if (ImGui::DragFloat("Distance", &MainCamera->GetDistance(), 1.0, -100, 100, "%.3f", ImGuiSliderFlags_Logarithmic))
+			MainCamera->Update();
 
 
 		ImGui::SeparatorText("Settings");
 		ImGui::Checkbox("Drum", &commonUniforms.CurveEnabled);
 		ImGui::DragFloat("Drum amount", &commonUniforms.CurveAmount, 0.001f, -1.0, 1.0);
 		ImGui::DragFloat("Drum power", &commonUniforms.CurvePower, 0.25, -2.0, 2.0);
-		ImGui::Checkbox("Locked", &MainCamera.Locked);
+		ImGui::Checkbox("Locked", &MainCamera->Locked);
 
 		if (ImGui::Button("Reset"))
 		{
-			MainCamera.Target(glm::vec3(0, 0, 0));
-			MainCamera.Angles(glm::vec3(0, 46, 0));
-			MainCamera.Distance(70);
-			MainCamera.Update();
+			MainCamera->Target(glm::vec3(0, 0, 0));
+			MainCamera->Angles(glm::vec3(0, 46, 0));
+			MainCamera->Distance(70);
+			MainCamera->Update();
 		}
 
 		if (ImGui::Button("Copy JSON"))
 		{
 			std::string json;
 			json += "{\n";
-			auto tar = MainCamera.GetTarget();
-			auto ang = MainCamera.GetAngles();
-			auto dis = MainCamera.GetDistance();
+			auto tar = MainCamera->GetTarget();
+			auto ang = MainCamera->GetAngles();
+			auto dis = MainCamera->GetDistance();
 			json += fmt::format("\t\"target\": [{}, {}, {}],\n", tar[0], tar[1], tar[2]);
 			json += fmt::format("\t\"angles\": [{}, {}, {}],\n", ang[0], ang[1], ang[2]);
 			json += fmt::format("\t\"distance\": {},\n", dis);
@@ -205,7 +205,7 @@ static void DoVillager()
 						continue;
 
 					const bool selected = (villagers[i] == debugVillager);
-					const bool here = std::find(town.Villagers.begin(), town.Villagers.end(), villagers[i]) != std::end(town.Villagers);
+					const bool here = std::find(town->Villagers.begin(), town->Villagers.end(), villagers[i]) != std::end(town->Villagers);
 
 					ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 1.0f, here ? 0.0f : 1.0f, villagers[i]->IsManifest() ? 1.0f : 0.5f));
 					if (ImGui::Selectable(villagers[i]->Name().c_str(), selected))
@@ -226,7 +226,7 @@ static void DoVillager()
 			ImGui::Text(debugVillager->Name().c_str());
 			ImGui::Separator();
 
-			const bool here = std::find(town.Villagers.begin(), town.Villagers.end(), debugVillager) != std::end(town.Villagers);
+			const bool here = std::find(town->Villagers.begin(), town->Villagers.end(), debugVillager) != std::end(town->Villagers);
 
 			if (debugVillager->Icon)
 			{
@@ -241,12 +241,12 @@ static void DoVillager()
 				debugVillager->Depart();
 			ImGui::SameLine();
 			if (!here && ImGui::Button("Bring in"))
-				town.Villagers.push_back(debugVillager);
+				town->Villagers.push_back(debugVillager);
 			else if (here && ImGui::Button("Remove"))
 			{
-				auto there = std::find(town.Villagers.begin(), town.Villagers.end(), debugVillager);
-				if (there != town.Villagers.end())
-					town.Villagers.erase(there);
+				auto there = std::find(town->Villagers.begin(), town->Villagers.end(), debugVillager);
+				if (there != town->Villagers.end())
+					town->Villagers.erase(there);
 			}
 
 			ImGui::Text(debugVillager->ID.c_str());
@@ -257,7 +257,7 @@ static void DoVillager()
 			if (ImGui::Button("Reload textures"))
 				debugVillager->ReloadTextures();
 			if (ImGui::Button("Track"))
-				MainCamera.Target(&debugVillager->Position);
+				MainCamera->Target(&debugVillager->Position);
 
 			ImGui::SeparatorText("Animation");
 			ImGui::SliderInt("Face", &debugVillager->face, 0, 15);

@@ -110,5 +110,3 @@ bool Camera::Tick(float dt)
 void Camera::Draw(float)
 {
 }
-
-Camera MainCamera;

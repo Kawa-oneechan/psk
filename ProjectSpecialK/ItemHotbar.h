@@ -21,4 +21,4 @@ public:
 	void RegisterItem(int slot, InventoryItemP item);
 };
 
-extern ItemHotbar* itemHotbar;
+extern std::shared_ptr<ItemHotbar> itemHotbar;
