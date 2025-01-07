@@ -109,7 +109,7 @@ void InputsMap::Clear(bool alsoGamepad)
 		for (int i = 0; i < 15; i++)
 			cnt[i] = trg[i] = 0;
 	MouseLeft = MouseRight = MouseMiddle = false;
-	MouseHoldLeft = MouseHoldRight = MouseHoldMiddle = false;
+	//MouseHoldLeft = MouseHoldRight = MouseHoldMiddle = false;
 }
 
 bool InputsMap::KeyDown(Binds bind)

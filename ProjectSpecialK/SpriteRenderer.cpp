@@ -535,7 +535,7 @@ namespace Sprite
 		}
 
 		auto h = cdata[(textRenderFont * 0xFFFF) + 'A'].x1 - cdata[(textRenderFont * 0xFFFF) + 'A'].x0;
-		result.y += (h + (h / 2)) * (textRenderSize / 100.0f);
+		result.y += (h + (h / 2)) * (originalTextRenderSize / 100.0f);
 
 		return result;
 	}
