@@ -562,9 +562,6 @@ bool DoomMenu::Tick(float dt)
 	}
 
 	//returning false should clear all inputs
-	Inputs.Clear(Binds::Accept);
-	Inputs.Clear(Binds::Back);
-	Inputs.MouseLeft = false;
 	return false;
 }
 

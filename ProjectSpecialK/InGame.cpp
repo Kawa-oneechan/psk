@@ -1,10 +1,4 @@
 #include "InGame.h"
-#include "DateTimePanel.h"
-#include "ItemHotbar.h"
-#include "DialogueBox.h"
-#include "Iris.h"
-
-static std::shared_ptr<Iris> iris;
 
 InGame::InGame()
 {
@@ -17,12 +11,9 @@ InGame::InGame()
 	tickables.push_back(itemHotbar);
 	tickables.push_back(dlgBox);
 	tickables.push_back(iris);
+
 	LoadCamera("cameras/field.json");
 	MainCamera->Target(&(thePlayer.Position));
-}
-
-InGame::~InGame()
-{
 }
 
 bool InGame::Tick(float dt)

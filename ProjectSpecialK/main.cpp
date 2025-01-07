@@ -9,11 +9,6 @@
 #include "InputsMap.h"
 #include "Cursor.h"
 #include "Background.h"
-#include "DoomMenu.h"
-#include "DialogueBox.h"
-#include "PanelLayout.h"
-#include "DateTimePanel.h"
-#include "ItemHotbar.h"
 #include "Town.h"
 #include "Messager.h"
 #include "MusicManager.h"
@@ -86,8 +81,6 @@ CommonUniforms commonUniforms;
 unsigned int commonBuffer = 0;
 
 std::shared_ptr<Camera> MainCamera;
-std::shared_ptr<ItemHotbar> itemHotbar;
-std::shared_ptr<DateTimePanel> dateTimePanel;
 std::shared_ptr<Messager> messager;
 std::shared_ptr<MusicManager> musicManager;
 std::shared_ptr<Town> town;
@@ -649,7 +642,7 @@ int main(int argc, char** argv)
 	tickables.push_back(std::make_shared<TitleScreen>());
 	//tickables.push_back(new InGame());
 
-	auto layoutOverlay = new Texture("layoutoverlay.png");
+	//auto layoutOverlay = new Texture("layoutoverlay.png");
 
 	while (!glfwWindowShouldClose(window))
 	{

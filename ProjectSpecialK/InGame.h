@@ -1,6 +1,10 @@
 #pragma once
 
 #include "SpecialK.h"
+#include "DateTimePanel.h"
+#include "ItemHotbar.h"
+#include "DialogueBox.h"
+#include "Iris.h"
 
 class InGame : public Tickable
 {
@@ -10,9 +14,12 @@ private:
 		Init, FadeIn, Playing
 	} state{ State::Init };
 
+	std::shared_ptr<Iris> iris;
+	std::shared_ptr<ItemHotbar> itemHotbar;
+	std::shared_ptr<DateTimePanel> dateTimePanel;
+	
 public:
 	InGame();
-	~InGame();
 
 	bool Tick(float dt);
 	void Draw(float dt);

@@ -244,6 +244,130 @@
 				]
 			},
 			{
+				"name": "idle",
+				"next": "",
+				"bits": [
+					{
+						"panel": "woodBack",
+						"property": "alpha",
+						"fromTime": 0.0, "fromVal": 1.0,
+						"toTime": 0.1, "toVal": 1.0
+					},
+					{
+						"panel": "woodBack",
+						"property": "y",
+						"fromTime": 0.0, "fromVal": 64,
+						"toTime": 0.1, "toVal": 64,
+						"easing": "bounceOut"
+					},
+					{
+						"panel": "logoC",
+						"property": "alpha",
+						"fromTime": 0.0, "fromVal": 1.0,
+						"toTime": 0.1, "toVal": 1.0
+					},
+					{
+						"panel": "logoC",
+						"property": "y",
+						"fromTime": 0.0, "fromVal": 147,
+						"toTime": 0.1, "toVal": 147
+					},
+
+					{
+						"panel": "logoE",
+						"property": "alpha",
+						"fromTime": 0.0, "fromVal": 0.0,
+						"toTime": 0.1, "toVal": 1.0
+					},
+					{
+						"panel": "logoE",
+						"property": "y",
+						"fromTime": 0.0, "fromVal": 141,
+						"toTime": 0.1, "toVal": 141
+					},
+					{
+						"panel": "logoI",
+						"property": "alpha",
+						"fromTime": 0.0, "fromVal": 0.0,
+						"toTime": 0.1, "toVal": 1.0
+					},
+					{
+						"panel": "logoI",
+						"property": "y",
+						"fromTime": 0.0, "fromVal": 91,
+						"toTime": 0.1, "toVal": 91
+					},
+
+					{
+						"panel": "logoP",
+						"property": "alpha",
+						"fromTime": 0.0, "fromVal": 1.0,
+						"toTime": 0.1, "toVal": 1.0
+					},
+					{
+						"panel": "logoP",
+						"property": "y",
+						"fromTime": 0.0, "fromVal": 116,
+						"toTime": 0.1, "toVal": 116
+					},
+					{
+						"panel": "logoA",
+						"property": "alpha",
+						"fromTime": 0.0, "fromVal": 0.0,
+						"toTime": 0.1, "toVal": 1.0
+					},
+					{
+						"panel": "logoA",
+						"property": "y",
+						"fromTime": 0.0, "fromVal": 101,
+						"toTime": 0.1, "toVal": 101
+					},
+					{
+						"panel": "logoS",
+						"property": "alpha",
+						"fromTime": 0.0, "fromVal": 1.0,
+						"toTime": 0.1, "toVal": 1.0
+					},
+					{
+						"panel": "logoS",
+						"property": "y",
+						"fromTime": 0.0, "fromVal": 62,
+						"toTime": 0.1, "toVal": 62
+					},
+					{
+						"panel": "logoL",
+						"property": "alpha",
+						"fromTime": 0.0, "fromVal": 1.0,
+						"toTime": 0.1, "toVal": 1.0
+					},
+					{
+						"panel": "logoL",
+						"property": "y",
+						"fromTime": 0.0, "fromVal": 92,
+						"toTime": 0.1, "toVal": 92
+					},
+					{
+						"panel": "logoK",
+						"property": "alpha",
+						"fromTime": 0.0, "fromVal": 1.0,
+						"toTime": 0.1, "toVal": 1.0
+					},
+					{
+						"panel": "logoK",
+						"property": "y",
+						"fromTime": 0.0, "fromVal": 125,
+						"toTime": 0.1, "toVal": 125
+					},
+
+					{
+						"panel": "logoJoke",
+						"property": "alpha",
+						"fromTime": 3.00, "fromVal": 0.0,
+						"toTime": 3.50, "toVal": 1.0
+					}
+				]
+			},
+			{
 				"name": "bounce",
 				"next": "",
 				"bits": [

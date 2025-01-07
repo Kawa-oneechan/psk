@@ -1,19 +1,10 @@
 ﻿#include "TitleScreen.h"
 #include "MusicManager.h"
 #include "InputsMap.h"
-#include "PanelLayout.h"
-#include "DoomMenu.h"
 #include "Town.h"
 #include "InGame.h"
-#include "Iris.h"
 
 extern std::vector<TickableP> newTickables;
-
-static std::string psText;
-static glm::vec2 psSize;
-static std::shared_ptr<PanelLayout> logoAnim;
-static std::shared_ptr<DoomMenu> optionsMenu;
-static std::shared_ptr<Iris> iris;
 
 TitleScreen::TitleScreen()
 {
@@ -97,6 +88,7 @@ bool TitleScreen::Tick(float dt)
 			{
 				optionsMenu->Visible = true;
 				optionsMenu->Enabled = true;
+				logoAnim->Visible = false;
 				return false;
 			}
 		}
@@ -107,6 +99,8 @@ bool TitleScreen::Tick(float dt)
 				optionsMenu->dead = false;
 				optionsMenu->Visible = false;
 				optionsMenu->Enabled = false;
+				logoAnim->Visible = true;
+				logoAnim->Play("idle");
 				return false;
 			}
 		}
@@ -116,6 +110,7 @@ bool TitleScreen::Tick(float dt)
 		if (iris->Done())
 		{
 			dead = true;
+			tickables.clear();
 			::newTickables.push_back(std::make_shared<InGame>());
 		}
 	}
