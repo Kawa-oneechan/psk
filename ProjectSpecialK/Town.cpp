@@ -5,7 +5,8 @@
 #include "ItemHotbar.h"
 #include "Model.h"
 
-static std::array<ModelP, 64> tileModels;
+static std::array<ModelP, 80> tileModels;
+static std::array<std::string, 80> tileModelKeys;
 
 float Map::GetHeight(const glm::vec3& pos)
 {
@@ -41,16 +42,6 @@ TextureArray* groundTextureMixs{ nullptr };
 TextureArray* grassColors{ nullptr };
 TextureArray* snowMix{ nullptr };
 
-static void LoadModels()
-{
-	//TODO: use a JSON file
-	tileModels[0] = std::make_shared<::Model>("field/ground/unit.fbx");
-	tileModels[1] = std::make_shared<::Model>("field/ground/cliff-12346789.fbx");
-	tileModels[2] = std::make_shared<::Model>("field/ground/cliff-147.fbx");
-	tileModels[3] = std::make_shared<::Model>("field/ground/cliff-14789.fbx");
-	tileModels[4] = std::make_shared<::Model>("field/ground/cliff-1.fbx");
-}
-
 static void UpdateGrass()
 {
 	if (glm::abs(lastGrassColor - commonUniforms.GrassColor) < glm::epsilon<float>())
@@ -81,10 +72,103 @@ static void UpdateGrass()
 
 void Map::WorkOutModels()
 {
-	if (!tileModels[0])
-		LoadModels();
+	std::map<std::string, std::tuple<std::string, int>> rules;
 
-	//TODO
+	auto json = VFS::ReadJSON("field/ground/patterns.json");
+	auto doc = json->AsObject();
+	for (auto& rule : doc["rules"]->AsObject())
+	{
+		auto r = rule.second->AsArray();
+		rules[rule.first] = std::make_tuple(r[0]->AsString(), r[1]->AsInteger());
+	}
+
+	if (!tileModels[0])
+	{
+		tileModels[0] = std::make_shared<::Model>("field/ground/unit.fbx");
+		tileModelKeys[0] = "_";
+
+		int i = 1;
+		for (auto& model : doc["models"]->AsObject())
+		{
+			tileModels[i] = std::make_shared<::Model>(fmt::format("field/ground/{}", model.second->AsString()));
+			tileModelKeys[i] = model.first;
+			i++;
+		}
+	}
+
+	delete json;
+
+	auto getTileElevation = [&](int x, int y)
+	{
+		if (x < 0 || y < 0 || x >= Width || y >= Height)
+			return 4;
+		return (int)Terrain[(y * Width) + x].Elevation;
+	};
+
+	/*
+	Interesting idea: have each key be nine characters long.
+	"?_?_-_?_?" would mean "apply this if the middle is elevated
+	compared to all sides, but don't bother with the diagonals."
+	"?-?_-_?-?" would mean "north and south must be the same
+	elevation as the center, east and west must be lower, and
+	the diagonals don't matter."
+	*/
+	
+	for (int y = 0; y < Height; y++)
+	{
+		for (int x = 0; x < Width; x++)
+		{
+			if (y == 8 && x == 5)
+				conprint(0, "...");
+
+			auto five = getTileElevation(x, y);
+			std::string key = "";
+			if (getTileElevation(x - 1, y + 1) >= five) key += "1";
+			if (getTileElevation(x    , y + 1) >= five) key += "2";
+			if (getTileElevation(x + 1, y + 1) >= five) key += "3";
+			if (getTileElevation(x - 1, y    ) >= five) key += "4";
+			
+			if (getTileElevation(x + 1, y    ) >= five) key += "6";
+			if (getTileElevation(x - 1, y - 1) >= five) key += "7";
+			if (getTileElevation(x    , y - 1) >= five) key += "8";
+			if (getTileElevation(x + 1, y - 1) >= five) key += "9";
+
+			if (key == "") //still empty and we're elevated?
+			{
+				if (getTileElevation(x - 1, y + 1) < five) key += "1";
+				if (getTileElevation(x    , y + 1) < five) key += "2";
+				if (getTileElevation(x + 1, y + 1) < five) key += "3";
+				if (getTileElevation(x - 1, y    ) < five) key += "4";
+			
+				if (getTileElevation(x + 1, y    ) < five) key += "6";
+				if (getTileElevation(x - 1, y - 1) < five) key += "7";
+				if (getTileElevation(x    , y - 1) < five) key += "8";
+				if (getTileElevation(x + 1, y - 1) < five) key += "9";
+
+				if (key == "12346789")
+					key = "#";
+			}
+
+
+			if (rules.find(key) != rules.end())
+			{
+				std::string model;
+				int rotation;
+				std::tie(model, rotation) = rules[key];
+
+				Terrain[(y * Width) + x].Rotation = (unsigned char)rotation;
+
+				for (int i = 0; i < tileModels.size(); i++)
+				{
+					if (tileModelKeys[i] == model)
+					{
+						Terrain[(y * Width) + x].Model = (unsigned char)i;
+						break;
+					}
+				}
+			}
+		}
+	}
 }
 
 #ifdef DEBUG
@@ -146,54 +230,27 @@ Town::Town()
 	{
 		//Top
 		Terrain[i].Elevation = 1;
-		Terrain[i].Model = 2;
-		Terrain[i].Rotation = 1;
 	}
 	for (int i = 0; i < Height; i++)
 	{
 		//Left
 		Terrain[(i * Width)].Elevation = 1;
-		Terrain[(i * Width)].Model = 2;
-		Terrain[(i * Width)].Rotation = 2;
 		//Right
 		Terrain[(i * Width) + (Width - 1)].Elevation = 1;
-		Terrain[(i * Width) + (Width - 1)].Model = 2;
-		Terrain[(i * Width) + (Width - 1)].Rotation = 0;
 	}
-	Terrain[0].Model = 4; //left corner
-	Terrain[0].Rotation = 1;
-	Terrain[Width - 1].Model = 4; //right corner
-	Terrain[Width - 1].Rotation = 0;
 
 	Terrain[(4 * Width) + 2].Type = 1; //single sand tile
 	Terrain[(0 * Width) + 2].Type = 2; //single stone tile on cliff
 	
-	Terrain[(8 * Width) + 5].Model = 1; //single column
-	Terrain[(8 * Width) + 5].Elevation = 2;
-	Terrain[(7 * Width) + 4].Model = 3; //surroundings
+	Terrain[(8 * Width) + 5].Elevation = 2; //single column
 	Terrain[(7 * Width) + 4].Elevation = 1;
-	Terrain[(7 * Width) + 4].Rotation = 0;
-	Terrain[(7 * Width) + 5].Model = 2;
 	Terrain[(7 * Width) + 5].Elevation = 1;
-	Terrain[(7 * Width) + 5].Rotation = 3;
-	Terrain[(7 * Width) + 6].Model = 3;
 	Terrain[(7 * Width) + 6].Elevation = 1;
-	Terrain[(7 * Width) + 6].Rotation = 3;
-	Terrain[(8 * Width) + 4].Model = 2;
 	Terrain[(8 * Width) + 4].Elevation = 1;
-	Terrain[(8 * Width) + 4].Rotation = 0;
-	Terrain[(8 * Width) + 6].Model = 2;
 	Terrain[(8 * Width) + 6].Elevation = 1;
-	Terrain[(8 * Width) + 6].Rotation = 2;
-	Terrain[(9 * Width) + 4].Model = 3;
 	Terrain[(9 * Width) + 4].Elevation = 1;
-	Terrain[(9 * Width) + 4].Rotation = 1;
-	Terrain[(9 * Width) + 5].Model = 2;
 	Terrain[(9 * Width) + 5].Elevation = 1;
-	Terrain[(9 * Width) + 5].Rotation = 1;
-	Terrain[(9 * Width) + 6].Model = 3;
 	Terrain[(9 * Width) + 6].Elevation = 1;
-	Terrain[(9 * Width) + 6].Rotation = 2;
 
 	//end test
 
@@ -429,9 +486,6 @@ void Town::Draw(float dt)
 		groundMixs[0] = "field/ground/snow_mix.png";
 		snowMix = new TextureArray(groundMixs);
 	}
-
-	if (!tileModels[0])
-		LoadModels();
 	
 	if (postFx)
 	{

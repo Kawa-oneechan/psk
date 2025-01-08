@@ -1,0 +1,67 @@
+{
+	/*
+	Okay so first of all, look at your numpad. If you don't have one:
+	  / * -
+	7 8 9 +
+	4 5 6
+	1 2 3 =
+	0   .
+	We'll focus on the middle bit, the numbers 1 to 9.
+	Notice that there's also arrows and home/end/pgup/pgdn in there:
+	home ↑ pgup
+	   ← . →
+	 end ↓ pgdn
+	So you can see why NumLock would toggle between entering numbers
+	and pretending to be those eight keys.
+	
+	Second, an assumption about rotations: the models for cliffs,
+	assuming no rotation, have the "left" wall facing to the left.
+	So if you extract the Cliff-5B model and don't apply any further
+	rotation, it will have a wall segment on the left edge of the tile.
+	Therefore, we'll notate this as "147". Cliff-3C is a corner piece
+	with a left edge and a top edge, so that's "14789". Now, rotating
+	Cliff-5B or "147" once by 90° turns it such that the one edge is
+	along the bottom, so it's effectively "123".
+	
+	We can now match patterns to models.
+	*/
+	
+	"rules": {
+		//If we're at 5, and there's elevated tiles above and below,
+		//us we should have a left and right edge.
+		"28":		[ "134679", 0 ],
+		//If there's elevated tiles to our left and right, we should
+		//use the same model but rotated.
+		"28":		[ "123789", 1 ],
+		//No elevated tiles around us at all, but *we* are: a pillar!
+		"#":		[ "12346789", 0 ],
+		//Single straight edges
+		"23689":	[ "147", 0 ], //left
+		"46789":	[ "147", 1 ], //bottom
+		"12478":	[ "147", 2 ], //right
+		"12346":	[ "147", 3 ], //top
+		//Straight edges ending in a corner
+		"146789":	[ "147", 1 ],
+		"346789":	[ "147", 1 ],
+		"2346789":	[ "147", 0 ],
+		"236789":	[ "147", 0 ],
+		"124789":	[ "147", 2 ],
+		//Corners -- gotta think about diagonals...
+		"236":		[ "14789", 0 ], //left-top
+		"689":		[ "14789", 1 ], //left-bottom
+		"478":		[ "14789", 2 ], //right-bottom
+		"124":		[ "14789", 3 ], //right-top
+		//Inside corners
+		"2346789":	[ "1", 0 ], //...
+		"1246789":	[ "1", 1 ], //...
+		"1234678":	[ "1", 2 ], //...
+		"1234689":	[ "1", 3 ]  //...
+	},
+	
+	"models": {
+		"1":        "cliff-1.fbx",
+		"147":      "cliff-147.fbx",
+		"14789":    "cliff-14789.fbx",
+		"12346789": "cliff-12346789.fbx"
+	}
+}
