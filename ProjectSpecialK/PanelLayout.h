@@ -18,7 +18,7 @@ struct Tween
 
 	T value()
 	{
-		progress = clamp(progress, 0.0f, 1.0f);
+		progress = glm::clamp(progress, 0.0f, 1.0f);
 		return glm::mix(from, to, interpolator(progress));
 	}
 

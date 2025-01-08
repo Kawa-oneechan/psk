@@ -36,7 +36,7 @@ void DoomMenuItem::Beep()
 	{
 		auto beep = generalSounds["ui"]["selectShort"];
 
-		auto ccur = clamp(selection, minVal, maxVal) - minVal;
+		auto ccur = glm::clamp(selection, minVal, maxVal) - minVal;
 		auto panpot = -1.0f + ((ccur / (float)(maxVal - minVal)) * 2.0f);
 
 		beep->Play(true);
@@ -373,9 +373,9 @@ bool DoomMenu::Tick(float dt)
 					auto item = items->items[highlight];
 
 					//thanks GZDoom
-					auto x = clamp(Inputs.MousePosition.x, sliderStart, sliderEnd);
+					auto x = glm::clamp(Inputs.MousePosition.x, sliderStart, sliderEnd);
 					auto  v = item->minVal + ((x - sliderStart) * (item->maxVal - item->minVal)) / (sliderEnd - sliderStart);
-					item->selection = (int)(round(v / item->step) * item->step);
+					item->selection = glm::clamp((int)(round(v / item->step) * item->step), item->minVal, item->maxVal);
 					if (item->change != nullptr)
 						item->change(item);
 				}
@@ -523,6 +523,7 @@ bool DoomMenu::Tick(float dt)
 			if (item->selection > item->minVal)
 			{
 				item->selection -= item->step;
+				item->selection = glm::clamp(item->selection, item->minVal, item->maxVal);
 				item->Beep();
 				if (item->change != nullptr)
 					item->change(item);
@@ -534,6 +535,7 @@ bool DoomMenu::Tick(float dt)
 			if (item->selection < item->maxVal)
 			{
 				item->selection += item->step;
+				item->selection = glm::clamp(item->selection, item->minVal, item->maxVal);
 				item->Beep();
 				if (item->change != nullptr)
 					item->change(item);
@@ -716,7 +718,7 @@ void DoomMenu::Draw(float dt)
 
 			//thanks GZDoom
 			auto range = item->maxVal - item->minVal;
-			auto ccur = clamp(item->selection, item->minVal, item->maxVal) - item->minVal;
+			auto ccur = glm::clamp(item->selection, item->minVal, item->maxVal) - item->minVal;
 			auto thumbPos = partSize + ((ccur * (barLength - (partSize * 2))) / range);
 
 			auto thumb = glm::vec2(col + (int)thumbPos, 10 * scale);

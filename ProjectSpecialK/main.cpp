@@ -156,10 +156,10 @@ namespace UI
 		DS("cursorScale", 100);
 		DS("24hour", true);
 		DS("contentFilters", JSONObject());
-		DS("musicVolume", 0.7f);
-		DS("ambientVolume", 0.5f);
-		DS("soundVolume", 1.0f);
-		DS("speechVolume", 1.0f);
+		DS("musicVolume", 70);
+		DS("ambientVolume", 50);
+		DS("soundVolume", 100);
+		DS("speechVolume", 100);
 		DS("keyBinds", JSONArray());
 		DS("gamepadBinds", JSONArray());
 #undef DS
@@ -170,10 +170,10 @@ namespace UI
 		constexpr Language opt2lan[] = { Language::USen, Language::JPja, Language::EUde, Language::EUes, Language::EUfr, Language::EUit, Language::EUhu, Language::EUnl, Language::EUen };
 		gameLang = opt2lan[settings["language"]->AsInteger()];
 
-		Audio::MusicVolume = settings["musicVolume"]->AsNumber();
-		Audio::AmbientVolume = settings["ambientVolume"]->AsNumber();
-		Audio::SoundVolume = settings["soundVolume"]->AsNumber();
-		Audio::SpeechVolume = settings["speechVolume"]->AsNumber();
+		Audio::MusicVolume = settings["musicVolume"]->AsInteger() / 100.0f;
+		Audio::AmbientVolume = settings["ambientVolume"]->AsInteger() / 100.0f;
+		Audio::SoundVolume = settings["soundVolume"]->AsInteger() / 100.0f;
+		Audio::SpeechVolume = settings["speechVolume"]->AsInteger() / 100.0f;
 
 		auto keyBinds = settings["keyBinds"]->AsArray();
 		if (keyBinds.size() != NumKeyBinds)
@@ -212,10 +212,10 @@ namespace UI
 		settings["screenWidth"] = new JSONValue(width);
 		settings["screenHeight"] = new JSONValue(height);
 
-		settings["musicVolume"] = new JSONValue(Audio::MusicVolume);
-		settings["ambientVolume"] = new JSONValue(Audio::AmbientVolume);
-		settings["soundVolume"] = new JSONValue(Audio::SoundVolume);
-		settings["speechVolume"] = new JSONValue(Audio::SpeechVolume);
+		settings["musicVolume"] = new JSONValue((int)(Audio::MusicVolume * 100.0f));
+		settings["ambientVolume"] = new JSONValue((int)(Audio::AmbientVolume * 100.0f));
+		settings["soundVolume"] = new JSONValue((int)(Audio::SoundVolume * 100.0f));
+		settings["speechVolume"] = new JSONValue((int)(Audio::SpeechVolume * 100.0f));
 
 		auto binds = JSONArray();
 		for (auto& k : Inputs.Keys)

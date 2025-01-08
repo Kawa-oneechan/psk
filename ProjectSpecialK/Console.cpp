@@ -83,7 +83,7 @@ void Console::Print(int color, const std::string& str)
 		return;
 	}
 
-	buffer.emplace_back(std::make_pair(clamp(color, 0, 8), str));
+	buffer.emplace_back(std::make_pair(glm::clamp(color, 0, 8), str));
 	if (hardcopy.good())
 	{
 		hardcopy.write(str.c_str(), str.length());
@@ -312,7 +312,7 @@ bool Console::Tick(float dt)
 			visible = false;
 		}
 	}
-	timer = clamp(timer, 0.0f, 1.0f);
+	timer = glm::clamp(timer, 0.0f, 1.0f);
 
 	return inputLine->Tick(dt);
 }

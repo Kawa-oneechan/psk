@@ -345,7 +345,7 @@ void PanelLayout::Draw(float dt)
 			parentID = parent->Parent;
 		}
 
-		color.a = clamp(Alpha * panel->Alpha, 0.0f, 1.0f);
+		color.a = glm::clamp(Alpha * panel->Alpha, 0.0f, 1.0f);
 		if (color.a == 0)
 			continue;
 

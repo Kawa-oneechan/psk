@@ -269,11 +269,11 @@ std::string Villager::Nickname(const std::string& newNickname)
 
 void Villager::SetFace(int index)
 {
-	face = clamp(index, 0, 15);
+	face = glm::clamp(index, 0, 15);
 }
 void Villager::SetMouth(int index)
 {
-	mouth = clamp(index, 0, 8);
+	mouth = glm::clamp(index, 0, 8);
 }
 
 void Villager::Draw(float)

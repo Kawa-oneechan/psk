@@ -220,16 +220,16 @@ bool Player::Retrieve(InventoryItemP item)
 	return Retrieve(findStorageSlot(item));
 }
 
+//TODO: eliminate duplication with Villager.cpp
 void Player::SetFace(int index)
 {
-	face = clamp(index, 0, 15);
+	face = glm::clamp(index, 0, 15);
 }
 void Player::SetMouth(int index)
 {
-	mouth = clamp(index, 0, 8);
+	mouth = glm::clamp(index, 0, 8);
 }
 
-//TODO: eliminate duplication with Villager.cpp
 void Player::Turn(float facing, float dt)
 {
 	auto m = Facing;

@@ -440,7 +440,7 @@ void DialogueBox::Text(const std::string& text, VillagerP who)
 
 void DialogueBox::Style(int style)
 {
-	style = clamp(style, 0, 4);
+	style = glm::clamp(style, 0, 4);
 
 	if (style >= 3) //system
 	{

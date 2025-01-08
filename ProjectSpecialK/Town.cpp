@@ -252,6 +252,8 @@ Town::Town()
 	Terrain[(9 * Width) + 5].Elevation = 1;
 	Terrain[(9 * Width) + 6].Elevation = 1;
 
+	WorkOutModels();
+
 	//end test
 
 	UseDrum = true;
