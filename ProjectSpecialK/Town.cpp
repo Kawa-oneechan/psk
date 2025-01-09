@@ -41,6 +41,7 @@ TextureArray* groundTextureNrms{ nullptr };
 TextureArray* groundTextureMixs{ nullptr };
 TextureArray* grassColors{ nullptr };
 TextureArray* snowMix{ nullptr };
+TextureArray* squareMix{ nullptr };
 
 static void UpdateGrass()
 {
@@ -49,6 +50,8 @@ static void UpdateGrass()
 
 	lastGrassColor = commonUniforms.GrassColor;
 	auto newMix = groundTextureMixs;
+	if (town->SquareGrass)
+		newMix = squareMix;
 	if (commonUniforms.GrassColor <= 0.052f || commonUniforms.GrassColor >= 0.865f)
 		newMix = snowMix;
 
@@ -219,6 +222,7 @@ Town::Town()
 	Music = "clock";
 	CanOverrideMusic = true;
 
+	SquareGrass = std::rand() / ((RAND_MAX + 1u) / 100) > 75;
 	weatherSeed = std::rand();
 
 	Width = AcreSize * 1;
@@ -487,6 +491,8 @@ void Town::Draw(float dt)
 		grassColors = new TextureArray("field/ground/grasscolors.png", GL_CLAMP_TO_EDGE, GL_NEAREST);
 		groundMixs[0] = "field/ground/snow_mix.png";
 		snowMix = new TextureArray(groundMixs);
+		groundMixs[0] = "field/ground/squares_mix.png";
+		squareMix= new TextureArray(groundMixs);
 	}
 	
 	if (postFx)

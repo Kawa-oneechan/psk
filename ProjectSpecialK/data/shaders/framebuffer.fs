@@ -15,10 +15,12 @@ void main()
 	//Determine pixel size in 0-1
 	vec2 ps = 1.0 / ScreenRes.xy;
 
+	fragColor = texture(image, TexCoords);
+
 /*
 	//OUTLINE
 	//-------
-	vec3 c = texture(image, TexCoords).rgb;
+	vec3 c = fragColor.rgb;
 	vec3 n = texture(image, TexCoords - vec2(ps.x, 0)).rgb;
 	vec3 s = texture(image, TexCoords + vec2(ps.x, 0)).rgb;
 	vec3 e = texture(image, TexCoords - vec2(0, ps.y)).rgb;
@@ -31,14 +33,14 @@ void main()
 /*
 	//SCANLINES
 	//---------
-	fragColor = texture(image, TexCoords) * mod(floor(TexCoords.y * ScreenRes.y), 2.0);
+	fragColor = fragColor * mod(floor(TexCoords.y * ScreenRes.y), 2.0);
 */
 
 /*
 	//CHROMATIC ABBERATION
 	//--------------------
 	float r = texture(image, TexCoords + vec2(ps.x * 4.0, 0)).r;
-	float g = texture(image, TexCoords).g;
+	float g = fragColor.g;
 	float b = texture(image, TexCoords + vec2(-ps.x * 4.0, 0)).b;
 
 	fragColor = vec4(r, g, b, 1.0);
@@ -54,12 +56,11 @@ void main()
 /*
 	//FILMGRAIN
 	//---------
-	vec4 color = texture(image, TexCoords);
 	float strength = 16.0;
 	float x = (TexCoords.x + 4.0 ) * (TexCoords.y + 4.0 ) * (TotalTime * 10.0);
 	vec4 grain = vec4(mod((mod(x, 13.0) + 1.0) * (mod(x, 123.0) + 1.0), 0.01)-0.005) * strength;
 	//grain = 1.0 - grain;
-	//fragColor = color * grain;
-	fragColor = color + grain;
+	//fragColor *= grain;
+	fragColor += grain;
 */
 }

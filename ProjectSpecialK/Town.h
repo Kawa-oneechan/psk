@@ -141,6 +141,8 @@ public:
 	
 	std::vector<VillagerP> Villagers;
 	int Wind{ 0 };
+	
+	bool SquareGrass{ false };
 
 	Town();
 
