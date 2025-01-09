@@ -286,7 +286,7 @@ void DialogueBox::Wrap()
 	//TODO: needs wrangling for Japanese.
 	size_t lastSpace = 0;
 	size_t start = 0;
-	auto threeLines = Sprite::MeasureText(font, "Mg\nMg\nMg", 100).y + 0;
+	auto threeLines = Sprite::MeasureText(font, "Mg\nMg\nMg\n", 100).y + 0;
 	int lineCount = 0;
 	for (size_t i = 0; i < toDisplay.length();)
 	{
