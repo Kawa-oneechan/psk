@@ -10,7 +10,7 @@ constexpr int StartingStorage = 1600;
 //could mean an item wasn't found or it was nullptr.
 constexpr int NoItem = -1;
 
-class Player : public NameableThing, Tickable
+class Player : public NameableThing, Tickable, public Person
 {
 private:
 	ModelP _model, _hairModel;
@@ -26,7 +26,7 @@ private:
 	int findItemSlot(InventoryItemP target);
 	int findStorageSlot(InventoryItemP target);
 
-	int face{ 0 }, mouth{ 0 }, cheeks{ 2 };
+	int eyeStyle{ 0 }, mouthStyle{ 0 }, cheeksStyle{ 2 };
 	bool stung{ false };
 
 public:
@@ -37,9 +37,6 @@ public:
 	glm::vec4 EyeColor{ 0.75f, 0.15f, 0.17f, 1.0f };
 	glm::vec4 CheekColor{ 0.87f, 0.48f, 0.29f, 1.0f };
 	glm::vec4 HairColor{ 0.73f, 0.11f, 0.31f, 1.0f };
-
-	glm::vec3 Position{ 0 };
-	float Facing{ 0 };
 
 	std::array<InventoryItemP, MaxOnHand> OnHand{ nullptr };
 	std::vector<InventoryItemP> Storage;
@@ -68,9 +65,6 @@ public:
 
 	void Draw(float dt);
 	bool Tick(float dt);
-
-	void Turn(float facing, float dt);
-	bool Move(float facing, float dt);
 
 	//Returns true if the player has room in their inventory according to their current limit.
 	bool HasInventoryRoom();

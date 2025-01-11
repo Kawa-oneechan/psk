@@ -21,13 +21,13 @@ void Player::LoadModel()
 
 	if (Textures[0] == nullptr)
 	{
-		Textures[0] = new TextureArray("player/eyes/0/eye*_alb.png");
-		Textures[1] = new TextureArray("player/eyes/0/eye*_nrm.png");
-		Textures[2] = new TextureArray("player/eyes/0/eye*_mix.png");
+		Textures[0] = new TextureArray(fmt::format("player/eyes/{}/eye*_alb.png", eyeStyle));
+		Textures[1] = new TextureArray(fmt::format("player/eyes/{}/eye*_nrm.png", eyeStyle));
+		Textures[2] = new TextureArray(fmt::format("player/eyes/{}/eye*_mix.png", eyeStyle));
 
-		Textures[3] = new TextureArray("player/mouth/0/mouth*_alb.png");
-		Textures[4] = new TextureArray("player/mouth/0/mouth*_nrm.png");
-		Textures[5] = new TextureArray("player/mouth/0/mouth*_mix.png");
+		Textures[3] = new TextureArray(fmt::format("player/mouth/{}/mouth*_alb.png", mouthStyle));
+		Textures[4] = new TextureArray(fmt::format("player/mouth/{}/mouth*_nrm.png", mouthStyle));
+		Textures[5] = new TextureArray(fmt::format("player/mouth/{}/mouth*_mix.png", mouthStyle));
 
 		Textures[6] = new TextureArray("player/cheek*_alb.png");
 	}
@@ -220,51 +220,6 @@ bool Player::Retrieve(InventoryItemP item)
 	return Retrieve(findStorageSlot(item));
 }
 
-//TODO: eliminate duplication with Villager.cpp
-void Player::SetFace(int index)
-{
-	face = glm::clamp(index, 0, 15);
-}
-void Player::SetMouth(int index)
-{
-	mouth = glm::clamp(index, 0, 8);
-}
-
-void Player::Turn(float facing, float dt)
-{
-	auto m = Facing;
-	if (m < 0) m += 360.0f;
-
-	auto cw = facing - m;
-	if (cw < 0.0) cw += 360.0f;
-	auto ccw = m - facing;
-	if (ccw < 0.0) ccw += 360.0f;
-
-	constexpr auto radius = 45.0f;
-	constexpr auto timeScale = 20.0f;
-
-	auto t = (ccw < cw) ? -glm::min(radius, ccw) : glm::min(radius, cw);
-
-	auto f = m + (t * (dt * timeScale));
-	if (f < 0) f += 360.0f;
-
-	Facing = glm::mod(f, 360.0f);
-}
-
-bool Player::Move(float facing, float dt)
-{
-	Turn(facing, dt);
-
-	const auto movement = glm::rotate(glm::vec2(0, 0.25f), glm::radians(Facing)) * dt;
-
-	constexpr auto speed = 120.0f;
-
-	//TODO: determine collisions.
-	Position.x -= movement.x * speed;
-	Position.z += movement.y * speed;
-	return true;
-}
-
 void Player::Draw(float)
 {
 	if (!_model)
@@ -275,7 +230,7 @@ void Player::Draw(float)
 	std::copy(&Textures[3], &Textures[6], _model->GetMesh("_mMouth").Textures);
 	_model->GetMesh("_mCheek").Textures[0] = Textures[6];
 
-	_model->SetLayer("_mCheek", cheeks);
+	_model->SetLayer("_mCheek", cheeksStyle);
 	_model->SetLayer("_mEye", face);
 	_model->SetLayer("_mMouth", mouth);
 

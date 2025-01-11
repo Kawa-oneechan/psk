@@ -77,7 +77,7 @@ class Map : public Tickable
 public:
 	//Size of an Acre in full tiles
 	static const int AcreSize = 16t;
-	//TEMP: how tall is a cliff face, roughly?
+	//How tall is a cliff face, roughly?
 	static const int ElevationHeight = 15;
 
 	//Width of the town map in tiles

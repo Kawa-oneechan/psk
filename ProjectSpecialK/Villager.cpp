@@ -3,6 +3,51 @@
 #define GLM_ENABLE_EXPERIMENTAL
 #include "support/glm/gtx/rotate_vector.hpp"
 
+void Person::Turn(float facing, float dt)
+{
+	auto m = Facing;
+	if (m < 0) m += 360.0f;
+
+	auto cw = facing - m;
+	if (cw < 0.0) cw += 360.0f;
+	auto ccw = m - facing;
+	if (ccw < 0.0) ccw += 360.0f;
+
+	constexpr auto radius = 45.0f;
+	constexpr auto timeScale = 20.0f;
+
+	auto t = (ccw < cw) ? -glm::min(radius, ccw) : glm::min(radius, cw);
+
+	auto f = m + (t * (dt * timeScale));
+	if (f < 0) f += 360.0f;
+
+	Facing = glm::mod(f, 360.0f);
+}
+
+bool Person::Move(float facing, float dt)
+{
+	Turn(facing, dt);
+
+	const auto movement = glm::rotate(glm::vec2(0, 0.25f), glm::radians(Facing)) * dt;
+
+	constexpr auto speed = 120.0f;
+
+	//TODO: determine collisions.
+	Position.x -= movement.x * speed;
+	Position.z += movement.y * speed;
+	return true;
+}
+
+
+void Person::SetFace(int index)
+{
+	face = glm::clamp(index, 0, 15);
+}
+void Person::SetMouth(int index)
+{
+	mouth = glm::clamp(index, 0, 8);
+}
+
 //TODO: special characters need support for more than just tops and accessories.
 
 Villager::Villager(JSONObject& value, const std::string& filename) : NameableThing(value, filename)
@@ -267,15 +312,6 @@ std::string Villager::Nickname(const std::string& newNickname)
 	return oldNickname;
 }
 
-void Villager::SetFace(int index)
-{
-	face = glm::clamp(index, 0, 15);
-}
-void Villager::SetMouth(int index)
-{
-	mouth = glm::clamp(index, 0, 8);
-}
-
 void Villager::Draw(float)
 {
 	if (_model == nullptr)
@@ -320,41 +356,6 @@ void Villager::Draw(float)
 bool Villager::Tick(float)
 {
 	//TODO
-	return true;
-}
-
-void Villager::Turn(float facing, float dt)
-{
-	auto m = Facing;
-	if (m < 0) m += 360.0f;
-
-	auto cw = facing - m;
-	if (cw < 0.0) cw += 360.0f;
-	auto ccw = m - facing;
-	if (ccw < 0.0) ccw += 360.0f;
-
-	constexpr auto radius = 45.0f;
-	constexpr auto timeScale = 20.0f;
-
-	auto t = (ccw < cw) ? -glm::min(radius, ccw) : glm::min(radius, cw);
-
-	auto f = m + (t * (dt * timeScale));
-	if (f < 0) f += 360.0f;
-
-	Facing = glm::mod(f, 360.0f);
-}
-
-bool Villager::Move(float facing, float dt)
-{
-	Turn(facing, dt);
-	
-	const auto movement = glm::rotate(glm::vec2(0, 0.25f), glm::radians(Facing)) * dt;
-
-	constexpr auto speed = 120.0f;
-
-	//TODO: determine collisions.
-	Position.x -= movement.x * speed;
-	Position.z += movement.y * speed;
 	return true;
 }
 

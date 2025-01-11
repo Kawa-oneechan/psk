@@ -21,7 +21,21 @@ public:
 
 using VillagerMemoryP = std::shared_ptr<VillagerMemory>;
 
-class Villager : public NameableThing, Tickable
+class Person
+{
+public:
+	glm::vec3 Position{ 0 };
+	float Facing{ 0 };
+	int face{ 0 }, mouth{ 0 };
+
+	void Turn(float facing, float dt);
+	bool Move(float facing, float dt);
+
+	void SetFace(int face);
+	void SetMouth(int mouth);
+};
+
+class Villager : public NameableThing, Tickable, public Person
 {
 private:
 	ModelP _model, _clothingModel, _accessoryModel;
@@ -46,22 +60,14 @@ private:
 	std::array<TextureArray*, 20> Textures;
 	std::array<TextureArray*, 4> ClothingTextures;
 
-#ifndef DEBUG
-	int face{ 0 }, mouth{ 0 };
-#endif
-
 	VillagerMemoryP memory;
 
 	void DeleteAllThings();
 
 public:
 #ifdef DEBUG
-	int face{ 0 }, mouth{ 0 };
 	void ReloadTextures();
 #endif
-
-	glm::vec3 Position { 0 };
-	float Facing{ 0 };
 
 	std::string RefSpecies;
 	std::string RefCatchphrase;
@@ -100,14 +106,8 @@ public:
 	std::string Nickname();
 	std::string Nickname(const std::string& newNickname);
 
-	void SetFace(int face);
-	void SetMouth(int mouth);
-
 	void Draw(float dt);
 	bool Tick(float dt);
-
-	void Turn(float facing, float dt);
-	bool Move(float facing, float dt);
 
 	void Manifest();
 	void Depart();
