@@ -12,16 +12,34 @@ layout(binding=3) uniform sampler2DArray opacityTexture;
 
 uniform vec3 viewPos;
 uniform int layer;
+uniform mat4 model;
 
 #include "common.fs"
 #include "lighting.fs"
 
 void main()
 {
-	vec4 albedo = texture(albedoTexture, vec3(TexCoord, layer));
-	vec3 normal = texture(normalTexture, vec3(TexCoord, layer)).rgb;
-	vec4 mixx = texture(mixTexture, vec3(TexCoord, layer));
-	vec4 opacity = texture(opacityTexture, vec3(TexCoord, layer));
+	float m00 = round(model[0][0]);
+	float m20 = round(model[2][0]);
+	int rotation = 0;
+	vec2 uv = TexCoord;
+	     if (m00 >=  1.0 && m20 ==  0.0) rotation = 0;
+	else if (m00 ==  0.0 && m20 <= -1.0) rotation = 1;
+	else if (m00 <= -1.0 && m20 ==  0.0) rotation = 2;
+	else if (m00 ==  0.0 && m20 >=  1.0) rotation = 3;
+    for (int i = 0; i < rotation; i++)
+    {
+        uv.xy = uv.yx;
+        uv.x = 1.0 - uv.x;
+    }
+	if (rotation == 3)
+		uv.xy = 1.0 - uv.xy;
+
+
+	vec4 albedo = texture(albedoTexture, vec3(uv, layer));
+	vec3 normal = texture(normalTexture, vec3(uv, layer)).rgb;
+	vec4 mixx = texture(mixTexture, vec3(uv, layer));
+	vec4 opacity = texture(opacityTexture, vec3(uv, layer));
 
 	if (layer == 0)
 	{
