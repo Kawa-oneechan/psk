@@ -26,7 +26,7 @@ private:
 	int findItemSlot(InventoryItemP target);
 	int findStorageSlot(InventoryItemP target);
 
-	int eyeStyle{ 0 }, mouthStyle{ 0 }, cheeksStyle{ 2 };
+	int eyeStyle{ 0 }, mouthStyle{ 0 }, cheeksStyle{ 2 }, noseStyle{ 1 };
 	bool stung{ false };
 
 public:

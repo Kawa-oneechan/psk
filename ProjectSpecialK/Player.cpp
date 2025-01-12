@@ -12,7 +12,7 @@ void Player::LoadModel()
 		_hairModel = std::make_shared<::Model>(fmt::format("player/hair/{}/model.fbx", 0));
 	}
 
-	_model->SetVisibility("Nose01__mNose", true);
+	_model->SetVisibility(fmt::format("Nose{:02}__mNose", noseStyle), true);
 
 	_shoesModel = nullptr;
 	_onePieceModel = nullptr;
