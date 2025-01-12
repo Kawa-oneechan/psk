@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string>
-#include "support/JSON/JSONValue.h"
+#include <JSON/JSONValue.h>
 
 namespace VFS
 {

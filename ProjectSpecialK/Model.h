@@ -1,9 +1,9 @@
 #pragma once
 
-#include "support/glad/glad.h"
-#include "support/stb_image.h"
-#include "support/format.h"
-#include "support/ufbx.h"
+#include <glad/glad.h>
+#include <stb_image.h>
+#include <format.h>
+#include <ufbx.h>
 #include "VFS.h"
 
 //Because void-casting an integer for legacy reasons is silly.

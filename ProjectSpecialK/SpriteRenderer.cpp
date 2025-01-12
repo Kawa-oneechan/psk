@@ -4,8 +4,8 @@
 #include "SpecialK.h"
 
 #include "SpriteRenderer.h"
-#include "support/stb_truetype.h"
-#include "support/stb_image_write.h"
+#include <stb_truetype.h>
+#include <stb_image_write.h>
 
 extern int width, height;
 extern Shader* spriteShader;

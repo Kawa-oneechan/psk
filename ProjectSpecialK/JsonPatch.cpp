@@ -1,4 +1,4 @@
-#include "support/JSON/JSON.h"
+#include <JSON/JSON.h>
 
 namespace JSONPatch
 {

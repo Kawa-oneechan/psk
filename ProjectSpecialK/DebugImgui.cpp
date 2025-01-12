@@ -1,9 +1,9 @@
 #include "SpecialK.h"
 #include "Town.h"
 
-#include "support/ImGUI/imgui.h"
-#include "support/ImGUI/imgui_impl_glfw.h"
-#include "support/ImGUI/imgui_impl_opengl3.h"
+#include <ImGUI/imgui.h>
+#include <ImGUI/imgui_impl_glfw.h>
+#include <ImGUI/imgui_impl_opengl3.h>
 
 bool debuggerEnabled{ false };
 

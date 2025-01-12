@@ -1,7 +1,7 @@
 #include "SpecialK.h"
 
 #define GLM_ENABLE_EXPERIMENTAL
-#include "support/glm/gtx/rotate_vector.hpp"
+#include <glm/gtx/rotate_vector.hpp>
 
 void Person::Turn(float facing, float dt)
 {

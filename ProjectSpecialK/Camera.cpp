@@ -1,14 +1,14 @@
 #define GLM_ENABLE_EXPERIMENTAL
 #include "Camera.h"
 
-#include "support/glm/gtc/matrix_transform.hpp"
-#include "support/glm/gtx/transform.hpp"
-#include "support/glm/gtx/norm.hpp"
-#include "support/glm/gtx/rotate_vector.hpp"
-#include "support/glm/ext/matrix_transform.hpp"
-#include "support/glm/gtc/matrix_inverse.hpp"
-#include "support/glm/gtx/euler_angles.hpp"
-#include "support/glm/gtx/transform.hpp"
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/transform.hpp>
+#include <glm/gtx/norm.hpp>
+#include <glm/gtx/rotate_vector.hpp>
+#include <glm/ext/matrix_transform.hpp>
+#include <glm/gtc/matrix_inverse.hpp>
+#include <glm/gtx/euler_angles.hpp>
+#include <glm/gtx/transform.hpp>
 
 extern unsigned int commonBuffer;
 

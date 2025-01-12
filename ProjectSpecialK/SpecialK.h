@@ -9,12 +9,12 @@
 #include <stack>
 #include <algorithm>
 
-#include "support/glm/glm.hpp"
-#include "support/glm/gtc/matrix_transform.hpp"
-#include "support/glm/gtc/type_ptr.hpp"
-#include "support/JSON/JSON.h"
-#include "support/format.h"
-#include "support/sol.hpp"
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <JSON/JSON.h>
+#include <format.h>
+#include <sol.hpp>
 
 #include "Tickable.h"
 

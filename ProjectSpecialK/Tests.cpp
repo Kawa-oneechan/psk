@@ -1,8 +1,8 @@
 ﻿#include "SpecialK.h"
 #include "Town.h"
 
-#include "support/stb_image.h"
-#include "support/stb_image_write.h"
+#include <stb_image.h>
+#include <stb_image_write.h>
 void TestScaler()
 {
 	const int scale = 4;

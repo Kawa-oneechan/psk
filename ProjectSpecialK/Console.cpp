@@ -7,10 +7,10 @@
 #include "PanelLayout.h"
 
 //For version information
-#include "support/miniz.h"
-#include <fmod.h>
+#include <miniz.h>
+#include <fmodex/fmod.hpp>
 #ifdef DEBUG
-#include "support/ImGUI/imgui.h"
+#include <ImGUI/imgui.h>
 #endif
 
 extern float timeScale;

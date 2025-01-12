@@ -77,12 +77,12 @@
     <LibraryPath>C:\libs\glfw-3.3.9.bin.WIN64\lib-vc2015;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\libs\fmodex\api\inc;C:\libs\lua;C:\libs\glfw-3.3.9.bin.WIN64\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\libs\fmodex\api\lib;C:\libs\lua;C:\libs\glfw-3.3.9.bin.WIN64\lib-vc2015;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)support;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)support\fmodex;$(ProjectDir)support\lua;$(ProjectDir)support\glfw;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>C:\libs\fmodex\api\inc;C:\libs\lua;C:\libs\glfw-3.3.9.bin.WIN64\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\libs\fmodex\api\lib;C:\libs\lua;C:\libs\glfw-3.3.9.bin.WIN64\lib-vc2015;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)support;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)support\fmodex;$(ProjectDir)support\lua;$(ProjectDir)support\glfw;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

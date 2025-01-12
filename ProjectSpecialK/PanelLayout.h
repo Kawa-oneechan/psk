@@ -3,7 +3,7 @@
 #include "SpecialK.h"
 
 #define GLM_ENABLE_EXPERIMENTAL
-#include "support/glm/gtx/easing.hpp"
+#include <glm/gtx/easing.hpp>
 
 template<class T>
 struct Tween

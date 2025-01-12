@@ -624,7 +624,7 @@ void HandleIncludes(std::string& code, const std::string& path)
 	}
 }
 
-#include "support/scale2x/scalebit.h"
+#include <scale2x/scalebit.h>
 unsigned char* ScaleImage(unsigned char* original, int origWidth, int origHeight, int channels, int targetScale)
 {
 	if (targetScale < 2 || targetScale > 4)

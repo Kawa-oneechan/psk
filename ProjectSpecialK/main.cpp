@@ -2,8 +2,8 @@
 #include <chrono>
 #include "SpecialK.h"
 
-#include "support/glad/glad.h"
-#include <GLFW/glfw3.h>
+#include <glad/glad.h>
+#include <glfw/glfw3.h>
 
 #include "Console.h"
 #include "InputsMap.h"

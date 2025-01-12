@@ -175,7 +175,7 @@ void Map::WorkOutModels()
 }
 
 #ifdef DEBUG
-#include "support/stb_image_write.h"
+#include <stb_image_write.h>
 void Map::SaveToPNG()
 {
 	auto width = Width * 2;

@@ -4,7 +4,7 @@
 #include <algorithm>
 
 #include "SpecialK.h"
-#include "support/miniz.h"
+#include <miniz.h>
 #include "Console.h"
 
 /*

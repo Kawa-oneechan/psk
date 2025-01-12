@@ -1,6 +1,6 @@
 #pragma once
 
-#include "support/JSON/JSON.h"
+#include <JSON/JSON.h>
 
 using hash = unsigned int;
 

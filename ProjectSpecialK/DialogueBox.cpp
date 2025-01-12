@@ -3,7 +3,7 @@
 #include "InputsMap.h"
 
 #define GLM_ENABLE_EXPERIMENTAL
-#include "support/glm/gtx/rotate_vector.hpp"
+#include <glm/gtx/rotate_vector.hpp>
 
 constexpr float tweenTimeScale{ 5.0f };
 constexpr float wobbleTimeScale{ 0.25f };

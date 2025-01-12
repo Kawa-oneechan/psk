@@ -1,8 +1,8 @@
 #pragma once
 
-#include "support/glad/glad.h"
-#include "support/glm/glm.hpp"
-#include "support/glm/gtc/matrix_transform.hpp"
+#include <glad/glad.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 #include "Texture.h"
 #include "Shader.h"

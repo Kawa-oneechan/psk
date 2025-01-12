@@ -1,5 +1,5 @@
 #pragma once
-#include <fmod.hpp>
+#include <fmodex/fmod.hpp>
 #include "SpecialK.h"
 
 class Audio
