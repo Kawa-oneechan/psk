@@ -129,6 +129,7 @@ namespace VFS
 
 				addFileEntry(entry);
 			}
+			mz_zip_reader_end(&zip);
 		}
 	}
 
@@ -165,6 +166,7 @@ namespace VFS
 					break;
 				}
 			}
+			mz_zip_reader_end(&zip);
 		}
 		else
 		{
@@ -366,6 +368,7 @@ namespace VFS
 				*size = fsize;
 			auto ret = std::make_unique<char[]>(fsize + 2);
 			mz_zip_reader_extract_to_mem(&zip, entry.zipIndex, ret.get(), fsize, 0);
+			mz_zip_reader_end(&zip);
 			return ret;
 		}
 		else
@@ -560,7 +563,7 @@ namespace VFS
 			*size = fsize;
 		auto ret = std::make_unique<char[]>(fsize + 2);
 		mz_zip_reader_extract_to_mem(&zip, zfs.m_file_index, ret.get(), fsize, 0);
-
+		mz_zip_reader_end(&zip);
 		return ret;
 	}
 
