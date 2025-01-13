@@ -1,24 +1,24 @@
 #include "Sequence.h"
 
-Sequence::Sequence(std::initializer_list<TickableP> tickables)
+Sequence::Sequence(std::initializer_list<TickableP> parts)
 {
-	for (auto i : tickables)
-		parts.emplace_back(i);
+	for (auto i : parts)
+		tickables.emplace_back(i);
 	cursor = 0;
 	waiting = parts.size() > 0;
 }
 
 bool Sequence::Tick(float dt)
 {
-	if (parts.size() == 0)
+	if (tickables.size() == 0)
 		return true;
-	if (cursor >= parts.size())
+	if (cursor >= tickables.size())
 		return true;
 
 	auto ret = false;
 	if (waiting)
 	{
-		auto now = parts[cursor];
+		auto now = tickables[cursor];
 		now->mutex = &waiting;
 		ret = now->Tick(dt);
 	}
@@ -26,7 +26,7 @@ bool Sequence::Tick(float dt)
 	if (!waiting)
 	{
 		cursor++;
-		if (cursor >= parts.size())
+		if (cursor >= tickables.size())
 		{
 			if (mutex != nullptr)
 				*mutex = false;
@@ -37,14 +37,14 @@ bool Sequence::Tick(float dt)
 
 void Sequence::Draw(float dt)
 {
-	if (parts.size() == 0)
+	if (tickables.size() == 0)
 		return;
-	if (cursor >= parts.size())
+	if (cursor >= tickables.size())
 		return;
 
 	if (waiting)
 	{
-		auto now = parts[cursor];
+		auto now = tickables[cursor];
 		now->mutex = &waiting;
 		now->Draw(dt);
 	}

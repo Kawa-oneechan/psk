@@ -5,7 +5,6 @@
 class Sequence : public Tickable
 {
 private:
-	std::vector<TickableP> parts;
 	int cursor;
 	bool waiting;
 

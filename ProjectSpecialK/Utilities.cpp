@@ -460,7 +460,7 @@ std::string GetKeyName(int scancode)
 		return std::string(glfw);
 }
 
-bool RevAllTickables(std::vector<TickableP> tickables, float dt)
+bool RevAllTickables(const std::vector<TickableP>& tickables, float dt)
 {
 	//for (auto t = tickables.crbegin(); t != tickables.crend(); ++t)
 	for (unsigned int i = (unsigned int)tickables.size(); i-- > 0; )
@@ -477,7 +477,7 @@ bool RevAllTickables(std::vector<TickableP> tickables, float dt)
 	return true;
 }
 
-void DrawAllTickables(std::vector<TickableP> tickables, float dt)
+void DrawAllTickables(const std::vector<TickableP>& tickables, float dt)
 {
 	for (const auto& t : tickables)
 	{

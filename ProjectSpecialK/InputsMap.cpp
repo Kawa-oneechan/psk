@@ -7,6 +7,7 @@ InputsMap::InputsMap()
 	Clear();
 
 	lastMousePos = MousePosition = glm::vec2(width, height) + 20.0f;
+	MouseHoldLeft = MouseHoldMiddle = MouseHoldRight = false;
 }
 
 void InputsMap::Process(int scancode, int action)

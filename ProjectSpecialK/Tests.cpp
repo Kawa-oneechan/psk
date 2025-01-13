@@ -187,7 +187,7 @@ int GetLetterScore(const std::string& text, bool checkSpaces)
 
 		while (pos != std::string::npos)
 		{
-			if (pos != 0 && size != 0)
+			if (pos != 0)
 				pos++;
 			if (pos + 3 >= text.length())
 				break;

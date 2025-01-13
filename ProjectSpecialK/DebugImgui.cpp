@@ -192,6 +192,8 @@ static void DoVillager()
 {
 	//TODO: use *current* map.
 	static VillagerP debugVillager = villagers[0];
+	auto villagers = town->Villagers;
+	
 	if (ImGui::Begin("Villagers"))
 	{
 		ImGui::BeginChild("left pane", ImVec2(150, 0), ImGuiChildFlags_Borders | ImGuiChildFlags_ResizeX);
@@ -205,7 +207,7 @@ static void DoVillager()
 						continue;
 
 					const bool selected = (villagers[i] == debugVillager);
-					const bool here = std::find(town->Villagers.begin(), town->Villagers.end(), villagers[i]) != std::end(town->Villagers);
+					const bool here = std::find(villagers.begin(), villagers.end(), villagers[i]) != std::end(villagers);
 
 					ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 1.0f, here ? 0.0f : 1.0f, villagers[i]->IsManifest() ? 1.0f : 0.5f));
 					if (ImGui::Selectable(villagers[i]->Name().c_str(), selected))
@@ -226,7 +228,7 @@ static void DoVillager()
 			ImGui::Text(debugVillager->Name().c_str());
 			ImGui::Separator();
 
-			const bool here = std::find(town->Villagers.begin(), town->Villagers.end(), debugVillager) != std::end(town->Villagers);
+			const bool here = std::find(villagers.begin(), villagers.end(), debugVillager) != std::end(villagers);
 
 			if (debugVillager->Icon)
 			{
@@ -241,12 +243,12 @@ static void DoVillager()
 				debugVillager->Depart();
 			ImGui::SameLine();
 			if (!here && ImGui::Button("Bring in"))
-				town->Villagers.push_back(debugVillager);
+				villagers.push_back(debugVillager);
 			else if (here && ImGui::Button("Remove"))
 			{
-				auto there = std::find(town->Villagers.begin(), town->Villagers.end(), debugVillager);
-				if (there != town->Villagers.end())
-					town->Villagers.erase(there);
+				auto there = std::find(villagers.begin(), villagers.end(), debugVillager);
+				if (there != villagers.end())
+					villagers.erase(there);
 			}
 
 			ImGui::Text(debugVillager->ID.c_str());

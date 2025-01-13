@@ -136,7 +136,7 @@ void Map::WorkOutModels()
 			if (getTileElevation(x    , y - 1) >= five) key += "8";
 			if (getTileElevation(x + 1, y - 1) >= five) key += "9";
 
-			if (key == "") //still empty and we're elevated?
+			if (key.empty()) //still empty and we're elevated?
 			{
 				if (getTileElevation(x - 1, y + 1) < five) key += "1";
 				if (getTileElevation(x    , y + 1) < five) key += "2";
