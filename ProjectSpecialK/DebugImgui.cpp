@@ -5,7 +5,7 @@
 #include <ImGUI/imgui_impl_glfw.h>
 #include <ImGUI/imgui_impl_opengl3.h>
 
-bool debuggerEnabled{ false };
+bool debuggerEnabled{ true };
 
 extern float uiTime, glTime;
 extern GLFWwindow* window;
@@ -192,7 +192,7 @@ static void DoVillager()
 {
 	//TODO: use *current* map.
 	static VillagerP debugVillager = villagers[0];
-	auto villagers = town->Villagers;
+	auto townVillagers = town->Villagers;
 	
 	if (ImGui::Begin("Villagers"))
 	{
@@ -207,7 +207,7 @@ static void DoVillager()
 						continue;
 
 					const bool selected = (villagers[i] == debugVillager);
-					const bool here = std::find(villagers.begin(), villagers.end(), villagers[i]) != std::end(villagers);
+					const bool here = std::find(townVillagers.begin(), townVillagers.end(), villagers[i]) != std::end(townVillagers);
 
 					ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 1.0f, here ? 0.0f : 1.0f, villagers[i]->IsManifest() ? 1.0f : 0.5f));
 					if (ImGui::Selectable(villagers[i]->Name().c_str(), selected))
@@ -228,7 +228,7 @@ static void DoVillager()
 			ImGui::Text(debugVillager->Name().c_str());
 			ImGui::Separator();
 
-			const bool here = std::find(villagers.begin(), villagers.end(), debugVillager) != std::end(villagers);
+			const bool here = std::find(townVillagers.begin(), townVillagers.end(), debugVillager) != std::end(townVillagers);
 
 			if (debugVillager->Icon)
 			{
@@ -243,12 +243,12 @@ static void DoVillager()
 				debugVillager->Depart();
 			ImGui::SameLine();
 			if (!here && ImGui::Button("Bring in"))
-				villagers.push_back(debugVillager);
+				town->Villagers.push_back(debugVillager);
 			else if (here && ImGui::Button("Remove"))
 			{
-				auto there = std::find(villagers.begin(), villagers.end(), debugVillager);
+				auto there = std::find(townVillagers.begin(), townVillagers.end(), debugVillager);
 				if (there != villagers.end())
-					villagers.erase(there);
+					town->Villagers.erase(there);
 			}
 
 			ImGui::Text(debugVillager->ID.c_str());
