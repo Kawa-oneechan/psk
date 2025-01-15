@@ -174,8 +174,8 @@ void Villager::LoadModel()
 		else
 			_model = _species->Model();
 
-		if (_customAccessory)
-			_accessoryModel = std::make_shared<::Model>(fmt::format("{}/accessory.fbx", Path));
+		//if (_customAccessory)
+		//	_accessoryModel = std::make_shared<::Model>(fmt::format("{}/accessory.fbx", Path));
 	}
 
 	if (Textures[0] == nullptr)
