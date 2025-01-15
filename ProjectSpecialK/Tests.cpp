@@ -385,11 +385,14 @@ void RunTests()
 	conprint(0, u8"Elevation test: the tile at point 0.5×0.5 is elevation {}.", town->GetHeight(glm::vec3(0.50, 0.50, 10)));
 	//town.GenerateNew(nullptr, 2, 2);
 	//conprint(0, u8"Elevation test: on a new blank map, the tile at point 0.5×0.5 is elevation {}.", town.GetHeight(glm::vec3(0.50, 0.50, 10)));
+	
+	/*
 	town->Load();
 	int i = town->GetFlag("test:numTimesRan", 0);
 	i++;
 	town->SetFlag("test:numTimesRan", i);
 	town->Save();
+	*/
 
 	return;
 }

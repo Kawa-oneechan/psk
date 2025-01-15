@@ -277,6 +277,7 @@
   <ItemGroup>
     <None Include="data\shaders\font.fs" />
     <None Include="data\shaders\framebuffer.fs" />
+    <None Include="data\shaders\grass.fs" />
     <None Include="data\shaders\iris.fs" />
     <None Include="data\shaders\lighting.fs" />
     <None Include="data\shaders\model.fs" />

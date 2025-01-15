@@ -227,9 +227,10 @@ Town::Town()
 
 	Width = AcreSize * 1;
 	Height = AcreSize * 1;
-
-	//TEST
 	Terrain = std::make_unique<LiveTerrainTile[]>(Width * Height);
+
+	/*
+	//TEST
 	for (int i = 0; i < Width; i++)
 	{
 		//Top
@@ -257,10 +258,13 @@ Town::Town()
 	Terrain[(9 * Width) + 6].Elevation = 1;
 
 	WorkOutModels();
-
+	
 	//end test
+	*/
 
 	UseDrum = true;
+
+	Load();
 
 #ifdef DEBUG
 	SaveToPNG();
@@ -285,18 +289,41 @@ void Town::Load()
 {
 	try
 	{
-		auto json = VFS::ReadSaveJSON("map/flags.json");
+		auto json = VFS::ReadSaveJSON("map/town.json");
+		auto jsonObj = json->AsObject();
+
+		weatherSeed = jsonObj["weather"]->AsInteger();
+		Hemisphere = jsonObj["north"]->AsBool() ? Hemisphere::North : Hemisphere::South;
+		SquareGrass = jsonObj["squareGrass"]->AsBool();
+
+		Width = jsonObj["width"]->AsInteger();
+		Height = jsonObj["height"]->AsInteger();
+		Terrain = std::make_unique<LiveTerrainTile[]>(Width * Height);
+		auto mapArray = jsonObj["map"]->AsArray();
+		for (int i = 0; i < Width * Height; i++)
+		{
+			Terrain[i].Type = (unsigned char)mapArray[(i * 2) + 0]->AsInteger();
+			Terrain[i].Elevation = (unsigned char)mapArray[(i * 2) + 1]->AsInteger();
+		}
+
+		Villagers.clear();
+		for (const auto& f : jsonObj["villagers"]->AsArray())
+		{
+			Villagers.push_back(Database::Find<Villager>(f->AsString(), villagers));
+		}
+
 		flags.clear();
-		for (const auto& f : json->AsObject())
+		for (const auto& f : jsonObj["flags"]->AsObject())
 		{
 			flags[f.first] = f.second->AsInteger();
 		}
 
+		delete json;
 	}
 	catch (std::runtime_error&)
-	{ //-V565
+	{
 		//Nothing to load.
-		//TODO: DWI
+		weatherSeed = 0; //Use this as a sign that there was no town data.
 	}
 
 	WorkOutModels();
@@ -305,12 +332,37 @@ void Town::Load()
 void Town::Save()
 {
 	JSONObject json;
+
+	JSONArray mapArray;
+	mapArray.resize(Width * Height * 2);
+	for (int i = 0; i < Width * Height; i++)
+	{
+		mapArray[(i * 2) + 0] = new JSONValue(Terrain[i].Type);
+		mapArray[(i * 2) + 1] = new JSONValue(Terrain[i].Elevation);
+	}
+	json["map"] = new JSONValue(mapArray);
+	json["width"] = new JSONValue(Width);
+	json["height"] = new JSONValue(Height);
+	json["weather"] = new JSONValue((int)weatherSeed);
+	json["north"] = new JSONValue(Hemisphere == Hemisphere::North);
+	json["squareGrass"] = new JSONValue(SquareGrass);
+
+	JSONArray villagersArray;
+	for (const auto& i : Villagers)
+	{
+		villagersArray.push_back(new JSONValue(i->ID));
+	}
+	json["villagers"] = new JSONValue(villagersArray);
+	
+	JSONObject flagsObj;
 	for (const auto& i : flags)
 	{
-		json[i.first] = new JSONValue(i.second);
+		flagsObj[i.first] = new JSONValue(i.second);
 	}
+	json["flags"] = new JSONValue(flagsObj);
+
 	auto val = JSONValue(json);
-	VFS::WriteSaveJSON("map/flags.json", &val);
+	VFS::WriteSaveJSON("map/town.json", &val);
 }
 
 void Town::StartNewDay()
