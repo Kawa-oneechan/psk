@@ -176,6 +176,7 @@ void Villager::LoadModel()
 
 		//if (_customAccessory)
 		//	_accessoryModel = std::make_shared<::Model>(fmt::format("{}/accessory.fbx", Path));
+		//BUGBUG Temporarily disabled until I can figure out the random crashes.
 	}
 
 	if (Textures[0] == nullptr)
@@ -229,7 +230,7 @@ void Villager::LoadModel()
 
 	if ( !_clothingModel && Clothing)
 	{
-		auto path = _customModel ? Path : _species->Path;
+		auto path = (_customModel && _isSpecial) ? Path : _species->Path;
 		_clothingModel = std::make_shared<::Model>(fmt::format("{}/{}.fbx", path, Clothing->Style()));
 
 		/*
@@ -320,7 +321,14 @@ void Villager::Draw(float)
 	std::copy(&Textures[0], &Textures[2], _model->GetMesh("_mBody").Textures);
 	std::copy(&Textures[0], &Textures[2], _model->GetMesh("_mCapVis").Textures);
 	std::copy(&Textures[6], &Textures[8], _model->GetMesh("_mEye").Textures);
-	std::copy(&Textures[9], &Textures[11], _model->GetMesh("_mMouth").Textures);
+	if ((_customModel && !_customMuzzle) || !_species->ModeledMuzzle)
+		std::copy(&Textures[9], &Textures[11], _model->GetMesh("_mMouth").Textures);
+	else
+	{
+		std::copy(&Textures[9], &Textures[11], _model->GetMesh("FaceBad__mBeak").Textures);
+		std::copy(&Textures[9], &Textures[11], _model->GetMesh("FaceGood__mBeak").Textures);
+		std::copy(&Textures[9], &Textures[11], _model->GetMesh("FaceNothing__mBeak").Textures);
+	}
 	//std::copy(&Textures[12], &Textures[14], _model->GetMesh("???").Textures);
 
 	_model->SetLayer("_mEye", face);
@@ -451,7 +459,7 @@ void Villager::PickClothing()
 			}
 		}
 	}
-	else if (!_customModel)
+	else if (!(_customModel && _isSpecial))
 	{
 		//use default clothing
 		Clothing = std::make_shared<InventoryItem>(defaultClothingID);
