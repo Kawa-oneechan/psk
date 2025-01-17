@@ -395,7 +395,15 @@ static int InitOpenGL()
 		height = mode->height;
 	}
 	if (mode->width == width && mode->height == height)
+	{
 		glfwWindowHint(GLFW_DECORATED, 0);
+		glfwWindowHint(GLFW_CENTER_CURSOR, 1);
+	}
+	else
+	{
+		glfwWindowHint(GLFW_POSITION_X, (mode->width / 2) - (width / 2));
+		glfwWindowHint(GLFW_POSITION_Y, (mode->height / 2) - (height / 2));
+	}
 	glfwWindowHint(GLFW_RESIZABLE, 0);
 
 	window = glfwCreateWindow(width, height, WindowTitle, NULL, NULL);
