@@ -10,10 +10,13 @@ private:
 	glm::vec2 hotspot;
 	glm::vec4 frame;
 	glm::vec2 size;
+	glm::vec4 penFrame;
 	float scale;
 	bool rotate{ false };
 
 public:
+	glm::vec4 Pen{ 1.0, 0.0, 0.0, 1.0 };
+
 	Cursor();
 	void Select(int style);
 	void SetScale(int newScale);

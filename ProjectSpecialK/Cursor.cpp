@@ -19,6 +19,9 @@ void Cursor::Select(int style)
 	frame = hand[style];
 	hotspot = hotspots[style];
 	rotate = (style == 1);
+	penFrame = glm::vec4(-1);
+	if (style >= 11 && style <= 15)
+		penFrame = hand[style + 8];
 }
 
 void Cursor::SetScale(int newScale)
@@ -36,4 +39,6 @@ void Cursor::Draw()
 		rotation = time * glm::radians(3000.0f);
 	}
 	Sprite::DrawSprite(hand, Inputs.MousePosition - (hotspot * scale), size, frame, rotation);
+	if (penFrame.x != -1)
+		Sprite::DrawSprite(hand, Inputs.MousePosition - (hotspot * scale), size, penFrame, rotation, Pen);
 }
