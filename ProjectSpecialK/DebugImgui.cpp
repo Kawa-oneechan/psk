@@ -246,9 +246,10 @@ static void DoVillager()
 				town->Villagers.push_back(debugVillager);
 			else if (here && ImGui::Button("Remove"))
 			{
-				auto there = std::find(town->Villagers.begin(), town->Villagers.end(), debugVillager);
-				if (there != town->Villagers.end())
-					town->Villagers.erase(there);
+				townVillagers = town->Villagers;
+				auto there = std::find(townVillagers.begin(), townVillagers.end(), debugVillager);
+				if (there != townVillagers.end())
+					townVillagers.erase(there);
 			}
 
 			ImGui::Text(debugVillager->ID.c_str());
