@@ -146,10 +146,10 @@ public:
 	//Returns true if the wrapped Item is actually Clothing.
 	bool IsClothing() const;
 
-	std::string InventoryItem::Icon() const;
-	std::string InventoryItem::Style() const;
-	std::string InventoryItem::PlayerModel() const;
-	int InventoryItem::Variant() const;
+	std::string Icon() const;
+	std::string Style() const;
+	std::string PlayerModel() const;
+	int Variant() const;
 
 	//Safe to delete if true. If not, DO NOT DELETE.
 	bool Temporary;

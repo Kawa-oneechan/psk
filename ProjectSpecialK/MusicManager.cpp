@@ -58,7 +58,7 @@ void MusicManager::Play(const std::string& id, bool immediate)
 
 	if (id.empty())
 	{
-		delete bgm;
+		bgm.reset();
 		currentFile.clear();
 		currentID.clear();
 		return;
@@ -138,9 +138,7 @@ void MusicManager::Play(const std::string& id, bool immediate)
 
 	if (currentFile != file)
 	{
-		if (!currentFile.empty())
-			delete bgm;
-		bgm = new Audio(file);
+		bgm = std::make_shared<Audio>(file);
 		bgm->Play();
 		state = MusicState::Playing;
 	}

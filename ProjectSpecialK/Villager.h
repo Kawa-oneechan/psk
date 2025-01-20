@@ -114,7 +114,7 @@ public:
 
 	void PickClothing();
 
-	bool Villager::GiveItem(InventoryItemP item);
+	bool GiveItem(InventoryItemP item);
 
 	void Serialize(JSONObject& target);
 	void Deserialize(JSONObject& source);

@@ -16,7 +16,7 @@ private:
 	std::string currentID;
 	std::string currentFile;
 
-	Audio* bgm{ nullptr };
+	std::shared_ptr<Audio> bgm{ nullptr };
 
 public:
 	std::string Override;
