@@ -15,7 +15,7 @@ out vec3 Tangent;
 uniform mat4 model;
 
 //Match these to Model.h
-const int MaxBones = 50;
+const int MaxBones = 100;
 const int MaxWeights = 4;
 uniform mat4 finalBonesMatrices[MaxBones];
 

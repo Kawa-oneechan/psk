@@ -174,9 +174,8 @@ void Villager::LoadModel()
 		else
 			_model = _species->Model();
 
-		//if (_customAccessory)
-		//	_accessoryModel = std::make_shared<::Model>(fmt::format("{}/accessory.fbx", Path));
-		//BUGBUG Temporarily disabled until I can figure out the random crashes.
+		if (_customAccessory)
+			_accessoryModel = std::make_shared<::Model>(fmt::format("{}/accessory.fbx", Path));
 	}
 
 	if (Textures[0] == nullptr)
@@ -340,7 +339,8 @@ void Villager::Draw(float)
 	{
 		if (_accessoryType == AccessoryType::Body)
 		{
-			std::copy(&Textures[0], &Textures[2], _accessoryModel->GetMesh(0).Textures);
+			for (auto& m : _accessoryModel->Meshes)
+				std::copy(&Textures[0], &Textures[2], m.Textures);
 		}
 		else
 		{

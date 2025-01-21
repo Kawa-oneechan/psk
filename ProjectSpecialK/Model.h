@@ -22,7 +22,7 @@ inline void kawa_glVertexAttribIPointer(GLuint index, GLint size, GLenum type, G
 #define glVertexAttribIPointer kawa_glVertexAttribIPointer
 
 //Max amount of bones in a mesh
-static constexpr int MaxBones = 50;
+static constexpr int MaxBones = 100;
 
 class Model
 {

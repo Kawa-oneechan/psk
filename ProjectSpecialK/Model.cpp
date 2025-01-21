@@ -458,7 +458,7 @@ Model::Model(const std::string& modelPath) : file(modelPath)
 
 		auto boundBoneCt = boneCt;
 
-		for (auto i = 0; i < scene->bones.count; i++)
+		for (auto i = 0; i < scene->bones.count && i < MaxBones; i++)
 		{
 			auto bone = scene->bones.data[i];
 			auto boneName = bone->name.data;
@@ -536,7 +536,7 @@ Model::Model(const std::string& modelPath) : file(modelPath)
 			}
 		}
 
-		for (int i = 0; i < Bones.size() /*MaxBones*/; i++)
+		for (int i = 0; i < Bones.size() && i < MaxBones; i++)
 			finalBoneMatrices[i] = glm::identity<glm::mat4>(); //Bones[i].Offset; //glm::mat4(1.0f);
 	}
 

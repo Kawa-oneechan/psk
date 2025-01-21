@@ -66,9 +66,10 @@ Serge Brunier
 
 #Special thanks
 Andrea le Phrog	Captain Jistuce
-katepango	mikailborg
-Screwtape	wareya
-Vikxin
+Foone	katepango
+mikailborg	Omnitechnomancer
+Screwtape	Vaartis
+Vikxin	wareya
 
 #Tooling
 Heaven Tool by rafacasari

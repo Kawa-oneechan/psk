@@ -511,12 +511,12 @@ int main(int argc, char** argv)
 		FatalError(x.what());
 	}
 
+	glfwInit();
+
 	Audio::Initialize();
 	SolBinds::Setup();
 
 	UI::Load();
-
-	glfwInit();
 
 	//test
 	//GetLetterScore(u8"Hello friend Bob. How are you? See ya!"); //should be 101
