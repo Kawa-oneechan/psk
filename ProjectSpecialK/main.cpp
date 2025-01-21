@@ -639,6 +639,8 @@ int main(int argc, char** argv)
 	//thePlayer.Bottoms = std::make_shared<InventoryItem>("acnh:denimcutoffs/lightblue");
 
 	commonUniforms.Projection = glm::perspective(glm::radians(45.0f), (float)width / (float)height, 0.1f, 300.0f);
+	//Orthographic projection for a laugh. For best results, use a 45 degree pitch and yaw, no bending.
+	//commonUniforms.Projection = glm::ortho(-75.0f, 75.0f, -50.0f, 50.f, -1.0f, 300.0f);
 
 	frameBuffer = new Framebuffer("shaders/framebuffer.fs", width, height);
 
@@ -653,7 +655,7 @@ int main(int argc, char** argv)
 	tickables.push_back(MainCamera);
 	tickables.push_back(town);
 	tickables.push_back(std::make_shared<TitleScreen>());
-	//tickables.push_back(new InGame());
+	//tickables.push_back(std::make_shared<InGame>());
 
 	//auto layoutOverlay = new Texture("layoutoverlay.png");
 
