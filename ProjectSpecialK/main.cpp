@@ -335,6 +335,41 @@ static void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
 		angles.y -= yoffset;
 		MainCamera->Angles(angles);
 	}
+
+#if 0
+	//Mouse picking test
+	{
+		auto projection = commonUniforms.Projection;
+		auto view = commonUniforms.View;
+		auto screen = glm::ivec4(0, 0, width, height);
+		auto nearSource = glm::vec3(xpos, ypos, 0);
+		auto farSource = glm::vec3(xpos, ypos, 1);
+		auto nearPoint = glm::unProject(nearSource, view, projection, screen);
+		auto farPoint = glm::unProject(farSource, view, projection, screen);
+		auto direction = farPoint - nearPoint;
+		direction = glm::normalize(direction);
+
+		auto newTitle = fmt::format("Mouse picking: near pt {:.3} {:.3} {:.3}, far pt {:.3} {:.3} {:.3}, direction {:.3} {:.3} {:.3}", nearPoint.x, nearPoint.y, nearPoint.z, farPoint.x, farPoint.y, farPoint.z, direction.x, direction.y, direction.z);
+		glfwSetWindowTitle(window, newTitle.c_str());
+
+		/*
+		Okay so what I had before in "Hidden Power" on XNA was a Ray class.
+		That offered intersection methods with bounding boxes and such:
+		
+		var cursorRay = new Ray(nearPoint, direction);
+		foreach (var block in Map.Blocks)
+		{
+			if (string.IsNullOrEmpty(block.Caption)) continue;
+			if (cursorRay.Intersects(block.Box) != null)
+			{
+				PickedObject = block;
+				picked = block.Caption;
+				break;
+			}
+		}
+		*/
+	}
+#endif
 }
 
 static void mousebutton_callback(GLFWwindow* window, int button, int action, int mods)
