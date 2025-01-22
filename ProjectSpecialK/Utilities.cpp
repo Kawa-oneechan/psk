@@ -687,10 +687,9 @@ namespace NookCode
 		for (int i = 0; i < 6; i++)
 			d[i] = reverseBits(d[i]);
 
-		swap(&d[0], &d[1]); //-V525 yes yes I know
-		swap(&d[2], &d[3]);
-		swap(&d[2], &d[4]);
-		swap(&d[0], &d[3]);
+		int swaps[]{ 0, 1, 2, 3, 2, 4, 0, 3 };
+		for (int i = 0; i < 8; i += 2)
+			swap(&d[swaps[i]], &d[swaps[i + 1]]);
 
 		for (int i = 0; i < 6; i++)
 			d[i] = rotateLeft(d[i], i + 1);
@@ -757,10 +756,9 @@ namespace NookCode
 		for (int i = 0; i < 8; i++)
 			d[i] = rotateRight(d[i], i + 1);
 
-		swap(&d[0], &d[3]); //-V525
-		swap(&d[2], &d[4]);
-		swap(&d[2], &d[3]);
-		swap(&d[0], &d[1]);
+		int swaps[]{ 0, 3, 2, 4, 2, 3, 0, 1 };
+		for (int i = 0; i < 8; i += 2)
+			swap(&d[swaps[i]], &d[swaps[i + 1]]);
 
 		for (int i = 0; i < 6; i++)
 			d[i] = reverseBits(d[i]);

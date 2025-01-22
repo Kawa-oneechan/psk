@@ -32,12 +32,12 @@ namespace Text
 
 	//Adds a JSONObject full of localized strings to the string database.
 	//The JSONObject must map strings and *only* strings to language IDs.
-	extern Entry& Add(std::string key, JSONObject& map);
+	extern Entry& Add(const std::string& key, JSONObject& map);
 	//Adds a presumably English string to the string database.
-	extern Entry& Add(std::string key, const std::string& english);
+	extern Entry& Add(const std::string& key, const std::string& english);
 	//Adds a JSONValue that can be an object *or* a string to the string database.
 	//See Add(std::string& key, JSONObject& map) for details.
-	extern Entry& Add(std::string key, JSONValue& value);
+	extern Entry& Add(const std::string& key, JSONValue& value);
 	//Removes every key starting with the given prefix.
 	extern void Forget(const std::string& ns);
 	//Adds maps or strings from a JSONValue to the string database.

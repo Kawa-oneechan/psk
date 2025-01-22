@@ -57,7 +57,7 @@ std::string Text::Entry::get()
 	return get(gameLang);
 }
 
-Text::Entry& Text::Add(std::string key, JSONObject& map) //-V813
+Text::Entry& Text::Add(const std::string& key, JSONObject& map)
 {
 	auto entry = new Entry();
 
@@ -91,14 +91,14 @@ Text::Entry& Text::Add(std::string key, JSONObject& map) //-V813
 	return *entry;
 }
 
-Text::Entry& Text::Add(std::string key, const std::string& english) //-V813
+Text::Entry& Text::Add(const std::string& key, const std::string& english)
 {
 	auto map = JSONObject();
 	map["USen"] = new JSONValue(english);
 	return Add(key, map);
 }
 
-Text::Entry& Text::Add(std::string key, JSONValue& value) //-V813
+Text::Entry& Text::Add(const std::string& key, JSONValue& value)
 {
 	if (value.IsObject())
 	{

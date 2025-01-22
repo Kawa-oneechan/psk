@@ -389,8 +389,7 @@ void Town::StartNewDay()
 		//NOTE: We assume all entries are sorted by date.
 		for (int i = 1; 0 < calendar.size(); i++)
 		{
-			auto c = calendar[i]->AsObject(); //-V836 TODO: figure this out
-			const auto until = GetJSONVec2(c["until"]);
+			const auto until = GetJSONVec2(calendar[i]->AsObject().at("until"));
 			const int calHere = ((int)until[1] * 31) + (int)until[0];
 			if (calHere > calNow)
 			{
