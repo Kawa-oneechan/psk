@@ -330,8 +330,8 @@ void Villager::Draw(float)
 	}
 	//std::copy(&Textures[12], &Textures[14], _model->GetMesh("???").Textures);
 
-	_model->SetLayer("_mEye", face);
-	_model->SetLayer("_mMouth", mouth);
+	_model->SetLayerByMat("_mEye", face);
+	_model->SetLayerByMat("_mMouth", mouth);
 	
 	_model->Draw(Position, Facing);
 

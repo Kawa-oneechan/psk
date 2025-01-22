@@ -230,9 +230,9 @@ void Player::Draw(float)
 	std::copy(&Textures[3], &Textures[6], _model->GetMesh("_mMouth").Textures);
 	_model->GetMesh("_mCheek").Textures[0] = Textures[6];
 
-	_model->SetLayer("_mCheek", cheeksStyle);
-	_model->SetLayer("_mEye", face);
-	_model->SetLayer("_mMouth", mouth);
+	_model->SetLayerByMat("_mCheek", cheeksStyle);
+	_model->SetLayerByMat("_mEye", face);
+	_model->SetLayerByMat("_mMouth", mouth);
 
 	std::copy(&ClothingTextures[12], &ClothingTextures[15], _model->GetMesh("_mSocks").Textures);
 
