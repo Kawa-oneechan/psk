@@ -3,10 +3,13 @@ flat in int index;
 
 out vec4 fragColor;
 
+//Match this to SpriteRenderer.h
+const int BatchSize = 200;
+
 layout(binding=0) uniform sampler2D image;
-uniform vec4 spriteColor[200];
-uniform vec4 sourceRect[200];
-uniform bool flipX[200], flipY[200];
+uniform vec4 spriteColor[BatchSize];
+uniform vec4 sourceRect[BatchSize];
+uniform bool flipX[BatchSize], flipY[BatchSize];
 
 void main()
 {

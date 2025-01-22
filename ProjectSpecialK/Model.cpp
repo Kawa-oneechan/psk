@@ -416,6 +416,9 @@ Model::Model(const std::string& modelPath) : file(modelPath)
 		debprint(0, "* {}", m->name.data);
 	}
 
+	//TODO: I have a theory that bones would best be PROPERLY loaded recursively,
+	//starting from the root, instead of linearly and determining parent-child
+	//relations later on.
 	if (scene->skin_clusters.count > 0)
 	{
 		debprint(5, "Bones:");

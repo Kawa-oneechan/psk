@@ -9,6 +9,8 @@
 
 namespace Sprite
 {
+	constexpr int BatchSize = 200;
+
 	enum SpriteFlags
 	{
 		NoFlags = 0,

@@ -36,11 +36,11 @@ namespace Sprite
 	static Texture* currentTexture = nullptr;
 	static Shader* currentShader = nullptr;
 
-	static glm::mat4 models[200];
-	static glm::vec4 sourceRects[200];
-	static glm::vec4 spriteColors[200];
-	static int spriteFlipX[200];
-	static int spriteFlipY[200];
+	static glm::mat4 models[BatchSize];
+	static glm::vec4 sourceRects[BatchSize];
+	static glm::vec4 spriteColors[BatchSize];
+	static int spriteFlipX[BatchSize];
+	static int spriteFlipY[BatchSize];
 	static int instanceCursor = 0;
 
 	struct font
@@ -177,7 +177,7 @@ namespace Sprite
 			else
 				currentTexture = &texture;
 		}
-		if (instanceCursor >= 200)
+		if (instanceCursor >= BatchSize)
 			flush = true;
 
 		if (flush)
