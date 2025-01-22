@@ -269,9 +269,6 @@
     <ClInclude Include="Villager.h" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="icon.ico" />
-  </ItemGroup>
-  <ItemGroup>
     <ResourceCompile Include="res.rc" />
   </ItemGroup>
   <ItemGroup>
@@ -293,6 +290,11 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="data\shaders\common.fs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="app.ico" />
+    <Image Include="data.ico" />
+    <Image Include="pack.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

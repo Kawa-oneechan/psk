@@ -1,7 +1,10 @@
 #include <windows.h>
 #pragma code_page(1252)
 
-IDI_APPLICATION	ICON ".\\icon.ico"
+1	ICON ".\\app.ico"
+2	ICON ".\\data.ico"
+3	ICON ".\\pack.ico"
+
 VS_VERSION_INFO VERSIONINFO
 FILEVERSION 1,0,0,1
 PRODUCTVERSION 1,0,0,1
