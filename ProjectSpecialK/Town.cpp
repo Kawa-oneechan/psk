@@ -292,6 +292,7 @@ void Town::Load()
 		auto json = VFS::ReadSaveJSON("map/town.json");
 		auto jsonObj = json->AsObject();
 
+		Name = jsonObj["name"]->AsString();
 		weatherSeed = jsonObj["weather"]->AsInteger();
 		Hemisphere = jsonObj["north"]->AsBool() ? Hemisphere::North : Hemisphere::South;
 		SquareGrass = jsonObj["squareGrass"]->AsBool();
@@ -344,6 +345,7 @@ void Town::Save()
 	json["width"] = new JSONValue(Width);
 	json["height"] = new JSONValue(Height);
 	json["weather"] = new JSONValue((int)weatherSeed);
+	json["name"] = new JSONValue(Name);
 	json["north"] = new JSONValue(Hemisphere == Hemisphere::North);
 	json["squareGrass"] = new JSONValue(SquareGrass);
 
