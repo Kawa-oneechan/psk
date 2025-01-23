@@ -11,5 +11,14 @@
 		"voiceMonology": "sound/voices/base/Voice_Monology.wav"
 	},
 	"reactions": {
+	},
+	"interactions": {
+		"placeObject": "sound/interact/Ftr_Common_Appear.wav",
+		"removeObject": "sound/interact/Ftr_Common_Disappear.wav",
+		"rotate0": "sound/interact/Ftr_Common_Rotate90_Float.wav",
+		"rotate1": "sound/interact/Ftr_Common_Rotate90_Light.wav",
+		"rotate2": "sound/interact/Ftr_Common_Rotate90_Medium.wav",
+		"rotate3": "sound/interact/Ftr_Common_Rotate90_Heavy.wav",
+		"rotate4": "sound/interact/Ftr_Common_Rotate90_VeryHeavy.wav"
 	}
 }

@@ -58,11 +58,8 @@ zeemczed
 #Cursors
 Kenney (CC0)
 
-#Sky shader
-Leo Gallatin
-Danil S
-Bastiaan Olij
-Serge Brunier
+#Music
+JerryTerry
 
 #Special thanks
 Andrea le Phrog	Captain Jistuce

@@ -519,8 +519,6 @@ Shader* playerMouthShader;
 Shader* playerCheekShader;
 Shader* playerLegsShader;
 
-//extern int GetLetterScore(const std::string& text, bool checkSpaces = true);
-
 int main(int argc, char** argv)
 {
 	setlocale(LC_ALL, "en_US.UTF-8");
@@ -553,11 +551,6 @@ int main(int argc, char** argv)
 
 	UI::Load();
 
-	//test
-	//GetLetterScore(u8"Hello friend Bob. How are you? See ya!"); //should be 101
-	//GetLetterScore(u8"こんにちは、ボブさん。元気ですか？またね！", false); //should be 40
-	//GetLetterScore("L!L!L!L!L!L! L!L!L!L!L!L!L! L!L!L!L!L!L!L! L!L!L!L!L!L! L!L!L!L!L!L!L! L!L!L!L!L!L!L!L!L!L!L!L! L!L!L!L!L!L!L!L!L! L!L!L!L! L!L!L!L! L!L!L! L!L!L! L!L!L!"); //should be 710
-	//GetLetterScore("!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i"); //should be -820
 	/*
 	{
 		town.StartNewDay();

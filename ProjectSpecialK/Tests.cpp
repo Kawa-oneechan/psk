@@ -299,6 +299,8 @@ int GetLetterScore(const std::string& text, bool checkSpaces)
 				find(first, 0xFF01, 0) == std::string::npos &&
 				find(first, 0xFF0E, 0) == std::string::npos &&
 				find(first, 0xFF1F, 0) == std::string::npos
+				//y'know what? commas.
+				&& find(first, ',', 0) == std::string::npos
 				)
 				score -= 150;
 		}
@@ -337,6 +339,11 @@ int GetLetterScore(const std::string& text, bool checkSpaces)
 
 void RunTests()
 {
+	//GetLetterScore(u8"Hello friend Bob. How are you? See ya!"); //should be 101
+	//GetLetterScore(u8"こんにちは、ボブさん。元気ですか？またね！", false); //should be 40
+	//GetLetterScore("L!L!L!L!L!L! L!L!L!L!L!L!L! L!L!L!L!L!L!L! L!L!L!L!L!L! L!L!L!L!L!L!L! L!L!L!L!L!L!L!L!L!L!L!L! L!L!L!L!L!L!L!L!L! L!L!L!L! L!L!L!L! L!L!L! L!L!L! L!L!L!"); //should be 710
+	//GetLetterScore("!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i"); //should be -820
+
 	{
 		hash item = 0xD25C790C;
 		int variant = 1;
