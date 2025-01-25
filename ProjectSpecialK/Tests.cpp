@@ -92,8 +92,6 @@ void TestInventorySystems()
 
 int GetLetterScore(const std::string& text, bool checkSpaces)
 {
-	//TODO: do this in UTF8, without the std::is____ functions.
-
 	auto trigrams = VFS::ReadString("mailcheck/trigrams.txt");
 	int score = 0;
 	

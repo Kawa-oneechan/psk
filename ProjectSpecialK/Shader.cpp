@@ -4,13 +4,13 @@
 
 static unsigned int currentShader;
 
-Shader::Shader(const std::string& vertexPath, const std::string& fragmentPath)
+void Shader::load()
 {
-	auto vShaderCode = HEADER + VFS::ReadString(vertexPath);
-	auto fShaderCode = HEADER + VFS::ReadString(fragmentPath);
+	auto vShaderCode = HEADER + VFS::ReadString(vertexShaderPath);
+	auto fShaderCode = HEADER + VFS::ReadString(fragmentShaderPath);
 
-	HandleIncludes(vShaderCode, GetDirFromFile(vertexPath));
-	HandleIncludes(fShaderCode, GetDirFromFile(fragmentPath));
+	HandleIncludes(vShaderCode, GetDirFromFile(vertexShaderPath));
+	HandleIncludes(fShaderCode, GetDirFromFile(fragmentShaderPath));
 
 	unsigned int vertex, fragment;
 	const char* vs = vShaderCode.c_str();
@@ -38,6 +38,14 @@ Shader::Shader(const std::string& vertexPath, const std::string& fragmentPath)
 	//Hook up Common Uniforms if any.
 	auto commonBlockIndex = glGetUniformBlockIndex(ID, "CommonData");
 	glUniformBlockBinding(ID, commonBlockIndex, 1);
+}
+
+Shader::Shader(const std::string& vertexPath, const std::string& fragmentPath)
+{
+	vertexShaderPath = vertexPath;
+	fragmentShaderPath = fragmentPath;
+
+	load();
 }
 
 Shader::Shader(const std::string& fragmentPath) : Shader("shaders/sprite.vs", fragmentPath)
@@ -115,6 +123,12 @@ void Shader::Set(const std::string& name, const glm::mat3& mat, size_t count) co
 void Shader::Set(const std::string& name, const glm::mat4& mat, size_t count) const
 {
 	glUniformMatrix4fv(glGetUniformLocation(ID, name.c_str()), (GLsizei)count, GL_FALSE, &mat[0][0]);
+}
+
+void Shader::Reload()
+{
+	glDeleteProgram(ID);
+	load();
 }
 
 void Shader::checkCompileErrors(unsigned int shader, const std::string& type)

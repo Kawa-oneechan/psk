@@ -720,7 +720,6 @@ int main(int argc, char** argv)
 			//for (auto t = tickables.crbegin(); t != tickables.crend(); ++t)
 			//	(*t)->Tick(dt);
 			RevAllTickables(tickables, dt);
-			//TODO: have Tick return false if it's the last one, known to cover up everything else.
 		}
 
 		glBindBuffer(GL_UNIFORM_BUFFER, commonBuffer);

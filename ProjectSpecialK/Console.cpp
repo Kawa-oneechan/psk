@@ -5,6 +5,7 @@
 #include "InputsMap.h"
 #include "DialogueBox.h"
 #include "PanelLayout.h"
+#include "Framebuffer.h"
 
 //For version information
 #include <miniz.h>
@@ -20,6 +21,16 @@ extern bool debuggerEnabled;
 extern bool cheatsEnabled;
 
 bool noWear; //placeholder
+
+extern Shader* spriteShader;
+extern Shader* modelShader;
+extern Shader* grassShader;
+extern Shader* playerBodyShader;
+extern Shader* playerEyesShader;
+extern Shader* playerMouthShader;
+extern Shader* playerCheekShader;
+extern Shader* playerLegsShader;
+extern Framebuffer* frameBuffer;
 
 Console::Console()
 {
@@ -201,6 +212,19 @@ bool Console::Execute(const std::string& str)
 					}
 				}
 				Print(0, fmt::format("{} cvars", cvars.size()));
+				return true;
+			}
+			else if (split[0] == "reshade")
+			{
+				spriteShader->Reload();
+				modelShader->Reload();
+				grassShader->Reload();
+				playerBodyShader->Reload();
+				playerEyesShader->Reload();
+				playerMouthShader->Reload();
+				playerCheekShader->Reload();
+				playerLegsShader->Reload();
+				frameBuffer->ReloadShader();
 				return true;
 			}
 		}

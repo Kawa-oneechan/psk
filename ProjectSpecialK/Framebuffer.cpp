@@ -88,6 +88,11 @@ void Framebuffer::ChangeShader(Shader* newShader, bool own)
 	shaderOwned = own;
 }
 
+void Framebuffer::ReloadShader()
+{
+	shader->Reload();
+}
+
 Texture& Framebuffer::GetTexture()
 {
 	return *texture;

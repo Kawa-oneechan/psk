@@ -26,6 +26,10 @@ public:
 	void Set(const std::string& name, const glm::mat3& mat, size_t count = 1) const;
 	void Set(const std::string& name, const glm::mat4& mat, size_t count = 1) const;
 
+	void Reload();
+
 private:
+	std::string vertexShaderPath, fragmentShaderPath;
 	void checkCompileErrors(unsigned int shader, const std::string& type);
+	void load();
 };
