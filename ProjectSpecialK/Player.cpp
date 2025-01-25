@@ -1,9 +1,6 @@
 #include "SpecialK.h"
 #include "InputsMap.h"
 
-#define GLM_ENABLE_EXPERIMENTAL
-#include <glm/gtx/rotate_vector.hpp>
-
 void Player::LoadModel()
 {
 	if (!_model)
@@ -331,5 +328,111 @@ bool Player::Tick(float dt)
 
 	return !anythingPressed;
 }
+
+void Player::Save()
+{
+	JSONObject json;
+	Serialize(json);
+	auto val = JSONValue(json);
+	VFS::WriteSaveJSON("player.json", &val);
+}
+
+void Player::Load()
+{
+	try
+	{
+		auto json = VFS::ReadSaveJSON("player.json");
+		Deserialize((JSONObject&)json->AsObject());
+	}
+	catch (std::runtime_error&)
+	{
+		conprint(1, "Couldn't load data for the player.");
+	}
+}
+
+void Player::Serialize(JSONObject& target)
+{
+	target["name"] = new JSONValue(Name);
+	target["bells"] = new JSONValue((int)Bells);
+
+	JSONArray skin{ new JSONValue(SkinTone.r), new JSONValue(SkinTone.g), new JSONValue(SkinTone.b) };
+	JSONArray eyes{ new JSONValue(EyeColor.r), new JSONValue(EyeColor.g), new JSONValue(EyeColor.b) };
+	JSONArray cheek{ new JSONValue(CheekColor.r), new JSONValue(CheekColor.g), new JSONValue(CheekColor.b) };
+	JSONArray hair{ new JSONValue(HairColor.r), new JSONValue(HairColor.g), new JSONValue(HairColor.b) };
+	JSONObject colors;
+	colors["skin"] = new JSONValue(skin);
+	colors["eyes"] = new JSONValue(eyes);
+	colors["cheek"] = new JSONValue(cheek);
+	colors["hair"] = new JSONValue(hair);
+	target["colors"] = new JSONValue(colors);
+
+	JSONObject style;
+	style["gender"] = new JSONValue((Gender == Gender::Boy || Gender == Gender::BEnby) ? "boy" : "girl");
+	style["eyes"] = new JSONValue(eyeStyle);
+	style["mouth"] = new JSONValue(mouthStyle);
+	style["cheeks"] = new JSONValue(cheeksStyle);
+	style["nose"] = new JSONValue(noseStyle);
+	target["style"] = new JSONValue(style);
+
+	JSONArray items;
+	for (const auto& i : OnHand)
+	{
+		if (i == nullptr)
+			items.push_back(new JSONValue());
+		else
+			items.push_back(new JSONValue(i->FullID()));
+	}
+	target["items"] = new JSONValue(items);
+
+	JSONArray storage;
+	for (const auto& i : Storage)
+	{
+		storage.push_back(new JSONValue(i->FullID()));
+	}
+	target["storage"] = new JSONValue(storage);
+}
+
+void Player::Deserialize(JSONObject& source)
+{
+	Name = source["name"]->AsString();
+	Bells = source["bells"]->AsInteger();
+
+	auto& colors = source["colors"]->AsObject();
+	SkinTone = GetJSONColor(colors.at("skin"));
+	EyeColor = GetJSONColor(colors.at("eyes"));
+	CheekColor = GetJSONColor(colors.at("cheek"));
+	HairColor = GetJSONColor(colors.at("hair"));
+
+	auto& style = source["style"]->AsObject();
+	Gender = StringToEnum<::Gender>(style.at("gender")->AsString(), { "boy", "girl" });
+	eyeStyle = style.at("eyes")->AsInteger();
+	mouthStyle = style.at("mouth")->AsInteger();
+	cheeksStyle = style.at("cheeks")->AsInteger();
+	noseStyle = style.at("nose")->AsInteger();
+
+	auto items = source["items"]->AsArray();
+	OnHand.fill(nullptr);
+	int j = 0;
+	for (const auto& i : items)
+	{
+		if (i->IsString())
+			OnHand[j] = std::make_shared<InventoryItem>(i->AsString());
+		j++;
+		if (j >= MaxOnHand)
+			break;
+	}
+
+	auto storage = source["storage"]->AsArray();
+	Storage.clear();
+	for (const auto& i : storage)
+	{
+		Storage.push_back(std::make_shared<InventoryItem>(i->AsString()));
+		j++;
+		if (j >= MaxStorage)
+			break;
+	}
+
+}
+
 
 Player thePlayer;

@@ -92,6 +92,9 @@ public:
 	//Moves the specified inventory item from the player's storage to their inventory.
 	bool Retrieve(InventoryItemP item);
 
+	void Save();
+	void Load();
+
 	void Serialize(JSONObject& target);
 	void Deserialize(JSONObject& source);
 };

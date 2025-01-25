@@ -601,8 +601,8 @@ int main(int argc, char** argv)
 	auto panels = new Texture("ui/panels.png");
 	panels->Use();
 
-	thePlayer.Name = "Kawa";
-	thePlayer.Gender = Gender::BEnby;
+	//thePlayer.Name = "Kawa";
+	//thePlayer.Gender = Gender::BEnby;
 
 	//Now that we've loaded the key names we can fill in some blanks.
 	for (int i = 0; i < NumKeyBinds; i++)
@@ -636,6 +636,9 @@ int main(int argc, char** argv)
 #ifdef DEBUG
 	RunTests();
 #endif
+
+	//Load the player *here* so we don't get inventory test results mixed in.
+	thePlayer.Load();
 
 	skyShader->Use();
 	auto cloudImage = Texture("altostratus.png");
@@ -792,6 +795,7 @@ int main(int argc, char** argv)
 		glfwPollEvents();
 	}
 
+	thePlayer.Save();
 	UI::Save();
 
 	glfwTerminate();
