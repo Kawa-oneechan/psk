@@ -90,9 +90,9 @@ void TestInventorySystems()
 }
 
 
-int GetLetterScore(const std::string& text, bool checkSpaces)
+int GetLetterScore(const std::string& text, bool noCapitals)
 {
-	auto trigrams = VFS::ReadString("mailcheck/trigrams.txt");
+	auto trigrams = VFS::ReadString(fmt::format("mailcheck/trigrams_{}.txt", Text::GetLangCode()));
 	int score = 0;
 	
 	rune ch;
@@ -124,6 +124,8 @@ int GetLetterScore(const std::string& text, bool checkSpaces)
 		{
 			score += 20;
 		}
+
+		//Check this for correctness.
 
 		auto checkFor = [&score, text, &find](rune pct)
 		{
@@ -222,6 +224,7 @@ int GetLetterScore(const std::string& text, bool checkSpaces)
 	}
 
 	//Check C: first letter is a capital
+	if (!noCapitals)
 	{
 		for (size_t i = 0; i < text.length(); i += size)
 		{
@@ -265,7 +268,6 @@ int GetLetterScore(const std::string& text, bool checkSpaces)
 	}
 
 	//Check E: space/non-space ratio
-	if (checkSpaces)
 	{
 		int spaces = 0;
 		int nonspaces = 0;
@@ -305,7 +307,6 @@ int GetLetterScore(const std::string& text, bool checkSpaces)
 	}
 
 	//Check G: at least one space per 32 character cluster
-	if (checkSpaces)
 	{
 		size_t i = 0;
 		while (i < text.length())
@@ -337,10 +338,10 @@ int GetLetterScore(const std::string& text, bool checkSpaces)
 
 void RunTests()
 {
-	//GetLetterScore(u8"Hello friend Bob. How are you? See ya!"); //should be 101
-	//GetLetterScore(u8"こんにちは、ボブさん。元気ですか？またね！", false); //should be 40
-	//GetLetterScore("L!L!L!L!L!L! L!L!L!L!L!L!L! L!L!L!L!L!L!L! L!L!L!L!L!L! L!L!L!L!L!L!L! L!L!L!L!L!L!L!L!L!L!L!L! L!L!L!L!L!L!L!L!L! L!L!L!L! L!L!L!L! L!L!L! L!L!L! L!L!L!"); //should be 710
-	//GetLetterScore("!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i"); //should be -820
+	//GetLetterScore(u8"Hello friend Bob. How are you? See ya!"); //should be 101, matches Hunter R's tool.
+	//GetLetterScore(u8"こんにちは、ボブさん。元気ですか？またね！", true); //should be 40, Hunter R's tool doesn't support non-US.
+	//GetLetterScore("L!L!L!L!L!L! L!L!L!L!L!L!L! L!L!L!L!L!L!L! L!L!L!L!L!L! L!L!L!L!L!L!L! L!L!L!L!L!L!L!L!L!L!L!L! L!L!L!L!L!L!L!L!L! L!L!L!L! L!L!L!L! L!L!L! L!L!L! L!L!L!"); //should be 710, Hunter R says 746.
+	//GetLetterScore("!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i"); //should be -820, Hunter R says -807
 
 	{
 		hash item = 0xD25C790C;

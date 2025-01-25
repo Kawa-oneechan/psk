@@ -104,7 +104,7 @@ void DoomMenu::Build()
 		[&](DoomMenuItem*i)
 		{
 			gameLang = opt2lan[i->selection];
-			UI::settings["language"] = new JSONValue(i->selection);
+			UI::settings["language"] = new JSONValue(Text::GetLangCode(gameLang));
 			Translate();
 			items = &options;
 			dlgBox->Text(Text::Get("menu:options:language:taunt"), Database::Find<Villager>("psk:cat00", villagers));

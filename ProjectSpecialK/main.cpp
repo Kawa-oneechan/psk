@@ -148,7 +148,7 @@ namespace UI
 #define DS(K, V) if (!settings[K]) settings[K] = new JSONValue(V)
 		DS("screenWidth", ScreenWidth);
 		DS("screenHeight", ScreenHeight);
-		DS("language", (int)Language::USen);
+		DS("language", "USen"); //(int)Language::USen);
 		DS("continue", (int)LoadSpawnChoice::FrontDoor);
 		DS("speech", (int)DialogueBox::Sound::Bebebese);
 		DS("pingRate", 3);
@@ -167,8 +167,9 @@ namespace UI
 		width = settings["screenWidth"]->AsInteger();
 		height = settings["screenHeight"]->AsInteger();
 
-		constexpr Language opt2lan[] = { Language::USen, Language::JPja, Language::EUde, Language::EUes, Language::EUfr, Language::EUit, Language::EUhu, Language::EUnl, Language::EUen };
-		gameLang = opt2lan[settings["language"]->AsInteger()];
+		//constexpr Language opt2lan[] = { Language::USen, Language::JPja, Language::EUde, Language::EUes, Language::EUfr, Language::EUit, Language::EUhu, Language::EUnl, Language::EUen };
+		//gameLang = opt2lan[settings["language"]->AsInteger()];
+		gameLang = Text::GetLangCode(settings["language"]->AsString());
 
 		Audio::MusicVolume = settings["musicVolume"]->AsInteger() / 100.0f;
 		Audio::AmbientVolume = settings["ambientVolume"]->AsInteger() / 100.0f;

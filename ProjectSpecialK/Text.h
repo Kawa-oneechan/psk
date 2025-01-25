@@ -30,6 +30,9 @@ namespace Text
 		std::string get();
 	};
 
+	Language GetLangCode(const std::string& lang);
+	std::string GetLangCode(Language lang = Language::Default);
+
 	//Adds a JSONObject full of localized strings to the string database.
 	//The JSONObject must map strings and *only* strings to language IDs.
 	extern Entry& Add(const std::string& key, JSONObject& map);

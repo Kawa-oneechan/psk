@@ -4,7 +4,7 @@ Language gameLang = Language::USen;
 
 static std::map<std::string, Text::Entry> textEntries;
 
-static Language LangStrToEnum(const std::string &lang)
+Language Text::GetLangCode(const std::string &lang)
 {
 	const auto map = std::map<std::string, Language>(
 	{
@@ -28,6 +28,31 @@ static Language LangStrToEnum(const std::string &lang)
 	if (match != map.end())
 		return match->second;
 	return Unknown;
+}
+
+std::string Text::GetLangCode(Language lang)
+{
+	const auto map = std::map<Language, std::string>(
+	{
+		{ USen, "USen" },
+		{ USes, "USes" },
+		{ USfr, "USfr" },
+		{ JPja, "JPja" },
+		{ KRko, "KRko" },
+		{ CNzh, "CNzh" },
+		{ TWzh, "TWzh" },
+		{ EUde, "EUde" },
+		{ EUen, "EUen" },
+		{ EUes, "EUes" },
+		{ EUfr, "EUfr" },
+		{ EUit, "EUit" },
+		{ EUnl, "EUnl" },
+		{ EUru, "EUru" },
+		{ EUhu, "EUhu" },
+	});
+	if (lang == Default)
+		lang = gameLang;
+	return map.at(lang);
 }
 
 std::string Text::Entry::get(Language lang)
@@ -71,7 +96,7 @@ Text::Entry& Text::Add(const std::string& key, JSONObject& map)
 			break;
 		}
 
-		auto langEnum = LangStrToEnum(langs.first);
+		auto langEnum = GetLangCode(langs.first);
 		if (langEnum == Unknown)
 			continue;
 		entry->text[langEnum] = langs.second->AsString();
