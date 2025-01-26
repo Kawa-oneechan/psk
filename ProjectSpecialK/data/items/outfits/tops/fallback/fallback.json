@@ -5,5 +5,6 @@
 	"category": "tops",
 	"price": 1,
 	"icon": "fallback",
-	"style": "ts_none"
+	"style": "ts_none",
+	"playerModel": "PlayerTopsTopTshirtsN"
 }

@@ -37,6 +37,8 @@ public:
 	int Price{ 0 };
 	//A stack limit of zero is functionally the same as a stack limit of one.
 	int StackLimit{ 0 };
+	//The item wears down at this many uses. If zero, the item can't wear down.
+	int WearLimit{ 0 };
 
 	//The name of the inventory/hotbar icon.
 	std::string Icon;
@@ -127,6 +129,7 @@ class InventoryItem : public NameableThing
 private:
 	ItemP _wrapped;
 	int _variant, _pattern;
+	int _wear;
 
 public:
 	InventoryItem(ItemP wrapped, int variant, int pattern);
@@ -150,6 +153,9 @@ public:
 	std::string Style() const;
 	std::string PlayerModel() const;
 	int Variant() const;
+	void Variant(int variant);
+
+	bool InventoryItem::WearDown(int howMuch = 1);
 
 	ItemP Wrapped() const;
 

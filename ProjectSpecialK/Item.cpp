@@ -86,12 +86,7 @@ Item::Item(JSONObject& value, const std::string& filename) : NameableThing(value
 			throw std::runtime_error(fmt::format("Don't know what to do with type \"{}\" while loading {}.", kind, ID));
 
 		Style = value["style"] != nullptr ? value["style"]->AsString() : "";
-		//TODO: regenerate as "playerModel"
-		if (value["xx_unparsedParam"])
-		{
-			auto params = value["xx_unparsedParam"]->AsObject();
-			PlayerModel = params["45_ItemPlayerTopsBottomsForm"]->AsString();
-		}
+		PlayerModel = value["playerModel"]->AsString();
 	}
 	
 	auto vars = value["variants"];
@@ -237,6 +232,19 @@ std::string InventoryItem::PlayerModel() const
 int InventoryItem::Variant() const
 {
 	return _variant;
+}
+
+void InventoryItem::Variant(int variant)
+{
+	_variant = glm::clamp(variant, 0, (int)_wrapped->variantNames.size());
+}
+
+bool InventoryItem::WearDown(int howMuch)
+{
+	if (_wrapped->WearLimit == 0)
+		return false;
+	_wear += howMuch;
+	return _wear >= _wrapped->WearLimit;
 }
 
 ItemP InventoryItem::Wrapped() const

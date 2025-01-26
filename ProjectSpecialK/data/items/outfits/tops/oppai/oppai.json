@@ -7,7 +7,5 @@
 	"variants": [ "black", "white", "gray" ],
 	"icon": "tops",
 	"style": "ts_short",
-	"xx_unparsedParam": {
-		"45_ItemPlayerTopsBottomsForm": "PlayerTopsTopTshirtsH"
-	}
+	"playerModel": "PlayerTopsTopTshirtsH"
 }
