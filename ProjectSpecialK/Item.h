@@ -151,6 +151,8 @@ public:
 	std::string PlayerModel() const;
 	int Variant() const;
 
+	ItemP Wrapped() const;
+
 	//Safe to delete if true. If not, DO NOT DELETE.
 	bool Temporary;
 };

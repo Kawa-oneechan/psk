@@ -390,6 +390,17 @@ void Player::Serialize(JSONObject& target)
 		storage.push_back(new JSONValue(i->FullID()));
 	}
 	target["storage"] = new JSONValue(storage);
+
+	JSONObject outfit;
+	auto tOrP = Tops ? Tops : (OnePiece ? OnePiece : nullptr);
+	outfit["topOrOnePiece"] = tOrP ? new JSONValue(tOrP->FullID()) : new JSONValue();
+	outfit["bottom"] = Bottoms ? new JSONValue(Bottoms->FullID()) : new JSONValue();
+	outfit["shoes"] = Shoes ? new JSONValue(Shoes->FullID()) : new JSONValue();
+	outfit["hat"] = Hat ? new JSONValue(Hat->FullID()) : new JSONValue();
+	outfit["glasses"] = Glasses ? new JSONValue(Glasses->FullID()) : new JSONValue();
+	outfit["mask"] = Mask ? new JSONValue(Mask->FullID()) : new JSONValue();
+	outfit["bag"] = Bag ? new JSONValue(Bag->FullID()) : new JSONValue();
+	target["outfit"] = new JSONValue(outfit);
 }
 
 void Player::Deserialize(JSONObject& source)
@@ -432,6 +443,47 @@ void Player::Deserialize(JSONObject& source)
 			break;
 	}
 
+	auto& outfit = source["outfit"]->AsObject();
+	{
+		auto topOrOnepiece = outfit.at("topOrOnepiece");
+		auto bottom = outfit.at("bottom");
+		auto shoes = outfit.at("shoes");
+		//auto socks = outfit.at("socks");
+		auto hat = outfit.at("hat");
+		auto glasses = outfit.at("glasses");
+		auto mask = outfit.at("mask");
+		auto bag = outfit.at("bag");
+
+		Tops = nullptr;
+		Bottoms = nullptr;
+		OnePiece = nullptr;
+		Shoes = nullptr;
+		Hat = nullptr;
+		Glasses = nullptr;
+		Mask = nullptr;
+		Bag = nullptr;
+
+		if (topOrOnepiece->IsString())
+		{
+			auto item = std::make_shared<InventoryItem>(topOrOnepiece->AsString());
+			if (item->Wrapped()->ClothingKind == Item::ClothingKind::Tops)
+				Tops = item;
+			else
+				OnePiece = item;
+		}
+		if (bottom->IsString())
+			Bottoms = std::make_shared<InventoryItem>(bottom->AsString());
+		if (shoes->IsString())
+			Shoes = std::make_shared<InventoryItem>(shoes->AsString());
+		if (hat->IsString())
+			Hat = std::make_shared<InventoryItem>(hat->AsString());
+		if (glasses->IsString())
+			Glasses = std::make_shared<InventoryItem>(glasses->AsString());
+		if (mask->IsString())
+			Mask = std::make_shared<InventoryItem>(mask->AsString());
+		if (bag->IsString())
+			Bag = std::make_shared<InventoryItem>(bag->AsString());
+	}
 }
 
 

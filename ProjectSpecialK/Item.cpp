@@ -238,3 +238,8 @@ int InventoryItem::Variant() const
 {
 	return _variant;
 }
+
+ItemP InventoryItem::Wrapped() const
+{
+	return _wrapped;
+}
