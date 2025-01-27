@@ -445,7 +445,7 @@ void Player::Deserialize(JSONObject& source)
 
 	auto& outfit = source["outfit"]->AsObject();
 	{
-		auto topOrOnepiece = outfit.at("topOrOnepiece");
+		auto topOrOnepiece = outfit.at("topOrOnePiece");
 		auto bottom = outfit.at("bottom");
 		auto shoes = outfit.at("shoes");
 		//auto socks = outfit.at("socks");

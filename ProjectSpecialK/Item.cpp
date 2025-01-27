@@ -86,7 +86,7 @@ Item::Item(JSONObject& value, const std::string& filename) : NameableThing(value
 			throw std::runtime_error(fmt::format("Don't know what to do with type \"{}\" while loading {}.", kind, ID));
 
 		Style = value["style"] != nullptr ? value["style"]->AsString() : "";
-		PlayerModel = value["playerModel"]->AsString();
+		PlayerModel = value["playerModel"] != nullptr ? value["playerModel"]->AsString() : "";
 	}
 	
 	auto vars = value["variants"];
