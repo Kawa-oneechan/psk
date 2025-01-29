@@ -25,6 +25,8 @@ void ButtonGuide::SetButtons(std::initializer_list<std::string> labels)
 
 void ButtonGuide::Draw()
 {
+	//TODO: rework
+
 	auto s = scale * 1.40f;
 	auto& controls = *UI::controls;
 	auto pillWidth = controls[7].z * s;

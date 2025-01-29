@@ -163,7 +163,7 @@ void GetAtlas(std::vector<glm::vec4> &ret, const std::string& jsonFile)
 	delete rjs;
 }
 
-bool PointInPoly(const glm::vec2 point, const std::vector<glm::vec2>& polygon)
+bool PointInPoly(const glm::vec2 point, const polygon& polygon)
 {
 	int crossings = 0;
 	const auto numPts = polygon.size() - 1;

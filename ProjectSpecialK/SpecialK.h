@@ -114,8 +114,9 @@ extern glm::vec4 GetJSONColor(JSONValue* val);
 //Either way, the first value is a day from 1-31 and the second a month from 1-12.
 extern glm::vec2 GetJSONDate(JSONValue* val);
 
+using polygon = std::vector<glm::vec2>;
 //Returns true if point is inside of polygon.
-extern bool PointInPoly(const glm::vec2 point, const std::vector<glm::vec2>& polygon);
+extern bool PointInPoly(const glm::vec2 point, const polygon& polygon);
 //Returns true if point is in rect.
 extern bool PointInRect(const glm::vec2 point, const glm::vec4 rect);
 

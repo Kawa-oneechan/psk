@@ -40,11 +40,8 @@ void Shader::load()
 	glUniformBlockBinding(ID, commonBlockIndex, 1);
 }
 
-Shader::Shader(const std::string& vertexPath, const std::string& fragmentPath)
+Shader::Shader(const std::string& vertexPath, const std::string& fragmentPath) : vertexShaderPath(vertexPath), fragmentShaderPath(fragmentPath)
 {
-	vertexShaderPath = vertexPath;
-	fragmentShaderPath = fragmentPath;
-
 	load();
 }
 

@@ -122,6 +122,7 @@ InventoryItem::InventoryItem(ItemP wrapped, int variant, int pattern)
 	_wrapped = wrapped;
 	_variant = variant;
 	_pattern = pattern;
+	_wear = 0;
 	ID = wrapped->ID;
 	Hash = wrapped->Hash;
 	RefName = wrapped->RefName;

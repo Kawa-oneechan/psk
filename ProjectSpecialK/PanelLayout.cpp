@@ -25,7 +25,7 @@ PanelLayout::PanelLayout(JSONValue* source)
 	{
 		for (const auto& p : src["polygons"]->AsArray())
 		{
-			std::vector<glm::vec2> poly;
+			polygon poly;
 			for (const auto& point : p->AsArray())
 			{
 				poly.emplace_back(GetJSONVec2(point));
@@ -274,7 +274,7 @@ bool PanelLayout::Tick(float dt)
 		}
 	}
 
-	std::vector<glm::vec2> poly;
+	polygon poly;
 	Panel* newHl = nullptr;
 	//auto prevPoly = -1;
 	for (const auto& panel : panels)
