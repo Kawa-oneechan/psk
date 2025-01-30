@@ -499,10 +499,18 @@ void Town::drawWorker(float dt)
 		v->Draw(dt * timeScale);
 	MeshBucket::Flush();
 
-	//just doing a single _fake_ acre, no whammies...
-	for (int y = 0; y < AcreSize; y++)
+	auto playerTile = glm::round(thePlayer.Position / 10.0f);
+	constexpr auto half = (int)(AcreSize * 1.5f);
+	constexpr auto north = AcreSize * 3;
+	constexpr auto south = AcreSize + half;
+	constexpr auto sides = AcreSize + half;
+	const auto y1 = glm::clamp((int)playerTile.z - north, 0, Width);
+	const auto y2 = glm::clamp((int)playerTile.z + south, 0, Width);
+	const auto x1 = glm::clamp((int)playerTile.x - sides, 0, Height);
+	const auto x2 = glm::clamp((int)playerTile.x + sides, 0, Height);
+	for (int y = y1; y < y2; y++)
 	{
-		for (int x = 0; x < AcreSize; x++)
+		for (int x = x1; x < x2; x++)
 		{
 			auto tile = Terrain[(y * Width) + x];
 			auto model = tileModels[tile.Model];
