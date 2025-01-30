@@ -7,7 +7,13 @@ namespace SolBinds
 {
 	void Setup()
 	{
-		Sol.open_libraries(sol::lib::coroutine);
+		Sol.open_libraries(sol::lib::base, sol::lib::coroutine, sol::lib::string, sol::lib::math);
+
+		//Remove some base stuff
+		Sol["dofile"] = nullptr;
+		Sol["load"] = nullptr;
+		Sol["loadfile"] = nullptr;
+		Sol["loadstring"] = nullptr;
 
 		Sol["print"] = [&](sol::variadic_args va)
 		{
