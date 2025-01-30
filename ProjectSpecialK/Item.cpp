@@ -24,6 +24,7 @@ Item::Item(JSONObject& value, const std::string& filename) : NameableThing(value
 
 	Icon = value["icon"] != nullptr ? value["icon"]->AsString() : "leaf";
 	Price = value["price"] != nullptr ? value["price"]->AsInteger() : 0;
+	WearLimit = value["breakDamage"] != nullptr ? value["breakDamage"]->AsInteger() : 0;
 
 	if (Type != Type::Clothing)
 	{
@@ -90,9 +91,16 @@ Item::Item(JSONObject& value, const std::string& filename) : NameableThing(value
 	}
 	
 	auto vars = value["variants"];
+	auto remake = value["remake"];
 	if (vars != nullptr)
 	{
 		for (auto v : vars->AsArray())
+			variantNames.push_back(v->AsString());
+	}
+	else if (remake != nullptr)
+	{
+		auto bodies = remake->AsObject().at("bodies");
+		for (auto v : bodies->AsArray())
 			variantNames.push_back(v->AsString());
 	}
 }
@@ -144,6 +152,7 @@ InventoryItem::InventoryItem(const std::string& reference)
 
 	_variant = 0;
 	_pattern = 0;
+	_wear = 0;
 
 	if (slash != std::string::npos)
 	{
@@ -158,9 +167,26 @@ InventoryItem::InventoryItem(const std::string& reference)
 	{
 		auto k = reference.substr(slash + 1);
 		auto varNames = Split(k, '/');
-		_variant = _wrapped->FindVariantByName(varNames[0]);
-		//TODO: pattern
-		_pattern = 0;
+		if (_wrapped->variantNames.size() != 0)
+		{
+			//Accept both variant names and indices. If one fails...
+			//This way, definitions can be more clear but saved data
+			//doesn't need to have them called by name.
+			_variant = _wrapped->FindVariantByName(varNames[0]);
+			if (_variant == -1)
+				_variant = std::stoi(varNames[0]);
+			//TODO: pattern names
+			if (varNames.size() > 1)
+				_pattern = std::stoi(varNames[1]);
+			if (_wrapped->WearLimit != 0)
+			{
+				_wear = std::stoi(varNames[2]);
+			}
+		}
+		else if (_wrapped->WearLimit != 0)
+		{
+			_wear = std::stoi(varNames[0]);
+		}
 	}
 	ID = _wrapped->ID;
 	Hash = _wrapped->Hash;
@@ -174,17 +200,28 @@ std::string InventoryItem::FullID() const
 {
 	if (_wrapped->variantNames.size() != 0)
 	{
-		//TODO: patterns
-		return fmt::format("{}/{}", ID, _wrapped->variantNames[_variant]);
+		if (_wear > 0)
+			return fmt::format("{}/{}/{}/{}", ID, _variant, _pattern, _wear);
+		return fmt::format("{}/{}/{}", ID, _variant, _pattern);
 	}
+	//No variants, but we do have a wear?
+	if (_wear > 0)
+		return fmt::format("{}/{}", ID, _wear);
+	//None of that applies?
 	return ID;
 }
 
 std::string InventoryItem::FullName()
 {
+	if (_wear)
+	{
+		auto wearPct = glm::round((_wrapped->WearLimit * _wear) / 100.0f);
+		if (_wrapped->variantNames.size() != 0)
+			return fmt::format("{} ({}%, {})", Name(), wearPct, _wrapped->variantNames[_variant]);
+		return fmt::format("{} ({}%)", Name(), wearPct);
+	}
 	if (_wrapped->variantNames.size() != 0)
 	{
-		//TODO: patterns
 		return fmt::format("{} ({})", Name(), _wrapped->variantNames[_variant]);
 	}
 	return Name();

@@ -14,6 +14,11 @@ bool MusicManager::Tick(float dt)
 {
 	if (state == MusicState::FadeOut || state == MusicState::FadeToQueue)
 	{
+		if (!bgm)
+		{
+			state = MusicState::Idle;
+			return true;
+		}
 		if (bgm->Volume > 0.0f)
 		{
 			bgm->Volume -= dt * 1.0f;
