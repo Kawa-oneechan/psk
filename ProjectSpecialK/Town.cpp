@@ -4,6 +4,13 @@
 #include "DateTimePanel.h"
 #include "ItemHotbar.h"
 #include "Model.h"
+#include <base64.h>
+
+extern "C"
+{
+	extern int mz_compress(unsigned char *pDest, unsigned long *pDest_len, const unsigned char *pSource, unsigned long source_len);
+	extern int mz_uncompress(unsigned char *pDest, unsigned long *pDest_len, const unsigned char *pSource, unsigned long source_len);
+}
 
 static std::array<ModelP, 80> tileModels;
 static std::array<std::string, 80> tileModelKeys;
@@ -159,13 +166,13 @@ void Map::WorkOutModels()
 				int rotation;
 				std::tie(model, rotation) = rules[key];
 
-				Terrain[(y * Width) + x].Rotation = (unsigned char)rotation;
+				TerrainModels[(y * Width) + x].Rotation = (unsigned char)rotation;
 
 				for (int i = 0; i < tileModels.size(); i++)
 				{
 					if (tileModelKeys[i] == model)
 					{
-						Terrain[(y * Width) + x].Model = (unsigned char)i;
+						TerrainModels[(y * Width) + x].Model = (unsigned char)i;
 						break;
 					}
 				}
@@ -227,7 +234,8 @@ Town::Town()
 
 	Width = AcreSize * 1;
 	Height = AcreSize * 1;
-	Terrain = std::make_unique<LiveTerrainTile[]>(Width * Height);
+	Terrain = std::make_unique<MapTile[]>(Width * Height);
+	TerrainModels = std::make_unique<ExtraTile[]>(Width * Height);
 
 	/*
 	//TEST
@@ -278,7 +286,8 @@ void Town::GenerateNew(void* generator, int width, int height)
 	Width = AcreSize * width;
 	Height = AcreSize * height;
 
-	Terrain = std::make_unique<LiveTerrainTile[]>(Width * Height);
+	Terrain = std::make_unique<MapTile[]>(Width * Height);
+	TerrainModels = std::make_unique<ExtraTile[]>(Width * Height);
 
 #ifdef DEBUG
 	//SaveToPNG();
@@ -299,12 +308,15 @@ void Town::Load()
 
 		Width = jsonObj["width"]->AsInteger();
 		Height = jsonObj["height"]->AsInteger();
-		Terrain = std::make_unique<LiveTerrainTile[]>(Width * Height);
-		auto mapArray = jsonObj["map"]->AsArray();
-		for (int i = 0; i < Width * Height; i++)
+		Terrain = std::make_unique<MapTile[]>(Width * Height);
+		TerrainModels = std::make_unique<ExtraTile[]>(Width * Height);
+
 		{
-			Terrain[i].Type = (unsigned char)mapArray[(i * 2) + 0]->AsInteger();
-			Terrain[i].Elevation = (unsigned char)mapArray[(i * 2) + 1]->AsInteger();
+			auto compressedData = new unsigned char[Width * Height];
+			auto compressedSize = (unsigned long)base64_decode_bin(jsonObj["mapData"]->AsString(), compressedData);
+			unsigned long uncompedSize;
+			mz_uncompress((unsigned char*)Terrain.get(), &uncompedSize, compressedData, compressedSize);
+			delete[] compressedData;
 		}
 
 		Villagers.clear();
@@ -334,14 +346,14 @@ void Town::Save()
 {
 	JSONObject json;
 
-	JSONArray mapArray;
-	mapArray.resize(Width * Height * 2);
-	for (int i = 0; i < Width * Height; i++)
 	{
-		mapArray[(i * 2) + 0] = new JSONValue(Terrain[i].Type);
-		mapArray[(i * 2) + 1] = new JSONValue(Terrain[i].Elevation);
+		auto compressedData = new unsigned char[Width * Height];
+		unsigned long compressedSize;
+		mz_compress(compressedData, &compressedSize, (unsigned char*)Terrain.get(), sizeof(MapTile) * Width * Height);
+		json["mapData"] = new JSONValue(base64_encode(compressedData, compressedSize));
+		delete[] compressedData;
 	}
-	json["map"] = new JSONValue(mapArray);
+	
 	json["width"] = new JSONValue(Width);
 	json["height"] = new JSONValue(Height);
 	json["weather"] = new JSONValue((int)weatherSeed);
@@ -513,12 +525,13 @@ void Town::drawWorker(float dt)
 		for (int x = x1; x < x2; x++)
 		{
 			auto tile = Terrain[(y * Width) + x];
-			auto model = tileModels[tile.Model];
+			auto extra = TerrainModels[(y * Width) + x];
+			auto model = tileModels[extra.Model];
 			auto pos = glm::vec3(x * 10, tile.Elevation * ElevationHeight, y * 10);
-			auto rot = tile.Rotation * 90.0f;
-			if (tile.Model == 0 || tile.Model > 44)
+			auto rot = extra.Rotation * 90.0f;
+			if (extra.Model == 0 || extra.Model > 44)
 				model->SetLayerByMat("_mGrass", tile.Type); //ground, river, or waterfall.
-			else if (tile.Model < 44)
+			else if (extra.Model < 44)
 				model->SetLayer("GrassT__mGrass", tile.Type); //cliffs should only have the top grass changed.
 			model->Draw(pos, rot);
 		}

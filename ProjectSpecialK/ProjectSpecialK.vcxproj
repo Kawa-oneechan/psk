@@ -172,6 +172,7 @@
     <ClCompile Include="SolBinds.cpp" />
     <ClCompile Include="Species.cpp" />
     <ClCompile Include="SpriteRenderer.cpp" />
+    <ClCompile Include="support\base64.cpp" />
     <ClCompile Include="support\format.cc" />
     <ClCompile Include="support\glad\glad.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCpp</CompileAs>

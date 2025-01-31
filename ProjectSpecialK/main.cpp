@@ -797,6 +797,7 @@ int main(int argc, char** argv)
 	}
 
 	thePlayer.Save();
+	town->Save();
 	UI::Save();
 
 	glfwTerminate();

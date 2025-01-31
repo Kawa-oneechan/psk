@@ -2,73 +2,32 @@
 
 #include "SpecialK.h"
 
-struct SavedMapItem
+namespace TileType
 {
-	unsigned int id;
-	union
-	{
-		unsigned char SystemParams;
-		struct
-		{
-			unsigned char Rotation : 2;
-			unsigned char Buried : 1;
-			unsigned char Dropped : 1;
-			unsigned char Status : 3;
-			unsigned char Locked : 1;
-		} System;
-	};
-	union
-	{
-		unsigned char AdditionalParams;
-		struct
-		{
-			unsigned char Type : 2;
-			unsigned char ShowItem : 1;
-			unsigned char : 1;
-			unsigned char Paper : 4;
-		} Wrapping;
-	};
-	unsigned short StackCount;
-	unsigned short UseCount;
-	struct
-	{
-		unsigned char Body : 4;
-		unsigned char Source : 4;
-	} Remake;
-	unsigned char FlowerGenes;
-	union
-	{
-		struct
-		{
-			unsigned char OffsetX, OffsetY; //How far back does this extend?
-			unsigned short Root;
-		} Extension;
-		//... let's be honest, if this format is only for serializing, why bother storing extensions?
-		struct
-		{
-			unsigned short : 16;
-			union
-			{
-				unsigned short Watered;
-				unsigned short PatternHash;
-			};
-		} Flowers;
-	};
+	constexpr auto Grass = 0;
+	constexpr auto Weed = 60;
+	constexpr auto Flower = 61;
+	constexpr auto River = 62;
+	constexpr auto Special = 63;
+}
+
+struct MapTile
+{
+	unsigned long Type : 6;
+	unsigned long Elevation : 2;
+	unsigned long Weathering : 4;
+	unsigned long : 4;
+	unsigned long FlowerType : 4;
+	unsigned long FlowerGrowth : 2;
+	unsigned long Watered : 1;
+	unsigned long Blocked : 1;
+	unsigned long Edges : 4;
+	unsigned long Corners : 4;
 };
 
-struct SavedTerrainTile
+struct ExtraTile
 {
-	unsigned short Type : 10;
-	unsigned short Corners : 4;
-	unsigned short Elevation : 2;
-};
-
-struct LiveTerrainTile
-{
-	unsigned char Type;
 	unsigned char Model;
-	unsigned char Corners;
-	unsigned char Elevation;
 	unsigned char Rotation;
 };
 
@@ -85,7 +44,8 @@ public:
 	//Height of the town map in tiles
 	int Height{ 0 };
 
-	std::unique_ptr<LiveTerrainTile[]> Terrain{ nullptr };
+	std::unique_ptr<MapTile[]> Terrain{ nullptr };
+	std::unique_ptr<ExtraTile[]> TerrainModels{ nullptr };
 
 	std::vector<void*> Objects;
 
