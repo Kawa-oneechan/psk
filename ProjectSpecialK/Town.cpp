@@ -222,10 +222,105 @@ void Map::SaveToPNG()
 }
 #endif
 
+
+void Map::drawWorker(float dt)
+{
+	Sprite::DrawSprite(skyShader, *whiteRect, glm::vec2(0), glm::vec2(width, height));
+	Sprite::FlushBatch();
+
+	glClear(GL_DEPTH_BUFFER_BIT);
+	glEnable(GL_DEPTH_TEST);
+	glPolygonMode(GL_FRONT_AND_BACK, wireframe ? GL_LINE : GL_FILL);
+	//modelShader->Use();
+
+	UpdateGrass();
+
+	thePlayer.Draw(dt * timeScale);
+	MeshBucket::Flush();
+	for (const auto& v : town->Villagers)
+		v->Draw(dt * timeScale);
+	MeshBucket::Flush();
+
+	auto playerTile = glm::round(thePlayer.Position / 10.0f);
+	constexpr auto half = (int)(AcreSize * 1.5f);
+	constexpr auto north = AcreSize * 3;
+	constexpr auto south = AcreSize + half;
+	constexpr auto sides = AcreSize + half;
+	const auto y1 = glm::clamp((int)playerTile.z - north, 0, Width);
+	const auto y2 = glm::clamp((int)playerTile.z + south, 0, Width);
+	const auto x1 = glm::clamp((int)playerTile.x - sides, 0, Height);
+	const auto x2 = glm::clamp((int)playerTile.x + sides, 0, Height);
+	for (int y = y1; y < y2; y++)
+	{
+		for (int x = x1; x < x2; x++)
+		{
+			auto tile = Terrain[(y * Width) + x];
+			auto extra = TerrainModels[(y * Width) + x];
+			auto model = tileModels[extra.Model];
+			auto pos = glm::vec3(x * 10, tile.Elevation * ElevationHeight, y * 10);
+			auto rot = extra.Rotation * 90.0f;
+			if (extra.Model == 0 || extra.Model > 44)
+				model->SetLayerByMat("_mGrass", tile.Type); //ground, river, or waterfall.
+			else if (extra.Model < 44)
+				model->SetLayer("GrassT__mGrass", tile.Type); //cliffs should only have the top grass changed.
+			model->Draw(pos, rot);
+		}
+	}
+	MeshBucket::Flush();
+
+	glDisable(GL_DEPTH_TEST);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+}
+
+void Map::Draw(float dt)
+{
+	if (groundTextureAlbs == nullptr)
+	{
+		std::vector<std::string> groundAlbs, groundNrms, groundMixs;
+		for (auto& d : VFS::Enumerate("field/ground/design*_alb.png"))
+			groundAlbs.push_back(d.path);
+		for (auto& d : VFS::Enumerate("field/ground/design*_nrm.png"))
+			groundNrms.push_back(d.path);
+		for (auto& d : VFS::Enumerate("field/ground/design*_mix.png"))
+			groundMixs.push_back(d.path);
+		//also add user designs somehow.
+		groundTextureAlbs = new TextureArray(groundAlbs);
+		groundTextureNrms = new TextureArray(groundNrms);
+		groundTextureMixs = new TextureArray(groundMixs);
+		grassColors = new TextureArray("field/ground/grasscolors.png", GL_CLAMP_TO_EDGE, GL_NEAREST);
+		groundMixs[0] = "field/ground/snow_mix.png";
+		snowMix = new TextureArray(groundMixs);
+		groundMixs[0] = "field/ground/squares_mix.png";
+		squareMix = new TextureArray(groundMixs);
+	}
+
+	if (postFx)
+	{
+		frameBuffer->Use();
+		glClearColor(0.2f, 0.3f, 0.3f, 0.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		drawWorker(dt * timeScale);
+		frameBuffer->Drop();
+		frameBuffer->Draw();
+	}
+	else
+	{
+		drawWorker(dt * timeScale);
+	}
+}
+
+bool Map::Tick(float dt)
+{
+	return thePlayer.Tick(dt);
+}
+
+
 Town::Town()
 {
 	Music = "clock";
 	CanOverrideMusic = true;
+	AllowRedeco = true;
+	AllowTools = true;
 
 	SquareGrass = std::rand() / ((RAND_MAX + 1u) / 100) > 75;
 	weatherSeed = std::rand();
@@ -535,98 +630,12 @@ bool Town::GetFlag(const std::string& id, bool def)
 	return GetFlag(id, (int)def) > 0;
 }
 
-void Town::drawWorker(float dt)
+void Town::Draw(float dt)
 {
-	Sprite::DrawSprite(skyShader, *whiteRect, glm::vec2(0), glm::vec2(width, height));
-	Sprite::FlushBatch();
-
-	glClear(GL_DEPTH_BUFFER_BIT);
-	glEnable(GL_DEPTH_TEST);
-	glPolygonMode(GL_FRONT_AND_BACK, wireframe ? GL_LINE : GL_FILL);
-	//modelShader->Use();
-
-	UpdateGrass();
-
-	thePlayer.Draw(dt * timeScale);
-	MeshBucket::Flush();
-	for (const auto& v : town->Villagers)
-		v->Draw(dt * timeScale);
-	MeshBucket::Flush();
-
-	auto playerTile = glm::round(thePlayer.Position / 10.0f);
-	constexpr auto half = (int)(AcreSize * 1.5f);
-	constexpr auto north = AcreSize * 3;
-	constexpr auto south = AcreSize + half;
-	constexpr auto sides = AcreSize + half;
-	const auto y1 = glm::clamp((int)playerTile.z - north, 0, Width);
-	const auto y2 = glm::clamp((int)playerTile.z + south, 0, Width);
-	const auto x1 = glm::clamp((int)playerTile.x - sides, 0, Height);
-	const auto x2 = glm::clamp((int)playerTile.x + sides, 0, Height);
-	for (int y = y1; y < y2; y++)
-	{
-		for (int x = x1; x < x2; x++)
-		{
-			auto tile = Terrain[(y * Width) + x];
-			auto extra = TerrainModels[(y * Width) + x];
-			auto model = tileModels[extra.Model];
-			auto pos = glm::vec3(x * 10, tile.Elevation * ElevationHeight, y * 10);
-			auto rot = extra.Rotation * 90.0f;
-			if (extra.Model == 0 || extra.Model > 44)
-				model->SetLayerByMat("_mGrass", tile.Type); //ground, river, or waterfall.
-			else if (extra.Model < 44)
-				model->SetLayer("GrassT__mGrass", tile.Type); //cliffs should only have the top grass changed.
-			model->Draw(pos, rot);
-		}
-	}
-	MeshBucket::Flush();
-
-	glDisable(GL_DEPTH_TEST);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	Map::Draw(dt);
 
 	if ((int)Clouds >= (int)Town::Weather::RainClouds)
 		rainLayer->Draw(dt * timeScale);
 
 	Sprite::FlushBatch();
-}
-
-void Town::Draw(float dt)
-{
-	if (groundTextureAlbs == nullptr)
-	{
-		std::vector<std::string> groundAlbs, groundNrms, groundMixs;
-		for (auto& d : VFS::Enumerate("field/ground/design*_alb.png"))
-			groundAlbs.push_back(d.path);
-		for (auto& d : VFS::Enumerate("field/ground/design*_nrm.png"))
-			groundNrms.push_back(d.path);
-		for (auto& d : VFS::Enumerate("field/ground/design*_mix.png"))
-			groundMixs.push_back(d.path);
-		//also add user designs somehow.
-		groundTextureAlbs = new TextureArray(groundAlbs);
-		groundTextureNrms = new TextureArray(groundNrms);
-		groundTextureMixs = new TextureArray(groundMixs);
-		grassColors = new TextureArray("field/ground/grasscolors.png", GL_CLAMP_TO_EDGE, GL_NEAREST);
-		groundMixs[0] = "field/ground/snow_mix.png";
-		snowMix = new TextureArray(groundMixs);
-		groundMixs[0] = "field/ground/squares_mix.png";
-		squareMix = new TextureArray(groundMixs);
-	}
-
-	if (postFx)
-	{
-		frameBuffer->Use();
-		glClearColor(0.2f, 0.3f, 0.3f, 0.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		drawWorker(dt * timeScale);
-		frameBuffer->Drop();
-		frameBuffer->Draw();
-	}
-	else
-	{
-		drawWorker(dt * timeScale);
-	}
-}
-
-bool Town::Tick(float dt)
-{
-	return thePlayer.Tick(dt);
 }

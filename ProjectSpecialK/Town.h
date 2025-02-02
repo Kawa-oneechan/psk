@@ -31,8 +31,22 @@ struct ExtraTile
 	unsigned char Rotation;
 };
 
+//Describes both placed objects and dropped items.
+struct MapItem
+{
+	InventoryItemP Item; //The actual item.
+	glm::uvec3 Position; //Where on the map the item is placed/dropped.
+	short Rotation; //If it's placed, which orientation is it in.
+	bool Fixed; //If it's placed, is it wrenched in place?
+	bool Dropped; //Is this a one-tile dropped item icon?
+	short State; //Extra state. Meaning depends on the item.
+};
+
 class Map : public Tickable
 {
+private:
+	void drawWorker(float dt);
+
 public:
 	//Size of an Acre in full tiles
 	static const int AcreSize = 16t;
@@ -47,12 +61,21 @@ public:
 	std::unique_ptr<MapTile[]> Terrain{ nullptr };
 	std::unique_ptr<ExtraTile[]> TerrainModels{ nullptr };
 
-	std::vector<void*> Objects;
+	std::vector<MapItem> Objects;
 
 	ModelP Model;
 
 	//If true, this map is represented with a single Model, probably an interior.
 	bool UseModel{ false };
+	/*Note that even if this is true, there are still MapTiles! Map::Draw()
+	may not draw any tiles, but other things still need to know about things
+	like floor sounds.
+	*/
+
+	//If true, player is allowed to drop, place, move, and pick up items.
+	bool AllowRedeco{ false };
+	//If true, player is allowed to carry tools outside of special animations.
+	bool AllowTools{ false };
 
 	bool UseDrum{ false };
 
@@ -66,8 +89,8 @@ public:
 	//Returns the height of the lowest point at the given tile coordinate.
 	float GetHeight(int x, int y);
 
-	void Draw(float) {};
-	bool Tick(float) { return true; };
+	void Draw(float);
+	bool Tick(float);
 
 #ifdef DEBUG
 	void SaveToPNG();
@@ -81,8 +104,6 @@ private:
 	int weatherRain[24] = { 0 };
 	int weatherWind[24] = { 0 };
 	std::map<std::string, int> flags;
-
-	void drawWorker(float dt);
 
 public:
 	std::string Name{ "Fuck-All Nowhere" };
@@ -119,7 +140,6 @@ public:
 	int GetFlag(const std::string& id, int def = 0);
 	bool GetFlag(const std::string& id, bool def = false);
 
-	bool Tick(float dt);
 	void Draw(float dt);
 };
 
