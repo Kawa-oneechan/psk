@@ -123,7 +123,7 @@ void Map::WorkOutModels()
 	elevation as the center, east and west must be lower, and
 	the diagonals don't matter."
 	*/
-	
+
 	for (int y = 0; y < Height; y++)
 	{
 		for (int x = 0; x < Width; x++)
@@ -137,7 +137,7 @@ void Map::WorkOutModels()
 			if (getTileElevation(x    , y + 1) >= five) key += "2";
 			if (getTileElevation(x + 1, y + 1) >= five) key += "3";
 			if (getTileElevation(x - 1, y    ) >= five) key += "4";
-			
+
 			if (getTileElevation(x + 1, y    ) >= five) key += "6";
 			if (getTileElevation(x - 1, y - 1) >= five) key += "7";
 			if (getTileElevation(x    , y - 1) >= five) key += "8";
@@ -149,7 +149,7 @@ void Map::WorkOutModels()
 				if (getTileElevation(x    , y + 1) < five) key += "2";
 				if (getTileElevation(x + 1, y + 1) < five) key += "3";
 				if (getTileElevation(x - 1, y    ) < five) key += "4";
-			
+
 				if (getTileElevation(x + 1, y    ) < five) key += "6";
 				if (getTileElevation(x - 1, y - 1) < five) key += "7";
 				if (getTileElevation(x    , y - 1) < five) key += "8";
@@ -185,42 +185,40 @@ void Map::WorkOutModels()
 #include <stb_image_write.h>
 void Map::SaveToPNG()
 {
-	auto width = Width * 2;
-	auto height = Height * 2;
-	auto pixels = new unsigned long[width * height * 4];
-	const glm::vec4 typeColors[] =
+	auto pixels = new unsigned long[Width * Height * 4];
+	const glm::vec3 typeColors[] =
 	{
-		{ 0.133, 0.545, 0.133, 1.0 },
-		{ 0.81, 0.59, 0.28, 1.0 }
+		{ 0.133, 0.545, 0.133 },
+		{ 0.81, 0.59, 0.28 },
+		{ 0.5, 0.5, 0.5 }
 	};
 
-	auto set = [pixels, width](glm::vec4 color, int x, int y, int w, int h)
+	auto width = Width;
+	auto set = [pixels, width](glm::vec3 color, int x, int y)
 	{
 		auto r = (unsigned char)(color.r * 255);
 		auto g = (unsigned char)(color.g * 255);
 		auto b = (unsigned char)(color.b * 255);
 		auto c = (r) | (g << 8) | (b << 16) | (255 << 24);
 
-		for (int _y = y; _y < y + h; _y++)
-			for (int _x = x; _x < x + w; _x++)
-				pixels[(_y * width) + _x] = c;
+		pixels[(y * width) + x] = c;
 	};
 
 	for (int i = 0; i < Width * Height; i++)
 	{
 		auto t = Terrain[i];
 		auto color = typeColors[t.Type];
-		color = glm::mix(color, glm::vec4(1), t.Elevation * 0.25f);
-		set(color, (i % Width) * 2, (i / Width) * 2, 2, 2);
+		color = glm::mix(color, glm::vec3(1), t.Elevation * 0.25f);
+		set(color, i % Width, i / Width);
 	}
 
 	/*
 	Objects on the map should have a size in tiles and a color.
 	If the color's alpha is zero, the object is to be skipped.
 	*/
-	set(glm::vec4(0.75), 1, 1, 5, 3);
+	//set(glm::vec4(0.75), 1, 1, 5, 3);
 
-	stbi_write_png("map.png", width, height, 4, pixels, width * 4);
+	stbi_write_png("map.png", Width, Height, 4, pixels, Width * 4);
 }
 #endif
 
@@ -254,7 +252,7 @@ Town::Town()
 
 	Terrain[(4 * Width) + 2].Type = 1; //single sand tile
 	Terrain[(0 * Width) + 2].Type = 2; //single stone tile on cliff
-	
+
 	Terrain[(8 * Width) + 5].Elevation = 2; //single column
 	Terrain[(7 * Width) + 4].Elevation = 1;
 	Terrain[(7 * Width) + 5].Elevation = 1;
@@ -266,31 +264,75 @@ Town::Town()
 	Terrain[(9 * Width) + 6].Elevation = 1;
 
 	WorkOutModels();
-	
+
 	//end test
 	*/
 
 	UseDrum = true;
 
-	Load();
+	GenerateNew("mappers/test.lua", 6, 6);
+	//Load();
 
 #ifdef DEBUG
 	SaveToPNG();
 #endif
+
+	Load();
 }
 
-void Town::GenerateNew(void* generator, int width, int height)
+void Town::GenerateNew(const std::string& mapper, int width, int height)
 {
-	generator;
-
 	Width = AcreSize * width;
 	Height = AcreSize * height;
 
 	Terrain = std::make_unique<MapTile[]>(Width * Height);
 	TerrainModels = std::make_unique<ExtraTile[]>(Width * Height);
 
+	auto setTile = [&](int x, int y, int type, int elevation)
+	{
+		if (x < 0 || y < 0 || x >= Width || y >= Height)
+			return false;
+		if (type < -1 || type >= 64)
+			return false;
+		if (elevation < -1 || elevation >= 4)
+			return false;
+		if (type != -1)
+			Terrain[(y * Width) + x].Type = type;
+		if (elevation != -1)
+			Terrain[(y * Width) + x].Elevation = elevation;
+		return true;
+	};
+
+	auto raise = [&](int x, int y)
+	{
+		if (x < 0 || y < 0 || x >= Width || y >= Height)
+			return false;
+		if (Terrain[(y * Width) + x].Elevation == 3)
+			return false;
+		Terrain[(y * Width) + x].Elevation++;
+		return true;
+	};
+
+	auto elevation = [&](int x, int y)
+	{
+		if (x < 0 || y < 0 || x >= Width || y >= Height)
+			return -1;
+		return (int)Terrain[(y * Width) + x].Elevation;
+	};
+
+	Sol["map"] = sol::new_table();
+	Sol["map"]["Width"].set(Width - 1);
+	Sol["map"]["Height"].set(Height - 1);
+	Sol["map"]["SetTile"].set_function(setTile);
+	Sol["map"]["Raise"].set_function(raise);
+	Sol["map"]["Elevation"].set_function(elevation);
+
+	Sol.script(VFS::ReadString(mapper));
+
+	Sol["map"] = nullptr;
+
 #ifdef DEBUG
-	//SaveToPNG();
+	SaveToPNG();
 #endif
 }
 
@@ -353,7 +395,7 @@ void Town::Save()
 		json["mapData"] = new JSONValue(base64_encode(compressedData, compressedSize));
 		delete[] compressedData;
 	}
-	
+
 	json["width"] = new JSONValue(Width);
 	json["height"] = new JSONValue(Height);
 	json["weather"] = new JSONValue((int)weatherSeed);
@@ -367,7 +409,7 @@ void Town::Save()
 		villagersArray.push_back(new JSONValue(i->ID));
 	}
 	json["villagers"] = new JSONValue(villagersArray);
-	
+
 	JSONObject flagsObj;
 	for (const auto& i : flags)
 	{
@@ -391,7 +433,7 @@ void Town::StartNewDay()
 		debprint(0, "Today is {} {}. Let's see.", day, month);
 
 		std::srand(weatherSeed + (month << 8) + (day << 16));
-		
+
 		auto doc = VFS::ReadJSON("weather.json");
 		auto json = doc->AsObject();
 		auto calendar = json[Hemisphere == Hemisphere::North ? "north" : "south"]->AsArray();
@@ -455,7 +497,7 @@ void Town::UpdateWeather()
 	auto hour = gm.tm_hour;
 
 	Clouds = static_cast<Town::Weather>(weatherRain[hour]);
-	
+
 	if (weatherWind[hour] == 0)
 		Wind = 0;
 	else
@@ -566,9 +608,9 @@ void Town::Draw(float dt)
 		groundMixs[0] = "field/ground/snow_mix.png";
 		snowMix = new TextureArray(groundMixs);
 		groundMixs[0] = "field/ground/squares_mix.png";
-		squareMix= new TextureArray(groundMixs);
+		squareMix = new TextureArray(groundMixs);
 	}
-	
+
 	if (postFx)
 	{
 		frameBuffer->Use();
@@ -588,4 +630,3 @@ bool Town::Tick(float dt)
 {
 	return thePlayer.Tick(dt);
 }
-

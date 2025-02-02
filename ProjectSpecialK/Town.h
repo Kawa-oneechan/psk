@@ -106,7 +106,7 @@ public:
 
 	Town();
 
-	void GenerateNew(void* generator, int width, int height);
+	void GenerateNew(const std::string& mapper, int width, int height);
 
 	void Load();
 	void Save();
