@@ -97,3 +97,17 @@ Texture& Framebuffer::GetTexture()
 {
 	return *texture;
 }
+
+void ColorMapBuffer::Draw(const glm::vec2& pos)
+{
+	GetShader()->Use();
+	lut->Use(1);
+	Framebuffer::Draw(pos);
+}
+
+void ColorMapBuffer::Draw(const glm::vec2& pos, const glm::vec2& size)
+{
+	GetShader()->Use();
+	lut->Use(1);
+	Framebuffer::Draw(pos, size);
+}

@@ -31,6 +31,7 @@ extern Shader* playerMouthShader;
 extern Shader* playerCheekShader;
 extern Shader* playerLegsShader;
 extern Framebuffer* frameBuffer;
+extern ColorMapBuffer* colorMapBuffer;
 
 Console::Console()
 {
@@ -225,6 +226,12 @@ bool Console::Execute(const std::string& str)
 				playerCheekShader->Reload();
 				playerLegsShader->Reload();
 				frameBuffer->ReloadShader();
+				colorMapBuffer->ReloadShader();
+				{
+					auto lut = colorMapBuffer->GetLutTexture();
+					delete lut;
+					colorMapBuffer->SetLutTexture(new Texture("colormap.png"));
+				}
 				return true;
 			}
 		}

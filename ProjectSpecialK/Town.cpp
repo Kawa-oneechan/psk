@@ -38,6 +38,7 @@ extern Shader* modelShader;
 extern Shader* skyShader;
 extern Background* rainLayer;
 extern Framebuffer* frameBuffer;
+extern ColorMapBuffer* colorMapBuffer;
 
 extern unsigned int commonBuffer;
 
@@ -128,9 +129,6 @@ void Map::WorkOutModels()
 	{
 		for (int x = 0; x < Width; x++)
 		{
-			if (y == 8 && x == 5)
-				conprint(0, "...");
-
 			auto five = getTileElevation(x, y);
 			std::string key = "";
 			if (getTileElevation(x - 1, y + 1) >= five) key += "1";
@@ -301,11 +299,17 @@ void Map::Draw(float dt)
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		drawWorker(dt * timeScale);
 		frameBuffer->Drop();
+		colorMapBuffer->Use();
 		frameBuffer->Draw();
+		colorMapBuffer->Drop();
+		colorMapBuffer->Draw();
 	}
 	else
 	{
+		colorMapBuffer->Use();
 		drawWorker(dt * timeScale);
+		colorMapBuffer->Drop();
+		colorMapBuffer->Draw();
 	}
 }
 

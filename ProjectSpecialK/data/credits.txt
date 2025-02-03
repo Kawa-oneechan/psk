@@ -74,15 +74,18 @@ Heaven Tool by rafacasari
 Switch Toolbox by KillzXGaming et al
 
 #Third-party libraries
+Base64 by René Nyffenegger
+Color LUT shader by Matt DesLauriers
 Dear ImGUI by Omar Cornut
 FMOD Ex by Firelight Technologies
 FMT by Victor Zverovich
 GLAD by David Herberth
-GLFW by Camilla Löwy
-GLM by icaven
+GLFW by Marcus Geelnard, Camilla Löwy, et al
+GLM by G-Truc Creation
+Lua by PUC-Rio
 MiniZ by Rich Geldreich
+STB tools by Sean Barrett
 Scale2X by Thomas Bernard
 SimpleJSON by Mike Anchor
-Sol by Rapptz and ThePhD
-STB tools by Sean Barrett
+Sol by Rapptz, ThePhD, et al
 UFBX by Samuli Raivio

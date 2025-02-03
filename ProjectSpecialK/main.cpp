@@ -510,6 +510,7 @@ void GLAPIENTRY MessageCallback(GLenum source, GLenum type, GLuint id, GLenum se
 #endif
 
 Framebuffer* frameBuffer;
+ColorMapBuffer* colorMapBuffer;
 Shader* skyShader;
 Background* rainLayer;
 
@@ -675,6 +676,8 @@ int main(int argc, char** argv)
 	//commonUniforms.Projection = glm::ortho(-75.0f, 75.0f, -50.0f, 50.f, -1.0f, 300.0f);
 
 	frameBuffer = new Framebuffer("shaders/framebuffer.fs", width, height);
+	colorMapBuffer = new ColorMapBuffer("shaders/colormap.fs", width, height);
+	colorMapBuffer->SetLutTexture(new Texture("colormap.png"));
 
 #ifdef DEBUG
 	auto startingTime = std::chrono::high_resolution_clock::now();
@@ -742,11 +745,6 @@ int main(int argc, char** argv)
 		cloudImage.Use(1);
 		starsImage.Use(2);
 
-		//modelShader->Use();
-		//modelShader->Set("viewPos", MainCamera.Position());
-
-		//for (const auto& t : tickables)
-		//	t->Draw(dt * timeScale);
 		DrawAllTickables(tickables, dt * timeScale);
 
 		//Sprite::DrawSprite(*layoutOverlay, glm::vec2(0), glm::vec2(width, height), glm::vec4(0), 0.0f, glm::vec4(1, 1, 1, 0.5));
