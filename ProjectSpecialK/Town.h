@@ -31,16 +31,29 @@ struct ExtraTile
 	unsigned char Rotation;
 };
 
+#pragma warning(push)
+#pragma warning(disable: 4201)
+
 //Describes both placed objects and dropped items.
 struct MapItem
 {
 	InventoryItemP Item; //The actual item.
-	glm::uvec3 Position; //Where on the map the item is placed/dropped.
-	short Rotation; //If it's placed, which orientation is it in.
-	bool Fixed; //If it's placed, is it wrenched in place?
-	bool Dropped; //Is this a one-tile dropped item icon?
-	short State; //Extra state. Meaning depends on the item.
+	glm::uvec2 Position; //Where on the map the item is placed/dropped.
+	int State; //Extra state. Meaning depends on the item.
+	union
+	{
+		struct
+		{
+			int Rotation : 2; //If it's placed, which orientation is it in.
+			int Layer : 4;
+			int Fixed : 1; //If it's placed, is it wrenched in place?
+			int Dropped : 1; //Is this a one-tile dropped item icon?
+		};
+		int Placement;
+	};
 };
+
+#pragma warning(pop)
 
 class Map : public Tickable
 {
@@ -92,6 +105,7 @@ public:
 	void Draw(float);
 	bool Tick(float);
 
+	void SaveObjects(JSONObject& json);
 #ifdef DEBUG
 	void SaveToPNG();
 #endif

@@ -318,6 +318,40 @@ bool Map::Tick(float dt)
 	return thePlayer.Tick(dt);
 }
 
+void Map::SaveObjects(JSONObject& json)
+{
+	JSONArray dropsArray;
+	JSONArray furnsArray;
+	for (const auto& i : Objects)
+	{
+		if (i.Dropped)
+		{
+			JSONObject drop;
+			drop["id"] = new JSONValue(i.Item->FullID());
+			JSONArray pos;
+			pos.push_back(new JSONValue((int)i.Position.x));
+			pos.push_back(new JSONValue((int)i.Position.y));
+			drop["position"] = new JSONValue(pos);
+			dropsArray.push_back(new JSONValue(drop));
+		}
+		else
+		{
+			JSONObject furn;
+			furn["id"] = new JSONValue(i.Item->FullID());
+			furn["fixed"] = new JSONValue(i.Fixed != 0); //why does PVS not like "== 1"?
+			furn["facing"] = new JSONValue(i.Rotation);
+			furn["layer"] = new JSONValue(i.Layer);
+			furn["state"] = new JSONValue(i.State);
+			JSONArray pos;
+			pos.push_back(new JSONValue((int)i.Position.x));
+			pos.push_back(new JSONValue((int)i.Position.y));
+			furn["position"] = new JSONValue(pos);
+			furnsArray.push_back(new JSONValue(furn));
+		}
+	}
+	json["drops"] = new JSONValue(dropsArray);
+	json["furniture"] = new JSONValue(furnsArray);
+}
 
 Town::Town()
 {
@@ -369,14 +403,12 @@ Town::Town()
 
 	UseDrum = true;
 
-	GenerateNew("mappers/test.lua", 6, 6);
-	//Load();
+	//GenerateNew("mappers/test.lua", 6, 6);
+	Load();
 
 #ifdef DEBUG
 	SaveToPNG();
 #endif
-
-	Load();
 }
 
 void Town::GenerateNew(const std::string& mapper, int width, int height)
@@ -453,7 +485,7 @@ void Town::Load()
 		TerrainModels = std::make_unique<ExtraTile[]>(Width * Height);
 
 		{
-			auto compressedData = new unsigned char[Width * Height];
+			auto compressedData = new unsigned char[sizeof(MapTile) * Width * Height];
 			auto compressedSize = (unsigned long)base64_decode_bin(jsonObj["mapData"]->AsString(), compressedData);
 			unsigned long uncompedSize;
 			mz_uncompress((unsigned char*)Terrain.get(), &uncompedSize, compressedData, compressedSize);
@@ -485,15 +517,21 @@ void Town::Load()
 
 void Town::Save()
 {
+	conprint(0, "Saving...");
 	JSONObject json;
 
+	auto compressedData = new unsigned char[sizeof(MapTile) * Width * Height];
+	unsigned long compressedSize;
+	mz_compress(compressedData, &compressedSize, (unsigned char*)Terrain.get(), sizeof(MapTile) * Width * Height);
+	//BUGBUG: mz_compress may return NOTHING in Release builds!
+	if (compressedSize == 0)
 	{
-		auto compressedData = new unsigned char[Width * Height];
-		unsigned long compressedSize;
-		mz_compress(compressedData, &compressedSize, (unsigned char*)Terrain.get(), sizeof(MapTile) * Width * Height);
-		json["mapData"] = new JSONValue(base64_encode(compressedData, compressedSize));
-		delete[] compressedData;
+		conprint(4, "NOT SAVING: mz_compress returned nothing!");
+		return;
 	}
+	auto base64 = base64_encode(compressedData, compressedSize);
+	json["mapData"] = new JSONValue(base64);
+	delete[] compressedData;
 
 	json["width"] = new JSONValue(Width);
 	json["height"] = new JSONValue(Height);
@@ -509,13 +547,15 @@ void Town::Save()
 	}
 	json["villagers"] = new JSONValue(villagersArray);
 
+	SaveObjects(json);
+
 	JSONObject flagsObj;
 	for (const auto& i : flags)
 	{
 		flagsObj[i.first] = new JSONValue(i.second);
 	}
 	json["flags"] = new JSONValue(flagsObj);
-
+	
 	auto val = JSONValue(json);
 	VFS::WriteSaveJSON("map/town.json", &val);
 }
