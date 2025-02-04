@@ -38,7 +38,7 @@ struct ExtraTile
 struct MapItem
 {
 	InventoryItemP Item; //The actual item.
-	glm::uvec2 Position; //Where on the map the item is placed/dropped.
+	glm::vec2 Position; //Where on the map the item is placed/dropped.
 	int State; //Extra state. Meaning depends on the item.
 	union
 	{
@@ -46,8 +46,8 @@ struct MapItem
 		{
 			int Rotation : 2; //If it's placed, which orientation is it in.
 			int Layer : 4;
-			int Fixed : 1; //If it's placed, is it wrenched in place?
-			int Dropped : 1; //Is this a one-tile dropped item icon?
+			bool Fixed : 1; //If it's placed, is it wrenched in place?
+			bool Dropped : 1; //Is this a one-tile dropped item icon?
 		};
 		int Placement;
 	};
@@ -106,6 +106,8 @@ public:
 	bool Tick(float);
 
 	void SaveObjects(JSONObject& json);
+	void LoadObjects(JSONObject& json);
+
 #ifdef DEBUG
 	void SaveToPNG();
 #endif

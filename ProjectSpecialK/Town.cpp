@@ -332,16 +332,19 @@ void Map::SaveObjects(JSONObject& json)
 			pos.push_back(new JSONValue((int)i.Position.x));
 			pos.push_back(new JSONValue((int)i.Position.y));
 			drop["position"] = new JSONValue(pos);
+			if (i.State != 0)
+				drop["state"] = new JSONValue(i.State);
 			dropsArray.push_back(new JSONValue(drop));
 		}
 		else
 		{
 			JSONObject furn;
 			furn["id"] = new JSONValue(i.Item->FullID());
-			furn["fixed"] = new JSONValue(i.Fixed != 0); //why does PVS not like "== 1"?
+			furn["fixed"] = new JSONValue(i.Fixed);
 			furn["facing"] = new JSONValue(i.Rotation);
 			furn["layer"] = new JSONValue(i.Layer);
-			furn["state"] = new JSONValue(i.State);
+			if (i.State != 0)
+				furn["state"] = new JSONValue(i.State);
 			JSONArray pos;
 			pos.push_back(new JSONValue((int)i.Position.x));
 			pos.push_back(new JSONValue((int)i.Position.y));
@@ -351,6 +354,25 @@ void Map::SaveObjects(JSONObject& json)
 	}
 	json["drops"] = new JSONValue(dropsArray);
 	json["furniture"] = new JSONValue(furnsArray);
+}
+
+void Map::LoadObjects(JSONObject& json)
+{
+	auto dropsArray = json["drops"] != nullptr ? json["drops"]->AsArray() : JSONArray();
+	//auto furnsArray = json["furniture"] != nullptr ? json["furniture"]->AsArray() : JSONArray();
+	for (auto& _i : dropsArray)
+	{
+		auto i = _i->AsObject();
+		MapItem drop;
+		drop.Item = std::make_shared<InventoryItem>(i["id"]->AsString());
+		drop.Dropped = true;
+		drop.Position = GetJSONVec2(i["position"]);
+		drop.Fixed = false;
+		drop.Layer = 0;
+		drop.Rotation = 0;
+		drop.State = (i["state"] != nullptr) ? i["state"]->AsInteger() : 0;
+		Objects.push_back(drop);
+	}
 }
 
 Town::Town()
@@ -498,6 +520,8 @@ void Town::Load()
 			Villagers.push_back(Database::Find<Villager>(f->AsString(), villagers));
 		}
 
+		LoadObjects(jsonObj);
+
 		flags.clear();
 		for (const auto& f : jsonObj["flags"]->AsObject())
 		{
@@ -526,7 +550,7 @@ void Town::Save()
 	//BUGBUG: mz_compress may return NOTHING in Release builds!
 	if (compressedSize == 0)
 	{
-		conprint(4, "NOT SAVING: mz_compress returned nothing!");
+		conprint(0, "NOT SAVING: mz_compress returned nothing!");
 		return;
 	}
 	auto base64 = base64_encode(compressedData, compressedSize);
