@@ -1,4 +1,5 @@
 #include "SpecialK.h"
+#include "Town.h"
 
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/rotate_vector.hpp>
@@ -32,9 +33,24 @@ bool Person::Move(float facing, float dt)
 
 	constexpr auto speed = 120.0f;
 
-	//TODO: determine collisions.
-	Position.x -= movement.x * speed;
-	Position.z += movement.y * speed;
+	auto newPos = Position;
+	newPos.x -= movement.x * speed;
+	newPos.z += movement.y * speed;
+	
+	//TODO: This is kinda fucked up, not gonna lie. Gonna need a much better way to do this.
+	//But it's SOMETHING I guess?
+	auto aheadPos = Position;
+	aheadPos.x -= movement.x * (speed * 15);
+	aheadPos.z += movement.y * (speed * 15);
+	
+	auto myHeight = Position.y;
+	//TODO: use current map instead of just the town in due time
+	auto newHeight = town->GetHeight(aheadPos + glm::vec3(0, 10, 0));
+	auto heightDiff = glm::abs(newHeight - myHeight);
+	if (heightDiff > 5.0f)
+		return false;
+
+	Position = newPos;
 	return true;
 }
 

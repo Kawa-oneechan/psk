@@ -21,15 +21,15 @@ float Map::GetHeight(const glm::vec3& pos)
 	TODO: check if there's a building, special acre, or placed object here.
 	If so, use proper ray casting to find out the answer.
 	*/
-	int tx = (int)pos.x;
-	int ty = (int)pos.y;
+	int tx = (int)glm::round(pos.x / 10.0f);
+	int ty = (int)glm::round(pos.z / 10.0f);
 	auto tile = Terrain[tx + (ty * Width)];
 	return (float)tile.Elevation * ElevationHeight;
 }
 
 float Map::GetHeight(int x, int y)
 {
-	return GetHeight(glm::vec3(x, y, 100));
+	return GetHeight(glm::vec3(x, 100, y));
 }
 
 extern float timeScale;
@@ -262,8 +262,8 @@ void Map::drawWorker(float dt)
 		for (auto& i : Acres[playerAcreIdx].Objects)
 		{
 			if (!i.Dropped) continue; //don't try to render placed stuff just yet
-			auto height = GetHeight((int)i.Position.x, (int)i.Position.y);
-			auto pos3 = glm::vec3(i.Position.x * 10.0f, height, i.Position.y * 10.0f);
+			auto height = GetHeight(glm::vec3(i.Position.x, 100, i.Position.y));
+			auto pos3 = glm::vec3(i.Position.x, height, i.Position.y);
 			i.Item->Wrapped()->DrawFieldIcon(pos3);
 		}
 	}
@@ -362,8 +362,8 @@ void Map::SaveObjects(JSONObject& json)
 				JSONObject drop;
 				drop["id"] = new JSONValue(i.Item->FullID());
 				JSONArray pos;
-				pos.push_back(new JSONValue((int)i.Position.x));
-				pos.push_back(new JSONValue((int)i.Position.y));
+				pos.push_back(new JSONValue((int)(i.Position.x / 10.0f)));
+				pos.push_back(new JSONValue((int)(i.Position.y/ 10.0f)));
 				drop["position"] = new JSONValue(pos);
 				if (i.State != 0)
 					drop["state"] = new JSONValue(i.State);
@@ -400,14 +400,14 @@ void Map::LoadObjects(JSONObject& json)
 		MapItem drop;
 		drop.Item = std::make_shared<InventoryItem>(i["id"]->AsString());
 		drop.Dropped = true;
-		drop.Position = GetJSONVec2(i["position"]);
+		drop.Position = GetJSONVec2(i["position"]) * 10.0f;
 		drop.Fixed = false;
 		drop.Layer = 0;
 		drop.Rotation = 0;
 		drop.State = (i["state"] != nullptr) ? i["state"]->AsInteger() : 0;
 		
-		int acreX = (int)drop.Position.x / AcreSize;
-		int acreY = (int)drop.Position.y / AcreSize;
+		int acreX = (int)(drop.Position.x / 10.0f) / AcreSize;
+		int acreY = (int)(drop.Position.y / 10.0f) / AcreSize;
 		auto acreIndex = (acreY * (Width / AcreSize)) + acreX;
 		if (acreIndex < 0 || acreIndex >= Acres.size())
 		{
