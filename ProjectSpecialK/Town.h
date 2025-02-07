@@ -53,6 +53,13 @@ struct MapItem
 	};
 };
 
+struct Acre
+{
+	ModelP Model; //nullptr if this is a regular no-bullshit acre.
+	std::string ModelName;
+	std::vector<MapItem> Objects;
+};
+
 #pragma warning(pop)
 
 class Map : public Tickable
@@ -74,7 +81,7 @@ public:
 	std::unique_ptr<MapTile[]> Terrain{ nullptr };
 	std::unique_ptr<ExtraTile[]> TerrainModels{ nullptr };
 
-	std::vector<MapItem> Objects;
+	std::vector<Acre> Acres;
 
 	ModelP Model;
 

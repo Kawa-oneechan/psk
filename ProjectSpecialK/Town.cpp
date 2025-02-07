@@ -240,6 +240,25 @@ void Map::drawWorker(float dt)
 	MeshBucket::Flush();
 
 	auto playerTile = glm::round(thePlayer.Position / 10.0f);
+
+	auto playerAcre = playerTile / (float)AcreSize;
+	auto playerAcreIdx = (playerAcre.y * (Width / AcreSize)) * playerAcre.y;
+	auto acrePos = glm::vec3(0, 0, 0); //TODO
+	//TODO: draw surrounding acres too
+	{
+		if (Acres[playerAcreIdx].Model)
+			Acres[playerAcreIdx].Model->Draw(acrePos);
+
+		for (auto& i : Acres[playerAcreIdx].Objects)
+		{
+			if (!i.Dropped) continue; //don't try to render placed stuff just yet
+			auto height = GetHeight(i.Position.x, i.Position.y);
+			auto pos3 = glm::vec3(i.Position.x * 10.0f, height, i.Position.y * 10.0f);
+			i.Item->Wrapped()->DrawFieldIcon(pos3);
+		}
+	}
+
+
 	constexpr auto half = (int)(AcreSize * 1.5f);
 	constexpr auto north = AcreSize * 3;
 	constexpr auto south = AcreSize + half;
@@ -253,6 +272,8 @@ void Map::drawWorker(float dt)
 		for (int x = x1; x < x2; x++)
 		{
 			auto tile = Terrain[(y * Width) + x];
+			if (tile.Type == TileType::Special)
+				continue;
 			auto extra = TerrainModels[(y * Width) + x];
 			auto model = tileModels[extra.Model];
 			auto pos = glm::vec3(x * 10, tile.Elevation * ElevationHeight, y * 10);
@@ -322,34 +343,37 @@ void Map::SaveObjects(JSONObject& json)
 {
 	JSONArray dropsArray;
 	JSONArray furnsArray;
-	for (const auto& i : Objects)
+	for (const auto& a : Acres)
 	{
-		if (i.Dropped)
+		for (const auto& i : a.Objects)
 		{
-			JSONObject drop;
-			drop["id"] = new JSONValue(i.Item->FullID());
-			JSONArray pos;
-			pos.push_back(new JSONValue((int)i.Position.x));
-			pos.push_back(new JSONValue((int)i.Position.y));
-			drop["position"] = new JSONValue(pos);
-			if (i.State != 0)
-				drop["state"] = new JSONValue(i.State);
-			dropsArray.push_back(new JSONValue(drop));
-		}
-		else
-		{
-			JSONObject furn;
-			furn["id"] = new JSONValue(i.Item->FullID());
-			furn["fixed"] = new JSONValue(i.Fixed);
-			furn["facing"] = new JSONValue(i.Rotation);
-			furn["layer"] = new JSONValue(i.Layer);
-			if (i.State != 0)
-				furn["state"] = new JSONValue(i.State);
-			JSONArray pos;
-			pos.push_back(new JSONValue((int)i.Position.x));
-			pos.push_back(new JSONValue((int)i.Position.y));
-			furn["position"] = new JSONValue(pos);
-			furnsArray.push_back(new JSONValue(furn));
+			if (i.Dropped)
+			{
+				JSONObject drop;
+				drop["id"] = new JSONValue(i.Item->FullID());
+				JSONArray pos;
+				pos.push_back(new JSONValue((int)i.Position.x));
+				pos.push_back(new JSONValue((int)i.Position.y));
+				drop["position"] = new JSONValue(pos);
+				if (i.State != 0)
+					drop["state"] = new JSONValue(i.State);
+				dropsArray.push_back(new JSONValue(drop));
+			}
+			else
+			{
+				JSONObject furn;
+				furn["id"] = new JSONValue(i.Item->FullID());
+				furn["fixed"] = new JSONValue(i.Fixed);
+				furn["facing"] = new JSONValue(i.Rotation);
+				furn["layer"] = new JSONValue(i.Layer);
+				if (i.State != 0)
+					furn["state"] = new JSONValue(i.State);
+				JSONArray pos;
+				pos.push_back(new JSONValue((int)i.Position.x));
+				pos.push_back(new JSONValue((int)i.Position.y));
+				furn["position"] = new JSONValue(pos);
+				furnsArray.push_back(new JSONValue(furn));
+			}
 		}
 	}
 	json["drops"] = new JSONValue(dropsArray);
@@ -371,7 +395,16 @@ void Map::LoadObjects(JSONObject& json)
 		drop.Layer = 0;
 		drop.Rotation = 0;
 		drop.State = (i["state"] != nullptr) ? i["state"]->AsInteger() : 0;
-		Objects.push_back(drop);
+		
+		int acreX = (int)drop.Position.x / AcreSize;
+		int acreY = (int)drop.Position.y / AcreSize;
+		auto acreIndex = (acreY * (Width / AcreSize)) + acreX;
+		if (acreIndex < 0 || acreIndex > Acres.size())
+		{
+			conprint(4, "Item \"{}\" at {}x{} is out of range.", drop.Item->FullID(), drop.Position.x, drop.Position.y);
+			continue;
+		}
+		Acres[acreIndex].Objects.push_back(drop);
 	}
 }
 
@@ -389,6 +422,8 @@ Town::Town()
 	Height = AcreSize * 1;
 	Terrain = std::make_unique<MapTile[]>(Width * Height);
 	TerrainModels = std::make_unique<ExtraTile[]>(Width * Height);
+	Acres.clear();
+	Acres.resize((Width / AcreSize) * (Height / AcreSize));
 
 	/*
 	//TEST
@@ -440,6 +475,8 @@ void Town::GenerateNew(const std::string& mapper, int width, int height)
 
 	Terrain = std::make_unique<MapTile[]>(Width * Height);
 	TerrainModels = std::make_unique<ExtraTile[]>(Width * Height);
+	Acres.clear();
+	Acres.resize(width * height);
 
 	auto setTile = [&](int x, int y, int type, int elevation)
 	{
@@ -505,6 +542,20 @@ void Town::Load()
 		Height = jsonObj["height"]->AsInteger();
 		Terrain = std::make_unique<MapTile[]>(Width * Height);
 		TerrainModels = std::make_unique<ExtraTile[]>(Width * Height);
+		
+		Acres.clear();
+		Acres.resize((Width / AcreSize) * (Height / AcreSize));
+		auto acres = jsonObj["acres"]->AsArray();
+		for (int i = 0; i < acres.size() && i < Acres.size(); i++)
+		{
+			if (acres[i]->IsNull())
+				Acres[i].Model.reset();
+			else
+			{
+				Acres[i].Model = std::make_shared<::Model>(fmt::format("field/acres/{}.fbx", acres[i]->AsString()));
+				Acres[i].ModelName = acres[i]->AsString();
+			}
+		}
 
 		{
 			auto compressedData = new unsigned char[sizeof(MapTile) * Width * Height];
@@ -570,6 +621,16 @@ void Town::Save()
 		villagersArray.push_back(new JSONValue(i->ID));
 	}
 	json["villagers"] = new JSONValue(villagersArray);
+
+	JSONArray acresArray;
+	for (const auto& i : Acres)
+	{
+		if (i.Model)
+			acresArray.push_back(new JSONValue(i.ModelName));
+		else
+			acresArray.push_back(new JSONValue());
+	}
+	json["acres"] = new JSONValue(acresArray);
 
 	SaveObjects(json);
 

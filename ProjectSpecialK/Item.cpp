@@ -125,6 +125,13 @@ bool Item::IsClothing() const
 	return Type == Type::Clothing;
 }
 
+void Item::DrawFieldIcon(glm::vec3 position)
+{
+	if (!iconModel)
+		iconModel = std::make_shared<Model>(fmt::format("field/icons/{}/model.fbx", Icon));
+	iconModel->Draw(position);
+}
+
 InventoryItem::InventoryItem(ItemP wrapped, int variant, int pattern)
 {
 	_wrapped = wrapped;

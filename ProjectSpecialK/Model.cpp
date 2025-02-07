@@ -399,14 +399,25 @@ Model::Model(const std::string& modelPath) : file(modelPath)
 		matMap = VFS::ReadJSON(matMapFile);
 		while (!matMap)
 		{
-			if (matMapFile.find('/') != std::string::npos)
+			if (matMapFile.find('/') == std::string::npos)
 			{
 				//FatalError("No material map? How?");
 				matMap = JSON::Parse("{}");
 				break;
 			}
+
 			matMapFile = matMapFile.substr(0, matMapFile.rfind('/'));
-			matMapFile = matMapFile.substr(0, matMapFile.rfind('/')) + "/default.mat.json";
+
+			auto slashes = 0;
+			for (auto c : matMapFile)
+				if (c == '/') slashes++;
+
+			if (slashes == 0)
+				matMapFile = "default.mat.json";
+			else
+				matMapFile = matMapFile.substr(0, matMapFile.rfind('/')) + "/default.mat.json";
+
+			matMap = VFS::ReadJSON(matMapFile);
 		}
 	}
 

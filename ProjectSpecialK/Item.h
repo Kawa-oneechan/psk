@@ -10,6 +10,9 @@ the Item that they represent.
 
 class Item : public NameableThing
 {
+private:
+	ModelP iconModel{ nullptr };
+
 public:
 	Item(JSONObject& value, const std::string& filename = "");
 	int FindVariantByName(const std::string& variantName) const;
@@ -77,6 +80,8 @@ public:
 	//The item can be held in a player's inventory.
 	bool CanHave{ false };
 	//There would be a canWardrobe, but only Clothing objects would ever appear there -- it's superfluous.
+
+	void DrawFieldIcon(glm::vec3 position);
 
 	enum class FurnKind
 	{
