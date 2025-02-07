@@ -242,17 +242,27 @@ void Map::drawWorker(float dt)
 	auto playerTile = glm::round(thePlayer.Position / 10.0f);
 
 	auto playerAcre = playerTile / (float)AcreSize;
-	auto playerAcreIdx = (playerAcre.y * (Width / AcreSize)) * playerAcre.y;
-	auto acrePos = glm::vec3(0, 0, 0); //TODO
-	//TODO: draw surrounding acres too
+	auto playerAcreIdx = ((int)playerAcre.y * (Width / AcreSize)) * (int)playerAcre.y;
+	//acrePos needs to start in alignment and increase by a lot.
+	auto acrePos = glm::vec3(0, 0, 0); //-V821 yeah I know, this is for later bby
+	//TODO: draw surrounding acres too.
+	/*
+	Suggest building an array of nine offsets:
+		-n - 1, -n,  -n + 1,
+		   - 1,  0,     + 1,
+		 n - 1,  n,   n + 1
+	where n = (Width / AcreSize), find playerAcreIdx,
+	then loop through this list. If out of bounds, skip.
+	*/
 	{
-		if (Acres[playerAcreIdx].Model)
-			Acres[playerAcreIdx].Model->Draw(acrePos);
+		auto acreModel = Acres[playerAcreIdx].Model;
+		if (acreModel)
+			acreModel->Draw(acrePos);
 
 		for (auto& i : Acres[playerAcreIdx].Objects)
 		{
 			if (!i.Dropped) continue; //don't try to render placed stuff just yet
-			auto height = GetHeight(i.Position.x, i.Position.y);
+			auto height = GetHeight((int)i.Position.x, (int)i.Position.y);
 			auto pos3 = glm::vec3(i.Position.x * 10.0f, height, i.Position.y * 10.0f);
 			i.Item->Wrapped()->DrawFieldIcon(pos3);
 		}
@@ -399,7 +409,7 @@ void Map::LoadObjects(JSONObject& json)
 		int acreX = (int)drop.Position.x / AcreSize;
 		int acreY = (int)drop.Position.y / AcreSize;
 		auto acreIndex = (acreY * (Width / AcreSize)) + acreX;
-		if (acreIndex < 0 || acreIndex > Acres.size())
+		if (acreIndex < 0 || acreIndex >= Acres.size())
 		{
 			conprint(4, "Item \"{}\" at {}x{} is out of range.", drop.Item->FullID(), drop.Position.x, drop.Position.y);
 			continue;

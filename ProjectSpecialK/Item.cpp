@@ -125,7 +125,7 @@ bool Item::IsClothing() const
 	return Type == Type::Clothing;
 }
 
-void Item::DrawFieldIcon(glm::vec3 position)
+void Item::DrawFieldIcon(const glm::vec3& position)
 {
 	if (!iconModel)
 		iconModel = std::make_shared<Model>(fmt::format("field/icons/{}/model.fbx", Icon));

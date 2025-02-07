@@ -81,7 +81,8 @@ public:
 	bool CanHave{ false };
 	//There would be a canWardrobe, but only Clothing objects would ever appear there -- it's superfluous.
 
-	void DrawFieldIcon(glm::vec3 position);
+	void DrawFieldIcon(const glm::vec3& position);
+	//void DrawFieldModel(const glm::vec3& position, float facing);
 
 	enum class FurnKind
 	{

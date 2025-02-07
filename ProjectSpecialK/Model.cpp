@@ -409,8 +409,8 @@ Model::Model(const std::string& modelPath) : file(modelPath)
 			matMapFile = matMapFile.substr(0, matMapFile.rfind('/'));
 
 			auto slashes = 0;
-			for (auto c : matMapFile)
-				if (c == '/') slashes++;
+			for (auto ch : matMapFile)
+				if (ch == '/') slashes++;
 
 			if (slashes == 0)
 				matMapFile = "default.mat.json";
