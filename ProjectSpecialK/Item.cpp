@@ -132,6 +132,13 @@ void Item::DrawFieldIcon(const glm::vec3& position)
 	iconModel->Draw(position);
 }
 
+void Item::DrawFieldModel(const glm::vec3& position, float facing)
+{
+	if (!fieldModel)
+		fieldModel = std::make_shared<Model>(fmt::format("{}/model.fbx", Path));
+	fieldModel->Draw(position, facing);
+}
+
 InventoryItem::InventoryItem(ItemP wrapped, int variant, int pattern)
 {
 	_wrapped = wrapped;

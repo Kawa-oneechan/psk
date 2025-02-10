@@ -255,13 +255,23 @@ void Map::drawWorker(float dt)
 
 		for (auto& i : Acres[playerAcreIdx].Objects)
 		{
-			if (!i.Dropped) continue; //don't try to render placed stuff just yet
+			if (!i.Dropped) continue;
 			auto height = GetHeight(glm::vec3(i.Position.x, 100, i.Position.y));
 			auto pos3 = glm::vec3(i.Position.x, height, i.Position.y);
 			i.Item->Wrapped()->DrawFieldIcon(pos3);
 		}
-	}
 
+		for (auto& i : Acres[playerAcreIdx].Objects)
+		{
+			if (i.Dropped) continue;
+			auto height = GetHeight(glm::vec3(i.Position.x, 100, i.Position.y));
+			//TODO: handle layers
+			auto pos3 = glm::vec3(i.Position.x, height, i.Position.y);
+			auto rotation = i.Rotation * 90.0f;
+			i.Item->Wrapped()->DrawFieldModel(pos3, rotation);
+		}
+	}
+	MeshBucket::Flush();
 
 	constexpr auto half = (int)(AcreSize * 1.5f);
 	constexpr auto north = AcreSize * 3;
@@ -373,8 +383,8 @@ void Map::SaveObjects(JSONObject& json)
 				if (i.State != 0)
 					furn["state"] = new JSONValue(i.State);
 				JSONArray pos;
-				pos.push_back(new JSONValue((int)i.Position.x));
-				pos.push_back(new JSONValue((int)i.Position.y));
+				pos.push_back(new JSONValue((int)(i.Position.x / 10.0f)));
+				pos.push_back(new JSONValue((int)(i.Position.y / 10.0f)));
 				furn["position"] = new JSONValue(pos);
 				furnsArray.push_back(new JSONValue(furn));
 			}
@@ -387,7 +397,8 @@ void Map::SaveObjects(JSONObject& json)
 void Map::LoadObjects(JSONObject& json)
 {
 	auto dropsArray = json["drops"] != nullptr ? json["drops"]->AsArray() : JSONArray();
-	//auto furnsArray = json["furniture"] != nullptr ? json["furniture"]->AsArray() : JSONArray();
+	auto furnsArray = json["furniture"] != nullptr ? json["furniture"]->AsArray() : JSONArray();
+
 	for (auto& _i : dropsArray)
 	{
 		auto i = _i->AsObject();
@@ -409,6 +420,29 @@ void Map::LoadObjects(JSONObject& json)
 			continue;
 		}
 		Acres[acreIndex].Objects.push_back(drop);
+	}
+
+	for (auto& _i : furnsArray)
+	{
+		auto i = _i->AsObject();
+		MapItem furn;
+		furn.Item = std::make_shared<InventoryItem>(i["id"]->AsString());
+		furn.Dropped = false;
+		furn.Position = GetJSONVec2(i["position"]) * 10.0f;
+		furn.Fixed = (i["fixed"] != nullptr) ? i["fixed"]->AsBool() : false;
+		furn.Layer = (i["layer"] != nullptr) ? i["layer"]->AsInteger() : 0;
+		furn.Rotation = (i["facing"] != nullptr) ? i["facing"]->AsInteger() : 0;
+		furn.State = (i["state"] != nullptr) ? i["state"]->AsInteger() : 0;
+
+		int acreX = (int)(furn.Position.x / 10.0f) / AcreSize;
+		int acreY = (int)(furn.Position.y / 10.0f) / AcreSize;
+		auto acreIndex = (acreY * (Width / AcreSize)) + acreX;
+		if (acreIndex < 0 || acreIndex >= Acres.size())
+		{
+			conprint(4, "Item \"{}\" at {}x{} is out of range.", furn.Item->FullID(), furn.Position.x, furn.Position.y);
+			continue;
+		}
+		Acres[acreIndex].Objects.push_back(furn);
 	}
 }
 

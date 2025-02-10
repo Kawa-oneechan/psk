@@ -1,0 +1,17 @@
+{
+	"mBody": {
+		"albedo": "albedo.png",
+		"mix": "mix.png",
+		"normal": "normal.png"
+	},
+	"mReBody": {
+		"albedo": "albedo.png",
+		"mix": "mix.png",
+		"normal": "normal.png"
+	},
+	"mReFabric": {
+		"albedo": "albedo.png",
+		"mix": "mix.png",
+		"normal": "normal.png"
+	}
+}

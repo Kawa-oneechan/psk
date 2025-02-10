@@ -12,6 +12,7 @@ class Item : public NameableThing
 {
 private:
 	ModelP iconModel{ nullptr };
+	ModelP fieldModel{ nullptr };
 
 public:
 	Item(JSONObject& value, const std::string& filename = "");
@@ -82,7 +83,7 @@ public:
 	//There would be a canWardrobe, but only Clothing objects would ever appear there -- it's superfluous.
 
 	void DrawFieldIcon(const glm::vec3& position);
-	//void DrawFieldModel(const glm::vec3& position, float facing);
+	void DrawFieldModel(const glm::vec3& position, float facing);
 
 	enum class FurnKind
 	{
