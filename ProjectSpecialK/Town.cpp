@@ -6,12 +6,6 @@
 #include "Model.h"
 #include <base64.h>
 
-extern "C"
-{
-	extern int mz_compress(unsigned char *pDest, unsigned long *pDest_len, const unsigned char *pSource, unsigned long source_len);
-	extern int mz_uncompress(unsigned char *pDest, unsigned long *pDest_len, const unsigned char *pSource, unsigned long source_len);
-}
-
 static std::array<ModelP, 80> tileModels;
 static std::array<std::string, 80> tileModelKeys;
 
@@ -567,13 +561,7 @@ void Town::Load()
 			}
 		}
 
-		{
-			auto compressedData = new unsigned char[sizeof(MapTile) * Width * Height];
-			auto compressedSize = (unsigned long)base64_decode_bin(jsonObj["mapData"]->AsString(), compressedData);
-			unsigned long uncompedSize;
-			mz_uncompress((unsigned char*)Terrain.get(), &uncompedSize, compressedData, compressedSize);
-			delete[] compressedData;
-		}
+		VFS::ReadSaveData(Terrain.get(), "map/map.bin");
 
 		Villagers.clear();
 		for (const auto& f : jsonObj["villagers"]->AsArray())
@@ -605,18 +593,7 @@ void Town::Save()
 	conprint(0, "Saving...");
 	JSONObject json;
 
-	auto compressedData = new unsigned char[sizeof(MapTile) * Width * Height];
-	unsigned long compressedSize;
-	mz_compress(compressedData, &compressedSize, (unsigned char*)Terrain.get(), sizeof(MapTile) * Width * Height);
-	//BUGBUG: mz_compress may return NOTHING in Release builds!
-	if (compressedSize == 0)
-	{
-		conprint(0, "NOT SAVING: mz_compress returned nothing!");
-		return;
-	}
-	auto base64 = base64_encode(compressedData, compressedSize);
-	json["mapData"] = new JSONValue(base64);
-	delete[] compressedData;
+	VFS::WriteSaveData("map/map.bin", (void*)Terrain.get(), sizeof(MapTile) * Width * Height);
 
 	json["width"] = new JSONValue(Width);
 	json["height"] = new JSONValue(Height);

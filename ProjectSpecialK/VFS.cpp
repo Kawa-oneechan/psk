@@ -631,6 +631,19 @@ namespace VFS
 		return ret;
 	}
 
+	size_t ReadSaveData(void* ret, const std::string& path)
+	{
+		std::string p2 = mangle(path);
+
+		std::ifstream file(savePath / p2, std::ios::binary | std::ios::ate);
+		if (!file.good())
+			throw std::runtime_error("Couldn't open file.");
+		std::streamsize fs = file.tellg();
+		file.seekg(0, std::ios::beg);
+		file.read((char*)ret, fs);
+		return fs;
+	}
+
 	std::string ReadSaveString(const std::string& path)
 	{
 		return std::string(ReadSaveData(path, nullptr).get());

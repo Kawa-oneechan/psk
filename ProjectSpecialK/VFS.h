@@ -53,9 +53,10 @@ namespace VFS
 	extern bool WriteSaveJSON(const std::string& archive, const std::string& path, JSONValue* data);
 
 	extern std::unique_ptr<char[]> ReadSaveData(const std::string& path, size_t* size);
+	extern size_t ReadSaveData(void* ret, const std::string& path);
 	extern std::string ReadSaveString(const std::string& path);
 	extern JSONValue* ReadSaveJSON(const std::string& path);
-	extern bool WriteSaveData(const std::string& path, char data[], size_t size);
+	extern bool WriteSaveData(const std::string& path, void* data, size_t size);
 	extern bool WriteSaveString(const std::string& path, const std::string& data);
 	extern bool WriteSaveJSON(const std::string& path, JSONValue* data);
 }
