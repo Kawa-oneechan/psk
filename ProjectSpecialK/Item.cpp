@@ -139,11 +139,10 @@ void Item::DrawFieldModel(const glm::vec3& position, float facing)
 	fieldModel->Draw(position, facing);
 }
 
-InventoryItem::InventoryItem(ItemP wrapped, int variant, int pattern)
+InventoryItem::InventoryItem(ItemP wrapped, int data)
 {
 	_wrapped = wrapped;
-	_variant = variant;
-	_pattern = pattern;
+	_data = data;
 	_wear = 0;
 	ID = wrapped->ID;
 	Hash = wrapped->Hash;
@@ -153,10 +152,10 @@ InventoryItem::InventoryItem(ItemP wrapped, int variant, int pattern)
 	Temporary = false;
 }
 
-InventoryItem::InventoryItem(ItemP wrapped, int variant) : InventoryItem(wrapped, variant, 0)
+InventoryItem::InventoryItem(ItemP wrapped, int variant, int pattern) : InventoryItem(wrapped, (pattern * 32) + variant)
 {}
 
-InventoryItem::InventoryItem(ItemP wrapped) : InventoryItem(wrapped, 0, 0)
+InventoryItem::InventoryItem(ItemP wrapped) : InventoryItem(wrapped, 0)
 {}
 
 InventoryItem::InventoryItem(const std::string& reference)
@@ -164,8 +163,7 @@ InventoryItem::InventoryItem(const std::string& reference)
 	auto cleanName = reference;
 	auto slash = cleanName.find_first_of('/');
 
-	_variant = 0;
-	_pattern = 0;
+	_data = 0;
 	_wear = 0;
 
 	if (slash != std::string::npos)
@@ -181,27 +179,46 @@ InventoryItem::InventoryItem(const std::string& reference)
 	{
 		auto k = reference.substr(slash + 1);
 		auto varNames = Split(k, '/');
+		/* Acceptable formats:
+		* id
+		* id/variantName
+		* id/variantName/patternName
+		* id/variantName/patternIndex
+		* id/count
+		* id/count/wear
+		*/
+
 		if (_wrapped->variantNames.size() != 0)
 		{
-			//Accept both variant names and indices. If one fails...
-			//This way, definitions can be more clear but saved data
-			//doesn't need to have them called by name.
-			_variant = _wrapped->FindVariantByName(varNames[0]);
-			if (_variant == -1)
-				_variant = std::stoi(varNames[0]);
-			//TODO: pattern names
-			if (varNames.size() > 1)
-				_pattern = std::stoi(varNames[1]);
-			if (_wrapped->WearLimit != 0)
+			auto variant = _wrapped->FindVariantByName(varNames[0]);
+			if (variant == -1)
 			{
-				_wear = std::stoi(varNames[2]);
+				//Not a variant. Use Count to set both variant and pattern.
+				_data = std::stoi(varNames[0]);
+				if (varNames.size() > 1 && _wrapped->WearLimit != 0)
+					_wear = std::stoi(varNames[1]);
+			}
+			else
+			{
+				//It was a variant name.
+				auto pattern = 0;
+				if (varNames.size() > 1)
+				{
+					//TODO: pattern names
+					//pattern = _wrapped->FindPatternByName(varNames[1]);
+					//if (pattern == -1)
+					pattern = std::stoi(varNames[1]);
+				}
 			}
 		}
-		else if (_wrapped->WearLimit != 0)
+		else
 		{
-			_wear = std::stoi(varNames[0]);
+			_data = std::stoi(varNames[0]);
+			if (varNames.size() > 1 && _wrapped->WearLimit != 0)
+				_wear = std::stoi(varNames[1]);
 		}
 	}
+
 	ID = _wrapped->ID;
 	Hash = _wrapped->Hash;
 	RefName = _wrapped->RefName;
@@ -212,16 +229,11 @@ InventoryItem::InventoryItem(const std::string& reference)
 
 std::string InventoryItem::FullID() const
 {
-	if (_wrapped->variantNames.size() != 0)
-	{
-		if (_wear > 0)
-			return fmt::format("{}/{}/{}/{}", ID, _variant, _pattern, _wear);
-		return fmt::format("{}/{}/{}", ID, _variant, _pattern);
-	}
-	//No variants, but we do have a wear?
+	//We don't need variant/pattern splits for loading and saving bro.
 	if (_wear > 0)
-		return fmt::format("{}/{}", ID, _wear);
-	//None of that applies?
+		return fmt::format("{}/{}/{}", ID, _data, _wear);
+	if (_data != 0)
+		return fmt::format("{}/{}", ID, _data);
 	return ID;
 }
 
@@ -231,12 +243,12 @@ std::string InventoryItem::FullName()
 	{
 		auto wearPct = glm::round((_wrapped->WearLimit * _wear) / 100.0f);
 		if (_wrapped->variantNames.size() != 0)
-			return fmt::format("{} ({}%, {})", Name(), wearPct, _wrapped->variantNames[_variant]);
+			return fmt::format("{} ({}%, {})", Name(), wearPct, _wrapped->variantNames[_data % 32]);
 		return fmt::format("{} ({}%)", Name(), wearPct);
 	}
 	if (_wrapped->variantNames.size() != 0)
 	{
-		return fmt::format("{} ({})", Name(), _wrapped->variantNames[_variant]);
+		return fmt::format("{} ({})", Name(), _wrapped->variantNames[_data % 32]);
 	}
 	return Name();
 }
@@ -281,14 +293,34 @@ std::string InventoryItem::PlayerModel() const
 	return _wrapped->PlayerModel;
 }
 
+int InventoryItem::Data() const
+{
+	return _data;
+}
+
+void InventoryItem::Data(int data)
+{
+	_data = data;
+}
+
 int InventoryItem::Variant() const
 {
-	return _variant;
+	return _data % 32;
 }
 
 void InventoryItem::Variant(int variant)
 {
-	_variant = glm::clamp(variant, 0, (int)_wrapped->variantNames.size());
+	_data = (Pattern() * 32) + glm::clamp(variant, 0, (int)_wrapped->variantNames.size());
+}
+
+int InventoryItem::Pattern() const
+{
+	return _data / 32;
+}
+
+void InventoryItem::Pattern(int pattern)
+{
+	_data = (pattern * 32) + Variant();
 }
 
 bool InventoryItem::WearDown(int howMuch)

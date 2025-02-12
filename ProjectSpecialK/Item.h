@@ -135,12 +135,12 @@ class InventoryItem : public NameableThing
 {
 private:
 	ItemP _wrapped;
-	int _variant, _pattern;
+	int _data;
 	int _wear;
 
 public:
 	InventoryItem(ItemP wrapped, int variant, int pattern);
-	InventoryItem(ItemP wrapped, int variant);
+	InventoryItem(ItemP wrapped, int data);
 	InventoryItem(ItemP wrapped);
 	InventoryItem(const std::string& reference);
 	std::string FullID() const;
@@ -159,8 +159,12 @@ public:
 	std::string Icon() const;
 	std::string Style() const;
 	std::string PlayerModel() const;
+	int Data() const;
+	void Data(int data);
 	int Variant() const;
 	void Variant(int variant);
+	int Pattern() const;
+	void Pattern(int pattern);
 
 	bool InventoryItem::WearDown(int howMuch = 1);
 
