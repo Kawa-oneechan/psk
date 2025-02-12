@@ -365,10 +365,7 @@ void Map::SaveObjects(JSONObject& json)
 			{
 				JSONObject drop;
 				drop["id"] = new JSONValue(i.Item->FullID());
-				JSONArray pos;
-				pos.push_back(new JSONValue((int)(i.Position.x / 10.0f)));
-				pos.push_back(new JSONValue((int)(i.Position.y/ 10.0f)));
-				drop["position"] = new JSONValue(pos);
+				drop["position"] = GetJSONVec(i.Position / 10.0f, true);
 				if (i.State != 0)
 					drop["state"] = new JSONValue(i.State);
 				dropsArray.push_back(new JSONValue(drop));
@@ -382,10 +379,7 @@ void Map::SaveObjects(JSONObject& json)
 				furn["layer"] = new JSONValue(i.Layer);
 				if (i.State != 0)
 					furn["state"] = new JSONValue(i.State);
-				JSONArray pos;
-				pos.push_back(new JSONValue((int)(i.Position.x / 10.0f)));
-				pos.push_back(new JSONValue((int)(i.Position.y / 10.0f)));
-				furn["position"] = new JSONValue(pos);
+				furn["position"] = GetJSONVec(i.Position / 10.0f, true);
 				furnsArray.push_back(new JSONValue(furn));
 			}
 		}

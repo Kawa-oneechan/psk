@@ -113,6 +113,12 @@ extern glm::vec4 GetJSONColor(JSONValue* val);
 //But given a string that parses as "mmm dd" or "mmm/dd", parses that as a day and returns those numbers.
 //Either way, the first value is a day from 1-31 and the second a month from 1-12.
 extern glm::vec2 GetJSONDate(JSONValue* val);
+//Returns a JSON array initialized from a vec2, optionally casting to int.
+extern JSONValue* GetJSONVec(const glm::vec2& vec, bool asInt = false);
+//Returns a JSON array initialized from a vec3, optionally casting to int.
+extern JSONValue* GetJSONVec(const glm::vec3& vec, bool asInt = false);
+//Returns a JSON array initialized from a vec4, optionally casting to int.
+extern JSONValue* GetJSONVec(const glm::vec4& vec, bool asInt = false);
 
 using polygon = std::vector<glm::vec2>;
 //Returns true if point is inside of polygon.

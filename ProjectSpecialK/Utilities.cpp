@@ -125,6 +125,57 @@ glm::vec2 GetJSONDate(JSONValue* val)
 	throw std::runtime_error(fmt::format("GetJSONDate: value {} is not a month/day pair.", val->Stringify()));
 }
 
+JSONValue* GetJSONVec(const glm::vec2& vec, bool asInt)
+{
+	JSONArray ret;
+	ret.reserve(2);
+	if (asInt)
+	{
+		ret.push_back(new JSONValue((int)vec.x));
+		ret.push_back(new JSONValue((int)vec.y));
+	}
+	else
+	{
+		ret.push_back(new JSONValue(vec.x));
+		ret.push_back(new JSONValue(vec.y));
+	}
+	return new JSONValue(ret);
+}
+
+JSONValue* GetJSONVec(const glm::vec3& vec, bool asInt)
+{
+	JSONArray ret;
+	ret.reserve(3);
+	if (asInt)
+	{
+		for (int i = 0; i < 3; i++)
+			ret.push_back(new JSONValue((int)vec[i]));
+	}
+	else
+	{
+		for (int i = 0; i < 3; i++)
+			ret.push_back(new JSONValue(vec[i]));
+	}
+	return new JSONValue(ret);
+}
+
+JSONValue* GetJSONVec(const glm::vec4& vec, bool asInt)
+{
+	JSONArray ret;
+	ret.reserve(4);
+	if (asInt)
+	{
+		for (int i = 0; i < 4; i++)
+			ret.push_back(new JSONValue((int)vec[i]));
+	}
+	else
+	{
+		for (int i = 0; i < 4; i++)
+			ret.push_back(new JSONValue(vec[i]));
+	}
+	return new JSONValue(ret);
+}
+
 void GetAtlas(std::vector<glm::vec4> &ret, const std::string& jsonFile)
 {
 	auto rjs = VFS::ReadJSON(jsonFile);

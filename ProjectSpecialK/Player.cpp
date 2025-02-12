@@ -355,15 +355,11 @@ void Player::Serialize(JSONObject& target)
 	target["name"] = new JSONValue(Name);
 	target["bells"] = new JSONValue((int)Bells);
 
-	JSONArray skin{ new JSONValue(SkinTone.r), new JSONValue(SkinTone.g), new JSONValue(SkinTone.b) };
-	JSONArray eyes{ new JSONValue(EyeColor.r), new JSONValue(EyeColor.g), new JSONValue(EyeColor.b) };
-	JSONArray cheek{ new JSONValue(CheekColor.r), new JSONValue(CheekColor.g), new JSONValue(CheekColor.b) };
-	JSONArray hair{ new JSONValue(HairColor.r), new JSONValue(HairColor.g), new JSONValue(HairColor.b) };
 	JSONObject colors;
-	colors["skin"] = new JSONValue(skin);
-	colors["eyes"] = new JSONValue(eyes);
-	colors["cheek"] = new JSONValue(cheek);
-	colors["hair"] = new JSONValue(hair);
+	colors["skin"] = GetJSONVec(glm::vec3(SkinTone));
+	colors["eyes"] = GetJSONVec(glm::vec3(EyeColor));
+	colors["cheek"] = GetJSONVec(glm::vec3(CheekColor));
+	colors["hair"] = GetJSONVec(glm::vec3(HairColor));
 	target["colors"] = new JSONValue(colors);
 
 	JSONObject style;
