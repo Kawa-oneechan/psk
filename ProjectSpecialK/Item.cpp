@@ -144,6 +144,7 @@ InventoryItem::InventoryItem(ItemP wrapped, int data)
 	_wrapped = wrapped;
 	_data = data;
 	_wear = 0;
+	_packaging = 0;
 	ID = wrapped->ID;
 	Hash = wrapped->Hash;
 	RefName = wrapped->RefName;
@@ -165,6 +166,7 @@ InventoryItem::InventoryItem(const std::string& reference)
 
 	_data = 0;
 	_wear = 0;
+	_packaging = 0;
 
 	if (slash != std::string::npos)
 	{
@@ -184,8 +186,11 @@ InventoryItem::InventoryItem(const std::string& reference)
 		* id/variantName
 		* id/variantName/patternName
 		* id/variantName/patternIndex
+		* id/variantName/patternName/packaging
+		* id/variantName/patternIndex/packaging
 		* id/count
 		* id/count/wear
+		* id/count/wear/packaging
 		*/
 
 		if (_wrapped->variantNames.size() != 0)
@@ -197,6 +202,8 @@ InventoryItem::InventoryItem(const std::string& reference)
 				_data = std::stoi(varNames[0]);
 				if (varNames.size() > 1 && _wrapped->WearLimit != 0)
 					_wear = std::stoi(varNames[1]);
+				if (varNames.size() > 2)
+					_packaging = std::stoi(varNames[2]);
 			}
 			else
 			{
@@ -208,6 +215,8 @@ InventoryItem::InventoryItem(const std::string& reference)
 					//pattern = _wrapped->FindPatternByName(varNames[1]);
 					//if (pattern == -1)
 					pattern = std::stoi(varNames[1]);
+					if (varNames.size() > 2)
+						_packaging = std::stoi(varNames[2]);
 				}
 			}
 		}
@@ -216,6 +225,8 @@ InventoryItem::InventoryItem(const std::string& reference)
 			_data = std::stoi(varNames[0]);
 			if (varNames.size() > 1 && _wrapped->WearLimit != 0)
 				_wear = std::stoi(varNames[1]);
+			if (varNames.size() > 2)
+				_packaging = std::stoi(varNames[2]);
 		}
 	}
 
@@ -231,14 +242,31 @@ std::string InventoryItem::FullID() const
 {
 	//We don't need variant/pattern splits for loading and saving bro.
 	if (_wear > 0)
+	{
+		if (_packaging != 0)
+			return fmt::format("{}/{}/{}/{}", ID, _data, _wear, _packaging);
 		return fmt::format("{}/{}/{}", ID, _data, _wear);
+	}
 	if (_data != 0)
+	{
+		if (_packaging != 0)
+			return fmt::format("{}/{}/0/{}", ID, _data, _packaging);
 		return fmt::format("{}/{}", ID, _data);
+	}
 	return ID;
 }
 
 std::string InventoryItem::FullName()
 {
+	if ((_packaging & 0x7F) != 0)
+	{
+		//auto packageType = _packaging & 0x7F;
+		if ((_packaging & 0x80) == 0x80)
+			return "present";
+		//If the bit is clear, we want to show the true name.
+		//TODO: use Text::Get
+	}
+
 	if (_wear)
 	{
 		auto wearPct = glm::round((_wrapped->WearLimit * _wear) / 100.0f);
@@ -280,6 +308,11 @@ bool InventoryItem::IsClothing() const
 
 std::string InventoryItem::Icon() const
 {
+	if ((_packaging & 0x80) != 0)
+	{
+		//auto packageType = _packaging & 0x7F;
+		return "present";
+	}
 	return _wrapped->Icon;
 }
 

@@ -137,6 +137,7 @@ private:
 	ItemP _wrapped;
 	int _data;
 	int _wear;
+	int _packaging;
 
 public:
 	InventoryItem(ItemP wrapped, int variant, int pattern);
