@@ -4,7 +4,6 @@
 #include "DateTimePanel.h"
 #include "ItemHotbar.h"
 #include "Model.h"
-#include <base64.h>
 
 static std::array<ModelP, 80> tileModels;
 static std::array<std::string, 80> tileModelKeys;

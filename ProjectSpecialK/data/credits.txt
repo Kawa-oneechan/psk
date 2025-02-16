@@ -74,7 +74,6 @@ Heaven Tool by rafacasari
 Switch Toolbox by KillzXGaming et al
 
 #Third-party libraries
-Base64 by René Nyffenegger
 Color LUT shader by Matt DesLauriers
 Dear ImGUI by Omar Cornut
 FMOD Ex by Firelight Technologies
