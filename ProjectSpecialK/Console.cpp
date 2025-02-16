@@ -19,6 +19,7 @@ extern bool debugPanelLayoutPolygons;
 extern bool postFx, wireframe;
 extern bool debuggerEnabled;
 extern bool cheatsEnabled;
+extern bool useOrthographic;
 
 bool noWear; //placeholder
 
@@ -61,6 +62,7 @@ Console::Console()
 	RegisterCVar("r_postfx", CVar::Type::Bool, &postFx);
 	RegisterCVar("r_wireframe", CVar::Type::Bool, &wireframe);
 	RegisterCVar("r_toon", CVar::Type::Bool, &commonUniforms.Toon);
+	RegisterCVar("r_zomboid", CVar::Type::Bool, &useOrthographic);
 	RegisterCVar("s_ambientvolume", CVar::Type::Float, &Audio::AmbientVolume, false, 0, 100);
 	RegisterCVar("s_effectvolume", CVar::Type::Float, &Audio::SoundVolume, false, 0, 100);
 	RegisterCVar("s_musicvolume", CVar::Type::Float, &Audio::MusicVolume, false, 0, 100);

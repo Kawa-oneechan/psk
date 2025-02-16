@@ -1,6 +1,8 @@
 #include "SpecialK.h"
 #include "InputsMap.h"
 
+extern bool useOrthographic;
+
 void Player::LoadModel()
 {
 	if (!_model)
@@ -323,7 +325,7 @@ bool Player::Tick(float dt)
 
 	if (anythingPressed)
 	{
-		Move(facing + MainCamera->Angles().z, dt);
+		Move(facing + MainCamera->Angles().z + (useOrthographic ? 0.45f : 0), dt);
 	}
 
 	return !anythingPressed;

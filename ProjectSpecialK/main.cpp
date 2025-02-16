@@ -41,6 +41,9 @@ extern "C"
 }
 #endif
 
+glm::mat4 perspectiveProjection, orthographicProjection;
+bool useOrthographic = false;
+
 GLFWwindow* window;
 
 Shader* spriteShader = nullptr;
@@ -671,9 +674,11 @@ int main(int argc, char** argv)
 	//thePlayer.Tops = std::make_shared<InventoryItem>("psk:oppai");
 	//thePlayer.Bottoms = std::make_shared<InventoryItem>("acnh:denimcutoffs/lightblue");
 
-	commonUniforms.Projection = glm::perspective(glm::radians(45.0f), (float)width / (float)height, 0.1f, 300.0f);
+	perspectiveProjection = glm::perspective(glm::radians(45.0f), (float)width / (float)height, 0.1f, 300.0f);
 	//Orthographic projection for a laugh. For best results, use a 45 degree pitch and yaw, no bending.
-	//commonUniforms.Projection = glm::ortho(-75.0f, 75.0f, -50.0f, 50.f, -1.0f, 300.0f);
+	constexpr auto orthoScale = 0.025f;
+	orthographicProjection = glm::ortho(-(ScreenWidth * orthoScale), (ScreenWidth * orthoScale), -(ScreenHeight * orthoScale), (ScreenHeight * orthoScale), -1.0f, 300.0f);
+	commonUniforms.Projection = useOrthographic ? orthographicProjection : perspectiveProjection;
 
 	frameBuffer = new Framebuffer("shaders/framebuffer.fs", width, height);
 	colorMapBuffer = new ColorMapBuffer("shaders/colormap.fs", width, height);
@@ -712,6 +717,8 @@ int main(int argc, char** argv)
 		float dt = (float)DeltaTime;
 		commonUniforms.TotalTime += dt;
 		commonUniforms.DeltaTime = dt;
+
+		commonUniforms.Projection = useOrthographic ? orthographicProjection : perspectiveProjection;
 
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);

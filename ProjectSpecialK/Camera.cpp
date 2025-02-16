@@ -11,6 +11,7 @@
 #include <glm/gtx/transform.hpp>
 
 extern unsigned int commonBuffer;
+extern bool useOrthographic;
 
 Camera::Camera(glm::vec3 target, glm::vec3 angles, float distance) : _target(target), _angles(angles), _distance(distance), _swapYZ(false)
 {
@@ -80,6 +81,18 @@ void Camera::Update()
 			0, 0, 0, 1
 		) * commonUniforms.InvView;
 	}
+
+	if (useOrthographic)
+	{
+		commonUniforms.InvView = (
+			glm::translate(_target)
+			* (glm::eulerAngleY(glm::radians(45.0f)))
+			* (glm::eulerAngleX(glm::radians(-45.0f)))
+			* (glm::eulerAngleZ(glm::radians(0.0f)))
+			* glm::translate(glm::vec3(0, 0, _distance))
+			); 
+	}
+
 	commonUniforms.View = glm::affineInverse(commonUniforms.InvView);
 	position = commonUniforms.InvView * glm::vec4(0, 0, 0, 1);
 }
