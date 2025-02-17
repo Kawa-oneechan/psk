@@ -213,6 +213,9 @@ void Map::SaveToPNG()
 }
 #endif
 
+#ifdef DEBUG
+extern bool Project(const glm::vec3& in, glm::vec2& out);
+#endif
 
 void Map::drawWorker(float dt)
 {
@@ -226,11 +229,19 @@ void Map::drawWorker(float dt)
 
 	UpdateGrass();
 
+#ifdef DEBUG
+	glm::vec2 debugDots[4];
+#endif
+
 	thePlayer.Draw(dt * timeScale);
 	MeshBucket::Flush();
 	for (const auto& v : town->Villagers)
 		v->Draw(dt * timeScale);
 	MeshBucket::Flush();
+
+#ifdef DEBUG
+	Project(thePlayer.Position, debugDots[0]);
+#endif
 
 	auto playerTile = glm::round(thePlayer.Position / 10.0f);
 
@@ -290,6 +301,10 @@ void Map::drawWorker(float dt)
 			auto extra = TerrainModels[(y * Width) + x];
 			auto model = tileModels[extra.Model];
 			auto pos = glm::vec3(x * 10, tile.Elevation * ElevationHeight, y * 10);
+#ifdef DEBUG
+			if (x == (int)playerTile.x && y == (int)playerTile.z)
+				Project(pos, debugDots[1]);
+#endif
 			auto rot = extra.Rotation * 90.0f;
 			if (extra.Model == 0 || extra.Model > 44)
 				model->SetLayerByMat("_mGrass", tile.Type); //ground, river, or waterfall.
@@ -302,6 +317,15 @@ void Map::drawWorker(float dt)
 
 	glDisable(GL_DEPTH_TEST);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+#ifdef DEBUG
+	for (int i = 0; i < 4; i++)
+	{
+		Sprite::DrawSprite(*whiteRect, debugDots[i] - 3.0f, glm::vec2(6), glm::vec4(0), 0.0f, glm::vec4(1, 1, 1, 1));
+		Sprite::DrawSprite(*whiteRect, debugDots[i] - 2.0f, glm::vec2(4), glm::vec4(0), 0.0f, glm::vec4(0, 0, 1, 1));
+	}
+	Sprite::FlushBatch();
+#endif
 }
 
 void Map::Draw(float dt)

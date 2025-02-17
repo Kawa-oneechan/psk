@@ -675,6 +675,15 @@ void HandleIncludes(std::string& code, const std::string& path)
 	}
 }
 
+bool Project(const glm::vec3& in, glm::vec2& out)
+{
+	//TODO: account for the curve.
+	auto res = glm::project(in, commonUniforms.View, commonUniforms.Projection, glm::vec4(0.0f, 0, width, height));
+	out.x = res.x;
+	out.y = height - res.y;
+	return res.z >= 0.0f;
+}
+
 #include <scale2x/scalebit.h>
 unsigned char* ScaleImage(unsigned char* original, int origWidth, int origHeight, int channels, int targetScale)
 {
