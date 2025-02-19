@@ -72,6 +72,7 @@ struct CommonUniforms
 	glm::vec4 PlayerHair; //528
 	glm::vec4 PlayerHairHi; //544
 	float GrassColor; //560
+	int PostEffect; //564
 };
 extern CommonUniforms commonUniforms;
 

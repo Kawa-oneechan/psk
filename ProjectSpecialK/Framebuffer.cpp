@@ -64,11 +64,15 @@ void Framebuffer::Drop()
 
 void Framebuffer::Draw(const glm::vec2& pos)
 {
+	GetShader()->Use();
+	lut->Use(1);
 	Sprite::DrawSprite(shader, *texture, pos, glm::vec2(texture->width, texture->height));
 }
 
 void Framebuffer::Draw(const glm::vec2& pos, const glm::vec2& size)
 {
+	GetShader()->Use();
+	lut->Use(1);
 	Sprite::DrawSprite(shader, *texture, pos, size);
 }
 
@@ -98,16 +102,12 @@ Texture& Framebuffer::GetTexture()
 	return *texture;
 }
 
-void ColorMapBuffer::Draw(const glm::vec2& pos)
+void Framebuffer::SetLut(Texture* newLut)
 {
-	GetShader()->Use();
-	lut->Use(1);
-	Framebuffer::Draw(pos);
+	lut = newLut;
 }
 
-void ColorMapBuffer::Draw(const glm::vec2& pos, const glm::vec2& size)
+Texture* Framebuffer::GetLut()
 {
-	GetShader()->Use();
-	lut->Use(1);
-	Framebuffer::Draw(pos, size);
+	return lut;
 }

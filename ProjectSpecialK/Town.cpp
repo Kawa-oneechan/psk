@@ -26,12 +26,11 @@ float Map::GetHeight(int x, int y)
 }
 
 extern float timeScale;
-extern bool wireframe, postFx;
+extern bool wireframe;
 extern Shader* modelShader;
 extern Shader* skyShader;
 extern Background* rainLayer;
-extern Framebuffer* frameBuffer;
-extern ColorMapBuffer* colorMapBuffer;
+extern Framebuffer* postFxBuffer;
 
 extern unsigned int commonBuffer;
 
@@ -350,25 +349,10 @@ void Map::Draw(float dt)
 		squareMix = new TextureArray(groundMixs);
 	}
 
-	if (postFx)
-	{
-		frameBuffer->Use();
-		glClearColor(0.2f, 0.3f, 0.3f, 0.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		drawWorker(dt * timeScale);
-		frameBuffer->Drop();
-		colorMapBuffer->Use();
-		frameBuffer->Draw();
-		colorMapBuffer->Drop();
-		colorMapBuffer->Draw();
-	}
-	else
-	{
-		colorMapBuffer->Use();
-		drawWorker(dt * timeScale);
-		colorMapBuffer->Drop();
-		colorMapBuffer->Draw();
-	}
+	postFxBuffer->Use();
+	drawWorker(dt * timeScale);
+	postFxBuffer->Drop();
+	postFxBuffer->Draw();
 }
 
 bool Map::Tick(float dt)

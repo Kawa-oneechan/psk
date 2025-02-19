@@ -64,7 +64,6 @@ float lastY = height / 2.0f;
 bool firstMouse = true;
 
 bool wireframe = false;
-bool postFx = false;
 
 float DeltaTime = 0.0f;
 float lastFrame = 0.0f;
@@ -306,9 +305,6 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 
 	if (key == GLFW_KEY_F1 && action == GLFW_PRESS)
 		wireframe = !wireframe;
-
-	if (key == GLFW_KEY_F2 && action == GLFW_PRESS)
-		postFx = !postFx;
 }
 
 static void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
@@ -512,8 +508,7 @@ void GLAPIENTRY MessageCallback(GLenum source, GLenum type, GLuint id, GLenum se
 }
 #endif
 
-Framebuffer* frameBuffer;
-ColorMapBuffer* colorMapBuffer;
+Framebuffer* postFxBuffer;
 Shader* skyShader;
 Background* rainLayer;
 
@@ -680,9 +675,8 @@ int main(int argc, char** argv)
 	orthographicProjection = glm::ortho(-(ScreenWidth * orthoScale), (ScreenWidth * orthoScale), -(ScreenHeight * orthoScale), (ScreenHeight * orthoScale), -1.0f, 300.0f);
 	commonUniforms.Projection = useOrthographic ? orthographicProjection : perspectiveProjection;
 
-	frameBuffer = new Framebuffer("shaders/framebuffer.fs", width, height);
-	colorMapBuffer = new ColorMapBuffer("shaders/colormap.fs", width, height);
-	colorMapBuffer->SetLutTexture(new Texture("colormap.png"));
+	postFxBuffer = new Framebuffer("shaders/postfx.fs", width, height);
+	postFxBuffer->SetLut(new Texture("colormap.png"));
 
 #ifdef DEBUG
 	auto startingTime = std::chrono::high_resolution_clock::now();

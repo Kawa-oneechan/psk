@@ -16,7 +16,7 @@
 
 extern float timeScale;
 extern bool debugPanelLayoutPolygons;
-extern bool postFx, wireframe;
+extern bool wireframe;
 extern bool debuggerEnabled;
 extern bool cheatsEnabled;
 extern bool useOrthographic;
@@ -31,8 +31,7 @@ extern Shader* playerEyesShader;
 extern Shader* playerMouthShader;
 extern Shader* playerCheekShader;
 extern Shader* playerLegsShader;
-extern Framebuffer* frameBuffer;
-extern ColorMapBuffer* colorMapBuffer;
+extern Framebuffer* postFxBuffer;
 
 Console::Console()
 {
@@ -59,7 +58,7 @@ Console::Console()
 	RegisterCVar("debugger", CVar::Type::Bool, &debuggerEnabled, true);
 #endif
 	RegisterCVar("r_polygons", CVar::Type::Bool, &debugPanelLayoutPolygons);
-	RegisterCVar("r_postfx", CVar::Type::Bool, &postFx);
+	RegisterCVar("r_postfx", CVar::Type::Int, &commonUniforms.PostEffect, false, 0, 4);
 	RegisterCVar("r_wireframe", CVar::Type::Bool, &wireframe);
 	RegisterCVar("r_toon", CVar::Type::Bool, &commonUniforms.Toon);
 	RegisterCVar("r_zomboid", CVar::Type::Bool, &useOrthographic);
@@ -227,12 +226,11 @@ bool Console::Execute(const std::string& str)
 				playerMouthShader->Reload();
 				playerCheekShader->Reload();
 				playerLegsShader->Reload();
-				frameBuffer->ReloadShader();
-				colorMapBuffer->ReloadShader();
+				postFxBuffer->ReloadShader();
 				{
-					auto lut = colorMapBuffer->GetLutTexture();
+					auto lut = postFxBuffer->GetLut();
 					delete lut;
-					colorMapBuffer->SetLutTexture(new Texture("colormap.png"));
+					postFxBuffer->SetLut(new Texture("colormap.png"));
 				}
 				return true;
 			}

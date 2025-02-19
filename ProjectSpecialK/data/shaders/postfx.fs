@@ -42,7 +42,51 @@ vec4 lookup(in vec4 textureColor, in sampler2D lookupTable) {
 	return newColor;
 }
 
+vec4 lookup(vec2 coords)
+{
+	return lookup(texture(image, coords), colorTexture);
+}
+
 void main()
 {
-	fragColor = lookup(texture(image, TexCoords), colorTexture);
+	if (PostEffect == 1)
+	{
+		//SCANLINES
+		//---------
+		fragColor = lookup(TexCoords);
+		fragColor = fragColor * mod(floor(TexCoords.y * ScreenRes.y), 2.0);
+	}
+	else if (PostEffect == 2)
+	{
+		//CHROMATIC ABBERATION
+		//--------------------
+		vec2 ps = 1.0 / ScreenRes.xy;
+		float r = lookup(TexCoords + vec2(ps.x * 4.0, 0)).r;
+		float g = lookup(TexCoords).g;
+		float b = lookup(TexCoords + vec2(-ps.x * 4.0, 0)).b;
+		fragColor = vec4(r, g, b, 1.0);
+	}
+	else if (PostEffect == 3)
+	{
+		//PIXELATE
+		//--------
+		const vec2 pixelSize = vec2(320.0, 240.0);
+		fragColor = lookup(floor(TexCoords * pixelSize) / pixelSize);
+	}
+	else if (PostEffect == 4)
+	{
+		//FILMGRAIN
+		//---------
+		float strength = 16.0;
+		float x = (TexCoords.x + 4.0 ) * (TexCoords.y + 4.0 ) * (TotalTime * 10.0);
+		vec4 grain = vec4(mod((mod(x, 13.0) + 1.0) * (mod(x, 123.0) + 1.0), 0.01)-0.005) * strength;
+		//grain = 1.0 - grain;
+		//fragColor = lookup(TexCoords) * grain;
+		fragColor = lookup(TexCoords) + grain;
+	}
+	
+	else
+	{
+		fragColor = lookup(TexCoords);
+	}
 }
