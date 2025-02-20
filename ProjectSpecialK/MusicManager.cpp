@@ -103,7 +103,7 @@ void MusicManager::Play(const std::string& id, bool immediate)
 	while (second->IsArray())
 	{
 		auto arr = second->AsArray();
-		second = arr[rnd::getInt(arr.size())];
+		second = arr[rnd::getInt((int)arr.size())];
 	}
 
 	if (!second->IsString())
