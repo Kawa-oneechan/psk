@@ -139,6 +139,9 @@ extern std::tuple<rune, size_t> GetChar(const std::string& what, size_t where);
 //Encodes a codepoint into a UTF-8 byte sequence and appends it to the given string.
 extern void AppendChar(std::string& where, rune what);
 
+//Like string::length() but counts UTF-8 characters, not bytes.
+extern size_t Utf8CharLength(const std::string& what);
+
 //Renders a set of tabular data to the console in a nice lined table.
 extern void Table(std::vector<std::string> data, size_t stride);
 

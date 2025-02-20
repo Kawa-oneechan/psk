@@ -104,7 +104,7 @@ namespace rnd
 
 	int getInt()
 	{
-		return getInt(0, device.max());
+		return getInt(0, RAND_MAX);
 	}
 
 	float getFloat(float min, float max)

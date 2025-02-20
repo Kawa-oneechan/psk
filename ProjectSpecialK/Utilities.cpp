@@ -1,5 +1,4 @@
-﻿//#include <regex>
-#include "SpecialK.h"
+﻿#include "SpecialK.h"
 #include "InputsMap.h"
 
 glm::vec2 GetJSONVec2(JSONValue* val)
@@ -405,6 +404,20 @@ void AppendChar(std::string& where, rune what)
 	}
 }
 
+size_t Utf8CharLength(const std::string& what)
+{
+	rune ch;
+	size_t size;
+	size_t ret = 0;
+	for (size_t i = 0; i < what.length();)
+	{
+		std::tie(ch, size) = GetChar(what, i);
+		i += size;
+		ret++;
+	}
+	return ret;
+}
+
 void Table(std::vector<std::string> data, size_t stride)
 {
 	size_t width[64] = { 0 };
@@ -414,7 +427,7 @@ void Table(std::vector<std::string> data, size_t stride)
 		for (auto row = 0; row < rows; row++)
 		{
 			const auto& cel = data[row * stride + col];
-			auto here = cel.length();
+			auto here = Utf8CharLength(cel);
 			if (here > width[col])
 				width[col] = here;
 		}
@@ -447,7 +460,14 @@ void Table(std::vector<std::string> data, size_t stride)
 		for (auto col = 0; col < stride; col++)
 		{
 			const auto& cel = data[row * stride + col];
-			line += fmt::format(fmt::format(u8"│ {{:{}}} ", width[col]), cel);
+#if 0
+			line += fmt::format(u8"│ {:{}} ", cel, width[col]);
+#else
+			//More expensive, but handles Ismène.
+			auto celLen = Utf8CharLength(cel);
+			auto padding = width[col] - celLen;
+			line += fmt::format(u8"│ {}{:{}} ", cel, "", padding);
+#endif
 		}
 		line += u8"│";
 		conprint(7, line);
