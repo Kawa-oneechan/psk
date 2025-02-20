@@ -454,8 +454,8 @@ Town::Town()
 	AllowRedeco = true;
 	AllowTools = true;
 
-	SquareGrass = std::rand() / ((RAND_MAX + 1u) / 100) > 75;
-	weatherSeed = std::rand();
+	SquareGrass = rnd::getFloat() > 0.75;
+	weatherSeed = rnd::getInt();
 
 	Width = AcreSize * 1;
 	Height = AcreSize * 1;
@@ -699,7 +699,10 @@ void Town::StartNewDay()
 		}
 
 		//Now to pick a weather pattern for this day...
-		std::srand(weatherSeed + calNow);
+		//std::srand(weatherSeed + calNow);
+		std::random_device device;
+		std::mt19937 engine(device());
+		engine.seed(weatherSeed + calNow);
 
 		std::vector<int> rates;
 		int rateTotal = 0;
@@ -708,7 +711,8 @@ void Town::StartNewDay()
 			rateTotal += r->AsInteger();
 			rates.push_back(r->AsInteger());
 		}
-		auto roll = std::rand() % rateTotal;
+		std::uniform_int_distribution<> dist(0, rateTotal);
+		auto roll = dist(engine);
 		auto pick = 0;
 		for (int i = 0; i < rates.size(); i++)
 		{
@@ -751,7 +755,7 @@ void Town::UpdateWeather()
 		auto baseWind = std::abs(weatherWind[hour]) - 1;
 		auto landIsEast = ((weatherSeed >> 16) % 2) == 1;
 		auto windIsLand = weatherWind[hour] < 0;
-		auto windStrength = ((1 << baseWind) - 1) + (std::rand() % 3);
+		auto windStrength = ((1 << baseWind) - 1) + rnd::getInt(3);
 		if (windIsLand && landIsEast)
 			windStrength = -windStrength;
 		Wind = windStrength;

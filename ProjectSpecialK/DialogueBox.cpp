@@ -116,7 +116,7 @@ void DialogueBox::msbtWordstruct(MSBTParams)
 		return;
 	}
 	
-	int choice = std::rand() % options;
+	int choice = rnd::getInt(options);
 	toDisplay.replace(start, len, Text::Get(fmt::format("{}:{}", key, choice)));
 }
 
@@ -574,7 +574,7 @@ bool DialogueBox::Tick(float dt)
 			if (speaker)
 			{
 				if (std::isalnum(ch) || (ch >= 0x2E80 && ch < 0xF000))
-					speaker->SetMouth(rand() % 3);
+					speaker->SetMouth(rnd::getInt(3));
 				else if (!std::isblank(ch))
 					speaker->SetMouth(0);
 			}

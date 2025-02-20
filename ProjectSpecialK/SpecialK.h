@@ -8,6 +8,7 @@
 #include <functional>
 #include <stack>
 #include <algorithm>
+#include <random>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -186,6 +187,17 @@ namespace MeshBucket
 extern hash GetCRC(const std::string& text);
 //Returns the CRC32 hash for the given data.
 extern hash GetCRC(unsigned char *buffer, int len);
+
+namespace rnd
+{
+	extern int getInt(int min, int max);
+	extern int getInt(int max);
+	extern int getInt();
+	extern float getFloat(float min, float max);
+	extern float getFloat(float max);
+	extern float getFloat();
+	extern bool flip();
+}
 
 namespace UI
 {

@@ -1,5 +1,4 @@
 ﻿#include <filesystem>
-#include <chrono>
 #include "SpecialK.h"
 
 #include <glad/glad.h>
@@ -86,6 +85,49 @@ std::shared_ptr<Camera> MainCamera;
 std::shared_ptr<Messager> messager;
 std::shared_ptr<MusicManager> musicManager;
 std::shared_ptr<Town> town;
+
+namespace rnd
+{
+	std::random_device device;
+	std::mt19937 engine(device());
+
+	int getInt(int min, int max)
+	{
+		std::uniform_int_distribution<> dist(min, max);
+		return dist(engine);
+	}
+
+	int getInt(int max)
+	{
+		return getInt(0, max);
+	}
+
+	int getInt()
+	{
+		return getInt(0, device.max());
+	}
+
+	float getFloat(float min, float max)
+	{
+		std::uniform_real_distribution<> dist(min, max);
+		return (float)dist(engine);
+	}
+
+	float getFloat(float max)
+	{
+		return getFloat(0.0f, max);
+	}
+
+	float getFloat()
+	{
+		return getFloat(0.0f, 1.0f);
+	}
+
+	bool flip()
+	{
+		return getFloat() > 0.5f;
+	}
+}
 
 __declspec(noreturn)
 void FatalError(const std::string& message)
@@ -522,7 +564,7 @@ Shader* playerLegsShader;
 int main(int argc, char** argv)
 {
 	setlocale(LC_ALL, "en_US.UTF-8");
-	std::srand((unsigned int)std::time(nullptr));
+	//std::srand((unsigned int)std::time(nullptr));
 
 	for (int i = 1; i < argc; i++)
 	{
@@ -777,7 +819,7 @@ int main(int argc, char** argv)
 				"Look. If you had ONE shot...",
 				"---Tom Nook calling---",
 			};
-			messager->Add(lols[rand() % 7]);
+			messager->Add(lols[rnd::getInt(7)]);
 		}
 		*/
 
