@@ -10,19 +10,23 @@ Hungarian:	Letrune
 Dutch:	Kawa
 
 #Ideas
-Andrea le Phrog	beargirlstink
-bobvarioa	0xb00b5
-bossbutch	delusionbait
-demifiendcruithne	eggseventy
-Foone	gryffintheparrotcat
-jelloapocalypse	justmeemawthings
-katzeregi	krusebruce
-Lancette2201	Letrune
+0xb00b5	Andrea le Phrog
+auyawolf	beargirlstink
+bobvarioa	bossbutch
+byzantineamber	Damonj17
+delusionbait	demifiendcruithne
+eggseventy	Foone
+gryffintheparrotcat	jelloapocalypse
+justmeemawthings	katzeregi
+krusebruce	Lancette2201
+Letrune	lizardywizard
 lustrous-orb	mezzofurrte
-mikailborg	pontaoski
+mikailborg	natee22
+Nidoskull	pontaoski
 probablynothing	ray10k
 razzdrgn	shiftergirlslappy
-shrike-dyke	spades-gameing
+shrike-dyke	Siapran
+spades-gameing	steellotus54
 sweetcremereblogs	unusedcactus
 yirrgzmb
 howimportantisausernameanyway
