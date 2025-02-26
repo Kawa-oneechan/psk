@@ -198,18 +198,27 @@ static void DoVillager()
 	{
 		ImGui::BeginChild("left pane", ImVec2(150, 0), ImGuiChildFlags_Borders | ImGuiChildFlags_ResizeX);
 		{
-			if (ImGui::BeginListBox("##villagers", ImVec2(0, -ImGui::GetFrameHeightWithSpacing())))
+			if (ImGui::BeginListBox("##villagers", ImGui::GetContentRegionAvail()))
 			{
 				auto amount = villagers.size();
+				std::string lastSpecies = "<<special>>";
 				for (int i = 0; i < amount; i++)
 				{
-					if (villagers[i]->IsSpecial())
-						continue;
+					//if (villagers[i]->IsSpecial())
+					//	continue;
+
+					if (villagers[i]->RefSpecies != lastSpecies)
+					{
+						lastSpecies = villagers[i]->RefSpecies;
+						auto newSpecies = fmt::format("{} --", StripMSBT(villagers[i]->Species()));
+						const bool lol = false;
+						ImGui::Selectable(newSpecies.c_str(), lol, ImGuiSelectableFlags_Disabled);
+					}
 
 					const bool selected = (villagers[i] == debugVillager);
 					const bool here = std::find(townVillagers.begin(), townVillagers.end(), villagers[i]) != std::end(townVillagers);
 
-					ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 1.0f, here ? 0.0f : 1.0f, villagers[i]->IsManifest() ? 1.0f : 0.5f));
+					ImGui::PushStyleColor(ImGuiCol_Text, here ? ImVec4(1.0f, 1.0f, 0.0f, 1.0f) : villagers[i]->IsManifest() ? ImVec4(0.0f, 1.0f, 1.0f, 1.0f) : ImVec4(1.0f, 1.0f, 1.0f, 1.0f));
 					if (ImGui::Selectable(villagers[i]->Name().c_str(), selected))
 					{
 						debugVillager = villagers[i];

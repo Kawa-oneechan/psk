@@ -269,14 +269,24 @@ namespace Database
 	{
 		debprint(0, "VillagerDatabase: loading...");
 		loadWorker<Villager>(progress, villagers, "villagers/*.json", "VillagerDatabase");
-		auto table = std::vector<std::string>{ "ID", "Name","Hash" };
+
+		//Sort villagers by species
+		std::sort(villagers.begin(), villagers.end(), [](VillagerP a, VillagerP b)
+		{
+			if (a->RefSpecies == b->RefSpecies)
+				return (a->Name().compare(b->Name()) < 0);
+			return (a->RefSpecies.compare(b->RefSpecies) < 0);
+		});
+
+		auto table = std::vector<std::string>{ "ID", "Name","Hash", "Flags" };
 		for (const auto& villager : villagers)
 		{
 			table.push_back(villager->ID);
 			table.push_back(villager->EnName);
 			table.emplace_back(fmt::format("{:08X}", villager->Hash));
+			table.emplace_back(fmt::format("{}", villager->IsSpecial() ? "Sp" : "")); //can add more markers
 		}
-		Table(table, 3);
+		Table(table, 4);
 		debprint(0, "VillagerDatabase: ended up with {} entries.", villagers.size());
 	}
 
