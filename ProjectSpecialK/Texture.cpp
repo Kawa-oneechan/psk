@@ -339,6 +339,9 @@ TextureArray::~TextureArray()
 	auto c = cacheArray.find(file);
 	if (c != cacheArray.end())
 	{
+		//BUGBUG
+		if (file == "white.png" || file == "fallback.png" || file == "fallback_nrm.png")
+			return;
 		TextureArray* t = c->second;
 		t->refCount--;
 		if (t->refCount > 0)

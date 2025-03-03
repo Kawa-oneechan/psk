@@ -12,7 +12,53 @@ uniform bool flipX[200], flipY[200];
 
 layout(binding=1) uniform sampler2D colorTexture;
 
-vec4 lookup(in vec4 textureColor, in sampler2D lookupTable) {
+vec3 filmic(in vec3 x)
+{
+	vec3 X = max(vec3(0.0), x - 0.004);
+	vec3 result = (X * (6.2 * X + 0.5)) / (X * (6.2 * X + 1.7) + 0.06);
+	return pow(result, vec3(2.2));
+}
+
+vec3 PBRNeutralToneMapping(vec3 color)
+{
+	const float startCompression = 0.8 - 0.04;
+	const float desaturation = 0.15;
+
+	float x = min(color.r, min(color.g, color.b));
+	float offset = x < 0.08 ? x - 6.25 * x * x : 0.04;
+	color -= offset;
+
+	float peak = max(color.r, max(color.g, color.b));
+	if (peak < startCompression) return color;
+
+	const float d = 1. - startCompression;
+	float newPeak = 1. - d * d / (peak + d - startCompression);
+	color *= newPeak / peak;
+
+	float g = 1. - 1. / (desaturation * (peak - newPeak) + 1.);
+	return mix(color, newPeak * vec3(1, 1, 1), g);
+}
+
+vec3 lottes(vec3 x)
+{
+	x *= vec3(0.9); //I reduced the light a little
+	const vec3 a = vec3(1.6);
+	const vec3 d = vec3(0.977);
+	const vec3 hdrMax = vec3(8.0);
+	const vec3 midIn = vec3(0.18);
+	const vec3 midOut = vec3(0.267);
+
+	const vec3 b =
+		(-pow(midIn, a) + pow(hdrMax, a) * midOut) /
+		((pow(hdrMax, a * d) - pow(midIn, a * d)) * midOut);
+	const vec3 c =
+		(pow(hdrMax, a * d) * pow(midIn, a) - pow(hdrMax, a) * pow(midIn, a * d) * midOut) /
+		((pow(hdrMax, a * d) - pow(midIn, a * d)) * midOut);
+
+	return pow(x, a) / (pow(x, a * d) * b + c);
+}
+
+vec3 lookup(in vec3 textureColor, in sampler2D lookupTable) {
 	mediump float blueColor = textureColor.b * 63.0;
 
 	mediump vec2 quad1;
@@ -35,16 +81,18 @@ vec4 lookup(in vec4 textureColor, in sampler2D lookupTable) {
 
 	texPos2.y = 1.0-texPos2.y;
 
-	lowp vec4 newColor1 = texture2D(lookupTable, texPos1);
-	lowp vec4 newColor2 = texture2D(lookupTable, texPos2);
+	lowp vec3 newColor1 = texture2D(lookupTable, texPos1).rgb;
+	lowp vec3 newColor2 = texture2D(lookupTable, texPos2).rgb;
 
-	lowp vec4 newColor = mix(newColor1, newColor2, fract(blueColor));
+	lowp vec3 newColor = mix(newColor1, newColor2, fract(blueColor));
 	return newColor;
 }
 
 vec4 lookup(vec2 coords)
 {
-	return lookup(texture(image, coords), colorTexture);
+	vec3 x = texture(image, coords).rgb;
+	x = PBRNeutralToneMapping(x);
+	return vec4(lookup(x, colorTexture), 1.0);
 }
 
 void main()

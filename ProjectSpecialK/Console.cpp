@@ -109,6 +109,12 @@ void Console::Print(const std::string& str)
 	Print(0, str);
 }
 
+void Console::Flush()
+{
+	if (hardcopy.good())
+		hardcopy.flush();
+}
+
 bool Console::Execute(const std::string& str)
 {
 	Print(8, fmt::format("]{}", str));
