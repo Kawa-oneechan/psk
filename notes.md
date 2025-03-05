@@ -19,48 +19,42 @@ For now though...
 
 ### Villager body
 
-| Source   | Sampler | Use                                          | Layers |
-| -------- | ------- | -------------------------------------------- | ------ |
-| 0 - 2    | 0 - 2   | Body (albedo, mix, normal)                   |        |
-| 6 - 8    | 4 - 6   | Eyes                                         | 16     |
-| 9 - 11   | 8 - 10  | Mouth                                        | 9¹     |
-| 12 - 15² | 0 - 3   | Accessories 1 (albedo, mix, normal, opacity) |        |
-| 16 - 19  | 4 - 7   | Accessories 2³                               |        |
+| Source   | Use                                          | Layers |
+| -------- | -------------------------------------------- | ------ |
+| 0 - 2    | Body (albedo, mix, normal)                   |        |
+| 6 - 8    | Eyes                                         | 16     |
+| 9 - 11   | Mouth                                        | 9¹     |
+| 12 - 14² | Accessories 1 (albedo, mix, normal, opacity) |        |
+| 16 - 19  | Accessories 2³                               |        |
 
-¹: if the model has a muzzle/beak, there are no mouth textures.
+¹: if the model has a muzzle/beak, there is only a single beak texture.
 ²: uses body textures if `accessoryMapType` is `body`.
 ³: only if `accessoryMapType` is `glassalpha`.
 
 ### Player body
 
-| Source  | Sampler | Use                        | Options | Layers |
-| ------- | ------- | -------------------------- | ------- | ------ |
-| 0 - 2   | 0 - 2   | Body (albedo, mix, normal) |         |        |
-| 3 - 5   | 4 - 6   | Nose                       | 3¹      |        |
-| 6 - 8   | 8 - 10  | Cheeks                     |         | 3²     |
-| 9 - 11  | 12 - 14 | Eyes                       | 26      | 16     |
-| 12 - 14 | 12 - 14 | Eyes (stung)               | 26      | 16     |
-| 15 - 17 | 16 - 18 | Mouth                      | 4       | 9      |
-| 18 - 20 | 0 - 3³  | Hair                       | A bunch | 0      |
+| Source  | Use                        | Options | Layers |
+| ------- | -------------------------- | ------- | ------ |
+| 0 - 2   | Eyes                       | 26      | 16     |
+| 3 - 5   | Mouth                      | 4       | 9      |
+| 6       | Cheeks                     |         | 3      |
 
-**TODO**: Socks, which are rendered as part of the player.
+Body and nose are handled by a `.mat` file.
 
-¹: not a matter of textures, the noses are different meshes.
-²: player's choice.
-³: hair is a different model.
+**TODO**: Socks, which are rendered as part of the player, and hair which requires functional armatures.
 
 ### Clothing
 
-| Source  | Sampler | Use                                               |
-| ------- | ------- | ------------------------------------------------- |
-| 0 - 3   | 0 - 3   | Tops *or* onepiece (albedo, mix, normal, opacity) |
-| 4 - 7   | 0 - 3   | Bottoms                                           |
-| 8 - 11  | 0 - 3   | Shoes                                             |
-| 12 - 15 | 0 - 3   | Hat                                               |
-| 16 - 19 | 0 - 3   | Glasses                                           |
-| 20 - 23 | 0 - 3   | Glasses alpha?                                    |
-| 24 - 27 | 0 - 3   | Accessories                                       |
-| 28 - 31 | 0 - 3   | Bag                                               |
+| Source  | Use                                               |
+| ------- | ------------------------------------------------- |
+| 0 - 3   | Tops *or* onepiece (albedo, mix, normal, opacity) |
+| 4 - 7   | Bottoms                                           |
+| 8 - 11  | Shoes                                             |
+| 12 - 15 | Hat                                               |
+| 16 - 19 | Glasses                                           |
+| 20 - 23 | Glasses alpha?                                    |
+| 24 - 27 | Accessories                                       |
+| 28 - 31 | Bag                                               |
 
 **TODO**: Look into the "glasses alpha" part. Is that actually needed?
 
@@ -115,5 +109,22 @@ House stuff, exterior:
 * Door
 * Owner
 * Player?
+
+Map stuff, specifically towns:
+* Weather seed
+** Current weather
+** Rain and wind forecast
+** Current wind speed
+* Flags
+* Grass texture, color map, snow allowance
+** Should also include a footstep sound
+* Name
+* Hemisphere
+
+Things to add to a town:
+* List of houses
+* List of special buildings
+* Message board contents
+* Town song
 
 

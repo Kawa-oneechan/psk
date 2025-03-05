@@ -341,17 +341,17 @@ Model::Mesh::Mesh(ufbx_mesh* mesh, std::vector<Bone>& bones) : Visible(true), La
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-#pragma warning(push)
-#pragma warning(disable: 4838 4244)
 static glm::mat4 ufbxToGlmMat4(const ufbx_matrix& mat)
 {
-	float ret[] = {
-		mat.m00, mat.m01, mat.m02, mat.m03,
-		mat.m10, mat.m11, mat.m12, mat.m13,
-		mat.m20, mat.m21, mat.m22, mat.m23,
-		0.0f,    0.0f,    0.0f,    1.0f
-	};
-	return glm::make_mat4(ret);
+	glm::mat4 ret;
+	for (int column = 0; column < 4; column++)
+	{
+		ret[column].x = (float)mat.cols[column].x;
+		ret[column].y = (float)mat.cols[column].y;
+		ret[column].z = (float)mat.cols[column].z;
+		ret[column].w = column < 3 ? 0.0f : 1.0f;
+	}
+	return ret;
 }
 
 static glm::vec3 ufbxToGlmVec(const ufbx_vec3& vec)
@@ -363,7 +363,6 @@ static glm::quat ufbxToGlmQuat(const ufbx_quat& qua)
 {
 	return glm::make_quat(&qua.x);
 }
-#pragma warning(pop)
 
 Model::Model(const std::string& modelPath) : file(modelPath)
 {
@@ -454,17 +453,8 @@ Model::Model(const std::string& modelPath) : file(modelPath)
 			debprint(0, "* {}. {}", boneCt, boneName);
 			auto b = Bone();
 			b.Name = boneName;
-			b.Offset = glm::mat4(1);
-			b.NodeToWorld = ufbxToGlmMat4(ufbx_matrix_invert(&bone->node_to_world));
-			/*
-			{
-				auto tr = glm::translate(glm::mat4(1), ufbxToGlmVec(bone->local_transform.translation));
-				auto ro = (glm::mat4)ufbxToGlmQuat(bone->local_transform.rotation);
-				auto sc = glm::scale(glm::mat4(1), ufbxToGlmVec(bone->local_transform.scale));
-
-				b.Offset = tr * ro * sc;
-			}
-			*/
+			b.LocalTransform = glm::mat4(1);
+			b.InverseBind = ufbxToGlmMat4(cluster->geometry_to_bone);
 			Bones.push_back(b);
 			clusterMap[boneCt] = i;
 			boneCt++;
@@ -551,7 +541,7 @@ Model::Model(const std::string& modelPath) : file(modelPath)
 		}
 
 		for (int i = 0; i < Bones.size() && i < MaxBones; i++)
-			finalBoneMatrices[i] = glm::identity<glm::mat4>(); //Bones[i].Offset; //glm::mat4(1.0f);
+			finalBoneMatrices[i] = glm::mat4(1.0f); //Bones[i].Offset; //glm::mat4(1.0f);
 	}
 
 	debprint(5, "Meshes:");
@@ -738,20 +728,45 @@ int Model::FindBone(const std::string& name)
 
 void Model::CalculateBoneTransform(int id, const glm::mat4& parentTransform)
 {
+	finalBoneMatrices[id] = parentTransform * finalBoneMatrices[id];
+	for (auto i : Bones[id].Children)
+		CalculateBoneTransform(i, finalBoneMatrices[id]);
+
+	/*
 	auto globalTransformation = parentTransform * Bones[id].LocalTransform;
 
 	finalBoneMatrices[id] = globalTransformation * Bones[id].Offset;
 	for (auto i : Bones[id].Children)
 		CalculateBoneTransform(i, globalTransformation);
+	*/
 }
 
-void Model::MoveBone(int id, const glm::vec3& rotation, const glm::vec3& transform, const glm::vec3& scale)
+void Model::CalculateBoneTransforms()
+{
+	for (int i = 0; i < Bones.size(); i++)
+		finalBoneMatrices[i] = Bones[i].LocalTransform;
+
+	auto root = FindBone("Skl_Root");
+	if (root == -1)
+		root = FindBone("Mdl_Root");
+	if (root == -1)
+		root = FindBone("Root");
+	if (root == -1)
+		return; //give up for now
+	CalculateBoneTransform(root, finalBoneMatrices[root]);
+
+	//Bring back into model space
+	for (int i = 0; i < Bones.size(); i++)
+		finalBoneMatrices[i] = finalBoneMatrices[i] * Bones[i].InverseBind;
+}
+
+void Model::MoveBone(int id, const glm::vec3& rotation, const glm::vec3& translate, const glm::vec3& scale)
 {
 	if (id == NoBone)
 		return;
 
-	auto t = glm::translate(glm::mat4(1), transform);
-	auto r = (glm::mat4)glm::quat(rotation);
-	auto s = glm::scale(glm::mat4(1), scale);
-	Bones[id].LocalTransform = t * r * s;
+	Bones[id].LocalTransform =
+		glm::translate(glm::mat4(1.0f), translate) *
+		glm::mat4(glm::quat(rotation)) *
+		glm::scale(glm::mat4(1.0f), scale);
 }

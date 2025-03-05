@@ -44,8 +44,7 @@ class Model
 	struct Bone
 	{
 		std::string Name;
-		glm::mat4 Offset;
-		glm::mat4 NodeToWorld;
+		glm::mat4 InverseBind;
 		glm::mat4 LocalTransform{ glm::mat4(1) };
 		std::vector<int> Children;
 	};
@@ -77,6 +76,8 @@ private:
 	TextureArray fallback{ TextureArray("fallback.png") };
 	TextureArray fallbackNormal{ TextureArray("fallback_nrm.png") };
 	TextureArray white{ TextureArray("white.png") };
+
+	void CalculateBoneTransform(int id, const glm::mat4& parentTransform = glm::mat4(1.0f));
 
 public:
 	std::vector<Mesh> Meshes;
@@ -113,8 +114,8 @@ public:
 
 	//Returns the index of a bone for this model by name.
 	int FindBone(const std::string& name);
-	void CalculateBoneTransform(int id, const glm::mat4& parentTransform = glm::mat4(1.0f));
-	void MoveBone(int id, const glm::vec3& rotation, const glm::vec3& transform = glm::vec3(0), const glm::vec3& scale = glm::vec3(1));
+	void CalculateBoneTransforms();
+	void MoveBone(int id, const glm::vec3& rotation, const glm::vec3& translate = glm::vec3(0), const glm::vec3& scale = glm::vec3(1));
 };
 
 using ModelP = std::shared_ptr<Model>;
