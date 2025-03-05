@@ -1,7 +1,6 @@
 {
 	"mGrass": {
 		"shader": "grass",
-		//Albedo, mix, and normal maps are handled by the game.
-		"opacity": "grasscolors.png" //piggyback into opacity.
+		//All texture maps are handled dynamically by the game.
 	}
 }

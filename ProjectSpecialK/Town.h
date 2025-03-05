@@ -128,6 +128,11 @@ private:
 	int weatherWind[24] = { 0 };
 	std::map<std::string, int> flags;
 
+	std::string grassTexture;
+	std::string grassColorMap;
+	bool grassCanSnow;
+
+
 public:
 	std::string Name{ "Fuck-All Nowhere" };
 
@@ -145,8 +150,6 @@ public:
 	
 	std::vector<VillagerP> Villagers;
 	int Wind{ 0 };
-	
-	bool SquareGrass{ false };
 
 	Town();
 

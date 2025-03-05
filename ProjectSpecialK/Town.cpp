@@ -40,8 +40,6 @@ TextureArray* groundTextureAlbs{ nullptr };
 TextureArray* groundTextureNrms{ nullptr };
 TextureArray* groundTextureMixs{ nullptr };
 TextureArray* grassColors{ nullptr };
-TextureArray* snowMix{ nullptr };
-TextureArray* squareMix{ nullptr };
 
 static void UpdateGrass()
 {
@@ -49,11 +47,6 @@ static void UpdateGrass()
 		return;
 
 	lastGrassColor = commonUniforms.GrassColor;
-	auto newMix = groundTextureMixs;
-	if (town->SquareGrass)
-		newMix = squareMix;
-	if (commonUniforms.GrassColor <= 0.052f || commonUniforms.GrassColor >= 0.865f)
-		newMix = snowMix;
 
 	for (auto& model : tileModels)
 	{
@@ -66,7 +59,8 @@ static void UpdateGrass()
 			{
 				mesh.Textures[0] = groundTextureAlbs;
 				mesh.Textures[1] = groundTextureNrms;
-				mesh.Textures[2] = newMix;
+				mesh.Textures[2] = groundTextureMixs;
+				mesh.Textures[3] = grassColors;
 			}
 		}
 	}
@@ -329,26 +323,6 @@ void Map::drawWorker(float dt)
 
 void Map::Draw(float dt)
 {
-	if (groundTextureAlbs == nullptr)
-	{
-		std::vector<std::string> groundAlbs, groundNrms, groundMixs;
-		for (auto& d : VFS::Enumerate("field/ground/design*_alb.png"))
-			groundAlbs.push_back(d.path);
-		for (auto& d : VFS::Enumerate("field/ground/design*_nrm.png"))
-			groundNrms.push_back(d.path);
-		for (auto& d : VFS::Enumerate("field/ground/design*_mix.png"))
-			groundMixs.push_back(d.path);
-		//also add user designs somehow.
-		groundTextureAlbs = new TextureArray(groundAlbs);
-		groundTextureNrms = new TextureArray(groundNrms);
-		groundTextureMixs = new TextureArray(groundMixs);
-		grassColors = new TextureArray("field/ground/grasscolors.png", GL_CLAMP_TO_EDGE, GL_NEAREST);
-		groundMixs[0] = "field/ground/snow_mix.png";
-		snowMix = new TextureArray(groundMixs);
-		groundMixs[0] = "field/ground/squares_mix.png";
-		squareMix = new TextureArray(groundMixs);
-	}
-
 	postFxBuffer->Use();
 	drawWorker(dt * timeScale);
 	postFxBuffer->Drop();
@@ -454,7 +428,11 @@ Town::Town()
 	AllowRedeco = true;
 	AllowTools = true;
 
-	SquareGrass = rnd::getFloat() > 0.75;
+	grassColorMap = "grasscolors.png";
+	grassTexture = "design0_mix.png";
+	if (rnd::getFloat() > 0.75f)
+		grassTexture = "squares_mix.png";
+	grassCanSnow = true;
 	weatherSeed = rnd::getInt();
 
 	Width = AcreSize * 1;
@@ -575,7 +553,9 @@ void Town::Load()
 		Name = jsonObj["name"]->AsString();
 		weatherSeed = jsonObj["weather"]->AsInteger();
 		Hemisphere = jsonObj["north"]->AsBool() ? Hemisphere::North : Hemisphere::South;
-		SquareGrass = jsonObj["squareGrass"]->AsBool();
+		grassCanSnow = jsonObj["grassCanSnow"]->AsBool();
+		grassColorMap = jsonObj["grassColors"]->AsString();
+		grassTexture = jsonObj["grassTexture"]->AsString();
 
 		Width = jsonObj["width"]->AsInteger();
 		Height = jsonObj["height"]->AsInteger();
@@ -635,7 +615,10 @@ void Town::Save()
 	json["weather"] = new JSONValue((int)weatherSeed);
 	json["name"] = new JSONValue(Name);
 	json["north"] = new JSONValue(Hemisphere == Hemisphere::North);
-	json["squareGrass"] = new JSONValue(SquareGrass);
+
+	json["grassTexture"] = new JSONValue(grassTexture);
+	json["grassCanSnow"] = new JSONValue(grassCanSnow);
+	json["grassColors"] = new JSONValue(grassColorMap);
 
 	JSONArray villagersArray;
 	for (const auto& i : Villagers)
@@ -737,6 +720,10 @@ void Town::StartNewDay()
 
 		delete doc;
 	}
+
+	//Reset textures so snow can appear/disappear
+	delete[] groundTextureAlbs;
+	groundTextureAlbs = nullptr;
 }
 
 void Town::UpdateWeather()
@@ -787,6 +774,28 @@ bool Town::GetFlag(const std::string& id, bool def)
 
 void Town::Draw(float dt)
 {
+	if (groundTextureAlbs == nullptr)
+	{
+		std::vector<std::string> groundAlbs, groundNrms, groundMixs;
+		for (auto& d : VFS::Enumerate("field/ground/design*_alb.png"))
+			groundAlbs.push_back(d.path);
+		for (auto& d : VFS::Enumerate("field/ground/design*_nrm.png"))
+			groundNrms.push_back(d.path);
+		for (auto& d : VFS::Enumerate("field/ground/design*_mix.png"))
+			groundMixs.push_back(d.path);
+		//also add user designs somehow.
+
+		if (grassCanSnow && commonUniforms.GrassColor <= 0.052f || commonUniforms.GrassColor >= 0.865f)
+			groundMixs[0] = "field/ground/snow_mix.png";
+		else
+			groundMixs[0] = fmt::format("field/ground/{}", grassTexture);
+
+		groundTextureAlbs = new TextureArray(groundAlbs);
+		groundTextureNrms = new TextureArray(groundNrms);
+		groundTextureMixs = new TextureArray(groundMixs);
+		grassColors = new TextureArray(fmt::format("field/ground/{}", grassColorMap), GL_CLAMP_TO_EDGE, GL_NEAREST);
+	}
+
 	Map::Draw(dt);
 
 	if ((int)Clouds >= (int)Town::Weather::RainClouds)
