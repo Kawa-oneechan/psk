@@ -731,14 +731,6 @@ void Model::CalculateBoneTransform(int id, const glm::mat4& parentTransform)
 	finalBoneMatrices[id] = parentTransform * finalBoneMatrices[id];
 	for (auto i : Bones[id].Children)
 		CalculateBoneTransform(i, finalBoneMatrices[id]);
-
-	/*
-	auto globalTransformation = parentTransform * Bones[id].LocalTransform;
-
-	finalBoneMatrices[id] = globalTransformation * Bones[id].Offset;
-	for (auto i : Bones[id].Children)
-		CalculateBoneTransform(i, globalTransformation);
-	*/
 }
 
 void Model::CalculateBoneTransforms()
@@ -746,6 +738,7 @@ void Model::CalculateBoneTransforms()
 	for (int i = 0; i < Bones.size(); i++)
 		finalBoneMatrices[i] = Bones[i].LocalTransform;
 
+	//Way I load my armature, the root can be *any* ID. Find it.
 	auto root = FindBone("Skl_Root");
 	if (root == -1)
 		root = FindBone("Mdl_Root");
@@ -753,7 +746,8 @@ void Model::CalculateBoneTransforms()
 		root = FindBone("Root");
 	if (root == -1)
 		return; //give up for now
-	CalculateBoneTransform(root, finalBoneMatrices[root]);
+
+	CalculateBoneTransform(root, glm::mat4(1.0f));
 
 	//Bring back into model space
 	for (int i = 0; i < Bones.size(); i++)
