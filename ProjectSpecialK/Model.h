@@ -47,6 +47,7 @@ class Model
 		glm::mat4 InverseBind;
 		glm::mat4 LocalTransform{ glm::mat4(1) };
 		std::vector<int> Children;
+		int Parent;
 	};
 
 public:
@@ -77,7 +78,7 @@ private:
 	TextureArray fallbackNormal{ TextureArray("fallback_nrm.png") };
 	TextureArray white{ TextureArray("white.png") };
 
-	void CalculateBoneTransform(int id, const glm::mat4& parentTransform = glm::mat4(1.0f));
+	void CalculateBoneTransform(int id);
 
 public:
 	std::vector<Mesh> Meshes;

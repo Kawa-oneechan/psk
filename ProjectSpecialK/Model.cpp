@@ -382,6 +382,7 @@ Model::Model(const std::string& modelPath) : file(modelPath)
 	auto vfsData = VFS::ReadData(modelPath, &vfsSize);
 
 	ufbx_load_opts options = {};
+	options.target_unit_meters = 1.0f;
 	ufbx_error errors;
 	ufbx_scene *scene = ufbx_load_memory(vfsData.get(), vfsSize, &options, &errors);
 	if (!scene)
@@ -426,122 +427,59 @@ Model::Model(const std::string& modelPath) : file(modelPath)
 		debprint(0, "* {}", m->name.data);
 	}
 
-	//TODO: I have a theory that bones would best be PROPERLY loaded recursively,
-	//starting from the root, instead of linearly and determining parent-child
-	//relations later on.
-	if (scene->skin_clusters.count > 0)
+	if (scene->bones.count > 0)
 	{
 		debprint(5, "Bones:");
-		unsigned int boneCt = 0;
-		std::array<int, MaxBones> clusterMap;
-		for (auto i = 0; i < scene->skin_clusters.count; i++)
+
+		std::unordered_map<std::string, int> nameToBoneIndex;
+		//TODO: Using skin clusters to find the bone names doesn't include all of them.
+		size_t numberOfBones = scene->skin_clusters.count;
+
+		Bones.resize(numberOfBones);
+
+		for (unsigned int boneIndex = 0; boneIndex < numberOfBones; boneIndex++)
 		{
-			auto cluster = scene->skin_clusters.data[i];
-			auto bone = cluster->bone_node;
-			auto boneName = bone->name.data;
-			auto exists = false;
-			for (auto& b : Bones)
-			{
-				if (b.Name == boneName)
-				{
-					exists = true;
-					break;
-				}
-			}
-			if (exists)
-				continue;
-			debprint(0, "* {}. {}", boneCt, boneName);
-			auto b = Bone();
-			b.Name = boneName;
-			b.LocalTransform = glm::mat4(1);
-			b.InverseBind = ufbxToGlmMat4(cluster->geometry_to_bone);
-			Bones.push_back(b);
-			clusterMap[boneCt] = i;
-			boneCt++;
+			auto& bone = *scene->skin_clusters.data[boneIndex];
+			std::string boneName = bone.name.data;
+			nameToBoneIndex[boneName] = boneIndex;
 		}
 
-		auto boundBoneCt = boneCt;
-
-		for (auto i = 0; i < scene->bones.count && i < MaxBones; i++)
+		std::function<void(ufbx_node*, int)> traverseNodeHierarchy = [&](ufbx_node* node, int parent)
 		{
-			auto bone = scene->bones.data[i];
-			auto boneName = bone->name.data;
-			auto exists = false;
-			for (auto& b : Bones)
+			size_t numberOfChildren = node->children.count;
+			int boneIndex = parent;
+			std::string nodeName = node->name.data;
+			bool isBone = nameToBoneIndex.find(nodeName) != nameToBoneIndex.end();
+
+			if (isBone)
 			{
-				if (b.Name == boneName)
-				{
-					exists = true;
-					break;
-				}
+				boneIndex = nameToBoneIndex[nodeName];
+				auto b = Bone();
+				b.Name = nodeName;
+				auto& bone = *scene->skin_clusters.data[boneIndex];
+				b.InverseBind = ufbxToGlmMat4(bone.geometry_to_bone);
+				b.Parent = parent;
+				Bones[boneIndex] = b;
+				debprint(0, "* {}. {}", boneIndex, nodeName);
 			}
-			if (exists)
-				continue;
-			debprint(0, "* {}. {} (extra)", boneCt, boneName);
-			auto b = Bone();
-			b.Name = boneName;
-			Bones.push_back(b);
-			boneCt++;
-		}
-
-		//lap two: parent/child relations
-		for (auto i = 0u; i < boundBoneCt; i++)
-		{
-			auto cluster = scene->skin_clusters.data[clusterMap[i]];
-			auto bone = cluster->bone_node;
-			auto boneName = bone->name.data;
-			if (bone->parent != nullptr)
+			for (int childIndex = 0; childIndex < numberOfChildren; childIndex++)
 			{
-				auto parentBone = bone->parent->name.data;
-				for (auto& pb : Bones)
+				if (isBone)
 				{
-					if (pb.Name == parentBone)
+					std::string childNodeName = node->children.data[childIndex]->name.data;
+					bool childIsBone = nameToBoneIndex.find(childNodeName) != nameToBoneIndex.end();
+					if (childIsBone)
 					{
-						pb.Children.push_back(i);
-						break;
+						Bones[boneIndex].Children.push_back(nameToBoneIndex[childNodeName]);
 					}
 				}
+				traverseNodeHierarchy(node->children.data[childIndex], boneIndex);
 			}
-
-			Bone* thisBone = nullptr;
-			auto thisBoneIdx = 0;
-			for (auto& b : Bones)
-			{
-				if (b.Name == boneName)
-				{
-					thisBone = &b;
-					break;
-				}
-				thisBoneIdx++;
-			}
-			if (!thisBone)
-				continue;
-			for (auto j = 0; j < bone->children.count; j++)
-			{
-				auto childBone = bone->children.data[j];
-				auto childIndex = 0;
-				for (auto& b : Bones)
-				{
-					if (b.Name == childBone->name.data)
-						break;
-					childIndex++;
-				}
-				auto bur = false;
-				for (auto kek : thisBone->Children)
-				{
-					if (kek == childIndex)
-					{
-						bur = true;
-						break;
-					}
-				}
-				if (!bur)
-					thisBone->Children.push_back(childIndex);
-			}
-		}
+		};
+		traverseNodeHierarchy(scene->root_node, -1);
 
 		for (int i = 0; i < Bones.size() && i < MaxBones; i++)
-			finalBoneMatrices[i] = glm::mat4(1.0f); //Bones[i].Offset; //glm::mat4(1.0f);
+			finalBoneMatrices[i] = glm::mat4(1.0f);
 	}
 
 	debprint(5, "Meshes:");
@@ -726,11 +664,14 @@ int Model::FindBone(const std::string& name)
 	return NoBone;
 }
 
-void Model::CalculateBoneTransform(int id, const glm::mat4& parentTransform)
+void Model::CalculateBoneTransform(int id)
 {
-	finalBoneMatrices[id] = parentTransform * finalBoneMatrices[id];
+	auto& bone = Bones[id];
+	if (bone.Parent != -1)
+		finalBoneMatrices[id] = finalBoneMatrices[bone.Parent] * finalBoneMatrices[id];
+
 	for (auto i : Bones[id].Children)
-		CalculateBoneTransform(i, finalBoneMatrices[id]);
+		CalculateBoneTransform(i);
 }
 
 void Model::CalculateBoneTransforms()
@@ -739,15 +680,15 @@ void Model::CalculateBoneTransforms()
 		finalBoneMatrices[i] = Bones[i].LocalTransform;
 
 	//Way I load my armature, the root can be *any* ID. Find it.
-	auto root = FindBone("Skl_Root");
+	auto root = FindBone("Root");
 	if (root == -1)
 		root = FindBone("Mdl_Root");
 	if (root == -1)
-		root = FindBone("Root");
+		root = FindBone("Skl_Root");
 	if (root == -1)
 		return; //give up for now
 
-	CalculateBoneTransform(root, glm::mat4(1.0f));
+	CalculateBoneTransform(root);
 
 	//Bring back into model space
 	for (int i = 0; i < Bones.size(); i++)
