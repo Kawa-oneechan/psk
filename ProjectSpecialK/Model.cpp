@@ -382,7 +382,6 @@ Model::Model(const std::string& modelPath) : file(modelPath)
 	auto vfsData = VFS::ReadData(modelPath, &vfsSize);
 
 	ufbx_load_opts options = {};
-	options.target_unit_meters = 1.0f;
 	ufbx_error errors;
 	ufbx_scene *scene = ufbx_load_memory(vfsData.get(), vfsSize, &options, &errors);
 	if (!scene)
@@ -432,14 +431,13 @@ Model::Model(const std::string& modelPath) : file(modelPath)
 		debprint(5, "Bones:");
 
 		std::unordered_map<std::string, int> nameToBoneIndex;
-		//TODO: Using skin clusters to find the bone names doesn't include all of them.
-		size_t numberOfBones = scene->skin_clusters.count;
+		size_t numberOfBones = scene->bones.count;
 
 		Bones.resize(numberOfBones);
 
 		for (unsigned int boneIndex = 0; boneIndex < numberOfBones; boneIndex++)
 		{
-			auto& bone = *scene->skin_clusters.data[boneIndex];
+			auto& bone = *scene->bones.data[boneIndex];
 			std::string boneName = bone.name.data;
 			nameToBoneIndex[boneName] = boneIndex;
 		}
@@ -461,6 +459,15 @@ Model::Model(const std::string& modelPath) : file(modelPath)
 				b.Parent = parent;
 				Bones[boneIndex] = b;
 				debprint(0, "* {}. {}", boneIndex, nodeName);
+
+				debprint(1, "* * Inverse Bind:");
+				for (int i = 0; i < 4; i++)
+					debprint(1, "* * --> [{}, {}, {}, {}]", b.InverseBind[i].x, b.InverseBind[i].y, b.InverseBind[i].z, b.InverseBind[i].w);
+
+				auto n2w = ufbxToGlmMat4(node->node_to_world);
+				debprint(1, "* * Node to World:");
+				for (int i = 0; i < 4; i++)
+					debprint(1, "* * --> [{}, {}, {}, {}]", n2w[i].x, n2w[i].y, n2w[i].z, n2w[i].w);
 			}
 			for (int childIndex = 0; childIndex < numberOfChildren; childIndex++)
 			{
@@ -667,7 +674,7 @@ int Model::FindBone(const std::string& name)
 void Model::CalculateBoneTransform(int id)
 {
 	auto& bone = Bones[id];
-	if (bone.Parent != -1)
+	if (bone.Parent != NoBone)
 		finalBoneMatrices[id] = finalBoneMatrices[bone.Parent] * finalBoneMatrices[id];
 
 	for (auto i : Bones[id].Children)
@@ -681,11 +688,11 @@ void Model::CalculateBoneTransforms()
 
 	//Way I load my armature, the root can be *any* ID. Find it.
 	auto root = FindBone("Root");
-	if (root == -1)
+	if (root == NoBone)
 		root = FindBone("Mdl_Root");
-	if (root == -1)
+	if (root == NoBone)
 		root = FindBone("Skl_Root");
-	if (root == -1)
+	if (root == NoBone)
 		return; //give up for now
 
 	CalculateBoneTransform(root);
