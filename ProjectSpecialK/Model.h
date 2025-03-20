@@ -44,10 +44,11 @@ class Model
 	struct Bone
 	{
 		std::string Name;
-		glm::mat4 InverseBind;
+		glm::mat4 InverseBind{ glm::mat4(1) };
 		glm::mat4 LocalTransform{ glm::mat4(1) };
+		glm::mat4 GlobalTransform{ glm::mat4(1) };
 		std::vector<int> Children;
-		int Parent;
+		int Parent{ NoBone };
 	};
 
 public:

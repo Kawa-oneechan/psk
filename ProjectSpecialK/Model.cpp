@@ -1,4 +1,4 @@
-#include "SpecialK.h"
+﻿#include "SpecialK.h"
 #include "Model.h"
 #include <ufbx.h>
 
@@ -454,20 +454,31 @@ Model::Model(const std::string& modelPath) : file(modelPath)
 				boneIndex = nameToBoneIndex[nodeName];
 				auto b = Bone();
 				b.Name = nodeName;
-				auto& bone = *scene->skin_clusters.data[boneIndex];
-				b.InverseBind = ufbxToGlmMat4(bone.geometry_to_bone);
 				b.Parent = parent;
-				Bones[boneIndex] = b;
+
+				//auto& bone = *scene->skin_clusters.data[boneIndex];
+				
+				//Instead of _assuming_ the skin clusters are in the same order,
+				//find the right skin cluster by name.
+				for (int i = 0; i < scene->skin_clusters.count; i++)
+				{
+					std::string clusterName = scene->skin_clusters.data[i]->name.data;
+					if (clusterName == b.Name)
+					{
+						auto& bone = scene->skin_clusters.data[i];
+						b.InverseBind = ufbxToGlmMat4(bone->geometry_to_bone);
+						break;
+					}
+				}
+				//If not found, the Bone constructor will default to an Identity
+
+				//b.InverseBind = ufbxToGlmMat4(bone->geometry_to_bone);
 				debprint(0, "* {}. {}", boneIndex, nodeName);
 
-				debprint(1, "* * Inverse Bind:");
 				for (int i = 0; i < 4; i++)
-					debprint(1, "* * --> [{}, {}, {}, {}]", b.InverseBind[i].x, b.InverseBind[i].y, b.InverseBind[i].z, b.InverseBind[i].w);
+					debprint(1, u8"* │ {: .3f}, {: .3f}, {: .3f}, {: .3f} │", b.InverseBind[0][i], b.InverseBind[1][i], b.InverseBind[2][i], b.InverseBind[3][i]);
 
-				auto n2w = ufbxToGlmMat4(node->node_to_world);
-				debprint(1, "* * Node to World:");
-				for (int i = 0; i < 4; i++)
-					debprint(1, "* * --> [{}, {}, {}, {}]", n2w[i].x, n2w[i].y, n2w[i].z, n2w[i].w);
+				Bones[boneIndex] = b;
 			}
 			for (int childIndex = 0; childIndex < numberOfChildren; childIndex++)
 			{
@@ -675,7 +686,9 @@ void Model::CalculateBoneTransform(int id)
 {
 	auto& bone = Bones[id];
 	if (bone.Parent != NoBone)
-		finalBoneMatrices[id] = finalBoneMatrices[bone.Parent] * finalBoneMatrices[id];
+		bone.GlobalTransform = Bones[bone.Parent].GlobalTransform * bone.LocalTransform;
+	else
+		bone.GlobalTransform = bone.LocalTransform;
 
 	for (auto i : Bones[id].Children)
 		CalculateBoneTransform(i);
@@ -683,8 +696,8 @@ void Model::CalculateBoneTransform(int id)
 
 void Model::CalculateBoneTransforms()
 {
-	for (int i = 0; i < Bones.size(); i++)
-		finalBoneMatrices[i] = Bones[i].LocalTransform;
+	//for (int i = 0; i < Bones.size(); i++)
+	//	finalBoneMatrices[i] = Bones[i].LocalTransform;
 
 	//Way I load my armature, the root can be *any* ID. Find it.
 	auto root = FindBone("Root");
@@ -699,7 +712,7 @@ void Model::CalculateBoneTransforms()
 
 	//Bring back into model space
 	for (int i = 0; i < Bones.size(); i++)
-		finalBoneMatrices[i] = finalBoneMatrices[i] * Bones[i].InverseBind;
+		finalBoneMatrices[i] = Bones[i].GlobalTransform * Bones[i].InverseBind;
 }
 
 void Model::MoveBone(int id, const glm::vec3& rotation, const glm::vec3& translate, const glm::vec3& scale)
