@@ -346,9 +346,9 @@ static glm::mat4 ufbxToGlmMat4(const ufbx_matrix& mat)
 	glm::mat4 ret;
 	for (int column = 0; column < 4; column++)
 	{
-		ret[column].x = (float)mat.cols[column].x;
-		ret[column].y = (float)mat.cols[column].y;
-		ret[column].z = (float)mat.cols[column].z;
+		ret[column].x = (float)mat.cols[column].z;
+		ret[column].y = (float)mat.cols[column].x;
+		ret[column].z = (float)mat.cols[column].y;
 		ret[column].w = column < 3 ? 0.0f : 1.0f;
 	}
 	return ret;
