@@ -13,6 +13,7 @@
 #ifdef DEBUG
 #include <ImGUI/imgui.h>
 #endif
+#include <ufbx.h>
 
 extern float timeScale;
 extern bool debugPanelLayoutPolygons;

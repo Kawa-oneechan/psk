@@ -3,7 +3,7 @@
 #include <glad/glad.h>
 #include <stb_image.h>
 #include <format.h>
-#include <ufbx.h>
+//#include <ufbx.h>
 #include "VFS.h"
 
 //Because void-casting an integer for legacy reasons is silly.
@@ -23,6 +23,8 @@ inline void kawa_glVertexAttribIPointer(GLuint index, GLint size, GLenum type, G
 
 //Max amount of bones in a mesh
 static constexpr int MaxBones = 100;
+
+struct ufbx_mesh;
 
 class Model
 {
@@ -69,7 +71,6 @@ public:
 		int Layer;
 
 		Mesh(ufbx_mesh* mesh, std::vector<Bone>& bones);
-		const void Draw();
 		const size_t Indices() { return indices.size(); }
 	};
 
