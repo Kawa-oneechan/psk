@@ -722,7 +722,7 @@ void Model::MoveBone(int id, const glm::vec3& rotation, const glm::vec3& transla
 	if (id == NoBone)
 		return;
 
-	Bones[id].LocalTransform =
+	Bones[id].AnimTransform =
 		glm::translate(glm::mat4(1.0f), translate) *
 		glm::mat4(glm::quat(rotation)) *
 		glm::scale(glm::mat4(1.0f), scale);
