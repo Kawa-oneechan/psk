@@ -65,14 +65,12 @@ void Framebuffer::Drop()
 
 void Framebuffer::Draw(const glm::vec2& pos)
 {
-	GetShader()->Use();
 	lut->Use(1);
 	Sprite::DrawSprite(shader, *texture, pos, glm::vec2(texture->width, texture->height));
 }
 
 void Framebuffer::Draw(const glm::vec2& pos, const glm::vec2& size)
 {
-	GetShader()->Use();
 	lut->Use(1);
 	Sprite::DrawSprite(shader, *texture, pos, size);
 }

@@ -10,7 +10,6 @@ void Background::Draw(float dt)
 {
 	time += dt;
 
-	scroller.Use();
 	scroller.Set("time", time);
 	scroller.Set("speed", Speed);
 	scroller.Set("recolorB", RecolorBlack);

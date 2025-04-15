@@ -39,7 +39,6 @@ bool Iris::Tick(float dt)
 void Iris::Draw(float dt)
 {
 	dt;
-	shader->Use();
 	shader->Set("smoothness", 0.02f);
 	shader->Set("progress", 1.0f - time);
 	Sprite::DrawSprite(shader, *whiteRect, glm::vec2(0), glm::vec2(width, height));

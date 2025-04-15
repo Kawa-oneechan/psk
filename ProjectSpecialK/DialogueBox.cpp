@@ -197,8 +197,6 @@ void DialogueBox::msbtPass(MSBTParams)
 
 DialogueBox::DialogueBox()
 {
-	wobble.Use();
-
 	auto extensions = VFS::ReadJSON("msbt/content.json");
 	if (extensions)
 	{
@@ -477,7 +475,6 @@ void DialogueBox::Draw(float dt)
 	auto dlgLeft = (width * 0.5) - dlgWidth;
 	auto dlgTop = height - dlgHeight - metrics["dialogueGap"]->AsNumber();
 
-	wobble.Use();
 	gradient[0].Use(1);
 	gradient[1].Use(2);
 	wobble.Set("time", time);

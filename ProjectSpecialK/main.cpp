@@ -682,7 +682,6 @@ int main(int argc, char** argv)
 	//Load the player *here* so we don't get inventory test results mixed in.
 	thePlayer.Load();
 
-	skyShader->Use();
 	auto cloudImage = Texture("altostratus.png");
 	auto starsImage = Texture("starfield.png");
 
@@ -783,7 +782,6 @@ int main(int argc, char** argv)
 
 		auto pitch = MainCamera->Angles().y;
 		if (pitch > 180) pitch -= 360;
-		skyShader->Use();
 		skyShader->Set("pitch", pitch);
 		cloudImage.Use(1);
 		starsImage.Use(2);
