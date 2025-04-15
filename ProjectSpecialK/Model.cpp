@@ -346,9 +346,9 @@ static glm::mat4 ufbxToGlmMat4(const ufbx_matrix& mat)
 	glm::mat4 ret;
 	for (int column = 0; column < 4; column++)
 	{
-		ret[column].x = (float)mat.cols[column].z;
-		ret[column].y = (float)mat.cols[column].x;
-		ret[column].z = (float)mat.cols[column].y;
+		ret[column].x = (float)mat.cols[column].x;
+		ret[column].y = (float)mat.cols[column].y;
+		ret[column].z = (float)mat.cols[column].z;
 		ret[column].w = column < 3 ? 0.0f : 1.0f;
 	}
 	return ret;
@@ -471,6 +471,8 @@ Model::Model(const std::string& modelPath) : file(modelPath)
 					}
 				}
 				//If not found, the Bone constructor will default to an Identity
+
+				b.LocalTransform = ufbxToGlmMat4(node->node_to_parent);
 
 				//b.InverseBind = ufbxToGlmMat4(bone->geometry_to_bone);
 				debprint(0, "* {}. {}", boneIndex, nodeName);
@@ -686,9 +688,9 @@ void Model::CalculateBoneTransform(int id)
 {
 	auto& bone = Bones[id];
 	if (bone.Parent != NoBone)
-		bone.GlobalTransform = Bones[bone.Parent].GlobalTransform * bone.LocalTransform;
+		bone.GlobalTransform = Bones[bone.Parent].GlobalTransform * bone.LocalTransform * bone.AnimTransform;
 	else
-		bone.GlobalTransform = bone.LocalTransform;
+		bone.GlobalTransform = bone.LocalTransform * bone.AnimTransform;
 
 	for (auto i : Bones[id].Children)
 		CalculateBoneTransform(i);

@@ -48,6 +48,7 @@ class Model
 		std::string Name;
 		glm::mat4 InverseBind{ glm::mat4(1) };
 		glm::mat4 LocalTransform{ glm::mat4(1) };
+		glm::mat4 AnimTransform{ glm::mat4(1) };
 		glm::mat4 GlobalTransform{ glm::mat4(1) };
 		std::vector<int> Children;
 		int Parent{ NoBone };
