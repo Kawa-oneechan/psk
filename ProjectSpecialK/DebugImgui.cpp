@@ -188,6 +188,9 @@ static void DoLights()
 	ImGui::End();
 }
 
+static std::vector<Model::Bone>* debugArmature = nullptr;
+static int selectedJoint = 0;
+
 static void DoVillager()
 {
 	//TODO: use *current* map.
@@ -261,6 +264,11 @@ static void DoVillager()
 					townVillagers.erase(there);
 			}
 
+			if (here && ImGui::Button("Armature"))
+			{
+				debugArmature = &debugVillager->Model()->Bones;
+			}
+
 			ImGui::Text(debugVillager->ID.c_str());
 
 			if (!debugVillager->IsManifest())
@@ -299,6 +307,81 @@ static void DoPlayer()
 	ImGui::End();
 }
 
+static void traverseArmature(int origin)
+{
+	int flags = ImGuiTreeNodeFlags_OpenOnDoubleClick;
+	if (debugArmature->at(origin).Children.size() == 0)
+		flags |= ImGuiTreeNodeFlags_Leaf;
+	if (selectedJoint == origin)
+		flags |= ImGuiTreeNodeFlags_Selected;
+
+	if (ImGui::TreeNodeEx(debugArmature->at(origin).Name.c_str(), flags))
+	{
+		if (ImGui::IsItemClicked())
+		{
+			selectedJoint = origin;
+		}
+		for (auto i : debugArmature->at(origin).Children)
+		{
+			traverseArmature(i);
+		}
+		ImGui::TreePop();
+	}
+}
+
+static void DoArmature()
+{
+	if (ImGui::Begin("Armature"))
+	{
+		if (ImGui::Button("Select Player's"))
+		{
+			debugArmature = &thePlayer.Model()->Bones;
+		}
+
+		if (debugArmature == nullptr)
+		{
+			ImGui::Text("No armature selected.");
+		}
+		else
+		{
+			ImGui::BeginChild("left pane", ImVec2(200, 0), ImGuiChildFlags_Borders | ImGuiChildFlags_ResizeX);
+			{
+				int root = 0;
+				for (auto i = 0; i < debugArmature->size(); i++)
+				{
+					if (debugArmature->at(i).Name == "Root")
+					{
+						root = i;
+						break;
+					}
+				}
+				ImGui::PushStyleVar(ImGuiStyleVar_IndentSpacing, 4);
+				traverseArmature(root);
+				ImGui::PopStyleVar();
+			}
+			ImGui::EndChild();
+
+			ImGui::SameLine();
+
+			ImGui::BeginChild("item view", ImVec2(0, -ImGui::GetFrameHeightWithSpacing()));
+			{
+				ImGui::Text(debugArmature->at(selectedJoint).Name.c_str());
+				ImGui::Separator();
+
+				ImGui::SeparatorText("Rotation");
+				auto& tar = debugArmature->at(selectedJoint).Rotation;
+				ImGui::DragFloat("X", &tar.x, 0.05, -1, 1);
+				ImGui::DragFloat("Y", &tar.y, 0.05, -1, 1);
+				ImGui::DragFloat("Z", &tar.z, 0.05, -1, 1);
+				if (ImGui::Button("Reset"))
+					tar.x = tar.y = tar.z = 0;
+			}
+			ImGui::EndChild();
+		}
+	}
+	ImGui::End();
+}
+
 void DoImGui()
 {
 	if (!debuggerEnabled)
@@ -318,6 +401,7 @@ void DoImGui()
 	DoLights();
 	DoVillager();
 	DoPlayer();
+	DoArmature();
 
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

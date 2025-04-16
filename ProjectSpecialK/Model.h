@@ -43,18 +43,31 @@ class Model
 		float Weights[Model::MaxWeights];
 	};
 
+public:
 	struct Bone
 	{
 		std::string Name;
 		glm::mat4 InverseBind{ glm::mat4(1) };
 		glm::mat4 LocalTransform{ glm::mat4(1) };
-		glm::mat4 AnimTransform{ glm::mat4(1) };
+		//glm::mat4 AnimTransform{ glm::mat4(1) };
 		glm::mat4 GlobalTransform{ glm::mat4(1) };
 		std::vector<int> Children;
 		int Parent{ NoBone };
+
+		glm::vec3 Translation{ glm::vec3(0) };
+		glm::vec3 Rotation{ glm::vec3(0) };
+		glm::vec3 Scale{ glm::vec3(1) };
+
+		glm::mat4 GetAnimTransform()
+		{
+			return
+				glm::translate(glm::mat4(1.0f), Translation) *
+				glm::mat4(glm::quat(Rotation)) *
+				glm::scale(glm::mat4(1.0f), Scale);
+
+		}
 	};
 
-public:
 	class Mesh
 	{
 	private:
@@ -119,7 +132,7 @@ public:
 	//Returns the index of a bone for this model by name.
 	int FindBone(const std::string& name);
 	void CalculateBoneTransforms();
-	void MoveBone(int id, const glm::vec3& rotation, const glm::vec3& translate = glm::vec3(0), const glm::vec3& scale = glm::vec3(1));
+	//void MoveBone(int id, const glm::vec3& rotation, const glm::vec3& translate = glm::vec3(0), const glm::vec3& scale = glm::vec3(1));
 };
 
 using ModelP = std::shared_ptr<Model>;

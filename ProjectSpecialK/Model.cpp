@@ -688,9 +688,9 @@ void Model::CalculateBoneTransform(int id)
 {
 	auto& bone = Bones[id];
 	if (bone.Parent != NoBone)
-		bone.GlobalTransform = Bones[bone.Parent].GlobalTransform * bone.LocalTransform * bone.AnimTransform;
+		bone.GlobalTransform = Bones[bone.Parent].GlobalTransform * bone.LocalTransform * bone.GetAnimTransform();
 	else
-		bone.GlobalTransform = bone.LocalTransform * bone.AnimTransform;
+		bone.GlobalTransform = bone.LocalTransform * bone.GetAnimTransform();
 
 	for (auto i : Bones[id].Children)
 		CalculateBoneTransform(i);
@@ -717,6 +717,7 @@ void Model::CalculateBoneTransforms()
 		finalBoneMatrices[i] = Bones[i].GlobalTransform * Bones[i].InverseBind;
 }
 
+/*
 void Model::MoveBone(int id, const glm::vec3& rotation, const glm::vec3& translate, const glm::vec3& scale)
 {
 	if (id == NoBone)
@@ -727,3 +728,4 @@ void Model::MoveBone(int id, const glm::vec3& rotation, const glm::vec3& transla
 		glm::mat4(glm::quat(rotation)) *
 		glm::scale(glm::mat4(1.0f), scale);
 }
+*/
