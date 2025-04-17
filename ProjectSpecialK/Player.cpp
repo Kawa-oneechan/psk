@@ -250,10 +250,6 @@ void Player::Draw(float)
 
 	if (_hairModel)
 	{
-		//TODO: figure out how to ATTACH shit!
-		auto headMat = _model->finalBoneMatrices[_model->FindBone("Head")];
-		auto headBone = _hairModel->Bones[_hairModel->FindBone("Root")];
-		headBone.LocalTransform = headMat;
 		auto plhBoneID = _model->FindBone("Head");
 		auto& plhBone = _model->Bones[plhBoneID];
 		auto plhFinalMat = _model->finalBoneMatrices[plhBoneID];
