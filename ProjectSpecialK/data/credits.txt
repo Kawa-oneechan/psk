@@ -65,30 +65,37 @@ Kenney (CC0)
 #Music
 JerryTerry
 
+#Shaders
+Based on works by
+RJVB09	gre
+jesstat	Matt DesLauriers
+
 #Special thanks
 Andrea le Phrog	Captain Jistuce
-Cuyler	Foone
-Hunter R.	katepango
-mikailborg	Omnitechnomancer
-Screwtape	Vaartis
-Vikxin	wareya
+Cuyler	FloatyMonkey
+Foone	Hunter R.
+katepango	mikailborg
+Omnitechnomancer	Screwtape
+Vaartis	Vikxin
+wareya
 
 #Tooling
 Heaven Tool by rafacasari
 Switch Toolbox by KillzXGaming et al
 
 #Third-party libraries
-Color LUT shader by Matt DesLauriers
-Dear ImGUI by Omar Cornut
-FMOD Ex by Firelight Technologies
-FMT by Victor Zverovich
-GLAD by David Herberth
-GLFW by Marcus Geelnard, Camilla Löwy, et al
-GLM by G-Truc Creation
-Lua by PUC-Rio
-MiniZ by Rich Geldreich
-STB tools by Sean Barrett
-Scale2X by Thomas Bernard
-SimpleJSON by Mike Anchor
-Sol by Rapptz, ThePhD, et al
-UFBX by Samuli Raivio
+Dear ImGUI	Omar Cornut
+FMOD Ex	Firelight Technologies
+FMT	Victor Zverovich
+GLAD	David Herberth
+GLFW	Marcus Geelnard
+	Camilla Löwy, et al
+GLM	G-Truc Creation
+Lua	PUC-Rio
+MiniZ	Rich Geldreich
+STB tools	Sean Barrett
+Scale2X	Thomas Bernard
+SimpleJSON	Mike Anchor
+Sol	Rapptz
+	ThePhD, et al
+UFBX	Samuli Raivio

@@ -1,0 +1,206 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"type": "object",
+	"properties": {
+		"id": {
+			"description": "The internal identification code for this item. Must be unique.",
+			"type": "string"
+		},
+		"name": {
+ 			"anyOf": [
+				{
+					"type": "string"
+				},
+				{
+					"type": "array",
+					"contains": {
+						"type": "string"
+					},
+					"minContains": 2,
+					"maxContains": 2
+				},
+				{
+					"type": "object",
+					"minContains": 2,
+					"maxContains": 2
+				}
+			]
+		},
+		"species": {
+			"type": "string"
+		},
+		"personality": {
+			"type": "array",
+			"items": {
+				"type": "string",
+					"minContains": 1
+			}
+		},
+		"personalitySubtype": {
+			"type": "number",
+				"default": 1
+		},
+		"gender": {
+			"type": "string",
+				"pattern": "boy|girl|enby-b|enby-g"
+		},
+		"attraction": {
+			"type": "string",
+				"pattern": "boys|girls|both|none"
+		},
+		"birthday": {
+			"oneOf": [
+				{
+					"type": "string",
+					"pattern": "[A-Z][a-z][a-z] [0-9][0-9]"
+				},
+				{
+					"type": "string",
+					"pattern": "[0-9][0-9]-[0-9][0-9]"
+				},
+			{
+			"type": "array",
+			"minItems": 2,
+				"maxItems": 2,
+			"items": {
+				"type": "number"
+			}
+			}
+				]
+		},
+		"hobby": {
+			"type": "string"
+		},
+		"colors": {
+			"type": "array",
+			"minItems": 2,
+			"maxItems": 2,
+			"items": {
+				"type": "string"
+			}
+		},
+		"nameTag": {
+			"type": "array",
+			"minItems": 2,
+			"maxItems": 2,
+			"items": {
+							"oneOf": [
+				{
+					"type": "string",
+					"pattern": "#([A-F0-9]{6,6})"
+				},
+				{
+					"type": "array",
+					"minItems": 3,
+					"maxItems": 3,
+					"items": {
+						"type": "number"
+					}
+				},
+			{
+			"type": "array",
+			"minItems": 2,
+				"maxItems": 2,
+			"items": {
+				"type": "number"
+			}
+			}
+				]
+			}
+		},
+		"catchphrase": {
+			"anyOf": [
+				{
+					"type": "string"
+				},
+				{
+					"type": "array",
+					"contains": {
+						"type": "string"
+					},
+					"minContains": 2,
+					"maxContains": 2
+				},
+				{
+					"type": "object",
+					"minContains": 2,
+					"maxContains": 2
+				}
+			]
+		},
+		"clothing": {
+			"type": "object",
+			"properties": {
+				"default": {
+					"type": "string"
+				},
+				"rain": {
+					"type": "array",
+						"minItems": 2,
+							"maxItems": 2,
+					"items": {
+						"type": "string"
+					}
+				}
+			},
+			"required": [
+				"default",
+				"rain"
+			]
+		},
+		"umbrella": {
+			"type": "string"
+		},
+		"photo": {
+			"type": "string"
+		},
+		"poster": {
+			"type": "string"
+		},
+		"house": {
+			"type": "object",
+			"properties": {
+				"walls": {
+					"type": "string"
+				},
+				"floor": {
+					"type": "string"
+				},
+				"music": {
+					"type": "string"
+				},
+				"items": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					}
+				}
+			},
+			"required": [
+				"walls",
+				"floor",
+				"music",
+				"items"
+			]
+		}
+	},
+	"required": [
+		"id",
+		"name",
+		"species",
+		"personality",
+		"personalitySubtype",
+		"gender",
+		"attraction",
+		"birthday",
+		"hobby",
+		"colors",
+		"nameTag",
+		"catchphrase",
+		"clothing",
+		"umbrella",
+		"photo",
+		"poster",
+		"house"
+	]
+}

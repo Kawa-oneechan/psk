@@ -26,6 +26,16 @@
 		"name": {
 			"description": "The user-readable name of this item. May not actually be used in-game.",
 			"type": "object"
+		},
+		"compatibility": {
+			"description": "Compatibility matrix for relationship values, against other species listed by ID.",
+			"type": "object"
 		}
-	}
+	},
+	"required": [
+		"id",
+		"voice",
+		"base",
+		"name"
+	]
 }

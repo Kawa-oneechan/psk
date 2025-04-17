@@ -30,6 +30,24 @@
 					"maxContains": 2
 				}
 			]
+		},
+		"compatibility": {
+			"description": "Compatibility matrix for relationship values, against other species listed by ID.",
+			"type": "object"
+		},
+		"hasMuzzle": {
+			"description": "Declares if the model for this species has a muzzle. If true, vertex animation is used instead of mouth textures.",
+			"type": "boolean",
+			"default": false
+		},
+		"hasMouth": {
+			"description": "Declares if the model has a mouth at all.",
+			"type": "boolean",
+			"default": true
 		}
-	}
+	},
+	"required": [
+		"id",
+		"name"
+	]
 }
