@@ -136,8 +136,6 @@ extern Shader* playerCheekShader;
 extern Shader* playerLegsShader;
 extern Shader* playerHairShader;
 
-//static std::map<std::string, unsigned int> matMap;
-
 Model::Mesh::Mesh(ufbx_mesh* mesh, std::vector<Bone>& bones) : Visible(true), Layer(0)
 {
 	Name = mesh->name.data;
@@ -456,8 +454,6 @@ Model::Model(const std::string& modelPath) : file(modelPath)
 				auto b = Bone();
 				b.Name = nodeName;
 				b.Parent = parent;
-
-				//auto& bone = *scene->skin_clusters.data[boneIndex];
 				
 				//Instead of _assuming_ the skin clusters are in the same order,
 				//find the right skin cluster by name.
@@ -475,9 +471,7 @@ Model::Model(const std::string& modelPath) : file(modelPath)
 
 				b.LocalTransform = ufbxToGlmMat4(node->node_to_parent);
 
-				//b.InverseBind = ufbxToGlmMat4(bone->geometry_to_bone);
 				debprint(0, "* {}. {}", boneIndex, nodeName);
-
 				for (int i = 0; i < 4; i++)
 					debprint(1, u8"* │ {: .3f}, {: .3f}, {: .3f}, {: .3f} │", b.InverseBind[0][i], b.InverseBind[1][i], b.InverseBind[2][i], b.InverseBind[3][i]);
 
@@ -530,6 +524,17 @@ Model::Model(const std::string& modelPath) : file(modelPath)
 						{
 							auto s = mat["shader"]->AsString();
 							//TODO: use a JSON for this.
+							/*
+							{
+								"__default": "model.fs",
+								"grass": "grass.fs",
+								"playerbody": "playerbody.fs"
+								//etc...
+							}
+							Have a map of Shader objects, populated by this JSON file.
+							Console reload function can use this too. Perhaps other
+							stuff too.
+							*/
 							if (s == "grass")
 								m.Shader = grassShader;
 							else if (s == "playerbody")
@@ -575,20 +580,7 @@ Model::Model(const std::string& modelPath) : file(modelPath)
 
 void Model::Draw(const glm::vec3& pos, float yaw, int mesh)
 {
-	/*
-	if (Bones.size() > 0)
-	{
-		//TEST TEST TEST TEST
-		auto head = FindBone("Head");
-		if (head != NoBone)
-			MoveBone(head, glm::vec3(0, glm::radians(11.0f), 0));
-		CalculateBoneTransform(0);
-		//TEST TEST TEST TEST
-	}
-	*/
-
 	int j = 0;
-
 	for (auto& m : Meshes)
 	{
 		if (!m.Visible)
@@ -701,9 +693,6 @@ void Model::CalculateBoneTransform(int id)
 
 void Model::CalculateBoneTransforms()
 {
-	//for (int i = 0; i < Bones.size(); i++)
-	//	finalBoneMatrices[i] = Bones[i].LocalTransform;
-
 	//Way I load my armature, the root can be *any* ID. Find it.
 	auto root = FindBone("Root");
 	if (root == NoBone)
@@ -719,16 +708,3 @@ void Model::CalculateBoneTransforms()
 	for (int i = 0; i < Bones.size(); i++)
 		finalBoneMatrices[i] = Bones[i].GlobalTransform * Bones[i].InverseBind;
 }
-
-/*
-void Model::MoveBone(int id, const glm::vec3& rotation, const glm::vec3& translate, const glm::vec3& scale)
-{
-	if (id == NoBone)
-		return;
-
-	Bones[id].AnimTransform =
-		glm::translate(glm::mat4(1.0f), translate) *
-		glm::mat4(glm::quat(rotation)) *
-		glm::scale(glm::mat4(1.0f), scale);
-}
-*/

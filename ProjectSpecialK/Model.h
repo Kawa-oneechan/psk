@@ -3,7 +3,6 @@
 #include <glad/glad.h>
 #include <stb_image.h>
 #include <format.h>
-//#include <ufbx.h>
 #include "VFS.h"
 
 //Because void-casting an integer for legacy reasons is silly.
@@ -49,7 +48,6 @@ public:
 		std::string Name;
 		glm::mat4 InverseBind{ glm::mat4(1) };
 		glm::mat4 LocalTransform{ glm::mat4(1) };
-		//glm::mat4 AnimTransform{ glm::mat4(1) };
 		glm::mat4 GlobalTransform{ glm::mat4(1) };
 		std::vector<int> Children;
 		int Parent{ NoBone };
@@ -64,7 +62,6 @@ public:
 				glm::translate(glm::mat4(1.0f), Translation) *
 				glm::mat4(glm::quat(Rotation)) *
 				glm::scale(glm::mat4(1.0f), Scale);
-
 		}
 	};
 
@@ -76,7 +73,6 @@ public:
 		std::vector<unsigned int> indices;
 	public:
 		unsigned int VAO;
-		//int Texture;
 		TextureArray* Textures[4];
 		bool Visible;
 		hash Hash, MatHash;
@@ -98,7 +94,6 @@ private:
 
 public:
 	std::vector<Mesh> Meshes;
-	//std::array<TextureArray*, 32> Textures;
 	std::vector<Bone> Bones;
 	glm::mat4 finalBoneMatrices[MaxBones];
 
@@ -131,8 +126,8 @@ public:
 
 	//Returns the index of a bone for this model by name.
 	int FindBone(const std::string& name);
+	//Calcalutes the final bone matrices for the entire armature.
 	void CalculateBoneTransforms();
-	//void MoveBone(int id, const glm::vec3& rotation, const glm::vec3& translate = glm::vec3(0), const glm::vec3& scale = glm::vec3(1));
 };
 
 using ModelP = std::shared_ptr<Model>;
