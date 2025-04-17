@@ -254,8 +254,15 @@ void Player::Draw(float)
 		auto headMat = _model->finalBoneMatrices[_model->FindBone("Head")];
 		auto headBone = _hairModel->Bones[_hairModel->FindBone("Root")];
 		headBone.LocalTransform = headMat;
+		auto plhBoneID = _model->FindBone("Head");
+		auto& plhBone = _model->Bones[plhBoneID];
+		auto plhFinalMat = _model->finalBoneMatrices[plhBoneID];
+		auto harBoneID = _hairModel->FindBone("Root");
+		auto& harBone = _hairModel->Bones[harBoneID];
+		harBone.LocalTransform = plhFinalMat * glm::inverse(plhBone.InverseBind);
+		harBone.Rotation = glm::vec3(glm::radians(-90.0f), glm::radians(-90.0f), 0);
 		_hairModel->CalculateBoneTransforms();
-		//_hairModel->Draw(Position, Facing);
+		_hairModel->Draw(Position, Facing);
 	}
 
 	if (_shoesModel && Shoes)

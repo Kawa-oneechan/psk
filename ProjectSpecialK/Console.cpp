@@ -32,6 +32,7 @@ extern Shader* playerEyesShader;
 extern Shader* playerMouthShader;
 extern Shader* playerCheekShader;
 extern Shader* playerLegsShader;
+extern Shader* playerHairShader;
 extern Framebuffer* postFxBuffer;
 
 Console::Console()
@@ -233,6 +234,7 @@ bool Console::Execute(const std::string& str)
 				playerMouthShader->Reload();
 				playerCheekShader->Reload();
 				playerLegsShader->Reload();
+				playerHairShader->Reload();
 				postFxBuffer->ReloadShader();
 				{
 					auto lut = postFxBuffer->GetLut();

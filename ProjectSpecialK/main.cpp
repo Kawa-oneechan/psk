@@ -560,6 +560,7 @@ Shader* playerEyesShader;
 Shader* playerMouthShader;
 Shader* playerCheekShader;
 Shader* playerLegsShader;
+Shader* playerHairShader;
 
 int main(int argc, char** argv)
 {
@@ -618,6 +619,7 @@ int main(int argc, char** argv)
 	playerMouthShader = new Shader("shaders/model.vs", "shaders/playermouth.fs");
 	playerCheekShader = new Shader("shaders/model.vs", "shaders/playercheek.fs");
 	playerLegsShader = new Shader("shaders/model.vs", "shaders/playerlegs.fs");
+	playerHairShader = new Shader("shaders/model.vs", "shaders/playerhair.fs");
 
 	grassShader = new Shader("shaders/model.vs", "shaders/grass.fs");;
 	commonUniforms.GrassColor = 0.5f;

@@ -370,9 +370,8 @@ static void DoArmature()
 
 				ImGui::SeparatorText("Rotation");
 				auto& tar = debugArmature->at(selectedJoint).Rotation;
-				ImGui::DragFloat("X", &tar.x, 0.05, -1, 1);
-				ImGui::DragFloat("Y", &tar.y, 0.05, -1, 1);
-				ImGui::DragFloat("Z", &tar.z, 0.05, -1, 1);
+				ImGui::DragFloat("X", &tar.x, 0.05, -10, 10);
+				ImGui::DragFloat("Y", &tar.y, 0.05, -10, 10);
 				if (ImGui::Button("Reset"))
 					tar.x = tar.y = tar.z = 0;
 			}

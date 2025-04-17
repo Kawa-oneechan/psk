@@ -134,6 +134,7 @@ extern Shader* playerEyesShader;
 extern Shader* playerMouthShader;
 extern Shader* playerCheekShader;
 extern Shader* playerLegsShader;
+extern Shader* playerHairShader;
 
 //static std::map<std::string, unsigned int> matMap;
 
@@ -541,6 +542,8 @@ Model::Model(const std::string& modelPath) : file(modelPath)
 								m.Shader = playerCheekShader;
 							else if (s == "playerlegs")
 								m.Shader = playerLegsShader;
+							else if (s == "playerhair")
+								m.Shader = playerHairShader;
 						}
 						if (mat["albedo"])
 							m.Textures[0] = new TextureArray(basePath + mat["albedo"]->AsString());
