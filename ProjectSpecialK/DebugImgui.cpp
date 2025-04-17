@@ -309,19 +309,20 @@ static void DoPlayer()
 
 static void traverseArmature(int origin)
 {
+	Model::Bone& thisJoint = debugArmature->at(origin);
 	int flags = ImGuiTreeNodeFlags_OpenOnDoubleClick;
-	if (debugArmature->at(origin).Children.size() == 0)
+	if (thisJoint.Children.size() == 0)
 		flags |= ImGuiTreeNodeFlags_Leaf;
 	if (selectedJoint == origin)
 		flags |= ImGuiTreeNodeFlags_Selected;
 
-	if (ImGui::TreeNodeEx(debugArmature->at(origin).Name.c_str(), flags))
+	if (ImGui::TreeNodeEx(thisJoint.Name.c_str(), flags))
 	{
 		if (ImGui::IsItemClicked())
 		{
 			selectedJoint = origin;
 		}
-		for (auto i : debugArmature->at(origin).Children)
+		for (auto i : thisJoint.Children)
 		{
 			traverseArmature(i);
 		}
@@ -370,9 +371,9 @@ static void DoArmature()
 
 				ImGui::SeparatorText("Rotation");
 				auto& tar = debugArmature->at(selectedJoint).Rotation;
-				ImGui::DragFloat("X", &tar.x, 0.05, -10, 10);
-				ImGui::DragFloat("Y", &tar.y, 0.05, -10, 10);
-				ImGui::DragFloat("Z", &tar.z, 0.05, -10, 10);
+				ImGui::DragFloat("X", &tar.x, 0.05f, -10, 10);
+				ImGui::DragFloat("Y", &tar.y, 0.05f, -10, 10);
+				ImGui::DragFloat("Z", &tar.z, 0.05f, -10, 10);
 				if (ImGui::Button("Reset"))
 					tar.x = tar.y = tar.z = 0;
 			}
