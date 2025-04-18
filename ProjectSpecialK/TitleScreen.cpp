@@ -58,6 +58,11 @@ bool TitleScreen::Tick(float dt)
 {
 	RevAllTickables(tickables, dt);
 
+	tm gm;
+	auto now = time(nullptr);
+	localtime_s(&gm, &now);
+	commonUniforms.TimeOfDay = (gm.tm_hour / 24.0f) + ((gm.tm_min / 60.0f) / 24.0f);
+
 	if (state == State::Init)
 	{
 		musicManager->Play("title", true);

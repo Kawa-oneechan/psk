@@ -686,6 +686,7 @@ int main(int argc, char** argv)
 
 	auto cloudImage = Texture("altostratus.png");
 	auto starsImage = Texture("starfield.png");
+	auto skyImage = Texture("skycolors.png");
 
 	rainLayer = new Background("rain.png", glm::vec2(1.0, 2.0));
 
@@ -787,6 +788,7 @@ int main(int argc, char** argv)
 		skyShader->Set("pitch", pitch);
 		cloudImage.Use(1);
 		starsImage.Use(2);
+		skyImage.Use(3);
 
 		DrawAllTickables(tickables, dt * timeScale);
 

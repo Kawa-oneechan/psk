@@ -1,3 +1,5 @@
+//Edited from shadertoy Ntd3Ws
+
 in vec2 TexCoords;
 
 out vec4 fragColor;
@@ -6,13 +8,9 @@ out vec4 fragColor;
 
 layout(binding=1) uniform sampler2D cloudImage;
 layout(binding=2) uniform sampler2D starsImage;
+layout(binding=3) uniform sampler2D skyImage;
 
 uniform float pitch;
-
-vec3 stars(vec2 uv)
-{
-	return texture(starsImage, uv * 2.0).rgb;
-}
 
 float clouds(vec2 uv)
 {
@@ -29,38 +27,17 @@ float clouds(vec2 uv)
 void main()
 {
 	vec2 uv = gl_FragCoord.xy / ScreenRes.xy;
-	float time = 1.0; //abs(sin(TotalTime * 0.000025));
+	uv.y += pitch;
+	//uv.y *= scale;
 
-	float flipped = -uv.y + 1.0;
+	vec3 sky = texture(skyImage, vec2(TimeOfDay, uv.y - 0.01)).rgb;
+	fragColor = vec4(sky, 1.0);
 
-	#define SKY_TOP vec3(0.47, 0.56, 0.68)
-	#define SKY_MID vec3(0.63, 0.72, 0.80)
-	#define SKY_BOT vec3(0.92, 0.89, 0.78)
-	#define GND_TOP vec3(0.60, 0.63, 0.67)
-	#define GND_BOT vec3(0.00, 0.00, 0.00)
+	float blend = clamp(texture(skyImage, vec2(TimeOfDay, 0.0)).r * 3.0, 0.0, 1.0);
 
-	float horizon = 0.5;
-	if (pitch > 0.0)
-		horizon -= (0.5 * (pitch / 60.0));
-	else
-		horizon -= (0.5 * (pitch / 30.0));
+	fragColor = mix(texture(starsImage, uv), fragColor, blend);
+	fragColor = mix(fragColor, vec4(1), clouds(uv * 1.25) * (blend * 0.75));
 
-	vec3 c = vec3(0);
-	vec3 e = mix(SKY_MID, SKY_TOP, horizon);
-	e = mix(e, vec3(1.0), clouds(uv + vec2(0.0, horizon + 0.25)));
-	
-	//if (flipped < horizon)
-	//{
-		c = mix(e, SKY_TOP, flipped * (1.0 / horizon));
-		c = mix(stars(uv), c, time); //TODO: needs better easing
-	//}
-	//else
-	c = clamp(c, vec3(0), vec3(1));
-	if (flipped > horizon)
-		c = mix(c, GND_BOT, (flipped - horizon) * 10.0);
-	//if (flipped > horizon + 0.1)
-	//	c = GND_BOT;
-	
-
-	fragColor = vec4(c, 1.0);
+	if (uv.y < 0.02)
+		fragColor.rgb = vec3(blend);
 }
