@@ -26,7 +26,8 @@ layout (std140) uniform CommonData
 	vec4 PlayerHair; //528
 	vec4 PlayerHairHi; //544
 	float GrassColor; //560
-	int PostEffect; //564
+	float TimeOfDay; //564
+	int PostEffect; //568
 };
 
 //------------
