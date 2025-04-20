@@ -65,6 +65,9 @@ struct Acre
 class Map : public Tickable
 {
 private:
+	void drawCharacters(float dt);
+	void drawObjects(float dt);
+	void drawGround(float dt);
 	void drawWorker(float dt);
 
 public:

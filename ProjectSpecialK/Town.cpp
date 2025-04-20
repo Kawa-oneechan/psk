@@ -210,32 +210,17 @@ void Map::SaveToPNG()
 extern bool Project(const glm::vec3& in, glm::vec2& out);
 #endif
 
-void Map::drawWorker(float dt)
+void Map::drawCharacters(float dt)
 {
-	Sprite::DrawSprite(skyShader, *whiteRect, glm::vec2(0), glm::vec2(width, height));
-	Sprite::FlushBatch();
-
-	glClear(GL_DEPTH_BUFFER_BIT);
-	glEnable(GL_DEPTH_TEST);
-	glPolygonMode(GL_FRONT_AND_BACK, wireframe ? GL_LINE : GL_FILL);
-	//modelShader->Use();
-
-	UpdateGrass();
-
-#ifdef DEBUG
-	glm::vec2 debugDots[4];
-#endif
-
 	thePlayer.Draw(dt * timeScale);
 	MeshBucket::Flush();
 	for (const auto& v : town->Villagers)
 		v->Draw(dt * timeScale);
 	MeshBucket::Flush();
+}
 
-#ifdef DEBUG
-	Project(thePlayer.Position, debugDots[0]);
-#endif
-
+void Map::drawObjects(float dt)
+{
 	auto playerTile = glm::round(thePlayer.Position / 10.0f);
 
 	auto playerAcre = playerTile / (float)AcreSize;
@@ -275,6 +260,11 @@ void Map::drawWorker(float dt)
 		}
 	}
 	MeshBucket::Flush();
+}
+
+void Map::drawGround(float dt)
+{
+	auto playerTile = glm::round(thePlayer.Position / 10.0f);
 
 	constexpr auto half = (int)(AcreSize * 1.5f);
 	constexpr auto north = AcreSize * 3;
@@ -294,10 +284,6 @@ void Map::drawWorker(float dt)
 			auto extra = TerrainModels[(y * Width) + x];
 			auto model = tileModels[extra.Model];
 			auto pos = glm::vec3(x * 10, tile.Elevation * ElevationHeight, y * 10);
-#ifdef DEBUG
-			if (x == (int)playerTile.x && y == (int)playerTile.z)
-				Project(pos, debugDots[1]);
-#endif
 			auto rot = extra.Rotation * 90.0f;
 			if (extra.Model == 0 || extra.Model > 44)
 				model->SetLayerByMat("_mGrass", tile.Type); //ground, river, or waterfall.
@@ -307,18 +293,38 @@ void Map::drawWorker(float dt)
 		}
 	}
 	MeshBucket::Flush();
+}
+
+void Map::drawWorker(float dt)
+{
+	Sprite::DrawSprite(skyShader, *whiteRect, glm::vec2(0), glm::vec2(width, height));
+	Sprite::FlushBatch();
+
+	glClear(GL_DEPTH_BUFFER_BIT);
+	glEnable(GL_DEPTH_TEST);
+	glPolygonMode(GL_FRONT_AND_BACK, wireframe ? GL_LINE : GL_FILL);
+
+	UpdateGrass();
+
+	drawCharacters(dt);
+	drawObjects(dt);
+	drawGround(dt);
 
 	glDisable(GL_DEPTH_TEST);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-#ifdef DEBUG
-	for (int i = 0; i < 4; i++)
-	{
-		Sprite::DrawSprite(*whiteRect, debugDots[i] - 3.0f, glm::vec2(6), glm::vec4(0), 0.0f, glm::vec4(1, 1, 1, 1));
-		Sprite::DrawSprite(*whiteRect, debugDots[i] - 2.0f, glm::vec2(4), glm::vec4(0), 0.0f, glm::vec4(0, 0, 1, 1));
-	}
-	Sprite::FlushBatch();
-#endif
+	//For an interior map:
+	/*
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+	glEnable(GL_DEPTH_TEST);
+	glPolygonMode(GL_FRONT_AND_BACK, wireframe ? GL_LINE : GL_FILL);
+	drawCharacters(dt);
+	drawObjects(dt);
+	drawRoom(dt); OR drawInterior(dt); I dunno
+	glDisable(GL_DEPTH_TEST);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	*/
 }
 
 void Map::Draw(float dt)
@@ -331,6 +337,13 @@ void Map::Draw(float dt)
 
 bool Map::Tick(float dt)
 {
+	//TODO: perhaps put this in a more sensible place.
+	//TODO: allow non-walltime
+	tm gm;
+	auto now = time(nullptr);
+	localtime_s(&gm, &now);
+	commonUniforms.TimeOfDay = (gm.tm_hour / 24.0f) + ((gm.tm_min / 60.0f) / 24.0f);
+
 	return thePlayer.Tick(dt);
 }
 
