@@ -379,7 +379,11 @@ void Villager::Draw(float)
 
 bool Villager::Tick(float)
 {
-	//TODO
+	_model->CalculateBoneTransforms();
+
+	//TODO: reflect bone transforms to clothes.
+	//_model->CopyBoneTransforms(_topsModel);
+
 	return true;
 }
 

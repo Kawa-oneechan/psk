@@ -58,6 +58,7 @@ bool TitleScreen::Tick(float dt)
 {
 	RevAllTickables(tickables, dt);
 
+	//TODO: move this from here and DateTimePanel::Update to somewhere else in the tree.
 	tm gm;
 	auto now = time(nullptr);
 	localtime_s(&gm, &now);

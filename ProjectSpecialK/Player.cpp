@@ -240,24 +240,10 @@ void Player::Draw(float)
 	commonUniforms.PlayerCheeks = CheekColor;
 	commonUniforms.PlayerHair = HairColor;
 
-	//_model->MoveBone(_model->FindBone("Head"), glm::vec3(0, glm::radians(-45.0f), 0));
-	//_model->MoveBone(_model->FindBone("Spine_1"), glm::vec3(sinf((float)glfwGetTime()) * glm::radians(16.0f), 0, 0));
-	//_model->MoveBone(_model->FindBone("Head"), glm::vec3(glm::radians(-45.0f), 0, 0)); //look to the right (player's right)
-	//_model->MoveBone(_model->FindBone("Head"), glm::vec3(0, 0, glm::radians(-45.0f))); //look up
-	//_model->Bones[_model->FindBone("Head")].Rotation = glm::vec3(glm::radians(-45.0f), 0, 0); //look to the player's right
-	_model->CalculateBoneTransforms();
 	_model->Draw(Position, Facing);
 
 	if (_hairModel)
 	{
-		auto plhBoneID = _model->FindBone("Head");
-		auto& plhBone = _model->Bones[plhBoneID];
-		auto plhFinalMat = _model->finalBoneMatrices[plhBoneID];
-		auto harBoneID = _hairModel->FindBone("Root");
-		auto& harBone = _hairModel->Bones[harBoneID];
-		harBone.LocalTransform = plhFinalMat * glm::inverse(plhBone.InverseBind);
-		harBone.Rotation = glm::vec3(glm::radians(-90.0f), glm::radians(-90.0f), 0);
-		_hairModel->CalculateBoneTransforms();
 		_hairModel->Draw(Position, Facing);
 	}
 
@@ -331,6 +317,29 @@ bool Player::Tick(float dt)
 	if (anythingPressed)
 	{
 		Move(facing + MainCamera->Angles().z + (useOrthographic ? 0.45f : 0), dt);
+	}
+
+	//_model->MoveBone(_model->FindBone("Head"), glm::vec3(0, glm::radians(-45.0f), 0));
+	//_model->MoveBone(_model->FindBone("Spine_1"), glm::vec3(sinf((float)glfwGetTime()) * glm::radians(16.0f), 0, 0));
+	//_model->MoveBone(_model->FindBone("Head"), glm::vec3(glm::radians(-45.0f), 0, 0)); //look to the right (player's right)
+	//_model->MoveBone(_model->FindBone("Head"), glm::vec3(0, 0, glm::radians(-45.0f))); //look up
+	//_model->Bones[_model->FindBone("Head")].Rotation = glm::vec3(glm::radians(-45.0f), 0, 0); //look to the player's right
+	_model->CalculateBoneTransforms();
+
+	//TODO: reflect bone transforms to clothes.
+	//_model->CopyBoneTransforms(_topsModel);
+
+	//TODO: make this a generic function for later.
+	if (_hairModel)
+	{
+		auto plhBoneID = _model->FindBone("Head");
+		auto& harBone = _hairModel->Bones[_hairModel->FindBone("Root")];
+		harBone.LocalTransform = _model->finalBoneMatrices[plhBoneID] *
+			glm::inverse(_model->Bones[plhBoneID].InverseBind);
+		//put the hair upright, there's probably a reason this is required that I'm missing.
+		harBone.Rotation = glm::vec3(glm::radians(-90.0f), glm::radians(-90.0f), 0);
+		_hairModel->CalculateBoneTransforms();
+		_hairModel->Draw(Position, Facing);
 	}
 
 	return !anythingPressed;
