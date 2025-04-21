@@ -319,6 +319,9 @@ bool Player::Tick(float dt)
 		Move(facing + MainCamera->Angles().z + (useOrthographic ? 0.45f : 0), dt);
 	}
 
+	if (!_model)
+		LoadModel();
+
 	//_model->MoveBone(_model->FindBone("Head"), glm::vec3(0, glm::radians(-45.0f), 0));
 	//_model->MoveBone(_model->FindBone("Spine_1"), glm::vec3(sinf((float)glfwGetTime()) * glm::radians(16.0f), 0, 0));
 	//_model->MoveBone(_model->FindBone("Head"), glm::vec3(glm::radians(-45.0f), 0, 0)); //look to the right (player's right)
