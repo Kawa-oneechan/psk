@@ -10,10 +10,13 @@ layout(binding=1) uniform sampler2D cloudImage;
 layout(binding=2) uniform sampler2D starsImage;
 layout(binding=3) uniform sampler2D skyImage;
 
+//TODO: find out how to derive this from the camera view matrix
 uniform float pitch;
 
 float clouds(vec2 uv)
 {
+	uv.y += pitch * 0.025;
+
 	uv.y -= 0.25;
 	uv.x += TotalTime * 0.0050;
 	float ret = texture(cloudImage, uv).a;
@@ -27,8 +30,6 @@ float clouds(vec2 uv)
 void main()
 {
 	vec2 uv = gl_FragCoord.xy / ScreenRes.xy;
-	uv.y += pitch;
-	//uv.y *= scale;
 
 	vec3 sky = texture(skyImage, vec2(TimeOfDay, uv.y - 0.01)).rgb;
 	fragColor = vec4(sky, 1.0);
