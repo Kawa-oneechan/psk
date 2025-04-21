@@ -91,7 +91,6 @@ static void DoCamera()
 		ImGui::SameLine();
 		if (ImGui::Button("Paste JSON"))
 		{
-			std::string result = "";
 			try
 			{
 				auto json = JSON::Parse(ImGui::GetClipboardText());
@@ -99,7 +98,7 @@ static void DoCamera()
 			}
 			catch (std::runtime_error& x)
 			{
-				result = x.what();
+				conprint(4, x.what());
 			}
 		}
 	}
@@ -172,7 +171,6 @@ static void DoLights()
 		ImGui::SameLine();
 		if (ImGui::Button("Paste JSON"))
 		{
-			std::string result = "";
 			try
 			{
 				auto json = JSON::Parse(ImGui::GetClipboardText());
@@ -180,7 +178,7 @@ static void DoLights()
 			}
 			catch (std::runtime_error& x)
 			{
-				result = x.what();
+				conprint(4, x.what());
 			}
 		}
 
@@ -257,9 +255,13 @@ static void DoVillager()
 					townVillagers.erase(there);
 			}
 
-			if (here && ImGui::Button("Armature"))
+			if (here)
 			{
-				debugArmature = &debugVillager->Model()->Bones;
+				ImGui::SameLine();
+				if (ImGui::Button("Armature"))
+				{
+					debugArmature = &debugVillager->Model()->Bones;
+				}
 			}
 
 			ImGui::Text(debugVillager->ID.c_str());
@@ -269,6 +271,7 @@ static void DoVillager()
 
 			if (ImGui::Button("Reload textures"))
 				debugVillager->ReloadTextures();
+			ImGui::SameLine();
 			if (ImGui::Button("Track"))
 				MainCamera->Target(&debugVillager->Position);
 
@@ -296,6 +299,15 @@ static void DoPlayer()
 	if (ImGui::Begin("Player"))
 	{
 		ImGui::InputInt("Bells", (int*)&thePlayer.Bells, 10, 100);
+		if (ImGui::Button("Armature"))
+		{
+			debugArmature = &thePlayer.Model()->Bones;
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Track"))
+		{
+			MainCamera->Target(&thePlayer.Position);
+		}
 	}
 	ImGui::End();
 }
@@ -303,7 +315,7 @@ static void DoPlayer()
 static void traverseArmature(int origin)
 {
 	Model::Bone& thisJoint = debugArmature->at(origin);
-	int flags = ImGuiTreeNodeFlags_OpenOnDoubleClick;
+	int flags = ImGuiTreeNodeFlags_OpenOnDoubleClick | ImGuiTreeNodeFlags_OpenOnArrow;
 	if (thisJoint.Children.size() == 0)
 		flags |= ImGuiTreeNodeFlags_Leaf;
 	if (selectedJoint == origin)
@@ -327,11 +339,6 @@ static void DoArmature()
 {
 	if (ImGui::Begin("Armature"))
 	{
-		if (ImGui::Button("Select Player's"))
-		{
-			debugArmature = &thePlayer.Model()->Bones;
-		}
-
 		if (debugArmature == nullptr)
 		{
 			ImGui::Text("No armature selected.");
@@ -370,6 +377,54 @@ static void DoArmature()
 				if (ImGui::Button("Reset"))
 					tar.x = tar.y = tar.z = 0;
 			}
+
+			if (ImGui::Button("Copy JSON"))
+			{
+				std::string json;
+				json += "{\n";
+				for (auto& bone : *debugArmature)
+				{
+					auto rot = bone.Rotation;
+					if (rot.x + rot.y + rot.z == 0)
+					{
+						continue;
+					}
+					json += fmt::format("\t\"{}\": {{ \"rot\": [ {}, {}, {} ] }},\n", bone.Name, rot.x, rot.y, rot.z);
+				}
+				json = json.substr(0, json.length() - 2); //remove trailing ",\n"
+				json += "\n}\n";
+				ImGui::SetClipboardText(json.c_str());
+			}
+			ImGui::SameLine();
+			if (ImGui::Button("Paste JSON"))
+			{
+				try
+				{
+					auto json = JSON::Parse(ImGui::GetClipboardText());
+					auto j = json->AsObject();
+					//reset first
+					for (auto& bone : *debugArmature)
+						bone.Rotation = glm::vec3(0.0f); 
+					for (auto& b : j)
+					{
+						auto& name = b.first;
+						auto trns = b.second->AsObject();
+						for (auto& bone : *debugArmature)
+						{
+							if (bone.Name == name)
+							{
+								bone.Rotation = GetJSONVec3(trns["rot"]);
+								break;
+							}
+						}
+					}
+				}
+				catch (std::runtime_error& x)
+				{
+					conprint(4, x.what());
+				}
+			}
+
 			ImGui::EndChild();
 		}
 	}
