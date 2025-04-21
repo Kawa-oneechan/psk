@@ -342,7 +342,6 @@ bool Player::Tick(float dt)
 		//put the hair upright, there's probably a reason this is required that I'm missing.
 		harBone.Rotation = glm::vec3(glm::radians(-90.0f), glm::radians(-90.0f), 0);
 		_hairModel->CalculateBoneTransforms();
-		_hairModel->Draw(Position, Facing);
 	}
 
 	return !anythingPressed;
