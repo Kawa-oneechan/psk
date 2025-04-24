@@ -208,13 +208,15 @@ InventoryItem::InventoryItem(const std::string& reference)
 			else
 			{
 				//It was a variant name.
-				auto pattern = 0;
+				_data = variant;
+				//auto pattern = 0;
 				if (varNames.size() > 1)
 				{
 					//TODO: pattern names
 					//pattern = _wrapped->FindPatternByName(varNames[1]);
 					//if (pattern == -1)
-					pattern = std::stoi(varNames[1]);
+					//pattern = std::stoi(varNames[1]);
+					Pattern(std::stoi(varNames[1]));
 					if (varNames.size() > 2)
 						_packaging = std::stoi(varNames[2]);
 				}
@@ -252,6 +254,10 @@ std::string InventoryItem::FullID() const
 		if (_packaging != 0)
 			return fmt::format("{}/{}/0/{}", ID, _data, _packaging);
 		return fmt::format("{}/{}", ID, _data);
+	}
+	if (_packaging != 0)
+	{
+		return fmt::format("{}/0/0/{}", ID, _packaging);
 	}
 	return ID;
 }

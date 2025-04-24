@@ -1,0 +1,11 @@
+{
+	"id": "psk:yeagtop",
+	"name": { "en": "<info::a :the >yeag top" },
+	"type": "clothes",
+	"category": "tops",
+	"price": 640,
+	"variants": [ "black" ],
+	"icon": "tops",
+	"style": "ts_none",
+	"playerModel": "PlayerTopsTopTshirtsN"
+}
