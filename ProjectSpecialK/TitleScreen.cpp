@@ -20,7 +20,7 @@ TitleScreen::TitleScreen()
 			auto result = Text::Get(fmt::format("logojoke:{}", i));
 			if (result.length() >= 3 && result.substr(0, 3) == "???")
 			{
-				options = i;
+				options = i - 1;
 				break;
 			}
 		}
