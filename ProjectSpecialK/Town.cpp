@@ -356,88 +356,69 @@ bool Map::Tick(float dt)
 
 void Map::SaveObjects(JSONObject& json)
 {
-	JSONArray dropsArray;
-	JSONArray furnsArray;
+	JSONArray objects;
 	for (const auto& a : Acres)
 	{
 		for (const auto& i : a.Objects)
 		{
+			JSONObject item;
+			item["id"] = new JSONValue(i.Item->FullID());
+			item["position"] = GetJSONVec(i.Position / 10.0f, true);
+			if (i.State != 0)
+				item["state"] = new JSONValue(i.State);
 			if (i.Dropped)
 			{
-				JSONObject drop;
-				drop["id"] = new JSONValue(i.Item->FullID());
-				drop["position"] = GetJSONVec(i.Position / 10.0f, true);
-				if (i.State != 0)
-					drop["state"] = new JSONValue(i.State);
-				dropsArray.push_back(new JSONValue(drop));
+				item["dropped"] = new JSONValue(true);
 			}
 			else
 			{
-				JSONObject furn;
-				furn["id"] = new JSONValue(i.Item->FullID());
-				furn["fixed"] = new JSONValue(i.Fixed);
-				furn["facing"] = new JSONValue(i.Rotation);
-				furn["layer"] = new JSONValue(i.Layer);
-				if (i.State != 0)
-					furn["state"] = new JSONValue(i.State);
-				furn["position"] = GetJSONVec(i.Position / 10.0f, true);
-				furnsArray.push_back(new JSONValue(furn));
+				if (i.Fixed)
+					item["fixed"] = new JSONValue(true);
+				if (i.Rotation != 0)
+					item["facing"] = new JSONValue(i.Rotation);
+				if (i.Layer != 0)
+					item["layer"] = new JSONValue(i.Layer);
 			}
+			objects.push_back(new JSONValue(item));
 		}
 	}
-	json["drops"] = new JSONValue(dropsArray);
-	json["furniture"] = new JSONValue(furnsArray);
+	json["objects"] = new JSONValue(objects);
 }
 
 void Map::LoadObjects(JSONObject& json)
 {
-	auto dropsArray = json["drops"] != nullptr ? json["drops"]->AsArray() : JSONArray();
-	auto furnsArray = json["furniture"] != nullptr ? json["furniture"]->AsArray() : JSONArray();
+	auto objects = json["objects"] != nullptr ? json["objects"]->AsArray() : JSONArray();
 
-	for (auto& _i : dropsArray)
+	for (auto& _i : objects)
 	{
 		auto i = _i->AsObject();
-		MapItem drop;
-		drop.Item = std::make_shared<InventoryItem>(i["id"]->AsString());
-		drop.Dropped = true;
-		drop.Position = GetJSONVec2(i["position"]) * 10.0f;
-		drop.Fixed = false;
-		drop.Layer = 0;
-		drop.Rotation = 0;
-		drop.State = (i["state"] != nullptr) ? i["state"]->AsInteger() : 0;
+		MapItem item;
+		item.Item = std::make_shared<InventoryItem>(i["id"]->AsString());
+		item.Position = GetJSONVec2(i["position"]) * 10.0f;
+		item.State = (i["state"] != nullptr) ? i["state"]->AsInteger() : 0;
+		item.Dropped = (i["dropped"] != nullptr) ? i["dropped"]->AsBool() : false;
+		if (item.Dropped)
+		{
+			item.Fixed = false;
+			item.Layer = 0;
+			item.Rotation = 0;
+		}
+		else
+		{
+			item.Fixed = (i["fixed"] != nullptr) ? i["fixed"]->AsBool() : false;
+			item.Layer = (i["layer"] != nullptr) ? i["layer"]->AsInteger() : 0;
+			item.Rotation = (i["facing"] != nullptr) ? i["facing"]->AsInteger() : 0;
+		}
 		
-		int acreX = (int)(drop.Position.x / 10.0f) / AcreSize;
-		int acreY = (int)(drop.Position.y / 10.0f) / AcreSize;
+		int acreX = (int)(item.Position.x / 10.0f) / AcreSize;
+		int acreY = (int)(item.Position.y / 10.0f) / AcreSize;
 		auto acreIndex = (acreY * (Width / AcreSize)) + acreX;
 		if (acreIndex < 0 || acreIndex >= Acres.size())
 		{
-			conprint(4, "Item \"{}\" at {}x{} is out of range.", drop.Item->FullID(), drop.Position.x, drop.Position.y);
+			conprint(4, "Item \"{}\" at {}x{} is out of range.", item.Item->FullID(), item.Position.x, item.Position.y);
 			continue;
 		}
-		Acres[acreIndex].Objects.push_back(drop);
-	}
-
-	for (auto& _i : furnsArray)
-	{
-		auto i = _i->AsObject();
-		MapItem furn;
-		furn.Item = std::make_shared<InventoryItem>(i["id"]->AsString());
-		furn.Dropped = false;
-		furn.Position = GetJSONVec2(i["position"]) * 10.0f;
-		furn.Fixed = (i["fixed"] != nullptr) ? i["fixed"]->AsBool() : false;
-		furn.Layer = (i["layer"] != nullptr) ? i["layer"]->AsInteger() : 0;
-		furn.Rotation = (i["facing"] != nullptr) ? i["facing"]->AsInteger() : 0;
-		furn.State = (i["state"] != nullptr) ? i["state"]->AsInteger() : 0;
-
-		int acreX = (int)(furn.Position.x / 10.0f) / AcreSize;
-		int acreY = (int)(furn.Position.y / 10.0f) / AcreSize;
-		auto acreIndex = (acreY * (Width / AcreSize)) + acreX;
-		if (acreIndex < 0 || acreIndex >= Acres.size())
-		{
-			conprint(4, "Item \"{}\" at {}x{} is out of range.", furn.Item->FullID(), furn.Position.x, furn.Position.y);
-			continue;
-		}
-		Acres[acreIndex].Objects.push_back(furn);
+		Acres[acreIndex].Objects.push_back(item);
 	}
 }
 
