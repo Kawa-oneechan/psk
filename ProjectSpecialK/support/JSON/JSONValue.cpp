@@ -123,6 +123,8 @@ JSONValue *JSONValue::Parse(const char **data)
 
 		double number = 0.0;
 
+		bool wasHex = false;
+
 		// Parse the whole part of the number - only if it wasn't 0
 		if (**data == L'0')
 			(*data)++;
@@ -153,6 +155,7 @@ JSONValue *JSONValue::Parse(const char **data)
 			//KAWA: JSON5 it's a hex number?
 			(*data)--;
 			number = JSON::ParseInt(data);
+			wasHex = true;
 		}
 
 		// Could be an exponent now...
@@ -180,6 +183,9 @@ JSONValue *JSONValue::Parse(const char **data)
 
 		// Was it neg?
 		if (neg) number *= -1;
+
+		if (wasHex) //KAWA
+			return new JSONValue((int)number, true);
 
 		return new JSONValue((float)number);
 	}
@@ -429,6 +435,13 @@ JSONValue::JSONValue(int m_integer_value)
 {
 	type = JSONType_Number;
 	number_value = (float) m_integer_value;
+}
+
+JSONValue::JSONValue(int m_integer_value, bool m_ashex)
+{
+	type = JSONType_Number;
+	number_value = (float) m_integer_value;
+	IntAsHex = m_ashex;
 }
 
 /**
@@ -865,6 +878,12 @@ std::string JSONValue::StringifyImpl(size_t const indentDepth) const
 		{
 			if (isinf(number_value) || isnan(number_value))
 				ret_string = "null";
+			else if (IntAsHex) //KAWA
+			{
+				std::stringstream ss;
+				ss << "0x" << std::hex << std::uppercase << (int)number_value;
+				ret_string = ss.str();
+			}
 			else
 			{
 				std::stringstream ss;
@@ -996,9 +1015,9 @@ std::string JSONValue::StringifyString(const std::string &str)
  */
 std::string JSONValue::Indent(size_t depth)
 {
-	const size_t indent_step = 2;
+	const size_t indent_step = 1;
 	depth ? --depth : 0;
-	std::string indentStr(depth * indent_step, ' ');
+	std::string indentStr(depth * indent_step, '\t');
 	return indentStr;
 }
 #endif

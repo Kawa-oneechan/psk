@@ -45,6 +45,7 @@ class JSONValue
 		JSONValue(bool m_bool_value);
 		JSONValue(float m_number_value);
 		JSONValue(int m_integer_value);
+		JSONValue(int m_integer_value, bool m_ashex); //KAWA
 		JSONValue(const JSONArray &m_array_value);
 		JSONValue(const JSONObject &m_object_value);
 		JSONValue(const JSONValue &m_source);
@@ -70,6 +71,11 @@ class JSONValue
 		bool HasChild(const char* name) const;
 		JSONValue *Child(const char* name);
 		std::vector<std::string> ObjectKeys() const;
+
+		//KAWA
+		bool IntAsHex;
+		bool ForceNewline;
+		std::string Comment;
 
 #if WITHSTRINGIFY
 		std::string Stringify(bool const prettyprint = false) const;

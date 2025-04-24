@@ -365,7 +365,9 @@ void Map::SaveObjects(JSONObject& json)
 			item["id"] = new JSONValue(i.Item->FullID());
 			item["position"] = GetJSONVec(i.Position / 10.0f, true);
 			if (i.State != 0)
-				item["state"] = new JSONValue(i.State);
+			{
+				item["state"] = new JSONValue(i.State, true);
+			}
 			if (i.Dropped)
 			{
 				item["dropped"] = new JSONValue(true);
@@ -613,7 +615,7 @@ void Town::Save()
 
 	json["width"] = new JSONValue(Width);
 	json["height"] = new JSONValue(Height);
-	json["weather"] = new JSONValue((int)weatherSeed);
+	json["weather"] = new JSONValue((int)weatherSeed, true);
 	json["name"] = new JSONValue(Name);
 	json["north"] = new JSONValue(Hemisphere == Hemisphere::North);
 
