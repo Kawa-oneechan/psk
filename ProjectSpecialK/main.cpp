@@ -713,7 +713,7 @@ int main(int argc, char** argv)
 	//thePlayer.Tops = std::make_shared<InventoryItem>("psk:oppai");
 	//thePlayer.Bottoms = std::make_shared<InventoryItem>("acnh:denimcutoffs/lightblue");
 
-	perspectiveProjection = glm::perspective(glm::radians(45.0f), (float)width / (float)height, 0.1f, 300.0f);
+	perspectiveProjection = glm::perspective(glm::radians(45.0f), (float)width / (float)height, 0.1f, 500.0f);
 	//Orthographic projection for a laugh. For best results, use a 45 degree pitch and yaw, no bending.
 	constexpr auto orthoScale = 0.025f;
 	orthographicProjection = glm::ortho(-(ScreenWidth * orthoScale), (ScreenWidth * orthoScale), -(ScreenHeight * orthoScale), (ScreenHeight * orthoScale), -1.0f, 300.0f);
@@ -759,7 +759,7 @@ int main(int argc, char** argv)
 		commonUniforms.Projection = useOrthographic ? orthographicProjection : perspectiveProjection;
 
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+		//glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
 		//important: disable depth testing to allow multiple sprites to overlap.
 		glDisable(GL_DEPTH_TEST);

@@ -97,6 +97,8 @@ public:
 	std::vector<Bone> Bones;
 	glm::mat4 finalBoneMatrices[MaxBones];
 
+	hash Hash;
+
 	const bool IsSkinned() const { return Bones.size() > 0; }
 
 	Model() = default;
@@ -128,6 +130,8 @@ public:
 	int FindBone(const std::string& name);
 	//Calcalutes the final bone matrices for the entire armature.
 	void CalculateBoneTransforms();
+
+	void CopyBoneTransforms(std::shared_ptr<Model> target);
 };
 
 using ModelP = std::shared_ptr<Model>;

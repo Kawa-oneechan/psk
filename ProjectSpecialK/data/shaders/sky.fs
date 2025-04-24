@@ -15,7 +15,7 @@ uniform float pitch;
 
 float clouds(vec2 uv)
 {
-	uv.y += pitch * 0.025;
+	uv.y -= pitch * 0.025;
 
 	uv.y -= 0.25;
 	uv.x += TotalTime * 0.0050;

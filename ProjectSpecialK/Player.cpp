@@ -329,8 +329,9 @@ bool Player::Tick(float dt)
 	//_model->Bones[_model->FindBone("Head")].Rotation = glm::vec3(glm::radians(-45.0f), 0, 0); //look to the player's right
 	_model->CalculateBoneTransforms();
 
-	//TODO: reflect bone transforms to clothes.
-	//_model->CopyBoneTransforms(_topsModel);
+	_model->CopyBoneTransforms(_topsModel);
+	_model->CopyBoneTransforms(_bottomsModel);
+	_model->CopyBoneTransforms(_onePieceModel);
 
 	//TODO: make this a generic function for later.
 	if (_hairModel)

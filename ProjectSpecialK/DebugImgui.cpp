@@ -335,6 +335,27 @@ static void traverseArmature(int origin)
 	}
 }
 
+static void applyPose(JSONValue* json)
+{
+	auto j = json->AsObject();
+	//reset first
+	for (auto& bone : *debugArmature)
+		bone.Rotation = glm::vec3(0.0f);
+	for (auto& b : j)
+	{
+		auto& name = b.first;
+		auto trns = b.second->AsObject();
+		for (auto& bone : *debugArmature)
+		{
+			if (bone.Name == name)
+			{
+				bone.Rotation = GetJSONVec3(trns["rot"]);
+				break;
+			}
+		}
+	}
+}
+
 static void DoArmature()
 {
 	if (ImGui::Begin("Armature"))
@@ -401,23 +422,26 @@ static void DoArmature()
 				try
 				{
 					auto json = JSON::Parse(ImGui::GetClipboardText());
-					auto j = json->AsObject();
-					//reset first
-					for (auto& bone : *debugArmature)
-						bone.Rotation = glm::vec3(0.0f); 
-					for (auto& b : j)
-					{
-						auto& name = b.first;
-						auto trns = b.second->AsObject();
-						for (auto& bone : *debugArmature)
-						{
-							if (bone.Name == name)
-							{
-								bone.Rotation = GetJSONVec3(trns["rot"]);
-								break;
-							}
-						}
-					}
+					applyPose(json);
+				}
+				catch (std::runtime_error& x)
+				{
+					conprint(4, x.what());
+				}
+			}
+
+			ImGui::SameLine();
+			if (ImGui::Button("A"))
+			{
+				try
+				{
+					auto json = JSON::Parse(R"json({
+						"Arm_2_L": { "rot": [0, 0, 0.5] },
+						"Arm_1_L" : { "rot": [0, -1.2, -0.4] },
+						"Arm_2_R" : { "rot": [0, 0, 0.5] },
+						"Arm_1_R" : { "rot": [0, -1.2, -0.4] }
+					})json");
+					applyPose(json);
 				}
 				catch (std::runtime_error& x)
 				{

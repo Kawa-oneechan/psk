@@ -221,6 +221,8 @@ void Map::drawCharacters(float dt)
 
 void Map::drawObjects(float dt)
 {
+	dt;
+
 	auto playerTile = glm::round(thePlayer.Position / 10.0f);
 
 	auto playerAcre = playerTile / (float)AcreSize;
@@ -264,6 +266,8 @@ void Map::drawObjects(float dt)
 
 void Map::drawGround(float dt)
 {
+	dt;
+
 	auto playerTile = glm::round(thePlayer.Position / 10.0f);
 
 	constexpr auto half = (int)(AcreSize * 1.5f);

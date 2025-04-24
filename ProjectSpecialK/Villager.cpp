@@ -384,8 +384,8 @@ bool Villager::Tick(float)
 
 	_model->CalculateBoneTransforms();
 
-	//TODO: reflect bone transforms to clothes.
-	//_model->CopyBoneTransforms(_topsModel);
+	_model->CopyBoneTransforms(_accessoryModel);
+	_model->CopyBoneTransforms(_clothingModel);
 
 	return true;
 }

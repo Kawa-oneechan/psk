@@ -372,10 +372,13 @@ Model::Model(const std::string& modelPath) : file(modelPath)
 		int r;
 		std::tie(m, r) = c->second;
 		Meshes = m->Meshes;
+		Hash = m->Hash;
 		r++;
 		cache[file] = std::make_tuple(m, r);
 		return;
 	}
+
+	Hash = GetCRC(file);
 
 	size_t vfsSize = 0;
 	auto vfsData = VFS::ReadData(modelPath, &vfsSize);
@@ -707,4 +710,59 @@ void Model::CalculateBoneTransforms()
 	//Bring back into model space
 	for (int i = 0; i < Bones.size(); i++)
 		finalBoneMatrices[i] = Bones[i].GlobalTransform * Bones[i].InverseBind;
+}
+
+static std::map<hash, std::map<hash, std::array<int, MaxBones>>> transferMaps;
+
+void Model::CopyBoneTransforms(ModelP target)
+{
+	if (!target)
+		return;
+
+	auto me = transferMaps.find(this->Hash);
+	if (me == transferMaps.end())
+	{
+		debprint(0, "No source model in transfer map: {}", this->file);
+		transferMaps[this->Hash] = std::map<hash, std::array<int, MaxBones>>();
+		me = transferMaps.find(this->Hash);
+	}
+	auto& transferMap = me->second;
+
+	auto map = transferMap.find(target->Hash);
+	if (map == transferMap.end())
+	{
+		debprint(0, "No target model in transfer map: {}",  target->file);
+		transferMap[target->Hash] = std::array<int, MaxBones>();
+		map = transferMap.find(target->Hash);
+		auto& m = map->second;
+		m.fill(NoBone);
+		auto& tb = target->Bones;
+		for (int i = 0; i < this->Bones.size(); i++)
+		{
+			auto name = this->Bones[i].Name;
+			for (int j = 0; j < tb.size(); j++)
+			{
+				if (tb[j].Name == name)
+				{
+					debprint(1, "* {} {} --> {} {}", i, name, j, tb[j].Name);
+					m[i] = j;
+					break;
+				}
+			}
+		}
+	}
+	auto& m = map->second;
+
+	for (int i = 0; i < Bones.size(); i++)
+	{
+		if (m[i] == NoBone)
+			continue;
+		auto& sb = this->Bones[i];
+		auto& tb = target->Bones[m[i]];
+		tb.Rotation = sb.Rotation;
+		tb.Translation = sb.Translation;
+		tb.Scale = sb.Scale;
+	}
+
+	target->CalculateBoneTransforms();
 }
