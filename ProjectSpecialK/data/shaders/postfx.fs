@@ -102,7 +102,7 @@ void main()
 		//SCANLINES
 		//---------
 		fragColor = lookup(TexCoords);
-		fragColor = fragColor * mod(floor(TexCoords.y * ScreenRes.y), 2.0);
+		fragColor.rgb *= mod(floor(TexCoords.y * ScreenRes.y), 2.0);
 	}
 	else if (PostEffect == 2)
 	{
