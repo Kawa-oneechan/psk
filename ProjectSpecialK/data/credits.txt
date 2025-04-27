@@ -41,18 +41,21 @@ Doc	DuoRogue
 eevee-williams	elric
 everyone	FoolForBrightness
 Foone	Friedslick6
-J. A. Sablosky	kaytypestar
+J. A. Sablosky	Jayeaaaaa
+JessicaIn3D	kaytypestar
 Key3Kyo	Lancette2201
-Letrune	LH
-Marquis	Marvel
-metaregress	muffiln
-natee22	North Greenfield
-pelontrix/percival	pickled-fox
-ratSprite	Renamon
-Retrotude	riotmode
-rknase	road-trip-girl
-rz-053/Aldous	Skorvold
-snurtle	thatguyoversea
+Laura	Letrune
+LH	lizardywizard 
+LucidPetals	Marquis
+Marvel	metaregress
+muffiln	natee22
+North Greenfield	pelontrix/percival
+pickled-fox	ratSprite
+Renamon	Retrotude
+riotmode	rknase
+road-trip-girl	rz-053/Aldous
+Skorvold	snurtle
+steellotus54	thatguyoversea
 The FOSS Community	Valoric Starlight
 Weil	wyatt8740
 yes	Zarky

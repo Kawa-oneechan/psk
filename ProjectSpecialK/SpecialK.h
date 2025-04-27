@@ -38,7 +38,7 @@
 
 using namespace std::literals;
 
-#define VERSIONJOKE "Yeah, We're Boned"
+#define VERSIONJOKE "Horkly Warding"
 
 __declspec(noreturn)
 extern void FatalError(const std::string& message);
