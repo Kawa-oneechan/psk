@@ -2,5 +2,9 @@
 	"sources": [
 		"assets",
 		"mods"
-	]
+	],
+	"saves": {
+		"win32": "$(SavedGames)\\Project Special K",
+		"linux": "~/.local/share/projectspecialk"
+	}
 }

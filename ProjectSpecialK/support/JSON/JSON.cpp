@@ -166,7 +166,7 @@ bool JSON::ExtractString(const char **data, std::string &str)
 			switch (**data)
 			{
 				case '"': next_char = '"'; break;
-				//case '\\': next_char = '\\'; break;
+				case '\\': next_char = '\\'; break;
 				case '/': next_char = '/'; break;
 				case 'b': next_char = '\b'; break;
 				case 'f': next_char = '\f'; break;

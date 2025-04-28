@@ -33,7 +33,9 @@ extern "C" {
 		unsigned short Data3;
 		unsigned char  Data4[8];
 	};
-	const GUID FOLDERID_SavedGames = { 0x4c5c32ff, 0xbb9d, 0x43b0, 0xb5, 0xb4, 0x2d, 0x72, 0xe5, 0x4e, 0xaa, 0xa4 };
+	const GUID FOLDERID_SavedGames = { 0x4C5C32FF, 0xBB9D, 0x43B0, 0xB5, 0xB4, 0x2D, 0x72, 0xE5, 0x4E, 0xAA, 0xA4 };
+	const GUID FOLDERID_Documents = { 0xFDD39AD0, 0x238F, 0x46AF, 0xAD, 0xB4, 0x6C, 0x85, 0x48, 0x03, 0x69, 0xC7 };
+	const GUID FOLDERID_Roaming = { 0x3EB685DB, 0x65F9, 0x4CF6, 0xA0, 0x3A, 0xE3, 0xEF, 0x65, 0x72, 0x9F, 0x3D };
 	int __stdcall SHGetKnownFolderPath(_In_ const GUID* rfid, _In_ unsigned long dwFlags, _In_opt_ void* hToken, _Out_ wchar_t** ppszPath);
 	int __stdcall WideCharToMultiByte(_In_ unsigned int CodePage, _In_ unsigned long dwFlags, const wchar_t* lpWideCharStr, _In_ int cchWideChar, char* lpMultiByteStr, _In_ int cbMultiByte, _In_opt_ char* lpDefaultChar, _Out_opt_ bool* lpUsedDefaultChar);
 	void _stdcall CoTaskMemFree(_In_opt_ void* pv);
@@ -52,6 +54,8 @@ namespace VFS
 	static std::vector<Source> sources;
 
 	static fs::path savePath;
+
+	static JSONValue* initJSON = nullptr;
 
 	static void addFileEntry(Entry& entry)
 	{
@@ -203,18 +207,40 @@ namespace VFS
 
 	static void findSaveDir()
 	{
+		auto initDoc = initJSON->AsObject();
+		if (initDoc["saves"]->AsObject().size() == 0)
+			FatalError("No savegame paths listed.");
+		auto saves = initDoc["saves"]->AsObject();
+
 #ifdef _WIN32
 		//Yes, we're assuming this is Vista or better. Fuck you.
+
+		auto p = saves["win32"]->AsString();
+
 		wchar_t* wp;
 		char mp[1024] = { 0 };
-		SHGetKnownFolderPath(&FOLDERID_SavedGames, 0, nullptr, &wp);
-		WideCharToMultiByte(65001, 0, wp, (int)wcslen(wp), mp, 1024, nullptr, nullptr);
-		CoTaskMemFree(wp);
-		savePath = fs::path(std::string(mp)) / "Project Special K";
+
+		auto handle = [&](const std::string& macro, const GUID* guid)
+		{
+			if (p.find(macro) != std::string::npos)
+			{
+				SHGetKnownFolderPath(guid, 0, nullptr, &wp);
+				WideCharToMultiByte(65001, 0, wp, (int)wcslen(wp), mp, 1024, nullptr, nullptr);
+				CoTaskMemFree(wp);
+				ReplaceAll(p, macro, std::string(mp));
+			}
+		};
+
+		handle("$(SavedGames)", &FOLDERID_SavedGames);
+		handle("$(Documents)", &FOLDERID_Documents);
+		handle("$(AppData)", &FOLDERID_Roaming);
+
 #else
-		//TODO: find a good save path for non-Windows systems.
-		//Internet says: ~/.local/share/projectspecialk
+		auto p = saves["linux"]->AsString();
+		//Find some interesting $() macros later on maybe.
 #endif
+
+		savePath = fs::path(p);
 
 		fs::create_directory(savePath);
 		fs::create_directory(savePath / "villagers");
@@ -234,7 +260,7 @@ namespace VFS
 		auto initData = std::make_unique<char[]>(fsize + 2);
 		file.read(initData.get(), fsize);
 
-		auto initJSON = JSON::Parse(initData.get());
+		initJSON = JSON::Parse(initData.get());
 		if (!initJSON)
 			FatalError("Init file parses as blank.");
 
