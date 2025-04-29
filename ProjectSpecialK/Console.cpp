@@ -27,6 +27,7 @@ bool noWear; //placeholder
 extern Shader* spriteShader;
 extern Shader* modelShader;
 extern Shader* grassShader;
+extern Shader* skyShader;
 extern Shader* playerBodyShader;
 extern Shader* playerEyesShader;
 extern Shader* playerMouthShader;
@@ -228,6 +229,7 @@ bool Console::Execute(const std::string& str)
 			{
 				spriteShader->Reload();
 				modelShader->Reload();
+				skyShader->Reload();
 				grassShader->Reload();
 				playerBodyShader->Reload();
 				playerEyesShader->Reload();
