@@ -1,5 +1,6 @@
 #include "SpecialK.h"
 #include "Town.h"
+#include "Animator.h"
 
 #include <ImGUI/imgui.h>
 #include <ImGUI/imgui_impl_glfw.h>
@@ -193,7 +194,7 @@ static void DoVillager()
 {
 	//TODO: use *current* map.
 	static VillagerP debugVillager = villagers[0];
-	auto townVillagers = town->Villagers;
+	auto& townVillagers = town->Villagers;
 	
 	if (ImGui::Begin("Villagers"))
 	{
@@ -260,7 +261,8 @@ static void DoVillager()
 				ImGui::SameLine();
 				if (ImGui::Button("Armature"))
 				{
-					debugArmature = &debugVillager->Model()->Bones;
+					//debugArmature = &debugVillager->Model()->Bones;
+					debugArmature = &debugVillager->Animator()->Bones;
 				}
 			}
 
@@ -435,12 +437,12 @@ static void DoArmature()
 			{
 				try
 				{
-					auto json = JSON::Parse(R"json({
-						"Arm_2_L": { "rot": [0, 0, 0.5] },
-						"Arm_1_L" : { "rot": [0, -1.2, -0.4] },
-						"Arm_2_R" : { "rot": [0, 0, 0.5] },
-						"Arm_1_R" : { "rot": [0, -1.2, -0.4] }
-					})json");
+					auto json = JSON::Parse(R"JSON({
+						"Arm_2_L": { "rot": [ 0,  0.0,  0.5 ] },
+						"Arm_1_L": { "rot": [ 0, -1.2, -0.4 ] },
+						"Arm_2_R": { "rot": [ 0,  0.0,  0.5 ] },
+						"Arm_1_R": { "rot": [ 0, -1.2, -0.4 ] }
+					})JSON");
 					applyPose(json);
 				}
 				catch (std::runtime_error& x)

@@ -1,5 +1,6 @@
 #include "SpecialK.h"
 #include "Town.h"
+#include "Animator.h"
 
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/rotate_vector.hpp>
@@ -54,11 +55,11 @@ bool Person::Move(float facing, float dt)
 	return true;
 }
 
-
 void Person::SetFace(int index)
 {
 	face = glm::clamp(index, 0, 15);
 }
+
 void Person::SetMouth(int index)
 {
 	mouth = glm::clamp(index, 0, 8);
@@ -259,6 +260,10 @@ void Villager::LoadModel()
 		ClothingTextures[2] = new TextureArray(fmt::format("{}/mix.png", Clothing->Path));
 		ClothingTextures[3] = new TextureArray(fmt::format("{}/opacity.png", Clothing->Path));
 	}
+
+	if (animator == nullptr)
+		animator = std::make_unique<::Animator>(_model->Bones);
+	animator->APose();
 }
 
 ModelP Villager::Model()
@@ -349,6 +354,12 @@ void Villager::Draw(float)
 	_model->SetLayerByMat("_mEye", face);
 	_model->SetLayerByMat("_mMouth", mouth);
 	
+	animator->CopyBones(_model);
+	_model->CalculateBoneTransforms();
+
+	_model->CopyBoneTransforms(_accessoryModel);
+	_model->CopyBoneTransforms(_clothingModel);
+
 	_model->Draw(Position, Facing);
 
 	if (_customAccessory && _accessoryModel)
@@ -375,17 +386,14 @@ void Villager::Draw(float)
 		_clothingModel->SetLayer(Clothing->Variant());
 		_clothingModel->Draw(Position, Facing);
 	}
+
+	MeshBucket::Flush();
 }
 
 bool Villager::Tick(float)
 {
 	if (!_model)
 		LoadModel();
-
-	_model->CalculateBoneTransforms();
-
-	_model->CopyBoneTransforms(_accessoryModel);
-	_model->CopyBoneTransforms(_clothingModel);
 
 	return true;
 }
@@ -440,6 +448,7 @@ void Villager::Depart()
 		}
 	}
 	_model = nullptr;
+	animator = nullptr;
 
 	DeleteAllThings();
 

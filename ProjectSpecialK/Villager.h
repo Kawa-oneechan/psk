@@ -21,6 +21,8 @@ public:
 
 using VillagerMemoryP = std::shared_ptr<VillagerMemory>;
 
+class Animator;
+
 class Person
 {
 public:
@@ -61,6 +63,7 @@ private:
 	std::array<TextureArray*, 8> ClothingTextures;
 
 	VillagerMemoryP memory;
+	std::unique_ptr<Animator> animator;
 
 	void DeleteAllThings();
 
@@ -125,6 +128,8 @@ public:
 	//move instead
 	Villager(Villager&&) = default;
 	Villager& operator = (Villager&&) = default;
+
+	Animator* Animator() { return animator.get(); };
 };
 
 using VillagerP = std::shared_ptr<Villager>;
