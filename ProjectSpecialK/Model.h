@@ -80,7 +80,7 @@ public:
 		Shader* Shader;
 		int Layer;
 
-		Mesh(ufbx_mesh* mesh, std::vector<Bone>& bones);
+		Mesh(ufbx_mesh* mesh, std::array<Bone, MaxBones>& bones, size_t boneCt);
 		const size_t Indices() { return indices.size(); }
 	};
 
@@ -94,8 +94,9 @@ private:
 
 public:
 	std::vector<Mesh> Meshes;
-	std::vector<Bone> Bones;
+	std::array<Model::Bone, MaxBones> Bones;
 	glm::mat4 finalBoneMatrices[MaxBones];
+	size_t BoneCt;
 
 	hash Hash;
 
@@ -135,3 +136,4 @@ public:
 };
 
 using ModelP = std::shared_ptr<Model>;
+using Armature = std::array<Model::Bone, MaxBones>;

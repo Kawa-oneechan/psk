@@ -187,7 +187,7 @@ static void DoLights()
 	ImGui::End();
 }
 
-static std::vector<Model::Bone>* debugArmature = nullptr;
+static Armature* debugArmature = nullptr;
 static int selectedJoint = 0;
 
 static void DoVillager()
@@ -317,7 +317,7 @@ static void DoPlayer()
 static void traverseArmature(int origin)
 {
 	Model::Bone& thisJoint = debugArmature->at(origin);
-	int flags = ImGuiTreeNodeFlags_OpenOnDoubleClick | ImGuiTreeNodeFlags_OpenOnArrow;
+	int flags = ImGuiTreeNodeFlags_OpenOnDoubleClick | ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth;
 	if (thisJoint.Children.size() == 0)
 		flags |= ImGuiTreeNodeFlags_Leaf;
 	if (selectedJoint == origin)
@@ -389,16 +389,33 @@ static void DoArmature()
 
 			ImGui::BeginChild("item view", ImVec2(0, -ImGui::GetFrameHeightWithSpacing()));
 			{
-				ImGui::Text(debugArmature->at(selectedJoint).Name.c_str());
+				auto& joint = debugArmature->at(selectedJoint);
+
+				ImGui::Text(joint.Name.c_str());
 				ImGui::Separator();
 
 				ImGui::SeparatorText("Rotation");
-				auto& tar = debugArmature->at(selectedJoint).Rotation;
+				auto& tar = joint.Rotation;
 				ImGui::DragFloat("X", &tar.x, 0.05f, -10, 10);
 				ImGui::DragFloat("Y", &tar.y, 0.05f, -10, 10);
 				ImGui::DragFloat("Z", &tar.z, 0.05f, -10, 10);
 				if (ImGui::Button("Reset"))
 					tar.x = tar.y = tar.z = 0;
+
+				ImGui::SeparatorText("Inverse Bind Pose");
+				auto& inv = joint.InverseBind;
+				if (ImGui::BeginTable("invbind", 4))
+				{
+					for (int i = 0; i < 4; i++)
+					{
+						for (int j = 0; j < 4; j++)
+						{
+							ImGui::TableNextColumn();
+							ImGui::Text("%.3f", inv[j][i]);
+						}
+					}
+					ImGui::EndTable();
+				}
 			}
 
 			if (ImGui::Button("Copy JSON"))

@@ -1,16 +1,15 @@
 #pragma once
 
-#include <memory>
-
 class Model;
+using Armature = std::array<Model::Bone, MaxBones>;
 
 class Animator
 {
 
 public:
-	std::vector<Model::Bone> Bones;
+	Armature Bones;
 
-	Animator(const std::vector<Model::Bone>& bones);
+	Animator(const Armature& bones);
 	void APose();
 	void CopyBones(const std::shared_ptr<Model>& client);
 };

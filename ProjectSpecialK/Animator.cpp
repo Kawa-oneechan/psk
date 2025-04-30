@@ -2,14 +2,17 @@
 #include "Animator.h"
 #include "Model.h"
 
-Animator::Animator(const std::vector<Model::Bone>& clientBones)
+Animator::Animator(const Armature& clientBones)
 {
+	/*
 	Bones.reserve(clientBones.size());
 	for (auto b : clientBones)
 		Bones.push_back(b);
+	*/
+	std::copy(clientBones.begin(), clientBones.end(), Bones.begin());
 }
 
-static int findBone(const std::vector<Model::Bone>& bones, const std::string& name)
+static int findBone(const Armature& bones, const std::string& name)
 {
 	for (auto i = 0; i < bones.size(); i++)
 	{
@@ -41,7 +44,7 @@ void Animator::CopyBones(const std::shared_ptr<Model>& client)
 {
 	//We assume that the client's bones are in the same order as ours.
 	auto& cbones = client->Bones;
-	for (auto i = 0; i < Bones.size(); i++)
+	for (auto i = 0; i < client->BoneCt; i++)
 	{
 		cbones[i].Rotation = Bones[i].Rotation;
 		//translation?

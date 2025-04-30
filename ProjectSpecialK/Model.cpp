@@ -136,7 +136,7 @@ extern Shader* playerCheekShader;
 extern Shader* playerLegsShader;
 extern Shader* playerHairShader;
 
-Model::Mesh::Mesh(ufbx_mesh* mesh, std::vector<Bone>& bones) : Visible(true), Layer(0)
+Model::Mesh::Mesh(ufbx_mesh* mesh, Armature& bones, size_t boneCt) : Visible(true), Layer(0)
 {
 	Name = mesh->name.data;
 	Hash = MatHash = GetCRC(Name);
@@ -168,7 +168,7 @@ Model::Mesh::Mesh(ufbx_mesh* mesh, std::vector<Bone>& bones) : Visible(true), La
 		for (int i = 0; i < skinDeformer->clusters.count; i++)
 		{
 			std::string clusterName = skinDeformer->clusters[i]->name.data;
-			for (int j = 0; j < bones.size(); j++)
+			for (int j = 0; j < boneCt; j++)
 			{
 				if (bones[j].Name == clusterName)
 				{
@@ -433,11 +433,14 @@ Model::Model(const std::string& modelPath) : file(modelPath)
 		debprint(5, "Bones:");
 
 		std::unordered_map<std::string, int> nameToBoneIndex;
-		size_t numberOfBones = scene->bones.count;
+		BoneCt = scene->bones.count;
+		if (BoneCt >= MaxBones)
+		{
+			conprint(2, "Warning: {} has too many bones -- {} but can only work with {}.", modelPath, BoneCt, MaxBones);
+			BoneCt = MaxBones - 1;
+		}
 
-		Bones.resize(numberOfBones);
-
-		for (unsigned int boneIndex = 0; boneIndex < numberOfBones; boneIndex++)
+		for (unsigned int boneIndex = 0; boneIndex < BoneCt; boneIndex++)
 		{
 			auto& bone = *scene->bones.data[boneIndex];
 			std::string boneName = bone.name.data;
@@ -475,8 +478,6 @@ Model::Model(const std::string& modelPath) : file(modelPath)
 				b.LocalTransform = ufbxToGlmMat4(node->node_to_parent);
 
 				debprint(0, "* {}. {}", boneIndex, nodeName);
-				for (int i = 0; i < 4; i++)
-					debprint(1, u8"* │ {: .3f}, {: .3f}, {: .3f}, {: .3f} │", b.InverseBind[0][i], b.InverseBind[1][i], b.InverseBind[2][i], b.InverseBind[3][i]);
 
 				Bones[boneIndex] = b;
 			}
@@ -496,7 +497,7 @@ Model::Model(const std::string& modelPath) : file(modelPath)
 		};
 		traverseNodeHierarchy(scene->root_node, -1);
 
-		for (int i = 0; i < Bones.size() && i < MaxBones; i++)
+		for (int i = 0; i < BoneCt && i < MaxBones; i++)
 			finalBoneMatrices[i] = glm::mat4(1.0f);
 	}
 
@@ -507,7 +508,7 @@ Model::Model(const std::string& modelPath) : file(modelPath)
 		ufbx_node *node = scene->nodes.data[i];
 		if (node->mesh)
 		{
-			auto m = Mesh(node->mesh, Bones);
+			auto m = Mesh(node->mesh, Bones, BoneCt);
 			m.Shader = modelShader;
 			m.Textures[0] = &fallback;
 			m.Textures[1] = &fallbackNormal;
@@ -552,6 +553,10 @@ Model::Model(const std::string& modelPath) : file(modelPath)
 								m.Shader = playerLegsShader;
 							else if (s == "playerhair")
 								m.Shader = playerHairShader;
+							/*
+							Secondary idea: look into custom properties in the FBX file
+							that may OVERRIDE the matmap file.
+							*/
 						}
 						if (mat["albedo"])
 							m.Textures[0] = new TextureArray(basePath + mat["albedo"]->AsString());
@@ -595,7 +600,7 @@ void Model::Draw(const glm::vec3& pos, float yaw, int mesh)
 		}
 
 		glm::vec3 r(0, glm::radians(yaw), 0);
-		MeshBucket::Draw(m,  pos, glm::quat(r), finalBoneMatrices, Bones.size());
+		MeshBucket::Draw(m,  pos, glm::quat(r), finalBoneMatrices, BoneCt);
 		j++;
 	}
 
@@ -674,7 +679,7 @@ Model::Mesh& Model::GetMesh(int index)
 
 int Model::FindBone(const std::string& name)
 {
-	for (auto i = 0; i < Bones.size(); i++)
+	for (auto i = 0; i < BoneCt; i++)
 	{
 		if (Bones[i].Name == name)
 			return i;
@@ -708,7 +713,7 @@ void Model::CalculateBoneTransforms()
 	CalculateBoneTransform(root);
 
 	//Bring back into model space
-	for (int i = 0; i < Bones.size(); i++)
+	for (int i = 0; i < BoneCt; i++)
 		finalBoneMatrices[i] = Bones[i].GlobalTransform * Bones[i].InverseBind;
 }
 
@@ -737,10 +742,10 @@ void Model::CopyBoneTransforms(ModelP target)
 		auto& m = map->second;
 		m.fill(NoBone);
 		auto& tb = target->Bones;
-		for (int i = 0; i < this->Bones.size(); i++)
+		for (int i = 0; i < this->BoneCt; i++)
 		{
 			auto name = this->Bones[i].Name;
-			for (int j = 0; j < tb.size(); j++)
+			for (int j = 0; j < target->BoneCt; j++)
 			{
 				if (tb[j].Name == name)
 				{
@@ -753,7 +758,7 @@ void Model::CopyBoneTransforms(ModelP target)
 	}
 	auto& m = map->second;
 
-	for (int i = 0; i < Bones.size(); i++)
+	for (int i = 0; i < BoneCt; i++)
 	{
 		if (m[i] == NoBone)
 			continue;
