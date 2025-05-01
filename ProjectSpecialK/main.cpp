@@ -700,15 +700,18 @@ int main(int argc, char** argv)
 		MainCamera->Set(glm::vec3(0, 0, -6), glm::vec3(0, 110, 0), 60);
 	}
 
-	VillagerP cat01;
 	if (town->Villagers.size() == 0)
 	{
-		cat01 = Database::Find<Villager>("ac:cat01", villagers);
-		town->Villagers.push_back(cat01);
+		town->Villagers.push_back(Database::Find<Villager>("ac:cat01", villagers));
 	}
-	cat01 = town->Villagers[0];
-	cat01->Manifest();
-	cat01->Position = glm::vec3(30, 0, 30);
+	{
+		int i = 0;
+		for (auto& vgr : town->Villagers)
+		{
+			vgr->Manifest();
+			vgr->Position = glm::vec3(30, 0, 30 + (i++ * 10));
+		}
+	}
 	thePlayer.Position = glm::vec3(40, 0, 30);
 	//thePlayer.Tops = std::make_shared<InventoryItem>("psk:oppai");
 	//thePlayer.Bottoms = std::make_shared<InventoryItem>("acnh:denimcutoffs/lightblue");
