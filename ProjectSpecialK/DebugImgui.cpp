@@ -23,7 +23,6 @@ void SetupImGui()
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 	io.ConfigFlags |= ImGuiConfigFlags_NoMouseCursorChange;
-	ImGui::StyleColorsDark();
 	ImGui_ImplGlfw_InitForOpenGL(window, true);
 	ImGui_ImplOpenGL3_Init("#version 130");
 }
@@ -119,7 +118,7 @@ static void DoLights()
 			{
 				lightIndex = i;
 			}
-			if (i < 3)
+			if (i % (MaxLights / 2) != (MaxLights / 2) - 1)
 				ImGui::SameLine();
 		}
 
@@ -310,6 +309,10 @@ static void DoPlayer()
 		{
 			MainCamera->Target(&thePlayer.Position);
 		}
+
+		ImGui::SeparatorText("Animation");
+		ImGui::SliderInt("Face", &thePlayer.face, 0, 1);
+		ImGui::SliderInt("Mouth", &thePlayer.mouth, 0, 1);
 	}
 	ImGui::End();
 }
