@@ -8,7 +8,7 @@ void Player::LoadModel()
 	if (!_model)
 	{
 		_model = std::make_shared<::Model>("player/model.fbx");
-		_hairModel = std::make_shared<::Model>(fmt::format("player/hair/{}/model.fbx", 0));
+		_hairModel = std::make_shared<::Model>(fmt::format("player/hair/{}/model.fbx", hairStyle));
 	}
 
 	_model->SetVisibility(fmt::format("Nose{:02}__mNose", noseStyle), true);
@@ -387,6 +387,7 @@ void Player::Serialize(JSONObject& target)
 	style["mouth"] = new JSONValue(mouthStyle);
 	style["cheeks"] = new JSONValue(cheeksStyle);
 	style["nose"] = new JSONValue(noseStyle);
+	style["hair"] = new JSONValue(hairStyle);
 	target["style"] = new JSONValue(style);
 
 	JSONArray items;
@@ -435,6 +436,7 @@ void Player::Deserialize(JSONObject& source)
 	mouthStyle = style.at("mouth")->AsInteger();
 	cheeksStyle = style.at("cheeks")->AsInteger();
 	noseStyle = style.at("nose")->AsInteger();
+	hairStyle = style.at("hair")->AsInteger();
 
 	auto items = source["items"]->AsArray();
 	OnHand.fill(nullptr);

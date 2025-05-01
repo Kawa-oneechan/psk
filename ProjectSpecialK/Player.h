@@ -26,7 +26,7 @@ private:
 	int findItemSlot(InventoryItemP target);
 	int findStorageSlot(InventoryItemP target);
 
-	int eyeStyle{ 0 }, mouthStyle{ 0 }, cheeksStyle{ 2 }, noseStyle{ 1 };
+	int eyeStyle{ 0 }, mouthStyle{ 0 }, cheeksStyle{ 2 }, noseStyle{ 1 }, hairStyle{ 0 };
 	bool stung{ false };
 
 public:
@@ -59,10 +59,7 @@ public:
 	ModelP Model();
 	ModelP Model(int slot);
 	std::string Birthday();
-
-	void SetFace(int face);
-	void SetMouth(int mouth);
-
+	
 	void Draw(float dt);
 	bool Tick(float dt);
 
