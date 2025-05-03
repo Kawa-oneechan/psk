@@ -27,30 +27,38 @@ struct MapTile
 
 struct ExtraTile
 {
-	unsigned char Model;
-	unsigned char Rotation;
+	unsigned char Model; //Model index for this tile, into tileModels
+	unsigned char Rotation; //Rotation of this tile model in 90 degree increments.
+	bool ObjectHere; //Is there an object on this tile?
+	unsigned char ObjectExtentH; //If this is non-zero and ObjectHere is true, the actual object is this many tiles to the left.
+	unsigned char ObjectExtentV; //If this is non-zero and ObjectHere is true, the actual object is this many tiles up.
 };
 
 #pragma warning(push)
 #pragma warning(disable: 4201)
 
+enum class ItemLayer
+{
+	Ground,
+	Table,
+	NorthWall,
+	EastWall,
+	SouthWall,
+	WestWall,
+	Ceiling,
+	Carpet
+};
+
 //Describes both placed objects and dropped items.
 struct MapItem
 {
 	InventoryItemP Item; //The actual item.
-	glm::vec2 Position; //Where on the map the item is placed/dropped.
+	glm::vec2 Position; //Where on the map the item is placed/dropped in tile coordinates.
 	int State; //Extra state. Meaning depends on the item.
-	union
-	{
-		struct
-		{
-			int Rotation : 2; //If it's placed, which orientation is it in.
-			int Layer : 4;
-			bool Fixed : 1; //If it's placed, is it wrenched in place?
-			bool Dropped : 1; //Is this a one-tile dropped item icon?
-		};
-		int Placement;
-	};
+	int Rotation; //If it's placed, which orientation is it in, in 90 degrees increments.
+	ItemLayer Layer; //If it's placed, which layer is it in.
+	bool Fixed; //If it's placed, is it wrenched in place?
+	bool Dropped; //Is this a one-tile dropped item icon?
 };
 
 struct Acre

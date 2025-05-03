@@ -378,8 +378,8 @@ void Map::SaveObjects(JSONObject& json)
 					item["fixed"] = new JSONValue(true);
 				if (i.Rotation != 0)
 					item["facing"] = new JSONValue(i.Rotation);
-				if (i.Layer != 0)
-					item["layer"] = new JSONValue(i.Layer);
+				if (i.Layer != ItemLayer::Ground)
+					item["layer"] = new JSONValue((int)i.Layer);
 			}
 			objects.push_back(new JSONValue(item));
 		}
@@ -402,13 +402,13 @@ void Map::LoadObjects(JSONObject& json)
 		if (item.Dropped)
 		{
 			item.Fixed = false;
-			item.Layer = 0;
+			item.Layer = ItemLayer::Ground;
 			item.Rotation = 0;
 		}
 		else
 		{
 			item.Fixed = (i["fixed"] != nullptr) ? i["fixed"]->AsBool() : false;
-			item.Layer = (i["layer"] != nullptr) ? i["layer"]->AsInteger() : 0;
+			item.Layer = (ItemLayer)((i["layer"] != nullptr) ? i["layer"]->AsInteger() : 0);
 			item.Rotation = (i["facing"] != nullptr) ? i["facing"]->AsInteger() : 0;
 		}
 		
@@ -422,6 +422,10 @@ void Map::LoadObjects(JSONObject& json)
 		}
 		Acres[acreIndex].Objects.push_back(item);
 	}
+
+	//TODO: go through the list of objects later on to correct wrong layers.
+	//In exteriors, items only go on the ground or on tables.
+	//Items on the table layer should have a supporter on the ground layer.
 }
 
 Town::Town()
