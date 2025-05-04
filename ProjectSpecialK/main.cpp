@@ -567,6 +567,8 @@ int main(int argc, char** argv)
 	setlocale(LC_ALL, "en_US.UTF-8");
 	//std::srand((unsigned int)std::time(nullptr));
 
+	bool skipTitle = false;
+
 	for (int i = 1; i < argc; i++)
 	{
 		std::string arg = argv[i];
@@ -574,6 +576,10 @@ int main(int argc, char** argv)
 		{
 			i++;
 			UI::initFile = argv[i];
+		}
+		if (arg == "-skiptitle")
+		{
+			skipTitle = true;
 		}
 	}
 
@@ -735,8 +741,10 @@ int main(int argc, char** argv)
 	tickables.push_back(musicManager);
 	tickables.push_back(MainCamera);
 	tickables.push_back(town);
-	tickables.push_back(std::make_shared<TitleScreen>());
-	//tickables.push_back(std::make_shared<InGame>());
+	if (skipTitle)
+		tickables.push_back(std::make_shared<InGame>());
+	else
+		tickables.push_back(std::make_shared<TitleScreen>());
 
 	//auto layoutOverlay = new Texture("layoutoverlay.png");
 
