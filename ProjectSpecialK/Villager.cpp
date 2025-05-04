@@ -355,6 +355,16 @@ void Villager::Draw(float)
 	_model->SetLayerByMat("_mMouth", mouth);
 	
 	animator->CopyBones(_model);
+	if ((_customModel && _customMuzzle) || _species->ModeledMuzzle)
+	{
+		_model->SetVisibility("FaceBad__mBeak", mouth >= 3 && mouth < 6);
+		_model->SetVisibility("FaceGood__mBeak", mouth >= 6);
+		_model->SetVisibility("FaceNothing__mBeak", mouth < 3);
+		_model->Bones[_model->FindBone("Mouth")].Rotation.z =
+			(mouth % 3 == 0 ? 0.000f :
+			(mouth % 3 == 1 ? 0.150f :
+				0.300f));
+	}
 	_model->CalculateBoneTransforms();
 
 	_model->CopyBoneTransforms(_accessoryModel);
