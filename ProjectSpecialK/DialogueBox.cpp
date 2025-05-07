@@ -475,11 +475,12 @@ void DialogueBox::Draw(float dt)
 	auto dlgLeft = (width * 0.5) - dlgWidth;
 	auto dlgTop = height - dlgHeight - metrics["dialogueGap"]->AsNumber();
 
+	auto wobble = Shaders["wobble"];
 	gradient[0].Use(1);
 	gradient[1].Use(2);
-	wobble.Set("time", time);
+	wobble->Set("time", time);
 
-	Sprite::DrawSprite(&wobble, bubble[bubbleNum], glm::vec2(dlgLeft, dlgTop), glm::vec2(dlgWidth * 2, dlgHeight), glm::vec4(0, 0, bubble[bubbleNum].width * 2, bubble[bubbleNum].height), 0, bubbleColor);
+	Sprite::DrawSprite(wobble, bubble[bubbleNum], glm::vec2(dlgLeft, dlgTop), glm::vec2(dlgWidth * 2, dlgHeight), glm::vec4(0, 0, bubble[bubbleNum].width * 2, bubble[bubbleNum].height), 0, bubbleColor);
 
 	Sprite::DrawText(font, displayed, glm::vec2(dlgLeft + (metrics["dialogueTextLeft"]->AsNumber() * dlgScale), dlgTop + (metrics["dialogueTextTop"]->AsNumber() * dlgScale)), textColor, 170.0f * dlgScale);
 

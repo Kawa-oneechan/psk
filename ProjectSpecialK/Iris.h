@@ -6,7 +6,6 @@ class Iris : public Tickable
 {
 private:
 	float time;
-	Shader* shader;
 	enum class State
 	{
 		Idle,
@@ -16,7 +15,6 @@ private:
 
 public:
 	Iris();
-	~Iris();
 	bool Tick(float dt);
 	void Draw(float dt);
 	void In();

@@ -8,7 +8,6 @@
 #include <stb_image_write.h>
 
 extern int width, height;
-extern Shader* spriteShader;
 
 extern unsigned int currentVAO;
 
@@ -102,7 +101,7 @@ namespace Sprite
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindVertexArray(0);
 
-		fontShader = new Shader("shaders/font.fs");
+		fontShader = Shaders["font"];
 
 		originalTextRenderSize = textRenderSize = 100;
 		originalTextRenderColor = textRenderColor = UI::textColors[0];
@@ -198,7 +197,7 @@ namespace Sprite
 
 	void DrawSprite(Texture& texture, const glm::vec2& position, const glm::vec2& size, const glm::vec4& srcRect, float rotate, const glm::vec4& color, SpriteFlags flip)
 	{
-		DrawSprite(spriteShader, texture, position, size, srcRect, rotate, color, flip);
+		DrawSprite(Shaders["sprite"], texture, position, size, srcRect, rotate, color, flip);
 	}
 
 	void DrawSprite(Shader* shader, Texture& texture, const glm::vec2 position)
@@ -208,7 +207,7 @@ namespace Sprite
 
 	void DrawSprite(Texture& texture, const glm::vec2 position)
 	{
-		DrawSprite(spriteShader, texture, position, glm::vec2(texture.width, texture.height), glm::vec4(0), 0, glm::vec4(1));
+		DrawSprite(Shaders["sprite"], texture, position, glm::vec2(texture.width, texture.height), glm::vec4(0), 0, glm::vec4(1));
 	}
 
 	void DrawLine(const glm::vec2& from, const glm::vec2& to, const glm::vec4& color)

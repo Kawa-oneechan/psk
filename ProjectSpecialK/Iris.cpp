@@ -2,13 +2,7 @@
 
 Iris::Iris()
 {
-	shader = new Shader("shaders/iris.fs");
 	time = 1.0f; //assume we're all black, irising IN
-}
-
-Iris::~Iris()
-{
-	delete shader;
 }
 
 bool Iris::Tick(float dt)
@@ -39,6 +33,7 @@ bool Iris::Tick(float dt)
 void Iris::Draw(float dt)
 {
 	dt;
+	auto shader = Shaders["iris"];
 	shader->Set("smoothness", 0.02f);
 	shader->Set("progress", 1.0f - time);
 	Sprite::DrawSprite(shader, *whiteRect, glm::vec2(0), glm::vec2(width, height));

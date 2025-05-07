@@ -1,0 +1,22 @@
+{
+	//Keys are used in matmap files and C++ code alike.
+	"model.vs": {	
+		"model": "model.fs",
+		"grass": "grass.fs",
+		"playerbody": "playerbody.fs",
+		"playereyes": "playereyes.fs",
+		"playermouth": "playermouth.fs",
+		"playercheek": "playercheek.fs",
+		"playerlegs": "playerlegs.fs",
+		"playerhair": "playerhair.fs"
+	},
+	"sprite.vs": {
+		"sprite": "sprite.fs",
+		"font": "font.fs",
+		"scroller": "scroller.fs",
+		"wobble": "wobble.fs",
+		"iris": "iris.fs",
+		"sky": "sky.fs",
+		"postfx": "postfx.fs"
+	}
+}

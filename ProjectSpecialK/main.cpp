@@ -45,8 +45,6 @@ bool useOrthographic = false;
 
 GLFWwindow* window;
 
-Shader* spriteShader = nullptr;
-Shader* modelShader = nullptr;
 Texture* whiteRect = nullptr;
 std::shared_ptr<DialogueBox> dlgBox = nullptr;
 CursorP cursor = nullptr;
@@ -551,16 +549,7 @@ void GLAPIENTRY MessageCallback(GLenum source, GLenum type, GLuint id, GLenum se
 #endif
 
 Framebuffer* postFxBuffer;
-Shader* skyShader;
-Background* rainLayer;
-
-Shader* grassShader;
-Shader* playerBodyShader;
-Shader* playerEyesShader;
-Shader* playerMouthShader;
-Shader* playerCheekShader;
-Shader* playerLegsShader;
-Shader* playerHairShader;
+//Background* rainLayer;
 
 int main(int argc, char** argv)
 {
@@ -614,20 +603,10 @@ int main(int argc, char** argv)
 	glDebugMessageCallback(MessageCallback, 0);
 #endif
 
-	spriteShader = new Shader("shaders/sprite.fs");
-	modelShader = new Shader("shaders/model.vs", "shaders/model.fs");
-	skyShader = new Shader("shaders/sky.fs");
 	whiteRect = new Texture("white.png", GL_CLAMP_TO_EDGE);
 	UI::controls = std::make_shared<Texture>("ui/controls.png");
 
-	playerBodyShader = new Shader("shaders/model.vs", "shaders/playerbody.fs");
-	playerEyesShader = new Shader("shaders/model.vs", "shaders/playereyes.fs");
-	playerMouthShader = new Shader("shaders/model.vs", "shaders/playermouth.fs");
-	playerCheekShader = new Shader("shaders/model.vs", "shaders/playercheek.fs");
-	playerLegsShader = new Shader("shaders/model.vs", "shaders/playerlegs.fs");
-	playerHairShader = new Shader("shaders/model.vs", "shaders/playerhair.fs");
-
-	grassShader = new Shader("shaders/model.vs", "shaders/grass.fs");;
+	Shader::LoadAll();
 	commonUniforms.GrassColor = 0.5f;
 
 	GLuint commonBind = 1;
@@ -694,7 +673,7 @@ int main(int argc, char** argv)
 	auto starsImage = Texture("starfield.png");
 	auto skyImage = Texture("skycolors.png");
 
-	rainLayer = new Background("rain.png", glm::vec2(1.0, 2.0));
+	//rainLayer = new Background("rain.png", glm::vec2(1.0, 2.0));
 
 	if (!LoadLights("lights/initial.json").empty())
 	{
@@ -728,7 +707,7 @@ int main(int argc, char** argv)
 	orthographicProjection = glm::ortho(-(ScreenWidth * orthoScale), (ScreenWidth * orthoScale), -(ScreenHeight * orthoScale), (ScreenHeight * orthoScale), -1.0f, 300.0f);
 	commonUniforms.Projection = useOrthographic ? orthographicProjection : perspectiveProjection;
 
-	postFxBuffer = new Framebuffer("shaders/postfx.fs", width, height);
+	postFxBuffer = new Framebuffer(Shaders["postfx"], width, height);
 	postFxBuffer->SetLut(new Texture("colormap.png"));
 
 #ifdef DEBUG
@@ -796,7 +775,7 @@ int main(int argc, char** argv)
 
 		auto pitch = MainCamera->Angles().y;
 		if (pitch > 180) pitch -= 360;
-		skyShader->Set("pitch", pitch);
+		Shaders["sky"]->Set("pitch", pitch);
 		cloudImage.Use(1);
 		starsImage.Use(2);
 		skyImage.Use(3);

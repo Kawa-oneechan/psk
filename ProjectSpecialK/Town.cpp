@@ -27,9 +27,7 @@ float Map::GetHeight(int x, int y)
 
 extern float timeScale;
 extern bool wireframe;
-extern Shader* modelShader;
-extern Shader* skyShader;
-extern Background* rainLayer;
+//extern Background* rainLayer;
 extern Framebuffer* postFxBuffer;
 
 extern unsigned int commonBuffer;
@@ -301,7 +299,7 @@ void Map::drawGround(float dt)
 
 void Map::drawWorker(float dt)
 {
-	Sprite::DrawSprite(skyShader, *whiteRect, glm::vec2(0), glm::vec2(width, height));
+	Sprite::DrawSprite(Shaders["sky"], *whiteRect, glm::vec2(0), glm::vec2(width, height));
 	Sprite::FlushBatch();
 
 	glClear(GL_DEPTH_BUFFER_BIT);
@@ -805,8 +803,8 @@ void Town::Draw(float dt)
 
 	Map::Draw(dt);
 
-	if ((int)Clouds >= (int)Town::Weather::RainClouds)
-		rainLayer->Draw(dt * timeScale);
+	//if ((int)Clouds >= (int)Town::Weather::RainClouds)
+	//	rainLayer->Draw(dt * timeScale);
 
 	Sprite::FlushBatch();
 }

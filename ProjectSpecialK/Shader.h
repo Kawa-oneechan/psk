@@ -28,8 +28,13 @@ public:
 
 	void Reload();
 
+	static void LoadAll();
+	static void ReloadAll();
+
 private:
 	std::string vertexShaderPath, fragmentShaderPath;
 	void checkCompileErrors(unsigned int shader, const std::string& type);
 	void load();
 };
+
+extern std::map<std::string, Shader*> Shaders;

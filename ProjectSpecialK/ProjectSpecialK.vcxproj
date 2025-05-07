@@ -285,6 +285,7 @@
     <None Include="data\shaders\model.vs" />
     <None Include="data\shaders\postfx.fs" />
     <None Include="data\shaders\scroller.fs" />
+    <None Include="data\shaders\shaders.json" />
     <None Include="data\shaders\sky.fs" />
     <None Include="data\shaders\sprite.fs" />
     <None Include="data\shaders\sprite.vs" />

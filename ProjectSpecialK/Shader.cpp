@@ -3,6 +3,7 @@
 #define HEADER "#version 430 core\n#define PSK\n"
 
 static unsigned int currentShader;
+std::map<std::string, Shader*> Shaders;
 
 void Shader::load()
 {
@@ -126,6 +127,32 @@ void Shader::Reload()
 {
 	glDeleteProgram(ID);
 	load();
+}
+
+void Shader::LoadAll()
+{
+	auto doc = VFS::ReadJSON("shaders/shaders.json");
+	if (!doc)
+		FatalError("Could not read shaders/shaders.json. Something is very wrong.");
+	for (auto& vs : doc->AsObject())
+	{
+		auto vsFile = fmt::format("shaders/{}", vs.first);
+		for (auto& fs : vs.second->AsObject())
+		{
+			auto& key = fs.first;
+			auto fsFile = fmt::format("shaders/{}", fs.second->AsString());
+			Shaders[key] = new Shader(vsFile, fsFile);
+		}
+	}
+	delete doc;
+}
+
+void Shader::ReloadAll()
+{
+	for (auto& s : Shaders)
+	{
+		s.second->Reload();
+	}
 }
 
 void Shader::checkCompileErrors(unsigned int shader, const std::string& type)

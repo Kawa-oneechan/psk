@@ -24,16 +24,6 @@ extern bool useOrthographic;
 
 bool noWear; //placeholder
 
-extern Shader* spriteShader;
-extern Shader* modelShader;
-extern Shader* grassShader;
-extern Shader* skyShader;
-extern Shader* playerBodyShader;
-extern Shader* playerEyesShader;
-extern Shader* playerMouthShader;
-extern Shader* playerCheekShader;
-extern Shader* playerLegsShader;
-extern Shader* playerHairShader;
 extern Framebuffer* postFxBuffer;
 
 Console::Console()
@@ -227,17 +217,8 @@ bool Console::Execute(const std::string& str)
 			}
 			else if (split[0] == "reshade")
 			{
-				spriteShader->Reload();
-				modelShader->Reload();
-				skyShader->Reload();
-				grassShader->Reload();
-				playerBodyShader->Reload();
-				playerEyesShader->Reload();
-				playerMouthShader->Reload();
-				playerCheekShader->Reload();
-				playerLegsShader->Reload();
-				playerHairShader->Reload();
-				postFxBuffer->ReloadShader();
+				Shader::ReloadAll();
+				//postFxBuffer->ReloadShader();
 				{
 					auto lut = postFxBuffer->GetLut();
 					delete lut;

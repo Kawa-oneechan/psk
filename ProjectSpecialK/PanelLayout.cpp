@@ -353,7 +353,7 @@ void PanelLayout::Draw(float dt)
 		{
 			auto& texture = *textures[panel->Texture];
 			auto frame = texture[panel->Frame];
-			auto shader = spriteShader;
+			auto shader = Shaders["sprite"];
 			auto finalPos = Position + parentPos + panel->Position;
 
 			Sprite::DrawSprite(
@@ -405,7 +405,7 @@ void PanelLayout::Draw(float dt)
 
 			auto& texture = *Database::ItemIcons;
 			auto frame = Database::ItemIconAtlas[panel->Text];
-			auto shader = spriteShader;
+			auto shader = Shaders["sprite"];
 
 			Sprite::DrawSprite(
 				shader, texture,

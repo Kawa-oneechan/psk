@@ -95,7 +95,6 @@ extern float scale;
 
 extern void GetAtlas(std::vector<glm::vec4> &ret, const std::string& jsonFile);
 
-extern Shader* spriteShader;
 extern Texture* whiteRect;
 
 extern sol::state Sol;

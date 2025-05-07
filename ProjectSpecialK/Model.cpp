@@ -127,14 +127,6 @@ namespace MeshBucket
 }
 
 static std::map<std::string, std::tuple<Model*, int>> cache;
-extern Shader* modelShader;
-extern Shader* grassShader;
-extern Shader* playerBodyShader;
-extern Shader* playerEyesShader;
-extern Shader* playerMouthShader;
-extern Shader* playerCheekShader;
-extern Shader* playerLegsShader;
-extern Shader* playerHairShader;
 
 Model::Mesh::Mesh(ufbx_mesh* mesh, Armature& bones, size_t boneCt) : Visible(true), Layer(0)
 {
@@ -147,7 +139,7 @@ Model::Mesh::Mesh(ufbx_mesh* mesh, Armature& bones, size_t boneCt) : Visible(tru
 			MatHash = GetCRC(Name.substr(lastUnder));
 	}
 
-	Shader = modelShader; //by default
+	Shader = Shaders["model"]; //by default
 	std::fill_n(Textures, 4, nullptr);
 
 	std::vector<unsigned int> tri_indices;
@@ -509,7 +501,7 @@ Model::Model(const std::string& modelPath) : file(modelPath)
 		if (node->mesh)
 		{
 			auto m = Mesh(node->mesh, Bones, BoneCt);
-			m.Shader = modelShader;
+			m.Shader = Shaders["model"];
 			m.Textures[0] = &fallback;
 			m.Textures[1] = &fallbackNormal;
 			m.Textures[2] = &white;
@@ -527,32 +519,7 @@ Model::Model(const std::string& modelPath) : file(modelPath)
 						if (mat["shader"])
 						{
 							auto s = mat["shader"]->AsString();
-							//TODO: use a JSON for this.
-							/*
-							{
-								"__default": "model.fs",
-								"grass": "grass.fs",
-								"playerbody": "playerbody.fs"
-								//etc...
-							}
-							Have a map of Shader objects, populated by this JSON file.
-							Console reload function can use this too. Perhaps other
-							stuff too.
-							*/
-							if (s == "grass")
-								m.Shader = grassShader;
-							else if (s == "playerbody")
-								m.Shader = playerBodyShader;
-							else if (s == "playereyes")
-								m.Shader = playerEyesShader;
-							else if (s == "playermouth")
-								m.Shader = playerMouthShader;
-							else if (s == "playercheek")
-								m.Shader = playerCheekShader;
-							else if (s == "playerlegs")
-								m.Shader = playerLegsShader;
-							else if (s == "playerhair")
-								m.Shader = playerHairShader;
+							m.Shader = Shaders[s];
 							/*
 							Secondary idea: look into custom properties in the FBX file
 							that may OVERRIDE the matmap file.

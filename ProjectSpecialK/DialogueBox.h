@@ -16,7 +16,6 @@ private:
 		Texture("gradient_wide.png")
 	};
 	Texture nametag{ Texture("ui/dialogue/nametag.png") };
-	Shader wobble{ Shader("shaders/wobble.fs") };
 	std::string displayed;
 	std::string toDisplay;
 	size_t displayCursor{ 0 };

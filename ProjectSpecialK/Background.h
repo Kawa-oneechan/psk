@@ -6,7 +6,6 @@ class Background : public Tickable
 {
 private:
 	std::unique_ptr<Texture> wallpaper;
-	Shader scroller{ Shader("shaders/scroller.fs") };
 	float time{ 0 };
 
 public:
