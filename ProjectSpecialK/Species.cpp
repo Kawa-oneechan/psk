@@ -28,8 +28,8 @@ Species::Species(JSONObject& value, const std::string& filename) : NameableThing
 			Text::Add(RefName + ":f", *narr[1]);
 		}
 	}
-	EnName[0] = StripMSBT(Text::Get(RefName + ":m", Language::EUen));
-	EnName[1] = StripMSBT(Text::Get(RefName + ":f", Language::EUen));
+	EnName[0] = StripMSBT(Text::Get(RefName + ":m"));
+	EnName[1] = StripMSBT(Text::Get(RefName + ":f"));
 
 	if (value["filterAs"])
 	{

@@ -35,6 +35,7 @@
 	"menu:options:language:hu": { "en": "Hungarian / magyar" },
 	"menu:options:language:nl": { "en": "Dutch / Nederlands" },
 	"menu:options:language:uk": { "en": "UK English" },
+/*
 	"menu:options:language:taunt": {
 		"en": "You chose <color:1>US English</color>. Howdy partner, this island is 300 square hamburgers of FREEDOM!",
 		"jp": "<color:1>日本語</color>を選択しました。 ごちゃごちゃしていてすみません。",
@@ -42,6 +43,7 @@
 		"nl": "Je hebt voor <color:1>Nederlands</color> gekozen. Waarom zijn bijna alle namen hetzelfde gebleven?",
 		"uk": "You chose <color:1>Proper English</color>. Don't worry, you don't need a Video Game License here, we won't tell, love."
 	},
+*/
 
 	"menu:options:continuefrom": {
 		"en": "Continue from",

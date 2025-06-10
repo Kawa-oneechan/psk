@@ -3,6 +3,9 @@
 #include "Cursor.h"
 #include "DialogueBox.h"
 
+//TODO: Add a thing where changing the game language reveals a warning about having to restart.
+//Would also work for a few other "deep" settings like resolution or whatever.
+
 DoomMenuItem::DoomMenuItem(const std::string& cap, int val, std::initializer_list<std::string> opts, std::function<void(DoomMenuItem*)> chg = nullptr) : key(cap), type(Type::Options), selection(val), change(chg), page(nullptr)
 {
 	for (auto i : opts)
@@ -107,7 +110,7 @@ void DoomMenu::Build()
 			UI::settings["language"] = new JSONValue(Text::GetLangCode(gameLang));
 			Translate();
 			items = &options;
-			dlgBox->Text(Text::Get("menu:options:language:taunt"), Database::Find<Villager>("psk:cat00", villagers));
+			//dlgBox->Text(Text::Get("menu:options:language:taunt"), Database::Find<Villager>("psk:cat00", villagers));
 		}
 		));
 		options.items.push_back(new DoomMenuItem("menu:options:continuefrom", UI::settings["continue"]->AsInteger(),

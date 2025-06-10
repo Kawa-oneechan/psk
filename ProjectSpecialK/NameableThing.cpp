@@ -29,7 +29,7 @@ NameableThing::NameableThing(JSONObject& value, const std::string& filename)
 	else
 		Text::Add(ref, *val);
 
-	EnName = StripMSBT(Text::Get(ref, Language::EUen));
+	EnName = StripMSBT(Text::Get(ref));
 }
 
 std::string NameableThing::Name()

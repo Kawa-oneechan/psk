@@ -55,7 +55,7 @@ std::string Text::GetLangCode(Language lang)
 	return map.at(lang);
 }
 
-std::string Text::Entry::get(Language lang)
+std::string Text::Entry::get()
 {
 	if (condition.size())
 	{
@@ -63,23 +63,7 @@ std::string Text::Entry::get(Language lang)
 		return Get(result ? ifTrue : ifElse);
 	}
 
-	auto t = text.find(lang);
-	if (t != text.end())
-		return t->second;
-
-	switch (lang)
-	{
-	case USen: return "<404>";
-	case EUes: return get(USes);
-	case EUfr: return get(USfr);
-	case TWzh: return get(CNzh);
-	default: return get(USen);
-	}
-}
-
-std::string Text::Entry::get()
-{
-	return get(gameLang);
+	return text;
 }
 
 Text::Entry& Text::Add(const std::string& key, JSONObject& map)
@@ -97,13 +81,12 @@ Text::Entry& Text::Add(const std::string& key, JSONObject& map)
 		}
 
 		auto langEnum = GetLangCode(langs.first);
-		if (langEnum == Unknown)
-			continue;
-		entry->text[langEnum] = langs.second->AsString();
+		if (langEnum == gameLang || langEnum == Language::USen)
+			entry->text = langs.second->AsString();
 	}
 
 	if (entry->condition.empty())
-		entry->rep = entry->get(Language::USen);
+		entry->rep = entry->get();
 	else
 		entry->rep = entry->condition;
 	if (entry->rep.length() > 16)
@@ -172,23 +155,17 @@ void Text::Add(JSONValue& doc)
 	delete &doc;
 }
 
-std::string Text::Get(std::string key, Language lang)
+std::string Text::Get(std::string key)
 {
-	auto oldLang = gameLang;
-	if (lang != Language::Default)
-		gameLang = lang;
-	auto ret = std::string("???" + key + "???");
 	for (const auto& entry : textEntries)
 	{
 		if (entry.first == key)
 		{
 			auto e = entry.second;
-			ret = e.get();
-			break;
+			return e.get();
 		}
 	}
-	gameLang = oldLang;
-	return ret;
+	return std::string("???" + key + "???");
 }
 
 std::string Text::DateMD(int month, int day)

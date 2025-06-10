@@ -22,11 +22,10 @@ namespace Text
 	struct Entry
 	{
 		std::string rep;
-		std::map<Language, std::string> text;
+		std::string text;
 		std::string condition;
 		std::string ifTrue, ifElse;
 
-		std::string get(Language lang);
 		std::string get();
 	};
 
@@ -47,7 +46,7 @@ namespace Text
 	//This deletes the original JSONValue afterwards - do NOT delete it yourself.
 	extern void Add(JSONValue& doc);
 	//Returns a localized string.
-	extern std::string Get(std::string key, Language lang = Language::Default);
+	extern std::string Get(std::string key);
 	//Returns a localized date.
 	extern std::string DateMD(int month, int day);
 }
