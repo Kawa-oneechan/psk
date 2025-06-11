@@ -166,8 +166,16 @@ namespace Database
 	{
 		auto entries = VFS::Enumerate("text/*.json");
 		auto progressStep = progressParts / entries.size();
+		auto langID = Text::GetLangCode(gameLang);
+		StringToLower(langID);
 		for (const auto& entry : entries)
 		{
+			auto last = entry.path.substr(entry.path.length() - 10);
+			if (last[0] == '-')
+			{
+				if (last.substr(1, 4) != langID)
+					continue;
+			}
 			Text::Add(*VFS::ReadJSON(entry.path));
 			*progress += progressStep;
 		}

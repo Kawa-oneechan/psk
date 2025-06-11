@@ -102,7 +102,8 @@ Text::Entry& Text::Add(const std::string& key, JSONObject& map)
 Text::Entry& Text::Add(const std::string& key, const std::string& english)
 {
 	auto map = JSONObject();
-	map["USen"] = new JSONValue(english);
+	auto langID = GetLangCode(gameLang);
+	map[langID] = new JSONValue(english);
 	return Add(key, map);
 }
 
@@ -149,7 +150,8 @@ void Text::Add(JSONValue& doc)
 	for (auto& entry : doc.AsObject())
 	{
 		std::string& key = (std::string&)entry.first;
-		auto map = entry.second->AsObject();
+		//auto map = entry.second->AsObject();
+		auto& map = *entry.second;
 		Add(key, map);
 	}
 	delete &doc;
