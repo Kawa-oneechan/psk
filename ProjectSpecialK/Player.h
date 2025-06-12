@@ -94,6 +94,8 @@ public:
 
 	void Serialize(JSONObject& target);
 	void Deserialize(JSONObject& source);
+
+	float FindVillagerCollision();
 };
 
 extern Player thePlayer;

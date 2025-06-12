@@ -32,6 +32,7 @@ public:
 
 	void Turn(float facing, float dt);
 	bool Move(float facing, float dt);
+	virtual float FindVillagerCollision() { return INFINITY; }
 
 	void SetFace(int face);
 	void SetMouth(int mouth);
@@ -121,6 +122,8 @@ public:
 
 	void Serialize(JSONObject& target);
 	void Deserialize(JSONObject& source);
+
+	float FindVillagerCollision();
 
 	//kill copies
 	Villager(const Villager&) = delete;

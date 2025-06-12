@@ -1,4 +1,5 @@
 #include "SpecialK.h"
+#include "Town.h"
 #include "InputsMap.h"
 
 extern bool useOrthographic;
@@ -503,5 +504,19 @@ void Player::Deserialize(JSONObject& source)
 	}
 }
 
+float Player::FindVillagerCollision()
+{
+	for (auto& v : town->Villagers)
+	{
+		auto dX = glm::abs(v->Position.x - this->Position.x);
+		auto dZ = glm::abs(v->Position.z - this->Position.z);
+		auto dist = glm::sqrt((dX * dX) + (dZ + dZ));
+
+		const auto r = 2.0f;
+		if (dist <= r + r)
+			return r + r - dist;
+	}
+	return 0.0f;
+}
 
 Player thePlayer;
