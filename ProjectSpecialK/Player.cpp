@@ -504,12 +504,12 @@ void Player::Deserialize(JSONObject& source)
 	}
 }
 
-float Player::FindVillagerCollision()
+float Player::FindVillagerCollision(glm::vec3 pos)
 {
 	for (auto& v : town->Villagers)
 	{
-		auto dX = glm::abs(v->Position.x - this->Position.x);
-		auto dZ = glm::abs(v->Position.z - this->Position.z);
+		auto dX = glm::abs(v->Position.x - pos.x);
+		auto dZ = glm::abs(v->Position.z - pos.z);
 		auto dist = glm::sqrt((dX * dX) + (dZ + dZ));
 
 		const auto r = 2.0f;

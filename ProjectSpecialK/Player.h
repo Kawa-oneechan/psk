@@ -95,7 +95,7 @@ public:
 	void Serialize(JSONObject& target);
 	void Deserialize(JSONObject& source);
 
-	float FindVillagerCollision();
+	float FindVillagerCollision(glm::vec3 pos);
 };
 
 extern Player thePlayer;

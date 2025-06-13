@@ -56,22 +56,12 @@ bool Person::Move(float facing, float dt)
 
 	//Okay so between this and the implementation of FindVillagerCollision,
 	//this ALSO does not work right.
-	float c2c = FindVillagerCollision();
+	float c2c = FindVillagerCollision(newPos);
 	if (c2c > 0.0f)
 	{
-		//Not resolving just gets you stuck once you collide.
-		//The only way to get out again is to use the built-in debug tools
-		//to move the villager you're stuck to out of the way.
+		//TODO: PUSH.
 		return true;
 	}
-	/*
-	{
-		//Does not work right, causes jittering as seen on tumblr et al.
-		newPos = Position;
-		newPos.x += movement.x * speed;
-		newPos.z -= movement.y * speed;
-	}
-	*/
 
 	Position = newPos;
 	return true;
@@ -607,15 +597,15 @@ void Villager::Deserialize(JSONObject& source)
 	}
 }
 
-float Villager::FindVillagerCollision()
+float Villager::FindVillagerCollision(glm::vec3 pos)
 {
 	for (auto& v : town->Villagers)
 	{
 		if (v->Hash == this->Hash)
 			continue;
-		auto dX = v->Position.x - this->Position.x;
-		auto dY = v->Position.y - this->Position.y;
-		auto dist = glm::sqrt((dX * dX) + (dY + dY));
+		auto dX = v->Position.x - pos.x;
+		auto dZ = v->Position.y - pos.z;
+		auto dist = glm::sqrt((dX * dX) + (dZ + dZ));
 
 		const auto r = 2.0f;
 		if (dist <= r + r)
@@ -624,8 +614,8 @@ float Villager::FindVillagerCollision()
 
 	//Now check against the player.
 	{
-		auto dX = glm::abs(thePlayer.Position.x - this->Position.x);
-		auto dZ = glm::abs(thePlayer.Position.z - this->Position.z);
+		auto dX = glm::abs(thePlayer.Position.x - pos.x);
+		auto dZ = glm::abs(thePlayer.Position.z - pos.z);
 		auto dist = glm::sqrt((dX * dX) + (dZ + dZ));
 
 		const auto r = 2.0f;
