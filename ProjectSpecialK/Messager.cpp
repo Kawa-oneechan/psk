@@ -5,12 +5,12 @@ Messager::Messager()
 	cursor = 0;
 }
 
-Messager::Message Messager::Add(const std::string& text, bool persist)
+Messager::Message* Messager::Add(const std::string& text, bool persist)
 {
-	auto& message = messages[cursor];
-	message.Text = text;
-	message.Lifetime = text.size() * 1.0f;
-	message.Persistent = persist;
+	auto message = &messages[cursor];
+	message->Text = text;
+	message->Lifetime = text.size() * 1.0f;
+	message->Persistent = persist;
 	conprint(8, text);
 	cursor++;
 	if (cursor == messages.size())

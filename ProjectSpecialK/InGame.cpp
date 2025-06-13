@@ -1,4 +1,5 @@
 #include "InGame.h"
+#include "Messager.h"
 
 InGame::InGame()
 {
@@ -10,6 +11,7 @@ InGame::InGame()
 	tickables.push_back(dateTimePanel);
 	tickables.push_back(itemHotbar);
 	tickables.push_back(dlgBox);
+	tickables.push_back(messager);
 	tickables.push_back(iris);
 
 	LoadCamera("cameras/field.json");

@@ -661,6 +661,7 @@ int main(int argc, char** argv)
 
 	town = std::make_shared<Town>();
 	dlgBox = std::make_shared<DialogueBox>();
+	messager = std::make_shared<Messager>();
 
 #ifdef DEBUG
 	RunTests();
