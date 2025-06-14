@@ -799,7 +799,6 @@ int main(int argc, char** argv)
 		}
 
 		//TEST
-		/*
 		if (Inputs.KeyDown(Binds::Accept))
 		{
 			Inputs.Clear(Binds::Accept);
@@ -814,7 +813,6 @@ int main(int argc, char** argv)
 			};
 			messager->Add(lols[rnd::getInt(7)]);
 		}
-		*/
 
 #ifdef DEBUG
 		DoImGui();
