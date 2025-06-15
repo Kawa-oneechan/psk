@@ -43,7 +43,7 @@ TitleScreen::TitleScreen()
 	psText = fmt::format(Text::Get("title:pressstart"), key.Name, GamepadPUAMap[key.GamepadButton]);
 	psSize = Sprite::MeasureText(1, psText, 100);
 
-	optionsMenu = std::make_shared<DoomMenu>();
+	optionsMenu = std::make_shared<OptionsMenu>();
 	optionsMenu->Enabled = false;
 	optionsMenu->Visible = false;
 

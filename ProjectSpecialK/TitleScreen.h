@@ -14,7 +14,7 @@ private:
 	} state{ State::Init };
 
 	std::shared_ptr<PanelLayout> logoAnim;
-	std::shared_ptr<DoomMenu> optionsMenu;
+	std::shared_ptr<OptionsMenu> optionsMenu;
 	std::shared_ptr<Iris> iris;
 
 	std::string psText;

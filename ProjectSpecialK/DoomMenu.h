@@ -59,14 +59,15 @@ public:
 	
 	DoomMenuPage() = default;
 
-	DoomMenuPage(const std::string& hed, const std::string& sub) : headerKey(hed), subKey(sub) {}
+	DoomMenuPage(const std::string& hed, const std::string& sub) : headerKey(hed), subKey(sub), DrawSpecial(nullptr) {}
 
 	void Translate();
+	std::function<void(DoomMenuPage*, DoomMenuItem*)> DrawSpecial;
 };
 
 class DoomMenu : public Tickable
 {
-private:
+protected:
 	Texture panels{ Texture("ui/panels.png") };
 	int highlight{ 0 };
 	int mouseHighlight{ 0 };
@@ -75,7 +76,6 @@ private:
 	int remapping{ -1 };
 	bool remapBounce{ false };
 
-	DoomMenuPage options, content, keybinds, volume, species;
 	DoomMenuPage* items{ nullptr };
 
 	std::stack<DoomMenuPage*> stack;
@@ -86,12 +86,8 @@ private:
 	float sliderEnd{ 0 };
 	int sliderHolding{ -1 };
 
-	std::vector<Texture*> speciesPreviews;
-	std::string speciesText;
-
 	ButtonGuide buttonGuide;
 
-	void Build();
 	void UpdateButtonGuide();
 
 public:
@@ -100,4 +96,20 @@ public:
 	bool Tick(float dt);
 	void Draw(float dt);
 	bool Scancode(unsigned int scancode);
+};
+
+
+class OptionsMenu : public DoomMenu
+{
+protected:
+	void Build();
+	void Translate();
+
+	DoomMenuPage options, content, keybinds, volume, species;
+
+	std::vector<Texture*> speciesPreviews;
+	std::string speciesText;
+
+public:
+	OptionsMenu();
 };
