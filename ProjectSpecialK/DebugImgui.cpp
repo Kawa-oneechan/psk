@@ -207,7 +207,7 @@ static void DoVillager()
 				if (villagers[i]->RefSpecies != lastSpecies)
 				{
 					lastSpecies = villagers[i]->RefSpecies;
-					auto newSpecies = StripMSBT(villagers[i]->Species());
+					auto newSpecies = StripBJTS(villagers[i]->Species());
 					ImGui::SeparatorText(newSpecies.c_str());
 				}
 

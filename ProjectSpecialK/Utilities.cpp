@@ -658,14 +658,14 @@ void ReplaceAll(std::string& data, const std::string& find, const std::string& r
 	}
 }
 
-std::string StripMSBT(const std::string& data)
+std::string StripBJTS(const std::string& data)
 {
 	std::string ret = data;
-	size_t msbtStart;
-	while ((msbtStart = ret.find_first_of('<', 0)) != std::string::npos)
+	size_t bjtsStart;
+	while ((bjtsStart = ret.find_first_of('<', 0)) != std::string::npos)
 	{
-		auto msbtEnd = ret.find_first_of('>', msbtStart);
-		ret.replace(msbtStart, msbtEnd - msbtStart + 1, "");
+		auto bjtsEnd = ret.find_first_of('>', bjtsStart);
+		ret.replace(bjtsStart, bjtsEnd - bjtsStart + 1, "");
 	}
 	return ret;
 }

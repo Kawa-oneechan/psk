@@ -90,7 +90,7 @@ Text::Entry& Text::Add(const std::string& key, JSONObject& map)
 	else
 		entry->rep = entry->condition;
 	if (entry->rep.length() > 16)
-		entry->rep = StripMSBT(entry->rep);
+		entry->rep = StripBJTS(entry->rep);
 	if (entry->rep.length() > 16)
 		entry->rep = entry->rep.substr(0, 16) + "...";
 	entry->rep.shrink_to_fit();

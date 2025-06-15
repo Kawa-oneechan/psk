@@ -8,11 +8,11 @@
 constexpr float tweenTimeScale{ 5.0f };
 constexpr float wobbleTimeScale{ 0.25f };
 
-void DialogueBox::msbtStr(MSBTParams)
+void DialogueBox::bjtsStr(BJTSParams)
 {
 	if (tags.size() < 2)
 	{
-		conprint(2, "Missing parameter in MSBT Str: {}", toDisplay.substr(start, len));
+		conprint(2, "Missing parameter in BJTS Str: {}", toDisplay.substr(start, len));
 		return;
 	}
 	if (tags[1] == "...")
@@ -25,7 +25,7 @@ void DialogueBox::msbtStr(MSBTParams)
 	{
 		if (!speaker)
 		{
-			conprint(2, "MSBT Str called for villager name, but no speaker is set.");
+			conprint(2, "BJTS Str called for villager name, but no speaker is set.");
 			toDisplay.replace(start, len, "Buggsy");
 			return;
 		}
@@ -35,7 +35,7 @@ void DialogueBox::msbtStr(MSBTParams)
 	{
 		if (!speaker)
 		{
-			conprint(2, "MSBT Str called for villager species, but no speaker is set.");
+			conprint(2, "BJTS Str called for villager species, but no speaker is set.");
 			toDisplay.replace(start, len, "bug");
 			return;
 		}
@@ -45,7 +45,7 @@ void DialogueBox::msbtStr(MSBTParams)
 	{
 		if (!speaker)
 		{
-			conprint(2, "MSBT Str called for villager catchphrase, but no speaker is set.");
+			conprint(2, "BJTS Str called for villager catchphrase, but no speaker is set.");
 			toDisplay.replace(start, len, "bugbug");
 			return;
 		}
@@ -53,21 +53,21 @@ void DialogueBox::msbtStr(MSBTParams)
 	}
 }
 
-void DialogueBox::msbtEllipses(MSBTParams)
+void DialogueBox::bjtsEllipses(BJTSParams)
 {
 	tags;
 	auto fakeTags = std::vector<std::string>
 	{
 		"str", "..."
 	};
-	msbtStr(fakeTags, start, len);
+	bjtsStr(fakeTags, start, len);
 }
 
-void DialogueBox::msbtWordstruct(MSBTParams)
+void DialogueBox::bjtsWordstruct(BJTSParams)
 {
 	if (tags.size() < 2)
 	{
-		conprint(2, "Missing parameter in MSBT Wordstruct: {}", toDisplay.substr(start, len));
+		conprint(2, "Missing parameter in BJTS Wordstruct: {}", toDisplay.substr(start, len));
 		return;
 	}
 
@@ -120,12 +120,12 @@ void DialogueBox::msbtWordstruct(MSBTParams)
 	toDisplay.replace(start, len, Text::Get(fmt::format("{}:{}", key, choice)));
 }
 
-void DialogueBox::msbtDelay(MSBTParams)
+void DialogueBox::bjtsDelay(BJTSParams)
 {
 	len; start;
 	if (tags.size() < 2)
 	{
-		conprint(2, "Missing parameter in MSBT Delay: {}", toDisplay.substr(start, len));
+		conprint(2, "Missing parameter in BJTS Delay: {}", toDisplay.substr(start, len));
 		return;
 	}
 	else if (tags.size() == 2)
@@ -136,7 +136,7 @@ void DialogueBox::msbtDelay(MSBTParams)
 	{
 		if (!speaker)
 		{
-			conprint(2, "MSBT Delay called with personality dependency, but no speaker is set.");
+			conprint(2, "BJTS Delay called with personality dependency, but no speaker is set.");
 			return;
 		}
 		/*
@@ -161,35 +161,35 @@ void DialogueBox::msbtDelay(MSBTParams)
 	}
 }
 
-void DialogueBox::msbtEmote(MSBTParams)
+void DialogueBox::bjtsEmote(BJTSParams)
 {
 	tags; len; start;
 	if (!speaker)
 	{
-		conprint(2, "MSBT Emote called but speaker is set.");
+		conprint(2, "BJTS Emote called but no speaker is set.");
 		return;
 	}
 	//TODO LATER
 }
 
-void DialogueBox::msbtBreak(MSBTParams)
+void DialogueBox::bjtsBreak(BJTSParams)
 {
 	tags; len; start;
 	state = State::WaitingForKey;
 }
 
-void DialogueBox::msbtClear(MSBTParams)
+void DialogueBox::bjtsClear(BJTSParams)
 {
 	tags; len; start;
 	displayed.clear();
 }
 
-void DialogueBox::msbtEnd(MSBTParams)
+void DialogueBox::bjtsEnd(BJTSParams)
 {
 	tags; len; start;
 	state = State::Closing;
 }
-void DialogueBox::msbtPass(MSBTParams)
+void DialogueBox::bjtsPass(BJTSParams)
 {
 	tags;
 	displayed += toDisplay.substr(start, len);
@@ -197,14 +197,14 @@ void DialogueBox::msbtPass(MSBTParams)
 
 DialogueBox::DialogueBox()
 {
-	auto extensions = VFS::ReadJSON("msbt/content.json");
+	auto extensions = VFS::ReadJSON("bjts/content.json");
 	if (extensions)
 	{
 		for (auto extension : extensions->AsObject())
 		{
 			if (!extension.second->IsString())
 			{
-				conprint(2, "MSBT extension {} is not a string.", extension.first);
+				conprint(2, "BJTS extension {} is not a string.", extension.first);
 				continue;
 			}
 			auto val = extension.second->AsString();
@@ -219,9 +219,9 @@ DialogueBox::DialogueBox()
 			}
 			else
 			{
-				val = VFS::ReadString(fmt::format("msbt/{}", val));
+				val = VFS::ReadString(fmt::format("bjts/{}", val));
 			}
-			msbtPhase1X[extension.first] = val;
+			bjtsPhase1X[extension.first] = val;
 		}
 	}
 
@@ -229,7 +229,7 @@ DialogueBox::DialogueBox()
 	//Text(u8"Truth is... <color:1>the game</color> was rigged from the start.",
 	//Text("Are you <color:3><str:player></color>? <delay:1000>Hiii! Welcome to <color:2>Project Special K</color>!", 0);
 	//Text(Get("dlg:sza:wack"), Database::Find<Villager>("psk:cat00", villagers));
-	//Text("MSBT JSON/Lua test:\n<test1>\n<test2:bur>", 3);
+	//Text("BJTS JSON/Lua test:\n<test1>\n<test2:bur>", 3);
 	//Text(u8"This is ordinary dialogue with a button image in it: \uE0E2 look at that.", Database::Find<Villager>("psk:cat00", villagers));
 	//Text("By the President of the United States of America:\nA Proclamation.<break>Whereas, on the twenty-second day of September, in the year of our Lord one thousand eight hundred and sixty-two, a proclamation was issued by the President of the United States, containing, among other things, the following, to wit:", 0);
 	//Text("Timmy Turner, my name is DougsDaleDimmaDaleDimmaDimmsDomeDoDiDomeDimmsDimmaDimmaDome, owner of the DougDimmsDimmaDaleDimmaDimmsDomeDoDiDimmaDimmsDaleDimmaDimmsDaleDimmaDome.", 0);
@@ -247,32 +247,32 @@ void DialogueBox::Preprocess()
 {
 	for (size_t i = 0; i < toDisplay.length(); i++)
 	{
-		auto msbtStart = toDisplay.find_first_of('<', i);
-		if (msbtStart != std::string::npos)
+		auto bjtsStart = toDisplay.find_first_of('<', i);
+		if (bjtsStart != std::string::npos)
 		{
-			msbtStart++;
-			auto msbtEnd = toDisplay.find_first_of('>', msbtStart);
-			i = msbtEnd;
+			bjtsStart++;
+			auto bjtsEnd = toDisplay.find_first_of('>', bjtsStart);
+			i = bjtsEnd;
 
-			auto msbtWhole = toDisplay.substr(msbtStart, msbtEnd - msbtStart);
-			auto msbt = Split(msbtWhole, ':');
-			auto func = msbtPhase1.find(msbt[0]);
-			auto start = (int)msbtStart - 1;
-			auto len = (int)(msbtEnd - msbtStart) + 2;
-			if (func != msbtPhase1.end())
+			auto bjtsWhole = toDisplay.substr(bjtsStart, bjtsEnd - bjtsStart);
+			auto bjts = Split(bjtsWhole, ':');
+			auto func = bjtsPhase1.find(bjts[0]);
+			auto start = (int)bjtsStart - 1;
+			auto len = (int)(bjtsEnd - bjtsStart) + 2;
+			if (func != bjtsPhase1.end())
 			{
-				std::invoke(func->second, this, msbt, start, len);
+				std::invoke(func->second, this, bjts, start, len);
 				i = (size_t)-1; //-1 because we may have subbed in a new tag.
 			}
 			else
 			{
 				//Is it an extension?
-				auto func2 = msbtPhase1X.find(msbt[0]);
-				if (func2 != msbtPhase1X.end())
+				auto func2 = bjtsPhase1X.find(bjts[0]);
+				if (func2 != bjtsPhase1X.end())
 				{
-					Sol.set("msbt", msbt);
+					Sol.set("bjts", bjts);
 					toDisplay.replace(start, len, Sol.script(func2->second).get<std::string>());
-					i = msbtStart;
+					i = bjtsStart;
 				}
 			}
 		}
@@ -549,20 +549,20 @@ bool DialogueBox::Tick(float dt)
 
 		if (ch == '<')
 		{
-			auto msbtEnd = toDisplay.find_first_of('>', displayCursor);
-			if (msbtEnd == -1) goto displayIt;
-			auto msbtStart = displayCursor;
-			displayCursor = msbtEnd + 1;
+			auto bjtsEnd = toDisplay.find_first_of('>', displayCursor);
+			if (bjtsEnd == -1) goto displayIt;
+			auto bjtsStart = displayCursor;
+			displayCursor = bjtsEnd + 1;
 
-			auto msbtWhole = toDisplay.substr(msbtStart, msbtEnd - msbtStart);
-			auto msbt = Split(msbtWhole, ':');
-			auto func = msbtPhase2.find(msbt[0]);
-			if (func != msbtPhase2.end())
+			auto bjtsWhole = toDisplay.substr(bjtsStart, bjtsEnd - bjtsStart);
+			auto bjts = Split(bjtsWhole, ':');
+			auto func = bjtsPhase2.find(bjts[0]);
+			if (func != bjtsPhase2.end())
 			{
-				std::invoke(func->second, this, msbt, (int)msbtStart - 1, (int)(msbtEnd - msbtStart) + 2);
+				std::invoke(func->second, this, bjts, (int)bjtsStart - 1, (int)(bjtsEnd - bjtsStart) + 2);
 			}
 			else
-				conprint(1, "DialogueBox::Tick: don't know how to handle {}.", msbtWhole);
+				conprint(1, "DialogueBox::Tick: don't know how to handle {}.", bjtsWhole);
 		}
 		else
 		{

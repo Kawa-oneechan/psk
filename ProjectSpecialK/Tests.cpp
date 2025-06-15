@@ -35,7 +35,7 @@ void TestVillagerGetting()
 
 	farrah->defaultClothingID = "acnh:fronttietee/red";
 
-	conprint(0, "Villager getting test: {}, a {}, birthday on {}.", farrah->Name(), StripMSBT(farrah->Species()), farrah->Birthday());
+	conprint(0, "Villager getting test: {}, a {}, birthday on {}.", farrah->Name(), StripBJTS(farrah->Species()), farrah->Birthday());
 	articlePlease = 0;
 	conprint(0, "Default clothing: {}", farrah->defaultClothingID);
 	conprint(0, "Portrait: {}", farrah->portraitID);

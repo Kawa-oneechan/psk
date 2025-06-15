@@ -220,7 +220,7 @@ namespace UI
 #define debprint(C, F, ...)
 #endif
 
-#define MSBTParams const std::vector<std::string>& tags, int start, int len
+#define BJTSParams const std::vector<std::string>& tags, int start, int len
 
 //Shows a loading screen while running another thread.
 extern void ThreadedLoader(std::function<void(float*)> loader);
@@ -252,8 +252,8 @@ extern void StripSpaces(std::string& data);
 //Finds and replaces all instances of a thing in a string, in place.
 extern void ReplaceAll(std::string& data, const std::string& find, const std::string& replace);
 
-//Removes MSBT tags from a string.
-extern std::string StripMSBT(const std::string& data);
+//Removes BJTS tags from a string.
+extern std::string StripBJTS(const std::string& data);
 
 template<typename T>
 auto StringToEnum(const std::string& s, std::initializer_list<const std::string> opts)

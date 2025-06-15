@@ -28,8 +28,8 @@ Species::Species(JSONObject& value, const std::string& filename) : NameableThing
 			Text::Add(RefName + ":f", *narr[1]);
 		}
 	}
-	EnName[0] = StripMSBT(Text::Get(RefName + ":m"));
-	EnName[1] = StripMSBT(Text::Get(RefName + ":f"));
+	EnName[0] = StripBJTS(Text::Get(RefName + ":m"));
+	EnName[1] = StripBJTS(Text::Get(RefName + ":f"));
 
 	if (value["filterAs"])
 	{
@@ -45,7 +45,7 @@ Species::Species(JSONObject& value, const std::string& filename) : NameableThing
 			for (auto sn : filterNames)
 			{
 				auto it = sn.second->AsString();
-				it = StripMSBT(it);
+				it = StripBJTS(it);
 				if (it[0] > 32 && it[0] < 127 && std::islower(it[0]))
 					it[0] = (char)std::toupper(it[0]);
 				filterNames[sn.first] = new JSONValue(it);

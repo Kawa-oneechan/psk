@@ -29,7 +29,7 @@ NameableThing::NameableThing(JSONObject& value, const std::string& filename)
 	else
 		Text::Add(ref, *val);
 
-	EnName = StripMSBT(Text::Get(ref));
+	EnName = StripBJTS(Text::Get(ref));
 }
 
 std::string NameableThing::Name()
@@ -37,15 +37,15 @@ std::string NameableThing::Name()
 	auto text = Text::Get(RefName);
 	if (text.substr(0, 6) == "<info:")
 	{
-		auto msbtEnd = text.find_first_of('>', 7);
-		auto rest = text.substr(msbtEnd + 1);
+		auto bjtsEnd = text.find_first_of('>', 7);
+		auto rest = text.substr(bjtsEnd + 1);
 		if (articlePlease)
 		{
-			auto msbtWhole = text.substr(7, msbtEnd - 7);
-			auto msbt = Split(msbtWhole, ':');
+			auto bjtsWhole = text.substr(7, bjtsEnd - 7);
+			auto bjts = Split(bjtsWhole, ':');
 			auto art = articlePlease - 1;
 			articlePlease = 0;
-			return msbt[art] + rest;
+			return bjts[art] + rest;
 		}
 		else
 			return rest;

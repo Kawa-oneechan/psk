@@ -37,42 +37,43 @@ private:
 		Opening, Writing, WaitingForKey, Closing, Done
 	} state{ State::Done };
 
-	typedef void(DialogueBox::*MSBTFunc)(MSBTParams);
+	typedef void(DialogueBox::*BJTSFunc)(BJTSParams);
 
-	void msbtStr(MSBTParams);
-	void msbtEllipses(MSBTParams);
-	void msbtWordstruct(MSBTParams);
+	void bjtsStr(BJTSParams);
+	void bjtsEllipses(BJTSParams);
+	void bjtsWordstruct(BJTSParams);
 
-	//MSBT functions that actually change the string content.
-	const std::map<std::string, MSBTFunc> msbtPhase1 = {
-		{ "str", &DialogueBox::msbtStr },
-		{ "...", &DialogueBox::msbtEllipses },
-		{ "ws", &DialogueBox::msbtWordstruct },
+	//BJTS functions that actually change the string content.
+	const std::map<std::string, BJTSFunc> bjtsPhase1 = {
+		{ "str", &DialogueBox::bjtsStr },
+		{ "...", &DialogueBox::bjtsEllipses },
+		{ "ws", &DialogueBox::bjtsWordstruct },
 	};
-	std::map<std::string, std::string> msbtPhase1X;
+	//BJTS functions loaded from Lua scripts.
+	std::map<std::string, std::string> bjtsPhase1X;
 
-	void msbtDelay(MSBTParams);
-	void msbtEmote(MSBTParams);
-	void msbtBreak(MSBTParams);
-	void msbtClear(MSBTParams);
-	void msbtEnd(MSBTParams);
-	void msbtPass(MSBTParams);
+	void bjtsDelay(BJTSParams);
+	void bjtsEmote(BJTSParams);
+	void bjtsBreak(BJTSParams);
+	void bjtsClear(BJTSParams);
+	void bjtsEnd(BJTSParams);
+	void bjtsPass(BJTSParams);
 
-	//MSBT functions that affect timing and such
-	const std::map<std::string, MSBTFunc> msbtPhase2 = {
-		{ "delay", &DialogueBox::msbtDelay },
-		{ "emote", &DialogueBox::msbtEmote },
-		{ "break", &DialogueBox::msbtBreak },
-		{ "clr", &DialogueBox::msbtClear },
-		{ "end", &DialogueBox::msbtEnd },
+	//BJTS functions that affect timing and such
+	const std::map<std::string, BJTSFunc> bjtsPhase2 = {
+		{ "delay", &DialogueBox::bjtsDelay },
+		{ "emote", &DialogueBox::bjtsEmote },
+		{ "break", &DialogueBox::bjtsBreak },
+		{ "clr", &DialogueBox::bjtsClear },
+		{ "end", &DialogueBox::bjtsEnd },
 
 		//Passed over so DrawString can worry about it
-		{ "color", &DialogueBox::msbtPass },
-		{ "/color", &DialogueBox::msbtPass },
-		{ "size", &DialogueBox::msbtPass },
-		{ "/size", &DialogueBox::msbtPass },
-		{ "font", &DialogueBox::msbtPass },
-		{ "/font", &DialogueBox::msbtPass },
+		{ "color", &DialogueBox::bjtsPass },
+		{ "/color", &DialogueBox::bjtsPass },
+		{ "size", &DialogueBox::bjtsPass },
+		{ "/size", &DialogueBox::bjtsPass },
+		{ "font", &DialogueBox::bjtsPass },
+		{ "/font", &DialogueBox::bjtsPass },
 	};
 
 	void Preprocess();

@@ -277,14 +277,14 @@ namespace Sprite
 		fontTextures[(font * 256) + bank] = new Texture(fontID, FontAtlasExtent, FontAtlasExtent, 1);
 	}
 
-	static void msbtColor(MSBTParams)
+	static void bjtsColor(BJTSParams)
 	{
 		start; len;
 		if (tags[0] == "/color")
 			textRenderColor = originalTextRenderColor;
 		else if (tags.size() < 2)
 		{
-			//conprint(2, "Missing parameter in MSBT Color");
+			//conprint(2, "Missing parameter in BJTS Color");
 			return;
 		}
 		else
@@ -297,14 +297,14 @@ namespace Sprite
 		}
 	}
 
-	static void msbtSize(MSBTParams)
+	static void bjtsSize(BJTSParams)
 	{
 		start; len;
 		if (tags[0] == "/size")
 			textRenderSize = 1.0f; //originalTextRenderSize;
 		else if (tags.size() < 2)
 		{
-			//conprint(2, "Missing parameter in MSBT Size");
+			//conprint(2, "Missing parameter in BJTS Size");
 			return;
 		}
 		else
@@ -317,14 +317,14 @@ namespace Sprite
 		}
 	}
 
-	static void msbtFont(MSBTParams)
+	static void bjtsFont(BJTSParams)
 	{
 		start; len;
 		if (tags[0] == "/font")
 			textRenderFont = originalTextRenderFont;
 		else if (tags.size() < 2)
 		{
-			//conprint(2, "Missing parameter in MSBT Font");
+			//conprint(2, "Missing parameter in BJTS Font");
 			return;
 		}
 		else
@@ -337,15 +337,15 @@ namespace Sprite
 		}
 	}
 
-	typedef void(*MSBTFunc)(MSBTParams);
-	const std::map<std::string, MSBTFunc> msbtPhase3
+	typedef void(*BJTSFunc)(BJTSParams);
+	const std::map<std::string, BJTSFunc> bjtsPhase3
 	{
-		{ "color", &msbtColor },
-		{ "/color", &msbtColor },
-		{ "size", &msbtSize },
-		{ "/size", &msbtSize },
-		{ "font", &msbtFont },
-		{ "/font", &msbtFont },
+		{ "color", &bjtsColor },
+		{ "/color", &bjtsColor },
+		{ "size", &bjtsSize },
+		{ "/size", &bjtsSize },
+		{ "font", &bjtsFont },
+		{ "/font", &bjtsFont },
 	};
 
 	void DrawText(int font, const std::string& text, glm::vec2 position, const glm::vec4& color, float size, float angle, bool raw)
@@ -402,17 +402,17 @@ namespace Sprite
 			}
 			if (ch == '<' && !raw)
 			{
-				auto msbtEnd = text.find_first_of('>', i);
-				if (msbtEnd == -1) goto renderIt;
-				auto msbtStart = i;
-				i = msbtEnd + 1;
+				auto bjtsEnd = text.find_first_of('>', i);
+				if (bjtsEnd == -1) goto renderIt;
+				auto bjtsStart = i;
+				i = bjtsEnd + 1;
 
-				auto msbtWhole = text.substr(msbtStart, msbtEnd - msbtStart);
-				auto msbt = Split(msbtWhole, ':');
-				auto func = msbtPhase3.find(msbt[0]);
-				if (func != msbtPhase3.end())
+				auto bjtsWhole = text.substr(bjtsStart, bjtsEnd - bjtsStart);
+				auto bjts = Split(bjtsWhole, ':');
+				auto func = bjtsPhase3.find(bjts[0]);
+				if (func != bjtsPhase3.end())
 				{
-					std::invoke(func->second, msbt, (int)msbtStart - 1, (int)(msbtEnd - msbtStart) + 2);
+					std::invoke(func->second, bjts, (int)bjtsStart - 1, (int)(bjtsEnd - bjtsStart) + 2);
 				}
 				continue;
 			}
@@ -501,22 +501,22 @@ namespace Sprite
 			}
 			if (ch == '<' && !raw)
 			{
-				auto msbtEnd = text.find_first_of('>', i);
-				if (msbtEnd == -1) goto measureIt;
-				auto msbtStart = i;
-				i = msbtEnd + 1;
+				auto bjtsEnd = text.find_first_of('>', i);
+				if (bjtsEnd == -1) goto measureIt;
+				auto bjtsStart = i;
+				i = bjtsEnd + 1;
 
-				auto msbtWhole = text.substr(msbtStart, msbtEnd - msbtStart);
-				auto msbt = Split(msbtWhole, ':');
-				if (msbt[0] == "break" || msbt[0] == "clr")
+				auto bjtsWhole = text.substr(bjtsStart, bjtsEnd - bjtsStart);
+				auto bjts = Split(bjtsWhole, ':');
+				if (bjts[0] == "break" || bjts[0] == "clr")
 				{
 					thisLine = 0.0f;
 					result.y = 0;
 					continue;
 				}
-				auto func = msbtPhase3.find(msbt[0]);
-				if (func != msbtPhase3.end())
-					std::invoke(func->second, msbt, (int)msbtStart - 1, (int)(msbtEnd - msbtStart) + 2);
+				auto func = bjtsPhase3.find(bjts[0]);
+				if (func != bjtsPhase3.end())
+					std::invoke(func->second, bjts, (int)bjtsStart - 1, (int)(bjtsEnd - bjtsStart) + 2);
 				continue;
 			}
 
