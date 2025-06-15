@@ -62,11 +62,17 @@ Body and nose are handled by a `.mat` file.
 
 The coordinate system is Y+ up, X+ right. For rotation, in a `glm::vec3`, X is roll, Y is pitch, and Z is yaw, or rather that's how it works for the camera. For models, Y is yaw? So consider this whole part a **WIP**.
 
+### Tile coordinates
+
+* **Unit Tile**: 10 world units or two halftiles to a side.
+* **Halftile**: 20 world units to a side.
+* **Acre**:: 16 unit tiles to a side.
+
 ## MSBT
 
 Why is it still called *Message Studio Binary Text*? It's not done in Message Studio, and it's not binary. This thing needs a rename!
 
-But whatever.
+BTS or BJTS? For "Beckett (JSON) Tagged Strings"? Whatever.
 
 Commands are inserted like fucked-up HTML tags, like `<color:3>` or `<str:player>`.
 
@@ -126,5 +132,6 @@ Things to add to a town:
 * List of special buildings
 * Message board contents
 * Town song
+
 
 
