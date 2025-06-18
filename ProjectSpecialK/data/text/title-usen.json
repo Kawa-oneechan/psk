@@ -1,5 +1,5 @@
 {
-	"title:pressstart": "Press {} or {} to start",
+	"title:pressstart": "Press <key:accept> or <pad:accept> to start",
 
 	"logojoke:0": "100% Generative AI free!",
 	"logojoke:1": "100% pure C++!",

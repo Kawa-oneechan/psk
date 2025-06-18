@@ -39,19 +39,6 @@ private:
 
 	typedef void(DialogueBox::*BJTSFunc)(BJTSParams);
 
-	void bjtsStr(BJTSParams);
-	void bjtsEllipses(BJTSParams);
-	void bjtsWordstruct(BJTSParams);
-
-	//BJTS functions that actually change the string content.
-	const std::map<std::string, BJTSFunc> bjtsPhase1 = {
-		{ "str", &DialogueBox::bjtsStr },
-		{ "...", &DialogueBox::bjtsEllipses },
-		{ "ws", &DialogueBox::bjtsWordstruct },
-	};
-	//BJTS functions loaded from Lua scripts.
-	std::map<std::string, std::string> bjtsPhase1X;
-
 	void bjtsDelay(BJTSParams);
 	void bjtsEmote(BJTSParams);
 	void bjtsBreak(BJTSParams);
@@ -76,7 +63,6 @@ private:
 		{ "/font", &DialogueBox::bjtsPass },
 	};
 
-	void Preprocess();
 	void Wrap();
 
 public:

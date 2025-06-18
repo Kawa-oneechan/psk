@@ -1,0 +1,12 @@
+{
+	"intro:rover:001": "Hey, you. You're finally awake.",
+	"intro:rover:002": "On your way somewhere, aren't you? I'm <str:vname>, how 'bout you?",
+	"intro:rover:002a": "Ah, <str:player>. Always a pleasure to meet a new face.",
+	"intro:rover:002b": "No way, what are the odds! Holy wow.",
+	"intro:rover:002c": "Oh, I know another <str:player>. Small world, huh?",
+	"intro:rover:003": "So, where're you headed, <str:player>?",
+	"intro:rover:003a": "STOP SHOUTING! Cheese and rice, I only asked where you were going!",
+	"intro:rover:004": "Huh. I don't think I've ever been to <str:town> before. What's it like?",
+	"intro:rover:005": "Oh well. You might want to freshen up a bit.<emote:rovershoulder><delay:50>After all, you did basically just wake up, so you should probably wash some of that sleep out of your eyes.",
+	"intro:rover:006": "You're looking much better, <str:player>. So... how 'bout a nice game of <rnd:travelgame> to pass the rest of the journey?"
+}

@@ -8,118 +8,6 @@
 constexpr float tweenTimeScale{ 5.0f };
 constexpr float wobbleTimeScale{ 0.25f };
 
-void DialogueBox::bjtsStr(BJTSParams)
-{
-	if (tags.size() < 2)
-	{
-		conprint(2, "Missing parameter in BJTS Str: {}", toDisplay.substr(start, len));
-		return;
-	}
-	if (tags[1] == "...")
-		toDisplay.replace(start, len, Text::Get("str:fix:001"));
-	else if (tags[1] == "player")
-		toDisplay.replace(start, len, thePlayer.Name);
-	else if (tags[1] == "kun")
-		toDisplay.replace(start, len, Text::Get("str:kun"));
-	else if (tags[1] == "vname")
-	{
-		if (!speaker)
-		{
-			conprint(2, "BJTS Str called for villager name, but no speaker is set.");
-			toDisplay.replace(start, len, "Buggsy");
-			return;
-		}
-		toDisplay.replace(start, len, speaker->Name());
-	}
-	else if (tags[1] == "vspec")
-	{
-		if (!speaker)
-		{
-			conprint(2, "BJTS Str called for villager species, but no speaker is set.");
-			toDisplay.replace(start, len, "bug");
-			return;
-		}
-		toDisplay.replace(start, len, speaker->Species());
-	}
-	else if (tags[1] == "catchphrase")
-	{
-		if (!speaker)
-		{
-			conprint(2, "BJTS Str called for villager catchphrase, but no speaker is set.");
-			toDisplay.replace(start, len, "bugbug");
-			return;
-		}
-		toDisplay.replace(start, len, speaker->Catchphrase());
-	}
-}
-
-void DialogueBox::bjtsEllipses(BJTSParams)
-{
-	tags;
-	auto fakeTags = std::vector<std::string>
-	{
-		"str", "..."
-	};
-	bjtsStr(fakeTags, start, len);
-}
-
-void DialogueBox::bjtsWordstruct(BJTSParams)
-{
-	if (tags.size() < 2)
-	{
-		conprint(2, "Missing parameter in BJTS Wordstruct: {}", toDisplay.substr(start, len));
-		return;
-	}
-
-	//Grab the entire thing, not just individual tags.
-	//This method is cheaper than re-joining the tags.
-	auto key = toDisplay.substr(start + 1, len - 2);
-
-	auto ppos = key.find('?');
-	if (ppos != key.npos)
-	{
-		//Use speaker's personality, unless there
-		//is no speaker in which case we use "normal".
-		//But if the speaker's personality isn't an option,
-		//reset and use "normal" after all.
-		if (!speaker)
-			key.replace(ppos, 1, "normal");
-		else
-		{
-			key.replace(ppos, 1, speaker->personality->ID);
-			//check if this is available
-			auto result = Text::Get(fmt::format("{}:0", key));
-			if (result.length() >= 3 && result.substr(0, 3) == "???")
-			{
-				//guess not :shrug:
-				key = toDisplay.substr(start + 1, len - 2);
-				key.replace(ppos, 1, "normal");
-			}
-		}
-	}
-
-	//Count the number of options
-	int options = 0;
-	for (int i = 0; i < 32; i++)
-	{
-		auto result = Text::Get(fmt::format("{}:{}", key, i));
-		if (result.length() >= 3 && result.substr(0, 3) == "???")
-		{
-			options = i;
-			break;
-		}
-	}
-	if (options == 0)
-	{
-		conprint(2, "Wordstructor: could not find anything for \"{}\".", key);
-		toDisplay.replace(start, len, "???WS???");
-		return;
-	}
-	
-	int choice = rnd::getInt(options);
-	toDisplay.replace(start, len, Text::Get(fmt::format("{}:{}", key, choice)));
-}
-
 void DialogueBox::bjtsDelay(BJTSParams)
 {
 	len; start;
@@ -197,34 +85,6 @@ void DialogueBox::bjtsPass(BJTSParams)
 
 DialogueBox::DialogueBox()
 {
-	auto extensions = VFS::ReadJSON("bjts/content.json");
-	if (extensions)
-	{
-		for (auto extension : extensions->AsObject())
-		{
-			if (!extension.second->IsString())
-			{
-				conprint(2, "BJTS extension {} is not a string.", extension.first);
-				continue;
-			}
-			auto val = extension.second->AsString();
-			if (val.length() < 4 || val.substr(val.length() - 4) != ".lua")
-			{
-				//This is a raw string. Convert it to a Lua thing.
-				//And for that, we need to escape quotes!
-				ReplaceAll(val, "\"", "\\\"");
-				//Possibly other things to but IDCRN.
-
-				val = fmt::format("return \"{}\"\r\n", val);
-			}
-			else
-			{
-				val = VFS::ReadString(fmt::format("bjts/{}", val));
-			}
-			bjtsPhase1X[extension.first] = val;
-		}
-	}
-
 	//Text(u8"Truth is... <color:1>the game</color> was rigged\nfrom the start.", 0, "Isabelle", glm::vec4(1, 0.98f, 0.56f, 1), glm::vec4(0.96f, 0.67f, 0.05f, 1));
 	//Text(u8"Truth is... <color:1>the game</color> was rigged from the start.",
 	//Text("Are you <color:3><str:player></color>? <delay:1000>Hiii! Welcome to <color:2>Project Special K</color>!", 0);
@@ -241,42 +101,6 @@ DialogueBox::DialogueBox()
 
 	//Text("I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I I", 0);
 	//Text("IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII", 0);
-}
-
-void DialogueBox::Preprocess()
-{
-	for (size_t i = 0; i < toDisplay.length(); i++)
-	{
-		auto bjtsStart = toDisplay.find_first_of('<', i);
-		if (bjtsStart != std::string::npos)
-		{
-			bjtsStart++;
-			auto bjtsEnd = toDisplay.find_first_of('>', bjtsStart);
-			i = bjtsEnd;
-
-			auto bjtsWhole = toDisplay.substr(bjtsStart, bjtsEnd - bjtsStart);
-			auto bjts = Split(bjtsWhole, ':');
-			auto func = bjtsPhase1.find(bjts[0]);
-			auto start = (int)bjtsStart - 1;
-			auto len = (int)(bjtsEnd - bjtsStart) + 2;
-			if (func != bjtsPhase1.end())
-			{
-				std::invoke(func->second, this, bjts, start, len);
-				i = (size_t)-1; //-1 because we may have subbed in a new tag.
-			}
-			else
-			{
-				//Is it an extension?
-				auto func2 = bjtsPhase1X.find(bjts[0]);
-				if (func2 != bjtsPhase1X.end())
-				{
-					Sol.set("bjts", bjts);
-					toDisplay.replace(start, len, Sol.script(func2->second).get<std::string>());
-					i = bjtsStart;
-				}
-			}
-		}
-	}
 }
 
 void DialogueBox::Wrap()
@@ -384,9 +208,7 @@ void DialogueBox::Wrap()
 void DialogueBox::Text(const std::string& text)
 {
 	displayed.clear();
-	toDisplay = text;
-
-	Preprocess();
+	toDisplay = PreprocessBJTS(text);
 	Wrap();
 
 	displayCursor = 0;

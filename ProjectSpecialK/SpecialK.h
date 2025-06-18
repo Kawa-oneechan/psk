@@ -255,6 +255,9 @@ extern void ReplaceAll(std::string& data, const std::string& find, const std::st
 //Removes BJTS tags from a string.
 extern std::string StripBJTS(const std::string& data);
 
+//Applies all non-dynamic BJTS tags to a string.
+extern std::string PreprocessBJTS(const std::string& data);
+
 template<typename T>
 auto StringToEnum(const std::string& s, std::initializer_list<const std::string> opts)
 {

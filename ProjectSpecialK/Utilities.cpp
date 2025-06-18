@@ -670,6 +670,255 @@ std::string StripBJTS(const std::string& data)
 	return ret;
 }
 
+
+void bjtsStr(std::string& data, BJTSParams)
+{
+	if (tags.size() < 2)
+	{
+		conprint(2, "Missing parameter in BJTS Str: {}", data.substr(start, len));
+		return;
+	}
+	if (tags[1] == "...")
+		data.replace(start, len, Text::Get("str:fix:001"));
+	else if (tags[1] == "player")
+		data.replace(start, len, thePlayer.Name);
+	else if (tags[1] == "kun")
+		data.replace(start, len, Text::Get("str:kun"));
+	else if (tags[1] == "vname")
+	{
+		//if (dlgBox->Speaker)
+		/*
+		if (!speaker)
+		{
+			conprint(2, "BJTS Str called for villager name, but no speaker is set.");
+			toDisplay.replace(start, len, "Buggsy");
+			return;
+		}
+		toDisplay.replace(start, len, speaker->Name());
+		*/
+	}
+	else if (tags[1] == "vspec")
+	{
+		/*
+		if (!speaker)
+		{
+			conprint(2, "BJTS Str called for villager species, but no speaker is set.");
+			toDisplay.replace(start, len, "bug");
+			return;
+		}
+		toDisplay.replace(start, len, speaker->Species());
+		*/
+	}
+	else if (tags[1] == "catchphrase")
+	{
+		/*
+		if (!speaker)
+		{
+			conprint(2, "BJTS Str called for villager catchphrase, but no speaker is set.");
+			toDisplay.replace(start, len, "bugbug");
+			return;
+		}
+		toDisplay.replace(start, len, speaker->Catchphrase());
+		*/
+	}
+}
+
+void bjtsEllipses(std::string& data, BJTSParams)
+{
+	tags;
+	auto fakeTags = std::vector<std::string>
+	{
+		"str", "..."
+	};
+	bjtsStr(data, fakeTags,  start, len);
+}
+
+void bjtsWordstruct(std::string& data, BJTSParams)
+{
+	if (tags.size() < 2)
+	{
+		conprint(2, "Missing parameter in BJTS Wordstruct: {}", data.substr(start, len));
+		return;
+	}
+
+	//Grab the entire thing, not just individual tags.
+	//This method is cheaper than re-joining the tags.
+	auto key = data.substr(start + 1, len - 2);
+
+	auto ppos = key.find('?');
+	if (ppos != key.npos)
+	{
+		//Use speaker's personality, unless there
+		//is no speaker in which case we use "normal".
+		//But if the speaker's personality isn't an option,
+		//reset and use "normal" after all.
+		/*
+		if (!speaker)
+			key.replace(ppos, 1, "normal");
+		else
+		{
+			key.replace(ppos, 1, speaker->personality->ID);
+			//check if this is available
+			auto result = Text::Get(fmt::format("{}:0", key));
+			if (result.length() >= 3 && result.substr(0, 3) == "???")
+			{
+				//guess not :shrug:
+				key = toDisplay.substr(start + 1, len - 2);
+				key.replace(ppos, 1, "normal");
+			}
+		}
+		*/
+	}
+
+	//Count the number of options
+	int options = 0;
+	for (int i = 0; i < 32; i++)
+	{
+		auto result = Text::Get(fmt::format("{}:{}", key, i));
+		if (result.length() >= 3 && result.substr(0, 3) == "???")
+		{
+			options = i;
+			break;
+		}
+	}
+	if (options == 0)
+	{
+		conprint(2, "Wordstructor: could not find anything for \"{}\".", key);
+		data.replace(start, len, "???WS???");
+		return;
+	}
+
+	int choice = rnd::getInt(options);
+	data.replace(start, len, Text::Get(fmt::format("{}:{}", key, choice)));
+}
+
+void bjtsKeyControl(std::string& data, BJTSParams)
+{
+	if (tags.size() < 2)
+	{
+		conprint(2, "Missing parameter in BJTS Key: {}", data.substr(start, len));
+		return;
+	}
+	if (tags[1] == "arrows")
+	{
+		data.replace(start, len, fmt::format("{}/{}/{}/{}",
+			Inputs.Keys[(int)Binds::WalkN].Name,
+			Inputs.Keys[(int)Binds::WalkS].Name,
+			Inputs.Keys[(int)Binds::WalkE].Name,
+			Inputs.Keys[(int)Binds::WalkW].Name
+			));
+	}
+	else if (tags[1] == "interact")
+		data.replace(start, len, Inputs.Keys[(int)Binds::Interact].Name);
+	else if (tags[1] == "accept")
+		data.replace(start, len, Inputs.Keys[(int)Binds::Accept].Name);
+}
+
+void bjtsGamepad(std::string& data, BJTSParams)
+{
+	if (tags.size() < 2)
+	{
+		conprint(2, "Missing parameter in BJTS Pad: {}", data.substr(start, len));
+		return;
+	}
+	if (tags[1] == "dpad")
+	{
+		data.replace(start, len, fmt::format("{}/{}/{}/{}",
+			GamepadPUAMap[Inputs.Keys[(int)Binds::WalkN].GamepadButton],
+			GamepadPUAMap[Inputs.Keys[(int)Binds::WalkS].GamepadButton],
+			GamepadPUAMap[Inputs.Keys[(int)Binds::WalkE].GamepadButton],
+			GamepadPUAMap[Inputs.Keys[(int)Binds::WalkW].GamepadButton]
+		));
+	}
+	else if (tags[1] == "interact")
+		data.replace(start, len, GamepadPUAMap[Inputs.Keys[(int)Binds::Interact].GamepadButton]);
+	else if (tags[1] == "accept")
+		data.replace(start, len, GamepadPUAMap[Inputs.Keys[(int)Binds::Accept].GamepadButton]);
+}
+
+typedef void(*BJTSFunc)(std::string& data, BJTSParams);
+
+//BJTS functions that actually change the string content.
+const std::map<std::string, BJTSFunc> bjtsPhase1 = {
+	{ "str", &bjtsStr },
+	{ "...", &bjtsEllipses },
+	{ "ws", &bjtsWordstruct },
+	{ "key", &bjtsKeyControl },
+	{ "pad", &bjtsGamepad },
+};
+//BJTS functions loaded from Lua scripts.
+std::map<std::string, std::string> bjtsPhase1X;
+
+std::string PreprocessBJTS(const std::string& data)
+{
+	if (bjtsPhase1X.empty())
+	{
+		auto extensions = VFS::ReadJSON("bjts/content.json");
+		if (extensions)
+		{
+			for (auto extension : extensions->AsObject())
+			{
+				if (!extension.second->IsString())
+				{
+					conprint(2, "BJTS extension {} is not a string.", extension.first);
+					continue;
+				}
+				auto val = extension.second->AsString();
+				if (val.length() < 4 || val.substr(val.length() - 4) != ".lua")
+				{
+					//This is a raw string. Convert it to a Lua thing.
+					//And for that, we need to escape quotes!
+					ReplaceAll(val, "\"", "\\\"");
+					//Possibly other things to but IDCRN.
+
+					val = fmt::format("return \"{}\"\r\n", val);
+				}
+				else
+				{
+					val = VFS::ReadString(fmt::format("bjts/{}", val));
+				}
+				bjtsPhase1X[extension.first] = val;
+			}
+		}
+	}
+
+	auto ret = std::string(data);
+	for (size_t i = 0; i < ret.length(); i++)
+	{
+		auto bjtsStart = ret.find_first_of('<', i);
+		if (bjtsStart != std::string::npos)
+		{
+			bjtsStart++;
+			auto bjtsEnd = ret.find_first_of('>', bjtsStart);
+			i = bjtsEnd;
+
+			auto bjtsWhole = ret.substr(bjtsStart, bjtsEnd - bjtsStart);
+			auto bjts = Split(bjtsWhole, ':');
+			auto func = bjtsPhase1.find(bjts[0]);
+			auto start = (int)bjtsStart - 1;
+			auto len = (int)(bjtsEnd - bjtsStart) + 2;
+			if (func != bjtsPhase1.end())
+			{
+				std::invoke(func->second, ret, bjts, start, len);
+				//std::invoke(func->second, bjts, (int)bjtsStart - 1, (int)(bjtsEnd - bjtsStart) + 2);
+				i = (size_t)-1; //-1 because we may have subbed in a new tag.
+			}
+			else
+			{
+				//Is it an extension?
+				auto func2 = bjtsPhase1X.find(bjts[0]);
+				if (func2 != bjtsPhase1X.end())
+				{
+					Sol.set("bjts", bjts);
+					ret.replace(start, len, Sol.script(func2->second).get<std::string>());
+					i = bjtsStart;
+				}
+			}
+		}
+	}
+	return ret;
+}
+
 std::vector<std::string> Split(std::string& data, char delimiter)
 {
 	std::vector<std::string> ret;

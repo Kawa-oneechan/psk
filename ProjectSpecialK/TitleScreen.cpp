@@ -39,8 +39,7 @@ TitleScreen::TitleScreen()
 	
 	LoadCamera("cameras/title.json");
 
-	auto key = Inputs.Keys[(int)Binds::Accept];
-	psText = fmt::format(Text::Get("title:pressstart"), key.Name, GamepadPUAMap[key.GamepadButton]);
+	psText = PreprocessBJTS(Text::Get("title:pressstart"));
 	psSize = Sprite::MeasureText(1, psText, 100);
 
 	optionsMenu = std::make_shared<OptionsMenu>();

@@ -1,5 +1,5 @@
 {
-	"title:pressstart": "Druk op {} of {}",
+	"title:pressstart": "Druk op <key:accept> of <pad:accept>",
 
 	"logojoke:0": "100% vrij van generatieve AI!",
 	"logojoke:1": "100% puur C++!",
