@@ -99,28 +99,7 @@ extern Texture* whiteRect;
 
 extern sol::state Sol;
 
-using rune = unsigned int;
 using hash = unsigned int;
-
-//Given a JSON array with two numbers in it, returns a vec2 with those numbers.
-extern glm::vec2 GetJSONVec2(JSONValue* val);
-//Given a JSON array with three numbers in it, returns a vec3 with those numbers.
-extern glm::vec3 GetJSONVec3(JSONValue* val);
-//Given a JSON array with four numbers in it, returns a vec4 with those numbers.
-extern glm::vec4 GetJSONVec4(JSONValue* val);
-//Converts [R,G,B], [R,G,B,A], "#RRGGBB" or "#AARRGGBB" to glm::vec4.
-//Returns an alpha of -1, which is impossible, on error.
-extern glm::vec4 GetJSONColor(JSONValue* val);
-//Given a JSON array with two numbers in it, returns a vec2 with those numbers.
-//But given a string that parses as "mmm dd" or "mmm/dd", parses that as a day and returns those numbers.
-//Either way, the first value is a day from 1-31 and the second a month from 1-12.
-extern glm::vec2 GetJSONDate(JSONValue* val);
-//Returns a JSON array initialized from a vec2, optionally casting to int.
-extern JSONValue* GetJSONVec(const glm::vec2& vec, bool asInt = false);
-//Returns a JSON array initialized from a vec3, optionally casting to int.
-extern JSONValue* GetJSONVec(const glm::vec3& vec, bool asInt = false);
-//Returns a JSON array initialized from a vec4, optionally casting to int.
-extern JSONValue* GetJSONVec(const glm::vec4& vec, bool asInt = false);
 
 using polygon = std::vector<glm::vec2>;
 //Returns true if point is inside of polygon.
@@ -134,43 +113,14 @@ std::string LoadCamera(const std::string& path);
 std::string LoadLights(JSONValue* json);
 std::string LoadLights(const std::string& path);
 
-//Decodes a UTF-8 byte sequence to a codepoint, returns it and the size of the sequence.
-extern std::tuple<rune, size_t> GetChar(const std::string& what, size_t where);
-//Encodes a codepoint into a UTF-8 byte sequence and appends it to the given string.
-extern void AppendChar(std::string& where, rune what);
-
-//Like string::length() but counts UTF-8 characters, not bytes.
-extern size_t Utf8CharLength(const std::string& what);
-
-//Renders a set of tabular data to the console in a nice lined table.
-extern void Table(std::vector<std::string> data, size_t stride);
-
 //Returns a calendar date for things like "the fourth Friday in November".
 tm* GetNthWeekdayOfMonth(int month, int dayOfWeek, int howManyth);
-
-//Given a full path to a file ("data/foo/bar.txt"), returns the path part including the final separator ("data/foo/").
-extern std::string GetDirFromFile(const std::string& path);
 
 extern bool RevAllTickables(const std::vector<TickableP>& tickables, float dt);
 extern void DrawAllTickables(const std::vector<TickableP>& tickables, float dt);
 
-//Given a piece of code (shader?) that may contain "#include" statements and a search path, inserts the included files, 
-extern void HandleIncludes(std::string& code, const std::string& path);
-
 //Invokes Scale2x, 3x, or 4x on an image. Returned pixel data is the caller's responsibility to delete.
 extern unsigned char* ScaleImage(unsigned char* original, int origWidth, int origHeight, int channels, int targetScale);
-
-//Returns the name of a key for the given scancode, using glfwGetKeyName for printables and Text::Get for specials.
-extern std::string GetKeyName(int scancode);
-
-//Checks if a string contains only characters valid for an ID (alhpanumerics, colons, underscores).
-extern bool IsID(const std::string& id);
-//Checks if a string contains a colon, which would mark it as a valid ID.
-extern bool IDIsQualified(const std::string& id);
-//Prepends the given namespace to an ID.
-extern std::string Qualify(const std::string& id, const std::string& ns);
-//Removes the frontmost namespace from an ID.
-extern std::string UnQualify(const std::string& id);
 
 namespace NookCode
 {
@@ -235,52 +185,3 @@ inline constexpr int operator "" t(unsigned long long v) { return (int)v; }
 //Distance normalized to a 0.0-1.0 range
 inline constexpr float operator "" pt(long double v) { return (float)v; }
 #pragma warning(pop)
-
-
-//Splits a string into a vector of strings by the specified delimiter.
-std::vector<std::string> Split(std::string& data, char delimiter);
-
-//Changes a string's characters to lowercase, in place.
-extern void StringToLower(std::string& data);
-
-//Changes a string's characters to uppercase, in place.
-extern void StringToUpper(std::string& data);
-
-//Removes spaces from a string, in place.
-extern void StripSpaces(std::string& data);
-
-//Finds and replaces all instances of a thing in a string, in place.
-extern void ReplaceAll(std::string& data, const std::string& find, const std::string& replace);
-
-//Removes BJTS tags from a string.
-extern std::string StripBJTS(const std::string& data);
-
-//Applies all non-dynamic BJTS tags to a string.
-extern std::string PreprocessBJTS(const std::string& data);
-
-template<typename T>
-auto StringToEnum(const std::string& s, std::initializer_list<const std::string> opts)
-{
-	auto it = std::find(opts.begin(), opts.end(), s);
-	if (it == opts.end())
-		throw std::range_error(fmt::format("StringToEnum: can't find \"{}\" in list \"{}\".", s, join(opts.begin(), opts.end())));
-	return (T)std::distance(opts.begin(), it);
-}
-
-template<typename InputIt>
-std::string join(InputIt begin, InputIt end, const std::string& separator = ", ", const std::string& concluder = "")
-{
-	std::ostringstream ss;
-
-	if (begin != end)
-		ss << *begin++;
-
-	while (begin != end)
-	{
-		ss << separator;
-		ss << *begin++;
-	}
-
-	ss << concluder;
-	return ss.str();
-}

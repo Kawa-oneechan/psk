@@ -6,6 +6,7 @@
 #include "DialogueBox.h"
 #include "PanelLayout.h"
 #include "Framebuffer.h"
+#include "TextUtils.h"
 
 //For version information
 #include <miniz.h>

@@ -1,5 +1,6 @@
 #include "PanelLayout.h"
 #include "InputsMap.h"
+#include "TextUtils.h"
 
 bool debugPanelLayoutPolygons = false;
 

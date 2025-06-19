@@ -1,4 +1,5 @@
 #include "SpecialK.h"
+#include "TextUtils.h"
 
 int Item::FindVariantByName(const std::string& variantName) const
 {

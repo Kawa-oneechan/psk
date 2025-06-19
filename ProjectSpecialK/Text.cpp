@@ -1,4 +1,5 @@
 #include "SpecialK.h"
+#include "TextUtils.h"
 
 Language gameLang = Language::USen;
 

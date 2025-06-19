@@ -1,6 +1,8 @@
 #include "SpecialK.h"
 #include "Town.h"
 #include "Animator.h"
+#include "TextUtils.h"
+#include "JSONUtils.h"
 
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/rotate_vector.hpp>

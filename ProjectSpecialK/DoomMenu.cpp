@@ -2,6 +2,7 @@
 #include "InputsMap.h"
 #include "Cursor.h"
 #include "DialogueBox.h"
+#include "TextUtils.h"
 
 //TODO: Add a thing where changing the game language reveals a warning about having to restart.
 //Would also work for a few other "deep" settings like resolution or whatever.

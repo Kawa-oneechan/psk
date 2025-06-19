@@ -164,6 +164,7 @@
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="ItemHotbar.cpp" />
     <ClCompile Include="JsonPatch.cpp" />
+    <ClCompile Include="JsonUtils.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Messager.cpp" />
     <ClCompile Include="Model.cpp" />
@@ -218,6 +219,7 @@
     <ClCompile Include="Text.cpp" />
     <ClCompile Include="TextField.cpp" />
     <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="TextUtils.cpp" />
     <ClCompile Include="ThreadedLoader.cpp" />
     <ClCompile Include="TitleScreen.cpp" />
     <ClCompile Include="Town.cpp" />
@@ -252,6 +254,7 @@
     <ClInclude Include="Iris.h" />
     <ClInclude Include="Item.h" />
     <ClInclude Include="ItemHotbar.h" />
+    <ClInclude Include="JsonUtils.h" />
     <ClInclude Include="Messager.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="MusicManager.h" />
@@ -266,6 +269,7 @@
     <ClInclude Include="Text.h" />
     <ClInclude Include="TextField.h" />
     <ClInclude Include="Texture.h" />
+    <ClInclude Include="TextUtils.h" />
     <ClInclude Include="Tickable.h" />
     <ClInclude Include="TitleScreen.h" />
     <ClInclude Include="Town.h" />

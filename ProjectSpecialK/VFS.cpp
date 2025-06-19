@@ -6,6 +6,7 @@
 #include "SpecialK.h"
 #include <miniz.h>
 #include "Console.h"
+#include "TextUtils.h"
 
 /*
 Saving to an archive file breaks if the entry already exists.

@@ -1,4 +1,5 @@
 #include "SpecialK.h"
+#include "TextUtils.h"
 
 #define HEADER "#version 430 core\n#define PSK\n"
 

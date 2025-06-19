@@ -1,5 +1,6 @@
 ﻿#include "SpecialK.h"
 #include "Town.h"
+#include "TextUtils.h"
 
 #include <stb_image.h>
 #include <stb_image_write.h>

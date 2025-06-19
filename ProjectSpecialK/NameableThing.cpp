@@ -1,4 +1,5 @@
 #include "SpecialK.h"
+#include "TextUtils.h"
 
 extern int articlePlease;
 
