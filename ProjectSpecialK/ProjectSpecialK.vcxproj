@@ -170,6 +170,7 @@
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="MusicManager.cpp" />
     <ClCompile Include="NameableThing.cpp" />
+    <ClCompile Include="NookCode.cpp" />
     <ClCompile Include="PanelLayout.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Sequence.cpp" />
@@ -259,6 +260,7 @@
     <ClInclude Include="Model.h" />
     <ClInclude Include="MusicManager.h" />
     <ClInclude Include="NameableThing.h" />
+    <ClInclude Include="NookCode.h" />
     <ClInclude Include="PanelLayout.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Sequence.h" />

@@ -99,6 +99,7 @@ extern Texture* whiteRect;
 
 extern sol::state Sol;
 
+//A CRC32 hash referring to a NameableThing.
 using hash = unsigned int;
 
 using polygon = std::vector<glm::vec2>;
@@ -121,14 +122,6 @@ extern void DrawAllTickables(const std::vector<TickableP>& tickables, float dt);
 
 //Invokes Scale2x, 3x, or 4x on an image. Returned pixel data is the caller's responsibility to delete.
 extern unsigned char* ScaleImage(unsigned char* original, int origWidth, int origHeight, int channels, int targetScale);
-
-namespace NookCode
-{
-	extern std::string Encode(std::array<unsigned char, 8>& d);
-	extern std::string Encode(hash itemHash, int variant, int pattern);
-	extern std::array<unsigned char, 8> Decode(const std::string& code);
-	extern void Decode(const std::string& code, hash& itemHash, int& variant, int& pattern);
-}
 
 namespace MeshBucket
 {
