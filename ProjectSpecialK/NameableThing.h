@@ -1,8 +1,6 @@
 #pragma once
-
 #include <JSON/JSON.h>
-
-using hash = unsigned int;
+#include "Types.h"
 
 class NameableThing
 {

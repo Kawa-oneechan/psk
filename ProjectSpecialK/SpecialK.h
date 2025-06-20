@@ -36,8 +36,6 @@
 #include "Text.h"
 #include "Console.h"
 
-using namespace std::literals;
-
 #define VERSIONJOKE "Horkly Warding"
 
 __declspec(noreturn)
@@ -98,9 +96,6 @@ extern void GetAtlas(std::vector<glm::vec4> &ret, const std::string& jsonFile);
 extern Texture* whiteRect;
 
 extern sol::state Sol;
-
-//A CRC32 hash referring to a NameableThing.
-using hash = unsigned int;
 
 using polygon = std::vector<glm::vec2>;
 //Returns true if point is inside of polygon.
@@ -167,14 +162,3 @@ namespace UI
 
 //Shows a loading screen while running another thread.
 extern void ThreadedLoader(std::function<void(float*)> loader);
-
-//To make coordinate spaces more explicit, maybe?
-#pragma warning(push)
-#pragma warning(disable: 4455)
-//Distance in pixels
-inline constexpr int operator "" px(unsigned long long v) { return (int)v; }
-//Distance in tiles
-inline constexpr int operator "" t(unsigned long long v) { return (int)v; }
-//Distance normalized to a 0.0-1.0 range
-inline constexpr float operator "" pt(long double v) { return (float)v; }
-#pragma warning(pop)

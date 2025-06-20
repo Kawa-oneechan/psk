@@ -173,6 +173,7 @@
     <ClCompile Include="NookCode.cpp" />
     <ClCompile Include="PanelLayout.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Scoring.cpp" />
     <ClCompile Include="Sequence.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="SolBinds.cpp" />
@@ -263,6 +264,7 @@
     <ClInclude Include="NookCode.h" />
     <ClInclude Include="PanelLayout.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="Scoring.h" />
     <ClInclude Include="Sequence.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="SpecialK.h" />
@@ -276,6 +278,7 @@
     <ClInclude Include="TitleScreen.h" />
     <ClInclude Include="Town.h" />
     <ClInclude Include="Traits.h" />
+    <ClInclude Include="Types.h" />
     <ClInclude Include="VFS.h" />
     <ClInclude Include="Villager.h" />
   </ItemGroup>

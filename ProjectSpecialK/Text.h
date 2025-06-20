@@ -4,6 +4,7 @@
 #include <sstream>
 #include <map>
 #include <algorithm>
+#include <JSON/JSON.h>
 
 //Supported game languages.
 enum Language

@@ -1,9 +1,7 @@
 #pragma once
 #include <vector>
 #include <string>
-
-//A single Unicode code point.
-using rune = unsigned int;
+#include "Types.h"
 
 //Decodes a UTF-8 byte sequence to a codepoint, returns it and the size of the sequence.
 extern std::tuple<rune, size_t> GetChar(const std::string& what, size_t where);

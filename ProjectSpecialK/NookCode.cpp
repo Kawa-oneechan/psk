@@ -1,7 +1,6 @@
 #include <string>
 #include <array>
-
-using hash = unsigned int;
+#include "Types.h"
 
 namespace NookCode
 {
