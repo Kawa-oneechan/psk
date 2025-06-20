@@ -99,7 +99,10 @@ namespace NookCode
 		{
 			auto pos = strchr(alphabet, code[i]);
 			if (pos == nullptr)
-				throw std::runtime_error("Invalid character in NookCode.");
+			{
+				d.fill(0xFF);
+				return d;
+			}
 			c[i] = (unsigned char)(pos - alphabet);
 		}
 
@@ -130,7 +133,11 @@ namespace NookCode
 		for (int i = 0; i < 5; i++)
 			check += d[i];
 		if (check != d[5])
-			throw std::runtime_error("NookCode checksum failed.");
+		{
+			d.fill(0xFF);
+			d[0] = 0xFE;
+			return d;
+		}
 
 		return d;
 	}

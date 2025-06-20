@@ -113,6 +113,10 @@ void RunTests()
 
 		if (item != 0xD25C790C || variant != 1 || pattern != 2)
 			conprint(2, "NookCode test: expected results 0xD25C790C 1 2 but got {:08X} {} {}.", item, variant, pattern);
+
+		NookCode::Decode("=========", item, variant, pattern);
+		item = (hash)-2; variant = 0xFF, pattern = 0xFF;
+		nookCode = NookCode::Encode(item, variant, pattern);
 	}
 
 	{

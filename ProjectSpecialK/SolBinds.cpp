@@ -2,6 +2,7 @@
 #include "DialogueBox.h"
 #include "Player.h"
 #include "MusicManager.h"
+#include "NookCode.h"
 
 namespace SolBinds
 {
@@ -115,6 +116,40 @@ namespace SolBinds
 			else if (va.size() == 2)
 				musicManager->Play(va[0].as<std::string>(), va[1].as<bool>());
 			console->Close();
+		};
+
+		Sol["decodeNookCode"] = [](const std::string& code)
+		{
+			hash itemHash;
+			int variant, pattern;
+			Sol["nookName"] = "XXX";
+			NookCode::Decode(code, itemHash, variant, pattern);
+			if (itemHash == (hash)-1)
+				return 0; //Invalid characters in NookCode.
+			if (itemHash == (hash)-2)
+				return 1; //Checksum mismatch.
+			//See if this identifies an item (despite the itemHash name)
+			{
+				auto item = Database::Find(itemHash, items);
+				if (item)
+				{
+					//TODO: check if we already have this item.
+					//TODO: put this item in the delivery queue for tomorrow
+					Sol["nookName"] = item->Name();
+					return 3; //Item will be delivered.
+				}
+			}
+			{
+				auto villager = Database::Find(itemHash, villagers);
+				if (villager)
+				{
+					//TODO: check if this villager already lives here.
+					//TODO: put this villager on the move-in queue
+					Sol["nookName"] = villager->Name();
+					return 5; //Villager will move in.
+				}
+			}
+			return 2; //Valid NookCode, but unknown hash.
 		};
 	}
 }
