@@ -15,6 +15,7 @@
 #include "TitleScreen.h"
 #include "InGame.h"
 #include "TextUtils.h"
+#include "Utilities.h"
 
 #include <fstream>
 

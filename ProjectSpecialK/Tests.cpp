@@ -1,6 +1,7 @@
 ﻿#include "SpecialK.h"
 #include "Town.h"
 #include "TextUtils.h"
+#include "Utilities.h"
 #include "NookCode.h"
 #include "Scoring.h"
 

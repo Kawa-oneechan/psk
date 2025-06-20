@@ -1,5 +1,6 @@
 ﻿#include "SpecialK.h"
 #include "Model.h"
+#include "Utilities.h"
 #include <ufbx.h>
 
 unsigned int currentVAO = 0;

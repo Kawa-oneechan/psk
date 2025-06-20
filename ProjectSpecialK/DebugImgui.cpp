@@ -2,6 +2,7 @@
 #include "Town.h"
 #include "Animator.h"
 #include "TextUtils.h"
+#include "Utilities.h"
 
 #include <ImGUI/imgui.h>
 #include <ImGUI/imgui_impl_glfw.h>

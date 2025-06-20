@@ -4,6 +4,7 @@
 #include "Town.h"
 #include "InGame.h"
 #include "TextUtils.h"
+#include "Utilities.h"
 
 extern std::vector<TickableP> newTickables;
 

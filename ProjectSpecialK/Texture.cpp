@@ -1,5 +1,6 @@
 #include "SpecialK.h"
 #include <stb_image.h>
+#include "JsonUtils.h"
 
 static std::map<std::string, Texture*> cache;
 static std::map<std::string, TextureArray*> cacheArray;

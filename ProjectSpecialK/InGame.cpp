@@ -1,5 +1,6 @@
 #include "InGame.h"
 #include "Messager.h"
+#include "Utilities.h"
 
 InGame::InGame()
 {

@@ -91,43 +91,15 @@ extern int height;
 //Ratio of current screen height over 1080.
 extern float scale;
 
-extern void GetAtlas(std::vector<glm::vec4> &ret, const std::string& jsonFile);
-
 extern Texture* whiteRect;
 
 extern sol::state Sol;
-
-using polygon = std::vector<glm::vec2>;
-//Returns true if point is inside of polygon.
-extern bool PointInPoly(const glm::vec2 point, const polygon& polygon);
-//Returns true if point is in rect.
-extern bool PointInRect(const glm::vec2 point, const glm::vec4 rect);
-
-std::string LoadCamera(JSONValue* json);
-std::string LoadCamera(const std::string& path);
-
-std::string LoadLights(JSONValue* json);
-std::string LoadLights(const std::string& path);
-
-//Returns a calendar date for things like "the fourth Friday in November".
-tm* GetNthWeekdayOfMonth(int month, int dayOfWeek, int howManyth);
-
-extern bool RevAllTickables(const std::vector<TickableP>& tickables, float dt);
-extern void DrawAllTickables(const std::vector<TickableP>& tickables, float dt);
-
-//Invokes Scale2x, 3x, or 4x on an image. Returned pixel data is the caller's responsibility to delete.
-extern unsigned char* ScaleImage(unsigned char* original, int origWidth, int origHeight, int channels, int targetScale);
 
 namespace MeshBucket
 {
 	extern void Flush();
 	extern void Draw(Model::Mesh& mesh, const glm::vec3& position, const glm::quat& rotation, const glm::mat4 bones[], size_t boneCt);
 }
-
-//Returns the CRC32 hash for the given text.
-extern hash GetCRC(const std::string& text);
-//Returns the CRC32 hash for the given data.
-extern hash GetCRC(unsigned char *buffer, int len);
 
 namespace rnd
 {
