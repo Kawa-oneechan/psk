@@ -34,6 +34,7 @@ unsigned int crcLut[256] =
 	0xB3667A2E, 0xC4614AB8, 0x5D681B02, 0x2A6F2B94,	0xB40BBE37, 0xC30C8EA1, 0x5A05DF1B, 0x2D02EF8D
 };
 
+#ifndef _WIN32
 //Left value is FROM, right value is TO.
 unsigned short caseFolding[2378] = {
 	0x0041, 0x0061, //latin capital letter a
@@ -1226,3 +1227,4 @@ unsigned short caseFolding[2378] = {
 	0xFF39, 0xFF59, //fullwidth latin capital letter y
 	0xFF3A, 0xFF5A, //fullwidth latin capital letter z
 };
+#endif

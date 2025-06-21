@@ -2,7 +2,18 @@
 #include "InputsMap.h"
 #include "DialogueBox.h"
 
+#ifdef _WIN32
+extern "C"
+{
+	//Normally, CharUpper/CharLower take either strings *or* characters, by checking the high bytes or sumth.
+	//It's a hack, but we don't *want* to use it on entire strings anyway cos we're UTF8.
+	int __stdcall CharUpperW(_In_ int lpsz);
+	int __stdcall CharLowerW(_In_ int lpsz);
+	wchar_t* __stdcall CharNextW(_In_ const wchar_t* lpText);
+}
+#else
 extern unsigned short caseFolding[2378];
+#endif
 
 static const char* bindingNames[] = {
 	"up", "down", "left", "right",
@@ -142,6 +153,9 @@ void StringToLower(std::string& data)
 		rune ch;
 		size_t size;
 		std::tie(ch, size) = GetChar(data, i);
+#ifdef _WIN32
+		ch = CharLowerW(ch);
+#else
 		for (int c = 0; c < 2378; c += 2)
 		{
 			if (caseFolding[c] == ch)
@@ -150,6 +164,7 @@ void StringToLower(std::string& data)
 				break;
 			}
 		}
+#endif
 		AppendChar(ret, ch);
 		i += size;
 	}
@@ -165,6 +180,9 @@ void StringToUpper(std::string& data)
 		rune ch;
 		size_t size;
 		std::tie(ch, size) = GetChar(data, i);
+#ifdef _WIN32
+		ch = CharUpperW(ch);
+#else
 		for (int c = 1; c < 2378; c += 2)
 		{
 			if (caseFolding[c] == ch)
@@ -173,6 +191,7 @@ void StringToUpper(std::string& data)
 				break;
 			}
 		}
+#endif
 		AppendChar(ret, ch);
 		i += size;
 	}
