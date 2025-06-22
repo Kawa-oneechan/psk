@@ -100,6 +100,11 @@ void RunTests()
 	//GetLetterScore("L!L!L!L!L!L! L!L!L!L!L!L!L! L!L!L!L!L!L!L! L!L!L!L!L!L! L!L!L!L!L!L!L! L!L!L!L!L!L!L!L!L!L!L!L! L!L!L!L!L!L!L!L!L! L!L!L!L! L!L!L!L! L!L!L! L!L!L! L!L!L!"); //should be 710, Hunter R says 746.
 	//GetLetterScore("!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i"); //should be -820, Hunter R says -807
 
+
+	auto testLine = "<ws:?:greeting> What's new?";
+	auto result = PreprocessBJTS(testLine);
+
+
 	{
 		hash item = 0xD25C790C;
 		int variant = 1;

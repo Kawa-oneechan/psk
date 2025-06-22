@@ -238,6 +238,9 @@ static void bjtsStr(std::string& data, BJTSParams)
 		conprint(2, "Missing parameter in BJTS Str: {}", data.substr(start, len));
 		return;
 	}
+
+	auto speaker = dlgBox->Speaker();
+
 	if (tags[1] == "...")
 		data.replace(start, len, Text::Get("str:fix:001"));
 	else if (tags[1] == "player")
@@ -246,40 +249,33 @@ static void bjtsStr(std::string& data, BJTSParams)
 		data.replace(start, len, Text::Get("str:kun"));
 	else if (tags[1] == "vname")
 	{
-		//if (dlgBox->Speaker)
-		/*
 		if (!speaker)
 		{
-		conprint(2, "BJTS Str called for villager name, but no speaker is set.");
-		toDisplay.replace(start, len, "Buggsy");
-		return;
+			conprint(2, "BJTS Str called for villager name, but no speaker is set.");
+			data.replace(start, len, "Buggsy");
+			return;
 		}
-		toDisplay.replace(start, len, speaker->Name());
-		*/
+		data.replace(start, len, speaker->Name());
 	}
 	else if (tags[1] == "vspec")
 	{
-		/*
 		if (!speaker)
 		{
-		conprint(2, "BJTS Str called for villager species, but no speaker is set.");
-		toDisplay.replace(start, len, "bug");
-		return;
+			conprint(2, "BJTS Str called for villager species, but no speaker is set.");
+			data.replace(start, len, "bug");
+			return;
 		}
-		toDisplay.replace(start, len, speaker->Species());
-		*/
+		data.replace(start, len, speaker->Species());
 	}
 	else if (tags[1] == "catchphrase")
 	{
-		/*
 		if (!speaker)
 		{
-		conprint(2, "BJTS Str called for villager catchphrase, but no speaker is set.");
-		toDisplay.replace(start, len, "bugbug");
-		return;
+			conprint(2, "BJTS Str called for villager catchphrase, but no speaker is set.");
+			data.replace(start, len, "bugbug");
+			return;
 		}
-		toDisplay.replace(start, len, speaker->Catchphrase());
-		*/
+		data.replace(start, len, speaker->Catchphrase());
 	}
 }
 
@@ -305,6 +301,8 @@ static void bjtsWordstruct(std::string& data, BJTSParams)
 	//This method is cheaper than re-joining the tags.
 	auto key = data.substr(start + 1, len - 2);
 
+	auto speaker = dlgBox->Speaker();
+
 	auto ppos = key.find('?');
 	if (ppos != key.npos)
 	{
@@ -312,22 +310,20 @@ static void bjtsWordstruct(std::string& data, BJTSParams)
 		//is no speaker in which case we use "normal".
 		//But if the speaker's personality isn't an option,
 		//reset and use "normal" after all.
-		/*
 		if (!speaker)
-		key.replace(ppos, 1, "normal");
+			key.replace(ppos, 1, "normal");
 		else
 		{
-		key.replace(ppos, 1, speaker->personality->ID);
-		//check if this is available
-		auto result = Text::Get(fmt::format("{}:0", key));
-		if (result.length() >= 3 && result.substr(0, 3) == "???")
-		{
-		//guess not :shrug:
-		key = toDisplay.substr(start + 1, len - 2);
-		key.replace(ppos, 1, "normal");
+			key.replace(ppos, 1, speaker->personality->ID);
+			//check if this is available
+			auto result = Text::Get(fmt::format("{}:0", key));
+			if (result.length() >= 3 && result.substr(0, 3) == "???")
+			{
+				//guess not :shrug:
+				key = data.substr(start + 1, len - 2);
+				key.replace(ppos, 1, "normal");
+			}
 		}
-		}
-		*/
 	}
 
 	//Count the number of options
@@ -348,7 +344,7 @@ static void bjtsWordstruct(std::string& data, BJTSParams)
 		return;
 	}
 
-	int choice = rnd::getInt(options);
+	int choice = rnd::getInt(options - 1);
 	data.replace(start, len, Text::Get(fmt::format("{}:{}", key, choice)));
 }
 
@@ -509,6 +505,8 @@ std::string PreprocessBJTS(const std::string& data)
 				}
 			}
 		}
+		else
+			break;
 	}
 	return ret;
 }

@@ -79,6 +79,8 @@ public:
 	void Style(int style);
 	void Draw(float dt);
 	bool Tick(float dt);
+
+	VillagerP Speaker() { return speaker; }
 };
 
 extern std::shared_ptr<DialogueBox> dlgBox;

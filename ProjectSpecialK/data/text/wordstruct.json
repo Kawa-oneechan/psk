@@ -1,3 +1,4 @@
+//Use "?" as a placeholder when invoking to sub in the current speaker's personality.
 {
 	"ws:normal:greeting:0": { "en": "<ws:?:init_hello>, <str:player>!" },
 
