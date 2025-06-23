@@ -3,7 +3,7 @@
 #include "SpecialK.h"
 #include "Iris.h"
 #include "PanelLayout.h"
-#include "DoomMenu.h"
+#include "OptionsMenu.h"
 
 class TitleScreen : public Tickable
 {

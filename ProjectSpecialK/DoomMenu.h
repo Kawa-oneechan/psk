@@ -1,6 +1,5 @@
 ﻿#pragma once
 
-#include "SpecialK.h"
 #include "InputsMap.h"
 #include "ButtonGuide.h"
 
@@ -95,21 +94,4 @@ public:
 	void Translate();
 	bool Tick(float dt);
 	void Draw(float dt);
-	bool Scancode(unsigned int scancode);
-};
-
-
-class OptionsMenu : public DoomMenu
-{
-protected:
-	void Build();
-	void Translate();
-
-	DoomMenuPage options, content, keybinds, volume, species;
-
-	std::vector<Texture*> speciesPreviews;
-	std::string speciesText;
-
-public:
-	OptionsMenu();
 };
