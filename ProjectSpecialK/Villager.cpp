@@ -7,6 +7,8 @@
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/rotate_vector.hpp>
 
+bool botherColliding = true;
+
 void Person::Turn(float facing, float dt)
 {
 	auto m = Facing;
@@ -56,13 +58,14 @@ bool Person::Move(float facing, float dt)
 		return false;
 	*/
 
-	//Okay so between this and the implementation of FindVillagerCollision,
-	//this ALSO does not work right.
-	float c2c = FindVillagerCollision(newPos);
-	if (c2c > 0.0f)
+	if (botherColliding)
 	{
-		//TODO: PUSH.
-		return true;
+		float c2c = FindVillagerCollision(newPos);
+		if (c2c > 0.0f)
+		{
+			//TODO: PUSH.
+			return true;
+		}
 	}
 
 	Position = newPos;

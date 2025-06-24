@@ -2,6 +2,8 @@
 #include "Cursor.h"
 #include "TextUtils.h"
 
+extern bool botherColliding;
+
 OptionsMenu::OptionsMenu()
 {
 	Build();
@@ -103,6 +105,9 @@ void OptionsMenu::Build()
 		));
 		options.items.push_back(new DoomMenuItem("menu:options:balloonchance", 10, 60, UI::settings["balloonChance"]->AsInteger(), 5, percent,
 			[&](DoomMenuItem*i) { UI::settings["balloonChance"] = new JSONValue(i->selection); }
+		));
+		options.items.push_back(new DoomMenuItem("menu:options:bothercolliding", botherColliding,
+			[&](DoomMenuItem*) { botherColliding = !botherColliding; }
 		));
 		options.items.push_back(new DoomMenuItem("menu:options:cursorscale", 50, 150, UI::settings["cursorScale"]->AsInteger(), 10, percent,
 			[&](DoomMenuItem*i)

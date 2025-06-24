@@ -72,6 +72,7 @@ float timeScale = 1.0f;
 int articlePlease;
 
 bool cheatsEnabled;
+extern bool botherColliding;
 
 #ifdef DEBUG
 float uiTime = 0;
@@ -198,6 +199,7 @@ namespace UI
 		DS("pingRate", 3);
 		DS("balloonChance", 15);
 		DS("cursorScale", 100);
+		DS("botherColliding", true);
 		DS("24hour", true);
 		DS("contentFilters", JSONObject());
 		DS("musicVolume", 70);
@@ -219,6 +221,8 @@ namespace UI
 		Audio::AmbientVolume = settings["ambientVolume"]->AsInteger() / 100.0f;
 		Audio::SoundVolume = settings["soundVolume"]->AsInteger() / 100.0f;
 		Audio::SpeechVolume = settings["speechVolume"]->AsInteger() / 100.0f;
+
+		botherColliding = settings["botherColliding"]->AsBool();
 
 		auto keyBinds = settings["keyBinds"]->AsArray();
 		if (keyBinds.size() != NumKeyBinds)
@@ -261,6 +265,8 @@ namespace UI
 		settings["ambientVolume"] = new JSONValue((int)(Audio::AmbientVolume * 100.0f));
 		settings["soundVolume"] = new JSONValue((int)(Audio::SoundVolume * 100.0f));
 		settings["speechVolume"] = new JSONValue((int)(Audio::SpeechVolume * 100.0f));
+
+		settings["botherColliding"] = new JSONValue(botherColliding);
 
 		auto binds = JSONArray();
 		for (auto& k : Inputs.Keys)

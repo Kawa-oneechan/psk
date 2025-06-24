@@ -22,6 +22,7 @@ extern bool wireframe;
 extern bool debuggerEnabled;
 extern bool cheatsEnabled;
 extern bool useOrthographic;
+extern bool botherColliding;
 
 bool noWear; //placeholder
 
@@ -69,6 +70,8 @@ Console::Console()
 	RegisterCVar("nowear", CVar::Type::Bool, &noWear, true);
 	
 	RegisterCVar("grass", CVar::Type::Float, &commonUniforms.GrassColor, false);
+
+	RegisterCVar("collidenpc", CVar::Type::Bool, &botherColliding, false);
 
 	//RegisterCVar("ai_disable", CVar::Type::Bool, &);
 	//RegisterCVar("cl_showpos", CVar::Type::Bool, &);

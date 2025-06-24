@@ -121,6 +121,9 @@
 		"hu": "Lufi esélye",
 		"nl": "Ballonnenkans"
 	},
+	"menu:options:bothercolliding": {
+		"en": "Enable character/character collisions"
+	},
 	"menu:options:cursorscale": {
 		"en": "Cursor scale",
 		"jp": "カーソル倍率",
