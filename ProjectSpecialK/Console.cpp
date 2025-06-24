@@ -49,7 +49,7 @@ Console::Console()
 	appearState = 0;
 
 #ifdef DEBUG
-	RegisterCVar("debugger", CVar::Type::Bool, &debuggerEnabled, true);
+	RegisterCVar("debugger", CVar::Type::Bool, &debuggerEnabled);
 #endif
 	RegisterCVar("r_polygons", CVar::Type::Bool, &debugPanelLayoutPolygons);
 	RegisterCVar("r_postfx", CVar::Type::Int, &commonUniforms.PostEffect, false, 0, 4);

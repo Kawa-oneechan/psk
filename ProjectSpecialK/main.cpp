@@ -315,6 +315,10 @@ static void char_callback(GLFWwindow* window, unsigned int codepoint)
 	}
 }
 
+#ifdef DEBUG
+extern bool debuggerEnabled;
+#endif
+
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
 	window, mods;
@@ -347,6 +351,11 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 
 	if (key == GLFW_KEY_F1 && action == GLFW_PRESS)
 		wireframe = !wireframe;
+
+#ifdef DEBUG
+	if (key == GLFW_KEY_D && mods == GLFW_MOD_CONTROL && action == GLFW_PRESS)
+		debuggerEnabled = !debuggerEnabled;
+#endif
 }
 
 static void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
