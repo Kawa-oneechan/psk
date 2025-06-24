@@ -69,6 +69,16 @@
 		"dialogueTagLeft": 250,
 		"dialogueTagAngle": -7,
 		"dialogueTextTop": 90,
-		"dialogueTextLeft": 160
+		"dialogueTextLeft": 160,
+
+		"menuColumnSize": 400,
+		"menuStartX": 0.22,
+		"menuStartY": 32,
+		"menuEndDist": 100,
+		"menuHeaderSize": 150,
+		"menuSubHeaderSize": 120,
+		"menuItemSize": 100,
+		"menuItemSpacing": 50,
+		"menuItemPartScale": 0.75
 	}
 }

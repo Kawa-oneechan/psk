@@ -127,6 +127,9 @@ bool DoomMenu::Tick(float dt)
 
 	static bool justSwitchedPage = true;
 
+	auto metrics = UI::json["metrics"]->AsObject();
+	const int col = (int)(metrics["menuColumnSize"]->AsNumber() * scale);
+
 	if (remapping != -1)
 	{
 		if (Inputs.HaveGamePad)
@@ -163,7 +166,6 @@ bool DoomMenu::Tick(float dt)
 
 	if (itemY.size() > 0 && Inputs.MouseMoved())
 	{
-		const int col = (int)(400 * scale);
 		mouseHighlight = -1;
 		if (Inputs.MousePosition.x >= itemX && Inputs.MousePosition.x <= itemX + (col * 2.5f))
 		{
@@ -393,12 +395,18 @@ void DoomMenu::Draw(float dt)
 	auto width = 1980.0f;
 	auto height = 1080.0f;
 
-	const int col = (int)(400 * scale);
+	auto metrics = UI::json["metrics"]->AsObject();
+	const int col = (int)(metrics["menuColumnSize"]->AsNumber() * scale);
 
-	const float startX = (width * 0.22f) * scale;
-	float startY = 32 * scale;
-	float endY = (height - 100) * scale;
-	
+	const float startX = (width * metrics["menuStartX"]->AsNumber()) * scale;
+	float startY = metrics["menuStartY"]->AsNumber() * scale;
+	const float endY = (height - metrics["menuEndDist"]->AsNumber()) * scale;
+	const float headerSize = metrics["menuHeaderSize"]->AsNumber();
+	const float subHeaderSize = metrics["menuSubHeaderSize"]->AsNumber();
+	const float itemSize = metrics["menuItemSize"]->AsNumber();
+	const float itemSpace = metrics["menuItemSpacing"]->AsNumber();
+	const float partScale = metrics["menuItemPartScale"]->AsNumber();
+
 	auto pos = glm::vec2(startX, startY);
 	
 	auto& controls = *UI::controls;
@@ -407,24 +415,24 @@ void DoomMenu::Draw(float dt)
 
 	if (!items->header.empty())
 	{
-		auto headerW = Sprite::MeasureText(1, items->header, 150).x;
+		auto headerW = Sprite::MeasureText(1, items->header, headerSize).x;
 		auto headerX = (width - headerW) / 2;
 
 		Sprite::DrawSprite(panels, glm::vec2(headerX - panels[4].z, pos.y) * scale, glm::vec2(panels[4].z, panels[4].w) * scale, panels[4], 0.0f, UI::themeColors["primary"]);
 		Sprite::DrawSprite(panels, glm::vec2(headerX, pos.y) * scale, glm::vec2(headerW, panels[3].w) * scale, panels[3], 0.0f, UI::themeColors["primary"]);
 		Sprite::DrawSprite(panels, glm::vec2(headerX + headerW, pos.y) * scale, glm::vec2(panels[5].z, panels[5].w) * scale, panels[5], 0.0f, UI::themeColors["primary"]);
 
-		Sprite::DrawText(1, items->header, glm::vec2(headerX, pos.y + 32) * scale, glm::vec4(1), 150 * scale);
+		Sprite::DrawText(1, items->header, glm::vec2(headerX, pos.y + 32) * scale, glm::vec4(1), headerSize * scale);
 		pos.y += panels[4].w + (32 * scale);
 
 		if (!items->subheader.empty())
 		{
-			auto xy = Sprite::MeasureText(1, items->subheader, 120);
+			auto xy = Sprite::MeasureText(1, items->subheader, subHeaderSize);
 			headerX = (width - xy.x) / 2;
 
 			Sprite::DrawSprite(*whiteRect, glm::vec2(0, pos.y) * scale, glm::vec2(width, xy.y + 16) * scale, glm::vec4(0), 0.0f, UI::themeColors["primary"]);
 
-			Sprite::DrawText(1, items->subheader, glm::vec2(headerX, pos.y + 8) * scale, glm::vec4(1), 120 * scale);
+			Sprite::DrawText(1, items->subheader, glm::vec2(headerX, pos.y + 8) * scale, glm::vec4(1), subHeaderSize * scale);
 			pos.y += xy.y + (20 * scale);
 		}
 
@@ -433,8 +441,8 @@ void DoomMenu::Draw(float dt)
 
 	const auto shown = std::min(visible, (int)items->items.size() - scroll);
 
-	const auto partSize = controls[4].w * 0.75f *  scale;
-	const auto thumbSize = glm::vec2(controls[3].z, controls[3].w) * 0.75f * scale;
+	const auto partSize = controls[4].w * partScale * scale;
+	const auto thumbSize = glm::vec2(controls[3].z, controls[3].w) * partScale * scale;
 
 	itemY.clear();
 
@@ -445,14 +453,14 @@ void DoomMenu::Draw(float dt)
 	for (int i = 0; i < shown; i++)
 	{
 		auto item = items->items[i + scroll];
-		auto size = 100 * scale;
-		pos.y += (50 * scale) + size - (100 * scale);
+		auto size = itemSize * scale;
+		pos.y += (itemSpace * scale) + size - (itemSize * scale);
 		if (i + scroll == highlight)
 		{
 			auto offset = glm::vec2(item->type == DoomMenuItem::Type::Checkbox ? (40 * scale) : 0, 0);
-			auto highlightSize = Sprite::MeasureText(1, item->caption, 100 * scale);
+			auto highlightSize = Sprite::MeasureText(1, item->caption, itemSize * scale);
 			highlightSize.x += 8 * scale;
-			highlightSize.y *= 0.75f;
+			highlightSize.y *= partScale;
 			Sprite::DrawSprite(controls, pos + offset + glm::vec2(-(highlightSize.y) * scale, 0), glm::vec2(highlightSize.y), controls[7], 0, UI::themeColors["secondary"]);
 			Sprite::DrawSprite(controls, pos + offset + glm::vec2(highlightSize.x, 0), glm::vec2(highlightSize.y), controls[8], 0, UI::themeColors["secondary"]);
 			Sprite::DrawSprite(controls, pos + offset, highlightSize, controls[9], 0, UI::themeColors["secondary"]);
@@ -467,7 +475,7 @@ void DoomMenu::Draw(float dt)
 		auto color = UI::themeColors["white"];
 		auto offset = glm::vec2(item->type == DoomMenuItem::Type::Checkbox ? (40 * scale) : 0, 0);
 		auto font = 1;
-		auto size = 100 * scale;
+		auto size = itemSize * scale;
 
 		if (item->type == DoomMenuItem::Type::Text)
 		{
@@ -490,7 +498,7 @@ void DoomMenu::Draw(float dt)
 			if (item->format != nullptr)
 			{
 				auto fmt = item->format(item);
-				Sprite::DrawText(1, fmt, pos + glm::vec2(col + col + (94 * scale), 10), color, size * 0.75f);
+				Sprite::DrawText(1, fmt, pos + glm::vec2(col + col + (94 * scale), 10), color, size * partScale);
 			}
 		}
 		else if (item->type == DoomMenuItem::Type::KeyBind)
@@ -502,7 +510,7 @@ void DoomMenu::Draw(float dt)
 		}
 
 		itemY.push_back(pos.y);
-		pos.y += (50 * scale) + size - (100 * scale);
+		pos.y += (itemSpace * scale) + size - (itemSize * scale);
 	}
 
 	//terminator
