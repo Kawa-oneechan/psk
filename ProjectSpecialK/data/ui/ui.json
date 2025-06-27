@@ -76,9 +76,17 @@
 		"menuStartY": 32,
 		"menuEndDist": 100,
 		"menuHeaderSize": 150,
+		"menuHeaderOffset": 32,
+		"menuHeaderPadding": 24,
 		"menuSubHeaderSize": 120,
+		"menuSubHeaderOffset": 8,
+		"menuSubHeaderPadding": 20,
 		"menuItemSize": 100,
 		"menuItemSpacing": 50,
-		"menuItemPartScale": 0.75
+		"menuItemPartScale": 0.75,
+		"menuHiliteBarOffset": 8,
+		"menuCheckboxOffset": 40,
+		"menuSliderValueOffsetX": 94,
+		"menuSliderValueOffsetY": 10,
 	}
 }

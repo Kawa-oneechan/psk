@@ -71,7 +71,7 @@ protected:
 	int highlight{ 0 };
 	int mouseHighlight{ 0 };
 	int scroll{ 0 };
-	int visible{ 12 };
+	int visible{ 12 }; //TODO: determine this dynamically
 	int remapping{ -1 };
 	bool remapBounce{ false };
 

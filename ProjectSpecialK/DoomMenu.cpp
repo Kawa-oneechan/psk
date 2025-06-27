@@ -402,10 +402,18 @@ void DoomMenu::Draw(float dt)
 	float startY = metrics["menuStartY"]->AsNumber() * scale;
 	const float endY = (height - metrics["menuEndDist"]->AsNumber()) * scale;
 	const float headerSize = metrics["menuHeaderSize"]->AsNumber();
+	const float headerOffset = metrics["menuHeaderOffset"]->AsNumber();
+	const float headerPadding = metrics["menuHeaderPadding"]->AsNumber();
 	const float subHeaderSize = metrics["menuSubHeaderSize"]->AsNumber();
+	const float subHeaderOffset = metrics["menuSubHeaderOffset"]->AsNumber();
+	const float subHeaderPadding = metrics["menuSubHeaderPadding"]->AsNumber();
 	const float itemSize = metrics["menuItemSize"]->AsNumber();
 	const float itemSpace = metrics["menuItemSpacing"]->AsNumber();
 	const float partScale = metrics["menuItemPartScale"]->AsNumber();
+	const float hiliteBarOffset = metrics["menuHiliteBarOffset"]->AsNumber();
+	const float checkboxOffset = metrics["menuCheckboxOffset"]->AsNumber();
+	const float sliderValueOffsetX = metrics["menuSliderValueOffsetX"]->AsNumber();
+	const float sliderValueOffsetY = metrics["menuSliderValueOffsetY"]->AsNumber();
 
 	auto pos = glm::vec2(startX, startY);
 	
@@ -422,7 +430,7 @@ void DoomMenu::Draw(float dt)
 		Sprite::DrawSprite(panels, glm::vec2(headerX, pos.y) * scale, glm::vec2(headerW, panels[3].w) * scale, panels[3], 0.0f, UI::themeColors["primary"]);
 		Sprite::DrawSprite(panels, glm::vec2(headerX + headerW, pos.y) * scale, glm::vec2(panels[5].z, panels[5].w) * scale, panels[5], 0.0f, UI::themeColors["primary"]);
 
-		Sprite::DrawText(1, items->header, glm::vec2(headerX, pos.y + 32) * scale, glm::vec4(1), headerSize * scale);
+		Sprite::DrawText(1, items->header, glm::vec2(headerX, pos.y + headerOffset) * scale, glm::vec4(1), headerSize * scale);
 		pos.y += panels[4].w + (32 * scale);
 
 		if (!items->subheader.empty())
@@ -432,11 +440,11 @@ void DoomMenu::Draw(float dt)
 
 			Sprite::DrawSprite(*whiteRect, glm::vec2(0, pos.y) * scale, glm::vec2(width, xy.y + 16) * scale, glm::vec4(0), 0.0f, UI::themeColors["primary"]);
 
-			Sprite::DrawText(1, items->subheader, glm::vec2(headerX, pos.y + 8) * scale, glm::vec4(1), subHeaderSize * scale);
-			pos.y += xy.y + (20 * scale);
+			Sprite::DrawText(1, items->subheader, glm::vec2(headerX, pos.y + subHeaderOffset) * scale, glm::vec4(1), subHeaderSize * scale);
+			pos.y += xy.y + (subHeaderPadding * scale);
 		}
 
-		startY = pos.y + (24 * scale);
+		startY = pos.y + (headerPadding * scale);
 	}
 
 	const auto shown = std::min(visible, (int)items->items.size() - scroll);
@@ -457,9 +465,9 @@ void DoomMenu::Draw(float dt)
 		pos.y += (itemSpace * scale) + size - (itemSize * scale);
 		if (i + scroll == highlight)
 		{
-			auto offset = glm::vec2(item->type == DoomMenuItem::Type::Checkbox ? (40 * scale) : 0, 0);
+			auto offset = glm::vec2(item->type == DoomMenuItem::Type::Checkbox ? (checkboxOffset * scale) : 0, 0);
 			auto highlightSize = Sprite::MeasureText(1, item->caption, itemSize * scale);
-			highlightSize.x += 8 * scale;
+			highlightSize.x += hiliteBarOffset * scale;
 			highlightSize.y *= partScale;
 			Sprite::DrawSprite(controls, pos + offset + glm::vec2(-(highlightSize.y) * scale, 0), glm::vec2(highlightSize.y), controls[7], 0, UI::themeColors["secondary"]);
 			Sprite::DrawSprite(controls, pos + offset + glm::vec2(highlightSize.x, 0), glm::vec2(highlightSize.y), controls[8], 0, UI::themeColors["secondary"]);
@@ -473,7 +481,7 @@ void DoomMenu::Draw(float dt)
 	{
 		auto item = items->items[i + scroll];
 		auto color = UI::themeColors["white"];
-		auto offset = glm::vec2(item->type == DoomMenuItem::Type::Checkbox ? (40 * scale) : 0, 0);
+		auto offset = glm::vec2(item->type == DoomMenuItem::Type::Checkbox ? (checkboxOffset * scale) : 0, 0);
 		auto font = 1;
 		auto size = itemSize * scale;
 
@@ -498,7 +506,7 @@ void DoomMenu::Draw(float dt)
 			if (item->format != nullptr)
 			{
 				auto fmt = item->format(item);
-				Sprite::DrawText(1, fmt, pos + glm::vec2(col + col + (94 * scale), 10), color, size * partScale);
+				Sprite::DrawText(1, fmt, pos + glm::vec2(col + col + (sliderValueOffsetX * scale), sliderValueOffsetY), color, size * partScale);
 			}
 		}
 		else if (item->type == DoomMenuItem::Type::KeyBind)
@@ -522,7 +530,7 @@ void DoomMenu::Draw(float dt)
 	for (int i = 0; i < shown; i++)
 	{
 		auto item = i == 0 ? items->items[0] : items->items[i + scroll];
-		const auto offset = glm::vec2(item->type == DoomMenuItem::Type::Checkbox ? (40 * scale) : 0, 0);
+		const auto offset = glm::vec2(item->type == DoomMenuItem::Type::Checkbox ? (checkboxOffset * scale) : 0, 0);
 
 		pos.y = itemY[i];
 
