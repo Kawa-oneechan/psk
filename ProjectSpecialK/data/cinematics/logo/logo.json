@@ -276,7 +276,7 @@
 					{
 						"panel": "logoE",
 						"property": "alpha",
-						"fromTime": 0.0, "fromVal": 0.0,
+						"fromTime": 0.0, "fromVal": 1.0,
 						"toTime": 0.1, "toVal": 1.0
 					},
 					{
@@ -288,7 +288,7 @@
 					{
 						"panel": "logoI",
 						"property": "alpha",
-						"fromTime": 0.0, "fromVal": 0.0,
+						"fromTime": 0.0, "fromVal": 1.0,
 						"toTime": 0.1, "toVal": 1.0
 					},
 					{
@@ -313,7 +313,7 @@
 					{
 						"panel": "logoA",
 						"property": "alpha",
-						"fromTime": 0.0, "fromVal": 0.0,
+						"fromTime": 0.0, "fromVal": 1.0,
 						"toTime": 0.1, "toVal": 1.0
 					},
 					{
@@ -362,7 +362,7 @@
 					{
 						"panel": "logoJoke",
 						"property": "alpha",
-						"fromTime": 3.00, "fromVal": 0.0,
+						"fromTime": 3.00, "fromVal": 1.0,
 						"toTime": 3.50, "toVal": 1.0
 					}
 				]
