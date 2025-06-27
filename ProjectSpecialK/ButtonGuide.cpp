@@ -3,54 +3,55 @@
 static constexpr auto padding = 32.0f;
 static constexpr auto margin = 32.0f;
 
+struct button
+{
+	std::string text;
+	float width;
+	bool important;
+};
+
+std::vector<button> buttons;
+
 void ButtonGuide::SetButtons(std::initializer_list<std::string> labels)
 {
-	texts.clear();
-	widths.clear();
-	highlight = -1;
-	left = (float)width;
+	buttons.clear();
+
 	for (auto l : labels)
 	{
-		if (l[0] == '!') //important
+		bool important = false;
+		if (l[0] == '!')
 		{
-			highlight = (int)texts.size();
 			l = l.substr(1);
+			important = true;
 		}
-		texts.push_back(l);
-		auto width = (Sprite::MeasureText(1, l, 100.0f).x + padding);
-		widths.push_back(width);
-		left -= width + (margin / 2);
+		auto width = Sprite::MeasureText(1, l, 90.0f).x + padding;
+		buttons.push_back({ l, width, important });
 	}
 }
 
 void ButtonGuide::Draw()
 {
-	//TODO: rework
-
 	auto s = scale * 1.40f;
 	auto& controls = *UI::controls;
 	auto pillWidth = controls[7].z * s;
 	auto pillHeight = controls[7].w * s;
 	auto pillSize = glm::vec2(pillWidth, pillHeight);
-	std::vector<glm::vec2> lefts;
 
-	auto pos = glm::vec2(left, height - margin - pillHeight);
+	auto pos = glm::vec2(width - (margin * 1.0f), height - margin - pillHeight);
 
-	for (int i = 0; i < texts.size(); i++)
+	for (int i = (int)buttons.size() - 1; i > -1; i--)
 	{
-		lefts.push_back(pos);
-		const auto color = i == highlight ? UI::themeColors["keybarh"] : UI::themeColors["keybar"];
-		Sprite::DrawSprite(controls, pos, pillSize, controls[7], 0, color);
-		pos.x += pillWidth;
-		Sprite::DrawSprite(controls, pos, glm::vec2(widths[i] - (pillWidth * 1.5f), pillHeight), controls[9], 0, color);
-		pos.x += widths[i] - (pillWidth * 1.5f);
-		Sprite::DrawSprite(controls, pos, pillSize, controls[8], 0, color);
-		pos.x += margin / 1.5f;
-	}
+		pos.x -= buttons[i].width + (margin  * 0.5f);
+		auto f = pos;
 
-	for (int i = 0; i < texts.size(); i++)
-	{
-		pos = lefts[i] + glm::vec2(18 * s, 9 * s);
-		Sprite::DrawText(1, texts[i], pos, i == highlight ? UI::themeColors["keybarhf"] : UI::themeColors["keybarf"], 90.0f * scale);
+		const auto color = buttons[i].important ? UI::themeColors["keybarh"] : UI::themeColors["keybar"];
+		Sprite::DrawSprite(controls, f, pillSize, controls[7], 0, color);
+		f.x += pillWidth;
+		Sprite::DrawSprite(controls, f, glm::vec2(buttons[i].width - (pillWidth * 1.5f), pillHeight), controls[9], 0, color);
+		f.x += buttons[i].width - (pillWidth * 1.5f);
+		Sprite::DrawSprite(controls, f, pillSize, controls[8], 0, color);
+		
+		f = pos + glm::vec2(18 * s, 9 * s);
+		Sprite::DrawText(1, buttons[i].text, f, buttons[i].important ? UI::themeColors["keybarhf"] : UI::themeColors["keybarf"], 90.0f * scale);
 	}
 }

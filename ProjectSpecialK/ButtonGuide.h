@@ -5,10 +5,10 @@
 class ButtonGuide
 {
 private:
-	int highlight{ -1 };
-	std::vector<std::string> texts;
-	std::vector<float> widths;
-	float left{ 0 };
+	//int highlight{ -1 };
+	//std::vector<std::string> texts;
+	//std::vector<float> widths;
+	//float left{ 0 };
 
 public:
 	//Replaces the buttons for this Guide entirely. Precede an entry with '!' to highlight it.
