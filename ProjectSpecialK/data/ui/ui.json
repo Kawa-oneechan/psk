@@ -88,5 +88,10 @@
 		"menuCheckboxOffset": 40,
 		"menuSliderValueOffsetX": 94,
 		"menuSliderValueOffsetY": 10,
+
+		"buttonGuidePadding": 32,
+		"buttonGuideMargin": 8,
+		"buttonGuideEdgeX": 24,
+		"buttonGuideEdgeY": 4,
 	}
 }

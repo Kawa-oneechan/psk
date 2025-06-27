@@ -1,8 +1,5 @@
 #include "ButtonGuide.h"
 
-static constexpr auto padding = 32.0f;
-static constexpr auto margin = 32.0f;
-
 struct button
 {
 	std::string text;
@@ -15,6 +12,9 @@ std::vector<button> buttons;
 void ButtonGuide::SetButtons(std::initializer_list<std::string> labels)
 {
 	buttons.clear();
+
+	auto metrics = UI::json["metrics"]->AsObject();
+	const float padding = metrics["buttonGuidePadding"]->AsNumber();
 
 	for (auto l : labels)
 	{
@@ -37,11 +37,16 @@ void ButtonGuide::Draw()
 	auto pillHeight = controls[7].w * s;
 	auto pillSize = glm::vec2(pillWidth, pillHeight);
 
-	auto pos = glm::vec2(width - (margin * 1.0f), height - margin - pillHeight);
+	auto metrics = UI::json["metrics"]->AsObject();
+	const float margin = metrics["buttonGuideMargin"]->AsNumber();
+	const float edgeX = metrics["buttonGuideEdgeX"]->AsNumber();
+	const float edgeY = metrics["buttonGuideEdgeY"]->AsNumber();
+
+	auto pos = glm::vec2(width - edgeX, height - edgeY - pillHeight);
 
 	for (int i = (int)buttons.size() - 1; i > -1; i--)
 	{
-		pos.x -= buttons[i].width + (margin  * 0.5f);
+		pos.x -= buttons[i].width + margin;
 		auto f = pos;
 
 		const auto color = buttons[i].important ? UI::themeColors["keybarh"] : UI::themeColors["keybar"];
