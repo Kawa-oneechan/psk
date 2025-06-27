@@ -198,3 +198,31 @@ std::string Text::DateMD(int month, int day)
 	}
 	return ret;
 }
+
+size_t Text::Count(const std::string& key)
+{
+	const auto kl= key.length();
+
+	size_t ret = 0;
+
+	for (const auto& entry : textEntries)
+	{
+		if (entry.first[0] != key[0])
+		{
+			if (ret != 0)
+				return ret;
+			continue;
+		}
+
+		const auto e = entry.first;
+		const auto el = e.length();
+		if (el < kl || e.substr(0, kl) != key)
+		{
+			if (ret != 0)
+				return ret;
+			continue;
+		}
+		ret++;
+	}
+	return ret;
+}

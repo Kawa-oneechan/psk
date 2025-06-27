@@ -50,4 +50,6 @@ namespace Text
 	extern std::string Get(std::string key);
 	//Returns a localized date.
 	extern std::string DateMD(int month, int day);
+	//Returns the number of entries starting with the given key.
+	extern size_t Count(const std::string& key);
 }

@@ -16,16 +16,7 @@ TitleScreen::TitleScreen()
 
 	{
 		auto logoJoke = logoAnim->GetPanel("logoJoke");
-		int options = 0;
-		for (int i = 0; i < 100; i++)
-		{
-			auto result = Text::Get(fmt::format("logojoke:{}", i));
-			if (result.length() >= 3 && result.substr(0, 3) == "???")
-			{
-				options = i - 1;
-				break;
-			}
-		}
+		int options = Text::Count("logojoke:");
 		if (options == 0)
 		{
 			conprint(2, "TitleScreen: could not find a logo joke.");
