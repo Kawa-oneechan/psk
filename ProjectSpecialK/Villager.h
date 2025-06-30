@@ -1,5 +1,6 @@
 #pragma once
 #include "Model.h"
+#include "Animator.h"
 
 enum class Gender
 {
@@ -21,8 +22,6 @@ public:
 
 using VillagerMemoryP = std::shared_ptr<VillagerMemory>;
 
-class Animator;
-
 class Person
 {
 public:
@@ -32,13 +31,17 @@ public:
 
 	void Turn(float facing, float dt);
 	bool Move(float facing, float dt);
-	virtual float FindVillagerCollision(glm::vec3 pos) { pos; return 0.0f; }
 
 	void SetFace(int face);
 	void SetMouth(int mouth);
+	virtual bool Tick(float) { return true; };
+	virtual void Draw(float) {};
 };
 
-class Villager : public NameableThing, Tickable, public Person
+using PersonP = std::shared_ptr<Person>;
+
+
+class Villager : public NameableThing, public Person
 {
 private:
 	ModelP _model, _clothingModel, _accessoryModel;
@@ -122,8 +125,6 @@ public:
 
 	void Serialize(JSONObject& target);
 	void Deserialize(JSONObject& source);
-
-	float FindVillagerCollision(glm::vec3 pos);
 
 	//kill copies
 	Villager(const Villager&) = delete;

@@ -60,11 +60,27 @@ bool Person::Move(float facing, float dt)
 
 	if (botherColliding)
 	{
-		float c2c = FindVillagerCollision(newPos);
-		if (c2c > 0.0f)
+		float c2c = 0.0f;
+		//float c2c = FindVillagerCollision(newPos);
+		//TODO: use current map, not town.
+		for (auto p : town->People)
 		{
-			//TODO: PUSH.
-			return true;
+			if (p == this)
+				continue;
+			auto dX = p->Position.x - newPos.x;
+			auto dZ = p->Position.z - newPos.z;
+			auto dist = glm::sqrt((dX * dX) + (dZ + dZ));
+
+			const auto r = 2.0f;
+			if (dist <= r + r)
+			{
+				c2c = r + r - dist;
+				if (c2c > 0.0f)
+				{
+					//TODO: PUSH.
+					return true;
+				}
+			}
 		}
 	}
 
@@ -600,33 +616,4 @@ void Villager::Deserialize(JSONObject& source)
 	{
 		memory->Clothing.push_back(std::make_shared<InventoryItem>(i->AsString()));
 	}
-}
-
-float Villager::FindVillagerCollision(glm::vec3 pos)
-{
-	for (auto& v : town->Villagers)
-	{
-		if (v->Hash == this->Hash)
-			continue;
-		auto dX = v->Position.x - pos.x;
-		auto dZ = v->Position.y - pos.z;
-		auto dist = glm::sqrt((dX * dX) + (dZ + dZ));
-
-		const auto r = 2.0f;
-		if (dist <= r + r)
-			return r + r - dist;
-	}
-
-	//Now check against the player.
-	{
-		auto dX = glm::abs(thePlayer.Position.x - pos.x);
-		auto dZ = glm::abs(thePlayer.Position.z - pos.z);
-		auto dist = glm::sqrt((dX * dX) + (dZ + dZ));
-
-		const auto r = 2.0f;
-		if (dist <= r + r)
-			return r + r - dist;
-	}
-
-	return 0.0f;
 }

@@ -16,7 +16,7 @@ TitleScreen::TitleScreen()
 
 	{
 		auto logoJoke = logoAnim->GetPanel("logoJoke");
-		int options = Text::Count("logojoke:");
+		auto options = Text::Count("logojoke:");
 		if (options == 0)
 		{
 			conprint(2, "TitleScreen: could not find a logo joke.");
@@ -24,7 +24,7 @@ TitleScreen::TitleScreen()
 		}
 		else
 		{
-			int choice = rnd::getInt(options);
+			int choice = rnd::getInt((int)options);
 			logoJoke->Text = Text::Get(fmt::format("logojoke:{}", choice));
 		}
 		Text::Forget("logojoke:");

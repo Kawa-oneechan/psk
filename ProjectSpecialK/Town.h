@@ -96,6 +96,9 @@ public:
 
 	ModelP Model;
 
+	//All the Villagers and Players actually present on this map.
+	std::vector<Person*> People;
+
 	//If true, this map is represented with a single Model, probably an interior.
 	bool UseModel{ false };
 	/*Note that even if this is true, there are still MapTiles! Map::Draw()
@@ -159,6 +162,7 @@ public:
 		Fine, Sunny, Cloudy, RainClouds, Rain, HeavyRain
 	} Clouds{ Weather::Fine };
 	
+	//Every villager living in this Town.
 	std::vector<VillagerP> Villagers;
 	int Wind{ 0 };
 

@@ -10,7 +10,7 @@ constexpr int StartingStorage = 1600;
 //could mean an item wasn't found or it was nullptr.
 constexpr int NoItem = -1;
 
-class Player : public NameableThing, Tickable, public Person
+class Player : public NameableThing, public Person
 {
 private:
 	ModelP _model, _hairModel;
@@ -94,8 +94,6 @@ public:
 
 	void Serialize(JSONObject& target);
 	void Deserialize(JSONObject& source);
-
-	float FindVillagerCollision(glm::vec3 pos);
 };
 
 extern Player thePlayer;

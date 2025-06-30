@@ -211,10 +211,8 @@ extern bool Project(const glm::vec3& in, glm::vec2& out);
 
 void Map::drawCharacters(float dt)
 {
-	thePlayer.Draw(dt * timeScale);
-	MeshBucket::Flush();
-	for (const auto& v : town->Villagers)
-		v->Draw(dt * timeScale);
+	for (const auto& p : People)
+		p->Draw(dt * timeScale);
 	MeshBucket::Flush();
 }
 
@@ -347,10 +345,13 @@ bool Map::Tick(float dt)
 	localtime_s(&gm, &now);
 	commonUniforms.TimeOfDay = (gm.tm_hour / 24.0f) + ((gm.tm_min / 60.0f) / 24.0f);
 
-	for (const auto& v : town->Villagers)
-		v->Tick(dt);
+	for (const auto& p : People)
+	{
+		if (!p->Tick(dt))
+			return false;
+	}
 
-	return thePlayer.Tick(dt);
+	return true;
 }
 
 void Map::SaveObjects(JSONObject& json)
@@ -607,6 +608,10 @@ void Town::Load()
 	}
 
 	WorkOutModels();
+
+	People.push_back(&thePlayer);
+	for (auto& v : Villagers)
+		People.push_back(v.get());
 }
 
 void Town::Save()
