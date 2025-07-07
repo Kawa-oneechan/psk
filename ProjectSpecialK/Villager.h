@@ -24,6 +24,11 @@ using VillagerMemoryP = std::shared_ptr<VillagerMemory>;
 
 class Person
 {
+protected:
+	ModelP _model;
+	std::array<ModelP, 10> _clothesModels;
+	std::array<InventoryItemP, 10> _clothesItems;
+
 public:
 	glm::vec3 Position{ 0 };
 	float Facing{ 0 };
@@ -34,8 +39,8 @@ public:
 
 	void SetFace(int face);
 	void SetMouth(int mouth);
-	virtual bool Tick(float) { return true; };
-	virtual void Draw(float) {};
+	virtual bool Tick(float) = 0;
+	virtual void Draw(float);
 };
 
 using PersonP = std::shared_ptr<Person>;
@@ -44,7 +49,8 @@ using PersonP = std::shared_ptr<Person>;
 class Villager : public NameableThing, public Person
 {
 private:
-	ModelP _model, _clothingModel, _accessoryModel;
+	//ModelP _model, _clothingModel, _accessoryModel;
+	ModelP _accessoryModel;
 
 	SpeciesP _species{ nullptr };
 	bool _customModel{ false };
@@ -91,12 +97,7 @@ public:
 	std::string rainCoatID;
 	std::string rainHatID;
 
-	InventoryItemP HeldTool{ nullptr };
-	InventoryItemP Cap{ nullptr };
-	InventoryItemP Glasses{ nullptr };
-	InventoryItemP Mask{ nullptr };
-	InventoryItemP Clothing{ nullptr };
-
+	
 	Texture* Icon{ nullptr };
 
 	const bool IsManifest() const { return !(!memory); }
@@ -134,6 +135,8 @@ public:
 	Villager& operator = (Villager&&) = default;
 
 	Animator* Animator() { return animator.get(); };
+
+	InventoryItem* Clothing() { return _clothesItems[0].get(); };
 };
 
 using VillagerP = std::shared_ptr<Villager>;

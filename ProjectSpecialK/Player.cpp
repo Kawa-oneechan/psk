@@ -16,11 +16,6 @@ void Player::LoadModel()
 
 	_model->SetVisibility(fmt::format("Nose{:02}__mNose", noseStyle), true);
 
-	_shoesModel = nullptr;
-	_onePieceModel = nullptr;
-	_bottomsModel = nullptr;
-	_topsModel = nullptr;
-
 	if (Textures[0] == nullptr)
 	{
 		Textures[0] = new TextureArray(fmt::format("player/eyes/{}/eye*_alb.png", eyeStyle));
@@ -34,47 +29,22 @@ void Player::LoadModel()
 		Textures[6] = new TextureArray("player/cheek*_alb.png");
 	}
 
-	/*
-	Clothing texture order:
-			alb	nml	mix	opc
-	top/1p	0	1	2	3
-	bottom	4	5	6	7
-	shoes	8	9	10	11
-	socks	12	13	14	15
-	...
-	*/
-
-	if (!_onePieceModel && OnePiece)
+	for (int i = 0; i < 8; i++)
 	{
-		_onePieceModel = std::make_shared<::Model>(fmt::format("player/outfits/{}.fbx", OnePiece->PlayerModel()));
+		if (!_clothesModels[i] && _clothesItems[i])
+		{
+			auto& cm = _clothesModels[i];
+			auto& ci = _clothesItems[i];
 
-		ClothingTextures[0] = new TextureArray(fmt::format("{}/albedo*.png", OnePiece->Path));
-		ClothingTextures[1] = new TextureArray(fmt::format("{}/normal.png", OnePiece->Path));
-		ClothingTextures[2] = new TextureArray(fmt::format("{}/mix.png", OnePiece->Path));
-		ClothingTextures[3] = new TextureArray(fmt::format("{}/opacity.png", OnePiece->Path));
-	}
-	else if (!_topsModel && Tops)
-	{
-		_topsModel = std::make_shared<::Model>(fmt::format("player/outfits/{}.fbx", Tops->PlayerModel()));
-
-		ClothingTextures[0] = new TextureArray(fmt::format("{}/albedo*.png", Tops->Path));
-		ClothingTextures[1] = new TextureArray(fmt::format("{}/normal.png", Tops->Path));
-		ClothingTextures[2] = new TextureArray(fmt::format("{}/mix.png", Tops->Path));
-		ClothingTextures[3] = new TextureArray(fmt::format("{}/opacity.png", Tops->Path));
+			cm = std::make_shared<::Model>(fmt::format("player/outfits/{}.fbx", ci->PlayerModel()));
+			ClothingTextures[(i * 4) + 0] = new TextureArray(fmt::format("{}/albedo*.png", ci->Path));
+			ClothingTextures[(i * 4) + 1] = new TextureArray(fmt::format("{}/normal.png", ci->Path));
+			ClothingTextures[(i * 4) + 2] = new TextureArray(fmt::format("{}/mix.png", ci->Path));
+			ClothingTextures[(i * 4) + 3] = new TextureArray(fmt::format("{}/opacity.png", ci->Path));
+		}
 	}
 
-	if (!_bottomsModel && Bottoms)
-	{
-		_bottomsModel = std::make_shared<::Model>(fmt::format("player/outfits/{}.fbx", Bottoms->PlayerModel()));
-
-		ClothingTextures[4] = new TextureArray(fmt::format("{}/albedo*.png", Bottoms->Path));
-		ClothingTextures[5] = new TextureArray(fmt::format("{}/normal.png", Bottoms->Path));
-		ClothingTextures[6] = new TextureArray(fmt::format("{}/mix.png", Bottoms->Path));
-		ClothingTextures[7] = new TextureArray(fmt::format("{}/opacity.png", Bottoms->Path));
-	}
-
-
-	if (!Socks)
+	if (!_clothesItems[8])
 	{
 		ClothingTextures[12] = new TextureArray("player/nosocks_alb.png");
 		ClothingTextures[13] = new TextureArray("fallback_nrm.png");
@@ -92,24 +62,6 @@ ModelP Player::Model()
 	if (!_model)
 		LoadModel();
 	return _model;
-}
-
-ModelP Player::Model(int slot)
-{
-	switch (slot)
-	{
-	case 0: return _model;
-	case 1: return _hairModel;
-	case 2: return _topsModel;
-	case 3: return _bottomsModel;
-	case 4: return _onePieceModel;
-	case 5: return _hatModel;
-	case 6: return _glassesModel;
-	case 7: return _maskModel;
-	case 8: return _shoesModel;
-	case 9: return _bagModel;
-	default: return nullptr;
-	}
 }
 
 std::string Player::Birthday()
@@ -222,7 +174,7 @@ bool Player::Retrieve(InventoryItemP item)
 	return Retrieve(findStorageSlot(item));
 }
 
-void Player::Draw(float)
+void Player::Draw(float dt)
 {
 	if (!_model)
 		LoadModel();
@@ -250,37 +202,19 @@ void Player::Draw(float)
 		_hairModel->Draw(Position, Facing);
 	}
 
-	if (_shoesModel && Shoes)
+	//0 top  1 bottom  2 hat  3 glasses  4 mask  5 shoes  6 bag  7 tool
+	for (int i = 0; i < 8; i++)
 	{
-		_shoesModel->SetLayer(Shoes->Variant());
-		_shoesModel->Draw(Position, Facing);
-	}
-
-	if (_onePieceModel && OnePiece)
-	{
-		std::copy(&ClothingTextures[0], &ClothingTextures[4], _onePieceModel->GetMesh("_mTops").Textures);
-		_onePieceModel->SetLayer(OnePiece->Variant());
-		_onePieceModel->Draw(Position, Facing);
-	}
-	else
-	{
-		if (_bottomsModel && Bottoms)
-		{
-			std::copy(&ClothingTextures[4], &ClothingTextures[8], _bottomsModel->GetMesh("_mBottoms").Textures);
-			_bottomsModel->SetLayer(Bottoms->Variant());
-			_bottomsModel->Draw(Position, Facing);
-		}
-		if (_topsModel && Tops)
-		{
-			std::copy(&ClothingTextures[0], &ClothingTextures[4], _topsModel->GetMesh("_mTops").Textures);
-			_topsModel->SetLayer(Tops->Variant());
-			_topsModel->Draw(Position, Facing);
-		}
+		if (!_clothesModels[i])
+			continue;
+		std::copy(&ClothingTextures[(i * 4)], &ClothingTextures[(i * 4) + 4], _clothesModels[i]->GetMesh(0).Textures);
 	}
 
 	//TODO: handle hats, glasses, masks, and bags.
 	//Note that certain "glasses" may cover the whole face and disable "masks".
 	//Or is that vice versa?
+
+	Person::Draw(dt);
 }
 
 bool Player::Tick(float dt)
@@ -331,10 +265,6 @@ bool Player::Tick(float dt)
 	//_model->MoveBone(_model->FindBone("Head"), glm::vec3(0, 0, glm::radians(-45.0f))); //look up
 	//_model->Bones[_model->FindBone("Head")].Rotation = glm::vec3(glm::radians(-45.0f), 0, 0); //look to the player's right
 	_model->CalculateBoneTransforms();
-
-	_model->CopyBoneTransforms(_topsModel);
-	_model->CopyBoneTransforms(_bottomsModel);
-	_model->CopyBoneTransforms(_onePieceModel);
 
 	//TODO: make this a generic function for later.
 	if (_hairModel)
@@ -410,15 +340,15 @@ void Player::Serialize(JSONObject& target)
 	}
 	target["storage"] = new JSONValue(storage);
 
+	//0 top  1 bottom  2 hat  3 glasses  4 mask  5 shoes  6 bag  7 tool
 	JSONObject outfit;
-	auto tOrP = Tops ? Tops : (OnePiece ? OnePiece : nullptr);
-	outfit["topOrOnePiece"] = tOrP ? new JSONValue(tOrP->FullID()) : new JSONValue();
-	outfit["bottom"] = Bottoms ? new JSONValue(Bottoms->FullID()) : new JSONValue();
-	outfit["shoes"] = Shoes ? new JSONValue(Shoes->FullID()) : new JSONValue();
-	outfit["hat"] = Hat ? new JSONValue(Hat->FullID()) : new JSONValue();
-	outfit["glasses"] = Glasses ? new JSONValue(Glasses->FullID()) : new JSONValue();
-	outfit["mask"] = Mask ? new JSONValue(Mask->FullID()) : new JSONValue();
-	outfit["bag"] = Bag ? new JSONValue(Bag->FullID()) : new JSONValue();
+	outfit["top"] = _clothesItems[0] ? new JSONValue(_clothesItems[0]->FullID()) : new JSONValue();
+	outfit["bottom"] = _clothesItems[1] ? new JSONValue(_clothesItems[1]->FullID()) : new JSONValue();
+	outfit["hat"] = _clothesItems[2] ? new JSONValue(_clothesItems[2]->FullID()) : new JSONValue();
+	outfit["glasses"] = _clothesItems[3] ? new JSONValue(_clothesItems[3]->FullID()) : new JSONValue();
+	outfit["mask"] = _clothesItems[4] ? new JSONValue(_clothesItems[4]->FullID()) : new JSONValue();
+	outfit["shoes"] = _clothesItems[5] ? new JSONValue(_clothesItems[5]->FullID()) : new JSONValue();
+	outfit["bag"] = _clothesItems[6] ? new JSONValue(_clothesItems[6]->FullID()) : new JSONValue();
 	target["outfit"] = new JSONValue(outfit);
 }
 
@@ -465,7 +395,7 @@ void Player::Deserialize(JSONObject& source)
 
 	auto& outfit = source["outfit"]->AsObject();
 	{
-		auto topOrOnepiece = outfit.at("topOrOnePiece");
+		auto top = outfit.at("top");
 		auto bottom = outfit.at("bottom");
 		auto shoes = outfit.at("shoes");
 		//auto socks = outfit.at("socks");
@@ -474,35 +404,29 @@ void Player::Deserialize(JSONObject& source)
 		auto mask = outfit.at("mask");
 		auto bag = outfit.at("bag");
 
-		Tops = nullptr;
-		Bottoms = nullptr;
-		OnePiece = nullptr;
-		Shoes = nullptr;
-		Hat = nullptr;
-		Glasses = nullptr;
-		Mask = nullptr;
-		Bag = nullptr;
+		//0 top  1 bottom  2 hat  3 glasses  4 mask  5 shoes  6 bag  7 tool
+		_clothesItems[0] = nullptr;
+		_clothesItems[1] = nullptr;
+		_clothesItems[2] = nullptr;
+		_clothesItems[3] = nullptr;
+		_clothesItems[4] = nullptr;
+		_clothesItems[5] = nullptr;
+		_clothesItems[6] = nullptr;
 
-		if (topOrOnepiece->IsString())
-		{
-			auto item = std::make_shared<InventoryItem>(topOrOnepiece->AsString());
-			if (item->Wrapped()->ClothingKind == Item::ClothingKind::Tops)
-				Tops = item;
-			else
-				OnePiece = item;
-		}
+		if (top->IsString())
+			_clothesItems[0] = std::make_shared<InventoryItem>(top->AsString());
 		if (bottom->IsString())
-			Bottoms = std::make_shared<InventoryItem>(bottom->AsString());
-		if (shoes->IsString())
-			Shoes = std::make_shared<InventoryItem>(shoes->AsString());
+			_clothesItems[1] = std::make_shared<InventoryItem>(bottom->AsString());
 		if (hat->IsString())
-			Hat = std::make_shared<InventoryItem>(hat->AsString());
+			_clothesItems[2] = std::make_shared<InventoryItem>(hat->AsString());
 		if (glasses->IsString())
-			Glasses = std::make_shared<InventoryItem>(glasses->AsString());
+			_clothesItems[3] = std::make_shared<InventoryItem>(glasses->AsString());
 		if (mask->IsString())
-			Mask = std::make_shared<InventoryItem>(mask->AsString());
+			_clothesItems[4] = std::make_shared<InventoryItem>(mask->AsString());
+		if (shoes->IsString())
+			_clothesItems[5] = std::make_shared<InventoryItem>(shoes->AsString());
 		if (bag->IsString())
-			Bag = std::make_shared<InventoryItem>(bag->AsString());
+			_clothesItems[6] = std::make_shared<InventoryItem>(bag->AsString());
 	}
 }
 

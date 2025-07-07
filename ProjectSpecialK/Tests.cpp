@@ -45,7 +45,7 @@ void TestVillagerGetting()
 	conprint(0, "Portrait: {}", farrah->portraitID);
 	conprint(0, "Manifesting...");
 	farrah->Manifest();
-	conprint(0, "Current clothing: {}", farrah->Clothing->FullName());
+	conprint(0, "Current clothing: {}", farrah->Clothing()->FullName());
 	farrah->Depart();
 
 	//Deliberately fail. Should pick the default clothes.

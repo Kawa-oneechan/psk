@@ -13,9 +13,7 @@ constexpr int NoItem = -1;
 class Player : public NameableThing, public Person
 {
 private:
-	ModelP _model, _hairModel;
-	ModelP _topsModel, _bottomsModel, _onePieceModel;
-	ModelP _hatModel, _glassesModel, _maskModel, _shoesModel, _bagModel;
+	ModelP _hairModel;
 
 	std::array<TextureArray*, 20> Textures;
 	std::array<TextureArray*, 32> ClothingTextures;
@@ -43,17 +41,6 @@ public:
 	int OnHandLimit{ StartingOnHand };
 	int StorageLimit{ StartingStorage };
 	unsigned int Bells{ 0 };
-	
-	InventoryItemP HeldTool{ nullptr };
-	InventoryItemP Tops{ nullptr };
-	InventoryItemP Bottoms{ nullptr };
-	InventoryItemP OnePiece{ nullptr };
-	InventoryItemP Hat{ nullptr };
-	InventoryItemP Glasses{ nullptr };
-	InventoryItemP Mask{ nullptr };
-	InventoryItemP Socks{ nullptr };
-	InventoryItemP Shoes{ nullptr };
-	InventoryItemP Bag{ nullptr };
 
 	void LoadModel();
 	ModelP Model();

@@ -98,7 +98,27 @@ void Person::SetMouth(int index)
 	mouth = glm::clamp(index, 0, 8);
 }
 
+void Person::Draw(float dt)
+{
+	//Remember: call this from Villager::Draw or Player::Draw.
+	//This ONLY handles outfits and held items.
+
+	//0 top  1 bottom  2 hat  3 glasses  4 mask  5 shoes  6 bag  7 tool
+	for (int i = 0; i < 8; i++)
+	{
+		if (!_clothesModels[i])
+			continue;
+		auto& c = _clothesModels[i];
+		_model->CopyBoneTransforms(c);
+		//May need to special-case the glasses and mask, possibly the hat.
+
+		c->Draw(Position, Facing);
+	}
+}
+
 //TODO: special characters need support for more than just tops and accessories.
+//IDEA: use a generic Clothing array instead of a single model.
+//Lets do that yeah.
 
 Villager::Villager(JSONObject& value, const std::string& filename) : NameableThing(value, filename)
 {
@@ -277,21 +297,20 @@ void Villager::LoadModel()
 		}
 	}
 
-	if ( !_clothingModel && Clothing)
+	for (int i = 0; i < 8; i++)
 	{
-		auto path = (_customModel && _isSpecial) ? Path : _species->Path;
-		_clothingModel = std::make_shared<::Model>(fmt::format("{}/{}.fbx", path, Clothing->Style()));
+		if (!_clothesModels[i] && _clothesItems[i])
+		{
+			auto& cm = _clothesModels[i];
+			auto& ci = _clothesItems[i];
 
-		/*
-		Texture order:
-		alb	nml	mix	opc
-		body	0	1	2	3
-		...
-		*/
-		ClothingTextures[0] = new TextureArray(fmt::format("{}/albedo*.png", Clothing->Path));
-		ClothingTextures[1] = new TextureArray(fmt::format("{}/normal.png", Clothing->Path));
-		ClothingTextures[2] = new TextureArray(fmt::format("{}/mix.png", Clothing->Path));
-		ClothingTextures[3] = new TextureArray(fmt::format("{}/opacity.png", Clothing->Path));
+			auto path = (_customModel && _isSpecial) ? Path : _species->Path;
+			cm = std::make_shared<::Model>(fmt::format("{}/{}.fbx", path, ci->Style()));
+			ClothingTextures[(i * 4) + 0] = new TextureArray(fmt::format("{}/albedo*.png", ci->Path));
+			ClothingTextures[(i * 4) + 1] = new TextureArray(fmt::format("{}/normal.png", ci->Path));
+			ClothingTextures[(i * 4) + 2] = new TextureArray(fmt::format("{}/mix.png", ci->Path));
+			ClothingTextures[(i * 4) + 3] = new TextureArray(fmt::format("{}/opacity.png", ci->Path));
+		}
 	}
 
 	if (animator == nullptr)
@@ -366,7 +385,7 @@ std::string Villager::Nickname(const std::string& newNickname)
 	return oldNickname;
 }
 
-void Villager::Draw(float)
+void Villager::Draw(float dt)
 {
 	if (_model == nullptr)
 		LoadModel();
@@ -400,9 +419,6 @@ void Villager::Draw(float)
 	}
 	_model->CalculateBoneTransforms();
 
-	_model->CopyBoneTransforms(_accessoryModel);
-	_model->CopyBoneTransforms(_clothingModel);
-
 	_model->Draw(Position, Facing);
 
 	if (_customAccessory && _accessoryModel)
@@ -423,12 +439,15 @@ void Villager::Draw(float)
 		_accessoryModel->Draw(Position, Facing);
 	}
 
-	if (_clothingModel && Clothing)
+	//0 top  1 bottom  2 hat  3 glasses  4 mask  5 shoes  6 bag  7 tool
+	for (int i = 0; i < 8; i++)
 	{
-		std::copy(&ClothingTextures[0], &ClothingTextures[3], _clothingModel->GetMesh("_mTops").Textures);
-		_clothingModel->SetLayer(Clothing->Variant());
-		_clothingModel->Draw(Position, Facing);
+		if (!_clothesModels[i])
+			continue;
+		std::copy(&ClothingTextures[(i * 4)], &ClothingTextures[(i * 4) + 4], _clothesModels[i]->GetMesh(0).Textures);
 	}
+
+	Person::Draw(dt);
 
 	MeshBucket::Flush();
 }
@@ -462,16 +481,11 @@ void Villager::Manifest()
 
 void Villager::DeleteAllThings()
 {
-	if (HeldTool && HeldTool->Temporary)
-		HeldTool = nullptr;
-	if (Cap && Cap->Temporary)
-		Cap = nullptr;
-	if (Glasses && Glasses->Temporary)
-		Glasses = nullptr;
-	if (Mask && Mask->Temporary)
-		Mask = nullptr;
-	if (Clothing && Clothing->Temporary)
-		Clothing = nullptr;
+	for (int i = 0; i < 8; i++)
+	{
+		if (_clothesItems[i] && _clothesItems[i]->Temporary)
+			_clothesItems[i] = nullptr;
+	}
 }
 
 void Villager::Depart()
@@ -518,8 +532,8 @@ void Villager::PickClothing()
 	{
 		if (memory->Clothing.size() == 1)
 		{
-			Clothing = memory->Clothing[0];
-			Clothing->Temporary = false; //just to be sure.
+			_clothesItems[0] = memory->Clothing[0];
+			_clothesItems[0]->Temporary = false; //just to be sure.
 		}
 		else
 		{
@@ -527,8 +541,8 @@ void Villager::PickClothing()
 			{
 				if (rnd::getFloat() > 25)
 				{
-					Clothing = i;
-					Clothing->Temporary = false; //just to be sure.
+					_clothesItems[0] = i;
+					_clothesItems[0]->Temporary = false; //just to be sure.
 					break;
 				}
 			}
@@ -537,13 +551,13 @@ void Villager::PickClothing()
 	else if (!(_customModel && _isSpecial))
 	{
 		//use default clothing
-		Clothing = std::make_shared<InventoryItem>(defaultClothingID);
-		if (!Clothing->IsClothing())
+		_clothesItems[0] = std::make_shared<InventoryItem>(defaultClothingID);
+		if (!_clothesItems[0]->IsClothing())
 		{
 			conprint(2, "PickClothing() for {}: \"{}\" may not exist, got a non-clothing item instead.", Name(), defaultClothingID);
-			Clothing = std::make_shared<InventoryItem>("psk:topsfallback");
+			_clothesItems[0] = std::make_shared<InventoryItem>("psk:topsfallback");
 		}
-		Clothing->Temporary = true; //mark as safe to free
+		_clothesItems[0]->Temporary = true; //mark as safe to free
 	}
 }
 
