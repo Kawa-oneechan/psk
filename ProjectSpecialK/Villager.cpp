@@ -98,13 +98,12 @@ void Person::SetMouth(int index)
 	mouth = glm::clamp(index, 0, 8);
 }
 
-void Person::Draw(float dt)
+void Person::Draw(float)
 {
 	//Remember: call this from Villager::Draw or Player::Draw.
 	//This ONLY handles outfits and held items.
 
-	//0 top  1 bottom  2 hat  3 glasses  4 mask  5 shoes  6 bag  7 tool
-	for (int i = 0; i < 8; i++)
+	for (int i = 0; i < NumClothes; i++)
 	{
 		if (!_clothesModels[i])
 			continue;
@@ -297,7 +296,7 @@ void Villager::LoadModel()
 		}
 	}
 
-	for (int i = 0; i < 8; i++)
+	for (int i = 0; i < NumClothes; i++)
 	{
 		if (!_clothesModels[i] && _clothesItems[i])
 		{
@@ -439,8 +438,7 @@ void Villager::Draw(float dt)
 		_accessoryModel->Draw(Position, Facing);
 	}
 
-	//0 top  1 bottom  2 hat  3 glasses  4 mask  5 shoes  6 bag  7 tool
-	for (int i = 0; i < 8; i++)
+	for (int i = 0; i < NumClothes; i++)
 	{
 		if (!_clothesModels[i])
 			continue;
@@ -481,7 +479,7 @@ void Villager::Manifest()
 
 void Villager::DeleteAllThings()
 {
-	for (int i = 0; i < 8; i++)
+	for (int i = 0; i < NumClothes; i++)
 	{
 		if (_clothesItems[i] && _clothesItems[i]->Temporary)
 			_clothesItems[i] = nullptr;

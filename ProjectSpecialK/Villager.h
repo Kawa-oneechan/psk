@@ -7,6 +7,16 @@ enum class Gender
 	Boy, Girl, BEnby, GEnby
 };
 
+
+enum class ClothingSlot
+{
+	Top, Bottom, Hat, Glasses, Mask, Shoes, Bag, Wetsuit, Socks,
+	Dress = ClothingSlot::Top,
+	TopFace = ClothingSlot::Glasses,
+	BottomFace = ClothingSlot::Mask,
+};
+#define NumClothes (int)ClothingSlot::Socks
+
 class VillagerMemory
 {
 public:
@@ -70,7 +80,7 @@ private:
 	static const int _maxClothes = 8 * 3;
 
 	std::array<TextureArray*, 24> Textures;
-	std::array<TextureArray*, 8> ClothingTextures;
+	std::array<TextureArray*, 32> ClothingTextures;
 
 	VillagerMemoryP memory;
 	std::unique_ptr<Animator> animator;

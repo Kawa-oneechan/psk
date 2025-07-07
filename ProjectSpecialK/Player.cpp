@@ -29,7 +29,7 @@ void Player::LoadModel()
 		Textures[6] = new TextureArray("player/cheek*_alb.png");
 	}
 
-	for (int i = 0; i < 8; i++)
+	for (int i = 0; i < NumClothes; i++)
 	{
 		if (!_clothesModels[i] && _clothesItems[i])
 		{
@@ -202,8 +202,7 @@ void Player::Draw(float dt)
 		_hairModel->Draw(Position, Facing);
 	}
 
-	//0 top  1 bottom  2 hat  3 glasses  4 mask  5 shoes  6 bag  7 tool
-	for (int i = 0; i < 8; i++)
+	for (int i = 0; i < NumClothes; i++)
 	{
 		if (!_clothesModels[i])
 			continue;
@@ -340,15 +339,15 @@ void Player::Serialize(JSONObject& target)
 	}
 	target["storage"] = new JSONValue(storage);
 
-	//0 top  1 bottom  2 hat  3 glasses  4 mask  5 shoes  6 bag  7 tool
 	JSONObject outfit;
-	outfit["top"] = _clothesItems[0] ? new JSONValue(_clothesItems[0]->FullID()) : new JSONValue();
-	outfit["bottom"] = _clothesItems[1] ? new JSONValue(_clothesItems[1]->FullID()) : new JSONValue();
-	outfit["hat"] = _clothesItems[2] ? new JSONValue(_clothesItems[2]->FullID()) : new JSONValue();
-	outfit["glasses"] = _clothesItems[3] ? new JSONValue(_clothesItems[3]->FullID()) : new JSONValue();
-	outfit["mask"] = _clothesItems[4] ? new JSONValue(_clothesItems[4]->FullID()) : new JSONValue();
-	outfit["shoes"] = _clothesItems[5] ? new JSONValue(_clothesItems[5]->FullID()) : new JSONValue();
-	outfit["bag"] = _clothesItems[6] ? new JSONValue(_clothesItems[6]->FullID()) : new JSONValue();
+	{
+		int i = 0;
+		for (auto s : { "top", "bottom", "hat", "glasses", "mask", "shoes", "bag" })
+		{
+			outfit[s] = _clothesItems[i] ? new JSONValue(_clothesItems[i]->FullID()) : new JSONValue();
+			i++;
+		}
+	}
 	target["outfit"] = new JSONValue(outfit);
 }
 
@@ -395,38 +394,15 @@ void Player::Deserialize(JSONObject& source)
 
 	auto& outfit = source["outfit"]->AsObject();
 	{
-		auto top = outfit.at("top");
-		auto bottom = outfit.at("bottom");
-		auto shoes = outfit.at("shoes");
-		//auto socks = outfit.at("socks");
-		auto hat = outfit.at("hat");
-		auto glasses = outfit.at("glasses");
-		auto mask = outfit.at("mask");
-		auto bag = outfit.at("bag");
-
-		//0 top  1 bottom  2 hat  3 glasses  4 mask  5 shoes  6 bag  7 tool
-		_clothesItems[0] = nullptr;
-		_clothesItems[1] = nullptr;
-		_clothesItems[2] = nullptr;
-		_clothesItems[3] = nullptr;
-		_clothesItems[4] = nullptr;
-		_clothesItems[5] = nullptr;
-		_clothesItems[6] = nullptr;
-
-		if (top->IsString())
-			_clothesItems[0] = std::make_shared<InventoryItem>(top->AsString());
-		if (bottom->IsString())
-			_clothesItems[1] = std::make_shared<InventoryItem>(bottom->AsString());
-		if (hat->IsString())
-			_clothesItems[2] = std::make_shared<InventoryItem>(hat->AsString());
-		if (glasses->IsString())
-			_clothesItems[3] = std::make_shared<InventoryItem>(glasses->AsString());
-		if (mask->IsString())
-			_clothesItems[4] = std::make_shared<InventoryItem>(mask->AsString());
-		if (shoes->IsString())
-			_clothesItems[5] = std::make_shared<InventoryItem>(shoes->AsString());
-		if (bag->IsString())
-			_clothesItems[6] = std::make_shared<InventoryItem>(bag->AsString());
+		{
+			int i = 0;
+			for (const auto& s : { "top", "bottom", "hat", "glasses", "mask", "shoes", "bag" })
+			{
+				auto t = outfit.at(s);
+				_clothesItems[i] = t->IsString() ? std::make_shared<InventoryItem>(t->AsString()) : nullptr;
+				i++;
+			}
+		}
 	}
 }
 
