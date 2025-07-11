@@ -67,9 +67,7 @@ bool Person::Move(float facing, float dt)
 		{
 			if (p == this)
 				continue;
-			auto dX = glm::abs(p->Position.x - newPos.x);
-			auto dZ = glm::abs(p->Position.z - newPos.z);
-			auto dist = glm::sqrt((dX * dX) + (dZ + dZ));
+			auto dist = glm::distance(p->Position, newPos);
 
 			const auto r = 2.0f;
 			if (dist <= r + r)
