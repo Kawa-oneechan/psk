@@ -1,6 +1,7 @@
 #include "SpecialK.h"
 #include <stb_image.h>
 #include "JsonUtils.h"
+#include "TextUtils.h"
 
 static std::map<std::string, Texture*> cache;
 static std::map<std::string, TextureArray*> cacheArray;
@@ -298,6 +299,14 @@ TextureArray::TextureArray(const std::string& texturePath, int repeat, int filte
 	stbi_set_flip_vertically_on_load(1);
 
 	auto entries = VFS::Enumerate(texturePath);
+	
+	if (entries.empty())
+	{
+		std::string tp = texturePath;
+		ReplaceAll(tp, "*", "");
+		entries = VFS::Enumerate(tp);
+	}
+
 	layers = (int)entries.size();
 	if (layers == 0)
 	{

@@ -304,9 +304,9 @@ void Villager::LoadModel()
 			auto path = (_customModel && _isSpecial) ? Path : _species->Path;
 			cm = std::make_shared<::Model>(fmt::format("{}/{}.fbx", path, ci->Style()));
 			ClothingTextures[(i * 4) + 0] = new TextureArray(fmt::format("{}/albedo*.png", ci->Path));
-			ClothingTextures[(i * 4) + 1] = new TextureArray(fmt::format("{}/normal.png", ci->Path));
-			ClothingTextures[(i * 4) + 2] = new TextureArray(fmt::format("{}/mix.png", ci->Path));
-			ClothingTextures[(i * 4) + 3] = new TextureArray(fmt::format("{}/opacity.png", ci->Path));
+			ClothingTextures[(i * 4) + 1] = new TextureArray(fmt::format("{}/normal*.png", ci->Path));
+			ClothingTextures[(i * 4) + 2] = new TextureArray(fmt::format("{}/mix*.png", ci->Path));
+			ClothingTextures[(i * 4) + 3] = new TextureArray(fmt::format("{}/opacity*.png", ci->Path));
 		}
 	}
 
