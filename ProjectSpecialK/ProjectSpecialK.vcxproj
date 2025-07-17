@@ -166,6 +166,8 @@
     <ClCompile Include="JsonPatch.cpp" />
     <ClCompile Include="JsonUtils.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="MeshBucket.cpp" />
     <ClCompile Include="Messager.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="MusicManager.cpp" />
