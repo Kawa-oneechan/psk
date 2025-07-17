@@ -144,6 +144,7 @@ public:
 	InventoryItem(ItemP wrapped, int data);
 	InventoryItem(ItemP wrapped);
 	InventoryItem(const std::string& reference);
+	InventoryItem(hash hash);
 	std::string FullID() const;
 	std::string FullName();
 	ItemP AsItem() const;

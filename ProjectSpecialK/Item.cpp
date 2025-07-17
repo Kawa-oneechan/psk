@@ -241,6 +241,19 @@ InventoryItem::InventoryItem(const std::string& reference)
 	Temporary = false;
 }
 
+InventoryItem::InventoryItem(hash hash)
+{
+	_wrapped = Database::Find<::Item>(hash, items);
+	if (!_wrapped)
+		_wrapped = Database::Find<::Item>("psk:thingfallback", items);
+	ID = _wrapped->ID;
+	Hash = _wrapped->Hash;
+	RefName = _wrapped->RefName;
+	EnName = _wrapped->EnName;
+	Path = _wrapped->Path;
+	Temporary = false;
+}
+
 std::string InventoryItem::FullID() const
 {
 	//We don't need variant/pattern splits for loading and saving bro.
