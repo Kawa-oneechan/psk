@@ -282,9 +282,9 @@ namespace Database
 		//Sort villagers by species
 		std::sort(villagers.begin(), villagers.end(), [](VillagerP a, VillagerP b)
 		{
-			if (a->RefSpecies == b->RefSpecies)
+			if (a->Species()->ID == b->Species()->ID)
 				return (a->Name().compare(b->Name()) < 0);
-			return (a->RefSpecies.compare(b->RefSpecies) < 0);
+			return (a->Species()->ID.compare(b->Species()->ID) < 0);
 		});
 
 		auto table = std::vector<std::string>{ "ID", "Name","Hash", "Flags" };

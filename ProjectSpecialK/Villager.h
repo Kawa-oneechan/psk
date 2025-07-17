@@ -38,11 +38,18 @@ protected:
 	ModelP _model;
 	std::array<ModelP, 10> _clothesModels;
 	std::array<InventoryItemP, 10> _clothesItems;
+	std::array<TextureArray*, 24> Textures;
+	std::array<TextureArray*, 32> ClothingTextures;
+
+	std::unique_ptr<Animator> animator;
+	unsigned int _birthday[2]{ 26, 6 };
 
 public:
 	glm::vec3 Position{ 0 };
 	float Facing{ 0 };
 	int face{ 0 }, mouth{ 0 };
+
+	Gender Gender{ Gender::BEnby };
 
 	void Turn(float facing, float dt);
 	bool Move(float facing, float dt);
@@ -51,6 +58,8 @@ public:
 	void SetMouth(int mouth);
 	virtual bool Tick(float) = 0;
 	virtual void Draw(float);
+
+	Animator* Animator() { return animator.get(); };
 };
 
 using PersonP = std::shared_ptr<Person>;
@@ -68,8 +77,7 @@ private:
 	bool _customAccessory{ false };
 	bool _accessoryFixed{ false };
 	bool _isSpecial{ false };
-	Gender gender{ Gender::BEnby };
-	unsigned int _birthday[2]{ 1, 1 };
+
 	enum class AccessoryType
 	{
 		None, Body, Cap, Glass, GlassAlpha, BodyCap
@@ -78,12 +86,8 @@ private:
 
 	static const int _maxFurnitureItems = 8 * 4;
 	static const int _maxClothes = 8 * 3;
-
-	std::array<TextureArray*, 24> Textures;
-	std::array<TextureArray*, 32> ClothingTextures;
-
+	
 	VillagerMemoryP memory;
-	std::unique_ptr<Animator> animator;
 
 	void DeleteAllThings();
 
@@ -92,7 +96,6 @@ public:
 	void ReloadTextures();
 #endif
 
-	std::string RefSpecies;
 	std::string RefCatchphrase;
 	glm::vec4 NameTag[2]{};
 
@@ -107,14 +110,14 @@ public:
 	std::string rainCoatID;
 	std::string rainHatID;
 
-	
 	Texture* Icon{ nullptr };
 
 	const bool IsManifest() const { return !(!memory); }
+	Species* Species();
 
 	Villager(JSONObject& value, const std::string& filename = "");
 	std::string Name();
-	std::string Species();
+	std::string SpeciesName();
 	void LoadModel();
 	ModelP Model();
 	std::string Birthday();
@@ -143,8 +146,6 @@ public:
 	//move instead
 	Villager(Villager&&) = default;
 	Villager& operator = (Villager&&) = default;
-
-	Animator* Animator() { return animator.get(); };
 
 	InventoryItem* Clothing() { return _clothesItems[0].get(); };
 };

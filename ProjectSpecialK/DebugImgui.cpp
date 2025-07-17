@@ -202,14 +202,14 @@ static void DoVillager()
 		ImGui::BeginChild("left pane", ImVec2(170, 0), ImGuiChildFlags_Borders | ImGuiChildFlags_ResizeX);
 		{
 			auto amount = villagers.size();
-			std::string lastSpecies = "<<special>>";
+			std::string lastSpecies = "__special__";
 			ImGui::SeparatorText("special");
 			for (int i = 0; i < amount; i++)
 			{
-				if (villagers[i]->RefSpecies != lastSpecies)
+				if (villagers[i]->Species()->ID != lastSpecies)
 				{
-					lastSpecies = villagers[i]->RefSpecies;
-					auto newSpecies = StripBJTS(villagers[i]->Species());
+					lastSpecies = villagers[i]->Species()->ID;
+					auto newSpecies = StripBJTS(villagers[i]->SpeciesName());
 					ImGui::SeparatorText(newSpecies.c_str());
 				}
 

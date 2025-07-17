@@ -8,6 +8,7 @@
 #include <glm/gtx/rotate_vector.hpp>
 
 bool botherColliding = true;
+static SpeciesP specialDummy;
 
 void Person::Turn(float facing, float dt)
 {
@@ -133,18 +134,12 @@ Villager::Villager(JSONObject& value, const std::string& filename) : NameableThi
 	Textures.fill(nullptr);
 	ClothingTextures.fill(nullptr);
 
-	if (_isSpecial)
-	{
-		RefSpecies = "<<special>>";
-	}
-	else
+	if (!_isSpecial)
 	{
 		auto sp = value["species"];
 		_species = Database::Find<::Species>(sp, species);
 		if (!_species)
 			throw std::runtime_error(fmt::format("Unknown species {} while loading {}.", sp->Stringify(), ID));
-		RefSpecies = fmt::format("name:{}", _species->ID);
-		StringToLower(RefSpecies);
 	}
 	_model = nullptr;
 
@@ -167,7 +162,7 @@ Villager::Villager(JSONObject& value, const std::string& filename) : NameableThi
 	{
 		try
 		{
-			this->gender = StringToEnum<Gender>(_gender->AsString(), { "boy", "girl", "enby-b", "enby-g" });
+			this->Gender = StringToEnum<::Gender>(_gender->AsString(), { "boy", "girl", "enby-b", "enby-g" });
 		}
 		catch (std::range_error& re)
 		{
@@ -224,12 +219,30 @@ std::string Villager::Name()
 	return Text::Get(RefName);
 }
 
-std::string Villager::Species()
+Species* Villager::Species()
 {
-	if (gender == Gender::Girl || gender == Gender::GEnby)
-		return Text::Get(RefSpecies + ":f");
-	else
-		return Text::Get(RefSpecies + ":m");
+	if (!_species)
+	{
+		if (!specialDummy)
+		{
+			JSONObject temp;
+			temp["id"] = new JSONValue("__special__");
+			temp["name"] = new JSONValue("<special>");
+			specialDummy = std::make_shared<::Species>(temp, "");
+		}
+		return specialDummy.get();
+	}
+	return _species.get();
+};
+
+std::string Villager::SpeciesName()
+{
+	if (!_species)
+		return "<special>";
+	auto ref = fmt::format("name:{}:{}", _species->ID,
+		(Gender == Gender::Girl || Gender == Gender::GEnby) ?
+		'f' : 'm');
+	return Text::Get(ref);
 }
 
 void Villager::LoadModel()

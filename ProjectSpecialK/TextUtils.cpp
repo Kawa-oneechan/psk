@@ -265,7 +265,7 @@ static void bjtsStr(std::string& data, BJTSParams)
 			data.replace(start, len, "bug");
 			return;
 		}
-		data.replace(start, len, speaker->Species());
+		data.replace(start, len, speaker->SpeciesName());
 	}
 	else if (tags[1] == "catchphrase")
 	{

@@ -15,10 +15,6 @@ class Player : public NameableThing, public Person
 private:
 	ModelP _hairModel;
 
-	std::array<TextureArray*, 20> Textures;
-	std::array<TextureArray*, 32> ClothingTextures;
-	
-	unsigned char _birthday[2]{ 26, 6 };
 	unsigned char _flags[255]{ 0 };
 
 	int findItemSlot(InventoryItemP target);
@@ -29,7 +25,6 @@ private:
 
 public:
 	std::string Name{ "Mayor" };
-	Gender Gender{ Gender::BEnby };
 
 	glm::vec4 SkinTone{ 1.0f, 0.67f, 0.51f, 1.0f };
 	glm::vec4 EyeColor{ 0.75f, 0.15f, 0.17f, 1.0f };
@@ -44,7 +39,6 @@ public:
 
 	void LoadModel();
 	ModelP Model();
-	ModelP Model(int slot);
 	std::string Birthday();
 	
 	void Draw(float dt);
