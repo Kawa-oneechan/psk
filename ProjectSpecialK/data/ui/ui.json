@@ -1,7 +1,7 @@
 {
 	"colors": {
 		"theme": {
-			"primary":   "#F61C3B55",
+			"primary":   "#C23E0072", //"#C2120021", //"#C223185A", "#F61C3B55",
 			"secondary": "#E12A89D9",
 			"dialogue":  "#FFFFF9E3",
 			"arrow":     "#FFFFB600",

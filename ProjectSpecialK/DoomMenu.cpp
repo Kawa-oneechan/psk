@@ -389,6 +389,14 @@ bool DoomMenu::Tick(float dt)
 	return false;
 }
 
+static void gradientPanel(Texture& texture, float startY, float height, float col)
+{
+	auto width = 1980.0f;
+	Sprite::DrawSprite(texture, glm::vec2(0, startY - 8) * scale, glm::vec2(col, height) * scale, texture[6], 0.0f, UI::themeColors["primary"]);
+	Sprite::DrawSprite(texture, glm::vec2(width - col, startY - 8) * scale, glm::vec2(col, height) * scale, texture[7], 0.0f, UI::themeColors["primary"]);
+	Sprite::DrawSprite(texture, glm::vec2(col, startY - 8) * scale, glm::vec2(width - col - col, height) * scale, texture[8], 0.0f, UI::themeColors["primary"]);
+}
+
 void DoomMenu::Draw(float dt)
 {
 	dt;
@@ -438,7 +446,8 @@ void DoomMenu::Draw(float dt)
 			auto xy = Sprite::MeasureText(1, items->subheader, subHeaderSize);
 			headerX = (width - xy.x) / 2;
 
-			Sprite::DrawSprite(*whiteRect, glm::vec2(0, pos.y) * scale, glm::vec2(width, xy.y + 16) * scale, glm::vec4(0), 0.0f, UI::themeColors["primary"]);
+			//Sprite::DrawSprite(*whiteRect, glm::vec2(0, pos.y) * scale, glm::vec2(width, xy.y + 16) * scale, glm::vec4(0), 0.0f, UI::themeColors["primary"]);
+			gradientPanel(panels, pos.y, xy.y + 16, col);
 
 			Sprite::DrawText(1, items->subheader, glm::vec2(headerX, pos.y + subHeaderOffset) * scale, glm::vec4(1), subHeaderSize * scale);
 			pos.y += xy.y + (subHeaderPadding * scale);
@@ -454,8 +463,15 @@ void DoomMenu::Draw(float dt)
 
 	itemY.clear();
 
-	Sprite::DrawSprite(*whiteRect, glm::vec2(0, startY - 8) * scale, glm::vec2(width, endY - startY - 8) * scale, glm::vec4(0), 0.0f, UI::themeColors["primary"]);
-	Sprite::DrawSprite(*whiteRect, glm::vec2(0, endY) * scale, glm::vec2(width, 24) * scale, glm::vec4(0), 0.0f, UI::themeColors["primary"]);
+	//Sprite::DrawSprite(*whiteRect, glm::vec2(0, startY - 8) * scale, glm::vec2(width, endY - startY - 8) * scale, glm::vec4(0), 0.0f, UI::themeColors["primary"]);
+	//Sprite::DrawSprite(*whiteRect, glm::vec2(0, endY) * scale, glm::vec2(width, 24) * scale, glm::vec4(0), 0.0f, UI::themeColors["primary"]);
+	gradientPanel(panels, startY - 8, endY - startY - 8, col);
+	gradientPanel(panels, endY, 24, col);
+	/*
+	Sprite::DrawSprite(panels, glm::vec2(0, startY - 8) * scale, glm::vec2(col, endY - startY - 8) * scale, panels[6], 0.0f, UI::themeColors["primary"]);
+	Sprite::DrawSprite(panels, glm::vec2(col, startY - 8) * scale, glm::vec2(width - col - col, endY - startY - 8) * scale, panels[8], 0.0f, UI::themeColors["primary"]);
+	Sprite::DrawSprite(panels, glm::vec2(width - col, startY - 8) * scale, glm::vec2(col, endY - startY - 8) * scale, panels[7], 0.0f, UI::themeColors["primary"]);
+	*/
 
 	pos.y -= 8 * scale;
 	for (int i = 0; i < shown; i++)

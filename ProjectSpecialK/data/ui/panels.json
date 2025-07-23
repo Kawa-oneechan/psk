@@ -6,6 +6,9 @@
 		[ 354,   0, 157, 128 ], //right tile
 		[   0,   0,  32, 128 ], //filler
 		[   0, 128, 101, 128 ], //header bar left
-		[ 101, 128, 101, 128 ]  //header bar right
+		[ 101, 128, 101, 128 ], //header bar right
+		[ 216, 144, 256,  24 ], //gradient (translucent on left)
+		[ 216, 208, 256,  24 ], //gradient (translucent on right)
+		[ 480, 144,  24,  24 ]  //plain white
 	]
 }
