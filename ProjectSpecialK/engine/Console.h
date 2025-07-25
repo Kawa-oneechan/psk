@@ -1,8 +1,10 @@
 #pragma once
-
-#include "SpecialK.h"
-
 #include <fstream>
+#include <JSON/JSONValue.h>
+#include <format.h>
+#include <glm/glm.hpp>
+#include "Tickable.h"
+#include "JsonUtils.h"
 
 class TextField;
 
@@ -120,3 +122,10 @@ public:
 };
 
 extern Console* console;
+
+#define conprint(C, F, ...) console->Print(C, fmt::format(F, __VA_ARGS__))
+#ifdef DEBUG
+#define debprint(C, F, ...) console->Print(C, fmt::format(F, __VA_ARGS__))
+#else
+#define debprint(C, F, ...)
+#endif

@@ -21,3 +21,6 @@ inline constexpr int operator "" t(unsigned long long v) { return (int)v; }
 //Distance normalized to a 0.0-1.0 range
 inline constexpr float operator "" pt(long double v) { return (float)v; }
 #pragma warning(pop)
+
+#define BJTSParams const std::vector<std::string>& tags, int start, int len
+

@@ -1,16 +1,23 @@
+#include <glad/glad.h>
 #include <string>
 #include <sstream>
+#include <algorithm>
 
-#include "SpecialK.h"
-
-#include "SpriteRenderer.h"
-#include "TextUtils.h"
+#include <format.h>
 #include <stb_truetype.h>
 #include <stb_image_write.h>
+#include "SpriteRenderer.h"
+#include "TextUtils.h"
+#include "Console.h"
 
 extern int width, height;
+extern Texture* whiteRect;
 
 extern unsigned int currentVAO;
+
+__declspec(noreturn)
+extern void FatalError(const std::string& message);
+
 
 namespace UI
 {

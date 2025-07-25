@@ -2,11 +2,14 @@
 #include <filesystem>
 #include <fstream>
 #include <algorithm>
+#include <functional>
 
-#include "SpecialK.h"
 #include <miniz.h>
-#include "Console.h"
+#include <format.h>
+#include "VFS.h"
 #include "TextUtils.h"
+#include "Console.h"
+#include "Texture.h"
 
 /*
 Saving to an archive file breaks if the entry already exists.
@@ -19,6 +22,20 @@ The new plan:
 6. This may be rather inefficient when handling a town full of villagers in a row.
 Until #6 is reconsidered, use the villagers FOLDER instead.
 */
+
+__declspec(noreturn)
+extern void FatalError(const std::string& message);
+
+namespace UI
+{
+	extern std::map<std::string, glm::vec4> themeColors;
+	extern std::vector<glm::vec4> textColors;
+	extern std::shared_ptr<Texture> controls;
+
+	extern JSONObject json;
+	extern JSONObject settings;
+	extern std::string initFile;
+};
 
 namespace JSONPatch
 {

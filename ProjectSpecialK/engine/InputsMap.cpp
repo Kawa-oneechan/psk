@@ -1,6 +1,7 @@
+#include <GLFW/glfw3.h>
 #include "InputsMap.h"
 
-#include <GLFW/glfw3.h>
+extern int width, height;
 
 InputsMap::InputsMap()
 {

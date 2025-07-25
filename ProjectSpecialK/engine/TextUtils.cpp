@@ -1,6 +1,6 @@
 ﻿#include "TextUtils.h"
 #include "InputsMap.h"
-#include "DialogueBox.h"
+#include "../DialogueBox.h"
 
 #ifdef _WIN32
 extern "C"

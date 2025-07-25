@@ -1,5 +1,4 @@
-﻿#include "SpecialK.h"
-#include "Model.h"
+﻿#include "Model.h"
 
 unsigned int currentVAO = 0;
 

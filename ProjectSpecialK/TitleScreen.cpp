@@ -1,10 +1,14 @@
 ﻿#include "TitleScreen.h"
 #include "MusicManager.h"
-#include "InputsMap.h"
+#include "engine/InputsMap.h"
 #include "Town.h"
 #include "InGame.h"
-#include "TextUtils.h"
 #include "Utilities.h"
+#include "engine/Utilities.h"
+#include "engine/TextUtils.h"
+
+#define GLFW_INCLUDE_NONE
+#include <glfw/glfw3.h>
 
 extern std::vector<TickableP> newTickables;
 

@@ -2,11 +2,12 @@
 
 #include "Console.h"
 #include "TextField.h"
-#include "InputsMap.h"
-#include "DialogueBox.h"
-#include "PanelLayout.h"
-#include "Framebuffer.h"
+//#include "InputsMap.h"
 #include "TextUtils.h"
+#include "../DialogueBox.h"
+#include "../PanelLayout.h"
+#include "../Framebuffer.h"
+#include "../Game.h"
 
 //For version information
 #include <miniz.h>
@@ -15,6 +16,8 @@
 #include <ImGUI/imgui.h>
 #endif
 #include <ufbx.h>
+#define GLFW_INCLUDE_NONE
+#include <glfw/glfw3.h>
 
 extern float timeScale;
 extern bool debugPanelLayoutPolygons;

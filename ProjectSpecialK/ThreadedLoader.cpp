@@ -1,5 +1,5 @@
 #include "SpecialK.h"
-#include "Cursor.h"
+#include "engine/Cursor.h"
 #include <GLFW/glfw3.h>
 #include <thread>
 #include <future>

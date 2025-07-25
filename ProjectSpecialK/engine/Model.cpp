@@ -1,7 +1,12 @@
-﻿#include "SpecialK.h"
+﻿#include <ufbx.h>
+#include <unordered_map>
+#include <functional>
 #include "Model.h"
 #include "Utilities.h"
-#include <ufbx.h>
+#include "Console.h"
+
+__declspec(noreturn)
+extern void FatalError(const std::string& message);
 
 static std::map<std::string, std::tuple<Model*, int>> cache;
 static std::map<hash, std::map<hash, std::array<int, MaxBones>>> transferMaps;

@@ -1,4 +1,7 @@
 #include "TextField.h"
+#include "SpriteRenderer.h"
+
+extern int width, height;
 
 void TextField::Draw(float dt)
 {

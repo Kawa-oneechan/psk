@@ -1,6 +1,5 @@
 ﻿#pragma once
-
-#include "InputsMap.h"
+#include "engine/InputsMap.h"
 #include "ButtonGuide.h"
 
 class DoomMenuPage;

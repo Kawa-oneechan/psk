@@ -1,8 +1,9 @@
 #include "SpecialK.h"
 #include "Town.h"
-#include "InputsMap.h"
-#include "TextUtils.h"
-#include "JSONUtils.h"
+#include "Game.h"
+#include "engine/InputsMap.h"
+#include "engine/TextUtils.h"
+#include "engine/JSONUtils.h"
 
 extern bool useOrthographic;
 

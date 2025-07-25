@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Model.h"
+#include "engine/Model.h"
 
 class Species : public NameableThing
 {

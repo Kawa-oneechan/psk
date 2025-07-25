@@ -3,8 +3,8 @@
 
 #include <stb_image.h>
 #include <stb_image_write.h>
-#include "Console.h"
-#include "TextUtils.h"
+#include "engine/Console.h"
+#include "engine/TextUtils.h"
 
 namespace fs = std::experimental::filesystem;
 

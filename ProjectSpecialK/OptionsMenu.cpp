@@ -1,6 +1,9 @@
 #include "OptionsMenu.h"
-#include "Cursor.h"
-#include "TextUtils.h"
+#include "engine/Cursor.h"
+#include "engine/TextUtils.h"
+
+#define GLFW_INCLUDE_NONE
+#include <glfw/glfw3.h>
 
 extern bool botherColliding;
 

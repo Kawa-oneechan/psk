@@ -145,11 +145,8 @@
     <ClCompile Include="Animator.cpp" />
     <ClCompile Include="Audio.cpp" />
     <ClCompile Include="Background.cpp" />
-    <ClCompile Include="BigTables.cpp" />
     <ClCompile Include="ButtonGuide.cpp" />
     <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="Console.cpp" />
-    <ClCompile Include="Cursor.cpp" />
     <ClCompile Include="Database.cpp" />
     <ClCompile Include="DateTimePanel.cpp" />
     <ClCompile Include="DialogueBox.cpp" />
@@ -157,19 +154,30 @@
     <ClCompile Include="DebugImgui.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="engine\BigTables.cpp" />
+    <ClCompile Include="engine\Console.cpp" />
+    <ClCompile Include="engine\Cursor.cpp" />
+    <ClCompile Include="engine\InputsMap.cpp" />
+    <ClCompile Include="engine\JsonPatch.cpp" />
+    <ClCompile Include="engine\JsonUtils.cpp" />
+    <ClCompile Include="engine\main.cpp" />
+    <ClCompile Include="engine\Mesh.cpp" />
+    <ClCompile Include="engine\MeshBucket.cpp" />
+    <ClCompile Include="engine\Model.cpp" />
+    <ClCompile Include="engine\Shader.cpp" />
+    <ClCompile Include="engine\SpriteRenderer.cpp" />
+    <ClCompile Include="engine\TextField.cpp" />
+    <ClCompile Include="engine\Texture.cpp" />
+    <ClCompile Include="engine\TextUtils.cpp" />
+    <ClCompile Include="engine\Utilities.cpp" />
+    <ClCompile Include="engine\VFS.cpp" />
     <ClCompile Include="Framebuffer.cpp" />
+    <ClCompile Include="Game.cpp" />
     <ClCompile Include="InGame.cpp" />
-    <ClCompile Include="InputsMap.cpp" />
     <ClCompile Include="Iris.cpp" />
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="ItemHotbar.cpp" />
-    <ClCompile Include="JsonPatch.cpp" />
-    <ClCompile Include="JsonUtils.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="Mesh.cpp" />
-    <ClCompile Include="MeshBucket.cpp" />
     <ClCompile Include="Messager.cpp" />
-    <ClCompile Include="Model.cpp" />
     <ClCompile Include="MusicManager.cpp" />
     <ClCompile Include="NameableThing.cpp" />
     <ClCompile Include="NookCode.cpp" />
@@ -178,10 +186,8 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Scoring.cpp" />
     <ClCompile Include="Sequence.cpp" />
-    <ClCompile Include="Shader.cpp" />
     <ClCompile Include="SolBinds.cpp" />
     <ClCompile Include="Species.cpp" />
-    <ClCompile Include="SpriteRenderer.cpp" />
     <ClCompile Include="support\format.cc" />
     <ClCompile Include="support\glad\glad.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCpp</CompileAs>
@@ -222,15 +228,11 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="Text.cpp" />
-    <ClCompile Include="TextField.cpp" />
-    <ClCompile Include="Texture.cpp" />
-    <ClCompile Include="TextUtils.cpp" />
     <ClCompile Include="ThreadedLoader.cpp" />
     <ClCompile Include="TitleScreen.cpp" />
     <ClCompile Include="Town.cpp" />
     <ClCompile Include="Traits.cpp" />
-    <ClCompile Include="Utilities.cpp" />
-    <ClCompile Include="VFS.cpp" />
+    <ClCompile Include="Utilties.cpp" />
     <ClCompile Include="Villager.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -247,21 +249,32 @@
     <ClInclude Include="Background.h" />
     <ClInclude Include="ButtonGuide.h" />
     <ClInclude Include="Camera.h" />
-    <ClInclude Include="Console.h" />
-    <ClInclude Include="Cursor.h" />
     <ClInclude Include="Database.h" />
     <ClInclude Include="DateTimePanel.h" />
     <ClInclude Include="DialogueBox.h" />
     <ClInclude Include="DoomMenu.h" />
+    <ClInclude Include="engine\Console.h" />
+    <ClInclude Include="engine\Cursor.h" />
+    <ClInclude Include="engine\GlfwKeys.h" />
+    <ClInclude Include="engine\InputsMap.h" />
+    <ClInclude Include="engine\JsonUtils.h" />
+    <ClInclude Include="engine\Model.h" />
+    <ClInclude Include="engine\Shader.h" />
+    <ClInclude Include="engine\SpriteRenderer.h" />
+    <ClInclude Include="engine\TextField.h" />
+    <ClInclude Include="engine\Texture.h" />
+    <ClInclude Include="engine\TextUtils.h" />
+    <ClInclude Include="engine\Tickable.h" />
+    <ClInclude Include="engine\Types.h" />
+    <ClInclude Include="engine\Utilities.h" />
+    <ClInclude Include="engine\VFS.h" />
     <ClInclude Include="Framebuffer.h" />
+    <ClInclude Include="Game.h" />
     <ClInclude Include="InGame.h" />
-    <ClInclude Include="InputsMap.h" />
     <ClInclude Include="Iris.h" />
     <ClInclude Include="Item.h" />
     <ClInclude Include="ItemHotbar.h" />
-    <ClInclude Include="JsonUtils.h" />
     <ClInclude Include="Messager.h" />
-    <ClInclude Include="Model.h" />
     <ClInclude Include="MusicManager.h" />
     <ClInclude Include="NameableThing.h" />
     <ClInclude Include="NookCode.h" />
@@ -270,21 +283,13 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="Scoring.h" />
     <ClInclude Include="Sequence.h" />
-    <ClInclude Include="Shader.h" />
     <ClInclude Include="SpecialK.h" />
     <ClInclude Include="Species.h" />
-    <ClInclude Include="SpriteRenderer.h" />
     <ClInclude Include="Text.h" />
-    <ClInclude Include="TextField.h" />
-    <ClInclude Include="Texture.h" />
-    <ClInclude Include="TextUtils.h" />
-    <ClInclude Include="Tickable.h" />
     <ClInclude Include="TitleScreen.h" />
     <ClInclude Include="Town.h" />
     <ClInclude Include="Traits.h" />
-    <ClInclude Include="Types.h" />
     <ClInclude Include="Utilities.h" />
-    <ClInclude Include="VFS.h" />
     <ClInclude Include="Villager.h" />
   </ItemGroup>
   <ItemGroup>

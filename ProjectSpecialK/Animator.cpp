@@ -1,6 +1,6 @@
 #include "SpecialK.h"
 #include "Animator.h"
-#include "Model.h"
+#include "engine/Model.h"
 
 Animator::Animator(const Armature& clientBones)
 {

@@ -1,8 +1,14 @@
 #pragma once
-
+#include <array>
 #include <glad/glad.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #include <stb_image.h>
 #include <format.h>
+#include "Types.h"
+#include "Shader.h"
+#include "Texture.h"
 #include "VFS.h"
 
 //Because void-casting an integer for legacy reasons is silly.
@@ -134,6 +140,12 @@ public:
 
 	void CopyBoneTransforms(std::shared_ptr<Model> target);
 };
+
+namespace MeshBucket
+{
+	extern void Flush();
+	extern void Draw(Model::Mesh& mesh, const glm::vec3& position, const glm::quat& rotation, const glm::mat4 bones[], size_t boneCt);
+}
 
 using ModelP = std::shared_ptr<Model>;
 using Armature = std::array<Model::Bone, MaxBones>;

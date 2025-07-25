@@ -1,7 +1,9 @@
 #include "SpecialK.h"
+#include "Game.h"
 #include "Town.h"
 #include "Animator.h"
-#include "TextUtils.h"
+#include "engine/TextUtils.h"
+#include "engine/Utilities.h"
 #include "Utilities.h"
 
 #include <ImGUI/imgui.h>

@@ -1,6 +1,6 @@
 #pragma once
-
-#include "SpecialK.h"
+#include <glm/glm.hpp>
+#include "Tickable.h"
 
 class TextField : public Tickable
 {

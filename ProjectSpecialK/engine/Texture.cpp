@@ -1,7 +1,9 @@
-#include "SpecialK.h"
 #include <stb_image.h>
 #include "JsonUtils.h"
 #include "TextUtils.h"
+#include "Texture.h"
+#include "VFS.h"
+#include "Console.h"
 
 static std::map<std::string, Texture*> cache;
 static std::map<std::string, TextureArray*> cacheArray;

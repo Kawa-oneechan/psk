@@ -1,6 +1,6 @@
 #pragma once
-
-#include "SpecialK.h"
+#include <memory>
+#include "Texture.h"
 
 class Cursor
 {

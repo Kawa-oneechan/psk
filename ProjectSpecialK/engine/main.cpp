@@ -1,25 +1,28 @@
 ﻿#include <filesystem>
-#include "SpecialK.h"
-
+#include <fstream>
 #include <glad/glad.h>
 #include <glfw/glfw3.h>
+#include <random>
 
 #include "Console.h"
-#include "InputsMap.h"
 #include "Cursor.h"
-#include "Background.h"
-#include "Town.h"
-#include "Messager.h"
-#include "MusicManager.h"
-#include "Framebuffer.h"
-#include "TitleScreen.h"
-#include "InGame.h"
+#include "InputsMap.h"
 #include "TextUtils.h"
+#include "Texture.h"
 #include "Utilities.h"
+#include "Shader.h"
+#include "SpriteRenderer.h"
+#include "../Game.h"
 
-#include <fstream>
+#include "../SpecialK.h"
+#include "../DialogueBox.h"
 
-constexpr auto WindowTitle = "Project Special K - " VERSIONJOKE
+extern void GameInit();
+extern void GameStart(std::vector<TickableP>& tickables);
+extern void GamePreDraw(float dt);
+extern void GameQuit();
+
+constexpr auto WindowTitle = GAMENAME " - " VERSIONJOKE
 #ifdef DEBUG
 " (debug build " __DATE__ ")";
 
@@ -48,12 +51,8 @@ bool useOrthographic = false;
 GLFWwindow* window;
 
 Texture* whiteRect = nullptr;
-std::shared_ptr<DialogueBox> dlgBox = nullptr;
 CursorP cursor = nullptr;
 Console* console = nullptr;
-Audio* bgm = nullptr;
-
-sol::state Sol;
 
 int width = ScreenWidth, height = ScreenHeight;
 float scale = height / 1080.0f;
@@ -81,11 +80,6 @@ float glTime = 0;
 
 CommonUniforms commonUniforms;
 unsigned int commonBuffer = 0;
-
-std::shared_ptr<Camera> MainCamera;
-std::shared_ptr<Messager> messager;
-std::shared_ptr<MusicManager> musicManager;
-std::shared_ptr<Town> town;
 
 namespace rnd
 {
@@ -138,7 +132,7 @@ void FatalError(const std::string& message)
 #ifdef _WIN32
 	wchar_t w[1024] = { 0 };
 	MultiByteToWideChar(65001, 0, message.c_str(), -1, w, 1024);
-	MessageBoxW(nullptr, w, L"Project Special K", 0x30);
+	MessageBoxW(nullptr, w, L"" GAMENAME, 0x30);
 #else
 	//TODO: report fatal errors some other way on non-Windows systems.
 	//Internet says: write the error to a file, then xdg-open that file.
@@ -565,15 +559,13 @@ void GLAPIENTRY MessageCallback(GLenum source, GLenum type, GLuint id, GLenum se
 }
 #endif
 
-Framebuffer* postFxBuffer;
-//Background* rainLayer;
+bool skipTitle = false;
 
 int main(int argc, char** argv)
 {
 	setlocale(LC_ALL, "en_US.UTF-8");
 	//std::srand((unsigned int)std::time(nullptr));
 
-	bool skipTitle = false;
 
 	for (int i = 1; i < argc; i++)
 	{
@@ -606,12 +598,6 @@ int main(int argc, char** argv)
 
 	UI::Load();
 
-	/*
-	{
-		town.StartNewDay();
-	}
-	*/
-
 	if (auto r = InitOpenGL())
 		return r;
 
@@ -637,15 +623,13 @@ int main(int argc, char** argv)
 #endif
 
 	cursor = std::make_shared<Cursor>();
-	MainCamera = std::make_shared<Camera>();
-	musicManager = std::make_shared<MusicManager>();
+
+	GameInit();
 
 	Inputs.HaveGamePad = (glfwJoystickPresent(GLFW_JOYSTICK_1) && glfwJoystickIsGamepad(GLFW_JOYSTICK_1));
 
-	ThreadedLoader(Database::LoadGlobalStuff);
-
-	auto panels = new Texture("ui/panels.png");
-	panels->Use();
+	//auto panels = new Texture("ui/panels.png");
+	//panels->Use();
 
 	//thePlayer.Name = "Kawa";
 	//thePlayer.Gender = Gender::BEnby;
@@ -654,79 +638,12 @@ int main(int argc, char** argv)
 	for (int i = 0; i < NumKeyBinds; i++)
 		Inputs.Keys[i].Name = GetKeyName(Inputs.Keys[i].ScanCode);
 
-	/*
-	tickables.push_back(&musicManager);
-	tickables.push_back(&MainCamera);
-	//auto background = Background("discobg2.png");
-	//tickables.push_back(new Background("discobg2.png"));
-	//tickables.push_back(new TemporaryTownDrawer());
-	auto townDrawer = TemporaryTownDrawer();
-	tickables.push_back(new DateTimePanel());
-	tickables.push_back(new ItemHotbar());
-	//hotbar->Tween(&hotbar->Position.y, -100.0f, 0, 0.002f, glm::bounceEaseOut<float>);
-	//hotbar->Tween(&hotbar->Alpha, 0, 0.75f, 0.006f);
-	//auto logoJson = VFS::ReadJSON("cinematics/logo/logo.json")->AsObject();
-	//auto logoAnim = new PanelLayout(logoJson["cinematic"]);
-	//tickables.push_back(logoAnim);
-	//tickables.push_back(new DoomMenu());
-	dlgBox = new DialogueBox();
-	tickables.push_back(dlgBox);
-	auto messager = new Messager();
-	tickables.push_back(messager);
-	//tickables.push_back(new TextField());
-	*/
-
-	town = std::make_shared<Town>();
-	dlgBox = std::make_shared<DialogueBox>();
-	messager = std::make_shared<Messager>();
-
-#ifdef DEBUG
-	RunTests();
-#endif
-
-	//Load the player *here* so we don't get inventory test results mixed in.
-	thePlayer.Load();
-
-	auto cloudImage = Texture("altostratus.png");
-	auto starsImage = Texture("starfield.png");
-	auto skyImage = Texture("skycolors.png");
-
-	//rainLayer = new Background("rain.png", glm::vec2(1.0, 2.0));
-
-	if (!LoadLights("lights/initial.json").empty())
-	{
-		commonUniforms.Lights[0].pos = { 0, 15, 20, 0 };
-		commonUniforms.Lights[0].color = { 1, 1, 1, 0.25 };
-	}
-	if (!LoadCamera("cameras/field.json").empty())
-	{
-		MainCamera->Set(glm::vec3(0, 0, -6), glm::vec3(0, 110, 0), 60);
-	}
-
-	if (town->Villagers.size() == 0)
-	{
-		town->Villagers.push_back(Database::Find<Villager>("ac:cat01", villagers));
-	}
-	{
-		int i = 0;
-		for (auto& vgr : town->Villagers)
-		{
-			vgr->Manifest();
-			vgr->Position = glm::vec3(30, 0, 30 + (i++ * 10));
-		}
-	}
-	thePlayer.Position = glm::vec3(40, 0, 30);
-	//thePlayer.Tops = std::make_shared<InventoryItem>("psk:oppai");
-	//thePlayer.Bottoms = std::make_shared<InventoryItem>("acnh:denimcutoffs/lightblue");
-
 	perspectiveProjection = glm::perspective(glm::radians(45.0f), (float)width / (float)height, 0.1f, 500.0f);
 	//Orthographic projection for a laugh. For best results, use a 45 degree pitch and yaw, no bending.
 	constexpr auto orthoScale = 0.025f;
 	orthographicProjection = glm::ortho(-(ScreenWidth * orthoScale), (ScreenWidth * orthoScale), -(ScreenHeight * orthoScale), (ScreenHeight * orthoScale), -1.0f, 300.0f);
 	commonUniforms.Projection = useOrthographic ? orthographicProjection : perspectiveProjection;
 
-	postFxBuffer = new Framebuffer(Shaders["postfx"], width, height);
-	postFxBuffer->SetLut(new Texture("colormap.png"));
 
 #ifdef DEBUG
 	auto startingTime = std::chrono::high_resolution_clock::now();
@@ -735,14 +652,7 @@ int main(int argc, char** argv)
 	auto oldTime = glfwGetTime();
 	commonUniforms.TotalTime = 0.0f;
 
-	tickables.push_back(musicManager);
-	tickables.push_back(MainCamera);
-	tickables.push_back(town);
-	if (skipTitle)
-		tickables.push_back(std::make_shared<InGame>());
-	else
-		tickables.push_back(std::make_shared<TitleScreen>());
-
+	GameStart(tickables);
 	//auto layoutOverlay = new Texture("layoutoverlay.png");
 
 	while (!glfwWindowShouldClose(window))
@@ -791,13 +701,7 @@ int main(int argc, char** argv)
 		startingTime = endingTime;
 #endif
 
-		auto pitch = MainCamera->Angles().y;
-		if (pitch > 180) pitch -= 360;
-		Shaders["sky"]->Set("pitch", pitch);
-		cloudImage.Use(1);
-		starsImage.Use(2);
-		skyImage.Use(3);
-
+		GamePreDraw(dt * timeScale);
 		DrawAllTickables(tickables, dt * timeScale);
 
 		//Sprite::DrawSprite(*layoutOverlay, glm::vec2(0), glm::vec2(width, height), glm::vec4(0), 0.0f, glm::vec4(1, 1, 1, 0.5));
@@ -815,6 +719,7 @@ int main(int argc, char** argv)
 			newTickables.clear();
 		}
 
+		/*
 		//TEST
 		if (Inputs.KeyDown(Binds::Accept))
 		{
@@ -830,6 +735,7 @@ int main(int argc, char** argv)
 			};
 			messager->Add(lols[rnd::getInt(7)]);
 		}
+		*/
 
 #ifdef DEBUG
 		DoImGui();
@@ -845,8 +751,7 @@ int main(int argc, char** argv)
 		glfwPollEvents();
 	}
 
-	thePlayer.Save();
-	town->Save();
+	GameQuit();
 	UI::Save();
 
 	glfwTerminate();

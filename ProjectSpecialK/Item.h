@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Model.h"
+#include "engine/Model.h"
 
 /*
 TODO: Bring back the separate Tool, Furniture, and Clothing classes,

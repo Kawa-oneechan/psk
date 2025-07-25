@@ -1,5 +1,11 @@
 #include "Cursor.h"
 #include "InputsMap.h"
+#include "VFS.h"
+#include "JsonUtils.h"
+#include "SpriteRenderer.h"
+
+#define GLFW_INCLUDE_NONE
+#include <glfw/glfw3.h>
 
 Cursor::Cursor()
 {

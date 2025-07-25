@@ -1,9 +1,9 @@
 #pragma once
-
-#include "SpecialK.h"
+#include <string>
+#include <glm/glm.hpp>
 
 //For keycodes in Default Bindings.
-#include <GLFW/glfw3.h>
+#include "GlfwKeys.h"
 
 enum class Binds
 {

@@ -1,6 +1,8 @@
-﻿#include "DoomMenu.h"
-#include "Cursor.h"
-#include "TextUtils.h"
+﻿#define GLFW_INCLUDE_NONE
+#include <glfw/glfw3.h>
+#include "DoomMenu.h"
+#include "engine/Cursor.h"
+#include "engine/TextUtils.h"
 
 //TODO: Add a thing where changing the game language reveals a warning about having to restart.
 //Would also work for a few other "deep" settings like resolution or whatever.
@@ -135,7 +137,7 @@ bool DoomMenu::Tick(float dt)
 		if (Inputs.HaveGamePad)
 		{
 			GLFWgamepadstate state;
-			if (glfwGetGamepadState(GLFW_JOYSTICK_1, &state))
+			if (glfwGetGamepadState(0, &state))
 			{
 				if (remapBounce)
 				{
@@ -217,7 +219,7 @@ bool DoomMenu::Tick(float dt)
 		if (Inputs.HaveGamePad)
 		{
 			GLFWgamepadstate state;
-			if (glfwGetGamepadState(GLFW_JOYSTICK_1, &state))
+			if (glfwGetGamepadState(0, &state))
 			{
 				int k = 0;
 				for (int i = 0; i < 15; i++)

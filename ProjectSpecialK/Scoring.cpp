@@ -1,10 +1,10 @@
 #include <string>
 #include <cctype>
 #include <format.h>
-#include "Types.h"
+#include "engine/Types.h"
 #include "Text.h"
-#include "TextUtils.h"
-#include "VFS.h"
+#include "engine/TextUtils.h"
+#include "engine/VFS.h"
 #include "Town.h"
 
 int GetLetterScore(const std::string& text, bool noCapitals)

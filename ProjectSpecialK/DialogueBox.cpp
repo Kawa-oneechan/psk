@@ -1,7 +1,7 @@
-﻿#include "DialogueBox.h"
+﻿#include "engine/InputsMap.h"
+#include "engine/TextUtils.h"
+#include "DialogueBox.h"
 #include "PanelLayout.h"
-#include "InputsMap.h"
-#include "TextUtils.h"
 
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/rotate_vector.hpp>

@@ -1,6 +1,6 @@
 #include "SpecialK.h"
-#include "TextUtils.h"
-#include "Utilities.h"
+#include "engine/TextUtils.h"
+#include "engine/Utilities.h"
 
 extern int articlePlease;
 

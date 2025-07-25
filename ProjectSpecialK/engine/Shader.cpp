@@ -1,7 +1,13 @@
-#include "SpecialK.h"
+#include <map>
+#include <format.h>
+#include "Shader.h"
 #include "TextUtils.h"
+#include "Console.h"
 
 #define HEADER "#version 430 core\n#define PSK\n"
+
+__declspec(noreturn)
+extern void FatalError(const std::string& message);
 
 static unsigned int currentShader;
 std::map<std::string, Shader*> Shaders;
