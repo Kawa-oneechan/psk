@@ -4,6 +4,11 @@
 #include <JSON/JSON.h>
 #include "engine/Types.h"
 
+extern "C" {
+	const char* glfwGetKeyName(int key, int scancode);
+	int glfwGetKeyScancode(int key);
+}
+
 //Loads camera settings from a JSONValue.
 extern std::string LoadCamera(JSONValue* json);
 //Loads camera settings from a JSON file.
@@ -23,3 +28,15 @@ extern bool Project(const glm::vec3& in, glm::vec2& out);
 
 //Invokes Scale2x, 3x, or 4x on an image. Returned pixel data is the caller's responsibility to delete.
 extern unsigned char* ScaleImage(unsigned char* original, int origWidth, int origHeight, int channels, int targetScale);
+
+//Returns the name of a key for the given scancode, using glfwGetKeyName for printables and Text::Get for specials.
+extern std::string GetKeyName(int scancode);
+
+//Checks if a string contains only characters valid for an ID (alhpanumerics, colons, underscores).
+extern bool IsID(const std::string& id);
+//Checks if a string contains a colon, which would mark it as a valid ID.
+extern bool IDIsQualified(const std::string& id);
+//Prepends the given namespace to an ID.
+extern std::string Qualify(const std::string& id, const std::string& ns);
+//Removes the frontmost namespace from an ID.
+extern std::string UnQualify(const std::string& id);

@@ -2,8 +2,6 @@
 #include <vector>
 #include <glm/glm.hpp>
 
-using namespace std::literals;
-
 //A single Unicode code point.
 using rune = unsigned int;
 //A CRC32 hash referring to a NameableThing.

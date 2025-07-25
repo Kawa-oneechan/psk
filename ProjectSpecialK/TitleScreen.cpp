@@ -7,8 +7,7 @@
 #include "engine/Utilities.h"
 #include "engine/TextUtils.h"
 
-#define GLFW_INCLUDE_NONE
-#include <glfw/glfw3.h>
+extern "C" { double glfwGetTime(void); }
 
 extern std::vector<TickableP> newTickables;
 

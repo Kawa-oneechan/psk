@@ -10,6 +10,9 @@
 #include "TitleScreen.h"
 #include "Utilities.h"
 
+constexpr int ScreenWidth = 1920;
+constexpr int ScreenHeight = 1080;
+
 std::shared_ptr<DialogueBox> dlgBox = nullptr;
 Audio* bgm = nullptr;
 sol::state Sol;
@@ -23,35 +26,159 @@ Framebuffer* postFxBuffer;
 
 std::shared_ptr<Texture> cloudImage, starsImage, skyImage;
 
+extern bool botherColliding;
+
+namespace SolBinds
+{
+	extern void Setup();
+}
+
+namespace UI
+{
+	std::map<std::string, glm::vec4> themeColors;
+	std::vector<glm::vec4> textColors;
+
+	std::shared_ptr<Texture> controls{ nullptr };
+
+	JSONObject json = JSONObject();
+	JSONObject settings = JSONObject();
+
+	std::string initFile = "init.json";
+
+	void Load()
+	{
+		auto doc = VFS::ReadJSON("ui/ui.json");
+		if (!doc)
+			FatalError("Could not read ui/ui.json. Something is very wrong.");
+		json = doc->AsObject();
+		auto colors = json["colors"]->AsObject();
+		for (auto& ink : colors["theme"]->AsObject())
+		{
+			themeColors[ink.first] = GetJSONColor(ink.second);
+		}
+		for (auto& ink : colors["text"]->AsArray())
+		{
+			textColors.push_back(GetJSONColor(ink));
+		}
+
+		try
+		{
+			settings = VFS::ReadSaveJSON("options.json")->AsObject();
+		}
+		catch (std::runtime_error&)
+		{
+			settings = JSON::Parse("{}")->AsObject();
+		}
+
+#define DS(K, V) if (!settings[K]) settings[K] = new JSONValue(V)
+		DS("screenWidth", ScreenWidth);
+		DS("screenHeight", ScreenHeight);
+		DS("language", "USen");
+		DS("continue", (int)LoadSpawnChoice::FrontDoor);
+		DS("speech", (int)DialogueBox::Sound::Bebebese);
+		DS("pingRate", 3);
+		DS("balloonChance", 15);
+		DS("cursorScale", 100);
+		DS("botherColliding", true);
+		DS("24hour", true);
+		DS("contentFilters", JSONObject());
+		DS("musicVolume", 70);
+		DS("ambientVolume", 50);
+		DS("soundVolume", 100);
+		DS("speechVolume", 100);
+		DS("keyBinds", JSONArray());
+		DS("gamepadBinds", JSONArray());
+#undef DS
+
+		width = settings["screenWidth"]->AsInteger();
+		height = settings["screenHeight"]->AsInteger();
+
+		//constexpr Language opt2lan[] = { Language::USen, Language::JPja, Language::EUde, Language::EUes, Language::EUfr, Language::EUit, Language::EUhu, Language::EUnl, Language::EUen };
+		//gameLang = opt2lan[settings["language"]->AsInteger()];
+		gameLang = Text::GetLangCode(settings["language"]->AsString());
+
+		Audio::MusicVolume = settings["musicVolume"]->AsInteger() / 100.0f;
+		Audio::AmbientVolume = settings["ambientVolume"]->AsInteger() / 100.0f;
+		Audio::SoundVolume = settings["soundVolume"]->AsInteger() / 100.0f;
+		Audio::SpeechVolume = settings["speechVolume"]->AsInteger() / 100.0f;
+
+		botherColliding = settings["botherColliding"]->AsBool();
+
+		auto keyBinds = settings["keyBinds"]->AsArray();
+		if (keyBinds.size() != NumKeyBinds)
+		{
+			keyBinds.reserve(NumKeyBinds);
+			for (auto &k : DefaultInputBindings)
+				keyBinds.push_back(new JSONValue(glfwGetKeyScancode(k)));
+		}
+
+		auto padBinds = settings["gamepadBinds"]->AsArray();
+		if (padBinds.size() != NumKeyBinds)
+		{
+			padBinds.reserve(NumKeyBinds);
+			for (auto &k : DefaultInputGamepadBindings)
+				padBinds.push_back(new JSONValue(k));
+		}
+
+		for (int i = 0; i < NumKeyBinds; i++)
+		{
+			Inputs.Keys[i].ScanCode = keyBinds[i]->AsInteger();
+			Inputs.Keys[i].GamepadButton = padBinds[i]->AsInteger();
+		}
+
+		doc = VFS::ReadJSON("sound/sounds.json");
+		auto sounds = doc->AsObject();
+		for (auto category : sounds)
+		{
+			for (auto sound : category.second->AsObject())
+				generalSounds[category.first][sound.first] = std::make_shared<Audio>(sound.second->AsString());
+		}
+		delete doc;
+	}
+
+	void Save()
+	{
+		settings["screenWidth"] = new JSONValue(width);
+		settings["screenHeight"] = new JSONValue(height);
+
+		settings["musicVolume"] = new JSONValue((int)(Audio::MusicVolume * 100.0f));
+		settings["ambientVolume"] = new JSONValue((int)(Audio::AmbientVolume * 100.0f));
+		settings["soundVolume"] = new JSONValue((int)(Audio::SoundVolume * 100.0f));
+		settings["speechVolume"] = new JSONValue((int)(Audio::SpeechVolume * 100.0f));
+
+		settings["botherColliding"] = new JSONValue(botherColliding);
+
+		auto binds = JSONArray();
+		for (auto& k : Inputs.Keys)
+			binds.push_back(new JSONValue(k.ScanCode));
+		settings["keyBinds"] = new JSONValue(binds);
+
+		binds.clear();
+		for (auto& k : Inputs.Keys)
+			binds.push_back(new JSONValue(k.GamepadButton));
+		settings["gamepadBinds"] = new JSONValue(binds);
+
+		try
+		{
+			VFS::WriteSaveJSON("options.json", new JSONValue(settings));
+		}
+		catch (std::exception&)
+		{
+			conprint(2, "Couldn't save settings.");
+		}
+	}
+};
+
 void GameInit()
 {
+	Audio::Initialize();
+	SolBinds::Setup();
+
 	MainCamera = std::make_shared<Camera>();
 	musicManager = std::make_shared<MusicManager>();
 
 	ThreadedLoader(Database::LoadGlobalStuff);
-
-	/*
-	tickables.push_back(&musicManager);
-	tickables.push_back(&MainCamera);
-	//auto background = Background("discobg2.png");
-	//tickables.push_back(new Background("discobg2.png"));
-	//tickables.push_back(new TemporaryTownDrawer());
-	auto townDrawer = TemporaryTownDrawer();
-	tickables.push_back(new DateTimePanel());
-	tickables.push_back(new ItemHotbar());
-	//hotbar->Tween(&hotbar->Position.y, -100.0f, 0, 0.002f, glm::bounceEaseOut<float>);
-	//hotbar->Tween(&hotbar->Alpha, 0, 0.75f, 0.006f);
-	//auto logoJson = VFS::ReadJSON("cinematics/logo/logo.json")->AsObject();
-	//auto logoAnim = new PanelLayout(logoJson["cinematic"]);
-	//tickables.push_back(logoAnim);
-	//tickables.push_back(new DoomMenu());
-	dlgBox = new DialogueBox();
-	tickables.push_back(dlgBox);
-	auto messager = new Messager();
-	tickables.push_back(messager);
-	//tickables.push_back(new TextField());
-	*/
-
+	
 	town = std::make_shared<Town>();
 	dlgBox = std::make_shared<DialogueBox>();
 	messager = std::make_shared<Messager>();
@@ -67,8 +194,6 @@ void GameInit()
 	cloudImage = std::make_shared<Texture>("altostratus.png");
 	starsImage = std::make_shared<Texture>("starfield.png");
 	skyImage = std::make_shared<Texture>("skycolors.png");
-
-	//rainLayer = new Background("rain.png", glm::vec2(1.0, 2.0));
 
 	if (!LoadLights("lights/initial.json").empty())
 	{
@@ -93,19 +218,19 @@ void GameInit()
 		}
 	}
 	thePlayer.Position = glm::vec3(40, 0, 30);
-	//thePlayer.Tops = std::make_shared<InventoryItem>("psk:oppai");
-	//thePlayer.Bottoms = std::make_shared<InventoryItem>("acnh:denimcutoffs/lightblue");
-
 
 	postFxBuffer = new Framebuffer(Shaders["postfx"], width, height);
 	postFxBuffer->SetLut(new Texture("colormap.png"));
-
 }
 
 extern bool skipTitle;
 
 void GameStart(std::vector<TickableP>& tickables)
 {
+	//Now that we've loaded the key names we can fill in some blanks.
+	for (int i = 0; i < NumKeyBinds; i++)
+		Inputs.Keys[i].Name = GetKeyName(Inputs.Keys[i].ScanCode);
+
 	tickables.push_back(musicManager);
 	tickables.push_back(MainCamera);
 	tickables.push_back(town);
@@ -113,6 +238,23 @@ void GameStart(std::vector<TickableP>& tickables)
 		tickables.push_back(std::make_shared<InGame>());
 	else
 		tickables.push_back(std::make_shared<TitleScreen>());
+}
+
+void GameMouse(double xPosIn, double yPosIn, float xoffset, float yoffset)
+{
+	xPosIn, yPosIn;
+	if (Inputs.MouseHoldMiddle && !MainCamera->Locked)
+	{
+		auto angles = MainCamera->GetAngles();
+		angles.z -= xoffset;
+		angles.y -= yoffset;
+		MainCamera->Angles(angles);
+	}
+}
+
+void GameLoopStart()
+{
+	Audio::Update();
 }
 
 void GamePreDraw(float dt)

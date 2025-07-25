@@ -184,3 +184,48 @@ unsigned char* ScaleImage(unsigned char* original, int origWidth, int origHeight
 
 	return target;
 }
+
+extern "C" { const char* glfwGetKeyName(int key, int scancode); }
+std::string GetKeyName(int scancode)
+{
+	if (scancode == 1 || scancode == 14 || scancode == 15 || scancode == 28 || scancode == 57 ||
+		(scancode >= 71 && scancode <= 83) || scancode == 284 || scancode == 309)
+		return Text::Get(fmt::format("keys:scan:{}", scancode));
+
+	auto glfw = glfwGetKeyName(-1, scancode);
+	if (glfw[0] == '\0')
+		return Text::Get(fmt::format("keys:scan:{}", scancode));
+	else
+		return std::string(glfw);
+}
+
+bool IsID(const std::string& id)
+{
+	//valid IDs may only contain alphanumerics, :, and _.
+	for (auto& c : id)
+	{
+		if (!(std::isalnum(c) || c == ':' || c == '_'))
+			return false;
+	}
+	return true;
+}
+
+bool IDIsQualified(const std::string& id)
+{
+	//must have a : but not as the first character.
+	return id.find(':') != std::string::npos && id[0] != ':';
+}
+
+std::string Qualify(const std::string& id, const std::string& ns)
+{
+	//if (id.substr(0, ns.length()) == ns)
+	//	throw std::runtime_error(fmt::format("Qualify: cannot double-qualify \"{}\", already starts with \"{}\".", id, ns));
+	return ns + ':' + id;
+}
+
+std::string UnQualify(const std::string& id)
+{
+	if (IDIsQualified(id))
+		return id.substr(id.find(':') + 1);
+	return id;
+}

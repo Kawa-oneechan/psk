@@ -39,18 +39,6 @@ extern std::string PreprocessBJTS(const std::string& data);
 //Given a full path to a file ("data/foo/bar.txt"), returns the path part including the final separator ("data/foo/").
 extern std::string GetDirFromFile(const std::string& path);
 
-//Returns the name of a key for the given scancode, using glfwGetKeyName for printables and Text::Get for specials.
-extern std::string GetKeyName(int scancode);
-
-//Checks if a string contains only characters valid for an ID (alhpanumerics, colons, underscores).
-extern bool IsID(const std::string& id);
-//Checks if a string contains a colon, which would mark it as a valid ID.
-extern bool IDIsQualified(const std::string& id);
-//Prepends the given namespace to an ID.
-extern std::string Qualify(const std::string& id, const std::string& ns);
-//Removes the frontmost namespace from an ID.
-extern std::string UnQualify(const std::string& id);
-
 template<typename T>
 auto StringToEnum(const std::string& s, std::initializer_list<const std::string> opts)
 {

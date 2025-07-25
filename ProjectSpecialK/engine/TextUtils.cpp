@@ -1,6 +1,12 @@
-﻿#include "TextUtils.h"
+﻿#include <ctype.h>
+#include <iostream>
+#include <sstream>
+#include <string>
+#include "VFS.h"
+#include "TextUtils.h"
 #include "InputsMap.h"
-#include "../DialogueBox.h"
+#include "Console.h"
+#include "../BJTS.h"
 
 #ifdef _WIN32
 extern "C"
@@ -231,214 +237,6 @@ std::string StripBJTS(const std::string& data)
 	return ret;
 }
 
-static void bjtsStr(std::string& data, BJTSParams)
-{
-	if (tags.size() < 2)
-	{
-		conprint(2, "Missing parameter in BJTS Str: {}", data.substr(start, len));
-		return;
-	}
-
-	auto speaker = dlgBox->Speaker();
-
-	if (tags[1] == "...")
-		data.replace(start, len, Text::Get("str:fix:001"));
-	else if (tags[1] == "player")
-		data.replace(start, len, thePlayer.Name);
-	else if (tags[1] == "kun")
-		data.replace(start, len, Text::Get("str:kun"));
-	else if (tags[1] == "vname")
-	{
-		if (!speaker)
-		{
-			conprint(2, "BJTS Str called for villager name, but no speaker is set.");
-			data.replace(start, len, "Buggsy");
-			return;
-		}
-		data.replace(start, len, speaker->Name());
-	}
-	else if (tags[1] == "vspec")
-	{
-		if (!speaker)
-		{
-			conprint(2, "BJTS Str called for villager species, but no speaker is set.");
-			data.replace(start, len, "bug");
-			return;
-		}
-		data.replace(start, len, speaker->SpeciesName());
-	}
-	else if (tags[1] == "catchphrase")
-	{
-		if (!speaker)
-		{
-			conprint(2, "BJTS Str called for villager catchphrase, but no speaker is set.");
-			data.replace(start, len, "bugbug");
-			return;
-		}
-		data.replace(start, len, speaker->Catchphrase());
-	}
-}
-
-static void bjtsEllipses(std::string& data, BJTSParams)
-{
-	tags;
-	auto fakeTags = std::vector<std::string>
-	{
-		"str", "..."
-	};
-	bjtsStr(data, fakeTags, start, len);
-}
-
-static void bjtsWordstruct(std::string& data, BJTSParams)
-{
-	if (tags.size() < 2)
-	{
-		conprint(2, "Missing parameter in BJTS Wordstruct: {}", data.substr(start, len));
-		return;
-	}
-
-	//Grab the entire thing, not just individual tags.
-	//This method is cheaper than re-joining the tags.
-	auto key = data.substr(start + 1, len - 2);
-
-	auto speaker = dlgBox->Speaker();
-
-	auto ppos = key.find('?');
-	if (ppos != key.npos)
-	{
-		//Use speaker's personality, unless there
-		//is no speaker in which case we use "normal".
-		//But if the speaker's personality isn't an option,
-		//reset and use "normal" after all.
-		if (!speaker)
-			key.replace(ppos, 1, "normal");
-		else
-		{
-			key.replace(ppos, 1, speaker->personality->ID);
-			//check if this is available
-			auto result = Text::Get(fmt::format("{}:0", key));
-			if (result.length() >= 3 && result.substr(0, 3) == "???")
-			{
-				//guess not :shrug:
-				key = data.substr(start + 1, len - 2);
-				key.replace(ppos, 1, "normal");
-			}
-		}
-	}
-
-	//Count the number of options
-	int options = 0;
-	for (int i = 0; i < 32; i++)
-	{
-		auto result = Text::Get(fmt::format("{}:{}", key, i));
-		if (result.length() >= 3 && result.substr(0, 3) == "???")
-		{
-			options = i;
-			break;
-		}
-	}
-	if (options == 0)
-	{
-		conprint(2, "Wordstructor: could not find anything for \"{}\".", key);
-		data.replace(start, len, "???WS???");
-		return;
-	}
-
-	int choice = rnd::getInt(options - 1);
-	data.replace(start, len, Text::Get(fmt::format("{}:{}", key, choice)));
-}
-
-static void bjtsKeyControl(std::string& data, BJTSParams)
-{
-	if (tags.size() < 2)
-	{
-		conprint(2, "Missing parameter in BJTS Key: {}", data.substr(start, len));
-		return;
-	}
-	if (tags[1] == "arrows")
-	{
-		data.replace(start, len, fmt::format("{}/{}/{}/{}",
-			Inputs.Keys[(int)Binds::WalkN].Name,
-			Inputs.Keys[(int)Binds::WalkS].Name,
-			Inputs.Keys[(int)Binds::WalkE].Name,
-			Inputs.Keys[(int)Binds::WalkW].Name
-		));
-		return;
-	}
-	else  if (tags[1] == "updown")
-	{
-		data.replace(start, len, fmt::format("{}/{}",
-			Inputs.Keys[(int)Binds::Up].Name,
-			Inputs.Keys[(int)Binds::Down].Name
-		));
-		return;
-	}
-	else  if (tags[1] == "page")
-	{
-		data.replace(start, len, fmt::format("{}/{}",
-			Inputs.Keys[(int)Binds::PageUp].Name,
-			Inputs.Keys[(int)Binds::PageDown].Name
-		));
-		return;
-	}
-	for (int i = 0; i < NumKeyBinds; i++)
-	{
-		if (tags[1] == bindingNames[i])
-		{
-			data.replace(start, len, Inputs.Keys[i].Name);
-			return;
-		}
-	}
-}
-
-static void bjtsGamepad(std::string& data, BJTSParams)
-{
-	if (tags.size() < 2)
-	{
-		conprint(2, "Missing parameter in BJTS Pad: {}", data.substr(start, len));
-		return;
-	}
-	if (tags[1] == "dpad")
-	{
-		data.replace(start, len, fmt::format("{}/{}/{}/{}",
-			GamepadPUAMap[Inputs.Keys[(int)Binds::WalkN].GamepadButton],
-			GamepadPUAMap[Inputs.Keys[(int)Binds::WalkS].GamepadButton],
-			GamepadPUAMap[Inputs.Keys[(int)Binds::WalkE].GamepadButton],
-			GamepadPUAMap[Inputs.Keys[(int)Binds::WalkW].GamepadButton]
-		));
-		return;
-	}
-	else if (tags[1] == "updown")
-	{
-		data.replace(start, len, fmt::format("{}/{}",
-			GamepadPUAMap[Inputs.Keys[(int)Binds::Up].GamepadButton],
-			GamepadPUAMap[Inputs.Keys[(int)Binds::Down].GamepadButton]
-		));
-		return;
-	}
-	for (int i = 0; i < NumKeyBinds; i++)
-	{
-		if (tags[1] == bindingNames[i])
-		{
-			data.replace(start, len, GamepadPUAMap[Inputs.Keys[i].GamepadButton]);
-			return;
-		}
-	}
-}
-
-typedef void(*BJTSFunc)(std::string& data, BJTSParams);
-
-//BJTS functions that actually change the string content.
-static const std::map<std::string, BJTSFunc> bjtsPhase1 = {
-	{ "str", &bjtsStr },
-	{ "...", &bjtsEllipses },
-	{ "ws", &bjtsWordstruct },
-	{ "key", &bjtsKeyControl },
-	{ "pad", &bjtsGamepad },
-};
-//BJTS functions loaded from Lua scripts.
-std::map<std::string, std::string> bjtsPhase1X;
-
 std::string PreprocessBJTS(const std::string& data)
 {
 	if (bjtsPhase1X.empty())
@@ -499,8 +297,7 @@ std::string PreprocessBJTS(const std::string& data)
 				auto func2 = bjtsPhase1X.find(bjts[0]);
 				if (func2 != bjtsPhase1X.end())
 				{
-					Sol.set("bjts", bjts);
-					ret.replace(start, len, Sol.script(func2->second).get<std::string>());
+					BJTSExtension(ret, func2->second, bjts, start, len);
 					i = bjtsStart;
 				}
 			}
@@ -539,49 +336,4 @@ void HandleIncludes(std::string& code, const std::string& path)
 std::string GetDirFromFile(const std::string& path)
 {
 	return path.substr(0, path.rfind('/') + 1);
-}
-
-extern "C" { const char* glfwGetKeyName(int key, int scancode); }
-std::string GetKeyName(int scancode)
-{
-	if (scancode == 1 || scancode == 14 || scancode == 15 || scancode == 28 || scancode == 57 ||
-		(scancode >= 71 && scancode <= 83) || scancode == 284 || scancode == 309)
-		return Text::Get(fmt::format("keys:scan:{}", scancode));
-
-	auto glfw = glfwGetKeyName(-1, scancode);
-	if (glfw[0] == '\0')
-		return Text::Get(fmt::format("keys:scan:{}", scancode));
-	else
-		return std::string(glfw);
-}
-
-bool IsID(const std::string& id)
-{
-	//valid IDs may only contain alphanumerics, :, and _.
-	for (auto& c : id)
-	{
-		if (!(std::isalnum(c) || c == ':' || c == '_'))
-			return false;
-	}
-	return true;
-}
-
-bool IDIsQualified(const std::string& id)
-{
-	//must have a : but not as the first character.
-	return id.find(':') != std::string::npos && id[0] != ':';
-}
-
-std::string Qualify(const std::string& id, const std::string& ns)
-{
-	//if (id.substr(0, ns.length()) == ns)
-	//	throw std::runtime_error(fmt::format("Qualify: cannot double-qualify \"{}\", already starts with \"{}\".", id, ns));
-	return ns + ':' + id;
-}
-
-std::string UnQualify(const std::string& id)
-{
-	if (IDIsQualified(id))
-		return id.substr(id.find(':') + 1);
-	return id;
 }

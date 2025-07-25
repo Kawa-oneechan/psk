@@ -16,8 +16,7 @@
 #include <ImGUI/imgui.h>
 #endif
 #include <ufbx.h>
-#define GLFW_INCLUDE_NONE
-#include <glfw/glfw3.h>
+extern "C" { const char* glfwGetVersionString(void); }
 
 extern float timeScale;
 extern bool debugPanelLayoutPolygons;

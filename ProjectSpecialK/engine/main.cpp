@@ -14,11 +14,10 @@
 #include "SpriteRenderer.h"
 #include "../Game.h"
 
-#include "../SpecialK.h"
-#include "../DialogueBox.h"
-
 extern void GameInit();
 extern void GameStart(std::vector<TickableP>& tickables);
+extern void GameMouse(double xPosIn, double yPosIn, float xoffset, float yoffset);
+extern void GameLoopStart();
 extern void GamePreDraw(float dt);
 extern void GameQuit();
 
@@ -71,7 +70,6 @@ float timeScale = 1.0f;
 int articlePlease;
 
 bool cheatsEnabled;
-extern bool botherColliding;
 
 #ifdef DEBUG
 float uiTime = 0;
@@ -80,6 +78,20 @@ float glTime = 0;
 
 CommonUniforms commonUniforms;
 unsigned int commonBuffer = 0;
+
+namespace UI
+{
+	extern std::map<std::string, glm::vec4> themeColors;
+	extern std::vector<glm::vec4> textColors;
+	extern std::shared_ptr<Texture> controls;
+
+	extern JSONObject json;
+	extern JSONObject settings;
+	extern std::string initFile;
+
+	extern void Load();
+	extern void Save();
+};
 
 namespace rnd
 {
@@ -141,147 +153,6 @@ void FatalError(const std::string& message)
 	conprint(1, "Exiting...");
 	exit(1);
 }
-
-namespace SolBinds
-{
-	extern void Setup();
-}
-
-namespace UI
-{
-	std::map<std::string, glm::vec4> themeColors;
-	std::vector<glm::vec4> textColors;
-
-	std::shared_ptr<Texture> controls{ nullptr };
-
-	JSONObject json = JSONObject();
-	JSONObject settings = JSONObject();
-
-	std::string initFile = "init.json";
-
-	static void Load()
-	{
-		auto doc = VFS::ReadJSON("ui/ui.json");
-		if (!doc)
-			FatalError("Could not read ui/ui.json. Something is very wrong.");
-		json = doc->AsObject();
-		auto colors = json["colors"]->AsObject();
-		for (auto& ink : colors["theme"]->AsObject())
-		{
-			themeColors[ink.first] = GetJSONColor(ink.second);
-		}
-		for (auto& ink : colors["text"]->AsArray())
-		{
-			textColors.push_back(GetJSONColor(ink));
-		}
-
-		try
-		{
-			settings = VFS::ReadSaveJSON("options.json")->AsObject();
-		}
-		catch (std::runtime_error&)
-		{
-			settings = JSON::Parse("{}")->AsObject();
-		}
-
-#define DS(K, V) if (!settings[K]) settings[K] = new JSONValue(V)
-		DS("screenWidth", ScreenWidth);
-		DS("screenHeight", ScreenHeight);
-		DS("language", "USen"); //(int)Language::USen);
-		DS("continue", (int)LoadSpawnChoice::FrontDoor);
-		DS("speech", (int)DialogueBox::Sound::Bebebese);
-		DS("pingRate", 3);
-		DS("balloonChance", 15);
-		DS("cursorScale", 100);
-		DS("botherColliding", true);
-		DS("24hour", true);
-		DS("contentFilters", JSONObject());
-		DS("musicVolume", 70);
-		DS("ambientVolume", 50);
-		DS("soundVolume", 100);
-		DS("speechVolume", 100);
-		DS("keyBinds", JSONArray());
-		DS("gamepadBinds", JSONArray());
-#undef DS
-
-		width = settings["screenWidth"]->AsInteger();
-		height = settings["screenHeight"]->AsInteger();
-
-		//constexpr Language opt2lan[] = { Language::USen, Language::JPja, Language::EUde, Language::EUes, Language::EUfr, Language::EUit, Language::EUhu, Language::EUnl, Language::EUen };
-		//gameLang = opt2lan[settings["language"]->AsInteger()];
-		gameLang = Text::GetLangCode(settings["language"]->AsString());
-
-		Audio::MusicVolume = settings["musicVolume"]->AsInteger() / 100.0f;
-		Audio::AmbientVolume = settings["ambientVolume"]->AsInteger() / 100.0f;
-		Audio::SoundVolume = settings["soundVolume"]->AsInteger() / 100.0f;
-		Audio::SpeechVolume = settings["speechVolume"]->AsInteger() / 100.0f;
-
-		botherColliding = settings["botherColliding"]->AsBool();
-
-		auto keyBinds = settings["keyBinds"]->AsArray();
-		if (keyBinds.size() != NumKeyBinds)
-		{
-			keyBinds.reserve(NumKeyBinds);
-			for (auto &k : DefaultInputBindings)
-				keyBinds.push_back(new JSONValue(glfwGetKeyScancode(k)));
-		}
-
-		auto padBinds = settings["gamepadBinds"]->AsArray();
-		if (padBinds.size() != NumKeyBinds)
-		{
-			padBinds.reserve(NumKeyBinds);
-			for (auto &k : DefaultInputGamepadBindings)
-				padBinds.push_back(new JSONValue(k));
-		}
-
-		for (int i = 0; i < NumKeyBinds; i++)
-		{
-			Inputs.Keys[i].ScanCode = keyBinds[i]->AsInteger();
-			Inputs.Keys[i].GamepadButton = padBinds[i]->AsInteger();
-		}
-
-		doc = VFS::ReadJSON("sound/sounds.json");
-		auto sounds = doc->AsObject();
-		for (auto category : sounds)
-		{
-			for (auto sound : category.second->AsObject())
-				generalSounds[category.first][sound.first] = std::make_shared<Audio>(sound.second->AsString());
-		}
-		delete doc;
-	}
-
-	static void Save()
-	{
-		settings["screenWidth"] = new JSONValue(width);
-		settings["screenHeight"] = new JSONValue(height);
-
-		settings["musicVolume"] = new JSONValue((int)(Audio::MusicVolume * 100.0f));
-		settings["ambientVolume"] = new JSONValue((int)(Audio::AmbientVolume * 100.0f));
-		settings["soundVolume"] = new JSONValue((int)(Audio::SoundVolume * 100.0f));
-		settings["speechVolume"] = new JSONValue((int)(Audio::SpeechVolume * 100.0f));
-
-		settings["botherColliding"] = new JSONValue(botherColliding);
-
-		auto binds = JSONArray();
-		for (auto& k : Inputs.Keys)
-			binds.push_back(new JSONValue(k.ScanCode));
-		settings["keyBinds"] = new JSONValue(binds);
-
-		binds.clear();
-		for (auto& k : Inputs.Keys)
-			binds.push_back(new JSONValue(k.GamepadButton));
-		settings["gamepadBinds"] = new JSONValue(binds);
-
-		try
-		{
-			VFS::WriteSaveJSON("options.json", new JSONValue(settings));
-		}
-		catch (std::exception&)
-		{
-			conprint(2, "Couldn't save settings.");
-		}
-	}
-};
 
 //Currently active Tickables.
 std::vector<TickableP> tickables;
@@ -379,13 +250,7 @@ static void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
 	lastX = xpos;
 	lastY = ypos;
 
-	if (Inputs.MouseHoldMiddle && !MainCamera->Locked)
-	{
-		auto angles = MainCamera->GetAngles();
-		angles.z -= xoffset;
-		angles.y -= yoffset;
-		MainCamera->Angles(angles);
-	}
+	GameMouse(xposIn, yposIn, xoffset, yoffset);
 
 #if 0
 	//Mouse picking test
@@ -497,7 +362,6 @@ static int InitOpenGL()
 	{
 		glfwTerminate();
 		FatalError("Failed to create GLFW window.");
-		return -1;
 	}
 	glfwMakeContextCurrent(window);
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
@@ -511,7 +375,6 @@ static int InitOpenGL()
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 	{
 		FatalError("Failed to initialize GLAD.");
-		return -1;
 	}
 
 	framebuffer_size_callback(window, width, height);
@@ -593,9 +456,6 @@ int main(int argc, char** argv)
 
 	glfwInit();
 
-	Audio::Initialize();
-	SolBinds::Setup();
-
 	UI::Load();
 
 	if (auto r = InitOpenGL())
@@ -634,10 +494,6 @@ int main(int argc, char** argv)
 	//thePlayer.Name = "Kawa";
 	//thePlayer.Gender = Gender::BEnby;
 
-	//Now that we've loaded the key names we can fill in some blanks.
-	for (int i = 0; i < NumKeyBinds; i++)
-		Inputs.Keys[i].Name = GetKeyName(Inputs.Keys[i].ScanCode);
-
 	perspectiveProjection = glm::perspective(glm::radians(45.0f), (float)width / (float)height, 0.1f, 500.0f);
 	//Orthographic projection for a laugh. For best results, use a 45 degree pitch and yaw, no bending.
 	constexpr auto orthoScale = 0.025f;
@@ -657,7 +513,7 @@ int main(int argc, char** argv)
 
 	while (!glfwWindowShouldClose(window))
 	{
-		Audio::Update();
+		GameLoopStart();
 
 #ifdef DEBUG
 		auto endingTime = std::chrono::high_resolution_clock::now();
