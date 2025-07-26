@@ -77,7 +77,7 @@ namespace Database
 
 		int sheetW = cols * iconSize;
 		int sheetH = rows * iconSize;
-		sheet = new unsigned char[(sheetW * sheetH) * 4];
+		sheet = new unsigned char[(sheetW * sheetH) * 4]{0};
 
 		auto progressStep = progressParts / entries.size();
 
@@ -124,6 +124,7 @@ namespace Database
 
 		//Loading happens in this thread, but making a texture out of it will be delayed.
 		*texture = std::make_shared<Texture>(sheet, sheetW, sheetH, 4);
+		free(sheet);
 		
 		Forget(entries);
 
