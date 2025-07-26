@@ -13,6 +13,11 @@ extern int width, height;
 #define GAMENAME "Project Special K"
 #define VERSIONJOKE "Horkly Warding"
 
+#define SCREENWIDTH 1920
+#define SCREENHEIGHT 1080
+
+#define DEFAULTFILTER GL_LINEAR
+
 constexpr int MaxLights = 8;
 
 struct Light

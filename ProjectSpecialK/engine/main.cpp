@@ -31,8 +31,8 @@ extern void RunTests();
 #endif
 ;
 
-constexpr int ScreenWidth = 1920;
-constexpr int ScreenHeight = 1080;
+constexpr int ScreenWidth = SCREENWIDTH;
+constexpr int ScreenHeight = SCREENHEIGHT;
 
 #ifdef _WIN32
 extern "C"
@@ -53,7 +53,7 @@ CursorP cursor = nullptr;
 Console* console = nullptr;
 
 int width = ScreenWidth, height = ScreenHeight;
-float scale = height / 1080.0f;
+float scale = height / (float)SCREENHEIGHT;
 
 float lastX = width / 2.0f;
 float lastY = height / 2.0f;
@@ -120,7 +120,7 @@ static void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 	window;
 	::width = width;
 	::height = height;
-	scale = ::height / 1080.0f;
+	scale = ::height / (float)SCREENHEIGHT;
 	glViewport(0, 0, width, height);
 	commonUniforms.ScreenRes = glm::uvec2(width, height);
 }
@@ -426,7 +426,6 @@ int main(int argc, char** argv)
 	UI::controls = std::make_shared<Texture>("ui/controls.png");
 
 	Shader::LoadAll();
-	commonUniforms.GrassColor = 0.5f;
 
 	GLuint commonBind = 1;
 	glGenBuffers(1, &commonBuffer);
@@ -488,7 +487,7 @@ int main(int argc, char** argv)
 
 		commonUniforms.Projection = useOrthographic ? orthographicProjection : perspectiveProjection;
 
-		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		//glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		//glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
 		//important: disable depth testing to allow multiple sprites to overlap.

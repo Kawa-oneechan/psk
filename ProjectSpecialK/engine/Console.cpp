@@ -1,11 +1,11 @@
 #include <regex>
 
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/gtx/easing.hpp>
+
 #include "Console.h"
 #include "TextField.h"
-//#include "InputsMap.h"
 #include "TextUtils.h"
-#include "../DialogueBox.h"
-#include "../PanelLayout.h"
 #include "../Game.h"
 
 //For version information
@@ -16,6 +16,8 @@
 #endif
 #include <ufbx.h>
 extern "C" { const char* glfwGetVersionString(void); }
+
+extern Texture* whiteRect;
 
 extern void ConsoleRegister(Console* console);
 extern bool ConsoleInterpret(const std::string& str);

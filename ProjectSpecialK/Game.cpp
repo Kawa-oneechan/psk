@@ -179,11 +179,10 @@ void GameInit()
 	musicManager = std::make_shared<MusicManager>();
 
 	ThreadedLoader(Database::LoadGlobalStuff);
-	
+
 	town = std::make_shared<Town>();
 	dlgBox = std::make_shared<DialogueBox>();
 	messager = std::make_shared<Messager>();
-
 
 #ifdef DEBUG
 	//RunTests();
@@ -222,6 +221,8 @@ void GameInit()
 
 	postFxBuffer = new Framebuffer(Shaders["postfx"], width, height);
 	postFxBuffer->SetLut(new Texture("colormap.png"));
+
+	commonUniforms.GrassColor = 0.5f;
 }
 
 extern bool skipTitle;
@@ -273,5 +274,4 @@ void GameQuit()
 {
 	thePlayer.Save();
 	town->Save();
-
 }

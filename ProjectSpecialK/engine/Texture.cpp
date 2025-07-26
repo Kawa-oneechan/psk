@@ -4,6 +4,7 @@
 #include "Texture.h"
 #include "VFS.h"
 #include "Console.h"
+#include "../Game.h"
 
 static std::map<std::string, Texture*> cache;
 static std::map<std::string, TextureArray*> cacheArray;
@@ -31,11 +32,13 @@ static bool load(const unsigned char* data, unsigned int *id, int width, int hei
 	return true;
 }
 
-Texture::Texture(const std::string& texturePath, int repeat, int filter) : file(texturePath), repeat(repeat), filter(filter)
+Texture::Texture(const std::string& texturePath, int repeat, int filter) : file(texturePath), repeat(repeat)
 {
 	ID = 0;
 	width = height = channels = 0;
 	data = nullptr;
+
+	this->filter = filter == 0 ? DEFAULTFILTER : filter;
 	
 	auto c = cache.find(texturePath);
 	if (c != cache.end())
@@ -74,7 +77,7 @@ Texture::Texture(const std::string& texturePath, int repeat, int filter) : file(
 
 	if (data)
 	{
-		if (!load(data, &ID, width, height, channels, repeat, filter))
+		if (!load(data, &ID, width, height, channels, repeat, this->filter))
 		{
 			debprint(3, "glGenTextures indicates we're threading. Delaying \"{}\"...", texturePath);
 			delayed = true;
@@ -91,10 +94,12 @@ Texture::Texture(const std::string& texturePath, int repeat, int filter) : file(
 	cache[file] = this;
 }
 
-Texture::Texture(const unsigned char* externalData, int width, int height, int channels, int repeat, int filter) : data(nullptr), width(width), height(height), channels(channels), repeat(repeat), filter(filter)
+Texture::Texture(const unsigned char* externalData, int width, int height, int channels, int repeat, int filter) : data(nullptr), width(width), height(height), channels(channels), repeat(repeat)
 {
 	ID = 0;
 	this->file.clear();
+
+	this->filter = filter == 0 ? DEFAULTFILTER : filter;
 
 	atlas.push_back(glm::vec4(0, 0, width, height));
 
@@ -103,7 +108,7 @@ Texture::Texture(const unsigned char* externalData, int width, int height, int c
 
 	if (externalData)
 	{
-		if (!load(externalData, &ID, width, height, channels, repeat, filter))
+		if (!load(externalData, &ID, width, height, channels, repeat, this->filter))
 		{
 			debprint(3, "glGenTextures indicates we're threading. Delaying load from memory...");
 			delayed = true;
@@ -215,11 +220,13 @@ static bool loadArray(unsigned char** data, unsigned int *id, int width, int hei
 	return true;
 }
 
-TextureArray::TextureArray(const std::vector<std::string>& entries, int repeat, int filter) : repeat(repeat), filter(filter)
+TextureArray::TextureArray(const std::vector<std::string>& entries, int repeat, int filter) : repeat(repeat)
 {
 	ID = 0;
 	width = height = channels = 0, layers = 0;
 	data = nullptr;
+
+	this->filter = filter == 0 ? DEFAULTFILTER : filter;
 
 	file = entries[0];
 
@@ -259,7 +266,7 @@ TextureArray::TextureArray(const std::vector<std::string>& entries, int repeat, 
 		data[l] = stbi_load_from_memory((unsigned char*)vfsData.get(), (int)vfsSize, &width, &height, &channels, 0);
 	}
 
-	if (!loadArray(data, &ID, width, height, channels, layers, repeat, filter))
+	if (!loadArray(data, &ID, width, height, channels, layers, repeat, this->filter))
 	{
 		conprint(3, "glGenTextures indicates we're threading. Delaying \"{}\"...", file);
 		delayed = true;
@@ -273,11 +280,13 @@ TextureArray::TextureArray(const std::vector<std::string>& entries, int repeat, 
 	cacheArray[file] = this;
 }
 
-TextureArray::TextureArray(const std::string& texturePath, int repeat, int filter) : file(texturePath), repeat(repeat), filter(filter)
+TextureArray::TextureArray(const std::string& texturePath, int repeat, int filter) : file(texturePath), repeat(repeat)
 {
 	ID = 0;
 	width = height = channels = 0, layers = 0;
 	data = nullptr;
+
+	this->filter = filter == 0 ? DEFAULTFILTER : filter;
 
 	auto c = cacheArray.find(texturePath);
 	if (c != cacheArray.end())
@@ -330,7 +339,7 @@ TextureArray::TextureArray(const std::string& texturePath, int repeat, int filte
 		data[l] = stbi_load_from_memory((unsigned char*)vfsData.get(), (int)vfsSize, &width, &height, &channels, 0);
 	}
 
-	if (!loadArray(data, &ID, width, height, channels, layers, repeat, filter))
+	if (!loadArray(data, &ID, width, height, channels, layers, repeat, this->filter))
 	{
 		conprint(3, "glGenTextures indicates we're threading. Delaying \"{}\"...", texturePath);
 		delayed = true;
