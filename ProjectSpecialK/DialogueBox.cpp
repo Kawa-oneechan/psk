@@ -1,5 +1,6 @@
 ﻿#include "engine/InputsMap.h"
 #include "engine/TextUtils.h"
+#include "engine/Random.h"
 #include "DialogueBox.h"
 #include "PanelLayout.h"
 
@@ -395,7 +396,7 @@ bool DialogueBox::Tick(float dt)
 			if (speaker)
 			{
 				if (std::isalnum(ch) || (ch >= 0x2E80 && ch < 0xF000))
-					speaker->SetMouth(rnd::getInt(3));
+					speaker->SetMouth(rnd::GetInt(3));
 				else if (!std::isblank(ch))
 					speaker->SetMouth(0);
 			}

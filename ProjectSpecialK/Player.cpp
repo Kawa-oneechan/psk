@@ -2,6 +2,7 @@
 #include "Town.h"
 #include "Game.h"
 #include "engine/InputsMap.h"
+#include "engine/Text.h"
 #include "engine/TextUtils.h"
 #include "engine/JSONUtils.h"
 

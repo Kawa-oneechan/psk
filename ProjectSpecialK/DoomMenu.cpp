@@ -2,6 +2,7 @@
 #include <glfw/glfw3.h>
 #include "DoomMenu.h"
 #include "engine/Cursor.h"
+#include "engine/Text.h"
 #include "engine/TextUtils.h"
 
 //TODO: Add a thing where changing the game language reveals a warning about having to restart.

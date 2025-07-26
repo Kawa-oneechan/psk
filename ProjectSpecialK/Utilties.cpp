@@ -2,6 +2,7 @@
 #include "engine/InputsMap.h"
 #include "engine/Tickable.h"
 #include "engine/JsonUtils.h"
+#include "engine/Text.h"
 #include "Game.h"
 #include "Camera.h"
 

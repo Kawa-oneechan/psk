@@ -1,4 +1,5 @@
 #pragma once
+#include <functional>
 #include <fstream>
 #include <JSON/JSONValue.h>
 #include <format.h>
@@ -7,11 +8,6 @@
 #include "JsonUtils.h"
 
 class TextField;
-
-extern glm::vec2 GetJSONVec2(JSONValue* val);
-extern glm::vec3 GetJSONVec3(JSONValue* val);
-extern glm::vec4 GetJSONVec4(JSONValue* val);
-extern glm::vec4 GetJSONColor(JSONValue* val);
 
 struct CVar
 {
@@ -89,6 +85,12 @@ struct CVar
 	}
 };
 
+struct CCmd
+{
+	std::string name;
+	std::function<void()> act;
+};
+
 class Console : public Tickable
 {
 private:
@@ -102,9 +104,9 @@ private:
 
 	std::ofstream hardcopy;
 
-	std::vector<CVar> cvars;
-
 public:
+	std::vector<CVar> cvars;
+	std::vector<CCmd> ccmds;
 	bool visible;
 
 	Console();
@@ -119,6 +121,7 @@ public:
 	bool Tick(float dt);
 	void Draw(float dt);
 	void RegisterCVar(const std::string& name, CVar::Type type, void* target, bool cheat = false, int min = -1, int max = -1);
+	void RegisterCCmd(const std::string& name, std::function<void()> act);
 };
 
 extern Console* console;

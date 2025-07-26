@@ -1,7 +1,8 @@
 #include "BJTS.h"
 #include "engine/Console.h"
 #include "engine/InputsMap.h"
-#include "Text.h"
+#include "engine/Text.h"
+#include "engine/Random.h"
 #include "DialogueBox.h"
 
 static const char* bindingNames[] = {
@@ -129,7 +130,7 @@ static void bjtsWordstruct(std::string& data, BJTSParams)
 		return;
 	}
 
-	int choice = rnd::getInt(options - 1);
+	int choice = rnd::GetInt(options - 1);
 	data.replace(start, len, Text::Get(fmt::format("{}:{}", key, choice)));
 }
 
@@ -229,4 +230,9 @@ void BJTSExtension(std::string& data, const std::string& func, BJTSParams)
 {
 	Sol.set("bjts", tags);
 	data.replace(start, len, Sol.script(func).get<std::string>());
+}
+
+bool BJTSConditional(const std::string& condition)
+{
+	return Sol.script("return (" + condition + ")");
 }

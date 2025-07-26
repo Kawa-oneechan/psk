@@ -1,10 +1,14 @@
-#include "SpecialK.h"
-#include "engine/Cursor.h"
+#define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 #include <thread>
 #include <future>
+#include "Console.h"
+#include "Cursor.h"
+#include "SpriteRenderer.h"
 
 extern GLFWwindow* window;
+extern int width, height;
+extern Texture* whiteRect;
 
 void ThreadedLoader(std::function<void(float*)> loader)
 {
@@ -17,7 +21,7 @@ void ThreadedLoader(std::function<void(float*)> loader)
 	cursor->Select(1);
 	auto loadIcon = Texture("loading.png");
 	auto loadPos = glm::vec2(width - 256, height - 256);
-	int oldTime = 0;
+	//int oldTime = 0;
 
 	auto loadProgress = 0.0f;
 	auto loadPointer = &loadProgress;
@@ -38,9 +42,6 @@ void ThreadedLoader(std::function<void(float*)> loader)
 
 	while (true)
 	{
-		int newTime = std::clock();
-		oldTime = newTime;
-
 		auto time = (float)glfwGetTime();
 
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);

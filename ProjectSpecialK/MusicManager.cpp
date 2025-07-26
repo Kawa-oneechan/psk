@@ -1,3 +1,4 @@
+#include "engine/Random.h"
 #include "MusicManager.h"
 #include "Town.h"
 
@@ -103,7 +104,7 @@ void MusicManager::Play(const std::string& id, bool immediate)
 	while (second->IsArray())
 	{
 		auto arr = second->AsArray();
-		second = arr[rnd::getInt((int)arr.size())];
+		second = arr[rnd::GetInt((int)arr.size())];
 	}
 
 	if (!second->IsString())

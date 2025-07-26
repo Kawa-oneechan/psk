@@ -1,8 +1,10 @@
 #include "SpecialK.h"
 #include "Town.h"
 #include "Animator.h"
+#include "engine/Text.h"
 #include "engine/TextUtils.h"
 #include "engine/JSONUtils.h"
+#include "engine/Random.h"
 
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/rotate_vector.hpp>
@@ -537,7 +539,7 @@ void Villager::PickClothing()
 
 	DeleteAllThings();
 
-	if (memory && memory->Clothing.size() > 0 && rnd::getFloat() > 25)
+	if (memory && memory->Clothing.size() > 0 && rnd::GetFloat() > 25)
 	{
 		if (memory->Clothing.size() == 1)
 		{
@@ -548,7 +550,7 @@ void Villager::PickClothing()
 		{
 			for (const auto& i : memory->Clothing)
 			{
-				if (rnd::getFloat() > 25)
+				if (rnd::GetFloat() > 25)
 				{
 					_clothesItems[0] = i;
 					_clothesItems[0]->Temporary = false; //just to be sure.

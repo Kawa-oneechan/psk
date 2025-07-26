@@ -9,6 +9,7 @@
 #include "InGame.h"
 #include "TitleScreen.h"
 #include "Utilities.h"
+#include "engine/Text.h"
 
 constexpr int ScreenWidth = 1920;
 constexpr int ScreenHeight = 1080;

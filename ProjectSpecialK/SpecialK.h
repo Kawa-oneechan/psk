@@ -22,6 +22,7 @@
 #include "engine/Shader.h"
 #include "engine/Texture.h"
 #include "engine/SpriteRenderer.h"
+#include "engine/Console.h"
 #include "Camera.h"
 #include "Audio.h"
 
@@ -32,8 +33,6 @@
 #include "Villager.h"
 #include "Player.h"
 #include "Database.h"
-#include "Text.h"
-#include "engine/Console.h"
 
 __declspec(noreturn)
 extern void FatalError(const std::string& message);
@@ -56,17 +55,6 @@ extern float scale;
 extern Texture* whiteRect;
 
 extern sol::state Sol;
-
-namespace rnd
-{
-	extern int getInt(int min, int max);
-	extern int getInt(int max);
-	extern int getInt();
-	extern float getFloat(float min, float max);
-	extern float getFloat(float max);
-	extern float getFloat();
-	extern bool flip();
-}
 
 namespace UI
 {

@@ -2,7 +2,7 @@
 #include <cctype>
 #include <format.h>
 #include "engine/Types.h"
-#include "Text.h"
+#include "engine/Text.h"
 #include "engine/TextUtils.h"
 #include "engine/VFS.h"
 #include "Town.h"

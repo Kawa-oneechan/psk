@@ -1,4 +1,6 @@
-#include "SpecialK.h"
+#include <format.h>
+#include "NameableThing.h"
+#include "engine/Text.h"
 #include "engine/TextUtils.h"
 #include "engine/Utilities.h"
 

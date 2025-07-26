@@ -1,5 +1,6 @@
 #include "engine/Model.h"
 #include "engine/JSONUtils.h"
+#include "engine/Random.h"
 #include "Game.h"
 #include "Town.h"
 #include "Framebuffer.h"
@@ -438,10 +439,10 @@ Town::Town()
 
 	grassColorMap = "grasscolors.png";
 	grassTexture = "design0_mix.png";
-	if (rnd::getFloat() > 0.75f)
+	if (rnd::GetFloat() > 0.75f)
 		grassTexture = "squares_mix.png";
 	grassCanSnow = true;
-	weatherSeed = rnd::getInt();
+	weatherSeed = rnd::GetInt();
 
 	Width = AcreSize * 1;
 	Height = AcreSize * 1;
@@ -754,7 +755,7 @@ void Town::UpdateWeather()
 		auto baseWind = std::abs(weatherWind[hour]) - 1;
 		auto landIsEast = ((weatherSeed >> 16) % 2) == 1;
 		auto windIsLand = weatherWind[hour] < 0;
-		auto windStrength = ((1 << baseWind) - 1) + rnd::getInt(3);
+		auto windStrength = ((1 << baseWind) - 1) + rnd::GetInt(3);
 		if (windIsLand && landIsEast)
 			windStrength = -windStrength;
 		Wind = windStrength;

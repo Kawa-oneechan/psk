@@ -1,4 +1,5 @@
 #include "OptionsMenu.h"
+#include "engine/Text.h"
 #include "engine/Cursor.h"
 #include "engine/TextUtils.h"
 #include "Utilities.h"

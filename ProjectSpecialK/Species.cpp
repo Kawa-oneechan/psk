@@ -1,4 +1,5 @@
 #include "SpecialK.h"
+#include "engine/Text.h"
 #include "engine/TextUtils.h"
 
 Species::Species(JSONObject& value, const std::string& filename) : NameableThing(value, filename)

@@ -4,6 +4,7 @@
 #include <stb_image.h>
 #include <stb_image_write.h>
 #include "engine/Console.h"
+#include "engine/Text.h"
 #include "engine/TextUtils.h"
 
 namespace fs = std::experimental::filesystem;

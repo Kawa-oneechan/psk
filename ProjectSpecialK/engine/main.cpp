@@ -2,7 +2,6 @@
 #include <fstream>
 #include <glad/glad.h>
 #include <glfw/glfw3.h>
-#include <random>
 
 #include "Console.h"
 #include "Cursor.h"
@@ -92,49 +91,6 @@ namespace UI
 	extern void Load();
 	extern void Save();
 };
-
-namespace rnd
-{
-	std::random_device device;
-	std::mt19937 engine(device());
-
-	int getInt(int min, int max)
-	{
-		std::uniform_int_distribution<> dist(min, max);
-		return dist(engine);
-	}
-
-	int getInt(int max)
-	{
-		return getInt(0, max);
-	}
-
-	int getInt()
-	{
-		return getInt(0, RAND_MAX);
-	}
-
-	float getFloat(float min, float max)
-	{
-		std::uniform_real_distribution<> dist(min, max);
-		return (float)dist(engine);
-	}
-
-	float getFloat(float max)
-	{
-		return getFloat(0.0f, max);
-	}
-
-	float getFloat()
-	{
-		return getFloat(0.0f, 1.0f);
-	}
-
-	bool flip()
-	{
-		return getFloat() > 0.5f;
-	}
-}
 
 __declspec(noreturn)
 void FatalError(const std::string& message)

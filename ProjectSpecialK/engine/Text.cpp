@@ -1,5 +1,9 @@
-#include "SpecialK.h"
-#include "engine/TextUtils.h"
+#include <string>
+#include <format.h>
+#include "Text.h"
+#include "TextUtils.h"
+
+using namespace std::literals;
 
 Language gameLang = Language::USen;
 
@@ -56,11 +60,12 @@ std::string Text::GetLangCode(Language lang)
 	return map.at(lang);
 }
 
+extern bool BJTSConditional(const std::string& condition);
 std::string Text::Entry::get()
 {
 	if (condition.size())
 	{
-		bool result = Sol.script("return (" + condition + ")");
+		bool result = BJTSConditional(condition);
 		return Get(result ? ifTrue : ifElse);
 	}
 
@@ -173,7 +178,7 @@ std::string Text::Get(std::string key)
 
 std::string Text::DateMD(int month, int day)
 {
-	auto format = Get("month:format"s);
+	auto format = Get("month:format");
 	std::string ret;
 	for (int i = 0; i < format.length(); i++)
 	{

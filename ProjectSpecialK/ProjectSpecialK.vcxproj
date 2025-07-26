@@ -148,6 +148,7 @@
     <ClCompile Include="BJTS.cpp" />
     <ClCompile Include="ButtonGuide.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="GameConsole.cpp" />
     <ClCompile Include="Database.cpp" />
     <ClCompile Include="DateTimePanel.cpp" />
     <ClCompile Include="DialogueBox.cpp" />
@@ -165,11 +166,14 @@
     <ClCompile Include="engine\Mesh.cpp" />
     <ClCompile Include="engine\MeshBucket.cpp" />
     <ClCompile Include="engine\Model.cpp" />
+    <ClCompile Include="engine\Random.cpp" />
     <ClCompile Include="engine\Shader.cpp" />
     <ClCompile Include="engine\SpriteRenderer.cpp" />
+    <ClCompile Include="engine\Text.cpp" />
     <ClCompile Include="engine\TextField.cpp" />
     <ClCompile Include="engine\Texture.cpp" />
     <ClCompile Include="engine\TextUtils.cpp" />
+    <ClCompile Include="engine\ThreadedLoader.cpp" />
     <ClCompile Include="engine\Utilities.cpp" />
     <ClCompile Include="engine\VFS.cpp" />
     <ClCompile Include="Framebuffer.cpp" />
@@ -228,8 +232,6 @@
     <ClCompile Include="Tests.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="Text.cpp" />
-    <ClCompile Include="ThreadedLoader.cpp" />
     <ClCompile Include="TitleScreen.cpp" />
     <ClCompile Include="Town.cpp" />
     <ClCompile Include="Traits.cpp" />
@@ -261,8 +263,10 @@
     <ClInclude Include="engine\InputsMap.h" />
     <ClInclude Include="engine\JsonUtils.h" />
     <ClInclude Include="engine\Model.h" />
+    <ClInclude Include="engine\Random.h" />
     <ClInclude Include="engine\Shader.h" />
     <ClInclude Include="engine\SpriteRenderer.h" />
+    <ClInclude Include="engine\Text.h" />
     <ClInclude Include="engine\TextField.h" />
     <ClInclude Include="engine\Texture.h" />
     <ClInclude Include="engine\TextUtils.h" />
@@ -288,7 +292,6 @@
     <ClInclude Include="Sequence.h" />
     <ClInclude Include="SpecialK.h" />
     <ClInclude Include="Species.h" />
-    <ClInclude Include="Text.h" />
     <ClInclude Include="TitleScreen.h" />
     <ClInclude Include="Town.h" />
     <ClInclude Include="Traits.h" />

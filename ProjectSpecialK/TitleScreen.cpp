@@ -1,11 +1,12 @@
 ﻿#include "TitleScreen.h"
 #include "MusicManager.h"
-#include "engine/InputsMap.h"
 #include "Town.h"
 #include "InGame.h"
 #include "Utilities.h"
 #include "engine/Utilities.h"
 #include "engine/TextUtils.h"
+#include "engine/Text.h"
+#include "engine/Random.h"
 
 extern "C" { double glfwGetTime(void); }
 
@@ -27,7 +28,7 @@ TitleScreen::TitleScreen()
 		}
 		else
 		{
-			int choice = rnd::getInt((int)options);
+			int choice = rnd::GetInt((int)options);
 			logoJoke->Text = Text::Get(fmt::format("logojoke:{}", choice));
 		}
 		Text::Forget("logojoke:");

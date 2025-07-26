@@ -6,7 +6,6 @@
 #include "TextUtils.h"
 #include "../DialogueBox.h"
 #include "../PanelLayout.h"
-#include "../Framebuffer.h"
 #include "../Game.h"
 
 //For version information
@@ -18,17 +17,14 @@
 #include <ufbx.h>
 extern "C" { const char* glfwGetVersionString(void); }
 
-extern float timeScale;
-extern bool debugPanelLayoutPolygons;
-extern bool wireframe;
-extern bool debuggerEnabled;
+extern void ConsoleRegister(Console* console);
+extern bool ConsoleInterpret(const std::string& str);
+
 extern bool cheatsEnabled;
-extern bool useOrthographic;
-extern bool botherColliding;
 
-bool noWear; //placeholder
-
-extern Framebuffer* postFxBuffer;
+static void CCmdVersion();
+static void CCmdCVarList();
+static void CCmdCCmdList();
 
 Console::Console()
 {
@@ -36,8 +32,8 @@ Console::Console()
 
 	hardcopy = std::ofstream("console.log", std::ios::trunc);
 
-	Print(3, "Project Special K");
-	Print(3, "-----------------");
+	Print(3, GAMENAME);
+	Print(3, "-------------------------");
 
 	inputLine = new TextField();
 	//inputLine->rect = glm::vec4(16, (height / 3) - 24, width - 8, 20);
@@ -51,38 +47,11 @@ Console::Console()
 	timer = 0.0f;
 	appearState = 0;
 
-#ifdef DEBUG
-	RegisterCVar("debugger", CVar::Type::Bool, &debuggerEnabled);
-#endif
-	RegisterCVar("r_polygons", CVar::Type::Bool, &debugPanelLayoutPolygons);
-	RegisterCVar("r_postfx", CVar::Type::Int, &commonUniforms.PostEffect, false, 0, 4);
-	RegisterCVar("r_wireframe", CVar::Type::Bool, &wireframe);
-	RegisterCVar("r_toon", CVar::Type::Bool, &commonUniforms.Toon);
-	RegisterCVar("r_zomboid", CVar::Type::Bool, &useOrthographic);
-	RegisterCVar("s_ambientvolume", CVar::Type::Float, &Audio::AmbientVolume, false, 0, 100);
-	RegisterCVar("s_effectvolume", CVar::Type::Float, &Audio::SoundVolume, false, 0, 100);
-	RegisterCVar("s_musicvolume", CVar::Type::Float, &Audio::MusicVolume, false, 0, 100);
-	RegisterCVar("s_voicevolume", CVar::Type::Float, &Audio::SpeechVolume, false, 0, 100);
-	RegisterCVar("sv_cheats", CVar::Type::Bool, &cheatsEnabled);
-	RegisterCVar("timescale", CVar::Type::Float, &timeScale, true);
-
-	RegisterCVar("bells", CVar::Type::Int, &thePlayer.Bells, true);
-	RegisterCVar("gender", CVar::Type::Int, &thePlayer.Gender, false, 0, 3);
-	RegisterCVar("name", CVar::Type::String, &thePlayer.Name);
-	RegisterCVar("nowear", CVar::Type::Bool, &noWear, true);
-	
-	RegisterCVar("grass", CVar::Type::Float, &commonUniforms.GrassColor, false);
-
-	RegisterCVar("collidenpc", CVar::Type::Bool, &botherColliding, false);
-
-	//RegisterCVar("ai_disable", CVar::Type::Bool, &);
-	//RegisterCVar("cl_showpos", CVar::Type::Bool, &);
-	//RegisterCVar("noclip", CVar::Type::Bool, &, true);
-	//RegisterCVar("r_acredistance", CVar::Type::Int, &, false, 1, 6);
-	//RegisterCVar("r_drawgui", CVar::Type::Bool, &, true);
-	//RegisterCVar("r_drum", CVar::Type::Bool, &);
-	//RegisterCVar("r_drumexp", CVar::Type::Float, &);
-	//RegisterCVar("r_farz", CVar::Type::float, &, yes);
+	RegisterCCmd("clear", [&]() { buffer.clear(); });
+	RegisterCCmd("version", CCmdVersion);
+	RegisterCCmd("cvarlist", CCmdCVarList);
+	RegisterCCmd("ccmdlist", CCmdCCmdList);
+	ConsoleRegister(this);
 }
 
 void Console::Print(int color, const std::string& str)
@@ -172,81 +141,18 @@ bool Console::Execute(const std::string& str)
 		}
 		if (split.size() == 1)
 		{
-			if (split[0] == "clear")
+			for (auto& cc : ccmds)
 			{
-				buffer.clear();
-				return true;
-			}
-			if (split[0] == "version")
-			{
-				Print(8, "Project Special K - " VERSIONJOKE);
-#ifdef DEBUG
-				Print(7, "Debug version: " __DATE__);
-#endif
-#ifdef _MSC_VER
-				Print(7, fmt::format("Microsoft Visual C++ version {}.{}.", (_MSC_VER / 100), (_MSC_VER % 100)));
-#endif
-				Print(7, fmt::format("OpenGL: {}", glGetString(GL_VERSION)));
-				Print(7, fmt::format("Vendor: {}", glGetString(GL_VENDOR)));
-				Print(7, fmt::format("GLSL {}", glGetString(GL_SHADING_LANGUAGE_VERSION)));
-				Print(7, fmt::format("Renderer: {}", glGetString(GL_RENDERER)));
-				Print(7, fmt::format("GLFW: {}", glfwGetVersionString()));
-				Print(7, fmt::format("UFBX: {}.{}.{}", ufbx_version_major(UFBX_VERSION), ufbx_version_minor(UFBX_VERSION), ufbx_version_patch(UFBX_VERSION)));
-				Print(7, "MiniZip: " MZ_VERSION);
-				Print(7, fmt::format("FMOD: {}.{}.{}", (FMOD_VERSION >> 16) & 0xFFFF, (FMOD_VERSION >> 8) & 0xFF, FMOD_VERSION & 0xFF));
-				Print(7, fmt::format("STB_Image: 2.30"));
-				Print(7, fmt::format("STB_Image_Write: 1.16"));
-				Print(7, fmt::format("STB_TrueType: 1.26"));
-#ifdef DEBUG
-				Print(7, "ImGUI version: " IMGUI_VERSION);
-#endif
-				return true;
-			}
-			else if (split[0] == "cvarlist")
-			{
-				for (auto& cv : cvars)
+				if (cc.name == split[0])
 				{
-					switch (cv.type)
-					{
-					case CVar::Type::Bool: Print(0, fmt::format("{} : {}", cv.name, *cv.asBool)); break;
-					case CVar::Type::Int: Print(0, fmt::format("{} : {}", cv.name, *cv.asInt)); break;
-					case CVar::Type::Float: Print(0, fmt::format("{} : {}", cv.name, *cv.asFloat)); break;
-					case CVar::Type::String: Print(0, fmt::format("{} : \"{}\"", cv.name, *cv.asString)); break;
-					case CVar::Type::Vec2: Print(0, fmt::format("{} : [{}, {}]", cv.name, cv.asVec2->x, cv.asVec2->y)); break;
-					case CVar::Type::Vec3: Print(0, fmt::format("{} : [{}, {}, {}]", cv.name, cv.asVec3->x, cv.asVec3->y, cv.asVec3->z)); break;
-					case CVar::Type::Color:
-					case CVar::Type::Vec4: Print(0, fmt::format("{} : [{}, {}, {}, {}]", cv.name, cv.asVec4->x, cv.asVec4->y, cv.asVec4->z, cv.asVec4->w)); break;
-					}
+					cc.act();
+					return true;
 				}
-				Print(0, fmt::format("{} cvars", cvars.size()));
-				return true;
-			}
-			else if (split[0] == "reshade")
-			{
-				Shader::ReloadAll();
-				//postFxBuffer->ReloadShader();
-				{
-					auto lut = postFxBuffer->GetLut();
-					delete lut;
-					postFxBuffer->SetLut(new Texture("colormap.png"));
-				}
-				return true;
 			}
 		}
 	}
 
-	try
-	{
-		Sol.script(str);
-	}
-	catch (sol::error& e)
-	{
-		std::string what = e.what();
-		if (what.find("attempt to yield from outside a coroutine") != -1)
-			; //Do nothing. Accept this silently.
-		else
-			Print(1, fmt::format("Error: {}", what));
-	}
+	ConsoleInterpret(str);
 	return false;
 }
 
@@ -403,4 +309,73 @@ void Console::RegisterCVar(const std::string& name, CVar::Type type, void* targe
 	cv.min = min;
 	cv.max = max;
 	cvars.push_back(cv);
+}
+
+void Console::RegisterCCmd(const std::string& name, std::function<void()> act)
+{
+	for (auto& cc : ccmds)
+	{
+		if (cc.name == name)
+		{
+			cc.act = act;
+			return;
+		}
+	}
+	CCmd cc;
+	cc.name = name;
+	cc.act = act;
+	ccmds.push_back(cc);
+}
+
+static void CCmdVersion()
+{
+	conprint(8, GAMENAME " - " VERSIONJOKE);
+#ifdef DEBUG
+	conprint(7, "Debug version: " __DATE__);
+#endif
+#ifdef _MSC_VER
+	conprint(7, "Microsoft Visual C++ version {}.{}.", (_MSC_VER / 100), (_MSC_VER % 100));
+#endif
+	conprint(7, "OpenGL: {}", glGetString(GL_VERSION));
+	conprint(7, "Vendor: {}", glGetString(GL_VENDOR));
+	conprint(7, "GLSL {}", glGetString(GL_SHADING_LANGUAGE_VERSION));
+	conprint(7, "Renderer: {}", glGetString(GL_RENDERER));
+	conprint(7, "GLFW: {}", glfwGetVersionString());
+	conprint(7, "UFBX: {}.{}.{}", ufbx_version_major(UFBX_VERSION), ufbx_version_minor(UFBX_VERSION), ufbx_version_patch(UFBX_VERSION));
+	conprint(7, "MiniZip: " MZ_VERSION);
+	conprint(7, "FMOD: {}.{}.{}", (FMOD_VERSION >> 16) & 0xFFFF, (FMOD_VERSION >> 8) & 0xFF, FMOD_VERSION & 0xFF);
+	conprint(7, "STB_Image: 2.30");
+	conprint(7, "STB_Image_Write: 1.16");
+	conprint(7, "STB_TrueType: 1.26");
+#ifdef DEBUG
+	conprint(7, "ImGUI version: " IMGUI_VERSION);
+#endif
+}
+
+static void CCmdCVarList()
+{
+	for (auto& cv : console->cvars)
+	{
+		switch (cv.type)
+		{
+		case CVar::Type::Bool: conprint(0, "{} : {}", cv.name, *cv.asBool); break;
+		case CVar::Type::Int: conprint(0, "{} : {}", cv.name, *cv.asInt); break;
+		case CVar::Type::Float: conprint(0, "{} : {}", cv.name, *cv.asFloat); break;
+		case CVar::Type::String: conprint(0, "{} : \"{}\"", cv.name, *cv.asString); break;
+		case CVar::Type::Vec2: conprint(0, "{} : [{}, {}]", cv.name, cv.asVec2->x, cv.asVec2->y); break;
+		case CVar::Type::Vec3: conprint(0, "{} : [{}, {}, {}]", cv.name, cv.asVec3->x, cv.asVec3->y, cv.asVec3->z); break;
+		case CVar::Type::Color:
+		case CVar::Type::Vec4: conprint(0, "{} : [{}, {}, {}, {}]", cv.name, cv.asVec4->x, cv.asVec4->y, cv.asVec4->z, cv.asVec4->w); break;
+		}
+	}
+	conprint(0, "{} cvars", console->cvars.size());
+}
+
+static void CCmdCCmdList()
+{
+	for (auto& cc : console->ccmds)
+	{
+		conprint(0, "{}", cc.name);
+	}
+	conprint(0, "{} cvars", console->ccmds.size());
 }
