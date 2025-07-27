@@ -1,8 +1,8 @@
-#include "BJTS.h"
 #include "engine/Console.h"
 #include "engine/InputsMap.h"
 #include "engine/Text.h"
 #include "engine/Random.h"
+#include "BJTS.h"
 #include "DialogueBox.h"
 
 static const char* bindingNames[] = {
@@ -225,14 +225,3 @@ const std::map<std::string, BJTSFunc> bjtsPhase1 = {
 
 //BJTS functions loaded from Lua scripts.
 std::map<std::string, std::string> bjtsPhase1X;
-
-void BJTSExtension(std::string& data, const std::string& func, BJTSParams)
-{
-	Sol.set("bjts", tags);
-	data.replace(start, len, Sol.script(func).get<std::string>());
-}
-
-bool BJTSConditional(const std::string& condition)
-{
-	return Sol.script("return (" + condition + ")");
-}

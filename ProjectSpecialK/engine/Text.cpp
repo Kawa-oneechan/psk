@@ -1,9 +1,12 @@
 #include <string>
 #include <format.h>
+#include <sol.hpp>
 #include "Text.h"
 #include "TextUtils.h"
 
 using namespace std::literals;
+
+extern sol::state Sol;
 
 Language gameLang = Language::USen;
 
@@ -60,12 +63,11 @@ std::string Text::GetLangCode(Language lang)
 	return map.at(lang);
 }
 
-extern bool BJTSConditional(const std::string& condition);
 std::string Text::Entry::get()
 {
 	if (condition.size())
 	{
-		bool result = BJTSConditional(condition);
+		bool result = Sol.script("return (" + condition + ")");
 		return Get(result ? ifTrue : ifElse);
 	}
 

@@ -2,11 +2,14 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <sol.hpp>
 #include "VFS.h"
 #include "TextUtils.h"
 #include "InputsMap.h"
 #include "Console.h"
 #include "../BJTS.h"
+
+extern sol::state Sol;
 
 #ifdef _WIN32
 extern "C"
@@ -297,7 +300,8 @@ std::string PreprocessBJTS(const std::string& data)
 				auto func2 = bjtsPhase1X.find(bjts[0]);
 				if (func2 != bjtsPhase1X.end())
 				{
-					BJTSExtension(ret, func2->second, bjts, start, len);
+					Sol.set("bjts", bjts);
+					ret.replace(start, len, Sol.script(func2->second).get<std::string>());
 					i = bjtsStart;
 				}
 			}

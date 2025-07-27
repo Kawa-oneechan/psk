@@ -1,4 +1,5 @@
 #include <regex>
+#include <sol.hpp>
 
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/easing.hpp>
@@ -17,10 +18,11 @@
 #include <ufbx.h>
 extern "C" { const char* glfwGetVersionString(void); }
 
+
+extern sol::state Sol;
 extern Texture* whiteRect;
 
 extern void ConsoleRegister(Console* console);
-extern bool ConsoleInterpret(const std::string& str);
 
 extern bool cheatsEnabled;
 
@@ -153,8 +155,19 @@ bool Console::Execute(const std::string& str)
 			}
 		}
 	}
-
-	ConsoleInterpret(str);
+	
+	try
+	{
+		Sol.script(str);
+	}
+	catch (sol::error& e)
+	{
+		std::string what = e.what();
+		if (what.find("attempt to yield from outside a coroutine") != -1)
+			return true; //Accept this silently.
+		else
+			conprint(1, "Error: {}", what);
+	}
 	return false;
 }
 

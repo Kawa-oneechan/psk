@@ -30,23 +30,6 @@ void CCmdReshade()
 	}
 }
 
-bool ConsoleInterpret(const std::string& str)
-{
-	try
-	{
-		Sol.script(str);
-	}
-	catch (sol::error& e)
-	{
-		std::string what = e.what();
-		if (what.find("attempt to yield from outside a coroutine") != -1)
-			; //Do nothing. Accept this silently.
-		else
-			conprint(1, "Error: {}", what);
-	}
-	return true;
-}
-
 void ConsoleRegister(Console* console)
 {
 #define RV console->RegisterCVar

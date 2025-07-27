@@ -8,5 +8,3 @@ typedef void(*BJTSFunc)(std::string& data, BJTSParams);
 extern const std::map<std::string, BJTSFunc> bjtsPhase1;
 //BJTS functions loaded from Lua scripts.
 extern std::map<std::string, std::string> bjtsPhase1X;
-
-extern void BJTSExtension(std::string& data, const std::string& func, BJTSParams);

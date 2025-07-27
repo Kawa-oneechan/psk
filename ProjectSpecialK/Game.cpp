@@ -16,7 +16,6 @@ constexpr int ScreenHeight = 1080;
 
 std::shared_ptr<DialogueBox> dlgBox = nullptr;
 Audio* bgm = nullptr;
-sol::state Sol;
 
 std::shared_ptr<Camera> MainCamera;
 std::shared_ptr<Messager> messager;

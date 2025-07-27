@@ -2,7 +2,7 @@
 #include <fstream>
 #include <glad/glad.h>
 #include <glfw/glfw3.h>
-
+#include <sol.hpp>
 #include "Console.h"
 #include "Cursor.h"
 #include "InputsMap.h"
@@ -48,6 +48,7 @@ glm::mat4 perspectiveProjection, orthographicProjection;
 bool useOrthographic = false;
 
 GLFWwindow* window;
+sol::state Sol;
 
 Texture* whiteRect = nullptr;
 CursorP cursor = nullptr;
