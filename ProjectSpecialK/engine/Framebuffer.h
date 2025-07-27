@@ -1,6 +1,7 @@
 #pragma once
-
+#include <string>
 #include <glad/glad.h>
+#include <glm/glm.hpp>
 
 class Texture;
 class Shader;

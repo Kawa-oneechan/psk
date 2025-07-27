@@ -23,8 +23,8 @@
 #include "engine/Texture.h"
 #include "engine/SpriteRenderer.h"
 #include "engine/Console.h"
+#include "engine/Audio.h"
 #include "Camera.h"
-#include "Audio.h"
 
 #include "NameableThing.h"
 #include "Item.h"

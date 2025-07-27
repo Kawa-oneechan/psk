@@ -1,4 +1,8 @@
+#include <algorithm>
+#include <glm/gtc/matrix_transform.hpp>
 #include "Audio.h"
+#include "Console.h"
+#include "VFS.h"
 
 FMOD::System* Audio::system;
 std::vector<Audio*> Audio::playing;

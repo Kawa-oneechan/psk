@@ -1,5 +1,9 @@
-#include "SpecialK.h"
 #include "Framebuffer.h"
+#include "SpriteRenderer.h"
+#include "Shader.h"
+#include "Texture.h"
+
+extern int width, height;
 
 void Framebuffer::setup()
 {

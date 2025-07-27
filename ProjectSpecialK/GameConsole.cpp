@@ -1,7 +1,8 @@
 #include "engine/Console.h"
+#include "engine/Framebuffer.h"
+#include "engine/Audio.h"
 #include "Game.h"
-#include "Audio.h"
-#include "Framebuffer.h"
+#include "Player.h"
 #include <sol.hpp>
 
 extern sol::state Sol;

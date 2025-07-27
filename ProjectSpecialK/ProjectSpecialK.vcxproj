@@ -143,11 +143,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Animator.cpp" />
-    <ClCompile Include="Audio.cpp" />
     <ClCompile Include="Background.cpp" />
     <ClCompile Include="BJTS.cpp" />
     <ClCompile Include="ButtonGuide.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="engine\Audio.cpp" />
+    <ClCompile Include="engine\Framebuffer.cpp" />
     <ClCompile Include="GameConsole.cpp" />
     <ClCompile Include="Database.cpp" />
     <ClCompile Include="DateTimePanel.cpp" />
@@ -176,7 +177,6 @@
     <ClCompile Include="engine\ThreadedLoader.cpp" />
     <ClCompile Include="engine\Utilities.cpp" />
     <ClCompile Include="engine\VFS.cpp" />
-    <ClCompile Include="Framebuffer.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="InGame.cpp" />
     <ClCompile Include="Iris.cpp" />
@@ -248,7 +248,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animator.h" />
-    <ClInclude Include="Audio.h" />
     <ClInclude Include="Background.h" />
     <ClInclude Include="BJTS.h" />
     <ClInclude Include="ButtonGuide.h" />
@@ -257,8 +256,10 @@
     <ClInclude Include="DateTimePanel.h" />
     <ClInclude Include="DialogueBox.h" />
     <ClInclude Include="DoomMenu.h" />
+    <ClInclude Include="engine\Audio.h" />
     <ClInclude Include="engine\Console.h" />
     <ClInclude Include="engine\Cursor.h" />
+    <ClInclude Include="engine\Framebuffer.h" />
     <ClInclude Include="engine\GlfwKeys.h" />
     <ClInclude Include="engine\InputsMap.h" />
     <ClInclude Include="engine\JsonUtils.h" />
@@ -274,7 +275,6 @@
     <ClInclude Include="engine\Types.h" />
     <ClInclude Include="engine\Utilities.h" />
     <ClInclude Include="engine\VFS.h" />
-    <ClInclude Include="Framebuffer.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="InGame.h" />
     <ClInclude Include="InputsMap.h" />

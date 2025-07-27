@@ -1,6 +1,10 @@
 #pragma once
+#include <string>
+#include <vector>
+#include <map>
+#include <memory>
 #include <fmodex/fmod.hpp>
-#include "SpecialK.h"
+#include <glm/glm.hpp>
 
 class Audio
 {

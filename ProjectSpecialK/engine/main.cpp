@@ -16,6 +16,7 @@
 extern void GameInit();
 extern void GameStart(std::vector<TickableP>& tickables);
 extern void GameMouse(double xPosIn, double yPosIn, float xoffset, float yoffset);
+extern void GameResize();
 extern void GameLoopStart();
 extern void GamePreDraw(float dt);
 extern void GameQuit();
@@ -123,6 +124,8 @@ static void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 	scale = ::height / (float)SCREENHEIGHT;
 	glViewport(0, 0, width, height);
 	commonUniforms.ScreenRes = glm::uvec2(width, height);
+
+	GameResize();
 }
 
 static void char_callback(GLFWwindow* window, unsigned int codepoint)
