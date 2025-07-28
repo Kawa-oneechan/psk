@@ -1,4 +1,7 @@
-#include <JSON/JSON.h>
+#include "JsonUtils.h"
+#ifdef DEEPERDOWN
+#include "Console.h"
+#endif
 
 namespace JSONPatch
 {
@@ -20,47 +23,51 @@ namespace JSONPatch
 			return Patch	
 	*/
 
-	static JSONValue* mergeWorker(JSONValue* target, JSONValue* patch)
+	static void mergeWorker(jsonValue& target, jsonValue& patch)
 	{
-		if (patch->IsObject())
+		std::string state = target.stringify5(json5pp::rule::tab_indent<>());
+		if (patch.is_object())
 		{
-			if (!target->IsObject())
+			if (!target.is_object())
 			{
-				target = new JSONValue(*(new JSONObject()));
-				return target;
+				target = json5pp::object({});
+				state = target.stringify5(json5pp::rule::tab_indent<>());
 			}
 			else
 			{
-				auto merged = target->AsObject();
-				for (const auto& p : patch->AsObject())
+				//auto merged = target.as_object();
+				for (const auto& p : patch.as_object())
 				{
-					if (p.second->IsNull())
+					if (p.second.is_null())
 					{
-						merged.erase(p.first);
+						//merged.erase(p.first);
+						target.as_object().erase(p.first);
 					}
 					else
 					{
-						auto res = merged.insert(p);
+						//auto res = merged.insert(p);
+						auto res = target.as_object().insert(p);
 						if (!res.second)
-							res.first->second = mergeWorker(res.first->second, p.second);
+							mergeWorker(res.first->second, (jsonValue&)p.second);
 					}
+					state = target.stringify5(json5pp::rule::tab_indent<>());
 				}
-				return new JSONValue(merged);
 			}
 		}
-		return patch;
 	}
 
-	JSONValue* ApplyPatch(JSONValue& source, JSONValue& patch)
+	jsonValue& ApplyPatch(jsonValue& source, jsonValue& patch)
 	{
-#if 0
-		conprint(0, "Original: %s", source.Stringify());
-		conprint(0, "Patch:    %s", patch.Stringify());
-		auto ret = mergeWorker(&source, &patch);
-		conprint(0, "New:      %s", ret->Stringify());
-		return ret;
+#ifdef DEEPERDOWN
+		conprint(0, "Original: {}", source.stringify5(json5pp::rule::tab_indent<>()));
+		conprint(0, "Patch:    {}", patch.stringify5(json5pp::rule::tab_indent<>()));
+		mergeWorker(source, patch);
+		conprint(0, "New:      {}", source.stringify5(json5pp::rule::tab_indent<>()));
+		console->Flush();
+		return source;
 #else
-		return mergeWorker(&source, &patch);
+		mergeWorker(source, patch);
+		return source;
 #endif
 	}
 }

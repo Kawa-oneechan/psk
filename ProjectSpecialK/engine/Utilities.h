@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 #include <glm/glm.hpp>
-#include <JSON/JSON.h>
+#include <json5pp.hpp>
 #include "Tickable.h"
 #include "Types.h"
 

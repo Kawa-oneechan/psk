@@ -1,12 +1,12 @@
 #include "SpecialK.h"
 
-Personality::Personality(JSONObject& value, const std::string& filename) : NameableThing(value, filename)
+Personality::Personality(jsonObject& value, const std::string& filename) : NameableThing(value, filename)
 {
 	std::string voices[2];
 	{
-		auto v = value["voice"]->AsArray();
-		voices[0] = v[0]->AsString();
-		voices[1] = v[1]->AsString();
+		auto v = value["voice"].as_array();
+		voices[0] = v[0].as_string();
+		voices[1] = v[1].as_string();
 	}
 	//auto& base = value["base"]->AsString();
 
@@ -20,7 +20,7 @@ Personality::Personality(JSONObject& value, const std::string& filename) : Namea
 	*/
 }
 
-Hobby::Hobby(JSONObject& value, const std::string&)
+Hobby::Hobby(jsonObject& value, const std::string&)
 {
-	ID = value["id"]->AsString();
+	ID = value["id"].as_string();
 }

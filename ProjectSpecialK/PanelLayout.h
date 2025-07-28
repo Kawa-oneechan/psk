@@ -96,7 +96,7 @@ public:
 	float Alpha;
 
 	PanelLayout() = default;
-	PanelLayout(JSONValue* source);
+	PanelLayout(jsonValue& source);
 	bool Tick(float dt);
 	void Draw(float dt);
 	Panel* GetPanel(const std::string& id);

@@ -65,7 +65,7 @@ Model::Model(const std::string& modelPath) : file(modelPath)
 	auto basePath = modelPath.substr(0, modelPath.rfind('/') + 1);
 	auto matMapFile = modelPath.substr(0, modelPath.rfind('.')) + ".mat.json";
 	auto matMap = VFS::ReadJSON(matMapFile);
-	if (!matMap)
+	if (!matMap.is_object())
 	{
 		matMapFile = matMapFile.substr(0, modelPath.rfind('/')) + "/default.mat.json";
 		matMap = VFS::ReadJSON(matMapFile);
@@ -74,7 +74,7 @@ Model::Model(const std::string& modelPath) : file(modelPath)
 			if (matMapFile.find('/') == std::string::npos)
 			{
 				//FatalError("No material map? How?");
-				matMap = JSON::Parse("{}");
+				matMap = json5pp::parse5("{}");
 				break;
 			}
 
@@ -190,31 +190,31 @@ Model::Model(const std::string& modelPath) : file(modelPath)
 			{
 				auto& m1 = node->mesh->materials[0]->name.data;
 				bool foundIt = false;
-				for (auto it : matMap->AsObject())
+				for (auto it : matMap.as_object())
 				{
 					if (it.first == m1)
 					{
-						auto mat = it.second->AsObject();
+						auto mat = it.second.as_object();
 						if (mat["shader"])
 						{
-							auto s = mat["shader"]->AsString();
+							auto s = mat["shader"].as_string();
 							m.Shader = Shaders[s];
 							/*
 							Secondary idea: look into custom properties in the FBX file
 							that may OVERRIDE the matmap file.
 							*/
 						}
-						if (mat["albedo"])
-							m.Textures[0] = new TextureArray(basePath + mat["albedo"]->AsString());
-						if (mat["normal"])
-							m.Textures[1] = new TextureArray(basePath + mat["normal"]->AsString());
-						if (mat["mix"])
-							m.Textures[2] = new TextureArray(basePath + mat["mix"]->AsString());
-						if (mat["opacity"])
-							m.Textures[3] = new TextureArray(basePath + mat["opacity"]->AsString());
+						if (mat["albedo"].is_string())
+							m.Textures[0] = new TextureArray(basePath + mat["albedo"].as_string());
+						if (mat["normal"].is_string())
+							m.Textures[1] = new TextureArray(basePath + mat["normal"].as_string());
+						if (mat["mix"].is_string())
+							m.Textures[2] = new TextureArray(basePath + mat["mix"].as_string());
+						if (mat["opacity"].is_string())
+							m.Textures[3] = new TextureArray(basePath + mat["opacity"].as_string());
 
-						if (mat["visible"])
-							m.Visible = mat["visible"]->AsBool();
+						if (mat["visible"].is_boolean())
+							m.Visible = mat["visible"].as_boolean();
 
 						foundIt = true;
 						break;

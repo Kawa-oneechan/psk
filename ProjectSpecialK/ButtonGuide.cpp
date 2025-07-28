@@ -13,8 +13,8 @@ void ButtonGuide::SetButtons(std::initializer_list<std::string> labels)
 {
 	buttons.clear();
 
-	auto metrics = UI::json["metrics"]->AsObject();
-	const float padding = metrics["buttonGuidePadding"]->AsNumber();
+	auto metrics = UI::json["metrics"].as_object();
+	const float padding = metrics["buttonGuidePadding"].as_number();
 
 	for (auto l : labels)
 	{
@@ -37,10 +37,10 @@ void ButtonGuide::Draw()
 	auto pillHeight = controls[7].w * s;
 	auto pillSize = glm::vec2(pillWidth, pillHeight);
 
-	auto metrics = UI::json["metrics"]->AsObject();
-	const float margin = metrics["buttonGuideMargin"]->AsNumber();
-	const float edgeX = metrics["buttonGuideEdgeX"]->AsNumber();
-	const float edgeY = metrics["buttonGuideEdgeY"]->AsNumber();
+	auto metrics = UI::json["metrics"].as_object();
+	const float margin = metrics["buttonGuideMargin"].as_number();
+	const float edgeX = metrics["buttonGuideEdgeX"].as_number();
+	const float edgeY = metrics["buttonGuideEdgeY"].as_number();
 
 	auto pos = glm::vec2(width - edgeX, height - edgeY - pillHeight);
 

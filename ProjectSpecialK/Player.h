@@ -73,8 +73,8 @@ public:
 	void Save();
 	void Load();
 
-	void Serialize(JSONObject& target);
-	void Deserialize(JSONObject& source);
+	void Serialize(jsonValue& target);
+	void Deserialize(jsonValue& source);
 };
 
 extern Player thePlayer;

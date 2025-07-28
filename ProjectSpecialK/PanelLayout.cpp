@@ -5,30 +5,30 @@
 
 bool debugPanelLayoutPolygons = false;
 
-PanelLayout::PanelLayout(JSONValue* source)
+PanelLayout::PanelLayout(jsonValue& source)
 {
-	auto src = source->AsObject();
+	auto src = source.as_object();
 
-	auto& panelsSet = src["panels"]->AsArray();
+	auto& panelsSet = src["panels"].as_array();
 
-	Position = src["position"] != nullptr ? GetJSONVec2(src["position"]) : glm::vec2(0);
-	Alpha = src["alpha"] != nullptr ? src["alpha"]->AsNumber() : 1.0f;
-	Origin = src["origin"] != nullptr ? StringToEnum<CornerOrigin>(src["origin"]->AsString(), { "topleft", "topright", "bottomleft", "bottomright" }) : CornerOrigin::TopLeft;
+	Position = src["position"].is_array() ? GetJSONVec2(src["position"]) : glm::vec2(0);
+	Alpha = src["alpha"].is_number() ? src["alpha"].as_number() : 1.0f;
+	Origin = src["origin"].is_string() ? StringToEnum<CornerOrigin>(src["origin"].as_string(), { "topleft", "topright", "bottomleft", "bottomright" }) : CornerOrigin::TopLeft;
 
-	if (src["textures"] != nullptr)
+	if (src["textures"].is_array())
 	{
-		for (const auto& t : src["textures"]->AsArray())
+		for (const auto& t : src["textures"].as_array())
 		{
-			textures.push_back(new Texture(t->AsString()));
+			textures.push_back(new Texture(t.as_string()));
 		}
 	}
 
-	if (src["polygons"] != nullptr)
+	if (src["polygons"].is_array())
 	{
-		for (const auto& p : src["polygons"]->AsArray())
+		for (const auto& p : src["polygons"].as_array())
 		{
 			polygon poly;
-			for (const auto& point : p->AsArray())
+			for (const auto& point : p.as_array())
 			{
 				poly.emplace_back(GetJSONVec2(point));
 			}
@@ -43,52 +43,52 @@ PanelLayout::PanelLayout(JSONValue* source)
 
 	for (const auto& p : panelsSet)
 	{
-		auto pnl = p->AsObject();
+		auto pnl = p.as_object();
 		auto panel = new Panel();
 
-		if (pnl["id"] != nullptr)
+		if (pnl["id"].is_string())
 		{
-			panel->ID = pnl["id"]->AsString();
+			panel->ID = pnl["id"].as_string();
 		}
 
 		panel->Polygon = -1;
 
-		auto& type = pnl["type"]->AsString();
+		auto& type = pnl["type"].as_string();
 		if (type == "image") panel->Type = Panel::Type::Image;
 		else if (type == "text") panel->Type = Panel::Type::Text;
 		else if (type == "itemicon") panel->Type = Panel::Type::ItemIcon;
 
 		if (panel->Type == Panel::Type::Image)
 		{
-			panel->Texture = pnl["texture"] != nullptr ? pnl["texture"]->AsInteger() : 0;
-			panel->Frame = pnl["frame"] != nullptr ? pnl["frame"]->AsInteger() : 0;
-			panel->Polygon = pnl["polygon"] != nullptr ? pnl["polygon"]->AsInteger() : -1;
+			panel->Texture = pnl["texture"].is_integer() ? pnl["texture"].as_integer() : 0;
+			panel->Frame = pnl["frame"].is_integer() ? pnl["frame"].as_integer() : 0;
+			panel->Polygon = pnl["polygon"].is_integer() ? pnl["polygon"].as_integer() : -1;
 
-			panel->Enabled = pnl["enabled"] != nullptr ? pnl["enabled"]->AsBool() : panel->Polygon != -1;
+			panel->Enabled = pnl["enabled"].is_boolean() ? pnl["enabled"].as_boolean() : panel->Polygon != -1;
 		}
 		else if (panel->Type == Panel::Type::Text)
 		{
-			panel->Text = pnl["text"] != nullptr ? pnl["text"]->AsString() : "???";
-			panel->Font = pnl["font"] != nullptr ? pnl["font"]->AsInteger() : 1;
-			panel->Size = pnl["size"] != nullptr ? pnl["size"]->AsNumber() : 100.0f;
+			panel->Text = pnl["text"].is_string() ? pnl["text"].as_string() : "???";
+			panel->Font = pnl["font"].is_integer() ? pnl["font"].as_integer() : 1;
+			panel->Size = pnl["size"].is_number() ? pnl["size"].as_number() : 100.0f;
 			panel->Alignment = 0;
-			if (pnl["alignment"] != nullptr)
+			if (pnl["alignment"].is_string())
 			{
-				if (pnl["alignment"]->AsString() == "right")
+				if (pnl["alignment"].as_string() == "right")
 					panel->Alignment = 1;
-				else if (pnl["alignment"]->AsString() == "center")
+				else if (pnl["alignment"].as_string() == "center")
 					panel->Alignment = 2;
 			}
 		}
 		else if (panel->Type == Panel::Type::ItemIcon)
 		{
-			panel->Text = pnl["text"] != nullptr ? pnl["text"]->AsString() : "";
-			panel->Size = pnl["size"] != nullptr ? pnl["size"]->AsNumber() : 100.0f;
-			panel->Polygon = pnl["polygon"] != nullptr ? pnl["polygon"]->AsInteger() : -1;
+			panel->Text = pnl["text"].is_string() ? pnl["text"].as_string() : "";
+			panel->Size = pnl["size"].is_number() ? pnl["size"].as_number() : 100.0f;
+			panel->Polygon = pnl["polygon"].is_integer() ? pnl["polygon"].as_integer() : -1;
 		}
 
 		{
-			auto pos = pnl["position"]->AsArray();
+			auto pos = pnl["position"].as_array();
 			auto w = 0;
 			auto h = 0;
 			if (panel->Type == Panel::Type::Image)
@@ -98,30 +98,30 @@ PanelLayout::PanelLayout(JSONValue* source)
 			}
 			for (int i = 0; i < 2; i++)
 			{
-				if (pos[i]->IsString())
+				if (pos[i].is_string())
 				{
-					auto& str = pos[i]->AsString();
+					auto& str = pos[i].as_string();
 					if (str == "middle")
 					{
 						if (i == 0)
-							pos[i] = new JSONValue((1920 * 0.5f) - (w * 0.5f));
+							pos[i] = (1920 * 0.5f) - (w * 0.5f);
 						else
-							pos[i] = new JSONValue((1080 * 0.5f) - (h * 0.5f));
+							pos[i] = (1080 * 0.5f) - (h * 0.5f);
 					}
 				}
 			}
-			panel->Position = GetJSONVec2(new JSONValue(pos));
+			panel->Position = GetJSONVec2(pnl["position"]);
 		}
 
-		if (pnl["angle"] != nullptr)
-			panel->Angle = pnl["angle"]->AsNumber();
+		if (pnl["angle"].is_number())
+			panel->Angle = pnl["angle"].as_number();
 
 		panel->Parent = -1;
-		if (pnl["parent"] != nullptr)
+		if (!pnl["parent"].is_null())
 		{
-			if (pnl["parent"]->IsString())
+			if (pnl["parent"].is_string())
 			{
-				auto& prt = pnl["parent"]->AsString();
+				auto& prt = pnl["parent"].as_string();
 				for (int i = 0; i < panels.size(); i++)
 				{
 					if (panels[i]->ID == prt)
@@ -131,49 +131,49 @@ PanelLayout::PanelLayout(JSONValue* source)
 					}
 				}
 			}
-			else if(pnl["parent"]->IsNumber())
-				panel->Parent = pnl["parent"]->AsInteger();
+			else if(pnl["parent"].is_integer())
+				panel->Parent = pnl["parent"].as_integer();
 		}
 
 		panel->Color = glm::vec4(1, 1, 1, 1);
-		if (pnl["color"] != nullptr)
+		if (!pnl["color"].is_null())
 		{
-			if (pnl["color"]->IsString())
+			if (pnl["color"].is_string())
 			{
-				auto& clr = pnl["color"]->AsString();
+				auto& clr = pnl["color"].as_string();
 				panel->Color = UI::themeColors.find(clr) != UI::themeColors.end() ? UI::themeColors[clr] : glm::vec4(1);
 			}
-			else if (pnl["color"]->IsArray())
+			else if (pnl["color"].is_array())
 				panel->Color = GetJSONColor(pnl["color"]);
 		}
-		panel->Alpha = pnl["alpha"] != nullptr ? pnl["alpha"]->AsNumber() : 1.0f;
+		panel->Alpha = pnl["alpha"].is_number() ? pnl["alpha"].as_number() : 1.0f;
 		panels.push_back(panel);
 	}
 
-	hasAnimations = src["anims"] != nullptr;
+	hasAnimations = src["anims"].is_array();
 	if (hasAnimations)
 	{
-		for (const auto& _anim : src["anims"]->AsArray())
+		for (const auto& _anim : src["anims"].as_array())
 		{
-			auto animObj = _anim->AsObject();
+			auto animObj = _anim.as_object();
 			auto newAnim = Animation();
-			std::string animName = animObj["name"]->AsString();
-			newAnim.Next = animObj["next"]->AsString();
-			for (const auto& _bit : animObj["bits"]->AsArray())
+			std::string animName = animObj["name"].as_string();
+			newAnim.Next = animObj["next"].as_string();
+			for (const auto& _bit : animObj["bits"].as_array())
 			{
-				auto bitObj = _bit->AsObject();
+				auto bitObj = _bit.as_object();
 				auto newBit = AnimationBit();
-				newBit.ID = bitObj["panel"]->AsString();
-				newBit.Property = bitObj["property"]->AsString();
-				newBit.FromTime = bitObj["fromTime"]->AsNumber();
-				newBit.ToTime = bitObj["toTime"]->AsNumber();
-				newBit.FromVal = bitObj["fromVal"]->AsNumber();
-				newBit.ToVal = bitObj["toVal"]->AsNumber();
+				newBit.ID = bitObj["panel"].as_string();
+				newBit.Property = bitObj["property"].as_string();
+				newBit.FromTime = bitObj["fromTime"].as_number();
+				newBit.ToTime = bitObj["toTime"].as_number();
+				newBit.FromVal = bitObj["fromVal"].as_number();
+				newBit.ToVal = bitObj["toVal"].as_number();
 
 				newBit.Function = glm::linearInterpolation<float>;
 				if (bitObj["easing"])
 				{
-					auto& easing = bitObj["easing"]->AsString();
+					auto& easing = bitObj["easing"].as_string();
 					if (easing == "bounceOut") newBit.Function = glm::bounceEaseOut<float>;
 				}
 

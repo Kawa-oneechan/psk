@@ -1,8 +1,8 @@
 #pragma once
 #include <vector>
 #include <glm/glm.hpp>
-#include <JSON/JSON.h>
 #include "engine/Types.h"
+#include "engine/JsonUtils.h"
 
 extern "C" {
 	const char* glfwGetKeyName(int key, int scancode);
@@ -10,12 +10,12 @@ extern "C" {
 }
 
 //Loads camera settings from a JSONValue.
-extern std::string LoadCamera(JSONValue* json);
+extern std::string LoadCamera(jsonValue& json);
 //Loads camera settings from a JSON file.
 extern std::string LoadCamera(const std::string& path);
 
 //Loads lighting settings from a JSONValue.
-extern std::string LoadLights(JSONValue* json);
+extern std::string LoadLights(jsonValue& json);
 //Loads lighting settings from a JSON file.
 extern std::string LoadLights(const std::string& path);
 

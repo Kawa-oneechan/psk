@@ -141,17 +141,17 @@ void Shader::LoadAll()
 	auto doc = VFS::ReadJSON("shaders/shaders.json");
 	if (!doc)
 		FatalError("Could not read shaders/shaders.json. Something is very wrong.");
-	for (auto& vs : doc->AsObject())
+	for (auto& vs : doc.as_object())
 	{
 		auto vsFile = fmt::format("shaders/{}", vs.first);
-		for (auto& fs : vs.second->AsObject())
+		for (auto& fs : vs.second.as_object())
 		{
 			auto& key = fs.first;
-			auto fsFile = fmt::format("shaders/{}", fs.second->AsString());
+			auto fsFile = fmt::format("shaders/{}", fs.second.as_string());
 			Shaders[key] = new Shader(vsFile, fsFile);
 		}
 	}
-	delete doc;
+	//delete doc;
 }
 
 void Shader::ReloadAll()

@@ -72,12 +72,11 @@ void Map::WorkOutModels()
 {
 	std::map<std::string, std::tuple<std::string, int>> rules;
 
-	auto json = VFS::ReadJSON("field/ground/patterns.json");
-	auto doc = json->AsObject();
-	for (auto& rule : doc["rules"]->AsObject())
+	auto json = VFS::ReadJSON("field/ground/patterns.json").as_object();
+	for (auto& rule : json["rules"].as_object())
 	{
-		auto r = rule.second->AsArray();
-		rules[rule.first] = std::make_tuple(r[0]->AsString(), r[1]->AsInteger());
+		auto r = rule.second.as_array();
+		rules[rule.first] = std::make_tuple(r[0].as_string(), r[1].as_integer());
 	}
 
 	if (!tileModels[0])
@@ -86,15 +85,15 @@ void Map::WorkOutModels()
 		tileModelKeys[0] = "_";
 
 		int i = 1;
-		for (auto& model : doc["models"]->AsObject())
+		for (auto& model : json["models"].as_object())
 		{
-			tileModels[i] = std::make_shared<::Model>(fmt::format("field/ground/{}", model.second->AsString()));
+			tileModels[i] = std::make_shared<::Model>(fmt::format("field/ground/{}", model.second.as_string()));
 			tileModelKeys[i] = model.first;
 			i++;
 		}
 	}
 
-	delete json;
+	//delete json;
 
 	auto getTileElevation = [&](int x, int y)
 	{
@@ -356,51 +355,52 @@ bool Map::Tick(float dt)
 	return true;
 }
 
-void Map::SaveObjects(JSONObject& json)
+void Map::SaveObjects(jsonValue& json)
 {
-	JSONArray objects;
+	auto objects = json5pp::array({});
 	for (const auto& a : Acres)
 	{
 		for (const auto& i : a.Objects)
 		{
-			JSONObject item;
-			item["id"] = new JSONValue(i.Item->FullID());
-			item["position"] = GetJSONVec(i.Position / 10.0f, true);
+			auto item = json5pp::object({});
+			item.as_object()["id"] = i.Item->FullID();
+			item.as_object()["position"] = GetJSONVec(i.Position / 10.0f, true);
 			if (i.State != 0)
 			{
-				item["state"] = new JSONValue(i.State, true);
+				item.as_object()["state"] = i.State;
 			}
 			if (i.Dropped)
 			{
-				item["dropped"] = new JSONValue(true);
+				item.as_object()["dropped"] = true;
 			}
 			else
 			{
 				if (i.Fixed)
-					item["fixed"] = new JSONValue(true);
+					item.as_object()["fixed"] = true;
 				if (i.Rotation != 0)
-					item["facing"] = new JSONValue(i.Rotation);
+					item.as_object()["facing"] = i.Rotation;
 				if (i.Layer != ItemLayer::Ground)
-					item["layer"] = new JSONValue((int)i.Layer);
+					item.as_object()["layer"] = (int)i.Layer;
 			}
-			objects.push_back(new JSONValue(item));
+			objects.as_array().push_back(item);
 		}
 	}
-	json["objects"] = new JSONValue(objects);
+	json.as_object()["objects"] = objects;
 }
 
-void Map::LoadObjects(JSONObject& json)
+void Map::LoadObjects(jsonValue& json)
 {
-	auto objects = json["objects"] != nullptr ? json["objects"]->AsArray() : JSONArray();
+	auto doc = json.as_object();
+	auto objects = doc["objects"].is_array() ? doc["objects"].as_array() : json5pp::array({}).as_array();
 
 	for (auto& _i : objects)
 	{
-		auto i = _i->AsObject();
+		auto i = _i.as_object();
 		MapItem item;
-		item.Item = std::make_shared<InventoryItem>(i["id"]->AsString());
+		item.Item = std::make_shared<InventoryItem>(i["id"].as_string());
 		item.Position = GetJSONVec2(i["position"]) * 10.0f;
-		item.State = (i["state"] != nullptr) ? i["state"]->AsInteger() : 0;
-		item.Dropped = (i["dropped"] != nullptr) ? i["dropped"]->AsBool() : false;
+		item.State = i["state"].is_number() ? (int)i["state"].as_number() : 0;
+		item.Dropped = i["dropped"].is_boolean() ? i["dropped"].as_boolean() : false;
 		if (item.Dropped)
 		{
 			item.Fixed = false;
@@ -409,9 +409,9 @@ void Map::LoadObjects(JSONObject& json)
 		}
 		else
 		{
-			item.Fixed = (i["fixed"] != nullptr) ? i["fixed"]->AsBool() : false;
-			item.Layer = (ItemLayer)((i["layer"] != nullptr) ? i["layer"]->AsInteger() : 0);
-			item.Rotation = (i["facing"] != nullptr) ? i["facing"]->AsInteger() : 0;
+			item.Fixed = i["fixed"].is_boolean() ? i["fixed"].as_boolean() : false;
+			item.Layer = (ItemLayer)(i["layer"].is_integer() ? i["layer"].as_integer() : 0);
+			item.Rotation = i["facing"].is_integer() ? i["facing"].as_integer() : 0;
 		}
 		
 		int acreX = (int)(item.Position.x / 10.0f) / AcreSize;
@@ -557,51 +557,51 @@ void Town::Load()
 	try
 	{
 		auto json = VFS::ReadSaveJSON("map/town.json");
-		auto jsonObj = json->AsObject();
+		auto jsonObj = json.as_object();
 
-		Name = jsonObj["name"]->AsString();
-		weatherSeed = jsonObj["weather"]->AsInteger();
-		Hemisphere = jsonObj["north"]->AsBool() ? Hemisphere::North : Hemisphere::South;
-		grassCanSnow = jsonObj["grassCanSnow"]->AsBool();
-		grassColorMap = jsonObj["grassColors"]->AsString();
-		grassTexture = jsonObj["grassTexture"]->AsString();
+		Name = jsonObj["name"].as_string();
+		weatherSeed = jsonObj["weather"].as_integer();
+		Hemisphere = jsonObj["north"].as_boolean() ? Hemisphere::North : Hemisphere::South;
+		grassCanSnow = jsonObj["grassCanSnow"].as_boolean();
+		grassColorMap = jsonObj["grassColors"].as_string();
+		grassTexture = jsonObj["grassTexture"].as_string();
 
-		Width = jsonObj["width"]->AsInteger();
-		Height = jsonObj["height"]->AsInteger();
+		Width = jsonObj["width"].as_integer();
+		Height = jsonObj["height"].as_integer();
 		Terrain = std::make_unique<MapTile[]>(Width * Height);
 		TerrainModels = std::make_unique<ExtraTile[]>(Width * Height);
 		
 		Acres.clear();
 		Acres.resize((Width / AcreSize) * (Height / AcreSize));
-		auto acres = jsonObj["acres"]->AsArray();
+		auto acres = jsonObj["acres"].as_array();
 		for (int i = 0; i < acres.size() && i < Acres.size(); i++)
 		{
-			if (acres[i]->IsNull())
+			if (acres[i].is_null())
 				Acres[i].Model.reset();
 			else
 			{
-				Acres[i].Model = std::make_shared<::Model>(fmt::format("field/acres/{}.fbx", acres[i]->AsString()));
-				Acres[i].ModelName = acres[i]->AsString();
+				Acres[i].Model = std::make_shared<::Model>(fmt::format("field/acres/{}.fbx", acres[i].as_string()));
+				Acres[i].ModelName = acres[i].as_string();
 			}
 		}
 
 		VFS::ReadSaveData(Terrain.get(), "map/map.bin");
 
 		Villagers.clear();
-		for (const auto& f : jsonObj["villagers"]->AsArray())
+		for (const auto& f : jsonObj["villagers"].as_array())
 		{
-			Villagers.push_back(Database::Find<Villager>(f->AsString(), villagers));
+			Villagers.push_back(Database::Find<Villager>(f.as_string(), villagers));
 		}
 
-		LoadObjects(jsonObj);
+		LoadObjects(json);
 
 		flags.clear();
-		for (const auto& f : jsonObj["flags"]->AsObject())
+		for (const auto& f : jsonObj["flags"].as_object())
 		{
-			flags[f.first] = f.second->AsInteger();
+			flags[f.first] = f.second.as_integer();
 		}
 
-		delete json;
+		//delete json;
 	}
 	catch (std::runtime_error&)
 	{
@@ -619,48 +619,47 @@ void Town::Load()
 void Town::Save()
 {
 	conprint(0, "Saving...");
-	JSONObject json;
+	auto json = json5pp::object({});
 
 	VFS::WriteSaveData("map/map.bin", (void*)Terrain.get(), sizeof(MapTile) * Width * Height);
 
-	json["width"] = new JSONValue(Width);
-	json["height"] = new JSONValue(Height);
-	json["weather"] = new JSONValue((int)weatherSeed, true);
-	json["name"] = new JSONValue(Name);
-	json["north"] = new JSONValue(Hemisphere == Hemisphere::North);
+	json.as_object()["width"] = Width;
+	json.as_object()["height"] = Height;
+	json.as_object()["weather"] = (int)weatherSeed;
+	json.as_object()["name"] = Name;
+	json.as_object()["north"] = Hemisphere == Hemisphere::North;
 
-	json["grassTexture"] = new JSONValue(grassTexture);
-	json["grassCanSnow"] = new JSONValue(grassCanSnow);
-	json["grassColors"] = new JSONValue(grassColorMap);
+	json.as_object()["grassTexture"] = grassTexture;
+	json.as_object()["grassCanSnow"] = grassCanSnow;
+	json.as_object()["grassColors"] = grassColorMap;
 
-	JSONArray villagersArray;
+	auto villagersArray = json5pp::array({});
 	for (const auto& i : Villagers)
 	{
-		villagersArray.push_back(new JSONValue(i->ID));
+		villagersArray.as_array().push_back(i->ID);
 	}
-	json["villagers"] = new JSONValue(villagersArray);
+	json.as_object()["villagers"] = villagersArray;
 
-	JSONArray acresArray;
+	auto acresArray = json5pp::array({});
 	for (const auto& i : Acres)
 	{
 		if (i.Model)
-			acresArray.push_back(new JSONValue(i.ModelName));
+			acresArray.as_array().push_back(i.ModelName);
 		else
-			acresArray.push_back(new JSONValue());
+			acresArray.as_array().push_back(nullptr);
 	}
-	json["acres"] = new JSONValue(acresArray);
+	json.as_object()["acres"] = acresArray;
 
 	SaveObjects(json);
 
-	JSONObject flagsObj;
+	auto flagsObj = json5pp::object({});
 	for (const auto& i : flags)
 	{
-		flagsObj[i.first] = new JSONValue(i.second);
+		flagsObj.as_object()[i.first] = i.second;
 	}
-	json["flags"] = new JSONValue(flagsObj);
+	json.as_object()["flags"] = flagsObj;
 	
-	auto val = JSONValue(json);
-	VFS::WriteSaveJSON("map/town.json", &val);
+	VFS::WriteSaveJSON("map/town.json", json);
 }
 
 void Town::StartNewDay()
@@ -677,19 +676,19 @@ void Town::StartNewDay()
 		std::srand(weatherSeed + (month << 8) + (day << 16));
 
 		auto doc = VFS::ReadJSON("weather.json");
-		auto json = doc->AsObject();
-		auto calendar = json[Hemisphere == Hemisphere::North ? "north" : "south"]->AsArray();
+		auto json = doc.as_object();
+		auto calendar = json[Hemisphere == Hemisphere::North ? "north" : "south"].as_array();
 
-		auto here = calendar[0]->AsObject();
+		auto here = calendar[0].as_object();
 		const int calNow = (month * 31) + day;
 		//NOTE: We assume all entries are sorted by date.
 		for (int i = 1; 0 < calendar.size(); i++)
 		{
-			const auto until = GetJSONVec2(calendar[i]->AsObject().at("until"));
+			const auto until = GetJSONVec2(calendar[i].as_object().at("until"));
 			const int calHere = ((int)until[1] * 31) + (int)until[0];
 			if (calHere > calNow)
 			{
-				here = calendar[i]->AsObject();
+				here = calendar[i].as_object();
 				break;
 			}
 		}
@@ -702,10 +701,10 @@ void Town::StartNewDay()
 
 		std::vector<int> rates;
 		int rateTotal = 0;
-		for (auto r : here["rates"]->AsArray())
+		for (auto r : here["rates"].as_array())
 		{
-			rateTotal += r->AsInteger();
-			rates.push_back(r->AsInteger());
+			rateTotal += r.as_integer();
+			rates.push_back(r.as_integer());
 		}
 		std::uniform_int_distribution<> dist(0, rateTotal);
 		auto roll = dist(engine);
@@ -720,18 +719,18 @@ void Town::StartNewDay()
 			roll -= rates[i];
 		}
 
-		auto patterns = json["patterns"]->AsArray();
-		auto pattern = patterns[pick]->AsObject();
-		debprint(0, "Weather: picked {}, \"{}\".", pick, pattern["id"]->AsString());
-		auto rain = pattern["rain"]->AsArray();
-		auto wind = pattern["wind"]->AsArray();
+		auto patterns = json["patterns"].as_array();
+		auto pattern = patterns[pick].as_object();
+		debprint(0, "Weather: picked {}, \"{}\".", pick, pattern["id"].as_string());
+		auto rain = pattern["rain"].as_array();
+		auto wind = pattern["wind"].as_array();
 		for (int i = 0; i < 24; i++)
 		{
-			weatherRain[i] = rain[i]->AsInteger();
-			weatherWind[i] = wind[i]->AsInteger();
+			weatherRain[i] = rain[i].as_integer();
+			weatherWind[i] = wind[i].as_integer();
 		}
 
-		delete doc;
+		//delete doc;
 	}
 
 	//Reset textures so snow can appear/disappear

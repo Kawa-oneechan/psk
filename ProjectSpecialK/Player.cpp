@@ -284,10 +284,9 @@ bool Player::Tick(float dt)
 
 void Player::Save()
 {
-	JSONObject json;
+	jsonValue json;
 	Serialize(json);
-	auto val = JSONValue(json);
-	VFS::WriteSaveJSON("player.json", &val);
+	VFS::WriteSaveJSON("player.json", json);
 }
 
 void Player::Load()
@@ -295,7 +294,7 @@ void Player::Load()
 	try
 	{
 		auto json = VFS::ReadSaveJSON("player.json");
-		Deserialize((JSONObject&)json->AsObject());
+		Deserialize(json);
 	}
 	catch (std::runtime_error&)
 	{
@@ -303,105 +302,108 @@ void Player::Load()
 	}
 }
 
-void Player::Serialize(JSONObject& target)
+void Player::Serialize(jsonValue& target)
 {
-	target["name"] = new JSONValue(Name);
-	target["bells"] = new JSONValue((int)Bells);
+	target = json5pp::object({ { "name", "" } });
 
-	JSONObject colors;
-	colors["skin"] = GetJSONVec(glm::vec3(SkinTone));
-	colors["eyes"] = GetJSONVec(glm::vec3(EyeColor));
-	colors["cheek"] = GetJSONVec(glm::vec3(CheekColor));
-	colors["hair"] = GetJSONVec(glm::vec3(HairColor));
-	target["colors"] = new JSONValue(colors);
+	target.as_object()["name"] = Name;
+	target.as_object()["bells"] = (int)Bells;
 
-	JSONObject style;
-	style["gender"] = new JSONValue((Gender == Gender::Boy || Gender == Gender::BEnby) ? "boy" : "girl");
-	style["eyes"] = new JSONValue(eyeStyle);
-	style["mouth"] = new JSONValue(mouthStyle);
-	style["cheeks"] = new JSONValue(cheeksStyle);
-	style["nose"] = new JSONValue(noseStyle);
-	style["hair"] = new JSONValue(hairStyle);
-	target["style"] = new JSONValue(style);
+	target.as_object()["colors"] = json5pp::object({
+		{ "skin", GetJSONVec(glm::vec3(SkinTone)) },
+		{ "eyes", GetJSONVec(glm::vec3(EyeColor)) },
+		{ "cheek", GetJSONVec(glm::vec3(CheekColor)) },
+		{ "hair", GetJSONVec(glm::vec3(HairColor))},
+	});
 
-	JSONArray items;
+	target.as_object()["style"] = json5pp::object({
+		{ "gender", (Gender == Gender::Boy || Gender == Gender::BEnby) ? "boy" : "girl" },
+		{ "eyes", eyeStyle },
+		{ "mouth", mouthStyle},
+		{ "cheeks", cheeksStyle },
+		{ "nose", noseStyle },
+		{ "hair", hairStyle },
+	});
+
+	auto items = json5pp::array({});
 	for (const auto& i : OnHand)
 	{
 		if (i == nullptr)
-			items.push_back(new JSONValue());
+			items.as_array().push_back(jsonValue(nullptr));
 		else
-			items.push_back(new JSONValue(i->FullID()));
+			items.as_array().push_back(i->FullID());
 	}
-	target["items"] = new JSONValue(items);
+	target.as_object()["items"] = items;
 
-	JSONArray storage;
+	auto storage = json5pp::array({});
 	for (const auto& i : Storage)
 	{
-		storage.push_back(new JSONValue(i->FullID()));
+		storage.as_array().push_back(i->FullID());
 	}
-	target["storage"] = new JSONValue(storage);
+	target.as_object()["storage"] = storage;
 
-	JSONObject outfit;
+	auto outfit = json5pp::object({});
 	{
 		int i = 0;
 		for (auto s : { "top", "bottom", "hat", "glasses", "mask", "shoes", "bag" })
 		{
-			outfit[s] = _clothesItems[i] ? new JSONValue(_clothesItems[i]->FullID()) : new JSONValue();
+			outfit.as_object()[s] = _clothesItems[i] ? _clothesItems[i]->FullID() : jsonValue(nullptr);
 			i++;
 		}
 	}
-	target["outfit"] = new JSONValue(outfit);
+	target.as_object()["outfit"] = outfit;
 }
 
-void Player::Deserialize(JSONObject& source)
+void Player::Deserialize(jsonValue& source)
 {
-	Name = source["name"]->AsString();
-	Bells = source["bells"]->AsInteger();
+	auto s = source.as_object();
+	Name = s["name"].as_string();
+	Bells = s["bells"].as_integer();
 
-	auto& colors = source["colors"]->AsObject();
+	auto& colors = s["colors"].as_object();
 	SkinTone = GetJSONColor(colors.at("skin"));
 	EyeColor = GetJSONColor(colors.at("eyes"));
 	CheekColor = GetJSONColor(colors.at("cheek"));
 	HairColor = GetJSONColor(colors.at("hair"));
 
-	auto& style = source["style"]->AsObject();
-	Gender = StringToEnum<::Gender>(style.at("gender")->AsString(), { "boy", "girl" });
-	eyeStyle = style.at("eyes")->AsInteger();
-	mouthStyle = style.at("mouth")->AsInteger();
-	cheeksStyle = style.at("cheeks")->AsInteger();
-	noseStyle = style.at("nose")->AsInteger();
-	hairStyle = style.at("hair")->AsInteger();
+	auto& style = s["style"].as_object();
+	Gender = StringToEnum<::Gender>(style.at("gender").as_string(), { "boy", "girl" });
+	eyeStyle = style.at("eyes").as_integer();
+	mouthStyle = style.at("mouth").as_integer();
+	cheeksStyle = style.at("cheeks").as_integer();
+	noseStyle = style.at("nose").as_integer();
+	hairStyle = style.at("hair").as_integer();
 
-	auto items = source["items"]->AsArray();
+	auto items = s["items"].as_array();
 	OnHand.fill(nullptr);
 	int j = 0;
 	for (const auto& i : items)
 	{
-		if (i->IsString())
-			OnHand[j] = std::make_shared<InventoryItem>(i->AsString());
+		if (i.is_string())
+			OnHand[j] = std::make_shared<InventoryItem>(i.as_string());
 		j++;
 		if (j >= MaxOnHand)
 			break;
 	}
 
-	auto storage = source["storage"]->AsArray();
+	auto storage = s["storage"].as_array();
 	Storage.clear();
 	for (const auto& i : storage)
 	{
-		Storage.push_back(std::make_shared<InventoryItem>(i->AsString()));
+		Storage.push_back(std::make_shared<InventoryItem>(i.as_string()));
 		j++;
 		if (j >= MaxStorage)
 			break;
 	}
 
-	auto& outfit = source["outfit"]->AsObject();
+	auto& outfit = s["outfit"].as_object();
 	{
 		{
 			int i = 0;
-			for (const auto& s : { "top", "bottom", "hat", "glasses", "mask", "shoes", "bag" })
+			for (const auto& c : { "top", "bottom", "hat", "glasses", "mask", "shoes", "bag" })
 			{
-				auto t = outfit.at(s);
-				_clothesItems[i] = t->IsString() ? std::make_shared<InventoryItem>(t->AsString()) : nullptr;
+				auto t = outfit.at(c);
+				_clothesItems[i] = t.is_string() ? std::make_shared<InventoryItem>(t.as_string()) : nullptr;
 				i++;
 			}
 		}

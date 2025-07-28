@@ -4,47 +4,47 @@
 #include "JsonUtils.h"
 #include "TextUtils.h"
 
-glm::vec2 GetJSONVec2(JSONValue* val)
+glm::vec2 GetJSONVec2(const jsonValue& val)
 {
-	if (!val->IsArray())
-		throw std::runtime_error(fmt::format("GetJSONVec2: given value {} is not an array.", val->Stringify()));
-	auto arr = val->AsArray();
+	if (!val.is_array())
+		throw std::runtime_error(fmt::format("GetJSONVec2: given value {} is not an array.", val.stringify5()));
+	auto arr = val.as_array();
 	if (arr.size() != 2)
-		throw std::runtime_error(fmt::format("GetJSONVec2: given array {} has {} entries, not 2.", val->Stringify(), arr.size()));
-	if (std::any_of(arr.cbegin(), arr.cend(), [](JSONValue* x) { return !x->IsNumber(); }))
-		throw std::runtime_error(fmt::format("GetJSONVec2: given array {} does not contain only numbers.", val->Stringify()));
-	return glm::vec2(arr[0]->AsNumber(), arr[1]->AsNumber());
+		throw std::runtime_error(fmt::format("GetJSONVec2: given array {} has {} entries, not 2.", val.stringify5(), arr.size()));
+	if (std::any_of(arr.cbegin(), arr.cend(), [](jsonValue x) { return !x.is_number(); }))
+		throw std::runtime_error(fmt::format("GetJSONVec2: given array {} does not contain only numbers.", val.stringify5()));
+	return glm::vec2(arr[0].as_number(), arr[1].as_number());
 }
 
-glm::vec3 GetJSONVec3(JSONValue* val)
+glm::vec3 GetJSONVec3(const jsonValue& val)
 {
-	if (!val->IsArray())
+	if (!val.is_array())
 		throw std::runtime_error("GetJSONVec3: given value is not an array.");
-	auto arr = val->AsArray();
+	auto arr = val.as_array();
 	if (arr.size() != 3)
 		throw std::runtime_error(fmt::format("GetJSONVec3: given array has {} entries, not 3.", arr.size()));
-	if (std::any_of(arr.cbegin(), arr.cend(), [](JSONValue* x) { return !x->IsNumber(); }))
+	if (std::any_of(arr.cbegin(), arr.cend(), [](jsonValue x) { return !x.is_number(); }))
 		throw std::runtime_error("GetJSONVec3: given array does not contain only numbers.");
-	return glm::vec3(arr[0]->AsNumber(), arr[1]->AsNumber(), arr[2]->AsNumber());
+	return glm::vec3(arr[0].as_number(), arr[1].as_number(), arr[2].as_number());
 }
 
-glm::vec4 GetJSONVec4(JSONValue* val)
+glm::vec4 GetJSONVec4(const jsonValue& val)
 {
-	if (!val->IsArray())
+	if (!val.is_array())
 		throw std::runtime_error("GetJSONVec4: given value is not an array.");
-	auto arr = val->AsArray();
+	auto arr = val.as_array();
 	if (arr.size() != 4)
 		throw std::runtime_error(fmt::format("GetJSONVec4: given array has {} entries, not 4.", arr.size()));
-	if (std::any_of(arr.cbegin(), arr.cend(), [](JSONValue* x) { return !x->IsNumber(); }))
+	if (std::any_of(arr.cbegin(), arr.cend(), [](jsonValue x) { return !x.is_number(); }))
 		throw std::runtime_error("GetJSONVec4: given array does not contain only numbers.");
-	return glm::vec4(arr[0]->AsNumber(), arr[1]->AsNumber(), arr[2]->AsNumber(), arr[3]->AsNumber());
+	return glm::vec4(arr[0].as_number(), arr[1].as_number(), arr[2].as_number(), arr[3].as_number());
 }
 
-glm::vec4 GetJSONColor(JSONValue* val)
+glm::vec4 GetJSONColor(const jsonValue& val)
 {
-	if (val->IsString())
+	if (val.is_string())
 	{
-		auto hex = val->AsString();
+		auto hex = val.as_string();
 		int r = 0, g = 0, b = 0, a = 0;
 		if (hex.empty() || hex[0] != '#')
 			return glm::vec4(0, 0, 0, -1);
@@ -65,35 +65,35 @@ glm::vec4 GetJSONColor(JSONValue* val)
 			b = std::stoi(hex.substr(7, 2), nullptr, 16);
 		}
 		else
-			throw std::runtime_error(fmt::format("GetJSONColor: {} is not a valid color.", val->Stringify()));
+			throw std::runtime_error(fmt::format("GetJSONColor: {} is not a valid color.", val.stringify5()));
 		return glm::vec4(r / 255.0f, g / 255.0f, b / 255.0f, a / 255.0f);
 	}
-	if (val->IsArray())
+	if (val.is_array())
 	{
-		auto arr = val->AsArray();
+		auto arr = val.as_array();
 		for (auto x : arr)
-			if (!x->IsNumber())
-				throw std::runtime_error(fmt::format("GetJSONColor: {} is not a valid color.", val->Stringify()));
+			if (!x.is_number())
+				throw std::runtime_error(fmt::format("GetJSONColor: {} is not a valid color.", val.stringify5()));
 		float r, g, b, a;
 		if (arr.size() == 3)
 		{
-			r = arr[0]->AsNumber();
-			g = arr[1]->AsNumber();
-			b = arr[2]->AsNumber();
+			r = (float)arr[0].as_number();
+			g = (float)arr[1].as_number();
+			b = (float)arr[2].as_number();
 			a = 1.0f;
 		}
 		else if (arr.size() == 4)
 		{
-			r = arr[0]->AsNumber();
-			g = arr[1]->AsNumber();
-			b = arr[2]->AsNumber();
-			a = arr[3]->AsNumber();
+			r = (float)arr[0].as_number();
+			g = (float)arr[1].as_number();
+			b = (float)arr[2].as_number();
+			a = (float)arr[3].as_number();
 		}
 		else
-			throw std::runtime_error(fmt::format("GetJSONColor: {} is not a valid color.", val->Stringify()));
+			throw std::runtime_error(fmt::format("GetJSONColor: {} is not a valid color.", val.stringify5()));
 		return glm::vec4(r, g, b, a);
 	}
-	throw std::runtime_error(fmt::format("GetJSONColor: {} is not a valid color.", val->Stringify()));
+	throw std::runtime_error(fmt::format("GetJSONColor: {} is not a valid color.", val.stringify5()));
 }
 
 static glm::vec2 checkDate(glm::vec2 date)
@@ -102,18 +102,18 @@ static glm::vec2 checkDate(glm::vec2 date)
 	date[1] = (float)glm::clamp((int)date[0], 1, 12);
 	return date;
 }
-glm::vec2 GetJSONDate(JSONValue* val)
+glm::vec2 GetJSONDate(const jsonValue& val)
 {
-	if (val->IsArray())
+	if (val.is_array())
 		return checkDate(GetJSONVec2(val));
-	if (val->IsString())
+	if (val.is_string())
 	{
-		auto str = val->AsString();
+		auto str = val.as_string();
 		auto split = str.find_last_of(' ');
 		if (split == str.npos)
 			split = str.find_last_of('/');
 		if (split == str.npos)
-			throw std::runtime_error(fmt::format("GetJSONDate: value {} can't split on space or slash.", val->Stringify()));
+			throw std::runtime_error(fmt::format("GetJSONDate: value {} can't split on space or slash.", val.stringify5()));
 		auto day = std::stoi(str.substr(split + 1));
 		auto mon = str.substr(0, 3);
 		StringToLower(mon);
@@ -124,58 +124,55 @@ glm::vec2 GetJSONDate(JSONValue* val)
 				return checkDate(glm::vec2(day, i + 1));
 		}
 	}
-	throw std::runtime_error(fmt::format("GetJSONDate: value {} is not a month/day pair.", val->Stringify()));
+	throw std::runtime_error(fmt::format("GetJSONDate: value {} is not a month/day pair.", val.stringify5()));
 }
 
-JSONValue* GetJSONVec(const glm::vec2& vec, bool asInt)
+jsonValue GetJSONVec(const glm::vec2& vec, bool asInt)
 {
-	JSONArray ret;
-	ret.reserve(2);
 	if (asInt)
 	{
-		ret.push_back(new JSONValue((int)vec.x));
-		ret.push_back(new JSONValue((int)vec.y));
+		return json5pp::array({
+			(int)vec.x, (int)vec.y
+		});
 	}
 	else
 	{
-		ret.push_back(new JSONValue(vec.x));
-		ret.push_back(new JSONValue(vec.y));
+		return json5pp::array({
+			vec.x, vec.y
+		});
 	}
-	return new JSONValue(ret);
 }
 
-JSONValue* GetJSONVec(const glm::vec3& vec, bool asInt)
+jsonValue GetJSONVec(const glm::vec3& vec, bool asInt)
 {
-	JSONArray ret;
-	ret.reserve(3);
 	if (asInt)
 	{
-		for (int i = 0; i < 3; i++)
-			ret.push_back(new JSONValue((int)vec[i]));
+		return json5pp::array({
+			(int)vec.x, (int)vec.y, (int)vec.z
+		});
 	}
 	else
 	{
-		for (int i = 0; i < 3; i++)
-			ret.push_back(new JSONValue(vec[i]));
+		return json5pp::array({
+			vec.x, vec.y, vec.z
+		});
 	}
-	return new JSONValue(ret);
 }
 
-JSONValue* GetJSONVec(const glm::vec4& vec, bool asInt)
+jsonValue GetJSONVec(const glm::vec4& vec, bool asInt)
 {
-	JSONArray ret;
-	ret.reserve(4);
 	if (asInt)
 	{
-		for (int i = 0; i < 4; i++)
-			ret.push_back(new JSONValue((int)vec[i]));
+		return json5pp::array({
+			(int)vec.x, (int)vec.y, (int)vec.z, (int)vec.w
+		});
 	}
 	else
 	{
-		for (int i = 0; i < 4; i++)
-			ret.push_back(new JSONValue(vec[i]));
+		return json5pp::array({
+			vec.x, vec.y, vec.z, vec.w
+		});
 	}
-	return new JSONValue(ret);
 }
 
 void GetAtlas(std::vector<glm::vec4> &ret, const std::string& jsonFile)
@@ -183,15 +180,15 @@ void GetAtlas(std::vector<glm::vec4> &ret, const std::string& jsonFile)
 	auto rjs = VFS::ReadJSON(jsonFile);
 	if (!rjs)
 		return;
-	auto doc = rjs->AsObject();
+	auto doc = rjs.as_object();
 	ret.clear();
-	if (doc["type"] == nullptr)
+	if (!doc["type"].is_string())
 	{
-		delete rjs;
+		//delete rjs;
 		return;
 	}
 
-	if (doc["type"]->AsString() == "simple")
+	if (doc["type"].as_string() == "simple")
 	{
 		auto size = GetJSONVec2(doc["size"]);
 		auto dims = GetJSONVec2(doc["dims"]);
@@ -203,15 +200,15 @@ void GetAtlas(std::vector<glm::vec4> &ret, const std::string& jsonFile)
 			}
 		}
 	}
-	else if (doc["type"]->AsString() == "atlas")
+	else if (doc["type"].as_string() == "atlas")
 	{
-		auto rects = doc["rects"]->AsArray();
+		auto rects = doc["rects"].as_array();
 		for (const auto& rect : rects)
 		{
 			ret.push_back(GetJSONVec4(rect));
 		}
 	}
 	else
-		throw std::runtime_error(fmt::format("GetAtlas: file {} has an unknown type \"{}\".", jsonFile, doc["type"]->AsString()));
-	delete rjs;
+		throw std::runtime_error(fmt::format("GetAtlas: file {} has an unknown type \"{}\".", jsonFile, doc["type"].as_string()));
+	//delete rjs;
 }

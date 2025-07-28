@@ -1,6 +1,6 @@
 #pragma once
-#include <JSON/JSON.h>
 #include "engine/Types.h"
+#include "engine/JsonUtils.h"
 
 class NameableThing
 {
@@ -10,7 +10,7 @@ public:
 	std::string EnName;
 	std::string Path; //To locate specific stuff like models, textures, sounds...
 	hash Hash;
-	NameableThing(JSONObject& value, const std::string& filename = "");
+	NameableThing(jsonObject& value, const std::string& filename = "");
 	NameableThing() = default;
 	std::string Name();
 

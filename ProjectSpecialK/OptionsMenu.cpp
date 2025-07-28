@@ -79,43 +79,43 @@ void OptionsMenu::Build()
 		[&](DoomMenuItem*i)
 		{
 			gameLang = opt2lan[i->selection];
-			UI::settings["language"] = new JSONValue(Text::GetLangCode(gameLang));
+			UI::settings.as_object()["language"] = Text::GetLangCode(gameLang);
 			Translate();
 			items = &options;
 			//dlgBox->Text(Text::Get("menu:options:language:taunt"), Database::Find<Villager>("psk:cat00", villagers));
 		}
 		));
-		options.items.push_back(new DoomMenuItem("menu:options:continuefrom", UI::settings["continue"]->AsInteger(),
+		options.items.push_back(new DoomMenuItem("menu:options:continuefrom", UI::settings.as_object()["continue"].as_integer(),
 		{
 			"menu:options:continuefrom:0",
 			"menu:options:continuefrom:1",
 			"menu:options:continuefrom:2",
 			"menu:options:continuefrom:3",
 		},
-		[&](DoomMenuItem*i) { UI::settings["continue"] = new JSONValue(i->selection); }
+		[&](DoomMenuItem*i) { UI::settings.as_object()["continue"] = i->selection; }
 		));
-		options.items.push_back(new DoomMenuItem("menu:options:speech", UI::settings["speech"]->AsInteger(),
+		options.items.push_back(new DoomMenuItem("menu:options:speech", UI::settings.as_object()["speech"].as_integer(),
 		{
 			"menu:options:speech:0",
 			"menu:options:speech:1",
 			"menu:options:speech:2",
 		},
-		[&](DoomMenuItem*i) { UI::settings["speech"] = new JSONValue(i->selection); }
+		[&](DoomMenuItem*i) { UI::settings.as_object()["speech"] = i->selection; }
 		));
-		options.items.push_back(new DoomMenuItem("menu:options:pingrate", 2, 60, UI::settings["pingRate"]->AsInteger(), 1, minutes,
-			[&](DoomMenuItem*i) { UI::settings["pingRate"] = new JSONValue(i->selection); }
+		options.items.push_back(new DoomMenuItem("menu:options:pingrate", 2, 60, UI::settings.as_object()["pingRate"].as_integer(), 1, minutes,
+			[&](DoomMenuItem*i) { UI::settings.as_object()["pingRate"] = i->selection; }
 		));
-		options.items.push_back(new DoomMenuItem("menu:options:balloonchance", 10, 60, UI::settings["balloonChance"]->AsInteger(), 5, percent,
-			[&](DoomMenuItem*i) { UI::settings["balloonChance"] = new JSONValue(i->selection); }
+		options.items.push_back(new DoomMenuItem("menu:options:balloonchance", 10, 60, UI::settings.as_object()["balloonChance"].as_integer(), 5, percent,
+			[&](DoomMenuItem*i) { UI::settings.as_object()["balloonChance"] = i->selection; }
 		));
 		options.items.push_back(new DoomMenuItem("menu:options:bothercolliding", botherColliding,
 			[&](DoomMenuItem*) { botherColliding = !botherColliding; }
 		));
-		options.items.push_back(new DoomMenuItem("menu:options:cursorscale", 50, 150, UI::settings["cursorScale"]->AsInteger(), 10, percent,
+		options.items.push_back(new DoomMenuItem("menu:options:cursorscale", 50, 150, UI::settings.as_object()["cursorScale"].as_integer(), 10, percent,
 			[&](DoomMenuItem*i)
 		{
 			cursor->SetScale(i->selection);
-			UI::settings["cursorScale"] = new JSONValue(i->selection);
+			UI::settings.as_object()["cursorScale"] = i->selection;
 		}
 		));
 	}
@@ -156,9 +156,10 @@ void OptionsMenu::Build()
 				[&, f](DoomMenuItem*i)
 			{
 				Database::Filters[f] = i->selection > 0;
-				auto s = UI::settings["contentFilters"]->AsObject(); //-V836 can't be helped for now
-				s.insert_or_assign(f, new JSONValue(Database::Filters[f]));
-				UI::settings["contentFilters"] = new JSONValue(s);
+				auto s = UI::settings.as_object()["contentFilters"].as_object(); //-V836 can't be helped for now
+				s[f] = Database::Filters[f];
+				//s.insert_or_assign(f, Database::Filters[f]);
+				//UI::settings.as_object()["contentFilters"] = s;
 			}
 			));
 		}
@@ -178,9 +179,10 @@ void OptionsMenu::Build()
 					[&, f](DoomMenuItem*i)
 				{
 					Database::Filters[f] = i->selection > 0;
-					auto s = UI::settings["contentFilters"]->AsObject(); //-V836 can't be helped for now
-					s.insert_or_assign(f, new JSONValue(Database::Filters[f]));
-					UI::settings["contentFilters"] = new JSONValue(s);
+					auto s = UI::settings.as_object()["contentFilters"].as_object(); //-V836 can't be helped for now
+					s[f] = Database::Filters[f];
+					//s.insert_or_assign(f, Database::Filters[f]);
+					//UI::settings.as_object()["contentFilters"] = s;
 				}
 				));
 			}

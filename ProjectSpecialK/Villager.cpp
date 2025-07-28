@@ -120,15 +120,15 @@ void Person::Draw(float)
 //IDEA: use a generic Clothing array instead of a single model.
 //Lets do that yeah.
 
-Villager::Villager(JSONObject& value, const std::string& filename) : NameableThing(value, filename)
+Villager::Villager(jsonObject& value, const std::string& filename) : NameableThing(value, filename)
 {
-	_customModel = value["customModel"] != nullptr && value["customModel"]->IsBool() ? value["customModel"]->AsBool() : false;
-	_isSpecial = value["isSpecial"] != nullptr && value["isSpecial"]->IsBool() ? value["isSpecial"]->AsBool() : false;
-	_customMuzzle = (value["hasMuzzle"] != nullptr) ? value["hasMuzzle"]->AsBool() : false;
-	_accessoryFixed = (value["accessoryFixed"] != nullptr) ? value["accessoryFixed"]->AsBool() : false;
+	_customModel = value["customModel"].is_boolean() ? value["customModel"].as_boolean() : false;
+	_isSpecial = value["isSpecial"].is_boolean() ? value["isSpecial"].as_boolean() : false;
+	_customMuzzle = value["hasMuzzle"].is_boolean() ? value["hasMuzzle"].as_boolean() : false;
+	_accessoryFixed = value["accessoryFixed"].is_boolean() ? value["accessoryFixed"].as_boolean() : false;
 
-	_accessoryType = (value["accessoryMapType"] != nullptr) ?
-		StringToEnum<AccessoryType>(value["accessoryMapType"]->AsString(),
+	_accessoryType = (value["accessoryMapType"].is_string()) ?
+		StringToEnum<AccessoryType>(value["accessoryMapType"].as_string(),
 		{ "none", "body", "cap", "glass", "glassalpha", "bodycap" }) :
 		AccessoryType::None;
 	_customAccessory = (_accessoryType != AccessoryType::None && _accessoryType != AccessoryType::BodyCap);
@@ -139,78 +139,78 @@ Villager::Villager(JSONObject& value, const std::string& filename) : NameableThi
 	if (!_isSpecial)
 	{
 		auto sp = value["species"];
-		_species = Database::Find<::Species>(sp, species);
+		_species = Database::FindEx<::Species>(sp, species);
 		if (!_species)
-			throw std::runtime_error(fmt::format("Unknown species {} while loading {}.", sp->Stringify(), ID));
+			throw std::runtime_error(fmt::format("Unknown species {} while loading {}.", sp.stringify5(), ID));
 	}
 	_model = nullptr;
 
 	//Normally, special villagers have no catchphrase but we'll allow it as an option.
 	RefCatchphrase = fmt::format("catchphrase:{}", ID);
 	auto val = value["catchphrase"];
-	if (!val || (val->IsString() && val->AsString().empty()))
-		val = JSON::Parse("\"dummy\"");
-	if (val->IsString() && val->AsString()[0] == '#')
-		RefCatchphrase = val->AsString().substr(1);
+	if (!val || (val.is_string() && val.as_string().empty()))
+		val = "dummy";
+	if (val.is_string() && val.as_string()[0] == '#')
+		RefCatchphrase = val.as_string().substr(1);
 	else
-		Text::Add(RefCatchphrase, *val);
+		Text::Add(RefCatchphrase, val);
 
 	auto birthday = GetJSONDate(value["birthday"]);
 	_birthday[0] = (int)birthday[0];
 	_birthday[1] = (int)birthday[1];
 
 	auto _gender = value["gender"];
-	if (_gender != nullptr)
+	if (_gender.is_string())
 	{
 		try
 		{
-			this->Gender = StringToEnum<::Gender>(_gender->AsString(), { "boy", "girl", "enby-b", "enby-g" });
+			this->Gender = StringToEnum<::Gender>(_gender.as_string(), { "boy", "girl", "enby-b", "enby-g" });
 		}
 		catch (std::range_error& re)
 		{
-			throw std::runtime_error(fmt::format("Unknown gender {} while loading {}: {}", _gender->Stringify(), ID, re.what()));
+			throw std::runtime_error(fmt::format("Unknown gender {} while loading {}: {}", _gender.stringify5(), ID, re.what()));
 		}
 	}
 
-	auto nametag = value["nameTag"]->AsArray();
+	auto nametag = value["nameTag"].as_array();
 	for (int i = 0; i < 2; i++)
 	{
 		NameTag[i] = GetJSONColor(nametag[i]);
 		if (NameTag[i].a == -1)
-			throw std::runtime_error(fmt::format("Not a well-formed color value {} while loading {}.", nametag[i]->Stringify(), ID));
+			throw std::runtime_error(fmt::format("Not a well-formed color value {} while loading {}.", nametag[i].stringify5(), ID));
 	}
 
 	if (_isSpecial)
 		personality = nullptr;
 	else
 	{
-		personality = Database::Find<::Personality>(value["personality"], personalities);
+		personality = Database::FindEx<::Personality>(value["personality"], personalities);
 		if (!personality)
-			throw std::runtime_error(fmt::format("Unknown personality {} while loading {}.", value["personality"]->Stringify(), ID));
+			throw std::runtime_error(fmt::format("Unknown personality {} while loading {}.", value["personality"].stringify5(), ID));
 	}
-	personalitySubtype = _isSpecial ? 0 : value["personalitySubtype"]->AsInteger();
+	personalitySubtype = _isSpecial ? 0 : value["personalitySubtype"].as_integer();
 
 	{
-		hobby = Database::Find<::Hobby>(value["hobby"], hobbies);
+		hobby = Database::Find<::Hobby>(value["hobby"].as_string(), hobbies);
 		if (!hobby)
 		{
-			conprint(1, "Unknown hobby {} while loading {}.", value["hobby"]->Stringify(), ID);
+			conprint(1, "Unknown hobby {} while loading {}.", value["hobby"].stringify5(), ID);
 			hobby = Database::Find<::Hobby>("fallback", hobbies);
 		}
 	}
 
-	if (value["umbrella"] != nullptr) umbrellaID = value["umbrella"]->AsString();
-	if (value["photo"] != nullptr) photoID = value["photo"]->AsString();
-	if (value["poster"] != nullptr) portraitID = value["poster"]->AsString();
+	if (value["umbrella"].is_string()) umbrellaID = value["umbrella"].as_string();
+	if (value["photo"].is_string()) photoID = value["photo"].as_string();
+	if (value["poster"].is_string()) portraitID = value["poster"].as_string();
 
 	//Everything after this point is only for regular villagers.
 	if (_isSpecial)
 		return;
 
-	auto clothing = value["clothing"]->AsObject();
-	defaultClothingID = clothing["default"]->AsString();
-	rainCoatID = (clothing["rain"]->AsArray())[0]->AsString();
-	rainHatID = (clothing["rain"]->AsArray())[1]->AsString();
+	auto clothing = value["clothing"].as_object();
+	defaultClothingID = clothing["default"].as_string();
+	rainCoatID = (clothing["rain"].as_array())[0].as_string();
+	rainHatID = (clothing["rain"].as_array())[1].as_string();
 
 	face = 0;
 	mouth = 0;
@@ -227,9 +227,9 @@ Species* Villager::Species()
 	{
 		if (!specialDummy)
 		{
-			JSONObject temp;
-			temp["id"] = new JSONValue("__special__");
-			temp["name"] = new JSONValue("<special>");
+			jsonObject temp;
+			temp["id"] = "__special__";
+			temp["name"] = "<special>";
 			specialDummy = std::make_shared<::Species>(temp, "");
 		}
 		return specialDummy.get();
@@ -480,7 +480,7 @@ void Villager::Manifest()
 	try
 	{
 		auto json = VFS::ReadSaveJSON(fmt::format("villagers/{}.json", ID));
-		Deserialize((JSONObject&)json->AsObject());
+		Deserialize(json.as_object());
 	}
 	catch (std::runtime_error&)
 	{
@@ -522,10 +522,9 @@ void Villager::Depart()
 
 
 
-	JSONObject json;
-	Serialize(json);
-	auto val = JSONValue(json);
-	VFS::WriteSaveJSON(fmt::format("villagers/{}.json", ID), &val);
+	jsonValue json = json5pp::object({});
+	Serialize(json.as_object());
+	VFS::WriteSaveJSON(fmt::format("villagers/{}.json", ID), json);
 
 	memory.reset();
 }
@@ -593,7 +592,7 @@ bool Villager::GiveItem(InventoryItemP item)
 	return true;
 }
 
-void Villager::Serialize(JSONObject& target)
+void Villager::Serialize(jsonObject& target)
 {
 	if (!memory)
 	{
@@ -601,23 +600,23 @@ void Villager::Serialize(JSONObject& target)
 		return;
 	}
 
-	target["id"] = new JSONValue(ID);
-	target["catchphrase"] = new JSONValue(memory->_customCatchphrase);
-	auto items = JSONArray();
+	target["id"] = ID;
+	target["catchphrase"] = memory->_customCatchphrase;
+	auto items = json5pp::array({});
 	for (const auto& i : memory->Items)
 	{
-		items.push_back(new JSONValue(i->FullID()));
+		items.as_array().push_back(i->FullID());
 	}
-	target["items"] = new JSONValue(items);
-	auto clothes = JSONArray();
+	target["items"] = items;
+	auto clothes = json5pp::array({});
 	for (const auto& i : memory->Clothing)
 	{
-		clothes.push_back(new JSONValue(i->FullID()));
+		clothes.as_array().push_back(i->FullID());
 	}
-	target["clothing"] = new JSONValue(items);
+	target["clothing"] = clothes;
 }
 
-void Villager::Deserialize(JSONObject& source)
+void Villager::Deserialize(jsonObject& source)
 {
 	//ID is used to determine *which* Villager to deserialize *to*.
 	//Still, we might do a sanity check?
@@ -628,17 +627,17 @@ void Villager::Deserialize(JSONObject& source)
 		return;
 	}
 
-	memory->_customCatchphrase = source["catchphrase"]->AsString();
-	auto items = source["items"]->AsArray();
+	memory->_customCatchphrase = source["catchphrase"].as_string();
+	auto items = source["items"].as_array();
 	memory->Items.clear();
 	for (const auto& i : items)
 	{
-		memory->Items.push_back(std::make_shared<InventoryItem>(i->AsString()));
+		memory->Items.push_back(std::make_shared<InventoryItem>(i.as_string()));
 	}
-	auto clothes = source["clothing"]->AsArray();
+	auto clothes = source["clothing"].as_array();
 	memory->Clothing.clear();
 	for (const auto& i : clothes)
 	{
-		memory->Clothing.push_back(std::make_shared<InventoryItem>(i->AsString()));
+		memory->Clothing.push_back(std::make_shared<InventoryItem>(i.as_string()));
 	}
 }

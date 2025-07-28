@@ -10,6 +10,7 @@
 #include "TextUtils.h"
 #include "Console.h"
 #include "Texture.h"
+#include "JsonUtils.h"
 
 /*
 Saving to an archive file breaks if the entry already exists.
@@ -32,14 +33,14 @@ namespace UI
 	extern std::vector<glm::vec4> textColors;
 	extern std::shared_ptr<Texture> controls;
 
-	extern JSONObject json;
-	extern JSONObject settings;
+	extern jsonValue json;
+	extern jsonValue settings;
 	extern std::string initFile;
 };
 
 namespace JSONPatch
 {
-	extern JSONValue* ApplyPatch(JSONValue& source, JSONValue& patch);
+	extern jsonValue& ApplyPatch(jsonValue& source, jsonValue& patch);
 }
 
 #ifdef _WIN32
@@ -73,7 +74,7 @@ namespace VFS
 
 	static fs::path savePath;
 
-	static JSONValue* initJSON = nullptr;
+	static jsonValue initJSON;
 
 	static void addFileEntry(Entry& entry)
 	{
@@ -205,18 +206,18 @@ namespace VFS
 
 		if (manifestData != nullptr)
 		{
-			auto manifestDoc = JSON::Parse(manifestData.get())->AsObject();
+			auto manifestDoc = json5pp::parse5(manifestData.get());
 
-			newSrc.id = manifestDoc["id"]->AsString();
-			newSrc.friendlyName = manifestDoc["friendlyName"]->IsString() ? manifestDoc["friendlyName"]->AsString() : newSrc.id;
-			newSrc.author = manifestDoc["author"] != nullptr ? manifestDoc["author"]->AsString() : "Unknown";
-			if (manifestDoc["namespaces"] != nullptr)
-				for (const auto& s : manifestDoc["namespaces"]->AsArray())
-					newSrc.namespaces.push_back(s->AsString());
-			if (manifestDoc["dependencies"] != nullptr)
-				for (const auto& s : manifestDoc["dependencies"]->AsArray())
-					newSrc.dependencies.push_back(s->AsString());
-			newSrc.priority = manifestDoc["priority"] != nullptr ? manifestDoc["priority"]->AsInteger() : 1;
+			newSrc.id = manifestDoc["id"].as_string();
+			newSrc.friendlyName = manifestDoc["friendlyName"].is_string() ? manifestDoc["friendlyName"].as_string() : newSrc.id;
+			newSrc.author = !manifestDoc["author"].is_string() ? manifestDoc["author"].as_string() : "Unknown";
+			if (manifestDoc["namespaces"].is_array())
+				for (const auto& s : manifestDoc["namespaces"].as_array())
+					newSrc.namespaces.push_back(s.as_string());
+			if (manifestDoc["dependencies"].is_array())
+				for (const auto& s : manifestDoc["dependencies"].as_array())
+					newSrc.dependencies.push_back(s.as_string());
+			newSrc.priority = manifestDoc["priority"].is_integer() ? manifestDoc["priority"].as_integer() : 1;
 			sources.push_back(newSrc);
 		}
 		else
@@ -225,15 +226,15 @@ namespace VFS
 
 	static void findSaveDir()
 	{
-		auto initDoc = initJSON->AsObject();
-		if (initDoc["saves"]->AsObject().size() == 0)
+		auto initDoc = initJSON.as_object();
+		if (initDoc["saves"].as_object().size() == 0)
 			FatalError("No savegame paths listed.");
-		auto saves = initDoc["saves"]->AsObject();
+		auto saves = initDoc["saves"].as_object();
 
 #ifdef _WIN32
 		//Yes, we're assuming this is Vista or better. Fuck you.
 
-		auto p = saves["win32"]->AsString();
+		auto p = saves["win32"].as_string();
 
 		wchar_t* wp;
 		char mp[1024] = { 0 };
@@ -278,16 +279,16 @@ namespace VFS
 		auto initData = std::make_unique<char[]>(fsize + 2);
 		file.read(initData.get(), fsize);
 
-		initJSON = JSON::Parse(initData.get());
+		initJSON = json5pp::parse5(initData.get());
 		if (!initJSON)
 			FatalError("Init file parses as blank.");
 
-		auto initDoc = initJSON->AsObject();
-		if (initDoc["sources"]->AsArray().size() == 0)
+		auto initDoc = initJSON.as_object();
+		if (initDoc["sources"].as_array().size() == 0)
 			FatalError("No asset sources listed.");
-		for (const auto& source : initDoc["sources"]->AsArray())
+		for (const auto& source : initDoc["sources"].as_array())
 		{
-			for (const auto& mod : fs::directory_iterator(source->AsString()))
+			for (const auto& mod : fs::directory_iterator(source.as_string()))
 			{
 				auto path = mod.path();
 				auto fn = path.filename();
@@ -427,7 +428,7 @@ namespace VFS
 			file.read(ret.get(), fsize);
 			return ret;
 		}
-		return nullptr;
+		//return nullptr;
 	}
 
 	std::unique_ptr<char[]> ReadData(const std::string& path, size_t* size)
@@ -457,12 +458,12 @@ namespace VFS
 		return ReadString(*it);
 	}
 
-	JSONValue* ReadJSON(const Entry& entry)
+	jsonValue ReadJSON(const Entry& entry)
 	{
 		try
 		{
 			auto vfsData = ReadString(entry.path);
-			auto doc = JSON::Parse(vfsData.c_str());
+			auto doc = json5pp::parse5(vfsData);
 
 			std::string ppath = entry.path + ".patch";
 			for (const auto& pents : entries)
@@ -470,8 +471,8 @@ namespace VFS
 				if (pents.path == ppath)
 				{
 					auto pdata = ReadString(pents.path);
-					auto pdoc = JSON::Parse(pdata.c_str());
-					auto patched = JSONPatch::ApplyPatch(*doc, *pdoc);
+					auto pdoc = json5pp::parse5(pdata);
+					auto patched = JSONPatch::ApplyPatch(doc, pdoc);
 					doc = patched;
 				}
 			}
@@ -484,14 +485,14 @@ namespace VFS
 		}
 	}
 
-	JSONValue* ReadJSON(const std::string& path)
+	jsonValue ReadJSON(const std::string& path)
 	{
 		auto it = std::find_if(entries.cbegin(), entries.cend(), [path](Entry e)
 		{
 			return e.path == path;
 		});
 		if (it == entries.cend())
-			return nullptr;
+			return jsonValue(nullptr);
 		return ReadJSON(*it);
 	}
 
@@ -619,12 +620,12 @@ namespace VFS
 		return std::string(data.get());
 	}
 
-	JSONValue* ReadSaveJSON(const std::string& archive, const std::string& path)
+	jsonValue ReadSaveJSON(const std::string& archive, const std::string& path)
 	{
 		auto data = ReadSaveString(archive, path);
 		if (data.empty())
 			throw std::runtime_error("Blank JSON"); //return nullptr;
-		auto doc = JSON::Parse(data.c_str());
+		auto doc = json5pp::parse5(data);
 		return doc;
 	}
 
@@ -654,9 +655,9 @@ namespace VFS
 
 	}
 
-	bool WriteSaveJSON(const std::string& archive, const std::string& path, JSONValue* data)
+	bool WriteSaveJSON(const std::string& archive, const std::string& path, jsonValue& data)
 	{
-		return WriteSaveString(archive, path, JSON::Stringify(data));
+		return WriteSaveString(archive, path, data.stringify5(json5pp::rule::tab_indent<>()));
 	}
 
 	std::unique_ptr<char[]> ReadSaveData(const std::string& path, size_t* size)
@@ -693,10 +694,10 @@ namespace VFS
 		return std::string(ReadSaveData(path, nullptr).get());
 	}
 
-	JSONValue* ReadSaveJSON(const std::string& path)
+	jsonValue ReadSaveJSON(const std::string& path)
 	{
 		auto data = ReadSaveString(path);
-		auto doc = JSON::Parse(data.c_str());
+		auto doc = json5pp::parse5(data);
 		return doc;
 	}
 
@@ -717,8 +718,8 @@ namespace VFS
 		return WriteSaveData(path, (void*)data.c_str(), data.length());
 	}
 
-	bool WriteSaveJSON(const std::string& path, JSONValue* data)
+	bool WriteSaveJSON(const std::string& path, jsonValue& data)
 	{
-		return WriteSaveString(path, JSON::Stringify(data));
+		return WriteSaveString(path, data.stringify5(json5pp::rule::tab_indent<>()));
 	}
 }

@@ -24,7 +24,8 @@ namespace UI
 	extern glm::vec4 primaryColor;
 	extern glm::vec4 secondaryColor;
 	extern std::vector<glm::vec4> textColors;
-	extern JSONObject json;
+	extern jsonValue json;
+	extern jsonValue settings;
 };
 
 namespace Sprite
@@ -244,7 +245,7 @@ namespace Sprite
 		if (!cdata)
 		{
 			auto doc = VFS::ReadJSON("fonts/fonts.json");
-			auto fontSettings = doc->AsArray();
+			auto fontSettings = doc.as_array();
 			numFonts = (int)fontSettings.size();
 			if (numFonts > MaxFonts)
 			{
@@ -256,13 +257,13 @@ namespace Sprite
 
 			for (int i = 0; i < numFonts; i++)
 			{
-				auto thisFont = fontSettings[i]->AsObject();
-				fonts[i].file = "fonts/" + thisFont["file"]->AsString();
-				fonts[i].size = thisFont["size"]->AsInteger();
-				fonts[i].alignToGrid = thisFont["grid"] != nullptr ? thisFont["grid"]->AsBool() : false;
-				fonts[i].puaSource = thisFont["pua"] != nullptr ? thisFont["pua"]->AsInteger() : 0;
+				auto thisFont = fontSettings[i].as_object();
+				fonts[i].file = "fonts/" + thisFont["file"].as_string();
+				fonts[i].size = thisFont["size"].as_integer();
+				fonts[i].alignToGrid = thisFont["grid"].is_boolean() ? thisFont["grid"].as_boolean() : false;
+				fonts[i].puaSource = thisFont["pua"].is_number() ? thisFont["pua"].as_integer() : 0;
 			}
-			delete doc;
+			//delete doc;
 		}
 
 		if (fontTextures[(font * 256) + bank] != nullptr)

@@ -7,7 +7,7 @@ extern void PlayMusic(const std::string& id);
 
 DateTimePanel::DateTimePanel()
 {
-	auto json = VFS::ReadJSON("ui/datetime.json")->AsObject();
+	auto json = VFS::ReadJSON("ui/datetime.json").as_object();
 	layout = PanelLayout(json["datetime"]);
 
 	auto now = time(nullptr);
@@ -18,7 +18,7 @@ DateTimePanel::DateTimePanel()
 
 void DateTimePanel::Update()
 {
-	if (UI::settings["24hour"]->AsBool())
+	if (UI::settings.as_object()["24hour"].as_boolean())
 	{
 		layout.GetPanel("time")->Text = fmt::format("{:2}:{:02}", gm.tm_hour, gm.tm_min);
 		layout.GetPanel("ampm")->Text.clear();

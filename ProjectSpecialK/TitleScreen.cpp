@@ -15,7 +15,7 @@ extern std::vector<TickableP> newTickables;
 TitleScreen::TitleScreen()
 {
 	tickables.clear();
-	auto logoJson = VFS::ReadJSON("cinematics/logo/logo.json")->AsObject();
+	auto logoJson = VFS::ReadJSON("cinematics/logo/logo.json").as_object();
 	logoAnim = std::make_shared<PanelLayout>(logoJson["cinematic"]);
 
 	{

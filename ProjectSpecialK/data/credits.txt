@@ -94,11 +94,11 @@ GLAD	David Herberth
 GLFW	Marcus Geelnard
 	Camilla Löwy, et al
 GLM	G-Truc Creation
+JSON5PP	Shuta Kimura 
 Lua	PUC-Rio
 MiniZ	Rich Geldreich
 STB tools	Sean Barrett
 Scale2X	Thomas Bernard
-SimpleJSON	Mike Anchor
 Sol	Rapptz
 	ThePhD, et al
 UFBX	Samuli Raivio

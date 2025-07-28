@@ -4,7 +4,7 @@
 
 ItemHotbar::ItemHotbar()
 {
-	auto json = VFS::ReadJSON("ui/itemhotbar.json")->AsObject();
+	auto json = VFS::ReadJSON("ui/itemhotbar.json").as_object();
 	layout = PanelLayout(json["itemhotbar"]);
 
 	for (int i = 0; i < 9; i++)

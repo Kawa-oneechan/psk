@@ -115,7 +115,7 @@ public:
 	const bool IsManifest() const { return !(!memory); }
 	Species* Species();
 
-	Villager(JSONObject& value, const std::string& filename = "");
+	Villager(jsonObject& value, const std::string& filename = "");
 	std::string Name();
 	std::string SpeciesName();
 	void LoadModel();
@@ -137,8 +137,8 @@ public:
 
 	bool GiveItem(InventoryItemP item);
 
-	void Serialize(JSONObject& target);
-	void Deserialize(JSONObject& source);
+	void Serialize(jsonObject& target);
+	void Deserialize(jsonObject& source);
 
 	//kill copies
 	Villager(const Villager&) = delete;

@@ -1,6 +1,6 @@
 #pragma once
-
 #include "engine/Model.h"
+#include "engine/JsonUtils.h"
 
 /*
 TODO: Bring back the separate Tool, Furniture, and Clothing classes,
@@ -15,7 +15,7 @@ private:
 	ModelP fieldModel{ nullptr };
 
 public:
-	Item(JSONObject& value, const std::string& filename = "");
+	Item(jsonObject& value, const std::string& filename = "");
 	int FindVariantByName(const std::string& variantName) const;
 
 	//Returns true if the Item is a Thing, not a Tool, Furniture, or Clothing.

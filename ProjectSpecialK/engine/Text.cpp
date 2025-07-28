@@ -74,23 +74,36 @@ std::string Text::Entry::get()
 	return text;
 }
 
-Text::Entry& Text::Add(const std::string& key, JSONObject& map)
+Text::Entry& Text::Add(const std::string& key, jsonValue& value)
 {
 	auto entry = new Entry();
+
+	if (value.is_string())
+	{
+		auto map = json5pp::object({ { GetLangCode(gameLang), value.as_string() } });
+		return Add(key, map);
+	}
+
+	if (!value.is_object())
+	{
+		throw "TextAdd<Value>: JSONValue is not an Object or String.";
+	}
+
+	auto map = value.as_object();
 
 	for (auto& langs : map)
 	{
 		if (langs.first == "condition")
 		{
-			entry->condition = langs.second->AsString();
-			entry->ifTrue = map["true"]->AsString();
-			entry->ifElse = map["false"]->AsString();
+			entry->condition = langs.second.as_string();
+			entry->ifTrue = map["true"].as_string();
+			entry->ifElse = map["false"].as_string();
 			break;
 		}
 
 		auto langEnum = GetLangCode(langs.first);
 		if (langEnum == gameLang || langEnum == Language::USen)
-			entry->text = langs.second->AsString();
+			entry->text = langs.second.as_string();
 	}
 
 	if (entry->condition.empty())
@@ -109,25 +122,8 @@ Text::Entry& Text::Add(const std::string& key, JSONObject& map)
 
 Text::Entry& Text::Add(const std::string& key, const std::string& english)
 {
-	auto map = JSONObject();
-	auto langID = GetLangCode(gameLang);
-	map[langID] = new JSONValue(english);
+	auto map = json5pp::object({ { GetLangCode(gameLang), english } });
 	return Add(key, map);
-}
-
-Text::Entry& Text::Add(const std::string& key, JSONValue& value)
-{
-	if (value.IsObject())
-	{
-		auto obj = value.AsObject();
-		return Add(key, obj);
-	}
-	else if (value.IsString())
-	{
-		auto str = value.AsString();
-		return Add(key, str);
-	}
-	throw "TextAdd<Value>: JSONValue is not an Object or String.";
 }
 
 void Text::Forget(const std::string& ns)
@@ -153,16 +149,16 @@ void Text::Forget(const std::string& ns)
 	}
 }
 
-void Text::Add(JSONValue& doc)
+void Text::Add(jsonValue& doc)
 {
-	for (auto& entry : doc.AsObject())
+	for (auto& entry : doc.as_object())
 	{
 		std::string& key = (std::string&)entry.first;
 		//auto map = entry.second->AsObject();
-		auto& map = *entry.second;
+		auto& map = entry.second;
 		Add(key, map);
 	}
-	delete &doc;
+	//delete &doc;
 }
 
 std::string Text::Get(std::string key)

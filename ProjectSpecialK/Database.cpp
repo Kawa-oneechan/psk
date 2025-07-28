@@ -141,28 +141,28 @@ namespace Database
 	{
 		Filters.clear();
 		FilterCategories.clear();
-		auto settings = UI::settings["contentFilters"]->AsObject();
+		auto settings = UI::settings["contentFilters"].as_object();
 		auto doc = VFS::ReadJSON("filters.json");
-		for (const auto& f : doc->AsObject())
+		for (const auto& f : doc.as_object())
 		{
 			auto key = f.first;
-			auto val = f.second->AsObject();
+			auto val = f.second.as_object();
 			auto items = std::vector<std::string>();
-			Text::Add(key, *val["name"]);
-			for (const auto& i : val["items"]->AsObject())
+			Text::Add(key, val["name"]);
+			for (const auto& i : val["items"].as_object())
 			{
 				auto k = i.first;
-				auto v = i.second->AsObject();
-				Text::Add(k, *v["name"]);
+				auto v = i.second.as_object();
+				Text::Add(k, v["name"]);
 				items.push_back(k);
 
-				Filters[k] = v["default"] != nullptr ? v["default"]->AsBool() : true;
+				Filters[k] = v["default"].is_boolean() ? v["default"].as_boolean() : true;
 				if (settings.find(k) != settings.end())
-					Filters[k] = settings[k]->AsBool();
+					Filters[k] = settings[k].as_boolean();
 			}
 			FilterCategories[key] = items;
 		}
-		delete doc;
+		//delete doc;
 	}
 
 	void LoadText(float* progress)
@@ -179,7 +179,8 @@ namespace Database
 				if (last.substr(1, 4) != langID)
 					continue;
 			}
-			Text::Add(*VFS::ReadJSON(entry.path));
+			auto stuff = VFS::ReadJSON(entry.path);
+			Text::Add(stuff);
 			*progress += progressStep;
 		}
 	}
@@ -198,11 +199,11 @@ namespace Database
 
 			auto doc = VFS::ReadJSON(entry.path);
 
-			if (doc != nullptr)
+			if (!doc.is_null())
 			{
 				try
 				{
-					target.emplace_back(std::make_shared<T2>((JSONObject&)doc->AsObject(), entry.path));
+					target.emplace_back(std::make_shared<T2>((jsonObject&)doc.as_object(), entry.path));
 				}
 				catch (std::runtime_error& e)
 				{
@@ -213,7 +214,7 @@ namespace Database
 			{
 				conprint(1, "{}: error loading {}.", whom, entry.path);
 			}
-			delete doc;
+			//delete doc;
 			*progress += progressStep;
 		}
 	}

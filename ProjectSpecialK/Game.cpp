@@ -40,37 +40,41 @@ namespace UI
 
 	std::shared_ptr<Texture> controls{ nullptr };
 
-	JSONObject json = JSONObject();
-	JSONObject settings = JSONObject();
+	jsonValue json;
+	jsonValue settings;
 
 	std::string initFile = "init.json";
 
 	void Load()
 	{
-		auto doc = VFS::ReadJSON("ui/ui.json");
-		if (!doc)
+		UI::json = VFS::ReadJSON("ui/ui.json");
+		if (!UI::json)
 			FatalError("Could not read ui/ui.json. Something is very wrong.");
-		json = doc->AsObject();
-		auto colors = json["colors"]->AsObject();
-		for (auto& ink : colors["theme"]->AsObject())
+		auto json = UI::json.as_object();
+		auto colors = json["colors"].as_object();
+		for (auto& ink : colors["theme"].as_object())
 		{
 			themeColors[ink.first] = GetJSONColor(ink.second);
 		}
-		for (auto& ink : colors["text"]->AsArray())
+		for (auto& ink : colors["text"].as_array())
 		{
 			textColors.push_back(GetJSONColor(ink));
 		}
 
 		try
 		{
-			settings = VFS::ReadSaveJSON("options.json")->AsObject();
+			UI::settings = VFS::ReadSaveJSON("options.json");
 		}
 		catch (std::runtime_error&)
 		{
-			settings = JSON::Parse("{}")->AsObject();
+			UI::settings = json5pp::parse5("{}");
 		}
 
-#define DS(K, V) if (!settings[K]) settings[K] = new JSONValue(V)
+		auto settings = UI::settings.as_object();
+
+#define DS(K, V) if (!settings[K]) settings[K] = jsonValue(V)
+#define DA(K, V) if (!settings[K]) settings[K] = json5pp::array(V)
+#define DO(K, V) if (!settings[K]) settings[K] = json5pp::object(V)
 		DS("screenWidth", ScreenWidth);
 		DS("screenHeight", ScreenHeight);
 		DS("language", "USen");
@@ -81,86 +85,88 @@ namespace UI
 		DS("cursorScale", 100);
 		DS("botherColliding", true);
 		DS("24hour", true);
-		DS("contentFilters", JSONObject());
+		DO("contentFilters", {});
 		DS("musicVolume", 70);
 		DS("ambientVolume", 50);
 		DS("soundVolume", 100);
 		DS("speechVolume", 100);
-		DS("keyBinds", JSONArray());
-		DS("gamepadBinds", JSONArray());
+		DA("keyBinds", {});
+		DA("gamepadBinds", {});
+#undef DO
+#undef DA
 #undef DS
 
-		width = settings["screenWidth"]->AsInteger();
-		height = settings["screenHeight"]->AsInteger();
+		width = settings["screenWidth"].as_integer();
+		height = settings["screenHeight"].as_integer();
 
 		//constexpr Language opt2lan[] = { Language::USen, Language::JPja, Language::EUde, Language::EUes, Language::EUfr, Language::EUit, Language::EUhu, Language::EUnl, Language::EUen };
 		//gameLang = opt2lan[settings["language"]->AsInteger()];
-		gameLang = Text::GetLangCode(settings["language"]->AsString());
+		gameLang = Text::GetLangCode(settings["language"].as_string());
 
-		Audio::MusicVolume = settings["musicVolume"]->AsInteger() / 100.0f;
-		Audio::AmbientVolume = settings["ambientVolume"]->AsInteger() / 100.0f;
-		Audio::SoundVolume = settings["soundVolume"]->AsInteger() / 100.0f;
-		Audio::SpeechVolume = settings["speechVolume"]->AsInteger() / 100.0f;
+		Audio::MusicVolume = settings["musicVolume"].as_integer() / 100.0f;
+		Audio::AmbientVolume = settings["ambientVolume"].as_integer() / 100.0f;
+		Audio::SoundVolume = settings["soundVolume"].as_integer() / 100.0f;
+		Audio::SpeechVolume = settings["speechVolume"].as_integer() / 100.0f;
 
-		botherColliding = settings["botherColliding"]->AsBool();
+		botherColliding = settings["botherColliding"].as_boolean();
 
-		auto keyBinds = settings["keyBinds"]->AsArray();
+		auto keyBinds = settings["keyBinds"].as_array();
 		if (keyBinds.size() != NumKeyBinds)
 		{
 			keyBinds.reserve(NumKeyBinds);
 			for (auto &k : DefaultInputBindings)
-				keyBinds.push_back(new JSONValue(glfwGetKeyScancode(k)));
+				keyBinds.push_back(glfwGetKeyScancode(k));
 		}
 
-		auto padBinds = settings["gamepadBinds"]->AsArray();
+		auto padBinds = settings["gamepadBinds"].as_array();
 		if (padBinds.size() != NumKeyBinds)
 		{
 			padBinds.reserve(NumKeyBinds);
 			for (auto &k : DefaultInputGamepadBindings)
-				padBinds.push_back(new JSONValue(k));
+				padBinds.push_back(k);
 		}
 
 		for (int i = 0; i < NumKeyBinds; i++)
 		{
-			Inputs.Keys[i].ScanCode = keyBinds[i]->AsInteger();
-			Inputs.Keys[i].GamepadButton = padBinds[i]->AsInteger();
+			Inputs.Keys[i].ScanCode = keyBinds[i].as_integer();
+			Inputs.Keys[i].GamepadButton = padBinds[i].as_integer();
 		}
 
-		doc = VFS::ReadJSON("sound/sounds.json");
-		auto sounds = doc->AsObject();
+		auto sounds = VFS::ReadJSON("sound/sounds.json").as_object();
 		for (auto category : sounds)
 		{
-			for (auto sound : category.second->AsObject())
-				generalSounds[category.first][sound.first] = std::make_shared<Audio>(sound.second->AsString());
+			for (auto sound : category.second.as_object())
+				generalSounds[category.first][sound.first] = std::make_shared<Audio>(sound.second.as_string());
 		}
-		delete doc;
+		//delete doc;
 	}
 
 	void Save()
 	{
-		settings["screenWidth"] = new JSONValue(width);
-		settings["screenHeight"] = new JSONValue(height);
+		auto settings = UI::settings.as_object();
+		settings["screenWidth"] = width;
+		settings["screenHeight"] = height;
 
-		settings["musicVolume"] = new JSONValue((int)(Audio::MusicVolume * 100.0f));
-		settings["ambientVolume"] = new JSONValue((int)(Audio::AmbientVolume * 100.0f));
-		settings["soundVolume"] = new JSONValue((int)(Audio::SoundVolume * 100.0f));
-		settings["speechVolume"] = new JSONValue((int)(Audio::SpeechVolume * 100.0f));
+		settings["musicVolume"] = (int)(Audio::MusicVolume * 100.0f);
+		settings["ambientVolume"] = (int)(Audio::AmbientVolume * 100.0f);
+		settings["soundVolume"] = (int)(Audio::SoundVolume * 100.0f);
+		settings["speechVolume"] = (int)(Audio::SpeechVolume * 100.0f);
 
-		settings["botherColliding"] = new JSONValue(botherColliding);
+		settings["botherColliding"] = botherColliding;
 
-		auto binds = JSONArray();
+		auto binds = json5pp::array({});
 		for (auto& k : Inputs.Keys)
-			binds.push_back(new JSONValue(k.ScanCode));
-		settings["keyBinds"] = new JSONValue(binds);
+			binds.as_array().push_back(k.ScanCode);
+		settings["keyBinds"] = binds;
 
-		binds.clear();
+		auto binds2 = json5pp::array({});
 		for (auto& k : Inputs.Keys)
-			binds.push_back(new JSONValue(k.GamepadButton));
-		settings["gamepadBinds"] = new JSONValue(binds);
+			binds2.as_array().push_back(k.GamepadButton);
+		settings["gamepadBinds"] = binds2;
 
 		try
 		{
-			VFS::WriteSaveJSON("options.json", new JSONValue(settings));
+			VFS::WriteSaveJSON("options.json", UI::settings);
 		}
 		catch (std::exception&)
 		{

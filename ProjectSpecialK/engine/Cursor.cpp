@@ -9,10 +9,10 @@ extern "C" { double glfwGetTime(void); }
 Cursor::Cursor()
 {
 	auto doc = VFS::ReadJSON("ui/cursors.json");
-	auto hsj = doc->AsObject();
-	for (auto& hs : hsj["hotspots"]->AsArray())
+	auto hsj = doc.as_object();
+	for (auto& hs : hsj["hotspots"].as_array())
 		hotspots.push_back(GetJSONVec2(hs));
-	delete doc;
+	//delete doc;
 
 	SetScale(100);
 	Select(0);

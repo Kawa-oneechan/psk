@@ -247,14 +247,14 @@ std::string PreprocessBJTS(const std::string& data)
 		auto extensions = VFS::ReadJSON("bjts/content.json");
 		if (extensions)
 		{
-			for (auto extension : extensions->AsObject())
+			for (auto extension : extensions.as_object())
 			{
-				if (!extension.second->IsString())
+				if (!extension.second.is_string())
 				{
 					conprint(2, "BJTS extension {} is not a string.", extension.first);
 					continue;
 				}
-				auto val = extension.second->AsString();
+				auto val = extension.second.as_string();
 				if (val.length() < 4 || val.substr(val.length() - 4) != ".lua")
 				{
 					//This is a raw string. Convert it to a Lua thing.

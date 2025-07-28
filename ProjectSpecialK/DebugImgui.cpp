@@ -97,7 +97,7 @@ static void DoCamera()
 		{
 			try
 			{
-				auto json = JSON::Parse(ImGui::GetClipboardText());
+				auto json = json5pp::parse5(ImGui::GetClipboardText());
 				LoadCamera(json);
 			}
 			catch (std::runtime_error& x)
@@ -177,7 +177,7 @@ static void DoLights()
 		{
 			try
 			{
-				auto json = JSON::Parse(ImGui::GetClipboardText());
+				auto json = json5pp::parse5(ImGui::GetClipboardText());
 				LoadLights(json);
 			}
 			catch (std::runtime_error& x)
@@ -344,16 +344,16 @@ static void traverseArmature(int origin)
 	}
 }
 
-static void applyPose(JSONValue* json)
+static void applyPose(jsonValue& json)
 {
-	auto j = json->AsObject();
+	auto j = json.as_object();
 	//reset first
 	for (auto& bone : *debugArmature)
 		bone.Rotation = glm::vec3(0.0f);
 	for (auto& b : j)
 	{
 		auto& name = b.first;
-		auto trns = b.second->AsObject();
+		auto trns = b.second.as_object();
 		for (auto& bone : *debugArmature)
 		{
 			if (bone.Name == name)
@@ -447,7 +447,7 @@ static void DoArmature()
 			{
 				try
 				{
-					auto json = JSON::Parse(ImGui::GetClipboardText());
+					auto json = json5pp::parse5(ImGui::GetClipboardText());
 					applyPose(json);
 				}
 				catch (std::runtime_error& x)
@@ -461,7 +461,7 @@ static void DoArmature()
 			{
 				try
 				{
-					auto json = JSON::Parse(R"JSON({
+					auto json = json5pp::parse5(R"JSON({
 						"Arm_2_L": { "rot": [ 0,  0.0,  0.5 ] },
 						"Arm_1_L": { "rot": [ 0, -1.2, -0.4 ] },
 						"Arm_2_R": { "rot": [ 0,  0.0,  0.5 ] },

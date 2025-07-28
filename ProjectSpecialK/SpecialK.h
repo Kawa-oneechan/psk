@@ -13,7 +13,6 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-#include <JSON/JSON.h>
 #include <format.h>
 #include <sol.hpp>
 
@@ -62,8 +61,8 @@ namespace UI
 	extern std::vector<glm::vec4> textColors;
 	extern std::shared_ptr<Texture> controls;
 
-	extern JSONObject json;
-	extern JSONObject settings;
+	extern jsonValue json;
+	extern jsonValue settings;
 	extern std::string initFile;
 };
 

@@ -130,8 +130,8 @@ bool DoomMenu::Tick(float dt)
 
 	static bool justSwitchedPage = true;
 
-	auto metrics = UI::json["metrics"]->AsObject();
-	const int col = (int)(metrics["menuColumnSize"]->AsNumber() * scale);
+	auto metrics = UI::json["metrics"].as_object();
+	const int col = (int)(metrics["menuColumnSize"].as_number() * scale);
 
 	if (remapping != -1)
 	{
@@ -406,25 +406,25 @@ void DoomMenu::Draw(float dt)
 	auto width = 1980.0f;
 	auto height = 1080.0f;
 
-	auto metrics = UI::json["metrics"]->AsObject();
-	const int col = (int)(metrics["menuColumnSize"]->AsNumber() * scale);
+	auto metrics = UI::json["metrics"].as_object();
+	const int col = (int)(metrics["menuColumnSize"].as_number() * scale);
 
-	const float startX = (width * metrics["menuStartX"]->AsNumber()) * scale;
-	float startY = metrics["menuStartY"]->AsNumber() * scale;
-	const float endY = (height - metrics["menuEndDist"]->AsNumber()) * scale;
-	const float headerSize = metrics["menuHeaderSize"]->AsNumber();
-	const float headerOffset = metrics["menuHeaderOffset"]->AsNumber();
-	const float headerPadding = metrics["menuHeaderPadding"]->AsNumber();
-	const float subHeaderSize = metrics["menuSubHeaderSize"]->AsNumber();
-	const float subHeaderOffset = metrics["menuSubHeaderOffset"]->AsNumber();
-	const float subHeaderPadding = metrics["menuSubHeaderPadding"]->AsNumber();
-	const float itemSize = metrics["menuItemSize"]->AsNumber();
-	const float itemSpace = metrics["menuItemSpacing"]->AsNumber();
-	const float partScale = metrics["menuItemPartScale"]->AsNumber();
-	const float hiliteBarOffset = metrics["menuHiliteBarOffset"]->AsNumber();
-	const float checkboxOffset = metrics["menuCheckboxOffset"]->AsNumber();
-	const float sliderValueOffsetX = metrics["menuSliderValueOffsetX"]->AsNumber();
-	const float sliderValueOffsetY = metrics["menuSliderValueOffsetY"]->AsNumber();
+	const float startX = (width * metrics["menuStartX"].as_number()) * scale;
+	float startY = metrics["menuStartY"].as_number() * scale;
+	const float endY = (height - metrics["menuEndDist"].as_number()) * scale;
+	const float headerSize = metrics["menuHeaderSize"].as_number();
+	const float headerOffset = metrics["menuHeaderOffset"].as_number();
+	const float headerPadding = metrics["menuHeaderPadding"].as_number();
+	const float subHeaderSize = metrics["menuSubHeaderSize"].as_number();
+	const float subHeaderOffset = metrics["menuSubHeaderOffset"].as_number();
+	const float subHeaderPadding = metrics["menuSubHeaderPadding"].as_number();
+	const float itemSize = metrics["menuItemSize"].as_number();
+	const float itemSpace = metrics["menuItemSpacing"].as_number();
+	const float partScale = metrics["menuItemPartScale"].as_number();
+	const float hiliteBarOffset = metrics["menuHiliteBarOffset"].as_number();
+	const float checkboxOffset = metrics["menuCheckboxOffset"].as_number();
+	const float sliderValueOffsetX = metrics["menuSliderValueOffsetX"].as_number();
+	const float sliderValueOffsetY = metrics["menuSliderValueOffsetY"].as_number();
 
 	auto pos = glm::vec2(startX, startY);
 	

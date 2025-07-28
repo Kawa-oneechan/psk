@@ -12,7 +12,7 @@ public:
 	bool ModeledMuzzle;
 	std::string FilterAs;
 
-	Species(JSONObject& value, const std::string& filename = "");
+	Species(jsonObject& value, const std::string& filename = "");
 	std::string Name();
 	void LoadModel();
 	ModelP Model();

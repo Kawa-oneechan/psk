@@ -52,7 +52,7 @@ void MusicManager::Play(const std::string& id, bool immediate)
 		return;
 
 	if (library.size() == 0)
-		library = VFS::ReadJSON("music/music.json")->AsObject();
+		library = VFS::ReadJSON("music/music.json").as_object();
 	//don't bother deleting it here and now, we're holding onto this.
 
 	if (!immediate && !currentID.empty())
@@ -84,13 +84,13 @@ void MusicManager::Play(const std::string& id, bool immediate)
 
 	auto second = entry->second;
 
-	if (second->IsArray() && second->AsArray()[0]->IsObject())
+	if (second.is_array() && second.as_array()[0].is_object())
 	{
 		auto now2 = (gm.tm_hour * 24) + gm.tm_min;
 		auto prev = 0;
-		for (auto& ranges : second->AsArray())
+		for (auto& ranges : second.as_array())
 		{
-			auto r = ranges->AsObject();
+			auto r = ranges.as_object();
 			auto t = GetJSONVec2(r["to"]);
 			auto to = (int)((t[0] * 24) + t[1]);
 			if (now2 < to && now2 > prev)
@@ -101,19 +101,19 @@ void MusicManager::Play(const std::string& id, bool immediate)
 		}
 	}
 
-	while (second->IsArray())
+	while (second.is_array())
 	{
-		auto arr = second->AsArray();
+		auto arr = second.as_array();
 		second = arr[rnd::GetInt((int)arr.size())];
 	}
 
-	if (!second->IsString())
+	if (!second.is_string())
 	{
 		conprint(1, "PlayMusic: could not figure out \"{}\", did not end up with a string.", id);
 		return;
 	}
 
-	auto file = second->AsString();
+	auto file = second.as_string();
 
 	{
 		auto weather = "sunny";

@@ -12,7 +12,7 @@ private:
 		Idle, Playing, FadeOut, FadeToQueue
 	} state{ MusicState::Idle };
 
-	JSONObject library = JSONObject();
+	jsonObject library = jsonObject();
 	std::string currentID;
 	std::string currentFile;
 

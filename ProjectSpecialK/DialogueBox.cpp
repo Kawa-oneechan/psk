@@ -287,9 +287,9 @@ void DialogueBox::Draw(float dt)
 
 	time += dt * wobbleTimeScale;
 
-	auto metrics = UI::json["metrics"]->AsObject();
+	auto metrics = UI::json["metrics"].as_object();
 
-	auto dlgScale = metrics["dialogueScale"]->AsNumber() * scale;
+	auto dlgScale = metrics["dialogueScale"].as_number() * scale;
 
 	if (state == State::Opening || state == State::Closing)
 		dlgScale *= glm::mix(0.0f, 1.0f, tween);
@@ -297,7 +297,7 @@ void DialogueBox::Draw(float dt)
 	auto dlgWidth = bubble[0].width * dlgScale;
 	auto dlgHeight = bubble[0].height * dlgScale;
 	auto dlgLeft = (width * 0.5) - dlgWidth;
-	auto dlgTop = height - dlgHeight - metrics["dialogueGap"]->AsNumber();
+	auto dlgTop = height - dlgHeight - metrics["dialogueGap"].as_number();
 
 	auto wobble = Shaders["wobble"];
 	gradient[0].Use(1);
@@ -306,12 +306,12 @@ void DialogueBox::Draw(float dt)
 
 	Sprite::DrawSprite(wobble, bubble[bubbleNum], glm::vec2(dlgLeft, dlgTop), glm::vec2(dlgWidth * 2, dlgHeight), glm::vec4(0, 0, bubble[bubbleNum].width * 2, bubble[bubbleNum].height), 0, bubbleColor);
 
-	Sprite::DrawText(font, displayed, glm::vec2(dlgLeft + (metrics["dialogueTextLeft"]->AsNumber() * dlgScale), dlgTop + (metrics["dialogueTextTop"]->AsNumber() * dlgScale)), textColor, 170.0f * dlgScale);
+	Sprite::DrawText(font, displayed, glm::vec2(dlgLeft + (metrics["dialogueTextLeft"].as_number() * dlgScale), dlgTop + (metrics["dialogueTextTop"].as_number() * dlgScale)), textColor, 170.0f * dlgScale);
 
 	if (!name.empty())
 	{
-		const auto tagAngle = metrics["dialogueTagAngle"]->AsNumber();
-		const auto tagPos = glm::vec2((int)(width / 2) - bubble[0].width + (metrics["dialogueTagLeft"]->AsNumber() * scale), dlgTop + (sinf(time * 2) * 10) * scale);
+		const auto tagAngle = metrics["dialogueTagAngle"].as_number();
+		const auto tagPos = glm::vec2((int)(width / 2) - bubble[0].width + (metrics["dialogueTagLeft"].as_number() * scale), dlgTop + (sinf(time * 2) * 10) * scale);
 		const auto tagSize = glm::vec2(nametag[0].z, nametag[0].w) * scale;
 		const auto alpha = glm::clamp((tween * 2.0f) - 0.75f, 0.0f, 1.0f);
 		nametagColor[0].a = alpha;

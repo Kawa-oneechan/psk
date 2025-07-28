@@ -86,8 +86,8 @@ namespace UI
 	extern std::vector<glm::vec4> textColors;
 	extern std::shared_ptr<Texture> controls;
 
-	extern JSONObject json;
-	extern JSONObject settings;
+	extern jsonValue json;
+	extern jsonValue settings;
 	extern std::string initFile;
 
 	extern void Load();

@@ -126,8 +126,8 @@ public:
 	void Draw(float);
 	bool Tick(float);
 
-	void SaveObjects(JSONObject& json);
-	void LoadObjects(JSONObject& json);
+	void SaveObjects(jsonValue& json);
+	void LoadObjects(jsonValue& json);
 
 #ifdef DEBUG
 	void SaveToPNG();

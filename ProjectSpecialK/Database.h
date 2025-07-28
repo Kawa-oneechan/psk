@@ -47,13 +47,13 @@ namespace Database
 
 	//Find a database entry from a JSONValue. If it's an array of strings, tries each.
 	template<typename T>
-	std::shared_ptr<T> Find(const JSONValue* value, std::vector<std::shared_ptr<T>>& source)
+	std::shared_ptr<T> FindEx(const jsonValue& value, std::vector<std::shared_ptr<T>>& source)
 	{
-		if (value->IsString())
-			return Find<T>(value->AsString(), source);
-		if (value->IsArray())
+		if (value.is_string())
+			return Find<T>(value.as_string(), source);
+		if (value.is_array())
 		{
-			for (const auto& i : value->AsArray())
+			for (const auto& i : value.as_array())
 			{
 				auto t = Find<T>(i, source);
 				if (t != nullptr)

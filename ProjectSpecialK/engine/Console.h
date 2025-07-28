@@ -1,7 +1,6 @@
 #pragma once
 #include <functional>
 #include <fstream>
-#include <JSON/JSONValue.h>
 #include <format.h>
 #include <glm/glm.hpp>
 #include "Tickable.h"
@@ -32,49 +31,49 @@ struct CVar
 
 	bool Set(const std::string& value)
 	{
-		auto json = JSON::Parse(value.c_str());
+		auto json = json5pp::parse5(value);
 		switch (type)
 		{
 		case Type::Bool:
-			if (json->IsNumber())
-				*asBool = json->AsInteger() != 0;
-			else if (json->IsBool())
-				*asBool = json->AsBool();
+			if (json.is_number())
+				*asBool = json.as_integer() != 0;
+			else if (json.is_boolean())
+				*asBool = json.as_boolean();
 			return true;
 		case Type::Int:
-			if (json->IsNumber())
+			if (json.is_integer())
 			{
-				auto i = json->AsInteger();
+				auto i = json.as_integer();
 				if (!(min == -1 && max == -1))
 					i = glm::clamp(i, min, max);
 				*asInt = i;
 			}
 			return true;
 		case Type::Float:
-			if (json->IsNumber())
+			if (json.is_number())
 			{
-				auto i = json->AsNumber();
+				auto i = (float)json.as_number();
 				if (!(min == -1 && max == -1))
 					i = glm::clamp(i, (float)min, (float)max);
 				*asFloat = i;
 			}
 			return true;
 		case Type::String:
-			if (json->IsNumber())
-				*asString = fmt::format("{}", json->AsNumber());
-			else if (json->IsString())
-				*asString = json->AsString();
+			if (json.is_number())
+				*asString = fmt::format("{}", json.as_number());
+			else if (json.is_string())
+				*asString = json.as_string();
 			return true;
 		case Type::Vec2:
-			if (json->IsArray())
+			if (json.is_array())
 				*asVec2 = GetJSONVec2(json);
 			return true;
 		case Type::Vec3:
-			if (json->IsArray())
+			if (json.is_array())
 				*asVec3 = GetJSONVec3(json);
 			return true;
 		case Type::Vec4:
-			if (json->IsArray())
+			if (json.is_array())
 				*asVec4 = GetJSONVec4(json);
 			return true;
 		case Type::Color:

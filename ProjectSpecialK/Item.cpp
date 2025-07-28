@@ -11,9 +11,9 @@ int Item::FindVariantByName(const std::string& variantName) const
 	return -1;
 }
 
-Item::Item(JSONObject& value, const std::string& filename) : NameableThing(value, filename)
+Item::Item(jsonObject& value, const std::string& filename) : NameableThing(value, filename)
 {
-	auto type = value["type"] != nullptr ? value["type"]->AsString() : "[missing value]";
+	auto type = value["type"].is_string() ? value["type"].as_string() : "[missing value]";
 	if (type == "thing") Type = Type::Thing;
 	else if (type == "tool") Type = Type::Tool;
 	else if (type == "furniture") Type = Type::Furniture;
@@ -23,31 +23,31 @@ Item::Item(JSONObject& value, const std::string& filename) : NameableThing(value
 	else
 		throw std::runtime_error(fmt::format("Don't know what to do with type \"{}\" while loading {}.", type, ID));
 
-	Icon = value["icon"] != nullptr ? value["icon"]->AsString() : "leaf";
-	Price = value["price"] != nullptr ? value["price"]->AsInteger() : 0;
-	WearLimit = value["breakDamage"] != nullptr ? value["breakDamage"]->AsInteger() : 0;
+	Icon = value["icon"].is_string() ? value["icon"].as_string() : "leaf";
+	Price = value["price"].is_integer() ? value["price"].as_integer() : 0;
+	WearLimit = value["breakDamage"].is_integer() ? value["breakDamage"].as_integer() : 0;
 
 	if (Type != Type::Clothing)
 	{
-		StackLimit = value["stack"] != nullptr ? value["stack"]->AsInteger() : 0;
+		StackLimit = value["stack"].is_integer() ? value["stack"].as_integer() : 0;
 
-		CanBury = value["canBury"] != nullptr ? value["canBury"]->AsBool() : false;
-		CanEat = value["canEat"] != nullptr ? value["canEat"]->AsBool() : false;
-		CanPlace = value["canPlace"] != nullptr ? value["canPlace"]->AsBool() : false;
-		CanPlant = value["canPlant"] != nullptr ? value["canPlant"]->AsBool() : false;
-		CanDrop = value["canDrop"] != nullptr ? value["canDrop"]->AsBool() : false;
-		CanGive = value["canGive"] != nullptr ? value["canGive"]->AsBool() : false;
-		CanSell = value["canSell"] != nullptr ? value["canSell"]->AsBool() : (Price != 0);
-		CanDropOff = value["canDropOff"] != nullptr ? value["canDropOff"]->AsBool() : CanSell;
-		CanStore = value["canStore"] != nullptr ? value["canStore"]->AsBool() : false;
-		CanTrash = value["canTrash"] != nullptr ? value["canTrash"]->AsBool() : false;
-		CanGift = value["canGiveBDay"] != nullptr ? value["canGiveBDay"]->AsBool() : false;
-		CanWrap = value["canGiftwrap"] != nullptr ? value["canGiftwrap"]->AsBool() : false;
-		CanHave = value["canHave"] != nullptr ? value["canHave"]->AsBool() : true;
+		CanBury = value["canBury"].is_boolean() ? value["canBury"].as_boolean() : false;
+		CanEat = value["canEat"].is_boolean() ? value["canEat"].as_boolean() : false;
+		CanPlace = value["canPlace"].is_boolean() ? value["canPlace"].as_boolean() : false;
+		CanPlant = value["canPlant"].is_boolean() ? value["canPlant"].as_boolean() : false;
+		CanDrop = value["canDrop"].is_boolean() ? value["canDrop"].as_boolean() : false;
+		CanGive = value["canGive"].is_boolean() ? value["canGive"].as_boolean() : false;
+		CanSell = value["canSell"].is_boolean() ? value["canSell"].as_boolean() : (Price != 0);
+		CanDropOff = value["canDropOff"].is_boolean() ? value["canDropOff"].as_boolean() : CanSell;
+		CanStore = value["canStore"].is_boolean() ? value["canStore"].as_boolean() : false;
+		CanTrash = value["canTrash"].is_boolean() ? value["canTrash"].as_boolean() : false;
+		CanGift = value["canGiveBDay"].is_boolean() ? value["canGiveBDay"].as_boolean() : false;
+		CanWrap = value["canGiftwrap"].is_boolean() ? value["canGiftwrap"].as_boolean() : false;
+		CanHave = value["canHave"].is_boolean() ? value["canHave"].as_boolean() : true;
 
 		if (Type == Type::Furniture)
 		{
-			auto kind = value["category"] != nullptr ? value["category"]->AsString() : "[missing value]";
+			auto kind = value["category"].is_string() ? value["category"].as_string() : "[missing value]";
 			if (kind == "housewares") FurnKind = FurnKind::Houseware;
 			else if (kind == "houseware") FurnKind = FurnKind::Houseware;
 			else if (kind == "floor") FurnKind = FurnKind::Houseware;
@@ -65,12 +65,12 @@ Item::Item(JSONObject& value, const std::string& filename) : NameableThing(value
 			else
 				throw std::runtime_error(fmt::format("Don't know what to do with type \"{}\" while loading {}.", kind, ID));
 
-			CanGoOnWallsOrFloor = value["canWallFloor"] != nullptr ? value["canWallFloor"]->AsBool() : false;
+			CanGoOnWallsOrFloor = value["canWallFloor"].is_boolean() ? value["canWallFloor"].as_boolean() : false;
 		}
 	}
 	else
 	{
-		auto kind = value["category"] != nullptr ? value["category"]->AsString() : "[missing value]";
+		auto kind = value["category"].is_string() ? value["category"].as_string() : "[missing value]";
 		if (kind == "tops") ClothingKind = ClothingKind::Tops;
 		else if (kind == "bottoms") ClothingKind = ClothingKind::Bottoms;
 		else if (kind == "onepiece") ClothingKind = ClothingKind::OnePiece;
@@ -87,22 +87,22 @@ Item::Item(JSONObject& value, const std::string& filename) : NameableThing(value
 		else
 			throw std::runtime_error(fmt::format("Don't know what to do with type \"{}\" while loading {}.", kind, ID));
 
-		Style = value["style"] != nullptr ? value["style"]->AsString() : "";
-		PlayerModel = value["playerModel"] != nullptr ? value["playerModel"]->AsString() : "";
+		Style = value["style"].is_string() ? value["style"].as_string() : "";
+		PlayerModel = value["playerModel"].is_string() ? value["playerModel"].as_string() : "";
 	}
 	
 	auto vars = value["variants"];
 	auto remake = value["remake"];
-	if (vars != nullptr)
+	if (vars.is_array())
 	{
-		for (auto v : vars->AsArray())
-			variantNames.push_back(v->AsString());
+		for (auto v : vars.as_array())
+			variantNames.push_back(v.as_string());
 	}
-	else if (remake != nullptr)
+	else if (remake.is_array())
 	{
-		auto bodies = remake->AsObject().at("bodies");
-		for (auto v : bodies->AsArray())
-			variantNames.push_back(v->AsString());
+		auto bodies = remake.as_object().at("bodies");
+		for (auto v : bodies.as_array())
+			variantNames.push_back(v.as_string());
 	}
 }
 

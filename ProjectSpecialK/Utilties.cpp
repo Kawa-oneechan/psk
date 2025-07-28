@@ -8,36 +8,36 @@
 
 extern int width, height;
 
-std::string LoadCamera(JSONValue* json)
+std::string LoadCamera(jsonValue& json)
 {
 	std::string result = "";
 	try
 	{
-		if (json == nullptr)
+		if (json.is_null())
 			result = "no data.";
-		else if (!json->IsObject())
+		else if (!json.is_object())
 			result = "not an object.";
 		else
 		{
-			JSONObject& obj = (JSONObject&)json->AsObject();
-			if (obj["target"] == nullptr || obj["angles"] == nullptr || obj["distance"] == nullptr)
+			auto obj = json.as_object();
+			if (obj["target"].is_null() || obj["angles"].is_null() || obj["distance"].is_null())
 				result = "not all required camera properties accounted for.";
 			else
 			{
 				MainCamera->Target(GetJSONVec3(obj["target"]));
 				MainCamera->Angles(GetJSONVec3(obj["angles"]));
-				if (!obj["distance"]->IsNumber())
+				if (!obj["distance"].is_number())
 					result = "distance is not a number.";
 				else
-					MainCamera->Distance(obj["distance"]->AsNumber());
-				if (obj["drum"] != nullptr && obj["drum"]->IsBool())
-					commonUniforms.CurveEnabled = obj["drum"]->AsBool();
-				if (obj["drumAmount"] != nullptr && obj["drumAmount"]->IsNumber())
-					commonUniforms.CurveAmount = obj["drumAmount"]->AsNumber();
-				if (obj["drumPower"] != nullptr && obj["drumPower"]->IsNumber())
-					commonUniforms.CurvePower = obj["drumPower"]->AsNumber();
-				//if (obj["locked"] != nullptr && obj["locked"]->IsBool())
-				//	MainCamera.Locked = obj["locked"]->AsBool();
+					MainCamera->Distance(obj["distance"].as_number());
+				if (obj["drum"].is_boolean())
+					commonUniforms.CurveEnabled = obj["drum"].as_boolean();
+				if (obj["drumAmount"].is_number())
+					commonUniforms.CurveAmount = obj["drumAmount"].as_number();
+				if (obj["drumPower"].is_number())
+					commonUniforms.CurvePower = obj["drumPower"].as_number();
+				//if (obj["locked"] != nullptr && obj["locked"].is_boolean())
+				//	MainCamera.Locked = obj["locked"].as_boolean();
 			}
 		}
 	}
@@ -56,7 +56,7 @@ std::string LoadCamera(const std::string& path)
 	try
 	{
 		auto json = VFS::ReadJSON(path);
-		if (json == nullptr)
+		if (json.is_null())
 			result = "no data.";
 		else
 			LoadCamera(json);
@@ -68,26 +68,26 @@ std::string LoadCamera(const std::string& path)
 	return result;
 }
 
-std::string LoadLights(JSONValue* json)
+std::string LoadLights(jsonValue& json)
 {
 	std::string result = "";
 	try
 	{
-		if (json == nullptr)
+		if (json.is_null())
 			result = "no data.";
-		else if (!json->IsArray())
+		else if (!json.is_array())
 			result = "not an array.";
 		else
 		{
 			auto i = 0;
-			for (auto lobj : json->AsArray())
+			for (auto lobj : json.as_array())
 			{
-				if (!lobj->IsObject())
+				if (!lobj.is_object())
 					result = "not an object.";
 				else
 				{
-					JSONObject& l = (JSONObject&)lobj->AsObject();
-					if (l["pos"] == nullptr || l["col"] == nullptr)
+					auto l = lobj.as_object();
+					if (l["pos"].is_null() || l["col"].is_null())
 						result = "not all light properties accounted for.";
 					else
 					{
@@ -116,7 +116,7 @@ std::string LoadLights(const std::string& path)
 	try
 	{
 		auto json = VFS::ReadJSON(path);
-		if (json == nullptr)
+		if (json.is_null())
 			result = "no data.";
 		else
 			LoadLights(json);
