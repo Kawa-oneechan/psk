@@ -1,0 +1,11 @@
+{
+	"id": "psk:goodgirl",
+	"name": { "en": "<info::a :the >good girl tee" },
+	"type": "clothes",
+	"category": "tops",
+	"price": 640,
+	"variants": [ "white" ],
+	"icon": "tops",
+	"style": "ts_short",
+	"playerModel": "PlayerTopsTopTshirtsH"
+}

@@ -1,6 +1,5 @@
 #include "engine/Text.h"
 #include "engine/Framebuffer.h"
-#include "engine/Audio.h"
 #include "Game.h"
 #include "DialogueBox.h"
 #include "Camera.h"
@@ -177,7 +176,6 @@ namespace UI
 
 void GameInit()
 {
-	Audio::Initialize();
 	SolBinds::Setup();
 
 	MainCamera = std::make_shared<Camera>();

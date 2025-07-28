@@ -3,6 +3,7 @@
 #include <glad/glad.h>
 #include <glfw/glfw3.h>
 #include <sol.hpp>
+#include "Audio.h"
 #include "Console.h"
 #include "Cursor.h"
 #include "InputsMap.h"
@@ -442,6 +443,7 @@ int main(int argc, char** argv)
 #endif
 
 	cursor = std::make_shared<Cursor>();
+	Audio::Initialize();
 
 	GameInit();
 

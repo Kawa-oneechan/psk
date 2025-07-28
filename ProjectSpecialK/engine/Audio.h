@@ -34,9 +34,9 @@ public:
 	static float AmbientVolume;
 	//General sounds -- diegetic and UI.
 	static float SoundVolume;
-	//Dialogue sounds -- Bebebese and Animalese.
+	//Dialogue sounds -- both vocalizations and beeps.
 	static float SpeechVolume;
-	
+
 	static void Initialize();
 	static void Update();
 

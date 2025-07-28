@@ -81,7 +81,7 @@ Audio::Audio(std::string filename) : filename(filename)
 		type = Type::Music;
 	else if (filename.find("ambient/") != std::string::npos)
 		type = Type::Ambient;
-	else if (filename.find("animalese/") != std::string::npos)
+	else if (filename.find("speech/") != std::string::npos)
 		type = Type::Speech;
 	else
 		type = Type::Sound;
@@ -93,7 +93,7 @@ Audio::Audio(std::string filename) : filename(filename)
 	}
 	theChannel->setCallback(callback);
 
-	//we don't have ends_with in C++17, that's a 20 thing.
+	//we don't have ends_with, that's a 20 thing.
 	auto ext = filename.substr(filename.length() - 4, 4);
 	if (ext == ".ogg")
 	{
