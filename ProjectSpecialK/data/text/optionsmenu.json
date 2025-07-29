@@ -121,6 +121,13 @@
 		"hu": "Lufi esélye",
 		"nl": "Ballonnenkans"
 	},
+	"menu:options:24hourclock": {
+		"en": "24-hour time notation",
+		"jp": "24時間表記",
+		"de": "24-Stunden-Zeitnotation",
+		"hu": "24 órás időkijelzés",
+		"nl": "24-uurs tijdsweergave"
+	},
 	"menu:options:bothercolliding": {
 		"en": "Enable character/character collisions"
 	},

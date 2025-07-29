@@ -102,14 +102,17 @@ void OptionsMenu::Build()
 		},
 		[&](DoomMenuItem*i) { UI::settings.as_object()["speech"] = i->selection; }
 		));
+		options.items.push_back(new DoomMenuItem("menu:options:24hourclock", UI::settings.as_object()["24hour"],
+			[&](DoomMenuItem*) { UI::settings.as_object()["24hour"] = !UI::settings.as_object()["24hour"]; }
+		));
+		options.items.push_back(new DoomMenuItem("menu:options:bothercolliding", botherColliding,
+			[&](DoomMenuItem*) { botherColliding = !botherColliding; }
+		));
 		options.items.push_back(new DoomMenuItem("menu:options:pingrate", 2, 60, UI::settings.as_object()["pingRate"].as_integer(), 1, minutes,
 			[&](DoomMenuItem*i) { UI::settings.as_object()["pingRate"] = i->selection; }
 		));
 		options.items.push_back(new DoomMenuItem("menu:options:balloonchance", 10, 60, UI::settings.as_object()["balloonChance"].as_integer(), 5, percent,
 			[&](DoomMenuItem*i) { UI::settings.as_object()["balloonChance"] = i->selection; }
-		));
-		options.items.push_back(new DoomMenuItem("menu:options:bothercolliding", botherColliding,
-			[&](DoomMenuItem*) { botherColliding = !botherColliding; }
 		));
 		options.items.push_back(new DoomMenuItem("menu:options:cursorscale", 50, 150, UI::settings.as_object()["cursorScale"].as_integer(), 10, percent,
 			[&](DoomMenuItem*i)
