@@ -76,8 +76,6 @@ std::string Text::Entry::get()
 
 Text::Entry& Text::Add(const std::string& key, jsonValue& value)
 {
-	auto entry = new Entry();
-
 	if (value.is_string())
 	{
 		auto map = json5pp::object({ { GetLangCode(gameLang), value.as_string() } });
@@ -89,6 +87,7 @@ Text::Entry& Text::Add(const std::string& key, jsonValue& value)
 		throw "TextAdd<Value>: JSONValue is not an Object or String.";
 	}
 
+	auto entry = new Entry();
 	auto map = value.as_object();
 
 	for (auto& langs : map)

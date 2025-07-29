@@ -607,13 +607,13 @@ void Villager::Serialize(jsonObject& target)
 	{
 		items.as_array().push_back(i->FullID());
 	}
-	target["items"] = items;
+	target["items"] = std::move(items);
 	auto clothes = json5pp::array({});
 	for (const auto& i : memory->Clothing)
 	{
 		clothes.as_array().push_back(i->FullID());
 	}
-	target["clothing"] = clothes;
+	target["clothing"] = std::move(clothes);
 }
 
 void Villager::Deserialize(jsonObject& source)

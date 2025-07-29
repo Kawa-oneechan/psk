@@ -329,18 +329,18 @@ void Player::Serialize(jsonValue& target)
 	for (const auto& i : OnHand)
 	{
 		if (i == nullptr)
-			items.as_array().push_back(jsonValue(nullptr));
+			items.as_array().emplace_back(jsonValue(nullptr));
 		else
 			items.as_array().push_back(i->FullID());
 	}
-	target.as_object()["items"] = items;
+	target.as_object()["items"] = std::move(items);
 
 	auto storage = json5pp::array({});
 	for (const auto& i : Storage)
 	{
-		storage.as_array().push_back(i->FullID());
+		storage.as_array().emplace_back(i->FullID());
 	}
-	target.as_object()["storage"] = storage;
+	target.as_object()["storage"] = std::move(storage);
 
 	auto outfit = json5pp::object({});
 	{
@@ -351,7 +351,7 @@ void Player::Serialize(jsonValue& target)
 			i++;
 		}
 	}
-	target.as_object()["outfit"] = outfit;
+	target.as_object()["outfit"] = std::move(outfit);
 }
 
 void Player::Deserialize(jsonValue& source)
@@ -374,7 +374,7 @@ void Player::Deserialize(jsonValue& source)
 	noseStyle = style.at("nose").as_integer();
 	hairStyle = style.at("hair").as_integer();
 
-	auto items = s["items"].as_array();
+	auto& items = s["items"].as_array();
 	OnHand.fill(nullptr);
 	int j = 0;
 	for (const auto& i : items)

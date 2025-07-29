@@ -156,12 +156,12 @@ namespace UI
 		auto binds = json5pp::array({});
 		for (auto& k : Inputs.Keys)
 			binds.as_array().push_back(k.ScanCode);
-		settings["keyBinds"] = binds;
+		settings["keyBinds"] = std::move(binds);
 
 		auto binds2 = json5pp::array({});
 		for (auto& k : Inputs.Keys)
 			binds2.as_array().push_back(k.GamepadButton);
-		settings["gamepadBinds"] = binds2;
+		settings["gamepadBinds"] = std::move(binds2);
 
 		try
 		{

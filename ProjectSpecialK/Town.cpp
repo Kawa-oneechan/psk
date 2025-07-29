@@ -385,7 +385,7 @@ void Map::SaveObjects(jsonValue& json)
 			objects.as_array().push_back(item);
 		}
 	}
-	json.as_object()["objects"] = objects;
+	json.as_object()["objects"] = std::move(objects);
 }
 
 void Map::LoadObjects(jsonValue& json)
@@ -638,7 +638,7 @@ void Town::Save()
 	{
 		villagersArray.as_array().push_back(i->ID);
 	}
-	json.as_object()["villagers"] = villagersArray;
+	json.as_object()["villagers"] = std::move(villagersArray);
 
 	auto acresArray = json5pp::array({});
 	for (const auto& i : Acres)
@@ -648,7 +648,7 @@ void Town::Save()
 		else
 			acresArray.as_array().push_back(nullptr);
 	}
-	json.as_object()["acres"] = acresArray;
+	json.as_object()["acres"] = std::move(acresArray);
 
 	SaveObjects(json);
 
@@ -657,7 +657,7 @@ void Town::Save()
 	{
 		flagsObj.as_object()[i.first] = i.second;
 	}
-	json.as_object()["flags"] = flagsObj;
+	json.as_object()["flags"] = std::move(flagsObj);
 	
 	VFS::WriteSaveJSON("map/town.json", json);
 }

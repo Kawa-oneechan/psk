@@ -172,7 +172,7 @@
 		"27_IsCollectAchievement": "0",
 		"28_Label": "Shovel",
 		"29_Name": "道具：スコップ",
-		"30_ToolCategory": ""
+		"30_ToolCategory": "1"
 	},
 	//Assorted ItemRemake data
 	"xx_unparsedRemake": {

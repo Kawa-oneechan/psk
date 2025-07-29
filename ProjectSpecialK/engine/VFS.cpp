@@ -473,7 +473,7 @@ namespace VFS
 					auto pdata = ReadString(pents.path);
 					auto pdoc = json5pp::parse5(pdata);
 					auto patched = JSONPatch::ApplyPatch(doc, pdoc);
-					doc = patched;
+					doc = std::move(patched);
 				}
 			}
 

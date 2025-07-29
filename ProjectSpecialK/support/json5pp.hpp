@@ -95,7 +95,7 @@ class manipulator_flags
 public:
   /**
    * @brief Invert set/clear of flags
-   * 
+   *
    * @return A new flag manipulator
    */
   manipulator_flags<C,S> operator-() const { return manipulator_flags<C,S>(); }
@@ -276,7 +276,7 @@ public:
 private:
   /**
    * @brief Release content
-   * 
+   *
    * @param new_type A new type id
    */
   void release(type_enum new_type = TYPE_NULL)
@@ -351,7 +351,7 @@ public:
 public:
   /**
    * @brief Cast to null
-   * 
+   *
    * @throws std::bad_cast if the value is not a null
    */
   null_type as_null() const
@@ -362,7 +362,7 @@ public:
 
   /**
    * @brief Cast to boolean
-   * 
+   *
    * @throws std::bad_cast if the value is not a boolean
    */
   boolean_type as_boolean() const
@@ -373,7 +373,7 @@ public:
 
   /**
    * @brief Cast to number
-   * 
+   *
    * @throws std::bad_cast if the value is not a number nor integer
    */
   number_type as_number() const
@@ -388,7 +388,7 @@ public:
 
   /**
    * @brief Cast to integer number
-   * 
+   *
    * @throws std::bad_cast if the value is not a number nor integer
    */
   integer_type as_integer() const
@@ -403,7 +403,7 @@ public:
 
   /**
    * @brief Cast to string
-   * 
+   *
    * @throws std::bad_cast if the value is not a string
    */
   const string_type& as_string() const
@@ -414,7 +414,7 @@ public:
 
   /**
    * @brief Cast to string reference
-   * 
+   *
    * @throws std::bad_cast if the value is not a string
    */
   string_type& as_string()
@@ -425,7 +425,7 @@ public:
 
   /**
    * @brief Cast to array
-   * 
+   *
    * @throws std::bad_cast if the value is not a array
    */
   const array_type& as_array() const
@@ -436,7 +436,7 @@ public:
 
   /**
    * @brief Cast to array reference
-   * 
+   *
    * @throws std::bad_cast if the value is not a array
    */
   array_type& as_array()
@@ -447,7 +447,7 @@ public:
 
   /**
    * @brief Cast to object
-   * 
+   *
    * @throws std::bad_cast if the value is not a object
    */
   const object_type& as_object() const
@@ -458,7 +458,7 @@ public:
 
   /**
    * @brief Cast to object reference
-   * 
+   *
    * @throws std::bad_cast if the value is not a object
    */
   object_type& as_object()
@@ -733,7 +733,7 @@ private:
 
 /**
  * @brief Make JSON array
- * 
+ *
  * @param elements An initializer list of elements
  * @return JSON value object
  */
@@ -747,7 +747,7 @@ inline value array(std::initializer_list<value> elements)
 
 /**
  * @brief Make JSON object
- * 
+ *
  * @param elements An initializer list of key:value pairs
  * @return JSON value object
  */
@@ -763,7 +763,7 @@ namespace impl {
 
 /**
  * @brief Parser implementation
- * 
+ *
  * @tparam F A combination of flags
  */
 template <flags_type F>
@@ -776,14 +776,14 @@ private:
 public:
   /**
    * @brief Construct a new parser object
-   * 
+   *
    * @param istream An input stream
    */
   parser(std::istream& istream) : istream(istream) {}
 
   /**
    * @brief Apply flag manipulator
-   * 
+   *
    * @tparam S Flags to be set
    * @tparam C Flags to be cleared
    * @param manip A manipulator
@@ -797,7 +797,7 @@ public:
 
   /**
    * @brief Apply indent manipulator (For parser, this is ignored)
-   * 
+   *
    * @tparam NI A new indent specification
    * @param manip A manipulator
    * @return A reference to self
@@ -810,7 +810,7 @@ public:
 
   /**
    * @brief Delegate manipulator to std::istream
-   * 
+   *
    * @param manip A stream manipulator
    * @return An input stream
    */
@@ -821,7 +821,7 @@ public:
 
   /**
    * @brief Delegate operator>> to std::istream
-   * 
+   *
    * @tparam T A typename of argument
    * @param v A value
    * @return An input stream
@@ -834,7 +834,7 @@ public:
 
   /**
    * @brief Parse JSON
-   * 
+   *
    * @param v A value object to store parsed value
    * @return A reference to self
    */
@@ -847,7 +847,7 @@ public:
 private:
   /**
    * @brief Check if flag(s) enabled
-   * 
+   *
    * @param flags Combination of flags to be tested
    * @retval true Any flag is enabled
    * @retval False No flag is enabled
@@ -859,7 +859,7 @@ private:
 
   /**
    * @brief Skip spaces (and comments) from input stream
-   * 
+   *
    * @return the first non-space character
    */
   int skip_spaces()
@@ -917,7 +917,7 @@ private:
 
   /**
    * @brief Check if a character is a digit [0-9]
-   * 
+   *
    * @param ch Character code to test
    * @retval true The character is a digit
    * @retval false The character is not a digit
@@ -929,7 +929,7 @@ private:
 
   /**
    * @brief Convert a digit character [0-9] to number (0-9)
-   * 
+   *
    * @param ch Character code to convert
    * @return A converted number (0-9)
    */
@@ -940,7 +940,7 @@ private:
 
   /**
    * @brief Convert a hexadecimal digit character [0-9A-Fa-f] to number (0-15)
-   * 
+   *
    * @param ch Character code to convert
    * @return int A converted number (0-15)
    */
@@ -958,10 +958,10 @@ private:
 
   /**
    * @brief Check if a character is an alphabet
-   * 
-   * @param ch 
-   * @return true 
-   * @return false 
+   *
+   * @param ch
+   * @return true
+   * @return false
    */
   static bool is_alpha(int ch)
   {
@@ -970,7 +970,7 @@ private:
 
   /**
    * @brief Check character sequence
-   * 
+   *
    * @tparam C A list of typenames of character
    * @param ch A buffer to store latest character code
    * @param expected The first expected character code
@@ -990,7 +990,7 @@ private:
 
   /**
    * @brief Parser entry
-   * 
+   *
    * @param v A value object to store parsed value
    */
   void do_parse(value& v)
@@ -1007,7 +1007,7 @@ private:
 
   /**
    * @brief Parse value
-   * 
+   *
    * @param v A value object to store parsed value
    * @param context A description of context
    */
@@ -1046,7 +1046,7 @@ private:
 
   /**
    * @brief Parse null value
-   * 
+   *
    * @param v A value object to store parsed value
    */
   void parse_null(value& v)
@@ -1062,7 +1062,7 @@ private:
 
   /**
    * @brief Parse boolean value
-   * 
+   *
    * @param v A value object to store parsed value
    * @param ch The first character
    */
@@ -1085,7 +1085,7 @@ private:
 
   /**
    * @brief Parse number value
-   * 
+   *
    * @param v A value object to store parsed value
    * @param ch The first character
    */
@@ -1217,7 +1217,7 @@ private:
 
   /**
    * @brief Parse string
-   * 
+   *
    * @param buffer A buffer to store string
    * @param quote The first quote character
    * @param context A description of context
@@ -1230,8 +1230,6 @@ private:
     buffer.clear();
     for (;;) {
       int ch = istream.get();
-	  if (ch == 1)
-		  ch = '?'; //KAWA HAX
       if (ch == quote) {
         break;
       } else if (ch < ' ') {
@@ -1312,7 +1310,7 @@ private:
 
   /**
    * @brief Parse string value
-   * 
+   *
    * @param v A value object to store parsed value
    * @param quote The first quote character
    */
@@ -1325,7 +1323,7 @@ private:
 
   /**
    * @brief Parse array value
-   * 
+   *
    * @param v A value object to store parsed value
    */
   void parse_array(value& v)
@@ -1357,7 +1355,7 @@ private:
 
   /**
    * @brief Parse object key
-   * 
+   *
    * @return A parsed string
    */
   std::string parse_key()
@@ -1389,7 +1387,7 @@ private:
 
   /**
    * @brief Parse object value
-   * 
+   *
    * @param v A value object to store parsed value
    */
   void parse_object(value& v)
@@ -1431,7 +1429,7 @@ private:
 
 /**
  * @brief Stringifier implementation
- * 
+ *
  * @tparam F A combination of flags
  * @tparam I An indent specification
  */
@@ -1445,14 +1443,14 @@ private:
 public:
   /**
    * @brief Construct a new stringifier object
-   * 
+   *
    * @param ostream An output stream
    */
   stringifier(std::ostream& ostream) : ostream(ostream) {}
 
   /**
    * @brief Apply flag manipulator
-   * 
+   *
    * @tparam S Flags to be set
    * @tparam C Flags to be cleared
    * @param manip A manipulator
@@ -1467,21 +1465,22 @@ public:
 
   /**
    * @brief Apply indent manipulator
-   * 
+   *
    * @tparam NI A new indent specification
    * @param manip A manipulator
-   * @return stringifier<F,NI> 
+   * @return stringifier<F,NI>
    * @return An updated stringifier object
    */
   template <indent_type NI>
   stringifier<F,NI> operator<<(const manipulator_indent<NI>& manip)
   {
+    manip;
     return stringifier<F,NI>(ostream);
   }
 
   /**
    * @brief Delegate manipulator to std::ostream
-   * 
+   *
    * @param manip A stream manipulator
    * @return An output stream
    */
@@ -1492,7 +1491,7 @@ public:
 
   /**
    * @brief Delegate operator<< to std::ostream
-   * 
+   *
    * @tparam T A typename of argument
    * @param v A value
    * @return An output stream
@@ -1505,7 +1504,7 @@ public:
 
   /**
    * @brief Stringify JSON
-   * 
+   *
    * @param v A value object to stringify
    * @return A reference to self
    */
@@ -1518,7 +1517,7 @@ public:
 private:
   /**
    * @brief Check if flag(s) enabled
-   * 
+   *
    * @param flags Combination of flags to be tested
    * @retval true Any flag is enabled
    * @retval False No flag is enabled
@@ -1530,7 +1529,7 @@ private:
 
   /**
    * @brief Get newline code
-   * 
+   *
    * @return A newline string literal
    */
   static const char *get_newline()
@@ -1540,7 +1539,7 @@ private:
 
   /**
    * @brief Get the indent text
-   * 
+   *
    * @return An indent text for one level
    */
   static value::json_type get_indent()
@@ -1555,7 +1554,7 @@ private:
 
   /**
    * @brief Stringifier entry
-   * 
+   *
    * @param v A value object to stringify
    * @param indent An indent string
    */
@@ -1584,7 +1583,7 @@ private:
 
   /**
    * @brief Stringify value
-   * 
+   *
    * @param v A value object to stringify
    * @param indent An indent string
    */
@@ -1674,7 +1673,7 @@ private:
 
   /**
    * @brief Stringify string
-   * 
+   *
    * @param string A string to be stringified
    */
   void stringify_string(const value::string_type& string)
@@ -1710,7 +1709,7 @@ private:
 
 /**
  * @brief Apply flag manipulator to std::istream
- * 
+ *
  * @param istream An input stream
  * @param manip A flag manipulator
  * @return A new parser
@@ -1723,7 +1722,7 @@ parser<S&flags::parse_mask> operator>>(std::istream& istream, const manipulator_
 
 /**
  * @brief Apply flag manipulator to std::ostream
- * 
+ *
  * @param ostream An output stream
  * @param manip A flag manipulator
  * @return A new stringifier
@@ -1736,7 +1735,7 @@ stringifier<S&flags::stringify_mask,0> operator<<(std::ostream& ostream, const m
 
 /**
  * @brief Apply indent manipulator to std::istream
- * 
+ *
  * @param istream An input stream
  * @param manip An indent manipulator
  * @return A new parser
@@ -1749,7 +1748,7 @@ parser<0> operator>>(std::istream& istream, const manipulator_indent<I>& manip)
 
 /**
  * @brief Apply indent manipulator to std::ostream
- * 
+ *
  * @param ostream An output stream
  * @param manip An indent manipulator
  * @return A new stringifier
@@ -1762,7 +1761,7 @@ stringifier<0,I> operator<<(std::ostream& ostream, const manipulator_indent<I>& 
 
 /**
  * @brief Flow manipulator/value into stringifier
- * 
+ *
  * @tparam S A typename of stringifier
  * @tparam T A typename of manipulator / value
  * @tparam Args A list of typenames of other manipulators / values
@@ -1778,7 +1777,7 @@ static void flow_stringifier(S stringifier, T& value, Args&... args)
 
 /**
  * @brief Recursive expansion stopper for flow_stringifier
- * 
+ *
  * @tparam S A typename of stringifier
  * @param stringifier A stringifier
  */
@@ -1811,7 +1810,7 @@ private:
 
 /**
  * @brief Parse JSON from an input stream (with ECMA-404 standard rule)
- * 
+ *
  * @param istream An input stream
  * @param v A value to store parsed value
  * @return A new parser
@@ -1823,7 +1822,7 @@ inline impl::parser<0> operator>>(std::istream& istream, value& v)
 
 /**
  * @brief Stringify JSON to an output stream (with ECMA-404 standard rule)
- * 
+ *
  * @param ostream An output stream
  * @param v A value to stringify
  * @return A new stringifier
@@ -2028,7 +2027,7 @@ using space_indent              = impl::manipulator_indent<I>;
 
 /**
  * @brief Parse string as JSON (ECMA-404 standard)
- * 
+ *
  * @param istream An input stream
  * @param finished If true, parse as finished(closed) JSON
  * @return JSON value
@@ -2047,7 +2046,7 @@ inline value parse(std::istream& istream, bool finished = true)
 
 /**
  * @brief Parse string as JSON (ECMA-404 standard)
- * 
+ *
  * @param string A string to be parsed
  * @return JSON value
  */
@@ -2059,7 +2058,7 @@ inline value parse(const value::json_type& string)
 
 /**
  * @brief Parse string as JSON (ECMA-404 standard)
- * 
+ *
  * @param pointer A pointer to string to be parsed
  * @param length Length of string (in bytes)
  * @return JSON value
@@ -2072,7 +2071,7 @@ inline value parse(const void* pointer, std::size_t length)
 
 /**
  * @brief Parse string as JSON (JSON5)
- * 
+ *
  * @param istream An input stream
  * @param finished If true, parse as finished(closed) JSON
  * @return JSON value
@@ -2091,7 +2090,7 @@ inline value parse5(std::istream& istream, bool finished = true)
 
 /**
  * @brief Parse string as JSON (JSON5)
- * 
+ *
  * @param string A string to be parsed
  * @return JSON value
  */
@@ -2103,7 +2102,7 @@ inline value parse5(const value::json_type& string)
 
 /**
  * @brief Parse string as JSON (JSON5)
- * 
+ *
  * @param pointer A pointer to string to be parsed
  * @param length Length of string (in bytes)
  * @return JSON value
@@ -2116,7 +2115,7 @@ inline value parse5(const void* pointer, std::size_t length)
 
 /**
  * @brief Stringify value (ECMA-404 standard)
- * 
+ *
  * @tparam T A list of typenames of manipulators
  * @param v A value to stringify
  * @param args A list of manipulators
@@ -2132,7 +2131,7 @@ value::json_type stringify(const value& v, T... args)
 
 /**
  * @brief Stringify value (JSON5)
- * 
+ *
  * @tparam T A list of typenames of manipulators
  * @param v A value to stringify
  * @param args A list of manipulators
@@ -2148,7 +2147,7 @@ value::json_type stringify5(const value& v, T... args)
 
 /**
  * @brief Stringify value (ECMA-404 standard)
- * 
+ *
  * @tparam T A list of typenames of manipulators
  * @param args A list of manipulators
  * @return JSON string
@@ -2161,7 +2160,7 @@ value::json_type value::stringify(T... args) const
 
 /**
  * @brief Stringify value (JSON5)
- * 
+ *
  * @tparam T A list of typenames of manipulators
  * @param args A list of manipulators
  * @return JSON string

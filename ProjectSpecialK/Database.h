@@ -55,7 +55,7 @@ namespace Database
 		{
 			for (const auto& i : value.as_array())
 			{
-				auto t = Find<T>(i, source);
+				auto t = Find<T>(i.as_string(), source);
 				if (t != nullptr)
 					return t;
 			}

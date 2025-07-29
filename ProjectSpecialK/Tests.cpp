@@ -103,7 +103,7 @@ void RunTests()
 
 
 	auto testLine = "<ws:?:greeting> What's new?";
-	auto result = PreprocessBJTS(testLine);
+	auto result = PreprocessBJTS(testLine); //-V808 yes yes I know
 
 
 	{
