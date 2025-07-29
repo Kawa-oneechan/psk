@@ -29,7 +29,6 @@ constexpr auto WindowTitle = GAMENAME " - " VERSIONJOKE
 extern bool IsImGuiHovered();
 extern void SetupImGui();
 extern void DoImGui();
-extern void RunTests();
 #endif
 ;
 

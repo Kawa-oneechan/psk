@@ -149,6 +149,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="engine\Audio.cpp" />
     <ClCompile Include="engine\Framebuffer.cpp" />
+    <ClCompile Include="engine\ImGuiDebugger.cpp" />
     <ClCompile Include="GameConsole.cpp" />
     <ClCompile Include="Database.cpp" />
     <ClCompile Include="DateTimePanel.cpp" />
