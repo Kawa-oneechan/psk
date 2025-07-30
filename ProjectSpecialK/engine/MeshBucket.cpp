@@ -4,7 +4,8 @@ unsigned int currentVAO = 0;
 
 namespace MeshBucket
 {
-	static constexpr int meshBucketSize = 32;
+	static constexpr int meshBucketSize = 64;
+	static constexpr int transMeshBucketSize = 256;
 
 	struct MeshInABucket
 	{
@@ -21,6 +22,9 @@ namespace MeshBucket
 
 	static int meshesInBucket;
 	static std::array<MeshInABucket, meshBucketSize> meshBucket;
+
+	static int transMeshesInBucket;
+	static std::array<MeshInABucket, transMeshBucketSize> transMeshBucket;
 
 	void Flush()
 	{
@@ -104,22 +108,48 @@ namespace MeshBucket
 		std::memset(&meshBucket, 0, sizeof(MeshInABucket) * meshBucketSize);
 	}
 
+	void FlushTranslucent()
+	{
+		for (auto i = 0; i < transMeshesInBucket; i++)
+		{
+			meshBucket[meshesInBucket] = transMeshBucket[i];
+			meshesInBucket++;
+			if (meshesInBucket == meshBucketSize)
+				Flush();
+		}
+		transMeshesInBucket = 0;
+		Flush();
+	}
+
 	void Draw(Model::Mesh& mesh, const glm::vec3& position, const glm::quat& rotation, const glm::mat4 bones[], size_t boneCt)
 	{
-		meshBucket[meshesInBucket].VAO = mesh.VAO;
-		meshBucket[meshesInBucket].Shader = mesh.Shader;
-		meshBucket[meshesInBucket].Position = position;
-		meshBucket[meshesInBucket].Rotation = rotation;
-		meshBucket[meshesInBucket].Indices = mesh.Indices();
-		meshBucket[meshesInBucket].BoneCount = boneCt;
-		meshBucket[meshesInBucket].Layer = mesh.Layer;
-		for (auto i = 0; i < 4; i++)
-			meshBucket[meshesInBucket].Textures[i] = mesh.Textures[i];
-		for (auto i = 0; i < boneCt; i++)
-			meshBucket[meshesInBucket].Bones[i] = bones[i];
+		auto& bucket = meshBucket[meshesInBucket];
 
-		meshesInBucket++;
-		if (meshesInBucket == meshBucketSize)
-			Flush();
+		bucket.VAO = mesh.VAO;
+		bucket.Shader = mesh.Shader;
+		bucket.Position = position;
+		bucket.Rotation = rotation;
+		bucket.Indices = mesh.Indices();
+		bucket.BoneCount = boneCt;
+		bucket.Layer = mesh.Layer;
+		for (auto i = 0; i < 4; i++)
+			bucket.Textures[i] = mesh.Textures[i];
+		for (auto i = 0; i < boneCt; i++)
+			bucket.Bones[i] = bones[i];
+
+		if (!mesh.Translucent)
+		{
+			meshesInBucket++;
+			if (meshesInBucket == meshBucketSize)
+				Flush();
+		}
+		else
+		{
+			transMeshBucket[transMeshesInBucket] = meshBucket[meshesInBucket];
+			bucket.VAO = 0;
+			transMeshesInBucket++;
+			if (transMeshesInBucket == transMeshBucketSize)
+				FlushTranslucent();
+		}
 	};
 }

@@ -58,6 +58,8 @@ static void UpdateGrass()
 		{
 			if (mesh.Name.find("_mGrass") != std::string::npos)
 			{
+				if (mesh.Name.find("_mGrassCliffXlu") != std::string::npos)
+					continue;
 				mesh.Textures[0] = groundTextureAlbs;
 				mesh.Textures[1] = groundTextureNrms;
 				mesh.Textures[2] = groundTextureMixs;
@@ -295,6 +297,7 @@ void Map::drawGround(float dt)
 		}
 	}
 	MeshBucket::Flush();
+	MeshBucket::FlushTranslucent();
 }
 
 void Map::drawWorker(float dt)

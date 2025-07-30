@@ -216,6 +216,9 @@ Model::Model(const std::string& modelPath) : file(modelPath)
 						if (mat["visible"].is_boolean())
 							m.Visible = mat["visible"].as_boolean();
 
+						if (mat["translucent"].is_boolean())
+							m.Translucent = mat["translucent"].as_boolean();
+
 						foundIt = true;
 						break;
 					}

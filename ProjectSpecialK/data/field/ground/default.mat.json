@@ -12,7 +12,15 @@
 		"normal": "cliff_nrm.png"
 	},
 	"mGrassCliffXlu": {
-		"visible": false
+		//DOES NOT WORK QUITE RIGHT.
+		//Z-fights with the grass that it's
+		//supposed to blend into.
+		"shader": "grassedge",
+		"albedo": "cliffedge_op.png", //not albedo
+		"mix": "cliffedge_mix.png",
+		"normal": "cliffedge_nrm.png",
+		"opacity": "grasscolors.png", //still not opacity
+		"translucent": true //NEW
 	},
 	"mProcGrass": {
 		"visible": false

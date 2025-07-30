@@ -3,6 +3,7 @@
 	"model.vs": {	
 		"model": "model.fs",
 		"grass": "grass.fs",
+		"grassedge": "grassedge.fs",
 		"playerbody": "playerbody.fs",
 		"playereyes": "playereyes.fs",
 		"playermouth": "playermouth.fs",

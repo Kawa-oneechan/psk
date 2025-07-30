@@ -85,6 +85,7 @@ public:
 		std::string Name;
 		Shader* Shader;
 		int Layer;
+		bool Translucent;
 
 		Mesh(ufbx_mesh* mesh, std::array<Bone, MaxBones>& bones, size_t boneCt);
 		const size_t Indices() { return indices.size(); }
@@ -144,6 +145,7 @@ public:
 namespace MeshBucket
 {
 	extern void Flush();
+	extern void FlushTranslucent();
 	extern void Draw(Model::Mesh& mesh, const glm::vec3& position, const glm::quat& rotation, const glm::mat4 bones[], size_t boneCt);
 }
 

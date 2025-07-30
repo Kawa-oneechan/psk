@@ -8,7 +8,7 @@ out vec4 fragColor;
 layout(binding=0) uniform sampler2DArray albedoTexture;
 layout(binding=1) uniform sampler2DArray normalTexture;
 layout(binding=2) uniform sampler2DArray mixTexture;
-layout(binding=3) uniform sampler2DArray opacityTexture;
+layout(binding=3) uniform sampler2DArray opacityTexture; //will be color if layer == 0
 
 uniform vec3 viewPos;
 uniform int layer;
