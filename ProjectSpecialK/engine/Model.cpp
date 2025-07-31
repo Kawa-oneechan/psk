@@ -181,6 +181,7 @@ Model::Model(const std::string& modelPath) : file(modelPath)
 		{
 			auto m = Mesh(node->mesh, Bones, BoneCt);
 			m.Shader = Shaders["model"];
+			m.Translucent = false;
 			m.Textures[0] = &fallback;
 			m.Textures[1] = &fallbackNormal;
 			m.Textures[2] = &white;
