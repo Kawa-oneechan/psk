@@ -9,6 +9,7 @@ extern sol::state Sol;
 
 extern float timeScale;
 extern bool debugPanelLayoutPolygons;
+extern bool debugRenderPanelLayouts;
 extern bool wireframe;
 extern bool debuggerEnabled;
 extern bool cheatsEnabled;
@@ -19,8 +20,10 @@ bool noWear; //placeholder
 
 extern Framebuffer* postFxBuffer;
 
-void CCmdReshade()
+void CCmdReshade(jsonArray& args)
 {
+	args;
+
 	Shader::ReloadAll();
 	//postFxBuffer->ReloadShader();
 	{
@@ -37,9 +40,12 @@ void ConsoleRegister(Console* console)
 #ifdef DEBUG
 	RV("debugger", CVar::Type::Bool, &debuggerEnabled);
 #endif
+	RV("r_drawgui", CVar::Type::Bool, &debugRenderPanelLayouts, true);
+	RV("r_drum", CVar::Type::Bool, &commonUniforms.CurveEnabled);
+	RV("r_drumexp", CVar::Type::Float, &commonUniforms.CurvePower);
+	RV("r_wireframe", CVar::Type::Bool, &wireframe);
 	RV("r_polygons", CVar::Type::Bool, &debugPanelLayoutPolygons);
 	RV("r_postfx", CVar::Type::Int, &commonUniforms.PostEffect, false, 0, 4);
-	RV("r_wireframe", CVar::Type::Bool, &wireframe);
 	RV("r_toon", CVar::Type::Bool, &commonUniforms.Toon);
 	RV("r_zomboid", CVar::Type::Bool, &useOrthographic);
 	RV("s_ambientvolume", CVar::Type::Float, &Audio::AmbientVolume, false, 0, 100);
@@ -56,15 +62,13 @@ void ConsoleRegister(Console* console)
 
 	RV("grass", CVar::Type::Float, &commonUniforms.GrassColor, false);
 
+	//replace this with noclip below
 	RV("collidenpc", CVar::Type::Bool, &botherColliding, false);
 
 	//RV("ai_disable", CVar::Type::Bool, &);
 	//RV("cl_showpos", CVar::Type::Bool, &);
 	//RV("noclip", CVar::Type::Bool, &, true);
 	//RV("r_acredistance", CVar::Type::Int, &, false, 1, 6);
-	//RV("r_drawgui", CVar::Type::Bool, &, true);
-	//RV("r_drum", CVar::Type::Bool, &);
-	//RV("r_drumexp", CVar::Type::Float, &);
 	//RV("r_farz", CVar::Type::float, &, yes);
 
 #undef RV

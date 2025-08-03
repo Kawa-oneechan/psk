@@ -4,6 +4,7 @@
 
 using jsonValue = json5pp::value;
 using jsonObject = json5pp::value::object_type;
+using jsonArray = json5pp::value::array_type;
 
 //Given a JSON array with two numbers in it, returns a vec2 with those numbers.
 extern glm::vec2 GetJSONVec2(const jsonValue& val);

@@ -4,6 +4,7 @@
 #include "engine/Utilities.h"
 
 bool debugPanelLayoutPolygons = false;
+bool debugRenderPanelLayouts = true;
 
 PanelLayout::PanelLayout(jsonValue& source)
 {
@@ -329,6 +330,9 @@ Tween<float>* PanelLayout::Tween(float* target, float from, float to, float spee
 void PanelLayout::Draw(float dt)
 {
 	dt;
+	if (!debugRenderPanelLayouts)
+		return;
+
 	for (const auto& panel : panels)
 	{
 		auto color = panel->Color;

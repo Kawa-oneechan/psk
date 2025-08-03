@@ -87,7 +87,7 @@ struct CVar
 struct CCmd
 {
 	std::string name;
-	std::function<void()> act;
+	std::function<void(jsonArray& args)> act;
 };
 
 class Console : public Tickable
@@ -120,7 +120,7 @@ public:
 	bool Tick(float dt);
 	void Draw(float dt);
 	void RegisterCVar(const std::string& name, CVar::Type type, void* target, bool cheat = false, int min = -1, int max = -1);
-	void RegisterCCmd(const std::string& name, std::function<void()> act);
+	void RegisterCCmd(const std::string& name, std::function<void(jsonArray& args)> act);
 };
 
 extern Console* console;

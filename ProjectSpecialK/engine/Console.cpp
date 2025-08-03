@@ -26,9 +26,9 @@ extern void ConsoleRegister(Console* console);
 
 extern bool cheatsEnabled;
 
-static void CCmdVersion();
-static void CCmdCVarList();
-static void CCmdCCmdList();
+static void CCmdVersion(jsonArray& args);
+static void CCmdCVarList(jsonArray& args);
+static void CCmdCCmdList(jsonArray& args);
 
 Console::Console()
 {
@@ -51,7 +51,7 @@ Console::Console()
 	timer = 0.0f;
 	appearState = 0;
 
-	RegisterCCmd("clear", [&]() { buffer.clear(); });
+	RegisterCCmd("clear", [&](jsonArray&) { buffer.clear(); });
 	RegisterCCmd("version", CCmdVersion);
 	RegisterCCmd("cvarlist", CCmdCVarList);
 	RegisterCCmd("ccmdlist", CCmdCCmdList);
@@ -91,71 +91,75 @@ bool Console::Execute(const std::string& str)
 {
 	Print(8, fmt::format("]{}", str));
 
-	auto split = Split((std::string&)str, ' ');
-	if (split.size() >= 1)
+	auto first = std::string(str);
+	auto second = std::string("");
+	auto haveArgs = false;
 	{
-		for (auto& cv : cvars)
+		auto space = first.find(' ');
+		if (space != std::string::npos)
 		{
-			if (cv.name == split[0])
+			first = first.substr(0, space);
+			second = str.substr(space);
+			haveArgs = true;
+		}
+	}
+
+	for (auto& cv : cvars)
+	{
+		if (cv.name == first)
+		{
+			if (!haveArgs)
 			{
-				if (split.size() == 1)
+				switch (cv.type)
+				{
+				case CVar::Type::Bool: Print(0, fmt::format("{} is {}", cv.name, *cv.asBool)); return true;
+				case CVar::Type::Int: Print(0, fmt::format("{} is {}", cv.name, *cv.asInt)); return true;
+				case CVar::Type::Float: Print(0, fmt::format("{} is {}", cv.name, *cv.asFloat)); return true;
+				case CVar::Type::String: Print(0, fmt::format("{} is \"{}\"", cv.name, *cv.asString)); return true;
+				case CVar::Type::Vec2: Print(0, fmt::format("{} is [{}, {}]", cv.name, cv.asVec2->x, cv.asVec2->y)); return true;
+				case CVar::Type::Vec3: Print(0, fmt::format("{} is [{}, {}, {}]", cv.name, cv.asVec3->x, cv.asVec3->y, cv.asVec3->z)); return true;
+				case CVar::Type::Color:
+				case CVar::Type::Vec4: Print(0, fmt::format("{} is [{}, {}, {}, {}]", cv.name, cv.asVec4->x, cv.asVec4->y, cv.asVec4->z, cv.asVec4->w)); return true;
+				}
+			}
+			else
+			{
+				if (cv.cheat && !cheatsEnabled)
+				{
+					Print(1, fmt::format("Changing {} is considered a cheat.", cv.name));
+					return false;
+				}
+				if (cv.Set(second))
 				{
 					switch (cv.type)
 					{
-					case CVar::Type::Bool: Print(0, fmt::format("{} is {}", cv.name, *cv.asBool)); return true;
-					case CVar::Type::Int: Print(0, fmt::format("{} is {}", cv.name, *cv.asInt)); return true;
-					case CVar::Type::Float: Print(0, fmt::format("{} is {}", cv.name, *cv.asFloat)); return true;
-					case CVar::Type::String: Print(0, fmt::format("{} is \"{}\"", cv.name, *cv.asString)); return true;
-					case CVar::Type::Vec2: Print(0, fmt::format("{} is [{}, {}]", cv.name, cv.asVec2->x, cv.asVec2->y)); return true;
-					case CVar::Type::Vec3: Print(0, fmt::format("{} is [{}, {}, {}]", cv.name, cv.asVec3->x, cv.asVec3->y, cv.asVec3->z)); return true;
+					case CVar::Type::Bool: Print(0, fmt::format("{} set to {}", cv.name, *cv.asBool)); return true;
+					case CVar::Type::Int: Print(0, fmt::format("{} set to {}", cv.name, *cv.asInt)); return true;
+					case CVar::Type::Float: Print(0, fmt::format("{} set to {}", cv.name, *cv.asFloat)); return true;
+					case CVar::Type::String: Print(0, fmt::format("{} set to \"{}\"", cv.name, *cv.asString)); return true;
+					case CVar::Type::Vec2: Print(0, fmt::format("{} set to [{}, {}]", cv.name, cv.asVec2->x, cv.asVec2->y)); return true;
+					case CVar::Type::Vec3: Print(0, fmt::format("{} set to [{}, {}, {}]", cv.name, cv.asVec3->x, cv.asVec3->y, cv.asVec3->z)); return true;
 					case CVar::Type::Color:
-					case CVar::Type::Vec4: Print(0, fmt::format("{} is [{}, {}, {}, {}]", cv.name, cv.asVec4->x, cv.asVec4->y, cv.asVec4->z, cv.asVec4->w)); return true;
+					case CVar::Type::Vec4: Print(0, fmt::format("{} set to [{}, {}, {}, {}]", cv.name, cv.asVec4->x, cv.asVec4->y, cv.asVec4->z, cv.asVec4->w)); return true;
 					}
 				}
 				else
 				{
-					auto second = str.substr(str.find(' '));
-					if (cv.cheat && !cheatsEnabled)
-					{
-						Print(1, fmt::format("Changing {} is considered a cheat.", cv.name));
-						return false;
-					}
-					if (cv.Set(second))
-					{
-						switch (cv.type)
-						{
-						case CVar::Type::Bool: Print(0, fmt::format("{} set to {}", cv.name, *cv.asBool)); return true;
-						case CVar::Type::Int: Print(0, fmt::format("{} set to {}", cv.name, *cv.asInt)); return true;
-						case CVar::Type::Float: Print(0, fmt::format("{} set to {}", cv.name, *cv.asFloat)); return true;
-						case CVar::Type::String: Print(0, fmt::format("{} set to \"{}\"", cv.name, *cv.asString)); return true;
-						case CVar::Type::Vec2: Print(0, fmt::format("{} set to [{}, {}]", cv.name, cv.asVec2->x, cv.asVec2->y)); return true;
-						case CVar::Type::Vec3: Print(0, fmt::format("{} set to [{}, {}, {}]", cv.name, cv.asVec3->x, cv.asVec3->y, cv.asVec3->z)); return true;
-						case CVar::Type::Color:
-						case CVar::Type::Vec4: Print(0, fmt::format("{} set to [{}, {}, {}, {}]", cv.name, cv.asVec4->x, cv.asVec4->y, cv.asVec4->z, cv.asVec4->w)); return true;
-						}
-					}
-					else
-					{
-						Print(2, fmt::format("Could not set cvar {} to {}", cv.name, second));
-						return false;
-					}
-					return true;
-				}
-			}
-		}
-		if (split.size() == 1)
-		{
-			for (auto& cc : ccmds)
-			{
-				if (cc.name == split[0])
-				{
-					cc.act();
-					return true;
+					Print(2, fmt::format("Could not set cvar {} to {}", cv.name, second));
+					return false;
 				}
 			}
 		}
 	}
-	
+	for (auto& cc : ccmds)
+	{
+		if (cc.name == first)
+		{
+			cc.act(json5pp::parse5(fmt::format("[ {} ]", second)).as_array());
+			return true;
+		}
+	}
+
 	try
 	{
 		Sol.script(str);
@@ -326,7 +330,7 @@ void Console::RegisterCVar(const std::string& name, CVar::Type type, void* targe
 	cvars.push_back(cv);
 }
 
-void Console::RegisterCCmd(const std::string& name, std::function<void()> act)
+void Console::RegisterCCmd(const std::string& name, std::function<void(jsonArray& args)> act)
 {
 	for (auto& cc : ccmds)
 	{
@@ -342,8 +346,9 @@ void Console::RegisterCCmd(const std::string& name, std::function<void()> act)
 	ccmds.push_back(cc);
 }
 
-static void CCmdVersion()
+static void CCmdVersion(jsonArray& args)
 {
+	args;
 	conprint(8, GAMENAME " - " VERSIONJOKE);
 #ifdef DEBUG
 	conprint(7, "Debug version: " __DATE__);
@@ -367,8 +372,10 @@ static void CCmdVersion()
 #endif
 }
 
-static void CCmdCVarList()
+static void CCmdCVarList(jsonArray& args)
 {
+	args;
+
 	for (auto& cv : console->cvars)
 	{
 		switch (cv.type)
@@ -386,8 +393,10 @@ static void CCmdCVarList()
 	conprint(0, "{} cvars", console->cvars.size());
 }
 
-static void CCmdCCmdList()
+static void CCmdCCmdList(jsonArray& args)
 {
+	args;
+
 	for (auto& cc : console->ccmds)
 	{
 		conprint(0, "{}", cc.name);
