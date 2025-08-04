@@ -4,7 +4,7 @@
 #include "Shader.h"
 #include "Utilities.h"
 
-Model::Mesh::Mesh(ufbx_mesh* mesh, Armature& bones, size_t boneCt) : Visible(true), Layer(0)
+Model::Mesh::Mesh(ufbx_mesh* mesh, Armature& bones, size_t boneCt) : Visible(true), Layer(0), Translucent(false)
 {
 	Name = mesh->name.data;
 	Hash = MatHash = GetCRC(Name);

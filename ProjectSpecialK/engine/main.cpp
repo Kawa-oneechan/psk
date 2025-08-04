@@ -65,11 +65,7 @@ bool wireframe = false;
 
 float DeltaTime = 0.0f;
 float lastFrame = 0.0f;
-
 float timeScale = 1.0f;
-
-int articlePlease;
-
 bool cheatsEnabled;
 
 #ifdef DEBUG
@@ -231,7 +227,7 @@ static void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
 		/*
 		Okay so what I had before in "Hidden Power" on XNA was a Ray class.
 		That offered intersection methods with bounding boxes and such:
-		
+
 		var cursorRay = new Ray(nearPoint, direction);
 		foreach (var block in Map.Blocks)
 		{
@@ -251,7 +247,7 @@ static void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
 static void mousebutton_callback(GLFWwindow* window, int button, int action, int mods)
 {
 	window; mods;
-	
+
 #ifdef DEBUG
 	if (IsImGuiHovered())
 	{
@@ -510,7 +506,7 @@ int main(int argc, char** argv)
 
 		glBindBuffer(GL_UNIFORM_BUFFER, commonBuffer);
 		glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(CommonUniforms), &commonUniforms);
-		
+
 #ifdef DEBUG
 		endingTime = std::chrono::high_resolution_clock::now();
 		uiTime = std::chrono::duration_cast<std::chrono::milliseconds>(endingTime - startingTime).count() * 0.001f;

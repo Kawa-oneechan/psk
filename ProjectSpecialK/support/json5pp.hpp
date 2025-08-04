@@ -1545,7 +1545,7 @@ private:
   static value::json_type get_indent()
   {
     if (I > 0) {
-      return value::json_type(I, ' ');
+      return value::json_type((size_t)I, ' ');
     } else if (I < 0) {
       return value::json_type(-I, '\t');
     }

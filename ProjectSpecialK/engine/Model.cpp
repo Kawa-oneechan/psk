@@ -24,6 +24,9 @@ static glm::mat4 ufbxToGlmMat4(const ufbx_matrix& mat)
 	return ret;
 }
 
+#pragma warning(push)
+#pragma warning(disable: 4505)
+//Keeping these for later
 static glm::vec3 ufbxToGlmVec(const ufbx_vec3& vec)
 {
 	return glm::vec3(vec.x, vec.y, vec.z);
@@ -33,6 +36,7 @@ static glm::quat ufbxToGlmQuat(const ufbx_quat& qua)
 {
 	return glm::make_quat(&qua.x);
 }
+#pragma warning(pop)
 
 Model::Model(const std::string& modelPath) : file(modelPath)
 {

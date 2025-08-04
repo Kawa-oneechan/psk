@@ -4,7 +4,8 @@
 #include "engine/TextUtils.h"
 #include "engine/Utilities.h"
 
-extern int articlePlease;
+//TODO: hack, clean this up
+int articlePlease;
 
 NameableThing::NameableThing(jsonObject& value, const std::string& filename)
 {

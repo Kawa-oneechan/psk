@@ -7,12 +7,10 @@
 
 extern sol::state Sol;
 
-extern float timeScale;
 extern bool debugPanelLayoutPolygons;
 extern bool debugRenderPanelLayouts;
 extern bool wireframe;
 extern bool debuggerEnabled;
-extern bool cheatsEnabled;
 extern bool useOrthographic;
 extern bool botherColliding;
 
@@ -52,8 +50,6 @@ void ConsoleRegister(Console* console)
 	RV("s_effectvolume", CVar::Type::Float, &Audio::SoundVolume, false, 0, 100);
 	RV("s_musicvolume", CVar::Type::Float, &Audio::MusicVolume, false, 0, 100);
 	RV("s_voicevolume", CVar::Type::Float, &Audio::SpeechVolume, false, 0, 100);
-	RV("sv_cheats", CVar::Type::Bool, &cheatsEnabled);
-	RV("timescale", CVar::Type::Float, &timeScale, true);
 
 	RV("bells", CVar::Type::Int, &thePlayer.Bells, true);
 	RV("gender", CVar::Type::Int, &thePlayer.Gender, false, 0, 3);

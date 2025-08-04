@@ -18,17 +18,18 @@
 #include <ufbx.h>
 extern "C" { const char* glfwGetVersionString(void); }
 
-
 extern sol::state Sol;
 extern Texture* whiteRect;
 
 extern void ConsoleRegister(Console* console);
 
 extern bool cheatsEnabled;
+extern float timeScale;
 
 static void CCmdVersion(jsonArray& args);
 static void CCmdCVarList(jsonArray& args);
-static void CCmdCCmdList(jsonArray& args);
+static void CCmdCmdList(jsonArray& args);
+static void CCmdCRC32(jsonArray& args);
 
 Console::Console()
 {
@@ -54,7 +55,10 @@ Console::Console()
 	RegisterCCmd("clear", [&](jsonArray&) { buffer.clear(); });
 	RegisterCCmd("version", CCmdVersion);
 	RegisterCCmd("cvarlist", CCmdCVarList);
-	RegisterCCmd("ccmdlist", CCmdCCmdList);
+	RegisterCCmd("cmdlist", CCmdCmdList);
+	RegisterCCmd("crc32", CCmdCRC32);
+	RegisterCVar("sv_cheats", CVar::Type::Bool, &cheatsEnabled);
+	RegisterCVar("timescale", CVar::Type::Float, &timeScale, true);
 	ConsoleRegister(this);
 }
 
@@ -89,8 +93,6 @@ void Console::Flush()
 
 bool Console::Execute(const std::string& str)
 {
-	Print(8, fmt::format("]{}", str));
-
 	auto first = std::string(str);
 	auto second = std::string("");
 	auto haveArgs = false;
@@ -99,7 +101,7 @@ bool Console::Execute(const std::string& str)
 		if (space != std::string::npos)
 		{
 			first = first.substr(0, space);
-			second = str.substr(space);
+			second = str.substr(space + 1);
 			haveArgs = true;
 		}
 	}
@@ -110,17 +112,8 @@ bool Console::Execute(const std::string& str)
 		{
 			if (!haveArgs)
 			{
-				switch (cv.type)
-				{
-				case CVar::Type::Bool: Print(0, fmt::format("{} is {}", cv.name, *cv.asBool)); return true;
-				case CVar::Type::Int: Print(0, fmt::format("{} is {}", cv.name, *cv.asInt)); return true;
-				case CVar::Type::Float: Print(0, fmt::format("{} is {}", cv.name, *cv.asFloat)); return true;
-				case CVar::Type::String: Print(0, fmt::format("{} is \"{}\"", cv.name, *cv.asString)); return true;
-				case CVar::Type::Vec2: Print(0, fmt::format("{} is [{}, {}]", cv.name, cv.asVec2->x, cv.asVec2->y)); return true;
-				case CVar::Type::Vec3: Print(0, fmt::format("{} is [{}, {}, {}]", cv.name, cv.asVec3->x, cv.asVec3->y, cv.asVec3->z)); return true;
-				case CVar::Type::Color:
-				case CVar::Type::Vec4: Print(0, fmt::format("{} is [{}, {}, {}, {}]", cv.name, cv.asVec4->x, cv.asVec4->y, cv.asVec4->z, cv.asVec4->w)); return true;
-				}
+				Print(0, fmt::format("{} is {}", cv.name, cv.ToString()));
+				return true;
 			}
 			else
 			{
@@ -131,17 +124,8 @@ bool Console::Execute(const std::string& str)
 				}
 				if (cv.Set(second))
 				{
-					switch (cv.type)
-					{
-					case CVar::Type::Bool: Print(0, fmt::format("{} set to {}", cv.name, *cv.asBool)); return true;
-					case CVar::Type::Int: Print(0, fmt::format("{} set to {}", cv.name, *cv.asInt)); return true;
-					case CVar::Type::Float: Print(0, fmt::format("{} set to {}", cv.name, *cv.asFloat)); return true;
-					case CVar::Type::String: Print(0, fmt::format("{} set to \"{}\"", cv.name, *cv.asString)); return true;
-					case CVar::Type::Vec2: Print(0, fmt::format("{} set to [{}, {}]", cv.name, cv.asVec2->x, cv.asVec2->y)); return true;
-					case CVar::Type::Vec3: Print(0, fmt::format("{} set to [{}, {}, {}]", cv.name, cv.asVec3->x, cv.asVec3->y, cv.asVec3->z)); return true;
-					case CVar::Type::Color:
-					case CVar::Type::Vec4: Print(0, fmt::format("{} set to [{}, {}, {}, {}]", cv.name, cv.asVec4->x, cv.asVec4->y, cv.asVec4->z, cv.asVec4->w)); return true;
-					}
+					Print(0, fmt::format("{} set to {}", cv.name, cv.ToString()));
+					return true;
 				}
 				else
 				{
@@ -155,8 +139,26 @@ bool Console::Execute(const std::string& str)
 	{
 		if (cc.name == first)
 		{
-			cc.act(json5pp::parse5(fmt::format("[ {} ]", second)).as_array());
-			return true;
+			try
+			{
+				cc.act(json5pp::parse5(fmt::format("[ {} ]", second)).as_array());
+				return true;
+			}
+			catch (json5pp::syntax_error& x)
+			{
+				/*
+				std::string what = x.what();
+				if (what.find("illegal character") != -1 && what.find("in array") != -1)
+				{
+					//Print(5, "Did you mean to put that in quotes?");
+					Execute(fmt::format("{} \"{}\"", first, second));
+				}
+				else
+					Print(1, what);
+				*/
+				Print(1, x.what());
+				return false;
+			}
 		}
 	}
 
@@ -187,6 +189,7 @@ bool Console::Scancode(unsigned int scancode)
 		if (history.size() == 0 || history.back() != inputLine->value)
 			history.emplace_back(inputLine->value);
 		historyCursor = 0;
+		Print(8, fmt::format("]{}", inputLine->value));
 		Execute(inputLine->value);
 		inputLine->Clear();
 		return true;
@@ -346,6 +349,121 @@ void Console::RegisterCCmd(const std::string& name, std::function<void(jsonArray
 	ccmds.push_back(cc);
 }
 
+bool Console::CheckSplat(const std::string& pattern, const std::string& text)
+{
+	if (pattern.empty() || text.empty())
+		return true;
+	std::function<bool(const char*, const char*)> splat;
+	splat = [&](const char* p, const char* t) -> bool
+	{
+		while (*p)
+		{
+			if (*p == '*')
+			{
+				char s = *++p;
+				while (*t && *t != s) t++;
+				if (*t && *t == s)
+				{
+					if (splat(p, t++)) return true;
+					p--;
+				}
+			}
+			else if (*p == '?' || *p == *t)
+			{
+				p++; t++;
+			}
+			else
+				return false;
+		}
+		return (*p | *t) == 0;
+	};
+	return splat(pattern.c_str(), text.c_str());
+}
+
+bool CVar::Set(const std::string& value)
+{
+	{
+		if (type == Type::String && value[0] != '\"')
+			return Set(fmt::format("\"{}\"", value));
+		if ((type == Type::Vec2 || type == Type::Vec3 || type == Type::Vec4) && value[0] != '[')
+			return Set(fmt::format("[{}]", value));
+		if (type == Type::Color)
+		{
+			if (value[0] == '#')
+				return Set(fmt::format("\"{}\"", value));
+			if (value[0] != '[')
+				return Set(fmt::format("[{}]", value));
+		}
+
+		auto json = json5pp::parse5(value);
+		switch (type)
+		{
+		case Type::Bool:
+			if (json.is_number())
+				*asBool = json.as_integer() != 0;
+			else if (json.is_boolean())
+				*asBool = json.as_boolean();
+			return true;
+		case Type::Int:
+			if (json.is_integer())
+			{
+				auto i = json.as_integer();
+				if (!(min == -1 && max == -1))
+					i = glm::clamp(i, min, max);
+				*asInt = i;
+			}
+			return true;
+		case Type::Float:
+			if (json.is_number())
+			{
+				auto i = (float)json.as_number();
+				if (!(min == -1 && max == -1))
+					i = glm::clamp(i, (float)min, (float)max);
+				*asFloat = i;
+			}
+			return true;
+		case Type::String:
+			if (json.is_number())
+				*asString = fmt::format("{}", json.as_number());
+			else if (json.is_string())
+				*asString = json.as_string();
+			return true;
+		case Type::Vec2:
+			if (json.is_array())
+				*asVec2 = GetJSONVec2(json);
+			return true;
+		case Type::Vec3:
+			if (json.is_array())
+				*asVec3 = GetJSONVec3(json);
+			return true;
+		case Type::Vec4:
+			if (json.is_array())
+				*asVec4 = GetJSONVec4(json);
+			return true;
+		case Type::Color:
+			*asVec4 = GetJSONColor(json);
+			return true;
+		}
+		return false;
+	}
+}
+
+std::string CVar::ToString()
+{
+	switch (type)
+	{
+	case CVar::Type::Bool: return fmt::format("{}", *asBool);
+	case CVar::Type::Int: return fmt::format("{}", *asInt);
+	case CVar::Type::Float: return fmt::format("{}", *asFloat);
+	case CVar::Type::String: return fmt::format("\"{}\"", *asString);
+	case CVar::Type::Vec2: return fmt::format("[{}, {}]", asVec2->x, asVec2->y);
+	case CVar::Type::Vec3: return fmt::format("[{}, {}, {}]", asVec3->x, asVec3->y, asVec3->z);
+	case CVar::Type::Color:
+	case CVar::Type::Vec4: return fmt::format("[{}, {}, {}, {}]", asVec4->x, asVec4->y, asVec4->z, asVec4->w);
+	}
+	return "something";
+}
+
 static void CCmdVersion(jsonArray& args)
 {
 	args;
@@ -374,32 +492,59 @@ static void CCmdVersion(jsonArray& args)
 
 static void CCmdCVarList(jsonArray& args)
 {
-	args;
+	if (args.size() != 0 && !args[0].is_string())
+	{
+		conprint(0, "Pattern must be a string.");
+		return;
+	}
+	size_t results = 0;
 
 	for (auto& cv : console->cvars)
 	{
-		switch (cv.type)
+		if (args.size() == 0 || Console::CheckSplat(args[0].as_string(), cv.name))
 		{
-		case CVar::Type::Bool: conprint(0, "{} : {}", cv.name, *cv.asBool); break;
-		case CVar::Type::Int: conprint(0, "{} : {}", cv.name, *cv.asInt); break;
-		case CVar::Type::Float: conprint(0, "{} : {}", cv.name, *cv.asFloat); break;
-		case CVar::Type::String: conprint(0, "{} : \"{}\"", cv.name, *cv.asString); break;
-		case CVar::Type::Vec2: conprint(0, "{} : [{}, {}]", cv.name, cv.asVec2->x, cv.asVec2->y); break;
-		case CVar::Type::Vec3: conprint(0, "{} : [{}, {}, {}]", cv.name, cv.asVec3->x, cv.asVec3->y, cv.asVec3->z); break;
-		case CVar::Type::Color:
-		case CVar::Type::Vec4: conprint(0, "{} : [{}, {}, {}, {}]", cv.name, cv.asVec4->x, cv.asVec4->y, cv.asVec4->z, cv.asVec4->w); break;
+			switch (cv.type)
+			{
+			case CVar::Type::Bool: conprint(0, "{} : {}", cv.name, *cv.asBool); break;
+			case CVar::Type::Int: conprint(0, "{} : {}", cv.name, *cv.asInt); break;
+			case CVar::Type::Float: conprint(0, "{} : {}", cv.name, *cv.asFloat); break;
+			case CVar::Type::String: conprint(0, "{} : \"{}\"", cv.name, *cv.asString); break;
+			case CVar::Type::Vec2: conprint(0, "{} : [{}, {}]", cv.name, cv.asVec2->x, cv.asVec2->y); break;
+			case CVar::Type::Vec3: conprint(0, "{} : [{}, {}, {}]", cv.name, cv.asVec3->x, cv.asVec3->y, cv.asVec3->z); break;
+			case CVar::Type::Color:
+			case CVar::Type::Vec4: conprint(0, "{} : [{}, {}, {}, {}]", cv.name, cv.asVec4->x, cv.asVec4->y, cv.asVec4->z, cv.asVec4->w); break;
+			}
+			results++;
 		}
 	}
-	conprint(0, "{} cvars", console->cvars.size());
+	conprint(0, "{} cvars", results);
 }
 
-static void CCmdCCmdList(jsonArray& args)
+static void CCmdCmdList(jsonArray& args)
 {
-	args;
-
+	if (args.size() != 0 && !args[0].is_string())
+	{
+		conprint(0, "Pattern must be a string.");
+		return;
+	}
+	size_t results = 0;
 	for (auto& cc : console->ccmds)
 	{
-		conprint(0, "{}", cc.name);
+		if (args.size() == 0 || Console::CheckSplat(args[0].as_string(), cc.name))
+		{
+			conprint(0, "{}", cc.name);
+			results++;
+		}
 	}
-	conprint(0, "{} cvars", console->ccmds.size());
+	conprint(0, "{} ccmds", results);
+}
+
+static void CCmdCRC32(jsonArray& args)
+{
+	if (args.size() == 0 || !args[0].is_string())
+	{
+		conprint(0, "Input value must be a string.");
+		return;
+	}
+	conprint(0, "{:X}", GetCRC(args[0].as_string()));
 }
