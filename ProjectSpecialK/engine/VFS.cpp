@@ -262,6 +262,8 @@ namespace VFS
 		savePath = fs::path(p);
 
 		fs::create_directory(savePath);
+
+		//TODO: split this out
 		fs::create_directory(savePath / "villagers");
 		fs::create_directory(savePath / "map");
 	}

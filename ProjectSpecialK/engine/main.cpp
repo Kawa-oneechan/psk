@@ -80,7 +80,6 @@ namespace UI
 {
 	extern std::map<std::string, glm::vec4> themeColors;
 	extern std::vector<glm::vec4> textColors;
-	extern std::shared_ptr<Texture> controls;
 
 	extern jsonValue json;
 	extern jsonValue settings;
@@ -423,7 +422,6 @@ int main(int argc, char** argv)
 #endif
 
 	whiteRect = new Texture("white.png", GL_CLAMP_TO_EDGE);
-	UI::controls = std::make_shared<Texture>("ui/controls.png");
 
 	Shader::LoadAll();
 

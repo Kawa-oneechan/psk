@@ -34,6 +34,7 @@ public:
 	{
 		return (atlas.empty() || i >= atlas.size()) ? atlas[0] : atlas[i];
 	}
+	const size_t Frames() const { return atlas.size(); }
 
 	Texture(const Texture &x) = default;
 	Texture &operator=(const Texture &x) = default;

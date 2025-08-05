@@ -187,6 +187,8 @@ void GameInit()
 	dlgBox = std::make_shared<DialogueBox>();
 	messager = std::make_shared<Messager>();
 
+	UI::controls = std::make_shared<Texture>("ui/controls.png");
+
 #ifdef DEBUG
 	//RunTests();
 #endif
