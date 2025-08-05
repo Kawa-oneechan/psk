@@ -53,6 +53,8 @@ private:
 	int appearState;
 
 	std::ofstream hardcopy;
+	std::string prediction;
+	void predict();
 
 public:
 	std::vector<CVar> cvars;

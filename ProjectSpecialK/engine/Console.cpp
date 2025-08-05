@@ -31,6 +31,31 @@ static void CCmdCVarList(jsonArray& args);
 static void CCmdCmdList(jsonArray& args);
 static void CCmdCRC32(jsonArray& args);
 
+void Console::predict()
+{
+	prediction.clear();
+	if (!inputLine->value.empty())
+	{
+		auto& input = inputLine->value;
+		for (const auto& cc : ccmds)
+		{
+			if (cc.name.length() >= input.length() && cc.name.substr(0, input.length()) == input)
+			{
+				prediction = cc.name;
+				return;
+			}
+		}
+		for (const auto& cv : cvars)
+		{
+			if (cv.name.length() >= input.length() && cv.name.substr(0, input.length()) == input)
+			{
+				prediction = cv.name;
+				return;
+			}
+		}
+	}
+}
+
 Console::Console()
 {
 	visible = false;
@@ -179,7 +204,9 @@ bool Console::Execute(const std::string& str)
 
 bool Console::Character(unsigned int codepoint)
 {
-	return inputLine->Character(codepoint);
+	auto ret = inputLine->Character(codepoint);
+	predict();
+	return ret;
 }
 
 bool Console::Scancode(unsigned int scancode)
@@ -192,7 +219,6 @@ bool Console::Scancode(unsigned int scancode)
 		Print(8, fmt::format("]{}", inputLine->value));
 		Execute(inputLine->value);
 		inputLine->Clear();
-		return true;
 	}
 	else if (scancode == 328) //up
 	{
@@ -233,8 +259,16 @@ bool Console::Scancode(unsigned int scancode)
 				scrollCursor = 0;
 		}
 	}
-	//TODO: tab completion. See ImGUI console demo for details.
-	return inputLine->Scancode(scancode);
+
+	auto ret = inputLine->Scancode(scancode);
+	predict();
+
+	if (scancode == 15) //tab
+	{
+		inputLine->Set(prediction);
+	}
+
+	return ret;
 }
 
 void Console::Open()
@@ -308,6 +342,8 @@ void Console::Draw(float dt)
 
 	inputLine->rect = glm::vec4(16, offset.y + (h - 24), width - 8, offset.y + (h - 24) + 20);
 	Sprite::DrawText(0, "]", glm::vec2(4, inputLine->rect.y));
+	if (!prediction.empty())
+		Sprite::DrawText(0, prediction, glm::vec2(inputLine->rect.x, inputLine->rect.y), glm::vec4(0.5f));
 	inputLine->Draw(dt);
 }
 
@@ -499,7 +535,7 @@ static void CCmdCVarList(jsonArray& args)
 	}
 	size_t results = 0;
 
-	for (auto& cv : console->cvars)
+	for (const auto& cv : console->cvars)
 	{
 		if (args.size() == 0 || Console::CheckSplat(args[0].as_string(), cv.name))
 		{
@@ -528,7 +564,7 @@ static void CCmdCmdList(jsonArray& args)
 		return;
 	}
 	size_t results = 0;
-	for (auto& cc : console->ccmds)
+	for (const auto& cc : console->ccmds)
 	{
 		if (args.size() == 0 || Console::CheckSplat(args[0].as_string(), cc.name))
 		{
