@@ -77,7 +77,7 @@ Console::Console()
 	timer = 0.0f;
 	appearState = 0;
 
-	RegisterCCmd("clear", [&](jsonArray&) { buffer.clear(); });
+	RegisterCCmd("clear", [&](jsonArray&) { buffer.clear(); scrollCursor = 0; });
 	RegisterCCmd("version", CCmdVersion);
 	RegisterCCmd("cvarlist", CCmdCVarList);
 	RegisterCCmd("cmdlist", CCmdCmdList);
