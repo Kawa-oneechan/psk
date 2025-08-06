@@ -26,6 +26,7 @@ Framebuffer* postFxBuffer;
 std::shared_ptr<Texture> cloudImage, starsImage, skyImage;
 
 extern bool botherColliding;
+bool showPos = false;
 
 namespace SolBinds
 {
@@ -276,6 +277,21 @@ void GamePreDraw(float dt)
 	cloudImage->Use(1);
 	starsImage->Use(2);
 	skyImage->Use(3);
+}
+
+void GamePostDraw(float dt)
+{
+	dt;
+	if (showPos)
+	{
+		Sprite::DrawText(
+			fmt::format(
+				"{}\npos: {}, {}, {}",
+				thePlayer.Name,
+				thePlayer.Position.x, thePlayer.Position.y, thePlayer.Position.z),
+			glm::vec2(0)
+			);
+	}
 }
 
 void GameQuit()

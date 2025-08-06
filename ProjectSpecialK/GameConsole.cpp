@@ -13,6 +13,7 @@ extern bool wireframe;
 extern bool debuggerEnabled;
 extern bool useOrthographic;
 extern bool botherColliding;
+extern bool showPos;
 
 bool noWear; //placeholder
 
@@ -35,6 +36,7 @@ void ConsoleRegister(Console* console)
 {
 #define RV console->RegisterCVar
 
+	RV("cl_showpos", CVar::Type::Bool, &showPos);
 #ifdef DEBUG
 	RV("debugger", CVar::Type::Bool, &debuggerEnabled);
 #endif

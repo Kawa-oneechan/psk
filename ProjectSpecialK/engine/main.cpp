@@ -20,6 +20,7 @@ extern void GameMouse(double xPosIn, double yPosIn, float xoffset, float yoffset
 extern void GameResize();
 extern void GameLoopStart();
 extern void GamePreDraw(float dt);
+extern void GamePostDraw(float dt);
 extern void GameQuit();
 
 constexpr auto WindowTitle = GAMENAME " - " VERSIONJOKE
@@ -513,6 +514,7 @@ int main(int argc, char** argv)
 
 		GamePreDraw(dt * timeScale);
 		DrawAllTickables(tickables, dt * timeScale);
+		GamePostDraw(dt * timeScale);
 
 		//Sprite::DrawSprite(*layoutOverlay, glm::vec2(0), glm::vec2(width, height), glm::vec4(0), 0.0f, glm::vec4(1, 1, 1, 0.5));
 
