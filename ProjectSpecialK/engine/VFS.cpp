@@ -435,9 +435,10 @@ namespace VFS
 
 	std::unique_ptr<char[]> ReadData(const std::string& path, size_t* size)
 	{
-		auto it = std::find_if(entries.cbegin(), entries.cend(), [path](Entry e)
+		auto absPath = ResolvePath(path);
+		auto it = std::find_if(entries.cbegin(), entries.cend(), [absPath](Entry e)
 		{
-			return e.path == path;
+			return e.path == absPath;
 		});
 		if (it == entries.cend())
 			return nullptr;
@@ -451,9 +452,10 @@ namespace VFS
 
 	std::string ReadString(const std::string& path)
 	{
-		auto it = std::find_if(entries.cbegin(), entries.cend(), [path](Entry e)
+		auto absPath = ResolvePath(path);
+		auto it = std::find_if(entries.cbegin(), entries.cend(), [absPath](Entry e)
 		{
-			return e.path == path;
+			return e.path == absPath;
 		});
 		if (it == entries.cend())
 			return nullptr;
@@ -489,9 +491,10 @@ namespace VFS
 
 	jsonValue ReadJSON(const std::string& path)
 	{
-		auto it = std::find_if(entries.cbegin(), entries.cend(), [path](Entry e)
+		auto absPath = ResolvePath(path);
+		auto it = std::find_if(entries.cbegin(), entries.cend(), [absPath](Entry e)
 		{
-			return e.path == path;
+			return e.path == absPath;
 		});
 		if (it == entries.cend())
 			return jsonValue(nullptr);
@@ -503,6 +506,7 @@ namespace VFS
 		std::vector<Entry> r;
 		std::string p = path;
 		ReplaceAll(p, "\\", "/");
+		p = ResolvePath(p);
 
 		const auto splatp = p.find('*');
 

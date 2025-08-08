@@ -341,3 +341,32 @@ std::string GetDirFromFile(const std::string& path)
 {
 	return path.substr(0, path.rfind('/') + 1);
 }
+
+std::string ResolvePath(const std::string& maybeRelative)
+{
+	if (maybeRelative.find("..") == std::string::npos)
+		return maybeRelative;
+	auto parts = Split(std::string(maybeRelative), '/');
+	for (int i = 0; i < parts.size(); i++)
+	{
+		if (parts[i] == "..")
+		{
+			if (i == 0)
+				throw std::exception("Can't go up from the root.");
+
+			//erase both the .. and the previous bit
+			parts.erase(parts.begin() + i - 1);
+			parts.erase(parts.begin() + i - 1);
+
+			//start over
+			i = 0;
+		}
+		else if (parts[i] == ".")
+		{
+			//erase just this part
+			parts.erase(parts.begin() + i);
+			i = 0;
+		}
+	}
+	return join(parts.begin(), parts.end(), "/");
+}
