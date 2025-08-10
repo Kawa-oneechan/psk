@@ -99,7 +99,7 @@ glm::vec4 GetJSONColor(const jsonValue& val)
 static glm::vec2 checkDate(glm::vec2 date)
 {
 	date[0] = (float)glm::clamp((int)date[0], 1, 31);
-	date[1] = (float)glm::clamp((int)date[0], 1, 12);
+	date[1] = (float)glm::clamp((int)date[1], 1, 12);
 	return date;
 }
 glm::vec2 GetJSONDate(const jsonValue& val)
@@ -183,10 +183,7 @@ void GetAtlas(std::vector<glm::vec4> &ret, const std::string& jsonFile)
 	auto doc = rjs.as_object();
 	ret.clear();
 	if (!doc["type"].is_string())
-	{
-		//delete rjs;
 		return;
-	}
 
 	if (doc["type"].as_string() == "simple")
 	{
@@ -210,5 +207,4 @@ void GetAtlas(std::vector<glm::vec4> &ret, const std::string& jsonFile)
 	}
 	else
 		throw std::runtime_error(fmt::format("GetAtlas: file {} has an unknown type \"{}\".", jsonFile, doc["type"].as_string()));
-	//delete rjs;
 }

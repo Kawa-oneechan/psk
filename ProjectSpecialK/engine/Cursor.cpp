@@ -12,7 +12,6 @@ Cursor::Cursor()
 	auto hsj = doc.as_object();
 	for (auto& hs : hsj["hotspots"].as_array())
 		hotspots.push_back(GetJSONVec2(hs));
-	//delete doc;
 
 	SetScale(100);
 	Select(0);

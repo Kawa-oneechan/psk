@@ -263,7 +263,6 @@ namespace Sprite
 				fonts[i].alignToGrid = thisFont["grid"].is_boolean() ? thisFont["grid"].as_boolean() : false;
 				fonts[i].puaSource = thisFont["pua"].is_number() ? thisFont["pua"].as_integer() : 0;
 			}
-			//delete doc;
 		}
 
 		if (fontTextures[(font * 256) + bank] != nullptr)

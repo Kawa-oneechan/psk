@@ -162,7 +162,6 @@ namespace Database
 			}
 			FilterCategories[key] = items;
 		}
-		//delete doc;
 	}
 
 	void LoadText(float* progress)
@@ -214,7 +213,6 @@ namespace Database
 			{
 				conprint(1, "{}: error loading {}.", whom, entry.path);
 			}
-			//delete doc;
 			*progress += progressStep;
 		}
 	}

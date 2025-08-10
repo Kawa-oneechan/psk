@@ -153,11 +153,9 @@ void Text::Add(jsonValue& doc)
 	for (auto& entry : doc.as_object())
 	{
 		std::string& key = (std::string&)entry.first;
-		//auto map = entry.second->AsObject();
 		auto& map = entry.second;
 		Add(key, map);
 	}
-	//delete &doc;
 }
 
 std::string Text::Get(std::string key)

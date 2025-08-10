@@ -138,7 +138,6 @@ namespace UI
 			for (auto sound : category.second.as_object())
 				generalSounds[category.first][sound.first] = std::make_shared<Audio>(sound.second.as_string());
 		}
-		//delete doc;
 	}
 
 	void Save()

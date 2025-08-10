@@ -346,7 +346,7 @@ std::string ResolvePath(const std::string& maybeRelative)
 {
 	if (maybeRelative.find("..") == std::string::npos)
 		return maybeRelative;
-	auto parts = Split(std::string(maybeRelative), '/');
+	auto parts = Split((std::string&)maybeRelative, '/');
 	for (int i = 0; i < parts.size(); i++)
 	{
 		if (parts[i] == "..")

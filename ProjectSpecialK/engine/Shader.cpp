@@ -151,7 +151,6 @@ void Shader::LoadAll()
 			Shaders[key] = new Shader(vsFile, fsFile);
 		}
 	}
-	//delete doc;
 }
 
 void Shader::ReloadAll()
