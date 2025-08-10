@@ -1,5 +1,6 @@
 #include "engine/InputsMap.h"
 #include "ItemHotbar.h"
+#include "Player.h"
 #include "Town.h"
 
 ItemHotbar::ItemHotbar()

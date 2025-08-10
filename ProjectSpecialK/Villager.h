@@ -3,6 +3,7 @@
 #include "Animator.h"
 #include "Species.h"
 #include "Traits.h"
+#include "Item.h"
 
 enum class Gender
 {

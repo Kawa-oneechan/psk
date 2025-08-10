@@ -2,7 +2,12 @@
 #include "engine/Text.h"
 #include "engine/Cursor.h"
 #include "engine/TextUtils.h"
+#include "engine/SpriteRenderer.h"
+#include "engine/Utilities.h"
+#include "engine/Audio.h"
 #include "Utilities.h"
+#include "Database.h"
+#include "Types.h"
 
 extern bool botherColliding;
 

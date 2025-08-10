@@ -1,7 +1,10 @@
 #pragma once
 
 #include <vector>
-
+#include "Item.h"
+#include "Species.h"
+#include "Traits.h"
+#include "Villager.h"
 
 extern std::vector<ItemP> items;
 extern std::vector<SpeciesP> species;

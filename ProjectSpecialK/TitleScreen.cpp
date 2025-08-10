@@ -1,12 +1,14 @@
-﻿#include "TitleScreen.h"
+﻿#include "engine/Utilities.h"
+#include "engine/TextUtils.h"
+#include "engine/Text.h"
+#include "engine/Random.h"
+#include "engine/Console.h"
+#include "engine/SpriteRenderer.h"
+#include "TitleScreen.h"
 #include "MusicManager.h"
 #include "Town.h"
 #include "InGame.h"
 #include "Utilities.h"
-#include "engine/Utilities.h"
-#include "engine/TextUtils.h"
-#include "engine/Text.h"
-#include "engine/Random.h"
 
 extern "C" { double glfwGetTime(void); }
 

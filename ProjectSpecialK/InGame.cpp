@@ -2,6 +2,8 @@
 #include "InGame.h"
 #include "Messager.h"
 #include "Utilities.h"
+#include "Camera.h"
+#include "Player.h"
 
 InGame::InGame()
 {

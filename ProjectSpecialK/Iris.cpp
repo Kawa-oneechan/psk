@@ -1,4 +1,7 @@
+#include "engine/SpriteRenderer.h"
+#include "engine/Utilities.h"
 #include "Iris.h"
+#include "Types.h"
 
 Iris::Iris()
 {

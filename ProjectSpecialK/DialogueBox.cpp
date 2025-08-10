@@ -1,8 +1,14 @@
-﻿#include "engine/InputsMap.h"
+﻿#include <cctype>
+#include "engine/InputsMap.h"
+#include "engine/Utilities.h"
 #include "engine/TextUtils.h"
 #include "engine/Random.h"
+#include "engine/Console.h"
+#include "engine/SpriteRenderer.h"
+#include "engine/Audio.h"
 #include "DialogueBox.h"
 #include "PanelLayout.h"
+#include "Types.h"
 
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/rotate_vector.hpp>

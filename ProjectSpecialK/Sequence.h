@@ -1,6 +1,7 @@
 #pragma once
 
-#include "SpecialK.h"
+#include <functional>
+#include "engine/Tickable.h"
 
 class Sequence : public Tickable
 {

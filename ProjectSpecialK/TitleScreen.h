@@ -1,6 +1,6 @@
 #pragma once
 
-#include "SpecialK.h"
+#include "engine/Tickable.h"
 #include "Iris.h"
 #include "PanelLayout.h"
 #include "OptionsMenu.h"

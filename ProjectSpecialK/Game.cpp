@@ -1,5 +1,7 @@
 #include "engine/Text.h"
 #include "engine/Framebuffer.h"
+#include "engine/Console.h"
+#include "Types.h"
 #include "Game.h"
 #include "DialogueBox.h"
 #include "Camera.h"
@@ -9,6 +11,8 @@
 #include "InGame.h"
 #include "TitleScreen.h"
 #include "Utilities.h"
+#include "Database.h"
+#include "Player.h"
 
 constexpr int ScreenWidth = 1920;
 constexpr int ScreenHeight = 1080;

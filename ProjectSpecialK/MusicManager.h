@@ -1,6 +1,7 @@
 #pragma once
 
-#include "SpecialK.h"
+#include "engine/Audio.h"
+#include "engine/Tickable.h"
 
 class MusicManager : public Tickable
 {

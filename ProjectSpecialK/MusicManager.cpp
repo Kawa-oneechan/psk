@@ -1,4 +1,7 @@
+#include <memory>
+#include <ctime>
 #include "engine/Random.h"
+#include "engine/Console.h"
 #include "MusicManager.h"
 #include "Town.h"
 

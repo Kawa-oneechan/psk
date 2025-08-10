@@ -1,6 +1,6 @@
 #pragma once
 
-#include "SpecialK.h"
+#include "engine/Tickable.h"
 
 class Iris : public Tickable
 {

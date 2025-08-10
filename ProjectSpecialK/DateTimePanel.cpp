@@ -1,7 +1,9 @@
+#include <ctime>
+#include "engine/Text.h"
 #include "DateTimePanel.h"
+#include "Types.h"
 #include "Town.h"
 #include "MusicManager.h"
-#include "engine/Text.h"
 
 extern void PlayMusic(const std::string& id);
 

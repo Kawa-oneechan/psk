@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <functional>
 #include <glm/glm.hpp>
 #include "engine/Types.h"
 #include "engine/JsonUtils.h"
@@ -40,3 +41,6 @@ extern bool IDIsQualified(const std::string& id);
 extern std::string Qualify(const std::string& id, const std::string& ns);
 //Removes the frontmost namespace from an ID.
 extern std::string UnQualify(const std::string& id);
+
+//Shows a loading screen while running another thread.
+extern void ThreadedLoader(std::function<void(float*)> loader);

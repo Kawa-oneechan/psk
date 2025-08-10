@@ -298,6 +298,7 @@
     <ClInclude Include="TitleScreen.h" />
     <ClInclude Include="Town.h" />
     <ClInclude Include="Traits.h" />
+    <ClInclude Include="Types.h" />
     <ClInclude Include="Utilities.h" />
     <ClInclude Include="Villager.h" />
   </ItemGroup>

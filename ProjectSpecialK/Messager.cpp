@@ -1,3 +1,5 @@
+#include "engine/Console.h"
+#include "engine/SpriteRenderer.h"
 #include "Messager.h"
 
 Messager::Messager()

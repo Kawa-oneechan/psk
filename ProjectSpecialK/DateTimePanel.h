@@ -1,6 +1,5 @@
 #pragma once
 
-#include "SpecialK.h"
 #include "PanelLayout.h"
 
 class DateTimePanel : public Tickable

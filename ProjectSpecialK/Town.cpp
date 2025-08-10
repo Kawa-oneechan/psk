@@ -1,12 +1,17 @@
+#include <random>
 #include "engine/Model.h"
 #include "engine/JSONUtils.h"
 #include "engine/Random.h"
 #include "engine/Framebuffer.h"
+#include "engine/Console.h"
+#include "Database.h"
 #include "Game.h"
 #include "Town.h"
 #include "Background.h"
 #include "DateTimePanel.h"
 #include "ItemHotbar.h"
+#include "Types.h"
+#include "Player.h"
 
 extern TextureArray* groundTextureAlbs;
 extern TextureArray* groundTextureNrms;

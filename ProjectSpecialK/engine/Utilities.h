@@ -28,3 +28,9 @@ extern hash GetCRC(unsigned char *buffer, int len);
 #else
 #define debprint(C, F, ...)
 #endif
+
+__declspec(noreturn)
+extern void FatalError(const std::string& message);
+
+extern int width, height;
+extern float scale;

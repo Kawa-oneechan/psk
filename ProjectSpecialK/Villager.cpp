@@ -1,10 +1,13 @@
-#include "SpecialK.h"
-#include "Town.h"
-#include "Animator.h"
 #include "engine/Text.h"
 #include "engine/TextUtils.h"
 #include "engine/JSONUtils.h"
 #include "engine/Random.h"
+#include "engine/Console.h"
+#include "Villager.h"
+#include "Database.h"
+#include "Town.h"
+#include "Animator.h"
+#include "Player.h"
 
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/rotate_vector.hpp>

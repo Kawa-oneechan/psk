@@ -1,11 +1,11 @@
 ﻿#include <filesystem>
-#include "SpecialK.h"
-
 #include <stb_image.h>
 #include <stb_image_write.h>
 #include "engine/Console.h"
 #include "engine/Text.h"
 #include "engine/TextUtils.h"
+#include "Database.h"
+#include "Types.h"
 
 namespace fs = std::experimental::filesystem;
 

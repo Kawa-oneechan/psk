@@ -1,10 +1,12 @@
-#include "SpecialK.h"
-#include "Town.h"
-#include "Game.h"
 #include "engine/InputsMap.h"
 #include "engine/Text.h"
 #include "engine/TextUtils.h"
 #include "engine/JSONUtils.h"
+#include "engine/Console.h"
+#include "Player.h"
+#include "Camera.h"
+#include "Town.h"
+#include "Game.h"
 
 extern bool useOrthographic;
 

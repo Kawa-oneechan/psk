@@ -1,4 +1,6 @@
-#include "SpecialK.h"
+#include "engine/Console.h"
+#include "Types.h"
+#include "Database.h"
 #include "DialogueBox.h"
 #include "Player.h"
 #include "MusicManager.h"

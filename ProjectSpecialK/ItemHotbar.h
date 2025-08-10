@@ -1,7 +1,7 @@
 #pragma once
 
-#include "SpecialK.h"
 #include "PanelLayout.h"
+#include "Item.h"
 
 class ItemHotbar : public Tickable
 {

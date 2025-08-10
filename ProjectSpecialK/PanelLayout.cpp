@@ -2,6 +2,10 @@
 #include "engine/InputsMap.h"
 #include "engine/TextUtils.h"
 #include "engine/Utilities.h"
+#include "engine/Console.h"
+#include "engine/SpriteRenderer.h"
+#include "Database.h"
+#include "Types.h"
 
 bool debugPanelLayoutPolygons = false;
 bool debugRenderPanelLayouts = true;

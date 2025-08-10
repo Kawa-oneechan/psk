@@ -1,10 +1,13 @@
-﻿#include "SpecialK.h"
-#include "Town.h"
+﻿#include <ctime>
 #include "engine/TextUtils.h"
 #include "engine/Utilities.h"
+#include "engine/Console.h"
+#include "Database.h"
+#include "Town.h"
 #include "NookCode.h"
 #include "Scoring.h"
 #include "Utilities.h"
+#include "Player.h"
 
 #include <stb_image.h>
 #include <stb_image_write.h>

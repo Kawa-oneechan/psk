@@ -1,7 +1,13 @@
 #pragma once
 
-#include "SpecialK.h"
-
+#include <functional>
+#include <vector>
+#include <glm/glm.hpp>
+#include "engine/Tickable.h"
+#include "engine/Shader.h"
+#include "engine/Texture.h"
+#include "engine/JsonUtils.h"
+#include "engine/Types.h"
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/easing.hpp>
 

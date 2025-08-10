@@ -1,6 +1,6 @@
 #pragma once
 
-#include "SpecialK.h"
+#include <string>
 
 class ButtonGuide
 {

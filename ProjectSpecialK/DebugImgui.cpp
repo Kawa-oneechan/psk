@@ -1,11 +1,14 @@
 #include <ImGUI/imgui.h>
 #include "engine/TextUtils.h"
 #include "engine/Utilities.h"
+#include "engine/Console.h"
 #include "Game.h"
 #include "Town.h"
 #include "Animator.h"
 #include "Utilities.h"
 #include "Camera.h"
+#include "Database.h"
+#include "Player.h"
 
 static void DoCamera()
 {

@@ -1,6 +1,7 @@
 #pragma once
 
-#include "SpecialK.h"
+#include "engine/Tickable.h"
+#include "engine/Texture.h"
 
 class Background : public Tickable
 {

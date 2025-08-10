@@ -4,6 +4,7 @@
 #include "engine/Random.h"
 #include "BJTS.h"
 #include "DialogueBox.h"
+#include "Player.h"
 
 static const char* bindingNames[] = {
 	"up", "down", "left", "right",

@@ -1,5 +1,6 @@
 #include "engine/TextUtils.h"
-#include "SpecialK.h"
+#include "Item.h"
+#include "Database.h"
 
 int Item::FindVariantByName(const std::string& variantName) const
 {

@@ -1,6 +1,8 @@
 #pragma once
 
-#include "SpecialK.h"
+#include "engine/Tickable.h"
+#include "engine/Texture.h"
+#include "Villager.h"
 
 class DialogueBox : public Tickable
 {

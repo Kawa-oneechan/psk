@@ -1,7 +1,7 @@
 #pragma once
 
-#include "SpecialK.h"
-#include "PanelLayout.h"
+#include <array>
+#include "engine/Tickable.h"
 
 class Messager : public Tickable
 {

@@ -1,9 +1,14 @@
 ﻿#define GLFW_INCLUDE_NONE
 #include <glfw/glfw3.h>
-#include "DoomMenu.h"
+#include <format.h>
 #include "engine/Cursor.h"
 #include "engine/Text.h"
 #include "engine/TextUtils.h"
+#include "engine/Audio.h"
+#include "engine/Utilities.h"
+#include "engine/SpriteRenderer.h"
+#include "DoomMenu.h"
+#include "Types.h"
 
 //TODO: Add a thing where changing the game language reveals a warning about having to restart.
 //Would also work for a few other "deep" settings like resolution or whatever.

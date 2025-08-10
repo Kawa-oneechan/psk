@@ -1,6 +1,8 @@
 #pragma once
 
-#include "SpecialK.h"
+#include <vector>
+#include <glm/glm.hpp>
+#include "engine/Tickable.h"
 
 class Camera : public Tickable
 {

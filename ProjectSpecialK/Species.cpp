@@ -1,6 +1,9 @@
-#include "SpecialK.h"
+#include <cctype>
 #include "engine/Text.h"
 #include "engine/TextUtils.h"
+#include "Species.h"
+#include "Types.h"
+#include "Database.h"
 
 Species::Species(jsonObject& value, const std::string& filename) : NameableThing(value, filename)
 {

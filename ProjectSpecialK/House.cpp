@@ -40,6 +40,7 @@ bool VillagerHouse::Room::Tick(float dt)
 
 void VillagerHouse::SaveObjects(jsonValue& json)
 {
+	//Adapted from Town
 	auto objects = json5pp::array({});
 	for (int r = 0; r < Rooms.size(); r++)
 	{
@@ -74,9 +75,11 @@ void VillagerHouse::SaveObjects(jsonValue& json)
 
 void VillagerHouse::LoadObjects(jsonValue& json)
 {
+	//Adapted from Town
 	if (Rooms.empty())
 	{
 		conprint(4, "VillagerHouse::LoadObjects: must have Rooms to load to first.");
+		return;
 	}
 
 	auto doc = json.as_object();

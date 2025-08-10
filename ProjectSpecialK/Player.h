@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "SpecialK.h"
+#include "Villager.h"
 
 constexpr int MaxOnHand = 7; //40
 constexpr int MaxStorage = 5000;

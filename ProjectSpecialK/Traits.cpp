@@ -1,4 +1,4 @@
-#include "SpecialK.h"
+#include "Traits.h"
 
 Personality::Personality(jsonObject& value, const std::string& filename) : NameableThing(value, filename)
 {

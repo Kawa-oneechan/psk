@@ -1,6 +1,7 @@
 #pragma once
 
-#include "SpecialK.h"
+#include <memory>
+#include "engine/Tickable.h"
 #include "DateTimePanel.h"
 #include "ItemHotbar.h"
 #include "DialogueBox.h"

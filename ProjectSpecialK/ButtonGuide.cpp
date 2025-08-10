@@ -1,4 +1,8 @@
+#include <vector>
+#include "engine/SpriteRenderer.h"
+#include "engine/Utilities.h"
 #include "ButtonGuide.h"
+#include "Types.h"
 
 struct button
 {

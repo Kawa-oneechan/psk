@@ -1,4 +1,9 @@
 ﻿#pragma once
+#include <functional>
+#include <stack>
+#include <vector>
+#include "engine/Tickable.h"
+#include "engine/Texture.h"
 #include "engine/InputsMap.h"
 #include "ButtonGuide.h"
 
