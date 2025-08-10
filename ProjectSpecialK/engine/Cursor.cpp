@@ -13,24 +13,25 @@ Cursor::Cursor()
 	for (auto& hs : hsj["hotspots"].as_array())
 		hotspots.push_back(GetJSONVec2(hs));
 
-	SetScale(100);
+	SetScale(1.0);
 	Select(0);
 	size = glm::vec2(frame.w);
 }
 
 void Cursor::Select(int style)
 {
+	style = glm::clamp(style, 0, (int)hotspots.size());
 	frame = hand[style];
 	hotspot = hotspots[style];
-	rotate = (style == 1);
+	rotate = (style == WaitIndex);
 	penFrame = glm::vec4(-1);
-	if (style >= 11 && style <= 15)
-		penFrame = hand[style + 8];
+	if (style >= PenMinIndex && style <= PenMaxIndex)
+		penFrame = hand[style + PenOffset];
 }
 
-void Cursor::SetScale(int newScale)
+void Cursor::SetScale(float newScale)
 {
-	scale = newScale / 100.0f;
+	scale = glm::clamp(newScale, 0.2f, 10.f);
 	size = glm::vec2(frame.w * scale);
 }
 

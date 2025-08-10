@@ -15,11 +15,15 @@ private:
 	bool rotate{ false };
 
 public:
+	int WaitIndex{ 1 };
+	int PenMinIndex{ 11 };
+	int PenMaxIndex{ 15 };
+	int	PenOffset{ 8 };
 	glm::vec4 Pen{ 1.0, 0.0, 0.0, 1.0 };
 
 	Cursor();
 	void Select(int style);
-	void SetScale(int newScale);
+	void SetScale(float newScale);
 	void Draw();
 };
 

@@ -117,7 +117,7 @@ void OptionsMenu::Build()
 		options.items.push_back(new DoomMenuItem("menu:options:cursorscale", 50, 150, UI::settings.as_object()["cursorScale"].as_integer(), 10, percent,
 			[&](DoomMenuItem*i)
 		{
-			cursor->SetScale(i->selection);
+			cursor->SetScale(i->selection / 100.0f);
 			UI::settings.as_object()["cursorScale"] = i->selection;
 		}
 		));
