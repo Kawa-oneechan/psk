@@ -183,6 +183,7 @@
     <ClCompile Include="Iris.cpp" />
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="ItemHotbar.cpp" />
+    <ClCompile Include="Map.cpp" />
     <ClCompile Include="Messager.cpp" />
     <ClCompile Include="MusicManager.cpp" />
     <ClCompile Include="NameableThing.cpp" />
@@ -280,6 +281,7 @@
     <ClInclude Include="Iris.h" />
     <ClInclude Include="Item.h" />
     <ClInclude Include="ItemHotbar.h" />
+    <ClInclude Include="Map.h" />
     <ClInclude Include="Messager.h" />
     <ClInclude Include="MusicManager.h" />
     <ClInclude Include="NameableThing.h" />

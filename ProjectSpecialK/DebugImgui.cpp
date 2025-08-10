@@ -5,6 +5,7 @@
 #include "Town.h"
 #include "Animator.h"
 #include "Utilities.h"
+#include "Camera.h"
 
 static void DoCamera()
 {

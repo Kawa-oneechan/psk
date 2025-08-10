@@ -1,6 +1,8 @@
 #pragma once
 #include "engine/Model.h"
 #include "Animator.h"
+#include "Species.h"
+#include "Traits.h"
 
 enum class Gender
 {

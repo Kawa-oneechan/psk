@@ -1,6 +1,7 @@
 #pragma once
 #include "engine/Model.h"
 #include "engine/JsonUtils.h"
+#include "NameableThing.h"
 
 /*
 TODO: Bring back the separate Tool, Furniture, and Clothing classes,
