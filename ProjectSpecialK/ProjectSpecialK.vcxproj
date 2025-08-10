@@ -293,7 +293,6 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="Scoring.h" />
     <ClInclude Include="Sequence.h" />
-    <ClInclude Include="SpecialK.h" />
     <ClInclude Include="Species.h" />
     <ClInclude Include="TitleScreen.h" />
     <ClInclude Include="Town.h" />
