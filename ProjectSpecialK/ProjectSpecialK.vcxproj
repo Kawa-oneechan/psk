@@ -179,6 +179,7 @@
     <ClCompile Include="engine\Utilities.cpp" />
     <ClCompile Include="engine\VFS.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="House.cpp" />
     <ClCompile Include="InGame.cpp" />
     <ClCompile Include="Iris.cpp" />
     <ClCompile Include="Item.cpp" />
@@ -276,6 +277,7 @@
     <ClInclude Include="engine\Utilities.h" />
     <ClInclude Include="engine\VFS.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="House.h" />
     <ClInclude Include="InGame.h" />
     <ClInclude Include="InputsMap.h" />
     <ClInclude Include="Iris.h" />

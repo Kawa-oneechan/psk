@@ -85,9 +85,9 @@ public:
 	//How tall is a cliff face, roughly?
 	static const int ElevationHeight = 15;
 
-	//Width of the town map in tiles
+	//Width of the map in tiles
 	int Width{ 0 };
-	//Height of the town map in tiles
+	//Height of the map in tiles
 	int Height{ 0 };
 
 	std::unique_ptr<MapTile[]> Terrain{ nullptr };
