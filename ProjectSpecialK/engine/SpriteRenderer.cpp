@@ -111,6 +111,8 @@ namespace Sprite
 		glBindVertexArray(0);
 
 		fontShader = Shaders["font"];
+		if (fontShader == nullptr)
+			FatalError("No \"font\" entry specified in \"shaders/shaders.json\".");
 
 		originalTextRenderSize = textRenderSize = 100;
 		originalTextRenderColor = textRenderColor = UI::textColors[0];
@@ -206,6 +208,9 @@ namespace Sprite
 
 	void DrawSprite(Texture& texture, const glm::vec2& position, const glm::vec2& size, const glm::vec4& srcRect, float rotate, const glm::vec4& color, SpriteFlags flip)
 	{
+		if (Shaders["sprite"] == nullptr)
+			FatalError("No \"sprite\" entry specified in \"shaders/shaders.json\".");
+
 		DrawSprite(Shaders["sprite"], texture, position, size, srcRect, rotate, color, flip);
 	}
 
@@ -358,8 +363,13 @@ namespace Sprite
 
 	void DrawText(int font, const std::string& text, glm::vec2 position, const glm::vec4& color, float size, float angle, bool raw)
 	{
+		if (numFonts == 0)
+			LoadFontBank(0, 0);
+
 		if (font >= MaxFonts)
 			font = 0;
+		if (font >= numFonts)
+			font = numFonts - 1;
 
 		if (text.empty())
 			return;
@@ -468,8 +478,13 @@ namespace Sprite
 
 	glm::vec2 MeasureText(int font, const std::string& text, float size, bool raw)
 	{
+		if (numFonts == 0)
+			LoadFontBank(0, 0);
+
 		if (font >= MaxFonts)
 			font = 0;
+		if (font >= numFonts)
+			font = numFonts - 1;
 
 		if (text.empty())
 			return glm::vec2(0);

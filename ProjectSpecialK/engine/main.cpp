@@ -207,41 +207,6 @@ static void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
 	lastY = ypos;
 
 	GameMouse(xposIn, yposIn, xoffset, yoffset);
-
-#if 0
-	//Mouse picking test
-	{
-		auto projection = commonUniforms.Projection;
-		auto view = commonUniforms.View;
-		auto screen = glm::ivec4(0, 0, width, height);
-		auto nearSource = glm::vec3(xpos, ypos, 0);
-		auto farSource = glm::vec3(xpos, ypos, 1);
-		auto nearPoint = glm::unProject(nearSource, view, projection, screen);
-		auto farPoint = glm::unProject(farSource, view, projection, screen);
-		auto direction = farPoint - nearPoint;
-		direction = glm::normalize(direction);
-
-		auto newTitle = fmt::format("Mouse picking: near pt {:.3} {:.3} {:.3}, far pt {:.3} {:.3} {:.3}, direction {:.3} {:.3} {:.3}", nearPoint.x, nearPoint.y, nearPoint.z, farPoint.x, farPoint.y, farPoint.z, direction.x, direction.y, direction.z);
-		glfwSetWindowTitle(window, newTitle.c_str());
-
-		/*
-		Okay so what I had before in "Hidden Power" on XNA was a Ray class.
-		That offered intersection methods with bounding boxes and such:
-
-		var cursorRay = new Ray(nearPoint, direction);
-		foreach (var block in Map.Blocks)
-		{
-			if (string.IsNullOrEmpty(block.Caption)) continue;
-			if (cursorRay.Intersects(block.Box) != null)
-			{
-				PickedObject = block;
-				picked = block.Caption;
-				break;
-			}
-		}
-		*/
-	}
-#endif
 }
 
 static void mousebutton_callback(GLFWwindow* window, int button, int action, int mods)
@@ -383,8 +348,6 @@ bool skipTitle = false;
 int main(int argc, char** argv)
 {
 	setlocale(LC_ALL, "en_US.UTF-8");
-	//std::srand((unsigned int)std::time(nullptr));
-
 
 	for (int i = 1; i < argc; i++)
 	{
@@ -443,11 +406,6 @@ int main(int argc, char** argv)
 
 	Inputs.HaveGamePad = (glfwJoystickPresent(GLFW_JOYSTICK_1) && glfwJoystickIsGamepad(GLFW_JOYSTICK_1));
 
-	//auto panels = new Texture("ui/panels.png");
-	//panels->Use();
-
-	//thePlayer.Name = "Kawa";
-	//thePlayer.Gender = Gender::BEnby;
 
 	perspectiveProjection = glm::perspective(glm::radians(45.0f), (float)width / (float)height, 0.1f, 500.0f);
 	//Orthographic projection for a laugh. For best results, use a 45 degree pitch and yaw, no bending.
@@ -464,7 +422,6 @@ int main(int argc, char** argv)
 	commonUniforms.TotalTime = 0.0f;
 
 	GameStart(tickables);
-	//auto layoutOverlay = new Texture("layoutoverlay.png");
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -487,22 +444,14 @@ int main(int argc, char** argv)
 
 		commonUniforms.Projection = useOrthographic ? orthographicProjection : perspectiveProjection;
 
-		//glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-		//glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-
 		//important: disable depth testing to allow multiple sprites to overlap.
 		glDisable(GL_DEPTH_TEST);
 
 		if (console->visible)
 			console->Tick(dt);
 		else
-		{
-			//a bit ugly but technically still better vis-a-vis iterators
-			//for (auto t = tickables.crbegin(); t != tickables.crend(); ++t)
-			//	(*t)->Tick(dt);
 			RevAllTickables(tickables, dt);
-		}
-
+		
 		glBindBuffer(GL_UNIFORM_BUFFER, commonBuffer);
 		glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(CommonUniforms), &commonUniforms);
 
@@ -515,8 +464,6 @@ int main(int argc, char** argv)
 		GamePreDraw(dt * timeScale);
 		DrawAllTickables(tickables, dt * timeScale);
 		GamePostDraw(dt * timeScale);
-
-		//Sprite::DrawSprite(*layoutOverlay, glm::vec2(0), glm::vec2(width, height), glm::vec4(0), 0.0f, glm::vec4(1, 1, 1, 0.5));
 
 		console->Draw(dt);
 		Sprite::FlushBatch();
@@ -531,30 +478,9 @@ int main(int argc, char** argv)
 			newTickables.clear();
 		}
 
-		/*
-		//TEST
-		if (Inputs.KeyDown(Binds::Accept))
-		{
-			Inputs.Clear(Binds::Accept);
-			static std::string lols[] = {
-				"Whatever you say.",
-				"You got crabs!",
-				"And bingo!",
-				"T minus 50 seconds 'til launch.",
-				"Four score and seven apples ago...",
-				"Look. If you had ONE shot...",
-				"---Tom Nook calling---",
-			};
-			messager->Add(lols[rnd::getInt(7)]);
-		}
-		*/
-
 #ifdef DEBUG
 		DoImGui();
 #endif
-
-		//turn depth testing back on for 3D shit
-		//glEnable(GL_DEPTH_TEST);
 
 		cursor->Draw();
 		Sprite::FlushBatch();
