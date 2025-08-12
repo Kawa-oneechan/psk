@@ -471,6 +471,11 @@ bool Villager::Tick(float)
 	if (!_model)
 		LoadModel();
 
+	if (runningScript.runnable() && !testMutex)
+	{
+		runningScript();
+	}
+
 	return true;
 }
 
@@ -643,4 +648,23 @@ void Villager::Deserialize(jsonObject& source)
 	{
 		memory->Clothing.push_back(std::make_shared<InventoryItem>(i.as_string()));
 	}
+}
+
+#include "Types.h"
+#include "DialogueBox.h"
+void Villager::TestScript()
+{
+	Sol.do_string(R"SOL(
+
+	function start()
+		dialogue("Panting and sweating...")
+		dialogue("Are we done yet?")
+		-- dialogue("Save complete.", 4)
+		-- dialogue() --oops
+	end
+	)SOL");
+	runningScript = Sol["start"];
+	dlgBox->mutex = &testMutex;
+	testMutex = false;
+	console->visible = false;
 }

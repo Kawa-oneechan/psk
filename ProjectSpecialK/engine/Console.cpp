@@ -273,12 +273,16 @@ bool Console::Scancode(unsigned int scancode)
 
 void Console::Open()
 {
+	if(visible)
+		return;
 	appearState = 1;
 	visible = true;
 }
 
 void Console::Close()
 {
+	if (!visible)
+		return;
 	appearState = 2;
 	visible = true;
 }

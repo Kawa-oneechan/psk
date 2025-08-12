@@ -4,6 +4,7 @@
 #include "Species.h"
 #include "Traits.h"
 #include "Item.h"
+#include <sol.hpp>
 
 enum class Gender
 {
@@ -151,6 +152,10 @@ public:
 	Villager& operator = (Villager&&) = default;
 
 	InventoryItem* Clothing() { return _clothesItems[0].get(); };
+
+	bool testMutex{ false };
+	sol::coroutine runningScript;
+	void TestScript();
 };
 
 using VillagerP = std::shared_ptr<Villager>;

@@ -53,7 +53,8 @@ namespace SolBinds
 
 			dlgBox->Text(line, style);
 
-			console->Close();
+			if (console->visible)
+				console->Close();
 		});
 
 		Sol.new_usertype<Player>(
@@ -75,7 +76,8 @@ namespace SolBinds
 		Sol.new_usertype<Villager>(
 			"__Villager",
 			"Name", sol::property(&Villager::Name),
-			"Species", &Villager::Species
+			"Species", &Villager::Species,
+			"Test", &Villager::TestScript
 		);
 
 		Sol["getVillager"] = [](sol::variadic_args va)
