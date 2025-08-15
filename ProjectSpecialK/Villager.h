@@ -154,7 +154,7 @@ public:
 	InventoryItem* Clothing() { return _clothesItems[0].get(); };
 
 	bool testMutex{ false };
-	sol::coroutine runningScript;
+	std::shared_ptr<sol::coroutine> runningScript;
 	void TestScript();
 };
 

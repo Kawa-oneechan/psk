@@ -471,9 +471,14 @@ bool Villager::Tick(float)
 	if (!_model)
 		LoadModel();
 
-	if (runningScript.runnable() && !testMutex)
+	if (runningScript && runningScript->runnable() && !testMutex)
 	{
-		runningScript();
+		runningScript->call();
+		if (runningScript->status() == sol::call_status::ok) //not yielded
+		{
+			//somehow clean up properly?
+			runningScript.reset();
+		}
 	}
 
 	return true;
@@ -663,7 +668,7 @@ void Villager::TestScript()
 		-- dialogue() --oops
 	end
 	)SOL");
-	runningScript = Sol["start"];
+	runningScript = std::make_shared<sol::coroutine>(Sol["start"]);
 	dlgBox->mutex = &testMutex;
 	testMutex = false;
 	console->visible = false;
