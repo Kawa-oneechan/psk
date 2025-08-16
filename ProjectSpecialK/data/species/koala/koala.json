@@ -1,0 +1,360 @@
+{
+	"id": "kol",
+	"name": [
+		//Male,
+		{
+			"en": "<info::a :the >koala",
+			"ja": "コアラ",
+			"ko": "코알라",
+			"zh": "無尾熊",
+			"de": "<info:ein :ein :der >Koala<case::::s>",
+			"es": "<info:un :un :el >koala",
+			"fr": "<info:un :un :le >koala",
+			"it": "<info:un :un :il >koala",
+			"nl": "<info:het :een :de >koala",
+			"ru": "<info:a ::>коал<case:а:у:е:ы>"
+		},
+		//Female,
+		{
+			"en": "<info::a :the >koala",
+			"ja": "コアラ",
+			"ko": "코알라",
+			"zh": "無尾熊",
+			"de": "<info:ein :ein :der >Koala<case::::s>",
+			"es": "<info:una :una :la >koala",
+			"fr": "<info:un :un :le >koala",
+			"it": "<info:un :un :il >koala",
+			"nl": "<info:het :een :de >koala",
+			"ru": "<info:a ::>коал<case:а:у:е:ы>"
+		}
+	],
+	"parameters": {
+		"handItemOffset": [ 0, 0.164671, -1.102004 ],
+		"accessories": {
+			"C_BrimUnder": {
+				"earType": 0,
+				"rotate": [ 0, -1.570796, -1.686711 ],
+				"scale": [ 0.431131, 0.431131, 0.431131 ],
+				"transform": [ 5.669648, -0.145198, -0.018319 ]
+			},
+			"G_Fit": {
+				"earType": 0,
+				"rotate": [ 0, -1.570796, -1.886756 ],
+				"scale": [ 1.121219, 1.158202, 1.158202 ],
+				"transform": [ 2.802452, 4.601618, 0 ]
+			},
+			"C_Forehead": {
+				"earType": 0,
+				"rotate": [ 0.499064, -1.560087, -2.026505 ],
+				"scale": [ 0.756921, 0.756921, 0.756921 ],
+				"transform": [ 5.902036, 0.447711, 0.008557 ]
+			},
+			"G_Normal": {
+				"earType": 0,
+				"rotate": [ 0, -1.570796, -1.783548 ],
+				"scale": [ 1.121219, 1.158202, 1.158202 ],
+				"transform": [ 2.596075, 4.039185, 0 ]
+			},
+			"C_Crown": {
+				"earType": 0,
+				"rotate": [ 0, -1.570796, -1.570796 ],
+				"scale": [ 1, 1, 1 ],
+				"transform": [ 5.582272, 0, 0 ]
+			},
+			"C_Brim": {
+				"earType": 0,
+				"rotate": [ 0, -1.570796, -1.686711 ],
+				"scale": [ 0.431131, 0.431131, 0.431131 ],
+				"transform": [ 5.669648, -0.145198, -0.018319 ]
+			},
+			"C_Knit": {
+				"earType": 0,
+				"rotate": [ -0.379496, -1.532991, -1.854702 ],
+				"scale": [ 0.877622, 0.867502, 0.877622 ],
+				"transform": [ 3.495146, -0.433004, -0.006946 ]
+			},
+			"C_Left": {
+				"earType": 0,
+				"rotate": [ 0.666368, -0.608949, -1.525401 ],
+				"scale": [ 0.863049, 0.863049, 0.863049 ],
+				"transform": [ 5.325424, 1.212073, 1.662704 ]
+			},
+			"C_Mask": {
+				"earType": 0,
+				"rotate": [ 0, -1.570796, -2.681768 ],
+				"scale": [ 0.483702, 0.483702, 0.483702 ],
+				"transform": [ 5.745962, 2.185778, 0 ]
+			},
+			"C_Normal": {
+				"earType": 0,
+				"rotate": [ 0, -1.570796, -1.686711 ],
+				"scale": [ 0.431131, 0.431131, 0.431131 ],
+				"transform": [ 5.669648, -0.145198, -0.018319 ]
+			},
+			"G_Down": {
+				"earType": 0,
+				"rotate": [ 0, -1.570796, -1.783548 ],
+				"scale": [ 1.121219, 1.158202, 1.158202 ],
+				"transform": [ 2.45433, 4.069804, 0 ]
+			},
+			"C_Bandana": {
+				"earType": 0,
+				"rotate": [ -0.404539, -1.527046, -1.521244 ],
+				"scale": [ 0.831738, 0.711003, 0.831738 ],
+				"transform": [ 3.959722, -0.239444, -0.014847 ]
+			},
+			"C_Top": {
+				"earType": 0,
+				"rotate": [ 0, -1.570796, -1.806614 ],
+				"scale": [ 0.834672, 0.834672, 0.834672 ],
+				"transform": [ 5.855347, -0.712855, 0 ]
+			},
+			"G_FitLittle": {
+				"earType": 0,
+				"rotate": [ 0, -1.570796, -1.982139 ],
+				"scale": [ 0.987094, 1.019652, 1.019652 ],
+				"transform": [ 2.655319, 3.757314, 0 ]
+			},
+			"C_Right": {
+				"earType": 0,
+				"rotate": [ -2.475225, -0.608949, 1.616192 ],
+				"scale": [ 0.863049, 0.863049, 0.863049 ],
+				"transform": [ 5.325424, 1.212073, -1.662704 ]
+			},
+			"C_LeftBig": {
+				"earType": 0,
+				"rotate": [ 1.333081, -1.021958, -2.396785 ],
+				"scale": [ 0.654453, 0.689803, 0.689803 ],
+				"transform": [ 5.325424, 1.212073, 1.662704 ]
+			},
+			"G_Beard": {
+				"earType": 0,
+				"rotate": [ 0, -1.570796, -1.909667 ],
+				"scale": [ 1.121219, 1.158202, 1.158202 ],
+				"transform": [ -0.332729, 3.375538, 0 ]
+			},
+			"None": {
+				"earType": 0,
+				"rotate": [ -0.331837, -1.527046, -1.521244 ],
+				"scale": [ 1, 1, 1 ],
+				"transform": [ 2.315217, 3.399804, 0.147844 ]
+			},
+			"G_Left": {
+				"earType": 0,
+				"rotate": [ -0.832805, -1.34449, -1.054915 ],
+				"scale": [ 1.115828, 1.115828, 1.115828 ],
+				"transform": [ 3.399425, 2.207616, 2.215207 ]
+			},
+			"G_UP": {
+				"earType": 0,
+				"rotate": [ 0, -1.570796, -1.783548 ],
+				"scale": [ 1.121219, 1.158202, 1.158202 ],
+				"transform": [ 2.818219, 3.991197, 0 ]
+			},
+			"edb6d273": {
+				"earType": 0,
+				"rotate": [ -0.832805, -1.34449, -1.054915 ],
+				"scale": [ 1.115828, 1.115828, 1.115828 ],
+				"transform": [ 2.765817, 1.425045, 2.130438 ]
+			}
+		},
+		"tools": {
+			"16243995": { "rotate": [ 0, 0, 0 ], "transform": [ 0, 0, 0 ], "mScale.f32": 1 },
+			"1d26a614": { "rotate": [ 0, 0, 0 ], "transform": [ 0, 0, 0 ], "mScale.f32": 1 },
+			"21059abf": {
+				"rotate": [ 0, 0, 0 ],
+				"transform": [ -0.692841, 0, -0.083724 ],
+				"mScale.f32": 1
+			},
+			"PaperFan": { "rotate": [ 0, 0, 0 ], "transform": [ 0, 0, 0 ], "mScale.f32": 1 },
+			"Candy": {
+				"rotate": [ 0, 0, 0 ],
+				"transform": [ -0.157945, 0, 0 ],
+				"mScale.f32": 0.979817
+			},
+			"32a7ac01": {
+				"rotate": [ 0, 0, 0 ],
+				"transform": [ -0.220902, 0, 0.374931 ],
+				"mScale.f32": 1
+			},
+			"Cop": { "rotate": [ 0, 0, 0 ], "transform": [ 0, 0, 0 ], "mScale.f32": 1 },
+			"HandLens": { "rotate": [ 0, 0, 0 ], "transform": [ 0, 0, 0 ], "mScale.f32": 1 },
+			"4c5417cd": { "rotate": [ 0, 0, 0 ], "transform": [ 0, 0, 0 ], "mScale.f32": 1 },
+			"Coffee": {
+				"rotate": [ 0, 0, 0 ],
+				"transform": [ 0, 0, 0 ],
+				"mScale.f32": 0.929031
+			},
+			"FruitBasket": {
+				"rotate": [ 0, 0, 0 ],
+				"transform": [ 0.352341, 0, -0.481713 ],
+				"mScale.f32": 0.856608
+			},
+			"StickLight": {
+				"rotate": [ 0, 0, 0 ],
+				"transform": [ 0, 0, 0.053233 ],
+				"mScale.f32": 0.882494
+			},
+			"Book": {
+				"rotate": [ 0, 0, 0 ],
+				"transform": [ 0, 0, 0 ],
+				"mScale.f32": 0.960618
+			},
+			"Sandwich": {
+				"rotate": [ 0, 0, 0 ],
+				"transform": [ -0.157945, 0, 0 ],
+				"mScale.f32": 0.889173
+			},
+			"FishingRod": {
+				"rotate": [ 0, 0, 0 ],
+				"transform": [ 0, 0, -0.118472 ],
+				"mScale.f32": 0.754135
+			},
+			"Dumbbell": {
+				"rotate": [ 0, 0, 0.409826 ],
+				"transform": [ 0, 0, 0 ],
+				"mScale.f32": 0.941543
+			},
+			"Watering": {
+				"rotate": [ 0, 0, 0 ],
+				"transform": [ -0.617711, 0.214799, 0.073253 ],
+				"mScale.f32": 0.790815
+			},
+			"Sprayer": { "rotate": [ 0, 0, 0 ], "transform": [ 0, 0, 0 ], "mScale.f32": 1 },
+			"Windmill": {
+				"rotate": [ 0, 0, 0 ],
+				"transform": [ -0.420742, 0, 0 ],
+				"mScale.f32": 0.855879
+			},
+			"Doughnut": {
+				"rotate": [ 0, 0, 0 ],
+				"transform": [ 0, 0, 0 ],
+				"mScale.f32": 0.941586
+			},
+			"7e806271": {
+				"rotate": [ 0, 0, 0 ],
+				"transform": [ 0, 0, -0.671372 ],
+				"mScale.f32": 1
+			},
+			"HighBagHand": {
+				"rotate": [ 0, 0, 0 ],
+				"transform": [ 0.352341, 0, -0.481713 ],
+				"mScale.f32": 0.82291
+			},
+			"90efb53d": {
+				"rotate": [ 0, 0, 0 ],
+				"transform": [ -0.315868, -0.393263, 0 ],
+				"mScale.f32": 1
+			},
+			"96a57194": {
+				"rotate": [ 0, 0, 0 ],
+				"transform": [ 0.40381, 0.068692, -0.093555 ],
+				"mScale.f32": 1
+			},
+			"Duster": {
+				"rotate": [ 0, 0, 0 ],
+				"transform": [ 0.262835, 0, 0 ],
+				"mScale.f32": 0.957448
+			},
+			"CuteBagHand": {
+				"rotate": [ 0, 0, 0 ],
+				"transform": [ 0.352341, 0, -0.481713 ],
+				"mScale.f32": 0.856608
+			},
+			"LightDumbbell": {
+				"rotate": [ 0, 0, 0.290914 ],
+				"transform": [ 0, 0, 0 ],
+				"mScale.f32": 0.980155
+			},
+			"Smoothie": {
+				"rotate": [ 0, 0, 0 ],
+				"transform": [ 0, 0.155661, 0 ],
+				"mScale.f32": 0.929021
+			},
+			"CoolBagHand": {
+				"rotate": [ 0, 0, 0 ],
+				"transform": [ 0.352341, 0, -0.481713 ],
+				"mScale.f32": 0.856608
+			},
+			"Firewood": {
+				"rotate": [ 0, 0, 0 ],
+				"transform": [ 0.079812, 0.158698, -1.040908 ],
+				"mScale.f32": 0.804245
+			},
+			"SoapBubble": { "rotate": [ 0, 0, 0 ], "transform": [ 0, 0, 0 ], "mScale.f32": 1 },
+			"SmallBook": {
+				"rotate": [ 0, 0, 0 ],
+				"transform": [ 0, 0, 0 ],
+				"mScale.f32": 0.806414
+			},
+			"SmartPhone": {
+				"rotate": [ 0, 0, 0 ],
+				"transform": [ 0, 0, 1.168579 ],
+				"mScale.f32": 0.886142
+			},
+			"b74150e5": { "rotate": [ 0, 0, 0 ], "transform": [ 0, 0, 0 ], "mScale.f32": 1 },
+			"Broom": {
+				"rotate": [ 0, 0, 0 ],
+				"transform": [ 0, 0, 0 ],
+				"mScale.f32": 0.919854
+			},
+			"Branch": {
+				"rotate": [ 0, 0, 0 ],
+				"transform": [ 0, 0, 0.074725 ],
+				"mScale.f32": 1
+			},
+			"Cracker": { "rotate": [ 0, 0, 0 ], "transform": [ 0, 0, 0 ], "mScale.f32": 1 },
+			"Canister": { "rotate": [ 0, 0, 0 ], "transform": [ 0, 0, 0 ], "mScale.f32": 1 },
+			"Tambourine": {
+				"rotate": [ 0, 0, 0 ],
+				"transform": [ 0, -0.272682, 0 ],
+				"mScale.f32": 0.753208
+			},
+			"Net": {
+				"rotate": [ 0, 0, 0 ],
+				"transform": [ 0, 0, -0.238698 ],
+				"mScale.f32": 0.901499
+			},
+			"cafb84bd": {
+				"rotate": [ 0, 0, 0 ],
+				"transform": [ -0.578443, -0.833319, -0.055929 ],
+				"mScale.f32": 1
+			},
+			"d21661f1": { "rotate": [ 0, 0, 0 ], "transform": [ 0, 0, 0 ], "mScale.f32": 1 },
+			"Hammer": { "rotate": [ 0, 0, 0 ], "transform": [ 0, 0, 0 ], "mScale.f32": 1 },
+			"LowBagHand": {
+				"rotate": [ 0, 0, 0 ],
+				"transform": [ 0.352341, 0, -0.481713 ],
+				"mScale.f32": 0.856608
+			},
+			"None": { "rotate": [ 0, 0, 0 ], "transform": [ 0, 0, 0 ], "mScale.f32": 1 },
+			"e0b14a22": {
+				"rotate": [ 0, 0, 0 ],
+				"transform": [ 0, 0, 0 ],
+				"mScale.f32": 0.904595
+			},
+			"Umbrella": {
+				"rotate": [ 0, 0, 0 ],
+				"transform": [ 0, 0, 0 ],
+				"mScale.f32": 0.838885
+			},
+			"ef8cf673": { "rotate": [ 0, 0, 0 ], "transform": [ 0, 0, 0 ], "mScale.f32": 1 },
+			"Firework": {
+				"rotate": [ 0, 0, 0 ],
+				"transform": [ 0, 0, 0 ],
+				"mScale.f32": 0.8507
+			},
+			"Ice": {
+				"rotate": [ 0, 0, 0 ],
+				"transform": [ -0.157945, 0, 0 ],
+				"mScale.f32": 0.996335
+			}
+		},
+		"size": "cNormal",
+		"footScale": 1.445,
+		"sitOffset": [ 0, 0.158198, -0.522053 ],
+		"footPrint": "ShoeslessMaru"
+	},
+	"hasMuzzle": false,
+	"hasMouth": true
+}

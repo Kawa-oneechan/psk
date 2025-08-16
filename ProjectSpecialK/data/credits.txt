@@ -1,9 +1,11 @@
 #Programming, data mining, design
 Kawa
 
+#Programming support
+Siapran	Vaartis
+
 #Mental support
-Lancette2201
-Letrune
+Lancette2201	Letrune
 
 #Translations
 Hungarian:	Letrune
@@ -79,8 +81,8 @@ Cuyler	FloatyMonkey
 Foone	Hunter R.
 katepango	mikailborg
 Omnitechnomancer	Screwtape
-Vaartis	Vikxin
-wareya
+Siapran	Vaartis
+Vikxin	wareya
 
 #Tooling
 Heaven Tool by rafacasari
