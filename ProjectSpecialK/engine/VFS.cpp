@@ -24,15 +24,17 @@ The new plan:
 Until #6 is reconsidered, use the villagers FOLDER instead.
 */
 
+#ifdef _MSC_VER
+namespace fs = std::experimental::filesystem;
+#else
+namespace fs = std::filesystem;
+#endif
+
 __declspec(noreturn)
 extern void FatalError(const std::string& message);
 
 namespace UI
 {
-	extern std::map<std::string, glm::vec4> themeColors;
-	extern std::vector<glm::vec4> textColors;
-	extern std::shared_ptr<Texture> controls;
-
 	extern jsonValue json;
 	extern jsonValue settings;
 	extern std::string initFile;
@@ -42,6 +44,8 @@ namespace JSONPatch
 {
 	extern jsonValue& ApplyPatch(jsonValue& source, jsonValue& patch);
 }
+
+extern void GamePrepSaveDirs(const fs::path& savePath);
 
 #ifdef _WIN32
 extern "C" {
@@ -63,12 +67,6 @@ extern "C" {
 
 namespace VFS
 {
-#ifdef _MSC_VER
-	namespace fs = std::experimental::filesystem;
-#else
-	namespace fs = std::filesystem;
-#endif
-
 	static std::vector<Entry> entries;
 	static std::vector<Source> sources;
 
@@ -262,10 +260,7 @@ namespace VFS
 		savePath = fs::path(p);
 
 		fs::create_directory(savePath);
-
-		//TODO: split this out
-		fs::create_directory(savePath / "villagers");
-		fs::create_directory(savePath / "map");
+		GamePrepSaveDirs(savePath);
 	}
 
 	void Initialize()

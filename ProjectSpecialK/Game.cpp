@@ -1,3 +1,4 @@
+#include <filesystem>
 #include "engine/Text.h"
 #include "engine/Framebuffer.h"
 #include "engine/Console.h"
@@ -13,6 +14,12 @@
 #include "Utilities.h"
 #include "Database.h"
 #include "Player.h"
+
+#ifdef _MSC_VER
+namespace fs = std::experimental::filesystem;
+#else
+namespace fs = std::filesystem;
+#endif
 
 constexpr int ScreenWidth = 1920;
 constexpr int ScreenHeight = 1080;
@@ -232,6 +239,12 @@ void GameInit()
 	postFxBuffer->SetLut(new Texture("colormap.png"));
 
 	commonUniforms.GrassColor = 0.5f;
+}
+
+void GamePrepSaveDirs(const fs::path& savePath)
+{
+	fs::create_directory(savePath / "villagers");
+	fs::create_directory(savePath / "map");
 }
 
 extern bool skipTitle;
