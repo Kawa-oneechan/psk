@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+	<Type Name="CVar">
+		<DisplayString>{name}</DisplayString>
+	</Type>
+	<Type Name="CCmd">
+		<DisplayString>{name}</DisplayString>
+	</Type>
+	<Type Name="InputKey">
+		<DisplayString>{Name} - {ScanCode}, {State}</DisplayString>
+	</Type>
+	<Type Name="Text::Entry">
+		<DisplayString>{rep}</DisplayString>
+	</Type>
+	<Type Name="TextField">
+		<DisplayString>{value}</DisplayString>
+	</Type>
+	<Type Name="Texture">
+		<DisplayString>#{ID}, [{width}x{height}]</DisplayString>
+	</Type>
+<!--
+	<Type Name="json5pp::value">
+		<DisplayString Condition="type == 6">{content.integer}</DisplayString>
+	</Type>
+-->	
+</AutoVisualizer>
