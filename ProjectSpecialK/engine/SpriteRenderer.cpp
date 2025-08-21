@@ -129,7 +129,11 @@ namespace Sprite
 		currentShader->Use();
 		currentTexture->Use(0);
 
-		glm::mat4 orthoProjection = glm::ortho(0.0f, (float)width, (float)height, 0.0f, -1.0f, 1.0f);
+		//this is bullshit
+		int vp[4];
+		glGetIntegerv(GL_VIEWPORT, vp);
+
+		glm::mat4 orthoProjection = glm::ortho((float)vp[0], (float)vp[2], (float)vp[3], (float)vp[1], -1.0f, 1.0f);
 		currentShader->Use();
 		currentShader->Set("image", 0);
 		currentShader->Set("projection", orthoProjection);

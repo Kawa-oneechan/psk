@@ -1,3 +1,4 @@
+#include <glad/glad.h>
 #include "Framebuffer.h"
 #include "SpriteRenderer.h"
 #include "Shader.h"

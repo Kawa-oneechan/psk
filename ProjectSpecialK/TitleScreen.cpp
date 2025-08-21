@@ -38,10 +38,8 @@ TitleScreen::TitleScreen()
 	
 	LoadCamera("cameras/title.json");
 
-	//auto key = Inputs.Keys[(int)Binds::Accept];
-	//psText = fmt::format(Text::Get("title:pressstart"), key.Name, GamepadPUAMap[key.GamepadButton]);
-	psText = PreprocessBJTS(Text::Get("title:pressstart"));
-	psSize = Sprite::MeasureText(1, psText, 100);
+	//psText = PreprocessBJTS(Text::Get("title:pressstart"));
+	//psSize = Sprite::MeasureText(1, psText, 100);
 
 	optionsMenu = std::make_shared<OptionsMenu>();
 	optionsMenu->Enabled = false;
@@ -71,6 +69,7 @@ bool TitleScreen::Tick(float dt)
 		{
 			state = State::Wait;
 			logoAnim->Play("open");
+			pressStart = new DropLabel(PreprocessBJTS(Text::Get("title:pressstart")), 1, 150, DropLabel::Style::Drop);
 		}
 	}
 	else if (state == State::Wait)
@@ -111,6 +110,7 @@ bool TitleScreen::Tick(float dt)
 		{
 			dead = true;
 			tickables.clear();
+			delete pressStart;
 			::newTickables.push_back(std::make_shared<InGame>());
 		}
 	}
@@ -122,9 +122,13 @@ void TitleScreen::Draw(float dt)
 {
 	DrawAllTickables(tickables, dt);
 
-	if (!optionsMenu->Visible)
+	if (!optionsMenu->Visible && pressStart != nullptr)
 	{
-		Sprite::DrawText(1, psText, (glm::vec2(width, height) - psSize) * glm::vec2(0.5f, 0.86f), glm::vec4(1, 1, 1, glm::abs(glm::sin((float)glfwGetTime())) * 1.0f), 150.0f * scale);
+		//Sprite::DrawText(1, psText, (glm::vec2(width, height) - psSize) * glm::vec2(0.5f, 0.86f), glm::vec4(1, 1, 1, glm::abs(glm::sin((float)glfwGetTime())) * 1.0f), 150.0f * scale);
+		Sprite::DrawSprite(pressStart->Texture(),
+			(glm::vec2(width, height) - (pressStart->Size() * scale)) * glm::vec2(0.5f, 0.86f),
+			pressStart->Size() * scale, glm::vec4(0), 0.0f,
+			glm::vec4(1, 1, 1, glm::abs(glm::sin((float)glfwGetTime())) * 1.0f));
 	}
 
 #ifdef DEBUG

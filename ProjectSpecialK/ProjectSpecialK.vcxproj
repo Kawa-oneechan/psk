@@ -132,7 +132,6 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <DisableLanguageExtensions>true</DisableLanguageExtensions>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -149,8 +148,12 @@
     <ClCompile Include="ButtonGuide.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="engine\Audio.cpp" />
+    <ClCompile Include="engine\DropLabel.cpp" />
     <ClCompile Include="engine\Framebuffer.cpp" />
-    <ClCompile Include="engine\ImGuiDebugger.cpp" />
+    <ClCompile Include="engine\ImGuiDebugger.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="engine\NineSlicer.cpp" />
     <ClCompile Include="GameConsole.cpp" />
     <ClCompile Include="Database.cpp" />
     <ClCompile Include="DateTimePanel.cpp" />
@@ -261,11 +264,13 @@
     <ClInclude Include="engine\Audio.h" />
     <ClInclude Include="engine\Console.h" />
     <ClInclude Include="engine\Cursor.h" />
+    <ClInclude Include="engine\DropLabel.h" />
     <ClInclude Include="engine\Framebuffer.h" />
     <ClInclude Include="engine\GlfwKeys.h" />
     <ClInclude Include="engine\InputsMap.h" />
     <ClInclude Include="engine\JsonUtils.h" />
     <ClInclude Include="engine\Model.h" />
+    <ClInclude Include="engine\NineSlicer.h" />
     <ClInclude Include="engine\Random.h" />
     <ClInclude Include="engine\Shader.h" />
     <ClInclude Include="engine\SpriteRenderer.h" />

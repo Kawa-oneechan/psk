@@ -4,6 +4,7 @@
 #include "Iris.h"
 #include "PanelLayout.h"
 #include "OptionsMenu.h"
+#include "engine/DropLabel.h"
 
 class TitleScreen : public Tickable
 {
@@ -17,8 +18,9 @@ private:
 	std::shared_ptr<OptionsMenu> optionsMenu;
 	std::shared_ptr<Iris> iris;
 
-	std::string psText;
-	glm::vec2 psSize;
+	//std::string psText;
+	//glm::vec2 psSize;
+	DropLabel* pressStart = nullptr;
 
 public:
 	TitleScreen();
