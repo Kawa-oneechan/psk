@@ -21,4 +21,12 @@ inline constexpr float operator "" pt(long double v) { return (float)v; }
 #pragma warning(pop)
 
 #define BJTSParams const std::vector<std::string>& tags, int start, int len
+typedef void(*BJTSFunc)(std::string& data, BJTSParams);
 
+struct ColorMap
+{
+	static constexpr int Rows = 32;
+	static constexpr int Cols = 32;
+	unsigned int values[Rows * Cols];
+	int numRows, numCols;
+};

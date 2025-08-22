@@ -180,6 +180,7 @@ void GetAtlas(std::vector<glm::vec4> &ret, const std::string& jsonFile)
 	auto rjs = VFS::ReadJSON(jsonFile);
 	if (!rjs)
 		return;
+	//TODO: try climbing up the path first, then retry with default.json
 	auto doc = rjs.as_object();
 	ret.clear();
 	if (!doc["type"].is_string())
@@ -207,4 +208,31 @@ void GetAtlas(std::vector<glm::vec4> &ret, const std::string& jsonFile)
 	}
 	else
 		throw std::runtime_error(fmt::format("GetAtlas: file {} has an unknown type \"{}\".", jsonFile, doc["type"].as_string()));
+}
+
+void GetColorMap(ColorMap& ret, const std::string& jsonFile)
+{
+	auto colorData = VFS::ReadJSON(jsonFile);
+	auto alts = colorData.as_array();
+	ret.numRows = (int)alts.size();
+	ret.numCols = (int)alts[0].as_array().size();
+	if (ret.numCols >= ColorMap::Cols || ret.numRows >= ColorMap::Rows)
+		throw std::runtime_error("Too many entries in colormap.");
+	for (int i = 0; i < ret.numRows; i++)
+	{
+		auto vals = alts[i].as_array();
+		for (int j = 0; j < ret.numCols; j++)
+		{
+			if (!vals[j].is_string())
+				throw std::runtime_error("Colormap entries should be \"#RRGGBB\" hexcodes.");
+			auto hex = vals[j].as_string();
+			if (hex.empty() || hex[0] != '#')
+				throw std::runtime_error("Colormap entries should be \"#RRGGBB\" hexcodes.");
+			auto r = std::stoi(hex.substr(1, 2), nullptr, 16);
+			auto g = std::stoi(hex.substr(3, 2), nullptr, 16);
+			auto b = std::stoi(hex.substr(5, 2), nullptr, 16);
+			auto col = (r << 0) | (g << 8) | (b << 16) | (255 << 24);
+			ret.values[(i * ColorMap::Cols) + j] = col;
+		}
+	}
 }

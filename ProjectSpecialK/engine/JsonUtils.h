@@ -6,6 +6,8 @@ using jsonValue = json5pp::value;
 using jsonObject = json5pp::value::object_type;
 using jsonArray = json5pp::value::array_type;
 
+struct ColorMap;
+
 //Given a JSON array with two numbers in it, returns a vec2 with those numbers.
 extern glm::vec2 GetJSONVec2(const jsonValue& val);
 //Given a JSON array with three numbers in it, returns a vec3 with those numbers.
@@ -27,3 +29,5 @@ extern jsonValue GetJSONVec(const glm::vec3& vec, bool asInt = false);
 extern jsonValue GetJSONVec(const glm::vec4& vec, bool asInt = false);
 
 extern void GetAtlas(std::vector<glm::vec4> &ret, const std::string& jsonFile);
+
+extern void GetColorMap(ColorMap &ret, const std::string& jsonFile);

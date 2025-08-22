@@ -11,6 +11,7 @@
 #include "Console.h"
 #include "Texture.h"
 #include "JsonUtils.h"
+#include "../Game.h"
 
 /*
 Saving to an archive file breaks if the entry already exists.
@@ -45,7 +46,9 @@ namespace JSONPatch
 	extern jsonValue& ApplyPatch(jsonValue& source, jsonValue& patch);
 }
 
+#ifdef BECKETT_EXTRASAVEDIRS
 extern void GamePrepSaveDirs(const fs::path& savePath);
+#endif
 
 #ifdef _WIN32
 extern "C" {
@@ -260,7 +263,9 @@ namespace VFS
 		savePath = fs::path(p);
 
 		fs::create_directory(savePath);
+#ifdef BECKETT_EXTRASAVEDIRS
 		GamePrepSaveDirs(savePath);
+#endif
 	}
 
 	void Initialize()

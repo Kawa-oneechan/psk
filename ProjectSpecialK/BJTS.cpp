@@ -2,7 +2,7 @@
 #include "engine/InputsMap.h"
 #include "engine/Text.h"
 #include "engine/Random.h"
-#include "BJTS.h"
+#include "Game.h"
 #include "DialogueBox.h"
 #include "Player.h"
 

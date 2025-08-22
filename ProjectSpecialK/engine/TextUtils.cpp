@@ -7,7 +7,7 @@
 #include "TextUtils.h"
 #include "InputsMap.h"
 #include "Console.h"
-#include "../BJTS.h"
+#include "../Game.h"
 
 extern sol::state Sol;
 

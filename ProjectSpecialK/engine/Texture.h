@@ -1,7 +1,17 @@
 #pragma once
 #include <vector>
-#include <glad/glad.h>
 #include <glm/glm.hpp>
+#include "Types.h"
+
+#ifndef GL_REPEAT
+#define GL_CLAMP_TO_BORDER 0x812D
+#define GL_CLAMP_TO_EDGE 0x812F
+#define GL_MIRRORED_REPEAT 0x8370
+#define GL_NEAREST 0x2600
+#define GL_LINEAR 0x2601
+#define GL_CLAMP 0x2900
+#define GL_REPEAT 0x2901
+#endif
 
 class Texture
 {
@@ -19,7 +29,7 @@ public:
 
 	Texture() = default;
 
-	Texture(const std::string& texturePath, int repeat = GL_REPEAT, int filter = 0);
+	Texture(const std::string& texturePath, int repeat = GL_REPEAT, int filter = 0, bool skipAtlas = false, ColorMap* colorMaps = nullptr, int colorMapIndex = 0);
 	Texture(const unsigned char* data, int width, int height, int channels, int repeat = GL_REPEAT, int filter = 0);
 	Texture(unsigned int id, int width, int height, int channels) : ID(id), width(width), height(height), channels(channels), data(nullptr), filter(0), repeat(GL_REPEAT) {}
 

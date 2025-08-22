@@ -254,7 +254,6 @@
   <ItemGroup>
     <ClInclude Include="Animator.h" />
     <ClInclude Include="Background.h" />
-    <ClInclude Include="BJTS.h" />
     <ClInclude Include="ButtonGuide.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Database.h" />
