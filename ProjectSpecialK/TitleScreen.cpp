@@ -110,12 +110,16 @@ bool TitleScreen::Tick(float dt)
 		{
 			dead = true;
 			tickables.clear();
-			delete pressStart;
 			::newTickables.push_back(std::make_shared<InGame>());
 		}
 	}
 
 	return true;
+}
+
+TitleScreen::~TitleScreen()
+{
+	delete pressStart;
 }
 
 void TitleScreen::Draw(float dt)

@@ -723,4 +723,69 @@ namespace VFS
 	{
 		return WriteSaveString(path, data.stringify5(json5pp::rule::tab_indent<>()));
 	}
+
+	std::string GetPathPart(const std::string& path)
+	{
+		if (path.empty()) return path;
+		if (path.find('/') != std::string::npos)
+			return path.substr(0, path.find_last_of('/'));
+		return "";
+	}
+
+	std::string GetFilePart(const std::string& path)
+	{
+		if (path.empty()) return path;
+		if (path.find('/') != std::string::npos)
+			return path.substr(path.find_last_of('/') + 1);
+		return "";
+	}
+
+	std::string ChangeExtension(const std::string& path, const std::string& ext)
+	{
+		if (path.empty()) return path;
+		if (path.find('.') != std::string::npos)
+			return path.substr(0, path.find_last_of('.') + 1) + ext;
+		return path;
+	}
+
+	std::string GoUpPath(const std::string& path)
+	{
+		if (path.empty()) return path;
+		if (path.find('/') != std::string::npos)
+			return path.substr(0, path.rfind('/'));
+		return "";
+	}
+
+
+	std::string ClimbDown(const std::string& path, const std::string& fallback)
+	{
+		auto haveFile = [path](const std::string& p)
+		{
+			auto it = std::find_if(entries.cbegin(), entries.cend(), [p](Entry e)
+			{
+				return e.path == p;
+			});
+			return it != entries.cend();
+		};
+
+		auto dir = GetPathPart(path);
+		auto file = GetFilePart(path);
+		while (!dir.empty())
+		{
+			auto findThis = fmt::format("{}/{}", dir, file);
+			if (haveFile(findThis))
+				return findThis;
+			findThis = fmt::format("{}/{}", dir, fallback);
+			if (haveFile(findThis))
+				return findThis;
+
+			dir = GoUpPath(dir);
+		}
+
+		//Final attempt in the root
+		if (haveFile(file))
+			return file;
+
+		return fallback;
+	}
 }

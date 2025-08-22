@@ -332,14 +332,9 @@ void HandleIncludes(std::string& code, const std::string& path)
 		auto incStr = incPos + 10;
 		auto incEnd = code.find('\"', incStr);
 		auto file = code.substr(incStr, incEnd - incStr);
-		auto includedFile = VFS::ReadString(path + file);
+		auto includedFile = VFS::ReadString(fmt::format("{}/{}", path, file));
 		code = code.replace(incPos, incEnd - incPos + 1, includedFile);
 	}
-}
-
-std::string GetDirFromFile(const std::string& path)
-{
-	return path.substr(0, path.rfind('/') + 1);
 }
 
 std::string ResolvePath(const std::string& maybeRelative)

@@ -9,6 +9,7 @@ public:
 	std::string RefName;
 	std::string EnName;
 	std::string Path; //To locate specific stuff like models, textures, sounds...
+	std::string File; //Goes with the path: Path + "/" + File.
 	hash Hash;
 	NameableThing(jsonObject& value, const std::string& filename = "");
 	NameableThing() = default;

@@ -36,9 +36,6 @@ extern std::string StripBJTS(const std::string& data);
 //Applies all non-dynamic BJTS tags to a string.
 extern std::string PreprocessBJTS(const std::string& data);
 
-//Given a full path to a file ("data/foo/bar.txt"), returns the path part including the final separator ("data/foo/").
-extern std::string GetDirFromFile(const std::string& path);
-
 //Given a path that may contain ".." or "." parts, returns an absolute path ("foo/bar/../baz" becomes "foo/baz").
 extern std::string ResolvePath(const std::string& maybeRelative);
 

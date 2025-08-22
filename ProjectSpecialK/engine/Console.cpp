@@ -284,7 +284,6 @@ void Console::Close()
 	if (!visible)
 		return;
 	appearState = 2;
-	visible = true;
 }
 
 bool Console::Tick(float dt)

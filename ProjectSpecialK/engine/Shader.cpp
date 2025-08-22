@@ -2,6 +2,7 @@
 #include <format.h>
 #include "Shader.h"
 #include "TextUtils.h"
+#include "VFS.h"
 #include "Console.h"
 
 #define HEADER "#version 430 core\n#define PSK\n"
@@ -17,8 +18,8 @@ void Shader::load()
 	auto vShaderCode = HEADER + VFS::ReadString(vertexShaderPath);
 	auto fShaderCode = HEADER + VFS::ReadString(fragmentShaderPath);
 
-	HandleIncludes(vShaderCode, GetDirFromFile(vertexShaderPath));
-	HandleIncludes(fShaderCode, GetDirFromFile(fragmentShaderPath));
+	HandleIncludes(vShaderCode, VFS::GetPathPart(vertexShaderPath));
+	HandleIncludes(fShaderCode, VFS::GetPathPart(fragmentShaderPath));
 
 	unsigned int vertex, fragment;
 	const char* vs = vShaderCode.c_str();

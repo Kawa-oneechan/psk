@@ -3,6 +3,7 @@
 #include "engine/Text.h"
 #include "engine/TextUtils.h"
 #include "engine/Utilities.h"
+#include "engine/VFS.h"
 
 //TODO: hack, clean this up
 int articlePlease;
@@ -17,10 +18,10 @@ NameableThing::NameableThing(jsonObject& value, const std::string& filename)
 	StripSpaces(ref);
 	RefName = ref;
 
-	if (!filename.empty())
-		Path = filename.substr(0, filename.find_last_of('/'));
-	else
-		Path.clear();
+	//All NameableThings should be at least on folder deep.
+	//Still, who knows.
+	Path = VFS::GetPathPart(filename);
+	File = VFS::GetFilePart(filename);
 
 	auto val = value["name"];
 	if (val.is_array())

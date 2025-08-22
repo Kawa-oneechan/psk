@@ -66,37 +66,11 @@ Model::Model(const std::string& modelPath) : file(modelPath)
 	
 	debprint(5, "Loading {}\n-------------------------------", modelPath);
 
-	auto basePath = modelPath.substr(0, modelPath.rfind('/') + 1);
-	auto matMapFile = modelPath.substr(0, modelPath.rfind('.')) + ".mat.json";
-	auto matMap = VFS::ReadJSON(matMapFile);
+	auto basePath = VFS::GetPathPart(modelPath);
+	auto matMap = VFS::ReadJSON(VFS::ClimbDown(VFS::ChangeExtension(modelPath, "mat.json"), "default.mat.json"));
 	if (!matMap.is_object())
-	{
-		matMapFile = matMapFile.substr(0, modelPath.rfind('/')) + "/default.mat.json";
-		matMap = VFS::ReadJSON(matMapFile);
-		while (!matMap)
-		{
-			if (matMapFile.find('/') == std::string::npos)
-			{
-				//FatalError("No material map? How?");
-				matMap = json5pp::parse5("{}");
-				break;
-			}
-
-			matMapFile = matMapFile.substr(0, matMapFile.rfind('/'));
-
-			auto slashes = 0;
-			for (auto ch : matMapFile)
-				if (ch == '/') slashes++;
-
-			if (slashes == 0)
-				matMapFile = "default.mat.json";
-			else
-				matMapFile = matMapFile.substr(0, matMapFile.rfind('/')) + "/default.mat.json";
-
-			matMap = VFS::ReadJSON(matMapFile);
-		}
-	}
-
+		matMap = json5pp::parse5("{}");
+	
 	debprint(5, "Materials:");
 	for (auto m : scene->materials)
 	{
@@ -210,13 +184,13 @@ Model::Model(const std::string& modelPath) : file(modelPath)
 							*/
 						}
 						if (mat["albedo"].is_string())
-							m.Textures[0] = new TextureArray(basePath + mat["albedo"].as_string());
+							m.Textures[0] = new TextureArray(fmt::format("{}/{}", basePath, mat["albedo"].as_string()));
 						if (mat["normal"].is_string())
-							m.Textures[1] = new TextureArray(basePath + mat["normal"].as_string());
+							m.Textures[1] = new TextureArray(fmt::format("{}/{}", basePath, mat["normal"].as_string()));
 						if (mat["mix"].is_string())
-							m.Textures[2] = new TextureArray(basePath + mat["mix"].as_string());
+							m.Textures[2] = new TextureArray(fmt::format("{}/{}", basePath, mat["mix"].as_string()));
 						if (mat["opacity"].is_string())
-							m.Textures[3] = new TextureArray(basePath + mat["opacity"].as_string());
+							m.Textures[3] = new TextureArray(fmt::format("{}/{}", basePath, mat["opacity"].as_string()));
 
 						if (mat["visible"].is_boolean())
 							m.Visible = mat["visible"].as_boolean();
