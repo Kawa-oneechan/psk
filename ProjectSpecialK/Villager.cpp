@@ -669,7 +669,7 @@ void Villager::TestScript()
 	end
 	)SOL");
 	runningScript = std::make_shared<sol::coroutine>(Sol["start"]);
-	dlgBox->mutex = &testMutex;
+	dlgBox->Mutex = &testMutex;
 	testMutex = false;
 	console->visible = false;
 }

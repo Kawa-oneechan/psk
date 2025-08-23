@@ -51,8 +51,8 @@ namespace SolBinds
 				break;
 			}
 
-			if (dlgBox->mutex != nullptr)
-				*dlgBox->mutex = true;
+			if (dlgBox->Mutex != nullptr)
+				*dlgBox->Mutex = true;
 			dlgBox->Text(line, style);
 
 			if (console->visible)

@@ -109,7 +109,7 @@ void FatalError(const std::string& message)
 }
 
 //Currently active Tickables.
-std::vector<TickableP> tickables;
+std::vector<TickableP> rootTickables;
 //Tickables to add next cycle.
 std::vector<TickableP> newTickables;
 
@@ -134,9 +134,9 @@ static void char_callback(GLFWwindow* window, unsigned int codepoint)
 		console->Character(codepoint);
 		return;
 	}
-	for (unsigned int i = (unsigned int)tickables.size(); i-- > 0; )
+	for (unsigned int i = (unsigned int)rootTickables.size(); i-- > 0; )
 	{
-		auto t = tickables[i];
+		auto t = rootTickables[i];
 		if (t->Character(codepoint))
 			break;
 	}
@@ -166,9 +166,9 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 
 	Inputs.Process(scancode, action);
 
-	for (unsigned int i = (unsigned int)tickables.size(); i-- > 0; )
+	for (unsigned int i = (unsigned int)rootTickables.size(); i-- > 0; )
 	{
-		auto t = tickables[i];
+		auto t = rootTickables[i];
 		if (t->Scancode(scancode))
 			break;
 	}
@@ -421,7 +421,7 @@ int main(int argc, char** argv)
 	auto oldTime = glfwGetTime();
 	commonUniforms.TotalTime = 0.0f;
 
-	GameStart(tickables);
+	GameStart(rootTickables);
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -450,7 +450,7 @@ int main(int argc, char** argv)
 		if (console->visible)
 			console->Tick(dt);
 		else
-			RevAllTickables(tickables, dt);
+			RevAllTickables(rootTickables, dt);
 		
 		glBindBuffer(GL_UNIFORM_BUFFER, commonBuffer);
 		glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(CommonUniforms), &commonUniforms);
@@ -462,19 +462,19 @@ int main(int argc, char** argv)
 #endif
 
 		GamePreDraw(dt * timeScale);
-		DrawAllTickables(tickables, dt * timeScale);
+		DrawAllTickables(rootTickables, dt * timeScale);
 		GamePostDraw(dt * timeScale);
 
 		console->Draw(dt);
 		Sprite::FlushBatch();
 
-		tickables.erase(std::remove_if(tickables.begin(), tickables.end(), [](TickableP i) {
-			return i->dead;
-		}), tickables.end());
+		rootTickables.erase(std::remove_if(rootTickables.begin(), rootTickables.end(), [](TickableP i) {
+			return i->Dead;
+		}), rootTickables.end());
 		if (newTickables.size() > 0)
 		{
 			for (const auto& t : newTickables)
-				tickables.push_back(t);
+				rootTickables.push_back(t);
 			newTickables.clear();
 		}
 

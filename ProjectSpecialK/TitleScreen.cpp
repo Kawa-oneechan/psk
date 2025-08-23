@@ -16,7 +16,7 @@ extern std::vector<TickableP> newTickables;
 
 TitleScreen::TitleScreen()
 {
-	tickables.clear();
+	ChildTickables.clear();
 	auto logoJson = VFS::ReadJSON("cinematics/logo/logo.json").as_object();
 	logoAnim = std::make_shared<PanelLayout>(logoJson["cinematic"]);
 
@@ -47,14 +47,14 @@ TitleScreen::TitleScreen()
 
 	iris = std::make_shared<Iris>();
 
-	tickables.push_back(logoAnim);
-	tickables.push_back(optionsMenu);
-	tickables.push_back(iris);
+	ChildTickables.push_back(logoAnim);
+	ChildTickables.push_back(optionsMenu);
+	ChildTickables.push_back(iris);
 }
 
 bool TitleScreen::Tick(float dt)
 {
-	RevAllTickables(tickables, dt);
+	RevAllTickables(ChildTickables, dt);
 
 	if (state == State::Init)
 	{
@@ -93,9 +93,9 @@ bool TitleScreen::Tick(float dt)
 		}
 		else
 		{
-			if (optionsMenu->dead)
+			if (optionsMenu->Dead)
 			{
-				optionsMenu->dead = false;
+				optionsMenu->Dead = false;
 				optionsMenu->Visible = false;
 				optionsMenu->Enabled = false;
 				logoAnim->Visible = true;
@@ -108,8 +108,8 @@ bool TitleScreen::Tick(float dt)
 	{
 		if (iris->Done())
 		{
-			dead = true;
-			tickables.clear();
+			Dead = true;
+			ChildTickables.clear();
 			::newTickables.push_back(std::make_shared<InGame>());
 		}
 	}
@@ -124,7 +124,7 @@ TitleScreen::~TitleScreen()
 
 void TitleScreen::Draw(float dt)
 {
-	DrawAllTickables(tickables, dt);
+	DrawAllTickables(ChildTickables, dt);
 
 	if (!optionsMenu->Visible && pressStart != nullptr)
 	{

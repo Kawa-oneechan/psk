@@ -389,7 +389,7 @@ bool DoomMenu::Tick(float dt)
 		}
 		else
 		{
-			dead = true;
+			Dead = true;
 		}
 	}
 

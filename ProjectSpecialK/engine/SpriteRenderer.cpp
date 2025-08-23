@@ -30,7 +30,8 @@ namespace UI
 
 namespace Sprite
 {
-	constexpr int FontAtlasExtent = 512;
+	constexpr int FontBaseScale = 2; //Higher base scale may improve quality.
+	constexpr int FontAtlasExtent = 512 * FontBaseScale;
 	constexpr int MaxFonts = 6;
 
 	static bool initialized{ false };
@@ -281,7 +282,7 @@ namespace Sprite
 		if (!ttfData)
 			FatalError(fmt::format("Could not load font {}.", fonts[font].file));
 		auto ttfBitmap = new unsigned char[FontAtlasExtent * FontAtlasExtent];
-		stbtt_BakeFontBitmap((unsigned char*)ttfData.get(), 0, (float)fonts[font].size, ttfBitmap, FontAtlasExtent, FontAtlasExtent, 256 * bank, 256, &cdata[(font * 0xFFFF) + (0x100 * bank)]);
+		stbtt_BakeFontBitmap((unsigned char*)ttfData.get(), 0, (float)fonts[font].size  * FontBaseScale, ttfBitmap, FontAtlasExtent, FontAtlasExtent, 256 * bank, 256, &cdata[(font * 0xFFFF) + (0x100 * bank)]);
 
 		unsigned int fontID;
 		glGenTextures(1, &fontID);
@@ -405,7 +406,7 @@ namespace Sprite
 			LoadFontBank(actualFont, bank);
 
 			//auto scaleF = textRenderSize / 100.0f;
-			auto scaleF = (originalTextRenderSize * textRenderSize) / 100.0f;
+			auto scaleF = (originalTextRenderSize * textRenderSize) / (100.0f * FontBaseScale);
 
 			if (ch == ' ')
 			{
@@ -517,7 +518,7 @@ namespace Sprite
 			LoadFontBank(actualFont, bank);
 
 			//auto scaleF = textRenderSize / 100.0f;
-			auto scaleF = (originalTextRenderSize * textRenderSize) / 100.0f;
+			auto scaleF = (originalTextRenderSize * textRenderSize) / (100.0f * FontBaseScale);
 
 			if (ch == '\n')
 			{
