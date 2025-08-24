@@ -103,7 +103,7 @@ void RunTests()
 	//GetLetterScore(u8"こんにちは、ボブさん。元気ですか？またね！", true); //should be 40, Hunter R's tool doesn't support non-US.
 	//GetLetterScore("L!L!L!L!L!L! L!L!L!L!L!L!L! L!L!L!L!L!L!L! L!L!L!L!L!L! L!L!L!L!L!L!L! L!L!L!L!L!L!L!L!L!L!L!L! L!L!L!L!L!L!L!L!L! L!L!L!L! L!L!L!L! L!L!L! L!L!L! L!L!L!"); //should be 710, Hunter R says 746.
 	//GetLetterScore("!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i!i"); //should be -820, Hunter R says -807
-
+	//GetLetterScore("Welcome to Rokoko!\nI'm happy you are here!\nYou are amazing. You are wonderful! Please reply...", false); //should be 75 (12*100/16), ignoring the town name check.
 
 	auto testLine = "<ws:?:greeting> What's new?";
 	auto result = PreprocessBJTS(testLine); //-V808 yes yes I know

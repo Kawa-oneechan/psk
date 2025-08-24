@@ -21,6 +21,10 @@ namespace fs = std::experimental::filesystem;
 namespace fs = std::filesystem;
 #endif
 
+#ifdef DEBUG
+extern void RunTests();
+#endif
+
 constexpr int ScreenWidth = 1920;
 constexpr int ScreenHeight = 1080;
 

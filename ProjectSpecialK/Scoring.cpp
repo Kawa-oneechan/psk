@@ -1,4 +1,5 @@
 #include <string>
+#include <map>
 #include <cctype>
 #include <format.h>
 #include "engine/Types.h"
@@ -7,9 +8,22 @@
 #include "engine/VFS.h"
 #include "Town.h"
 
+#define CITYFOLKRULES
+
 int GetLetterScore(const std::string& text, bool noCapitals)
 {
 	//Based on https://www.youtube.com/watch?v=8VbwWVvw-zI
+	/* August '25 update: https://www.youtube.com/watch?v=YL2V6TGq7wA reveals about City Folk:
+	    * Trigrams still there.
+	    * Each trigram only counts up to two times.
+	    * Each trigram is worth one point.
+	    * Score is then calculated as (numTrigrams * 100) / numWords.
+	    * Town and player name add 3 points each.
+	    * No repeated letter checks, no punctuation, no capitalization.
+		* Positive replies at >= 25 points.
+	   Separately, there's a list of precomposed replies, triggered by special words and phrases:
+	    * 
+	 */
 
 	auto trigrams = VFS::ReadString(fmt::format("mailcheck/trigrams_{}.txt", Text::GetLangCode()));
 	int score = 0;
@@ -31,6 +45,7 @@ int GetLetterScore(const std::string& text, bool noCapitals)
 		return std::string::npos;
 	};
 
+#ifndef CITYFOLKRULES
 	//Check A: punctuation and capital letters.
 	{
 		auto lastPos = text.length() - 1;
@@ -90,6 +105,9 @@ int GetLetterScore(const std::string& text, bool noCapitals)
 		checkFor(0xFF0E);
 		checkFor(0xFF1F);
 	}
+#else
+	std::map<std::string, int> triCounter;
+#endif
 
 	//Check B: trigrams
 	{
@@ -130,7 +148,17 @@ int GetLetterScore(const std::string& text, bool noCapitals)
 
 			auto triPos = trigrams.find(tri);
 			if (triPos != std::string::npos)
+			{
+#ifndef CITYFOLKRULES
 				trisFound++;
+#else
+				if (triCounter[tri] < 2)
+				{
+					trisFound++;
+					triCounter[tri]++;
+				}
+#endif
+			}
 
 			if (poop == 1)
 			{
@@ -139,9 +167,22 @@ int GetLetterScore(const std::string& text, bool noCapitals)
 					pos++;
 			}
 		}
+#ifndef CITYFOLKRULES
 		score += trisFound * 3;
+#else
+		char lastCh = -1;
+		int words = 1;
+		for (auto ch : text)
+		{
+			if ((ch == ' ' || ch == '\n') && ch != lastCh)
+				words++;
+			lastCh = ch;
+		}
+		score += (trisFound * 100) / words;
+#endif
 	}
 
+#ifndef CITYFOLKRULES
 	//Check C: first letter is a capital
 	if (!noCapitals)
 	{
@@ -250,6 +291,11 @@ int GetLetterScore(const std::string& text, bool noCapitals)
 			i = pos;
 		}
 	}
+#endif
+
+#ifdef CITYFOLKRULES
+	//Add three points for each instance of the town or player name.
+#endif
 
 	return score;
 }
