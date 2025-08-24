@@ -471,13 +471,13 @@ bool Villager::Tick(float)
 	if (!_model)
 		LoadModel();
 
-	if (runningScript && runningScript->runnable() && !testMutex)
+	if (scriptRunner && scriptRunner->Runnable() && !Mutex)
 	{
-		runningScript->call();
-		if (runningScript->status() == sol::call_status::ok) //not yielded
+		scriptRunner->Call();
+		if (scriptRunner->Status() == sol::call_status::ok) //not yielded
 		{
 			//somehow clean up properly?
-			runningScript.reset();
+			scriptRunner.reset();
 		}
 	}
 
@@ -659,6 +659,7 @@ void Villager::Deserialize(jsonObject& source)
 #include "DialogueBox.h"
 void Villager::TestScript()
 {
+	/*
 	Sol.do_string(R"SOL(
 
 	function start()
@@ -672,4 +673,38 @@ void Villager::TestScript()
 	dlgBox->Mutex = &testMutex;
 	testMutex = false;
 	console->visible = false;
+	*/
+
+	auto testScript = R"SOL(
+
+	function start()
+		dialogue("Panting and sweating...")
+		dialogue("Are we done yet?")
+		-- dialogue("Save complete.", 4)
+		-- dialogue() --oops
+	end
+
+	)SOL";
+
+	console->visible = false;
+	Mutex = false;
+	scriptRunner = std::make_shared<ScriptRunner>("start", testScript, &Mutex);
+	dlgBox->Mutex = scriptRunner->Mutex;
+}
+
+//TODO: split this into its own files
+namespace SolBinds
+{
+	extern void Setup(sol::state& sol);
+}
+ScriptRunner::ScriptRunner(const std::string& entryPoint, const std::string& script, bool* mutex)
+{
+	SolBinds::Setup(myState);
+	Mutex = mutex;
+	myState.do_string(script);
+	currentCoro = std::make_shared<sol::coroutine>(myState[entryPoint]);
+}
+ScriptRunner::~ScriptRunner()
+{
+	currentCoro.reset();
 }

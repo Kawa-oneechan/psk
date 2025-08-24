@@ -45,7 +45,7 @@ bool showPos = false;
 
 namespace SolBinds
 {
-	extern void Setup();
+	extern void Setup(sol::state& sol);
 }
 
 namespace UI
@@ -191,7 +191,7 @@ namespace UI
 
 void GameInit()
 {
-	SolBinds::Setup();
+	SolBinds::Setup(Sol);
 
 	MainCamera = std::make_shared<Camera>();
 	musicManager = std::make_shared<MusicManager>();

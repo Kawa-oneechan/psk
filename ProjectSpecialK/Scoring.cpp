@@ -172,11 +172,11 @@ int GetLetterScore(const std::string& text, bool noCapitals)
 #else
 		char lastCh = -1;
 		int words = 1;
-		for (auto ch : text)
+		for (auto chr : text)
 		{
-			if ((ch == ' ' || ch == '\n') && ch != lastCh)
+			if ((chr == ' ' || chr == '\n') && chr != lastCh)
 				words++;
-			lastCh = ch;
+			lastCh = chr;
 		}
 		score += (trisFound * 100) / words;
 #endif

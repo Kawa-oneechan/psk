@@ -1,5 +1,6 @@
 #pragma once
 #include "engine/Model.h"
+#include "engine/Tickable.h"
 #include "Animator.h"
 #include "Species.h"
 #include "Traits.h"
@@ -67,6 +68,20 @@ public:
 };
 
 using PersonP = std::shared_ptr<Person>;
+
+//TODO: split this into its own files
+class ScriptRunner : public Tickable
+{
+public:
+	std::shared_ptr<sol::coroutine> currentCoro;
+	sol::state myState;
+	ScriptRunner(const std::string& entryPoint, const std::string& script, bool* mutex);
+	~ScriptRunner();
+	bool Runnable() const { return currentCoro->runnable(); }
+	void Call() { currentCoro->call(); }
+	sol::call_status Status() { return currentCoro->status(); }
+};
+using ScriptRunnerP = std::shared_ptr<ScriptRunner>;
 
 
 class Villager : public NameableThing, public Person
@@ -153,8 +168,8 @@ public:
 
 	InventoryItem* Clothing() { return _clothesItems[0].get(); };
 
-	bool testMutex{ false };
-	std::shared_ptr<sol::coroutine> runningScript;
+	bool Mutex{ false };
+	ScriptRunnerP scriptRunner;
 	void TestScript();
 };
 

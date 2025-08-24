@@ -8,7 +8,7 @@
 
 namespace SolBinds
 {
-	void Setup()
+	void Setup(sol::state& Sol)
 	{
 		Sol.open_libraries(sol::lib::base, sol::lib::coroutine, sol::lib::string, sol::lib::math);
 
@@ -124,7 +124,7 @@ namespace SolBinds
 			console->Close();
 		};
 
-		Sol["decodeNookCode"] = [](const std::string& code)
+		Sol["decodeNookCode"] = [&Sol](const std::string& code)
 		{
 			hash itemHash;
 			int variant, pattern;
