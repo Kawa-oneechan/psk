@@ -9,8 +9,7 @@ extern "C" { double glfwGetTime(void); }
 Cursor::Cursor()
 {
 	auto doc = VFS::ReadJSON("ui/cursors.json");
-	auto hsj = doc.as_object();
-	for (auto& hs : hsj["hotspots"].as_array())
+	for (auto& hs : doc.as_object()["hotspots"].as_array())
 		hotspots.push_back(GetJSONVec2(hs));
 
 	SetScale(1.0);
@@ -27,6 +26,16 @@ void Cursor::Select(int style)
 	penFrame = glm::vec4(-1);
 	if (style >= PenMinIndex && style <= PenMaxIndex)
 		penFrame = hand[style + PenOffset];
+}
+
+void Cursor::Select(const std::string& style)
+{
+	auto& atlas = hand.Atlas();
+	auto it = atlas.names.find(style);
+	if (it == atlas.names.cend())
+		Select(0);
+	else
+		Select(it->second);
 }
 
 void Cursor::SetScale(float newScale)

@@ -1,6 +1,7 @@
 #pragma once
 #include <glm/glm.hpp>
 #include <json5pp.hpp>
+#include "Types.h"
 
 using jsonValue = json5pp::value;
 using jsonObject = json5pp::value::object_type;
@@ -28,6 +29,6 @@ extern jsonValue GetJSONVec(const glm::vec3& vec, bool asInt = false);
 //Returns a JSON array initialized from a vec4, optionally casting to int.
 extern jsonValue GetJSONVec(const glm::vec4& vec, bool asInt = false);
 
-extern void GetAtlas(std::vector<glm::vec4> &ret, const std::string& jsonFile);
+extern void GetAtlas(SpriteAtlas &ret, const std::string& jsonFile);
 
 extern void GetColorMap(ColorMap &ret, const std::string& jsonFile);

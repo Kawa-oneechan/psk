@@ -38,8 +38,8 @@ void DropLabel::update()
 	unsigned int finalTID;
 
 	unsigned int tempFBO, tempTID, blurFBO, blurTID, finalFBO;
-	blurTID = -1;
-	blurFBO = -1;
+	blurTID = (unsigned int)-1;
+	blurFBO = (unsigned int)-1;
 
 	//Step 1 - Draw text to TEMP
 	{
@@ -104,11 +104,11 @@ DropLabel::DropLabel(const std::string& text, int font, float size, Style style)
 	update();
 }
 
-void DropLabel::SetText(const std::string& text)
+void DropLabel::SetText(const std::string& newText)
 {
-	if (this->text != text)
+	if (this->text != newText)
 	{
-		this->text = text;
+		this->text = newText;
 		update();
 	}
 }

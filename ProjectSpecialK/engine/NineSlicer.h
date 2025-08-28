@@ -4,7 +4,7 @@
 class NineSlicer : public Tickable
 {
 private:
-	Texture texture;
+	std::shared_ptr<Texture> texture;
 	int left, top, width, height;
 
 public:

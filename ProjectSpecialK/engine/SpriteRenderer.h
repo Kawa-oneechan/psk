@@ -1,6 +1,5 @@
 #pragma once
 
-#include <glad/glad.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -9,6 +8,7 @@
 
 namespace Sprite
 {
+	//Number of sprites to queue up at once.
 	constexpr int BatchSize = 200;
 
 	enum SpriteFlags
@@ -22,6 +22,8 @@ namespace Sprite
 
 	void DrawSprite(Shader* shader, Texture& texture, glm::vec2 position, glm::vec2 size, glm::vec4 srcRect = glm::vec4(0.0f), float rotate = 0.0f, const glm::vec4& color = glm::vec4(1), SpriteFlags flags = SpriteFlags::NoFlags);
 	void DrawSprite(Texture& texture, const glm::vec2& position, const glm::vec2& size, const glm::vec4& srcRect = glm::vec4(0.0f), float rotate = 0.0f, const glm::vec4& color = glm::vec4(1), SpriteFlags flags = SpriteFlags::NoFlags);
+	void DrawSprite(Shader* shader, Texture& texture, const glm::vec2& position, const glm::vec4& srcRect, float rotate = 0.0f, const glm::vec4& color = glm::vec4(1), SpriteFlags flags = SpriteFlags::NoFlags);
+	void DrawSprite(Texture& texture, const glm::vec2& position, const glm::vec4& srcRect, float rotate = 0.0f, const glm::vec4& color = glm::vec4(1), SpriteFlags flags = SpriteFlags::NoFlags);
 	void DrawSprite(Shader* shader, Texture& texture, glm::vec2 position);
 	void DrawSprite(Texture& texture, glm::vec2 position);
 	void DrawLine(const glm::vec2& from, const glm::vec2& to, const glm::vec4& color);

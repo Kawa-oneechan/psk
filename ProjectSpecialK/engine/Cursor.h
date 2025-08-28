@@ -30,6 +30,8 @@ public:
 	Cursor();
 	//Sets up the cursor to a specific style.
 	void Select(int style);
+	//Sets up the cursor to a specific style.
+	void Cursor::Select(const std::string& style);
 	//Sets the scale of the cursor as a percentage float from 0.2 to 10.0.
 	void SetScale(float newScale);
 	//Draws the cursor to the screen.

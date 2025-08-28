@@ -19,7 +19,7 @@ private:
 	unsigned char* data;
 	std::string file;
 	int filter, repeat;
-	std::vector<glm::vec4> atlas;
+	SpriteAtlas atlas;
 
 public:
 	unsigned int ID;
@@ -44,7 +44,12 @@ public:
 	{
 		return (atlas.empty() || i >= atlas.size()) ? atlas[0] : atlas[i];
 	}
+	glm::vec4 operator[](const std::string& n) const
+	{
+		return atlas.empty() ? atlas[0] : atlas[n];
+	}
 	const size_t Frames() const { return atlas.size(); }
+	const SpriteAtlas& Atlas() const { return atlas; }
 
 	Texture(const Texture &x) = default;
 	Texture &operator=(const Texture &x) = default;

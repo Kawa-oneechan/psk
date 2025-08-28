@@ -211,12 +211,22 @@ namespace Sprite
 		instanceCursor++;
 	}
 
-	void DrawSprite(Texture& texture, const glm::vec2& position, const glm::vec2& size, const glm::vec4& srcRect, float rotate, const glm::vec4& color, SpriteFlags flip)
+	void DrawSprite(Texture& texture, const glm::vec2& position, const glm::vec2& size, const glm::vec4& srcRect, float rotate, const glm::vec4& color, SpriteFlags flags)
 	{
 		if (Shaders["sprite"] == nullptr)
 			FatalError("No \"sprite\" entry specified in \"shaders/shaders.json\".");
 
-		DrawSprite(Shaders["sprite"], texture, position, size, srcRect, rotate, color, flip);
+		DrawSprite(Shaders["sprite"], texture, position, size, srcRect, rotate, color, flags);
+	}
+
+	void DrawSprite(Shader* shader, Texture& texture, const glm::vec2& position, const glm::vec4& srcRect, float rotate, const glm::vec4& color, SpriteFlags flags)
+	{
+		DrawSprite(shader, texture, position, glm::vec2(srcRect.z, srcRect.w), srcRect, rotate, color, flags);
+	}
+
+	void DrawSprite(Texture& texture, const glm::vec2& position, const glm::vec4& srcRect, float rotate, const glm::vec4& color, SpriteFlags flags)
+	{
+		DrawSprite(Shaders["sprite"], texture, position, glm::vec2(srcRect.z, srcRect.w), srcRect, rotate, color, flags);
 	}
 
 	void DrawSprite(Shader* shader, Texture& texture, const glm::vec2 position)

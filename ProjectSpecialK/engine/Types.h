@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <map>
 #include <glm/glm.hpp>
 
 //A single Unicode code point.
@@ -29,4 +30,21 @@ struct ColorMap
 	static constexpr int Cols = 32;
 	unsigned int values[Rows * Cols];
 	int numRows, numCols;
+};
+
+struct SpriteAtlas
+{
+	std::vector<glm::vec4> frames;
+	std::map<std::string, int> names;
+	inline bool empty() const { return frames.empty(); }
+	inline size_t size() const { return frames.size(); }
+	inline void push_back(glm::vec4& frame) { frames.push_back(frame); }
+	inline glm::vec4 operator[](size_t i) const { return frames[i]; }
+	inline glm::vec4 operator[](const std::string& s) const
+	{
+		auto it = names.find(s);
+		if (it != names.cend())
+			return frames[it->second];
+		return frames[0];
+	}
 };
