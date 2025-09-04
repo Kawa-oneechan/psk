@@ -60,7 +60,6 @@ void SettingsLoad(jsonObject& settings)
 #define DS(K, V) if (!settings[K]) settings[K] = jsonValue(V)
 #define DA(K, V) if (!settings[K]) settings[K] = json5pp::array(V)
 #define DO(K, V) if (!settings[K]) settings[K] = json5pp::object(V)
-	DS("language", "USen");
 	DS("continue", (int)LoadSpawnChoice::FrontDoor);
 	DS("speech", (int)DialogueBox::Sound::Bebebese);
 	DS("pingRate", 3);
@@ -69,29 +68,15 @@ void SettingsLoad(jsonObject& settings)
 	DS("botherColliding", true);
 	DS("24hour", true);
 	DO("contentFilters", {});
-	DS("musicVolume", 70);
-	DS("ambientVolume", 50);
-	DS("soundVolume", 100);
-	DS("speechVolume", 100);
 #undef DO
 #undef DA
 #undef DS
-
-	Audio::MusicVolume = settings["musicVolume"].as_integer() / 100.0f;
-	Audio::AmbientVolume = settings["ambientVolume"].as_integer() / 100.0f;
-	Audio::SoundVolume = settings["soundVolume"].as_integer() / 100.0f;
-	Audio::SpeechVolume = settings["speechVolume"].as_integer() / 100.0f;
 
 	botherColliding = settings["botherColliding"].as_boolean();
 }
 
 void SettingsSave(jsonObject& settings)
 {
-	settings["musicVolume"] = (int)(Audio::MusicVolume * 100.0f);
-	settings["ambientVolume"] = (int)(Audio::AmbientVolume * 100.0f);
-	settings["soundVolume"] = (int)(Audio::SoundVolume * 100.0f);
-	settings["speechVolume"] = (int)(Audio::SpeechVolume * 100.0f);
-
 	settings["botherColliding"] = botherColliding;
 }
 

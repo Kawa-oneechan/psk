@@ -14,6 +14,7 @@
 #include "Utilities.h"
 #include "Shader.h"
 #include "SpriteRenderer.h"
+#include "Text.h"
 #include "../Game.h"
 
 extern void GameInit();
@@ -130,11 +131,24 @@ namespace UI
 		DS("screenHeight", ScreenHeight);
 		DA("keyBinds", {});
 		DA("gamepadBinds", {});
+		DS("language", "USen");
+		DS("musicVolume", 70);
+		DS("ambientVolume", 50);
+		DS("soundVolume", 100);
+		DS("speechVolume", 100);
 #undef DA
 #undef DS
 
 		width = settings["screenWidth"].as_integer();
 		height = settings["screenHeight"].as_integer();
+
+		gameLang = Text::GetLangCode(settings["language"].as_string());
+
+		//Convert from saved integer values to float.
+		Audio::MusicVolume = settings["musicVolume"].as_integer() / 100.0f;
+		Audio::AmbientVolume = settings["ambientVolume"].as_integer() / 100.0f;
+		Audio::SoundVolume = settings["soundVolume"].as_integer() / 100.0f;
+		Audio::SpeechVolume = settings["speechVolume"].as_integer() / 100.0f;
 
 		auto keyBinds = settings["keyBinds"].as_array();
 		if (keyBinds.size() != NumKeyBinds)
@@ -176,6 +190,12 @@ namespace UI
 		for (auto& k : Inputs.Keys)
 			binds2.as_array().push_back(k.GamepadButton);
 		settings["gamepadBinds"] = std::move(binds2);
+
+		//Convert from float values to easier-to-read integers.
+		settings["musicVolume"] = (int)(Audio::MusicVolume * 100.0f);
+		settings["ambientVolume"] = (int)(Audio::AmbientVolume * 100.0f);
+		settings["soundVolume"] = (int)(Audio::SoundVolume * 100.0f);
+		settings["speechVolume"] = (int)(Audio::SpeechVolume * 100.0f);
 
 		SettingsSave(settings);
 
