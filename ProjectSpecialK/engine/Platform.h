@@ -4,15 +4,9 @@
 extern "C"
 {
 	//why bother including windows headers lol
-	int __stdcall MessageBoxW(void* hWnd, const wchar_t* lpText, const wchar_t* lpCaption, unsigned int uType);
-	int __stdcall MultiByteToWideChar(unsigned int CodePage, unsigned long dwFlags, const char* lpMultiByteStr, int cbMultiByte, wchar_t* lpWideCharStr, int cchWideChar);
 
 	int __stdcall WinMain(struct HINSTANCE__*, struct HINSTANCE__*, char*, int);
 
-	//Normally, CharUpper/CharLower take either strings *or* characters, by checking the high bytes or sumth.
-	//It's a hack, but we don't *want* to use it on entire strings anyway cos we're UTF8.
-	int __stdcall CharUpperW(int lpsz);
-	int __stdcall CharLowerW(int lpsz);
 	wchar_t* __stdcall CharNextW(const wchar_t* lpText);
 
 	using GUID = struct _GUID
@@ -31,3 +25,7 @@ extern "C"
 
 }
 #endif
+
+extern int CharUpper(int rune);
+extern int CharLower(int rune);
+extern void MessageBox(const std::string& message);

@@ -12,10 +12,6 @@
 
 extern sol::state Sol;
 
-#ifndef _WIN32
-extern unsigned short caseFolding[2378];
-#endif
-
 static const char* bindingNames[] = {
 	"up", "down", "left", "right",
 	"accept", "back", "pageup", "pagedown",
@@ -154,19 +150,7 @@ void StringToLower(std::string& data)
 		rune ch;
 		size_t size;
 		std::tie(ch, size) = GetChar(data, i);
-#ifdef _WIN32
-		ch = CharLowerW(ch);
-#else
-		for (int c = 0; c < 2378; c += 2)
-		{
-			if (caseFolding[c] == ch)
-			{
-				ch = caseFolding[c + 1];
-				break;
-			}
-		}
-#endif
-		AppendChar(ret, ch);
+		AppendChar(ret, CharLower(ch));
 		i += size;
 	}
 	data = ret;
@@ -181,19 +165,7 @@ void StringToUpper(std::string& data)
 		rune ch;
 		size_t size;
 		std::tie(ch, size) = GetChar(data, i);
-#ifdef _WIN32
-		ch = CharUpperW(ch);
-#else
-		for (int c = 1; c < 2378; c += 2)
-		{
-			if (caseFolding[c] == ch)
-			{
-				ch = caseFolding[c - 1];
-				break;
-			}
-		}
-#endif
-		AppendChar(ret, ch);
+		AppendChar(ret, CharUpper(ch));
 		i += size;
 	}
 	data = ret;

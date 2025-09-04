@@ -86,16 +86,7 @@ __declspec(noreturn)
 void FatalError(const std::string& message)
 {
 	conprint(1, "Fatal error: {}", message);
-
-#ifdef _WIN32
-	wchar_t w[1024] = { 0 };
-	MultiByteToWideChar(65001, 0, message.c_str(), -1, w, 1024);
-	MessageBoxW(nullptr, w, L"" GAMENAME, 0x30);
-#else
-	//TODO: report fatal errors some other way on non-Windows systems.
-	//Internet says: write the error to a file, then xdg-open that file.
-#endif
-
+	MessageBox(message);
 	conprint(1, "Exiting...");
 	exit(1);
 }

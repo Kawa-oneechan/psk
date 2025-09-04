@@ -163,7 +163,6 @@
     <ClCompile Include="DebugImgui.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="engine\BigTables.cpp" />
     <ClCompile Include="engine\Console.cpp" />
     <ClCompile Include="engine\Cursor.cpp" />
     <ClCompile Include="engine\InputsMap.cpp" />
