@@ -3,6 +3,7 @@
 #include <glad/glad.h>
 #include <glfw/glfw3.h>
 #include <sol.hpp>
+#include "Platform.h"
 #include "Audio.h"
 #include "Console.h"
 #include "Cursor.h"
@@ -35,15 +36,6 @@ extern void DoImGui();
 
 constexpr int ScreenWidth = SCREENWIDTH;
 constexpr int ScreenHeight = SCREENHEIGHT;
-
-#ifdef _WIN32
-extern "C"
-{
-	//why bother including windows headers lol
-	int __stdcall MessageBoxW(_In_opt_ void* hWnd, _In_opt_ const wchar_t* lpText, _In_opt_ const wchar_t* lpCaption, _In_ unsigned int uType);
-	int __stdcall MultiByteToWideChar(_In_ unsigned int CodePage, _In_ unsigned long dwFlags, const char* lpMultiByteStr, _In_ int cbMultiByte, wchar_t* lpWideCharStr, _In_ int cchWideChar);
-}
-#endif
 
 glm::mat4 perspectiveProjection, orthographicProjection;
 bool useOrthographic = false;
@@ -495,5 +487,3 @@ int main(int argc, char** argv)
 	glfwTerminate();
 	return 0;
 }
-
-extern "C" int __stdcall WinMain(struct HINSTANCE__*, struct HINSTANCE__*, char*, int) { return main(__argc, __argv); }

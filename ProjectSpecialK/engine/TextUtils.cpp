@@ -4,6 +4,7 @@
 #include <string>
 #include <sol.hpp>
 #include "VFS.h"
+#include "Platform.h"
 #include "TextUtils.h"
 #include "InputsMap.h"
 #include "Console.h"
@@ -11,16 +12,7 @@
 
 extern sol::state Sol;
 
-#ifdef _WIN32
-extern "C"
-{
-	//Normally, CharUpper/CharLower take either strings *or* characters, by checking the high bytes or sumth.
-	//It's a hack, but we don't *want* to use it on entire strings anyway cos we're UTF8.
-	int __stdcall CharUpperW(_In_ int lpsz);
-	int __stdcall CharLowerW(_In_ int lpsz);
-	wchar_t* __stdcall CharNextW(_In_ const wchar_t* lpText);
-}
-#else
+#ifndef _WIN32
 extern unsigned short caseFolding[2378];
 #endif
 

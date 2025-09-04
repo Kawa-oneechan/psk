@@ -154,6 +154,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="engine\NineSlicer.cpp" />
+    <ClCompile Include="engine\PlatformWin32.cpp" />
     <ClCompile Include="GameConsole.cpp" />
     <ClCompile Include="Database.cpp" />
     <ClCompile Include="DateTimePanel.cpp" />
@@ -270,6 +271,7 @@
     <ClInclude Include="engine\JsonUtils.h" />
     <ClInclude Include="engine\Model.h" />
     <ClInclude Include="engine\NineSlicer.h" />
+    <ClInclude Include="engine\Platform.h" />
     <ClInclude Include="engine\Random.h" />
     <ClInclude Include="engine\Shader.h" />
     <ClInclude Include="engine\SpriteRenderer.h" />

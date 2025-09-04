@@ -6,6 +6,7 @@
 
 #include <miniz.h>
 #include <format.h>
+#include "Platform.h"
 #include "VFS.h"
 #include "TextUtils.h"
 #include "Console.h"
@@ -48,24 +49,6 @@ namespace JSONPatch
 
 #ifdef BECKETT_EXTRASAVEDIRS
 extern void GamePrepSaveDirs(const fs::path& savePath);
-#endif
-
-#ifdef _WIN32
-extern "C" {
-	using GUID = struct _GUID
-	{
-		unsigned long  Data1;
-		unsigned short Data2;
-		unsigned short Data3;
-		unsigned char  Data4[8];
-	};
-	const GUID FOLDERID_SavedGames = { 0x4C5C32FF, 0xBB9D, 0x43B0, 0xB5, 0xB4, 0x2D, 0x72, 0xE5, 0x4E, 0xAA, 0xA4 };
-	const GUID FOLDERID_Documents = { 0xFDD39AD0, 0x238F, 0x46AF, 0xAD, 0xB4, 0x6C, 0x85, 0x48, 0x03, 0x69, 0xC7 };
-	const GUID FOLDERID_Roaming = { 0x3EB685DB, 0x65F9, 0x4CF6, 0xA0, 0x3A, 0xE3, 0xEF, 0x65, 0x72, 0x9F, 0x3D };
-	int __stdcall SHGetKnownFolderPath(_In_ const GUID* rfid, _In_ unsigned long dwFlags, _In_opt_ void* hToken, _Out_ wchar_t** ppszPath);
-	int __stdcall WideCharToMultiByte(_In_ unsigned int CodePage, _In_ unsigned long dwFlags, const wchar_t* lpWideCharStr, _In_ int cchWideChar, char* lpMultiByteStr, _In_ int cbMultiByte, _In_opt_ char* lpDefaultChar, _Out_opt_ bool* lpUsedDefaultChar);
-	void _stdcall CoTaskMemFree(_In_opt_ void* pv);
-}
 #endif
 
 namespace VFS
