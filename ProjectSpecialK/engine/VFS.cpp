@@ -12,6 +12,7 @@
 #include "Console.h"
 #include "Texture.h"
 #include "JsonUtils.h"
+#include "Types.h"
 #include "../Game.h"
 
 /*
@@ -34,13 +35,6 @@ namespace fs = std::filesystem;
 
 __declspec(noreturn)
 extern void FatalError(const std::string& message);
-
-namespace UI
-{
-	extern jsonValue json;
-	extern jsonValue settings;
-	extern std::string initFile;
-};
 
 namespace JSONPatch
 {

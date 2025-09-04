@@ -9,6 +9,7 @@
 #include "SpriteRenderer.h"
 #include "TextUtils.h"
 #include "Console.h"
+#include "Types.h"
 
 extern int width, height;
 extern Texture* whiteRect;
@@ -17,16 +18,6 @@ extern unsigned int currentVAO;
 
 __declspec(noreturn)
 extern void FatalError(const std::string& message);
-
-
-namespace UI
-{
-	extern glm::vec4 primaryColor;
-	extern glm::vec4 secondaryColor;
-	extern std::vector<glm::vec4> textColors;
-	extern jsonValue json;
-	extern jsonValue settings;
-};
 
 namespace Sprite
 {

@@ -4,6 +4,7 @@
 #include <glfw/glfw3.h>
 #include <sol.hpp>
 #include "Platform.h"
+#include "Tickable.h"
 #include "Audio.h"
 #include "Console.h"
 #include "Cursor.h"
@@ -23,6 +24,8 @@ extern void GameLoopStart();
 extern void GamePreDraw(float dt);
 extern void GamePostDraw(float dt);
 extern void GameQuit();
+extern void SettingsLoad(jsonObject& settings);
+extern void SettingsSave(jsonObject& settings);
 
 constexpr auto WindowTitle = GAMENAME " - " VERSIONJOKE
 #ifdef DEBUG
@@ -69,19 +72,6 @@ float glTime = 0;
 CommonUniforms commonUniforms;
 unsigned int commonBuffer = 0;
 
-namespace UI
-{
-	extern std::map<std::string, glm::vec4> themeColors;
-	extern std::vector<glm::vec4> textColors;
-
-	extern jsonValue json;
-	extern jsonValue settings;
-	extern std::string initFile;
-
-	extern void Load();
-	extern void Save();
-};
-
 __declspec(noreturn)
 void FatalError(const std::string& message)
 {
@@ -95,6 +85,111 @@ void FatalError(const std::string& message)
 std::vector<TickableP> rootTickables;
 //Tickables to add next cycle.
 std::vector<TickableP> newTickables;
+
+
+namespace UI
+{
+	std::map<std::string, glm::vec4> themeColors;
+	std::vector<glm::vec4> textColors;
+
+	jsonValue json;
+	jsonValue settings;
+
+	std::string initFile = "init.json";
+
+	void Load()
+	{
+		UI::json = VFS::ReadJSON("ui/ui.json");
+		if (!UI::json)
+			FatalError("Could not read ui/ui.json. Something is very wrong.");
+		auto json = UI::json.as_object();
+		auto colors = json["colors"].as_object();
+		for (auto& ink : colors["theme"].as_object())
+		{
+			themeColors[ink.first] = GetJSONColor(ink.second);
+		}
+		for (auto& ink : colors["text"].as_array())
+		{
+			textColors.push_back(GetJSONColor(ink));
+		}
+
+		try
+		{
+			UI::settings = VFS::ReadSaveJSON("options.json");
+		}
+		catch (std::runtime_error&)
+		{
+			UI::settings = json5pp::parse5("{}");
+		}
+
+		auto settings = UI::settings.as_object();
+
+#define DS(K, V) if (!settings[K]) settings[K] = jsonValue(V)
+#define DA(K, V) if (!settings[K]) settings[K] = json5pp::array(V)
+		DS("screenWidth", ScreenWidth);
+		DS("screenHeight", ScreenHeight);
+		DA("keyBinds", {});
+		DA("gamepadBinds", {});
+#undef DA
+#undef DS
+
+		width = settings["screenWidth"].as_integer();
+		height = settings["screenHeight"].as_integer();
+
+		auto keyBinds = settings["keyBinds"].as_array();
+		if (keyBinds.size() != NumKeyBinds)
+		{
+			keyBinds.reserve(NumKeyBinds);
+			for (auto &k : DefaultInputBindings)
+				keyBinds.emplace_back(jsonValue(glfwGetKeyScancode(k)));
+		}
+
+		auto padBinds = settings["gamepadBinds"].as_array();
+		if (padBinds.size() != NumKeyBinds)
+		{
+			padBinds.reserve(NumKeyBinds);
+			for (auto &k : DefaultInputGamepadBindings)
+				padBinds.emplace_back(jsonValue(k));
+		}
+
+		for (int i = 0; i < NumKeyBinds; i++)
+		{
+			Inputs.Keys[i].ScanCode = keyBinds[i].as_integer();
+			Inputs.Keys[i].GamepadButton = padBinds[i].as_integer();
+		}
+
+		SettingsLoad(settings);
+	}
+
+	void Save()
+	{
+		auto settings = UI::settings.as_object();
+		settings["screenWidth"] = width;
+		settings["screenHeight"] = height;
+
+		auto binds = json5pp::array({});
+		for (auto& k : Inputs.Keys)
+			binds.as_array().push_back(k.ScanCode);
+		settings["keyBinds"] = std::move(binds);
+
+		auto binds2 = json5pp::array({});
+		for (auto& k : Inputs.Keys)
+			binds2.as_array().push_back(k.GamepadButton);
+		settings["gamepadBinds"] = std::move(binds2);
+
+		SettingsSave(settings);
+
+		try
+		{
+			VFS::WriteSaveJSON("options.json", UI::settings);
+		}
+		catch (std::exception&)
+		{
+			conprint(2, "Couldn't save settings.");
+		}
+	}
+};
+
 
 static void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {

@@ -7,8 +7,6 @@
 FMOD::System* Audio::system;
 std::vector<Audio*> Audio::playing;
 
-std::map<std::string, std::map<std::string, std::shared_ptr<Audio>>> generalSounds;
-
 bool Audio::Enabled;
 float Audio::MusicVolume, Audio::AmbientVolume, Audio::SoundVolume, Audio::SpeechVolume;
 

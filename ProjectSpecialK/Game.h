@@ -6,6 +6,7 @@
 #include "engine/TextUtils.h"
 #include "engine/Utilities.h"
 #include "engine/Tickable.h"
+#include "engine/Audio.h"
 
 extern float scale;
 extern int width, height;
@@ -57,3 +58,5 @@ extern CommonUniforms commonUniforms;
 extern const std::map<std::string, BJTSFunc> bjtsPhase1;
 //BJTS functions loaded from Lua scripts.
 extern std::map<std::string, std::string> bjtsPhase1X;
+
+extern std::map<std::string, std::map<std::string, std::shared_ptr<Audio>>> generalSounds;

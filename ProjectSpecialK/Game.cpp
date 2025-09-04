@@ -31,6 +31,8 @@ constexpr int ScreenHeight = 1080;
 std::shared_ptr<DialogueBox> dlgBox = nullptr;
 Audio* bgm = nullptr;
 
+std::map<std::string, std::map<std::string, std::shared_ptr<Audio>>> generalSounds;
+
 std::shared_ptr<Camera> MainCamera;
 std::shared_ptr<Messager> messager;
 std::shared_ptr<MusicManager> musicManager;
@@ -50,144 +52,48 @@ namespace SolBinds
 
 namespace UI
 {
-	std::map<std::string, glm::vec4> themeColors;
-	std::vector<glm::vec4> textColors;
+	std::shared_ptr<Texture> controls;
+}
 
-	std::shared_ptr<Texture> controls{ nullptr };
-
-	jsonValue json;
-	jsonValue settings;
-
-	std::string initFile = "init.json";
-
-	void Load()
-	{
-		UI::json = VFS::ReadJSON("ui/ui.json");
-		if (!UI::json)
-			FatalError("Could not read ui/ui.json. Something is very wrong.");
-		auto json = UI::json.as_object();
-		auto colors = json["colors"].as_object();
-		for (auto& ink : colors["theme"].as_object())
-		{
-			themeColors[ink.first] = GetJSONColor(ink.second);
-		}
-		for (auto& ink : colors["text"].as_array())
-		{
-			textColors.push_back(GetJSONColor(ink));
-		}
-
-		try
-		{
-			UI::settings = VFS::ReadSaveJSON("options.json");
-		}
-		catch (std::runtime_error&)
-		{
-			UI::settings = json5pp::parse5("{}");
-		}
-
-		auto settings = UI::settings.as_object();
-
+void SettingsLoad(jsonObject& settings)
+{
 #define DS(K, V) if (!settings[K]) settings[K] = jsonValue(V)
 #define DA(K, V) if (!settings[K]) settings[K] = json5pp::array(V)
 #define DO(K, V) if (!settings[K]) settings[K] = json5pp::object(V)
-		DS("screenWidth", ScreenWidth);
-		DS("screenHeight", ScreenHeight);
-		DS("language", "USen");
-		DS("continue", (int)LoadSpawnChoice::FrontDoor);
-		DS("speech", (int)DialogueBox::Sound::Bebebese);
-		DS("pingRate", 3);
-		DS("balloonChance", 15);
-		DS("cursorScale", 100);
-		DS("botherColliding", true);
-		DS("24hour", true);
-		DO("contentFilters", {});
-		DS("musicVolume", 70);
-		DS("ambientVolume", 50);
-		DS("soundVolume", 100);
-		DS("speechVolume", 100);
-		DA("keyBinds", {});
-		DA("gamepadBinds", {});
+	DS("language", "USen");
+	DS("continue", (int)LoadSpawnChoice::FrontDoor);
+	DS("speech", (int)DialogueBox::Sound::Bebebese);
+	DS("pingRate", 3);
+	DS("balloonChance", 15);
+	DS("cursorScale", 100);
+	DS("botherColliding", true);
+	DS("24hour", true);
+	DO("contentFilters", {});
+	DS("musicVolume", 70);
+	DS("ambientVolume", 50);
+	DS("soundVolume", 100);
+	DS("speechVolume", 100);
 #undef DO
 #undef DA
 #undef DS
 
-		width = settings["screenWidth"].as_integer();
-		height = settings["screenHeight"].as_integer();
+	Audio::MusicVolume = settings["musicVolume"].as_integer() / 100.0f;
+	Audio::AmbientVolume = settings["ambientVolume"].as_integer() / 100.0f;
+	Audio::SoundVolume = settings["soundVolume"].as_integer() / 100.0f;
+	Audio::SpeechVolume = settings["speechVolume"].as_integer() / 100.0f;
 
-		//constexpr Language opt2lan[] = { Language::USen, Language::JPja, Language::EUde, Language::EUes, Language::EUfr, Language::EUit, Language::EUhu, Language::EUnl, Language::EUen };
-		//gameLang = opt2lan[settings["language"]->AsInteger()];
-		gameLang = Text::GetLangCode(settings["language"].as_string());
+	botherColliding = settings["botherColliding"].as_boolean();
+}
 
-		Audio::MusicVolume = settings["musicVolume"].as_integer() / 100.0f;
-		Audio::AmbientVolume = settings["ambientVolume"].as_integer() / 100.0f;
-		Audio::SoundVolume = settings["soundVolume"].as_integer() / 100.0f;
-		Audio::SpeechVolume = settings["speechVolume"].as_integer() / 100.0f;
+void SettingsSave(jsonObject& settings)
+{
+	settings["musicVolume"] = (int)(Audio::MusicVolume * 100.0f);
+	settings["ambientVolume"] = (int)(Audio::AmbientVolume * 100.0f);
+	settings["soundVolume"] = (int)(Audio::SoundVolume * 100.0f);
+	settings["speechVolume"] = (int)(Audio::SpeechVolume * 100.0f);
 
-		botherColliding = settings["botherColliding"].as_boolean();
-
-		auto keyBinds = settings["keyBinds"].as_array();
-		if (keyBinds.size() != NumKeyBinds)
-		{
-			keyBinds.reserve(NumKeyBinds);
-			for (auto &k : DefaultInputBindings)
-				keyBinds.push_back(glfwGetKeyScancode(k));
-		}
-
-		auto padBinds = settings["gamepadBinds"].as_array();
-		if (padBinds.size() != NumKeyBinds)
-		{
-			padBinds.reserve(NumKeyBinds);
-			for (auto &k : DefaultInputGamepadBindings)
-				padBinds.push_back(k);
-		}
-
-		for (int i = 0; i < NumKeyBinds; i++)
-		{
-			Inputs.Keys[i].ScanCode = keyBinds[i].as_integer();
-			Inputs.Keys[i].GamepadButton = padBinds[i].as_integer();
-		}
-
-		auto sounds = VFS::ReadJSON("sound/sounds.json").as_object();
-		for (auto category : sounds)
-		{
-			for (auto sound : category.second.as_object())
-				generalSounds[category.first][sound.first] = std::make_shared<Audio>(sound.second.as_string());
-		}
-	}
-
-	void Save()
-	{
-		auto settings = UI::settings.as_object();
-		settings["screenWidth"] = width;
-		settings["screenHeight"] = height;
-
-		settings["musicVolume"] = (int)(Audio::MusicVolume * 100.0f);
-		settings["ambientVolume"] = (int)(Audio::AmbientVolume * 100.0f);
-		settings["soundVolume"] = (int)(Audio::SoundVolume * 100.0f);
-		settings["speechVolume"] = (int)(Audio::SpeechVolume * 100.0f);
-
-		settings["botherColliding"] = botherColliding;
-
-		auto binds = json5pp::array({});
-		for (auto& k : Inputs.Keys)
-			binds.as_array().push_back(k.ScanCode);
-		settings["keyBinds"] = std::move(binds);
-
-		auto binds2 = json5pp::array({});
-		for (auto& k : Inputs.Keys)
-			binds2.as_array().push_back(k.GamepadButton);
-		settings["gamepadBinds"] = std::move(binds2);
-
-		try
-		{
-			VFS::WriteSaveJSON("options.json", UI::settings);
-		}
-		catch (std::exception&)
-		{
-			conprint(2, "Couldn't save settings.");
-		}
-	}
-};
+	settings["botherColliding"] = botherColliding;
+}
 
 void GameInit()
 {
@@ -203,6 +109,15 @@ void GameInit()
 	messager = std::make_shared<Messager>();
 
 	UI::controls = std::make_shared<Texture>("ui/controls.png");
+
+	{
+		auto sounds = VFS::ReadJSON("sound/sounds.json").as_object();
+		for (auto category : sounds)
+		{
+			for (auto sound : category.second.as_object())
+				generalSounds[category.first][sound.first] = std::make_shared<Audio>(sound.second.as_string());
+		}
+	}
 
 #ifdef DEBUG
 	//RunTests();

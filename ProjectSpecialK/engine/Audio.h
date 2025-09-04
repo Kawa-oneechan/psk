@@ -73,5 +73,3 @@ public:
 	//to the left and 1.0 is fully to the right.
 	void SetPan(float pos);
 };
-
-extern std::map<std::string, std::map<std::string, std::shared_ptr<Audio>>> generalSounds;

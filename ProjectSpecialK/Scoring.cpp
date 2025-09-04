@@ -14,19 +14,23 @@ int GetLetterScore(const std::string& text, bool noCapitals)
 {
 	//Based on https://www.youtube.com/watch?v=8VbwWVvw-zI
 	/* August '25 update: https://www.youtube.com/watch?v=YL2V6TGq7wA reveals about City Folk:
-	    * Trigrams still there.
-	    * Each trigram only counts up to two times.
-	    * Each trigram is worth one point.
-	    * Score is then calculated as (numTrigrams * 100) / numWords.
-	    * Town and player name add 3 points each.
-	    * No repeated letter checks, no punctuation, no capitalization.
+		* Trigrams still there.
+		* Each trigram only counts up to two times.
+		* Each trigram is worth one point.
+		* Score is then calculated as (numTrigrams * 100) / numWords.
+		* Town and player name add 3 points each.
+		* No repeated letter checks, no punctuation, no capitalization.
 		* Positive replies at >= 25 points.
 	   Separately, there's a list of precomposed replies, triggered by special words and phrases:
-	    * 
+		*
 	 */
 
 	auto trigrams = VFS::ReadString(fmt::format("mailcheck/trigrams_{}.txt", Text::GetLangCode()));
 	int score = 0;
+
+#ifdef CITYFOLKRULES
+	noCapitals;
+#endif
 
 	rune ch;
 	size_t size;

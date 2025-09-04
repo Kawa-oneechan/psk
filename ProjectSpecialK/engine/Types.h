@@ -2,6 +2,11 @@
 #include <vector>
 #include <map>
 #include <glm/glm.hpp>
+#include <json5pp.hpp>
+
+using jsonValue = json5pp::value;
+using jsonObject = json5pp::value::object_type;
+using jsonArray = json5pp::value::array_type;
 
 //A single Unicode code point.
 using rune = unsigned int;
@@ -47,4 +52,15 @@ struct SpriteAtlas
 			return frames[it->second];
 		return frames[0];
 	}
+};
+
+namespace UI
+{
+	extern std::map<std::string, glm::vec4> themeColors;
+	extern std::vector<glm::vec4> textColors;
+
+	extern jsonValue json;
+	extern jsonValue settings;
+
+	extern std::string initFile;
 };

@@ -9,6 +9,7 @@
 #include "DialogueBox.h"
 #include "PanelLayout.h"
 #include "Types.h"
+#include "Game.h"
 
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/rotate_vector.hpp>

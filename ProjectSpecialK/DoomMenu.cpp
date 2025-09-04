@@ -9,6 +9,7 @@
 #include "engine/SpriteRenderer.h"
 #include "DoomMenu.h"
 #include "Types.h"
+#include "Game.h"
 
 //TODO: Add a thing where changing the game language reveals a warning about having to restart.
 //Would also work for a few other "deep" settings like resolution or whatever.
