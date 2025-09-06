@@ -33,17 +33,17 @@ namespace fs = std::experimental::filesystem;
 namespace fs = std::filesystem;
 #endif
 
+#ifdef BECKETT_EXTRASAVEDIRS
+extern void GamePrepSaveDirs(const fs::path& savePath);
+#endif
+
 __declspec(noreturn)
-extern void FatalError(const std::string& message);
+	extern void FatalError(const std::string& message);
 
 namespace JSONPatch
 {
 	extern jsonValue& ApplyPatch(jsonValue& source, jsonValue& patch);
 }
-
-#ifdef BECKETT_EXTRASAVEDIRS
-extern void GamePrepSaveDirs(const fs::path& savePath);
-#endif
 
 namespace VFS
 {
@@ -217,20 +217,20 @@ namespace VFS
 		wchar_t* wp;
 		char mp[1024] = { 0 };
 
-		auto handle = [&](const std::string& macro, const GUID* guid)
+		auto handle = [&](const std::string& macro, const Platform::GUID* guid)
 		{
 			if (p.find(macro) != std::string::npos)
 			{
-				SHGetKnownFolderPath(guid, 0, nullptr, &wp);
-				WideCharToMultiByte(65001, 0, wp, (int)wcslen(wp), mp, 1024, nullptr, nullptr);
-				CoTaskMemFree(wp);
+				Platform::SHGetKnownFolderPath(guid, 0, nullptr, &wp);
+				Platform::WideCharToMultiByte(65001, 0, wp, (int)wcslen(wp), mp, 1024, nullptr, nullptr);
+				Platform::CoTaskMemFree(wp);
 				ReplaceAll(p, macro, std::string(mp));
 			}
 		};
 
-		handle("$(SavedGames)", &FOLDERID_SavedGames);
-		handle("$(Documents)", &FOLDERID_Documents);
-		handle("$(AppData)", &FOLDERID_Roaming);
+		handle("$(SavedGames)", &Platform::FOLDERID_SavedGames);
+		handle("$(Documents)", &Platform::FOLDERID_Documents);
+		handle("$(AppData)", &Platform::FOLDERID_Roaming);
 
 #else
 		auto p = saves["linux"]->AsString();

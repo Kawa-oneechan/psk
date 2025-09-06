@@ -150,7 +150,7 @@ void StringToLower(std::string& data)
 		rune ch;
 		size_t size;
 		std::tie(ch, size) = GetChar(data, i);
-		AppendChar(ret, CharLower(ch));
+		AppendChar(ret, Platform::CharLower(ch));
 		i += size;
 	}
 	data = ret;
@@ -165,7 +165,7 @@ void StringToUpper(std::string& data)
 		rune ch;
 		size_t size;
 		std::tie(ch, size) = GetChar(data, i);
-		AppendChar(ret, CharUpper(ch));
+		AppendChar(ret, Platform::CharUpper(ch));
 		i += size;
 	}
 	data = ret;

@@ -2,8 +2,9 @@
 #include <ImGUI/imgui_impl_glfw.h>
 #include <ImGUI/imgui_impl_opengl3.h>
 
-bool debuggerEnabled{ false };
 extern void GameImGui();
+
+bool debuggerEnabled{ false };
 
 extern float uiTime, glTime;
 extern GLFWwindow* window;

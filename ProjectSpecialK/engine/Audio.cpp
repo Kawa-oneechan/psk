@@ -3,12 +3,16 @@
 #include "Audio.h"
 #include "Console.h"
 #include "VFS.h"
+#include "../Game.h"
 
 FMOD::System* Audio::system;
 std::vector<Audio*> Audio::playing;
 
 bool Audio::Enabled;
-float Audio::MusicVolume, Audio::AmbientVolume, Audio::SoundVolume, Audio::SpeechVolume;
+float Audio::MusicVolume, Audio::SoundVolume;
+#ifdef BECKETT_MOREVOLUME
+float Audio::AmbientVolume, Audio::SpeechVolume;
+#endif
 
 void Audio::Initialize()
 {
@@ -71,16 +75,18 @@ Audio::Audio(std::string filename) : filename(filename)
 		conprint(1, "Could not open audio file {}.", filename);
 		return;
 	}
-	auto soundEx = FMOD_CREATESOUNDEXINFO { 0 };
+	auto soundEx = FMOD_CREATESOUNDEXINFO{ 0 };
 	soundEx.cbsize = sizeof(FMOD_CREATESOUNDEXINFO);
 	soundEx.length = (unsigned int)size;
 	auto mode = FMOD_HARDWARE | FMOD_2D | FMOD_OPENMEMORY;
 	if (filename.find("music/") != std::string::npos)
 		type = Type::Music;
+#ifdef BECKETT_MOREVOLUME
 	else if (filename.find("ambient/") != std::string::npos)
 		type = Type::Ambient;
 	else if (filename.find("speech/") != std::string::npos)
 		type = Type::Speech;
+#endif
 	else
 		type = Type::Sound;
 
@@ -169,9 +175,11 @@ void Audio::UpdateVolume()
 	switch (type)
 	{
 	case Type::Music: v = MusicVolume; break;
-	case Type::Ambient: v = AmbientVolume; break;
 	case Type::Sound: v = SoundVolume; break;
+#ifdef BECKETT_MOREVOLUME
+	case Type::Ambient: v = AmbientVolume; break;
 	case Type::Speech: v = SpeechVolume; break;
+#endif
 	}
 	Volume = glm::clamp(Volume, 0.0f, 1.0f);
 	theChannel->setVolume(v * Volume);
@@ -182,14 +190,16 @@ void Audio::SetPitch(float ratio)
 	theChannel->setFrequency(frequency * ratio);
 }
 
+#ifdef BECKETT_3DAUDIO
 void Audio::SetPosition(glm::vec3 pos)
 {
 	//Only generic sounds can be positioned.
 	if (type != Type::Sound)
 		return;
-	FMOD_VECTOR v = {pos.x, pos.y, pos.z};
+	FMOD_VECTOR v = { pos.x, pos.y, pos.z };
 	theChannel->set3DAttributes(&v, nullptr);
 }
+#endif
 
 void Audio::SetPan(float pos)
 {

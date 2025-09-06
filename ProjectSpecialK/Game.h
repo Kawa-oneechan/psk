@@ -11,13 +11,14 @@
 extern float scale;
 extern int width, height;
 
-#define GAMENAME "Project Special K"
-#define VERSIONJOKE "Horkly Warding"
-
-#define SCREENWIDTH 1920
-#define SCREENHEIGHT 1080
-
-#define DEFAULTFILTER GL_LINEAR
+#define BECKETT_GAMENAME "Project Special K"
+#define BECKETT_VERSIONJOKE "Horkly Warding"
+#define BECKETT_SCREENWIDTH 1920
+#define BECKETT_SCREENHEIGHT 1080
+#define BECKETT_DEFAULTFILTER GL_LINEAR
+#define BECKETT_EXTRASAVEDIRS
+#define BECKETT_MOREVOLUME
+#define BECKETT_3DAUDIO
 
 constexpr int MaxLights = 8;
 
@@ -59,4 +60,5 @@ extern const std::map<std::string, BJTSFunc> bjtsPhase1;
 //BJTS functions loaded from Lua scripts.
 extern std::map<std::string, std::string> bjtsPhase1X;
 
+class Audio;
 extern std::map<std::string, std::map<std::string, std::shared_ptr<Audio>>> generalSounds;

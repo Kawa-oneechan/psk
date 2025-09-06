@@ -1,6 +1,6 @@
 #pragma once
 
-namespace rnd
+namespace Random
 {
 	extern int GetInt(int min, int max);
 	extern int GetInt(int max);

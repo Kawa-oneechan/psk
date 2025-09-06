@@ -10,10 +10,10 @@ extern bool PointInPoly(const glm::vec2 point, const polygon& polygon);
 //Returns true if point is in rect.
 extern bool PointInRect(const glm::vec2 point, const glm::vec4 rect);
 
-//Go through all root Tickables, calling their Tick methods in reverse order.
+//Go through all specified Tickables, calling their Tick methods in reverse order.
 //Disabled Tickables are skipped. If any of them returns false, inputs are flushed.
 extern bool RevAllTickables(const std::vector<TickableP>& tickables, float dt);
-//Go through all root Tickables, calling their Draw methods.
+//Go through all specified Tickables, calling their Draw methods.
 //Invisible Tickables are skipped.
 extern void DrawAllTickables(const std::vector<TickableP>& tickables, float dt);
 
@@ -28,9 +28,3 @@ extern hash GetCRC(unsigned char *buffer, int len);
 #else
 #define debprint(C, F, ...)
 #endif
-
-__declspec(noreturn)
-extern void FatalError(const std::string& message);
-
-extern int width, height;
-extern float scale;

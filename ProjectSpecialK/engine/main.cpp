@@ -28,9 +28,9 @@ extern void GameQuit();
 extern void SettingsLoad(jsonObject& settings);
 extern void SettingsSave(jsonObject& settings);
 
-constexpr auto WindowTitle = GAMENAME " - " VERSIONJOKE
+constexpr auto WindowTitle = BECKETT_GAMENAME " - " BECKETT_VERSIONJOKE
 #ifdef DEBUG
-" (debug build " __DATE__ ")";
+	" (debug build " __DATE__ ")";
 
 extern bool IsImGuiHovered();
 extern void SetupImGui();
@@ -38,8 +38,8 @@ extern void DoImGui();
 #endif
 ;
 
-constexpr int ScreenWidth = SCREENWIDTH;
-constexpr int ScreenHeight = SCREENHEIGHT;
+constexpr int ScreenWidth = BECKETT_SCREENWIDTH;
+constexpr int ScreenHeight = BECKETT_SCREENHEIGHT;
 
 glm::mat4 perspectiveProjection, orthographicProjection;
 bool useOrthographic = false;
@@ -52,7 +52,7 @@ CursorP cursor = nullptr;
 Console* console = nullptr;
 
 int width = ScreenWidth, height = ScreenHeight;
-float scale = height / (float)SCREENHEIGHT;
+float scale = height / (float)ScreenHeight;
 
 float lastX = width / 2.0f;
 float lastY = height / 2.0f;
@@ -74,10 +74,10 @@ CommonUniforms commonUniforms;
 unsigned int commonBuffer = 0;
 
 __declspec(noreturn)
-void FatalError(const std::string& message)
+	void FatalError(const std::string& message)
 {
 	conprint(1, "Fatal error: {}", message);
-	MessageBox(message);
+	Platform::MessageBox(message);
 	conprint(1, "Exiting...");
 	exit(1);
 }
@@ -133,9 +133,11 @@ namespace UI
 		DA("gamepadBinds", {});
 		DS("language", "USen");
 		DS("musicVolume", 70);
-		DS("ambientVolume", 50);
 		DS("soundVolume", 100);
+#ifdef BECKETT_MOREVOLUME
+		DS("ambientVolume", 50);
 		DS("speechVolume", 100);
+#endif
 #undef DA
 #undef DS
 
@@ -146,9 +148,11 @@ namespace UI
 
 		//Convert from saved integer values to float.
 		Audio::MusicVolume = settings["musicVolume"].as_integer() / 100.0f;
-		Audio::AmbientVolume = settings["ambientVolume"].as_integer() / 100.0f;
 		Audio::SoundVolume = settings["soundVolume"].as_integer() / 100.0f;
+#ifdef BECKETT_MOREVOLUME
+		Audio::AmbientVolume = settings["ambientVolume"].as_integer() / 100.0f;
 		Audio::SpeechVolume = settings["speechVolume"].as_integer() / 100.0f;
+#endif
 
 		auto keyBinds = settings["keyBinds"].as_array();
 		if (keyBinds.size() != NumKeyBinds)
@@ -193,9 +197,11 @@ namespace UI
 
 		//Convert from float values to easier-to-read integers.
 		settings["musicVolume"] = (int)(Audio::MusicVolume * 100.0f);
-		settings["ambientVolume"] = (int)(Audio::AmbientVolume * 100.0f);
 		settings["soundVolume"] = (int)(Audio::SoundVolume * 100.0f);
+#ifdef BECKETT_MOREVOLUME
+		settings["ambientVolume"] = (int)(Audio::AmbientVolume * 100.0f);
 		settings["speechVolume"] = (int)(Audio::SpeechVolume * 100.0f);
+#endif
 
 		SettingsSave(settings);
 
@@ -210,13 +216,12 @@ namespace UI
 	}
 };
 
-
 static void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
 	window;
 	::width = width;
 	::height = height;
-	scale = ::height / (float)SCREENHEIGHT;
+	scale = ::height / (float)ScreenHeight;
 	glViewport(0, 0, width, height);
 	commonUniforms.ScreenRes = glm::uvec2(width, height);
 
@@ -549,7 +554,7 @@ int main(int argc, char** argv)
 			console->Tick(dt);
 		else
 			RevAllTickables(rootTickables, dt);
-		
+
 		glBindBuffer(GL_UNIFORM_BUFFER, commonBuffer);
 		glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(CommonUniforms), &commonUniforms);
 
@@ -566,7 +571,8 @@ int main(int argc, char** argv)
 		console->Draw(dt);
 		Sprite::FlushBatch();
 
-		rootTickables.erase(std::remove_if(rootTickables.begin(), rootTickables.end(), [](TickableP i) {
+		rootTickables.erase(std::remove_if(rootTickables.begin(), rootTickables.end(), [](TickableP i)
+		{
 			return i->Dead;
 		}), rootTickables.end());
 		if (newTickables.size() > 0)

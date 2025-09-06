@@ -6,7 +6,7 @@
 #include "Console.h"
 
 __declspec(noreturn)
-extern void FatalError(const std::string& message);
+	extern void FatalError(const std::string& message);
 
 static std::map<std::string, std::tuple<Model*, int>> cache;
 static std::map<hash, std::map<hash, std::array<int, MaxBones>>> transferMaps;
@@ -63,14 +63,14 @@ Model::Model(const std::string& modelPath) : file(modelPath)
 	ufbx_scene *scene = ufbx_load_memory(vfsData.get(), vfsSize, &options, &errors);
 	if (!scene)
 		FatalError(fmt::format("Could not load scene {}: {}", modelPath, errors.description.data));
-	
+
 	debprint(5, "Loading {}\n-------------------------------", modelPath);
 
 	auto basePath = VFS::GetPathPart(modelPath);
 	auto matMap = VFS::ReadJSON(VFS::ClimbDown(VFS::ChangeExtension(modelPath, "mat.json"), "default.mat.json"));
 	if (!matMap.is_object())
 		matMap = json5pp::parse5("{}");
-	
+
 	debprint(5, "Materials:");
 	for (auto m : scene->materials)
 	{
@@ -109,7 +109,7 @@ Model::Model(const std::string& modelPath) : file(modelPath)
 				auto b = Bone();
 				b.Name = nodeName;
 				b.Parent = parent;
-				
+
 				//Instead of _assuming_ the skin clusters are in the same order,
 				//find the right skin cluster by name.
 				for (int i = 0; i < scene->skin_clusters.count; i++)
@@ -228,7 +228,7 @@ void Model::Draw(const glm::vec3& pos, float yaw, int mesh)
 		}
 
 		glm::vec3 r(0, glm::radians(yaw), 0);
-		MeshBucket::Draw(m,  pos, glm::quat(r), finalBoneMatrices, BoneCt);
+		MeshBucket::Draw(m, pos, glm::quat(r), finalBoneMatrices, BoneCt);
 		j++;
 	}
 
@@ -362,7 +362,7 @@ void Model::CopyBoneTransforms(ModelP target)
 	auto map = transferMap.find(target->Hash);
 	if (map == transferMap.end())
 	{
-		debprint(0, "No target model in transfer map: {}",  target->file);
+		debprint(0, "No target model in transfer map: {}", target->file);
 		transferMap[target->Hash] = std::array<int, MaxBones>();
 		map = transferMap.find(target->Hash);
 		auto& m = map->second;

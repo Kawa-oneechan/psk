@@ -18,7 +18,7 @@ private:
 	bool shaderOwned;
 
 	void setup();
-	
+
 public:
 	Framebuffer(const std::string& fragmentShader, int width, int height);
 	Framebuffer(Shader* fragmentShader, int width, int height);

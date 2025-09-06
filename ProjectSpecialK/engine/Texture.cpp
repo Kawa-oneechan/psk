@@ -39,8 +39,8 @@ Texture::Texture(const std::string& texturePath, int repeat, int filter, bool sk
 	width = height = channels = 0;
 	data = nullptr;
 
-	this->filter = filter == 0 ? DEFAULTFILTER : filter;
-	
+	this->filter = filter == 0 ? BECKETT_DEFAULTFILTER : filter;
+
 	auto c = cache.find(texturePath);
 	if (c != cache.end())
 	{
@@ -115,7 +115,7 @@ Texture::Texture(const unsigned char* externalData, int width, int height, int c
 	ID = 0;
 	this->file.clear();
 
-	this->filter = filter == 0 ? DEFAULTFILTER : filter;
+	this->filter = filter == 0 ? BECKETT_DEFAULTFILTER : filter;
 
 	atlas.push_back(glm::vec4(0, 0, width, height));
 
@@ -242,7 +242,7 @@ TextureArray::TextureArray(const std::vector<std::string>& entries, int repeat, 
 	width = height = channels = 0, layers = 0;
 	data = nullptr;
 
-	this->filter = filter == 0 ? DEFAULTFILTER : filter;
+	this->filter = filter == 0 ? BECKETT_DEFAULTFILTER : filter;
 
 	file = entries[0];
 
@@ -302,7 +302,7 @@ TextureArray::TextureArray(const std::string& texturePath, int repeat, int filte
 	width = height = channels = 0, layers = 0;
 	data = nullptr;
 
-	this->filter = filter == 0 ? DEFAULTFILTER : filter;
+	this->filter = filter == 0 ? BECKETT_DEFAULTFILTER : filter;
 
 	auto c = cacheArray.find(texturePath);
 	if (c != cacheArray.end())
@@ -326,7 +326,7 @@ TextureArray::TextureArray(const std::string& texturePath, int repeat, int filte
 	stbi_set_flip_vertically_on_load(1);
 
 	auto entries = VFS::Enumerate(texturePath);
-	
+
 	if (entries.empty())
 	{
 		std::string tp = texturePath;

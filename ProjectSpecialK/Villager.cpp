@@ -551,7 +551,7 @@ void Villager::PickClothing()
 
 	DeleteAllThings();
 
-	if (memory && memory->Clothing.size() > 0 && rnd::GetFloat() > 25)
+	if (memory && memory->Clothing.size() > 0 && Random::GetFloat() > 25)
 	{
 		if (memory->Clothing.size() == 1)
 		{
@@ -562,7 +562,7 @@ void Villager::PickClothing()
 		{
 			for (const auto& i : memory->Clothing)
 			{
-				if (rnd::GetFloat() > 25)
+				if (Random::GetFloat() > 25)
 				{
 					_clothesItems[0] = i;
 					_clothesItems[0]->Temporary = false; //just to be sure.

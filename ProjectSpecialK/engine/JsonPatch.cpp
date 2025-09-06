@@ -20,7 +20,7 @@ namespace JSONPatch
 						Target[Name] = MergePatch(Target[Name], Value)
 			return Target
 		else:
-			return Patch	
+			return Patch
 	*/
 
 	static void mergeWorker(jsonValue& target, jsonValue& patch)

@@ -1,5 +1,6 @@
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
+#include <glad/glad.h>
 #include <thread>
 #include <future>
 #include "Console.h"
@@ -18,7 +19,7 @@ void ThreadedLoader(std::function<void(float*)> loader)
 #endif
 
 	glDisable(GL_DEPTH_TEST);
-	cursor->Select(1);
+	cursor->Select(cursor->WaitIndex);
 	auto loadIcon = Texture("loading.png");
 	auto loadPos = glm::vec2(width - 256, height - 256);
 	//int oldTime = 0;

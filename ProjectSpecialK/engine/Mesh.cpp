@@ -8,7 +8,7 @@ Model::Mesh::Mesh(ufbx_mesh* mesh, Armature& bones, size_t boneCt) : Visible(tru
 {
 	Name = mesh->name.data;
 	Hash = MatHash = GetCRC(Name);
-	
+
 	{
 		auto lastUnder = Name.rfind('_');
 		if (lastUnder != std::string::npos)

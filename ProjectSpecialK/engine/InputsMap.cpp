@@ -62,9 +62,9 @@ bool InputsMap::UpdateGamepad()
 		const float dead = 0.2f;
 
 		Keys[(int)Binds::WalkW].State = state.axes[0] < -dead;
-		Keys[(int)Binds::WalkE].State = state.axes[0] >  dead;
+		Keys[(int)Binds::WalkE].State = state.axes[0] > dead;
 		Keys[(int)Binds::WalkN].State = state.axes[1] < -dead;
-		Keys[(int)Binds::WalkS].State = state.axes[1] >  dead;
+		Keys[(int)Binds::WalkS].State = state.axes[1] > dead;
 
 		/*
 		//Hardwire the left stick to work for the walking actions
@@ -120,4 +120,3 @@ bool InputsMap::KeyDown(Binds bind)
 }
 
 InputsMap Inputs;
-

@@ -6,6 +6,7 @@
 #include "engine/SpriteRenderer.h"
 #include "Database.h"
 #include "Types.h"
+#include "Game.h"
 
 bool debugPanelLayoutPolygons = false;
 bool debugRenderPanelLayouts = true;

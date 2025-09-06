@@ -2,6 +2,7 @@
 #include "engine/Utilities.h"
 #include "Iris.h"
 #include "Types.h"
+#include "Game.h"
 
 Iris::Iris()
 {

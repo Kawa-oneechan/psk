@@ -9,7 +9,7 @@ NineSlicer::NineSlicer(const std::string& texPath, int left, int top, int width,
 void NineSlicer::Draw(float dt)
 {
 	dt;
-	
+
 	auto& tex = *texture;
 
 	auto size = glm::vec2(tex[0].z, tex[0].w);
@@ -40,7 +40,7 @@ void NineSlicer::Draw(float dt)
 	Sprite::DrawSprite(tex, glm::vec2(left, bottom), size, tex[6]);
 
 	//Bottom
-	Sprite::DrawSprite(tex,glm::vec2(left + size.x, bottom), glm::vec2(edgeWidth, size.y), tex[7]);
+	Sprite::DrawSprite(tex, glm::vec2(left + size.x, bottom), glm::vec2(edgeWidth, size.y), tex[7]);
 
 	//Bottom right
 	Sprite::DrawSprite(tex, glm::vec2(right, bottom), size, tex[8]);

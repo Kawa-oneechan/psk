@@ -5,6 +5,7 @@
 #include <memory>
 #include <fmodex/fmod.hpp>
 #include <glm/glm.hpp>
+#include "../Game.h"
 
 class Audio
 {
@@ -19,7 +20,10 @@ private:
 	} status{ Status::Stopped };
 	enum class Type
 	{
-		Music, Ambient, Sound, Speech
+		Music, Sound,
+#ifdef BECKETT_MOREVOLUME
+		Ambient, Speech
+#endif
 	} type{ Type::Sound };
 	std::string filename;
 	std::unique_ptr<char[]> data{ nullptr };
@@ -28,14 +32,19 @@ private:
 public:
 	//Is audio enabled in general?
 	static bool Enabled;
-	//Background music volume -- outside hourly tracks, interiors, events.
+	//Background music volume
 	static float MusicVolume;
-	//Ambient noises -- outside wind, soundscapes.
-	static float AmbientVolume;
+#ifndef BECKETT_MOREVOLUME
+	//General sound volume
+	static float SoundVolume;
+#else
 	//General sounds -- diegetic and UI.
 	static float SoundVolume;
+	//Ambient noises -- outside wind, soundscapes.
+	static float AmbientVolume;
 	//Dialogue sounds -- both vocalizations and beeps.
 	static float SpeechVolume;
+#endif
 
 	//Initializes FMOD.
 	static void Initialize();
@@ -67,8 +76,10 @@ public:
 	//percentage where 1.0 is the original and 2.0 is double that.
 	//For convenience.
 	void SetPitch(float ratio);
+#ifdef BECKETT_3DAUDIO
 	//TODO: Test this.
 	void SetPosition(glm::vec3 pos);
+#endif
 	//Sets the sound's position in 2D stereo space where -1.0 is fully
 	//to the left and 1.0 is fully to the right.
 	void SetPan(float pos);

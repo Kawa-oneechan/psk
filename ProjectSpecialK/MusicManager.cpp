@@ -107,7 +107,7 @@ void MusicManager::Play(const std::string& id, bool immediate)
 	while (second.is_array())
 	{
 		auto arr = second.as_array();
-		second = arr[rnd::GetInt((int)arr.size())];
+		second = arr[Random::GetInt((int)arr.size())];
 	}
 
 	if (!second.is_string())

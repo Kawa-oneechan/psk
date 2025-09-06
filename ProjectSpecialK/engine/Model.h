@@ -15,21 +15,21 @@
 
 inline void kawa_glVertexAttribPointer(GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei stride, GLsizeiptr offset)
 {
-	glad_glVertexAttribPointer(index, size, type, normalized, stride, (void*)offset);
+glad_glVertexAttribPointer(index, size, type, normalized, stride, (void*)offset);
 }
 inline void kawa_glVertexAttribIPointer(GLuint index, GLint size, GLenum type, GLsizei stride, GLsizeiptr offset)
 {
-	glad_glVertexAttribIPointer(index, size, type, stride, (void*)offset);
+glad_glVertexAttribIPointer(index, size, type, stride, (void*)offset);
 }
 #undef glVertexAttribPointer
 #undef glVertexAttribIPointer
 #define glVertexAttribPointer kawa_glVertexAttribPointer
 #define glVertexAttribIPointer kawa_glVertexAttribIPointer
 
+struct ufbx_mesh;
+
 //Max amount of bones in a mesh
 static constexpr int MaxBones = 100;
-
-struct ufbx_mesh;
 
 class Model
 {

@@ -44,9 +44,9 @@ bool RevAllTickables(const std::vector<TickableP>& tickables, float dt)
 			continue;
 		if (!t->Tick(dt))
 			Inputs.Clear();
-			//return false;
-		//t->Tick(dt);
-		//(*t)->Tick(dt);
+		//return false;
+	//t->Tick(dt);
+	//(*t)->Tick(dt);
 	}
 	return true;
 }

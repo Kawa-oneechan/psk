@@ -30,7 +30,7 @@ TitleScreen::TitleScreen()
 		}
 		else
 		{
-			int choice = rnd::GetInt((int)options);
+			int choice = Random::GetInt((int)options);
 			logoJoke->Text = Text::Get(fmt::format("logojoke:{}", choice));
 		}
 		Text::Forget("logojoke:");

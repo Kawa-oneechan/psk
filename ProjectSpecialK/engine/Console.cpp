@@ -1,8 +1,5 @@
-#include <regex>
+#include <glad/glad.h>
 #include <sol.hpp>
-
-#define GLM_ENABLE_EXPERIMENTAL
-#include <glm/gtx/easing.hpp>
 
 #include "Console.h"
 #include "TextField.h"
@@ -18,10 +15,10 @@
 #include <ufbx.h>
 extern "C" { const char* glfwGetVersionString(void); }
 
+extern void ConsoleRegister(Console* console);
+
 extern sol::state Sol;
 extern Texture* whiteRect;
-
-extern void ConsoleRegister(Console* console);
 
 extern bool cheatsEnabled;
 extern float timeScale;
@@ -62,7 +59,7 @@ Console::Console()
 
 	hardcopy = std::ofstream("console.log", std::ios::trunc);
 
-	Print(3, GAMENAME);
+	Print(3, BECKETT_GAMENAME);
 	Print(3, "-------------------------");
 
 	inputLine = new TextField();
@@ -273,17 +270,14 @@ bool Console::Scancode(unsigned int scancode)
 
 void Console::Open()
 {
-	if(visible)
-		return;
 	appearState = 1;
 	visible = true;
 }
 
 void Console::Close()
 {
-	if (!visible)
-		return;
 	appearState = 2;
+	visible = true;
 }
 
 bool Console::Tick(float dt)
@@ -332,7 +326,7 @@ void Console::Draw(float dt)
 	auto h = (float)height / 3;
 	glm::vec2 offset{ 0 };
 	if (appearState != 0)
-		offset.y += glm::mix(-h, 0.0f, glm::linearInterpolation(timer));
+		offset.y += glm::mix(-h, 0.0f, timer);
 
 	Sprite::DrawSprite(*whiteRect, offset, glm::vec2(width, h), glm::vec4(0), 0, glm::vec4(0, 0, 0, 0.8));
 
@@ -506,7 +500,7 @@ std::string CVar::ToString()
 static void CCmdVersion(jsonArray& args)
 {
 	args;
-	conprint(8, GAMENAME " - " VERSIONJOKE);
+	conprint(8, BECKETT_GAMENAME " - " BECKETT_VERSIONJOKE);
 #ifdef DEBUG
 	conprint(7, "Debug version: " __DATE__);
 #endif

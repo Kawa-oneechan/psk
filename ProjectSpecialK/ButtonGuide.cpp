@@ -3,6 +3,7 @@
 #include "engine/Utilities.h"
 #include "ButtonGuide.h"
 #include "Types.h"
+#include "Game.h"
 
 struct button
 {

@@ -9,7 +9,7 @@
 #define HEADER "#version 430 core\n#define PSK\n"
 
 __declspec(noreturn)
-extern void FatalError(const std::string& message);
+	extern void FatalError(const std::string& message);
 
 static unsigned int currentShader;
 std::map<std::string, Shader*> Shaders;

@@ -17,7 +17,7 @@ extern Texture* whiteRect;
 extern unsigned int currentVAO;
 
 __declspec(noreturn)
-extern void FatalError(const std::string& message);
+	extern void FatalError(const std::string& message);
 
 namespace Sprite
 {

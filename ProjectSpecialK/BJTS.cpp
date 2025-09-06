@@ -131,7 +131,7 @@ static void bjtsWordstruct(std::string& data, BJTSParams)
 		return;
 	}
 
-	int choice = rnd::GetInt(options - 1);
+	int choice = Random::GetInt(options - 1);
 	data.replace(start, len, Text::Get(fmt::format("{}:{}", key, choice)));
 }
 

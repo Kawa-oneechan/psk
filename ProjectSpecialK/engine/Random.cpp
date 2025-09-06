@@ -1,6 +1,6 @@
 #include <random>
 
-namespace rnd
+namespace Random
 {
 	std::random_device device;
 	std::mt19937 engine(device());

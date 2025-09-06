@@ -50,6 +50,7 @@ Framebuffer::Framebuffer(Shader* fragmentShader, int width, int height) : width(
 Framebuffer::~Framebuffer()
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glViewport(0, 0, ::width, ::height);
 	delete texture;
 	if (shaderOwned)
 		delete shader;

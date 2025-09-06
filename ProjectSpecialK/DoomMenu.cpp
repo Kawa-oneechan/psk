@@ -11,6 +11,7 @@
 #include "Types.h"
 #include "Game.h"
 
+
 //TODO: Add a thing where changing the game language reveals a warning about having to restart.
 //Would also work for a few other "deep" settings like resolution or whatever.
 
@@ -73,6 +74,8 @@ void DoomMenuPage::Translate()
 	}
 }
 
+__declspec(noreturn)
+extern void FatalError(const std::string& message);
 void DoomMenu::Translate()
 {
 	FatalError("Tried to call DoomMenu::Translate().");

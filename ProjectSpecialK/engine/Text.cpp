@@ -201,7 +201,7 @@ std::string Text::DateMD(int month, int day)
 
 size_t Text::Count(const std::string& key)
 {
-	const auto kl= key.length();
+	const auto kl = key.length();
 
 	size_t ret = 0;
 

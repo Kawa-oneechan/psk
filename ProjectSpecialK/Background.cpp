@@ -1,6 +1,7 @@
 ﻿#include "engine/SpriteRenderer.h"
 #include "engine/Utilities.h"
 #include "Background.h"
+#include "Game.h"
 
 Background::Background(const std::string& file, glm::vec2 speed)
 {
