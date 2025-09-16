@@ -1,9 +1,22 @@
 #include <random>
+#include <ctime>
 
 namespace Random
 {
-	std::random_device device;
-	std::mt19937 engine(device());
+	//static std::random_device device;
+	//static std::mt19937 engine(device());
+	static std::mt19937 engine((unsigned int)std::clock());
+
+	void Seed(unsigned int newSeed)
+	{
+		engine.seed(newSeed);
+	}
+
+	void Seed()
+	{
+		auto newSeed = (unsigned int)std::clock();
+		engine.seed(newSeed);
+	}
 
 	int GetInt(int min, int max)
 	{
