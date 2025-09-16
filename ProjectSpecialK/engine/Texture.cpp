@@ -7,6 +7,10 @@
 #include "Console.h"
 #include "../Game.h"
 
+#ifndef BECKETT_DEFAULTFILTER
+#define BECKETT_DEFAULTFILTER GL_LINEAR
+#endif
+
 static std::map<std::string, Texture*> cache;
 static std::map<std::string, TextureArray*> cacheArray;
 

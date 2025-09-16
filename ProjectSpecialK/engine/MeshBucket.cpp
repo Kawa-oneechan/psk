@@ -1,6 +1,6 @@
 ﻿#include "Model.h"
 
-unsigned int currentVAO = 0;
+extern unsigned int currentVAO;
 
 namespace MeshBucket
 {

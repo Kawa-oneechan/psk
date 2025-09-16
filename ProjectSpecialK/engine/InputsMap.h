@@ -20,12 +20,16 @@ private:
 
 public:
 	InputKey Keys[NumKeyBinds]{ 0 };
+	bool Shift, Control, Alt;
 
 	bool MouseLeft, MouseRight, MouseMiddle;
 	bool MouseHoldLeft, MouseHoldRight, MouseHoldMiddle;
 	glm::vec2 MousePosition;
 
 	bool HaveGamePad = false;
+	int StickAngles[2];
+	float StickDists[2];
+	float RunThreshold{ 0.5 };
 
 	InputsMap();
 	void Process(int scancode, int action);

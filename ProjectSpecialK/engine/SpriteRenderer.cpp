@@ -14,7 +14,7 @@
 extern int width, height;
 extern Texture* whiteRect;
 
-extern unsigned int currentVAO;
+unsigned int currentVAO = 0;
 
 __declspec(noreturn)
 	extern void FatalError(const std::string& message);

@@ -1,5 +1,6 @@
 #include <GLFW/glfw3.h>
 #include "InputsMap.h"
+#include "../Game.h"
 
 extern int width, height;
 
@@ -9,6 +10,9 @@ InputsMap::InputsMap()
 
 	lastMousePos = MousePosition = glm::vec2(width, height) + 20.0f;
 	MouseHoldLeft = MouseHoldMiddle = MouseHoldRight = false;
+	Shift = Control = Alt = false;
+	StickAngles[0] = StickAngles[1] = 0;
+	StickDists[0] = StickDists[1] = 0.0f;
 }
 
 void InputsMap::Process(int scancode, int action)
@@ -61,10 +65,39 @@ bool InputsMap::UpdateGamepad()
 	{
 		const float dead = 0.2f;
 
-		Keys[(int)Binds::WalkW].State = state.axes[0] < -dead;
-		Keys[(int)Binds::WalkE].State = state.axes[0] > dead;
-		Keys[(int)Binds::WalkN].State = state.axes[1] < -dead;
-		Keys[(int)Binds::WalkS].State = state.axes[1] > dead;
+		for (int i = 0; i < 2; i++)
+		{
+			auto x = state.axes[GLFW_GAMEPAD_AXIS_LEFT_X + (i * 2)];
+			auto y = state.axes[GLFW_GAMEPAD_AXIS_LEFT_Y + (i * 2)];
+			if (glm::abs(x) + glm::abs(y) > dead)
+			{
+				StickAngles[i] = (360 + (int)glm::degrees(std::atan2f(y, x)) + 90) % 360;
+				auto dotdotdot = glm::vec2(x, y);
+				StickDists[i] = glm::dot(dotdotdot, dotdotdot);
+				if (i == 0)
+					Shift = StickDists[0] > RunThreshold;
+			}
+			else
+			{
+				StickAngles[i] = 0;
+				StickDists[i] = 0.0f;
+			}
+		}
+
+#ifdef BECKETT_ANALOGLEFT
+		Keys[(int)BECKETT_ANALOGLEFT + 0].State = state.axes[GLFW_GAMEPAD_AXIS_LEFT_Y] < -dead;
+		Keys[(int)BECKETT_ANALOGLEFT + 1].State = state.axes[GLFW_GAMEPAD_AXIS_LEFT_X] < -dead;
+		Keys[(int)BECKETT_ANALOGLEFT + 2].State = state.axes[GLFW_GAMEPAD_AXIS_LEFT_Y] > dead;
+		Keys[(int)BECKETT_ANALOGLEFT + 3].State = state.axes[GLFW_GAMEPAD_AXIS_LEFT_X] > dead;
+		//TODO: Hold Shift if the axes are pushed further to run. Will need my gamepad to test.
+#endif
+
+#ifdef BECKETT_ANALOGRIGHT
+		Keys[(int)BECKETT_ANALOGRIGHT + 0].State = state.axes[GLFW_GAMEPAD_AXIS_RIGHT_Y] < -dead;
+		Keys[(int)BECKETT_ANALOGRIGHT + 1].State = state.axes[GLFW_GAMEPAD_AXIS_RIGHT_X] < -dead;
+		Keys[(int)BECKETT_ANALOGRIGHT + 2].State = state.axes[GLFW_GAMEPAD_AXIS_RIGHT_Y] > dead;
+		Keys[(int)BECKETT_ANALOGRIGHT + 3].State = state.axes[GLFW_GAMEPAD_AXIS_RIGHT_X] > dead;
+#endif
 
 		/*
 		//Hardwire the left stick to work for the walking actions

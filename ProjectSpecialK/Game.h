@@ -15,10 +15,25 @@ extern int width, height;
 #define BECKETT_VERSIONJOKE "Horkly Warding"
 #define BECKETT_SCREENWIDTH 1920
 #define BECKETT_SCREENHEIGHT 1080
+
+//Defines the standard interpolation mode for textures.
 #define BECKETT_DEFAULTFILTER GL_LINEAR
+
+//If defined, GamePrepSaveDirs must be provided.
 #define BECKETT_EXTRASAVEDIRS
+
+//If defined, adds Ambient and Speech volume controls alongside Music and Sound.
 #define BECKETT_MOREVOLUME
+
+//If defined, allows 3D positional audio. IF not, Audio::SetPosition is entirely removed.
 #define BECKETT_3DAUDIO
+
+//If defined, maps the left analog stick to the specified actions.
+//Assumes the actions are in the order north-west-south-east.
+#define BECKETT_ANALOGLEFT Binds::WalkN
+//If defined, maps the right analog stick to the specified actions.
+//Makes the same assumption as BECKETT_ANALOGLEFT.
+//#define BECKETT_ANALOGRIGHT Binds::CameraUp
 
 constexpr int MaxLights = 8;
 

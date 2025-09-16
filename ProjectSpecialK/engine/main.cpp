@@ -131,6 +131,7 @@ namespace UI
 		DS("screenHeight", ScreenHeight);
 		DA("keyBinds", {});
 		DA("gamepadBinds", {});
+		DS("gamepadRunThreshold", Inputs.RunThreshold);
 		DS("language", "USen");
 		DS("musicVolume", 70);
 		DS("soundVolume", 100);
@@ -143,6 +144,8 @@ namespace UI
 
 		width = settings["screenWidth"].as_integer();
 		height = settings["screenHeight"].as_integer();
+
+		Inputs.RunThreshold = settings["gamepadRunThreshold"].as_number();
 
 		gameLang = Text::GetLangCode(settings["language"].as_string());
 
@@ -194,6 +197,7 @@ namespace UI
 		for (auto& k : Inputs.Keys)
 			binds2.as_array().push_back(k.GamepadButton);
 		settings["gamepadBinds"] = std::move(binds2);
+		settings["gamepadRunThreshold"] = Inputs.RunThreshold;
 
 		//Convert from float values to easier-to-read integers.
 		settings["musicVolume"] = (int)(Audio::MusicVolume * 100.0f);
@@ -266,6 +270,10 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 		console->Scancode(scancode);
 		return;
 	}
+
+	Inputs.Shift = (mods & GLFW_MOD_SHIFT) != 0;
+	Inputs.Control = (mods & GLFW_MOD_CONTROL) != 0;
+	Inputs.Alt = (mods & GLFW_MOD_ALT) != 0;
 
 	Inputs.Process(scancode, action);
 
@@ -344,11 +352,27 @@ static void mousebutton_callback(GLFWwindow* window, int button, int action, int
 	}
 }
 
+static void confirmGamepad(int jid)
+{
+	conprint(0, "Gamepad connected: {}", glfwGetJoystickName(jid));
+	int axes = 0, buttons = 0, hats = 0;
+	glfwGetJoystickAxes(jid, &axes);
+	glfwGetJoystickButtons(jid, &buttons);
+	glfwGetJoystickHats(jid, &hats);
+	if (axes < 2 || buttons < 6 || hats < 1)
+	{
+		conprint(2, "Rejecting gamepad: not enough inputs ({}/2 axes, {}/6 buttons, {}/1 hats)", axes, buttons, hats);
+		Inputs.HaveGamePad = false;
+	}
+}
+
 static void joystick_callback(int jid, int event)
 {
 	if (event == GLFW_CONNECTED)
 	{
 		Inputs.HaveGamePad = (jid == GLFW_JOYSTICK_1 && glfwJoystickIsGamepad(jid));
+		if (Inputs.HaveGamePad)
+			confirmGamepad(jid);
 	}
 	else if (event == GLFW_DISCONNECTED)
 	{
@@ -508,7 +532,8 @@ int main(int argc, char** argv)
 	GameInit();
 
 	Inputs.HaveGamePad = (glfwJoystickPresent(GLFW_JOYSTICK_1) && glfwJoystickIsGamepad(GLFW_JOYSTICK_1));
-
+	if (Inputs.HaveGamePad)
+		confirmGamepad(GLFW_JOYSTICK_1);
 
 	perspectiveProjection = glm::perspective(glm::radians(45.0f), (float)width / (float)height, 0.1f, 500.0f);
 	//Orthographic projection for a laugh. For best results, use a 45 degree pitch and yaw, no bending.
