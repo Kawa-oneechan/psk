@@ -1,7 +1,10 @@
 {
 	//Keys are used in matmap files and C++ code alike.
 	"model.vs": {	
+		//Beckett
 		"model": "model.fs",
+		"depthpass": "depthpass.fs",
+		//Game
 		"grass": "grass.fs",
 		"grassedge": "grassedge.fs",
 		"playerbody": "playerbody.fs",
@@ -12,8 +15,10 @@
 		"playerhair": "playerhair.fs"
 	},
 	"sprite.vs": {
+		//Beckett
 		"sprite": "sprite.fs",
 		"font": "font.fs",
+		//Game
 		"scroller": "scroller.fs",
 		"wobble": "wobble.fs",
 		"iris": "iris.fs",

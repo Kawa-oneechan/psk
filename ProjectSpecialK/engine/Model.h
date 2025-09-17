@@ -1,5 +1,6 @@
 #pragma once
 #include <array>
+#include <functional>
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -147,6 +148,7 @@ namespace MeshBucket
 	extern void Flush();
 	extern void FlushTranslucent();
 	extern void Draw(Model::Mesh& mesh, const glm::vec3& position, const glm::quat& rotation, const glm::mat4 bones[], size_t boneCt);
+	extern void DrawAllWithDepth(float dt, const std::function<void(void)> renderer);
 }
 
 using ModelP = std::shared_ptr<Model>;

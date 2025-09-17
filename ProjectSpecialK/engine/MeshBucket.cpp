@@ -1,11 +1,14 @@
 ﻿#include "Model.h"
 
 extern unsigned int currentVAO;
+extern bool wireframe;
 
 namespace MeshBucket
 {
 	static constexpr int meshBucketSize = 64;
 	static constexpr int transMeshBucketSize = 256;
+
+	static int renderMode = 0; //color
 
 	struct MeshInABucket
 	{
@@ -50,17 +53,25 @@ namespace MeshBucket
 		unsigned int currentTextures[4]{ currentShader, currentShader, currentShader, currentShader };
 		int currentLayer = -1;
 
+		Shader* theShader = Shaders["model"];
+		if (renderMode == 1)
+		{
+			theShader = Shaders["depthpass"];
+			theShader->Use();
+		}
+
 		for (auto i = 0; i < meshesInBucket; i++)
 		{
 			bool justSwitchedShaders = false;
 
 			auto& m = meshBucket[i];
-			if (m.Shader->ID != currentShader)
+			if (renderMode == 0 && m.Shader->ID != currentShader)
 			{
 				justSwitchedShaders = true;
-				currentShader = m.Shader->ID;
+				theShader = m.Shader;
+				currentShader = theShader->ID;
 				currentLayer = -1;
-				m.Shader->Use();
+				theShader->Use();
 			}
 
 			if (m.Position != currentPos || m.Rotation != currentRot || justSwitchedShaders)
@@ -73,10 +84,10 @@ namespace MeshBucket
 				//auto s = glm::scale(glm::mat4(1), scale);
 				auto model = t * r; //* s;
 
-				m.Shader->Set("model", model);
+				theShader->Set("model", model);
 			}
 
-			m.Shader->Set("finalBonesMatrices", m.Bones[0], m.BoneCount);
+			theShader->Set("finalBonesMatrices", m.Bones[0], m.BoneCount);
 
 			for (auto j = 0; j < 4; j++)
 			{
@@ -90,7 +101,7 @@ namespace MeshBucket
 			if (m.Layer != currentLayer)
 			{
 				currentLayer = m.Layer;
-				m.Shader->Set("layer", m.Layer);
+				theShader->Set("layer", m.Layer);
 			}
 
 			if (m.VAO != currentVAO)
@@ -110,6 +121,9 @@ namespace MeshBucket
 
 	void FlushTranslucent()
 	{
+		if (renderMode == 1)
+			return; //don't render translucents in the depth prepass
+
 		for (auto i = 0; i < transMeshesInBucket; i++)
 		{
 			meshBucket[meshesInBucket] = transMeshBucket[i];
@@ -143,7 +157,7 @@ namespace MeshBucket
 			if (meshesInBucket == meshBucketSize)
 				Flush();
 		}
-		else
+		else if (renderMode != 1)
 		{
 			transMeshBucket[transMeshesInBucket] = meshBucket[meshesInBucket];
 			bucket.VAO = 0;
@@ -152,4 +166,26 @@ namespace MeshBucket
 				FlushTranslucent();
 		}
 	};
+
+	void DrawAllWithDepth(float dt, const std::function<void(void)> renderer)
+	{
+		renderMode = 1;
+		glDepthMask(GL_TRUE);
+		glClear(GL_DEPTH_BUFFER_BIT);
+		glEnable(GL_DEPTH_TEST);
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+		renderer();
+
+		renderMode = 0;
+		glDepthFunc(GL_LEQUAL);
+		glColorMask(1, 1, 1, 1);
+		glDepthMask(GL_FALSE);
+		glPolygonMode(GL_FRONT_AND_BACK, wireframe ? GL_LINE : GL_FILL);
+
+		renderer();
+
+		glDisable(GL_DEPTH_TEST);
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	}
 }

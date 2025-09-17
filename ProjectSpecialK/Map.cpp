@@ -300,21 +300,12 @@ void Map::drawGround(float dt)
 
 void Map::drawWorker(float dt)
 {
+	UpdateGrass();
+
 	Sprite::DrawSprite(Shaders["sky"], *whiteRect, glm::vec2(0), glm::vec2(width, height));
 	Sprite::FlushBatch();
 
-	glClear(GL_DEPTH_BUFFER_BIT);
-	glEnable(GL_DEPTH_TEST);
-	glPolygonMode(GL_FRONT_AND_BACK, wireframe ? GL_LINE : GL_FILL);
-
-	UpdateGrass();
-
-	drawCharacters(dt);
-	drawObjects(dt);
-	drawGround(dt);
-
-	glDisable(GL_DEPTH_TEST);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	MeshBucket::DrawAllWithDepth(dt, [&, dt] { drawCharacters(dt); drawObjects(dt); drawGround(dt); });
 
 	//For an interior map:
 	/*
