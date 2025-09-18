@@ -5,6 +5,7 @@
 #include "PanelLayout.h"
 #include "OptionsMenu.h"
 #include "engine/DropLabel.h"
+#include "engine/NineSlicer.h"
 
 class TitleScreen : public Tickable
 {
@@ -21,6 +22,9 @@ private:
 	//std::string psText;
 	//glm::vec2 psSize;
 	DropLabel* pressStart = nullptr;
+	NineSlicer* playerPanel = nullptr;
+	std::string playerText;
+	int playerPanelWidth;
 
 public:
 	TitleScreen();

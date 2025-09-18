@@ -84,6 +84,9 @@ Omnitechnomancer	Screwtape
 Siapran	Vaartis
 Vikxin	wareya
 
+#Certain concepts cribbed from
+James Reyes
+
 #Tooling
 Heaven Tool by rafacasari
 Switch Toolbox by KillzXGaming et al
