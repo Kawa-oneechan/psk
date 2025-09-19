@@ -11,6 +11,7 @@
 #include "Shader.h"
 #include "Texture.h"
 #include "VFS.h"
+#include "../Game.h"
 
 //Because void-casting an integer for legacy reasons is silly.
 
@@ -26,6 +27,8 @@ glad_glVertexAttribIPointer(index, size, type, stride, (void*)offset);
 #undef glVertexAttribIPointer
 #define glVertexAttribPointer kawa_glVertexAttribPointer
 #define glVertexAttribIPointer kawa_glVertexAttribIPointer
+
+#ifndef BECKETT_NO3DMODELS
 
 struct ufbx_mesh;
 
@@ -153,3 +156,5 @@ namespace MeshBucket
 
 using ModelP = std::shared_ptr<Model>;
 using Armature = std::array<Model::Bone, MaxBones>;
+
+#endif

@@ -1,5 +1,7 @@
 ﻿#include "Model.h"
 
+#ifndef BECKETT_NO3DMODELS
+
 extern unsigned int currentVAO;
 extern bool wireframe;
 
@@ -189,3 +191,5 @@ namespace MeshBucket
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	}
 }
+
+#endif

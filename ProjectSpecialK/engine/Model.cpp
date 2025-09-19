@@ -5,6 +5,8 @@
 #include "Utilities.h"
 #include "Console.h"
 
+#ifndef BECKETT_NO3DMODELS
+
 __declspec(noreturn)
 	extern void FatalError(const std::string& message);
 
@@ -397,3 +399,5 @@ void Model::CopyBoneTransforms(ModelP target)
 
 	target->CalculateBoneTransforms();
 }
+
+#endif

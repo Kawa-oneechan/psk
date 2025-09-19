@@ -12,7 +12,9 @@
 #ifdef DEBUG
 #include <ImGUI/imgui.h>
 #endif
+#ifndef BECKETT_NO3DMODELS
 #include <ufbx.h>
+#endif
 extern "C" { const char* glfwGetVersionString(void); }
 
 extern void ConsoleRegister(Console* console);
@@ -512,7 +514,9 @@ static void CCmdVersion(jsonArray& args)
 	conprint(7, "GLSL {}", glGetString(GL_SHADING_LANGUAGE_VERSION));
 	conprint(7, "Renderer: {}", glGetString(GL_RENDERER));
 	conprint(7, "GLFW: {}", glfwGetVersionString());
+#ifndef BECKETT_NO3DMODELS
 	conprint(7, "UFBX: {}.{}.{}", ufbx_version_major(UFBX_VERSION), ufbx_version_minor(UFBX_VERSION), ufbx_version_patch(UFBX_VERSION));
+#endif
 	conprint(7, "MiniZip: " MZ_VERSION);
 	conprint(7, "FMOD: {}.{}.{}", (FMOD_VERSION >> 16) & 0xFFFF, (FMOD_VERSION >> 8) & 0xFF, FMOD_VERSION & 0xFF);
 	conprint(7, "STB_Image: 2.30");

@@ -4,6 +4,8 @@
 #include "Shader.h"
 #include "Utilities.h"
 
+#ifndef BECKETT_NO3DMODELS
+
 Model::Mesh::Mesh(ufbx_mesh* mesh, Armature& bones, size_t boneCt) : Visible(true), Layer(0), Translucent(false)
 {
 	Name = mesh->name.data;
@@ -207,3 +209,5 @@ Model::Mesh::Mesh(ufbx_mesh* mesh, Armature& bones, size_t boneCt) : Visible(tru
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
+
+#endif
