@@ -2,6 +2,7 @@
 #include "House.h"
 #include "Town.h"
 #include "Database.h"
+#include "Player.h"
 
 VillagerHouse::Room::Room(VillagerHouse* parent, size_t roomNum)
 {
@@ -11,6 +12,8 @@ VillagerHouse::Room::Room(VillagerHouse* parent, size_t roomNum)
 	Width = 64;
 	Height = 64;
 	Terrain = std::make_unique<MapTile[]>(Width * Height);
+	//if (roomNum == 0)
+	Exits[0] = ToOutside;
 
 	//TODO: generate invisible terrain from room size.
 }
@@ -127,17 +130,37 @@ void VillagerHouse::Load()
 		return;
 	}
 
-	//TODO: really load
-	//If there's no JSON for this house, create a default room either from
-	//villager info or a special "new player house" JSON.
-	if (Owner != PlayerHouse)
-	{
-		auto owner = Database::Find<Villager>(Owner, villagers);
-		auto ownerFile = VFS::Enumerate(fmt::format("{}/*.json", owner->Path))[0];
-		auto ownerJson = VFS::ReadJSON(ownerFile);
-		auto ownerDoc = ownerJson.as_object();
+	jsonValue ownerJson;
 
+	if (IsPlayerOwned)
+	{
+		//Remember to properly identify which player later on.
+		auto savedHouseFile = fmt::format("homes/{}", thePlayer.ID);
+		ownerJson = VFS::ReadSaveJSON(savedHouseFile);
+		//Catch if this worked or not.
+	}
+	else
+	{
+		VillagerP owner = nullptr;
+		owner = Database::Find<Villager>(Owner, villagers);
+		auto savedHouseFile = fmt::format("homes/{}.json", owner);
+
+		ownerJson = VFS::ReadSaveJSON(savedHouseFile);
+		//Catch if this worked or not.
+
+
+		//if not...
+		{
+			auto ownerFile = VFS::Enumerate(fmt::format("{}/*.json", owner->Path))[0];
+			auto temp = VFS::ReadJSON(ownerFile);
+			ownerJson = json5pp::array({ temp });
+		}
+	}
+
+	for (auto& room : ownerJson.as_array())
+	{
 		Rooms.emplace_back(this, Rooms.size());
+		LoadObjects(room);
 	}
 }
 
@@ -145,17 +168,20 @@ VillagerHouse::VillagerHouse(int owner)
 {
 	if (owner == -1)
 	{
-		Owner = PlayerHouse;
+		Owner = thePlayer.Hash;
+		IsPlayerOwned = true;
 	}
 	else if (owner >= town->Villagers.size())
 	{
 		conprint(4, "VillagerHouse: owner {} out range ({}).", owner, town->Villagers.size());
 		Owner = Orphaned;
+		IsPlayerOwned = false;
 		return;
 	}
 	else
 	{
 		Owner = town->Villagers[owner]->Hash;
+		IsPlayerOwned = false;
 	}
 
 	Load();

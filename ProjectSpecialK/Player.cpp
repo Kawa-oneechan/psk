@@ -3,6 +3,7 @@
 #include "engine/TextUtils.h"
 #include "engine/JSONUtils.h"
 #include "engine/Console.h"
+#include "engine/Random.h"
 #include "Player.h"
 #include "Camera.h"
 #include "Town.h"
@@ -301,14 +302,19 @@ void Player::Load()
 	catch (std::runtime_error&)
 	{
 		conprint(1, "Couldn't load data for the player.");
+		Name = "Mayor";
+		ID = "player:00000000";
+		Hash = GetCRC(ID);
 	}
+	EnName = Name;
 }
 
 void Player::Serialize(jsonValue& target)
 {
-	target = json5pp::object({ { "name", "" } });
+	target = json5pp::object({});
 
 	target.as_object()["name"] = Name;
+	target.as_object()["id"] = ID;
 	target.as_object()["bells"] = (int)Bells;
 
 	target.as_object()["colors"] = json5pp::object({
@@ -360,6 +366,15 @@ void Player::Deserialize(jsonValue& source)
 {
 	auto s = source.as_object();
 	Name = s["name"].as_string();
+
+	if (s["id"].is_null())
+	{
+		conprint(1, "No ID in player data. Assigning a new one...");
+		s["id"] = fmt::format("player:{:X}", Random::GetInt());
+	}
+	ID = s["id"].as_string();
+	Hash = GetCRC(ID);
+
 	Bells = s["bells"].as_integer();
 
 	auto& colors = s["colors"].as_object();

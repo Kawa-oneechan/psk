@@ -43,6 +43,7 @@ public:
 	std::vector<Room> Rooms;
 
 	hash Owner;
+	bool IsPlayerOwned;
 
 	VillagerHouse(int owner);
 

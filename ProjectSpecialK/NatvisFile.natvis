@@ -31,4 +31,9 @@
 			<Item Name="CRC32">Hash,Xb</Item>
 		</Expand>
 	</Type>
+	<Type Name="Player">
+		<DisplayString>{Name} ({ID})</DisplayString>
+		<Expand>
+		</Expand>
+	</Type>
 </AutoVisualizer>
