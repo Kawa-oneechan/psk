@@ -10,5 +10,5 @@ namespace Random
 	extern float GetFloat(float min, float max);
 	extern float GetFloat(float max);
 	extern float GetFloat();
-	extern bool flip();
+	extern bool Flip();
 }

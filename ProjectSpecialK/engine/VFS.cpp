@@ -34,7 +34,7 @@ namespace fs = std::filesystem;
 #endif
 
 #ifdef BECKETT_EXTRASAVEDIRS
-extern void GamePrepSaveDirs(const fs::path& savePath);
+extern void GamePrepSaveDirs();
 #endif
 
 __declspec(noreturn)
@@ -241,7 +241,7 @@ namespace VFS
 
 		fs::create_directory(savePath);
 #ifdef BECKETT_EXTRASAVEDIRS
-		GamePrepSaveDirs(savePath);
+		GamePrepSaveDirs();
 #endif
 	}
 
@@ -704,6 +704,11 @@ namespace VFS
 	bool WriteSaveJSON(const std::string& path, jsonValue& data)
 	{
 		return WriteSaveString(path, data.stringify5(json5pp::rule::tab_indent<>()));
+	}
+
+	void MakeSaveDir(const std::string& path)
+	{
+		fs::create_directories(savePath / mangle(path));
 	}
 
 	std::string GetPathPart(const std::string& path)

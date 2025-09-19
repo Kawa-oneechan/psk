@@ -59,6 +59,8 @@ namespace VFS
 	extern bool WriteSaveString(const std::string& path, const std::string& data);
 	extern bool WriteSaveJSON(const std::string& path, jsonValue& data);
 
+	extern void MakeSaveDir(const std::string& path);
+
 	//Given "foo/bar/baz.txt", returns "foo/bar".
 	extern std::string GetPathPart(const std::string& path);
 	//Given "foo/bar/baz.txt", returns "baz.txt". Given "baz.txt", returns the empty string.

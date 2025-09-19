@@ -15,12 +15,6 @@
 #include "Database.h"
 #include "Player.h"
 
-#ifdef _MSC_VER
-namespace fs = std::experimental::filesystem;
-#else
-namespace fs = std::filesystem;
-#endif
-
 #ifdef DEBUG
 extern void RunTests();
 #endif
@@ -145,10 +139,10 @@ void GameInit()
 	commonUniforms.GrassColor = 0.5f;
 }
 
-void GamePrepSaveDirs(const fs::path& savePath)
+void GamePrepSaveDirs()
 {
-	fs::create_directory(savePath / "villagers");
-	fs::create_directory(savePath / "map");
+	VFS::MakeSaveDir("villagers");
+	VFS::MakeSaveDir("map");
 }
 
 extern bool skipTitle;
