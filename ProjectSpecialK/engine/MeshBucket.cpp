@@ -169,7 +169,7 @@ namespace MeshBucket
 		}
 	};
 
-	void DrawAllWithDepth(float dt, const std::function<void(void)> renderer)
+	void DrawAllWithDepth(float dt, const std::function<void(void)>& renderer)
 	{
 		renderMode = 1;
 		glDepthMask(GL_TRUE);

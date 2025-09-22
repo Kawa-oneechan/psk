@@ -151,7 +151,7 @@ namespace MeshBucket
 	extern void Flush();
 	extern void FlushTranslucent();
 	extern void Draw(Model::Mesh& mesh, const glm::vec3& position, const glm::quat& rotation, const glm::mat4 bones[], size_t boneCt);
-	extern void DrawAllWithDepth(float dt, const std::function<void(void)> renderer);
+	extern void DrawAllWithDepth(float dt, const std::function<void(void)>& renderer);
 }
 
 using ModelP = std::shared_ptr<Model>;

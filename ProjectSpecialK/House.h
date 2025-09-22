@@ -48,7 +48,7 @@ public:
 	VillagerHouse(int owner);
 
 	void SaveObjects(jsonValue& json);
-	void LoadObjects(jsonValue& json);
+	void LoadObjects(jsonValue& json, int roomNum);
 
 	void Load();
 	void Save();

@@ -149,13 +149,18 @@ namespace Sprite
 	{
 		if (!initialized) Initialize();
 
+		if ((flags & SpriteFlags::MidBotOrigin) == SpriteFlags::MidBotOrigin)
+			position -= glm::vec2(size.x * 0.5f, size.y);
+		else if ((flags & SpriteFlags::CenterOrigin) == SpriteFlags::CenterOrigin)
+			position -= size * 0.5f;
+		
 		glm::mat4 model = glm::mat4(1.0f);
 		model = glm::translate(model, glm::vec3(position, 0));
 		// first translate (transformations are: scale happens first, then rotation, and then final translation happens; reversed order)
-		if ((flags & SpriteFlags::TopLeft) != SpriteFlags::TopLeft)
+		if ((flags & SpriteFlags::RotateTopLeft) != SpriteFlags::RotateTopLeft)
 			model = glm::translate(model, glm::vec3(0.5f * size.x, 0.5f * size.y, 0)); // move origin of rotation to center of quad
 		model = glm::rotate(model, glm::radians(rotate), glm::vec3(0, 0, 1)); // then rotate
-		if ((flags & SpriteFlags::TopLeft) != SpriteFlags::TopLeft)
+		if ((flags & SpriteFlags::RotateTopLeft) != SpriteFlags::RotateTopLeft)
 			model = glm::translate(model, glm::vec3(-0.5f * size.x, -0.5f * size.y, 0)); // move origin back
 		model = glm::scale(model, glm::vec3(size, 1)); // last scale
 
@@ -248,7 +253,7 @@ namespace Sprite
 		}
 		auto a = glm::degrees(std::atan2(l.y, l.x));
 
-		DrawSprite(*whiteRect, from, glm::vec2(len, 1), glm::vec4(0), a, color, SpriteFlags::TopLeft);
+		DrawSprite(*whiteRect, from, glm::vec2(len, 1), glm::vec4(0), a, color, SpriteFlags::TopLeftOrigin);
 	}
 
 	static void LoadFontBank(int font, int bank)

@@ -142,7 +142,7 @@ void TitleScreen::Draw(float dt)
 			glm::vec4(1, 1, 1, glm::abs(glm::sin((float)glfwGetTime())) * 1.0f));
 
 		playerPanel->Draw(dt);
-		Sprite::DrawText(1, playerText, playerPanel->Position + glm::vec2(32, 24), UI::textColors[7], 70.0f, true);
+		Sprite::DrawText(1, playerText, playerPanel->Position + glm::vec2(32, 24), UI::textColors[7], 70.0f, 0.0f, true);
 	}
 
 #ifdef DEBUG

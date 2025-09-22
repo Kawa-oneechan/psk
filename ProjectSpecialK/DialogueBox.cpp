@@ -329,9 +329,9 @@ void DialogueBox::Draw(float dt)
 		const auto tagPosR = tagPosM + glm::rotate(glm::vec2(nametagWidth, 0), glm::radians(tagAngle));
 		const auto tagPosT = tagPosL + glm::rotate(glm::vec2(tagSize.x - 16, 20), glm::radians(tagAngle));
 
-		Sprite::DrawSprite(nametag, tagPosL, tagSize, nametag[0], tagAngle, nametagColor[0], Sprite::TopLeft);
-		Sprite::DrawSprite(nametag, tagPosM, glm::vec2(nametagWidth, tagSize.y), nametag[2], tagAngle, nametagColor[0], Sprite::TopLeft);
-		Sprite::DrawSprite(nametag, tagPosR, tagSize, nametag[1], tagAngle, nametagColor[0], Sprite::TopLeft);
+		Sprite::DrawSprite(nametag, tagPosL, tagSize, nametag[0], tagAngle, nametagColor[0], Sprite::RotateTopLeft);
+		Sprite::DrawSprite(nametag, tagPosM, glm::vec2(nametagWidth, tagSize.y), nametag[2], tagAngle, nametagColor[0], Sprite::RotateTopLeft);
+		Sprite::DrawSprite(nametag, tagPosR, tagSize, nametag[1], tagAngle, nametagColor[0], Sprite::RotateTopLeft);
 		Sprite::DrawText(1, name, tagPosT, nametagColor[1], 120 * scale, tagAngle);
 	}
 

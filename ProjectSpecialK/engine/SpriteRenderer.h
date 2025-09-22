@@ -13,11 +13,15 @@ namespace Sprite
 
 	enum SpriteFlags
 	{
-		NoFlags = 0,
-		FlipX = 1,
-		FlipY = 2,
-		FlipXY = 3,
-		TopLeft = 4,
+		NoFlags = 0, //Rotate along the center, position is the top left.
+		FlipX = 1, //Draw the sprite horizontally flipped.
+		FlipY = 2, //Draw the sprite vertically flipped.
+		FlipXY = 3, //Draw the sprite flipped bothways.
+		RotateCenter = 0, //Rotate the sprite along the center.
+		RotateTopLeft = 4, //Rorate the sprite along the top left corner.
+		TopLeftOrigin = 0, //Consider the position to be the top left of the sprite.
+		CenterOrigin = 8, //Consider the position to be the center of the sprite.
+		MidBotOrigin = 16, //Consider the position to be the bottom middle of the sprite.
 	};
 
 	void DrawSprite(Shader* shader, Texture& texture, glm::vec2 position, glm::vec2 size, glm::vec4 srcRect = glm::vec4(0.0f), float rotate = 0.0f, const glm::vec4& color = glm::vec4(1), SpriteFlags flags = SpriteFlags::NoFlags);
