@@ -22,5 +22,8 @@
 	<Type Name="json5pp::value">
 		<DisplayString Condition="type == 6">{content.integer}</DisplayString>
 	</Type>
--->	
+-->
+	<Type Name="Tickable">
+		<DisplayString>{ID}</DisplayString>
+	</Type>
 </AutoVisualizer>

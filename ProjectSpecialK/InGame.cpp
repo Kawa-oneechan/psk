@@ -11,12 +11,12 @@ InGame::InGame()
 	itemHotbar = std::make_shared<ItemHotbar>();
 	iris = std::make_shared<Iris>();
 
-	ChildTickables.clear();
-	ChildTickables.push_back(dateTimePanel);
-	ChildTickables.push_back(itemHotbar);
-	ChildTickables.push_back(dlgBox);
-	ChildTickables.push_back(messager);
-	ChildTickables.push_back(iris);
+	RemoveAll();
+	AddChild(dateTimePanel);
+	AddChild(itemHotbar);
+	AddChild(dlgBox);
+	AddChild(messager);
+	AddChild(iris);
 
 	LoadCamera("cameras/field.json");
 	MainCamera->Target(&(thePlayer.Position));
@@ -24,7 +24,7 @@ InGame::InGame()
 
 bool InGame::Tick(float dt)
 {
-	RevAllTickables(ChildTickables, dt);
+	Tickable::Tick(dt);
 
 	if (state == State::Init)
 	{
@@ -46,5 +46,5 @@ bool InGame::Tick(float dt)
 
 void InGame::Draw(float dt)
 {
-	DrawAllTickables(ChildTickables, dt);
+	Tickable::Draw(dt);
 }
