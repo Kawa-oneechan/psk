@@ -2,6 +2,7 @@
 #include <vector>
 #include <memory>
 #include <algorithm>
+#include "InputsMap.h"
 
 class Tickable;
 
@@ -17,8 +18,28 @@ public:
 	std::string ID;
 
 	virtual ~Tickable() {}
-	virtual bool Tick(float) { return true; };
-	virtual void Draw(float) {};
+	virtual bool Tick(float dt)
+	{
+		for (unsigned int i = (unsigned int)ChildTickables.size(); i-- > 0; )
+		{
+			auto t = ChildTickables[i];
+			if (!t->Enabled)
+				continue;
+			if (!t->Tick(dt))
+				Inputs.Clear();
+		}
+		return true;
+	}
+
+	virtual void Draw(float dt)
+	{
+		for (const auto& t : ChildTickables)
+		{
+			if (!t->Visible)
+				continue;
+			t->Draw(dt);
+		}
+	}
 	virtual bool Character(unsigned int ch)
 	{
 		for (unsigned int i = (unsigned int)ChildTickables.size(); i-- > 0; )
