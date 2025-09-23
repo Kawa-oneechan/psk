@@ -13,6 +13,7 @@
 #include "Texture.h"
 #include "JsonUtils.h"
 #include "Types.h"
+#include "Game.h"
 #include "../Game.h"
 
 /*
@@ -31,10 +32,6 @@ Until #6 is reconsidered, use the villagers FOLDER instead.
 namespace fs = std::experimental::filesystem;
 #else
 namespace fs = std::filesystem;
-#endif
-
-#ifdef BECKETT_EXTRASAVEDIRS
-extern void GamePrepSaveDirs();
 #endif
 
 __declspec(noreturn)
@@ -241,7 +238,7 @@ namespace VFS
 
 		fs::create_directory(savePath);
 #ifdef BECKETT_EXTRASAVEDIRS
-		GamePrepSaveDirs();
+		Game::PrepareSaveDirs();
 #endif
 	}
 

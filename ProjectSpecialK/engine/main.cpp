@@ -15,18 +15,8 @@
 #include "Shader.h"
 #include "SpriteRenderer.h"
 #include "Text.h"
+#include "Game.h"
 #include "../Game.h"
-
-extern void GameInit();
-extern void GameStart(std::vector<TickableP>& tickables);
-extern void GameMouse(double xPosIn, double yPosIn, float xoffset, float yoffset);
-extern void GameResize();
-extern void GameLoopStart();
-extern void GamePreDraw(float dt);
-extern void GamePostDraw(float dt);
-extern void GameQuit();
-extern void SettingsLoad(jsonObject& settings);
-extern void SettingsSave(jsonObject& settings);
 
 constexpr auto WindowTitle = BECKETT_GAMENAME " - " BECKETT_VERSIONJOKE
 #ifdef DEBUG
@@ -179,7 +169,7 @@ namespace UI
 			Inputs.Keys[i].GamepadButton = padBinds[i].as_integer();
 		}
 
-		SettingsLoad(settings);
+		Game::LoadSettings(settings);
 	}
 
 	void Save()
@@ -207,7 +197,7 @@ namespace UI
 		settings["speechVolume"] = (int)(Audio::SpeechVolume * 100.0f);
 #endif
 
-		SettingsSave(settings);
+		Game::SaveSettings(settings);
 
 		try
 		{
@@ -229,7 +219,7 @@ static void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 	glViewport(0, 0, width, height);
 	commonUniforms.ScreenRes = glm::uvec2(width, height);
 
-	GameResize();
+	Game::OnResize();
 }
 
 static void char_callback(GLFWwindow* window, unsigned int codepoint)
@@ -317,7 +307,7 @@ static void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
 	lastX = xpos;
 	lastY = ypos;
 
-	GameMouse(xposIn, yposIn, xoffset, yoffset);
+	Game::OnMouse(xposIn, yposIn, xoffset, yoffset);
 }
 
 static void mousebutton_callback(GLFWwindow* window, int button, int action, int mods)
@@ -385,7 +375,11 @@ static int InitOpenGL()
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-	glfwWindowHint(GLFW_SAMPLES, 2);
+#ifdef BECKETT_MSAA
+	glfwWindowHint(GLFW_SAMPLES, 4);
+#else
+	glfwWindowHint(GLFW_SAMPLES, 0); //Disable
+#endif
 
 	const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 	if (mode->width < width || mode->height < height)
@@ -529,7 +523,7 @@ int main(int argc, char** argv)
 	cursor = std::make_shared<Cursor>();
 	Audio::Initialize();
 
-	GameInit();
+	Game::Initialize();
 
 	Inputs.HaveGamePad = (glfwJoystickPresent(GLFW_JOYSTICK_1) && glfwJoystickIsGamepad(GLFW_JOYSTICK_1));
 	if (Inputs.HaveGamePad)
@@ -549,11 +543,11 @@ int main(int argc, char** argv)
 	auto oldTime = glfwGetTime();
 	commonUniforms.TotalTime = 0.0f;
 
-	GameStart(rootTickables);
+	Game::Start(rootTickables);
 
 	while (!glfwWindowShouldClose(window))
 	{
-		GameLoopStart();
+		Game::LoopStart();
 
 #ifdef DEBUG
 		auto endingTime = std::chrono::high_resolution_clock::now();
@@ -589,9 +583,9 @@ int main(int argc, char** argv)
 		startingTime = endingTime;
 #endif
 
-		GamePreDraw(dt * timeScale);
+		Game::PreDraw(dt * timeScale);
 		DrawAllTickables(rootTickables, dt * timeScale);
-		GamePostDraw(dt * timeScale);
+		Game::PostDraw(dt * timeScale);
 
 		console->Draw(dt);
 		Sprite::FlushBatch();
@@ -618,7 +612,7 @@ int main(int argc, char** argv)
 		glfwPollEvents();
 	}
 
-	GameQuit();
+	Game::OnQuit();
 	UI::Save();
 
 	glfwTerminate();

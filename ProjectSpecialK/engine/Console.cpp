@@ -4,6 +4,7 @@
 #include "Console.h"
 #include "TextField.h"
 #include "TextUtils.h"
+#include "Game.h"
 #include "../Game.h"
 
 //For version information
@@ -16,8 +17,6 @@
 #include <ufbx.h>
 #endif
 extern "C" { const char* glfwGetVersionString(void); }
-
-extern void ConsoleRegister(Console* console);
 
 extern sol::state Sol;
 extern Texture* whiteRect;
@@ -83,7 +82,7 @@ Console::Console()
 	RegisterCCmd("crc32", CCmdCRC32);
 	RegisterCVar("sv_cheats", CVar::Type::Bool, &cheatsEnabled);
 	RegisterCVar("timescale", CVar::Type::Float, &timeScale, true);
-	ConsoleRegister(this);
+	Game::RegisterConsole(this);
 }
 
 void Console::Print(int color, const std::string& str)

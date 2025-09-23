@@ -1,8 +1,7 @@
 #include <ImGUI/imgui.h>
 #include <ImGUI/imgui_impl_glfw.h>
 #include <ImGUI/imgui_impl_opengl3.h>
-
-extern void GameImGui();
+#include "Game.h"
 
 bool debuggerEnabled{ false };
 
@@ -40,7 +39,7 @@ void DoImGui()
 	}
 	ImGui::End();
 
-	GameImGui();
+	Game::ImGui();
 
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

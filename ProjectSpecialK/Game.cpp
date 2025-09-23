@@ -2,6 +2,7 @@
 #include "engine/Text.h"
 #include "engine/Framebuffer.h"
 #include "engine/Console.h"
+#include "engine/Game.h"
 #include "Types.h"
 #include "Game.h"
 #include "DialogueBox.h"
@@ -49,7 +50,7 @@ namespace UI
 	std::shared_ptr<Texture> controls;
 }
 
-void SettingsLoad(jsonObject& settings)
+void Game::LoadSettings(jsonObject& settings)
 {
 #define DS(K, V) if (!settings[K]) settings[K] = jsonValue(V)
 #define DA(K, V) if (!settings[K]) settings[K] = json5pp::array(V)
@@ -69,12 +70,12 @@ void SettingsLoad(jsonObject& settings)
 	botherColliding = settings["botherColliding"].as_boolean();
 }
 
-void SettingsSave(jsonObject& settings)
+void Game::SaveSettings(jsonObject& settings)
 {
 	settings["botherColliding"] = botherColliding;
 }
 
-void GameInit()
+void Game::Initialize()
 {
 	SolBinds::Setup(Sol);
 
@@ -139,7 +140,7 @@ void GameInit()
 	commonUniforms.GrassColor = 0.5f;
 }
 
-void GamePrepSaveDirs()
+void Game::PrepareSaveDirs()
 {
 	VFS::MakeSaveDir("villagers");
 	VFS::MakeSaveDir("map");
@@ -147,7 +148,7 @@ void GamePrepSaveDirs()
 
 extern bool skipTitle;
 
-void GameStart(std::vector<TickableP>& tickables)
+void Game::Start(std::vector<TickableP>& tickables)
 {
 	//Now that we've loaded the key names we can fill in some blanks.
 	for (int i = 0; i < NumKeyBinds; i++)
@@ -162,7 +163,7 @@ void GameStart(std::vector<TickableP>& tickables)
 		tickables.push_back(std::make_shared<TitleScreen>());
 }
 
-void GameMouse(double xPosIn, double yPosIn, float xoffset, float yoffset)
+void Game::OnMouse(double xPosIn, double yPosIn, float xoffset, float yoffset)
 {
 	xPosIn, yPosIn;
 	if (Inputs.MouseHoldMiddle && !MainCamera->Locked)
@@ -174,15 +175,15 @@ void GameMouse(double xPosIn, double yPosIn, float xoffset, float yoffset)
 	}
 }
 
-void GameResize()
+void Game::OnResize()
 {}
 
-void GameLoopStart()
+void Game::LoopStart()
 {
 	Audio::Update();
 }
 
-void GamePreDraw(float dt)
+void Game::PreDraw(float dt)
 {
 	dt;
 	auto pitch = MainCamera->Angles().y;
@@ -193,7 +194,7 @@ void GamePreDraw(float dt)
 	skyImage->Use(3);
 }
 
-void GamePostDraw(float dt)
+void Game::PostDraw(float dt)
 {
 	dt;
 	if (showPos)
@@ -208,7 +209,7 @@ void GamePostDraw(float dt)
 	}
 }
 
-void GameQuit()
+void Game::OnQuit ()
 {
 	thePlayer.Save();
 	town->Save();

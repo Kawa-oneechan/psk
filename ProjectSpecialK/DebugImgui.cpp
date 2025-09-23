@@ -2,6 +2,7 @@
 #include "engine/TextUtils.h"
 #include "engine/Utilities.h"
 #include "engine/Console.h"
+#include "engine/Game.h"
 #include "Game.h"
 #include "Town.h"
 #include "Animator.h"
@@ -460,7 +461,7 @@ static void DoArmature()
 	ImGui::End();
 }
 
-void GameImGui()
+void Game::ImGui()
 {
 	DoCamera();
 	DoLights();

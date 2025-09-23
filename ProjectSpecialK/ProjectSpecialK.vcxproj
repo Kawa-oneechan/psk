@@ -265,6 +265,7 @@
     <ClInclude Include="engine\Cursor.h" />
     <ClInclude Include="engine\DropLabel.h" />
     <ClInclude Include="engine\Framebuffer.h" />
+    <ClInclude Include="engine\Game.h" />
     <ClInclude Include="engine\GlfwKeys.h" />
     <ClInclude Include="engine\InputsMap.h" />
     <ClInclude Include="engine\JsonUtils.h" />

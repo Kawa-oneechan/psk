@@ -1,6 +1,7 @@
 #include "engine/Console.h"
 #include "engine/Framebuffer.h"
 #include "engine/Audio.h"
+#include "engine/Game.h"
 #include "Game.h"
 #include "Player.h"
 #include <sol.hpp>
@@ -32,7 +33,7 @@ void CCmdReshade(jsonArray& args)
 	}
 }
 
-void ConsoleRegister(Console* console)
+void Game::RegisterConsole(Console* console)
 {
 #define RV console->RegisterCVar
 
