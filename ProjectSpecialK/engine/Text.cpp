@@ -14,6 +14,7 @@ static std::map<std::string, Text::Entry> textEntries;
 
 Language Text::GetLangCode(const std::string &lang)
 {
+#ifndef BECKETT_ONLYMURCAN
 	const auto map = std::map<std::string, Language>(
 	{
 		//Proper
@@ -36,10 +37,14 @@ Language Text::GetLangCode(const std::string &lang)
 	if (match != map.end())
 		return match->second;
 	return Unknown;
+#else
+	return USen;
+#endif
 }
 
 std::string Text::GetLangCode(Language lang)
 {
+#ifndef BECKETT_ONLYMURCAN
 	const auto map = std::map<Language, std::string>(
 	{
 		{ USen, "USen" },
@@ -61,6 +66,9 @@ std::string Text::GetLangCode(Language lang)
 	if (lang == Default)
 		lang = gameLang;
 	return map.at(lang);
+#else
+	return "USen";
+#endif
 }
 
 std::string Text::Entry::get()
@@ -109,8 +117,10 @@ Text::Entry& Text::Add(const std::string& key, jsonValue& value)
 		entry->rep = entry->get();
 	else
 		entry->rep = entry->condition;
+#ifndef BECKETT_NOBJTS
 	if (entry->rep.length() > 16)
 		entry->rep = StripBJTS(entry->rep);
+#endif
 	if (entry->rep.length() > 16)
 		entry->rep = entry->rep.substr(0, 16) + "...";
 	entry->rep.shrink_to_fit();

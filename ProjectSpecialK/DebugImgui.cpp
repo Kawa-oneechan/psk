@@ -148,7 +148,7 @@ static void DoLights()
 				block += "\t}";
 				blocks.push_back(block);
 			}
-			json += join(blocks.begin(), blocks.end(), ",\n", "\n");
+			json += StringJoin(blocks.begin(), blocks.end(), ",\n", "\n");
 			json += "]\n";
 			ImGui::SetClipboardText(json.c_str());
 		}

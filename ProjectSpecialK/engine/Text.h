@@ -9,9 +9,13 @@
 //Supported game languages.
 enum Language
 {
+#ifndef BECKETT_ONLYMURCAN
 	USen, USes, USfr,
 	JPja, KRko, CNzh, TWzh,
 	EUde, EUen, EUes, EUfr, EUit, EUnl, EUru, EUhu,
+#else
+	USen,
+#endif
 	DontCare, Default, Unknown
 };
 

@@ -301,6 +301,7 @@ namespace Sprite
 		fontTextures[(font * 256) + bank] = new Texture(fontID, FontAtlasExtent, FontAtlasExtent, 1);
 	}
 
+#ifndef BECKETT_NOBJTS
 	static void bjtsColor(BJTSParams)
 	{
 		start; len;
@@ -371,6 +372,7 @@ namespace Sprite
 		{ "font", &bjtsFont },
 		{ "/font", &bjtsFont },
 	};
+#endif
 
 	void DrawText(int font, const std::string& text, glm::vec2 position, const glm::vec4& color, float size, float angle, bool raw)
 	{
@@ -429,6 +431,7 @@ namespace Sprite
 				position.y = ogY;
 				continue;
 			}
+#ifndef BECKETT_NOBJTS
 			if (ch == '<' && !raw)
 			{
 				auto bjtsEnd = text.find_first_of('>', i);
@@ -447,6 +450,7 @@ namespace Sprite
 			}
 
 		renderIt:
+#endif
 			auto bakedChar = cdata[(actualFont * 0xFFFF) + ch];
 
 			auto w = bakedChar.x1 - bakedChar.x0 + 0.5f;
@@ -533,6 +537,7 @@ namespace Sprite
 				result.y += (h + (h / 1)) * scaleF;
 				continue;
 			}
+#ifndef BECKETT_NOBJTS
 			if (ch == '<' && !raw)
 			{
 				auto bjtsEnd = text.find_first_of('>', i);
@@ -555,6 +560,7 @@ namespace Sprite
 			}
 
 		measureIt:
+#endif
 			auto bakedChar = cdata[(actualFont * 0xFFFF) + ch];
 
 			auto w = bakedChar.x1 - bakedChar.x0 + 0.5f;

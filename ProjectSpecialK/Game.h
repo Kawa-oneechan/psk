@@ -6,7 +6,6 @@
 #include "engine/TextUtils.h"
 #include "engine/Utilities.h"
 #include "engine/Tickable.h"
-#include "engine/Audio.h"
 
 extern float scale;
 extern int width, height;
@@ -31,6 +30,13 @@ extern int width, height;
 //If defined, leaves out all 3D model stuff. Allows you to leave out UFBX, too.
 //#define BECKETT_NO3DMODELS
 //DO NOT ENABLE FOR PSK UNLESS YOU ARE A FUCKING MORON
+
+//If defined, BJTS support is disabled entirely. Text strings are always effectively "raw".
+//#define BECKETT_NOBJTS
+//DO NOT ENABLE FOR PSK UNLESS YOU ARE A FUCKING MORON
+
+//If defined, only US English text strings are acknowledged.
+//#define BECKETT_ONLYMURCAN
 
 //If defined, enables multi-sample anti-aliasing.
 #define BECKETT_MSAA

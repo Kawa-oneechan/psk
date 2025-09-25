@@ -192,6 +192,7 @@ void ReplaceAll(std::string& data, const std::string& find, const std::string& r
 	}
 }
 
+#ifndef BECKETT_NOBJTS
 std::string StripBJTS(const std::string& data)
 {
 	std::string ret = data;
@@ -275,6 +276,7 @@ std::string PreprocessBJTS(const std::string& data)
 	}
 	return ret;
 }
+#endif
 
 std::vector<std::string> Split(std::string& data, char delimiter)
 {
@@ -327,5 +329,5 @@ std::string ResolvePath(const std::string& maybeRelative)
 			i = 0;
 		}
 	}
-	return join(parts.begin(), parts.end(), "/");
+	return StringJoin(parts.begin(), parts.end(), "/");
 }
