@@ -5,6 +5,9 @@
 extern unsigned int currentVAO;
 extern bool wireframe;
 
+__declspec(noreturn)
+extern void FatalError(const std::string& message);
+
 namespace MeshBucket
 {
 	static constexpr int meshBucketSize = 64;
@@ -52,22 +55,17 @@ namespace MeshBucket
 		unsigned int currentShader = (unsigned int)-1;
 		glm::vec3 currentPos{ 0 };
 		auto currentRot = glm::quat();
-		unsigned int currentTextures[4]{ currentShader, currentShader, currentShader, currentShader };
+		unsigned int currentTextures[4]{ (unsigned int)-1, (unsigned int)-1, (unsigned int)-1, (unsigned int)-1 };
 		int currentLayer = -1;
 
 		Shader* theShader = Shaders["model"];
-		if (renderMode == 1)
-		{
-			theShader = Shaders["depthpass"];
-			theShader->Use();
-		}
 
 		for (auto i = 0; i < meshesInBucket; i++)
 		{
 			bool justSwitchedShaders = false;
 
 			auto& m = meshBucket[i];
-			if (renderMode == 0 && m.Shader->ID != currentShader)
+			if (m.Shader->ID != currentShader)
 			{
 				justSwitchedShaders = true;
 				theShader = m.Shader;
@@ -91,7 +89,7 @@ namespace MeshBucket
 
 			theShader->Set("finalBonesMatrices", m.Bones[0], m.BoneCount);
 
-			for (auto j = 0; j < 4; j++)
+			for (auto j = (renderMode == 0) ? 0 : 3; j < 4; j++)
 			{
 				if (m.Textures[j]->ID != currentTextures[j])
 				{
@@ -153,6 +151,10 @@ namespace MeshBucket
 		for (auto i = 0; i < boneCt; i++)
 			bucket.Bones[i] = bones[i];
 
+		if (renderMode == 1)
+		{
+			bucket.Shader = mesh.Opaque ? Shaders["depthpass2"] : Shaders["depthpass"];
+		}
 		if (!mesh.Translucent)
 		{
 			meshesInBucket++;
@@ -171,6 +173,9 @@ namespace MeshBucket
 
 	void DrawAllWithDepth(float dt, const std::function<void(void)>& renderer)
 	{
+		if (Shaders.count("depthpass") == 0 || Shaders.count("depthpass2") == 0) //-V838
+			FatalError("Cannot do depth prepass rendering without \"depthpass\" and \"depthpass2\" shaders.");
+
 		renderMode = 1;
 		glDepthMask(GL_TRUE);
 		glClear(GL_DEPTH_BUFFER_BIT);

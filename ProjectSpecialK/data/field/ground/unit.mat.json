@@ -1,6 +1,7 @@
 {
 	"mGrass": {
 		"shader": "grass",
+		"opaque": true
 		//All texture maps are handled dynamically by the game.
 	}
 }

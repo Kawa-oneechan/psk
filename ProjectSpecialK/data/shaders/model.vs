@@ -9,6 +9,7 @@ out vec2 TexCoord;
 out vec3 FragPos;
 out vec3 Normal;
 out vec3 Tangent;
+out vec3 WorldPos;
 
 #include "common.fs"
 
@@ -38,6 +39,7 @@ void main()
 	FragPos = vec3(model * totalPosition);
 	Normal = mat3(transpose(inverse(model))) * totalNormal;
 	Tangent = mat3(transpose(inverse(model))) * aTangent;
+	WorldPos = (model * totalPosition).xyz;
 
 	vec4 tm = View * model * totalPosition;
 

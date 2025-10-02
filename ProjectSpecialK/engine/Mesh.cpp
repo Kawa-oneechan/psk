@@ -6,7 +6,7 @@
 
 #ifndef BECKETT_NO3DMODELS
 
-Model::Mesh::Mesh(ufbx_mesh* mesh, Armature& bones, size_t boneCt) : Visible(true), Layer(0), Translucent(false)
+Model::Mesh::Mesh(ufbx_mesh* mesh, Armature& bones, size_t boneCt) : Visible(true), Layer(0), Translucent(false), Opaque(false)
 {
 	Name = mesh->name.data;
 	Hash = MatHash = GetCRC(Name);

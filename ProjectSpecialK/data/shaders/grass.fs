@@ -35,34 +35,29 @@ void main()
 	if (rotation == 3)
 		uv.xy = 1.0 - uv.xy;
 
-
-	vec4 albedo = texture(albedoTexture, vec3(uv, layer));
-	vec3 normal = texture(normalTexture, vec3(uv, layer)).rgb;
-	vec4 mixx = texture(mixTexture, vec3(uv, layer));
-	vec4 opacity = texture(opacityTexture, vec3(uv, layer));
+	vec4 albedoVal = texture(albedoTexture, vec3(uv, layer));
+	vec3 normalVal = texture(normalTexture, vec3(uv, layer)).rgb;
+	vec4 mixVal = texture(mixTexture, vec3(uv, layer));
 
 	if (layer == 0)
 	{
 		//Special grass mode. Opacity will contain color map.
-		albedo.rgb = texture(opacityTexture, vec3(mixx.a, GrassColor, 0)).rgb;
+		albedoVal.rgb = texture(opacityTexture, vec3(mixVal.a, GrassColor, 0)).rgb;
 	}
 
-	if (mixx.r == mixx.g && mixx.g == mixx.b)
+	if (mixVal.r == mixVal.g && mixVal.g == mixVal.b)
 	{
-		mixx.g = mixx.b = 0;
+		mixVal.g = mixVal.b = 0;
 	}
 
-	vec3 norm = Toon ? normalize(Normal) : calcNormal(normal);
+	vec3 norm = Toon ? normalize(Normal) : calcNormal(normalVal);
 
 	vec3 viewDir = normalize(viewPos - FragPos);
 
 	vec3 result;
 	for (int i = 0; i < NUMLIGHTS; i++)
-		result += getLight(Lights[i], albedo.rgb, norm, viewDir, mixx.b);
+		result += getLight(Lights[i], albedoVal.rgb, norm, viewDir, mixVal.b);
 	fragColor = vec4(result, 1.0);
 
-	//fragColor = texture(albedoTexture, TexCoord);
-	//fragColor = vec4(norm, 1.0);
-	//fragColor = mixx;
-	if(fragColor.a < 0.1) discard;
+	//if(fragColor.a < OPACITY_CUTOFF) discard;
 }

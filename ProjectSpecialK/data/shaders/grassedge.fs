@@ -20,29 +20,26 @@ uniform mat4 model;
 void main()
 {
 	vec3 uv3 = vec3(TexCoord, layer);
-	float opacity = texture(albedoTexture, uv3).r;
-	vec3 normal = texture(normalTexture, uv3).rgb;
-	vec4 mixx = texture(mixTexture, uv3);
+	float opacityVal = texture(albedoTexture, uv3).r;
+	vec3 normalVal = texture(normalTexture, uv3).rgb;
+	vec4 mixVal = texture(mixTexture, uv3);
 
-	if (mixx.r == mixx.g && mixx.g == mixx.b)
+	if (mixVal.r == mixVal.g && mixVal.g == mixVal.b)
 	{
-		mixx.g = mixx.b = 0;
+		mixVal.g = mixVal.b = 0;
 	}
 
-	vec3 norm = Toon ? normalize(Normal) : calcNormal(normal);
+	vec3 norm = Toon ? normalize(Normal) : calcNormal(normalVal);
 
 	vec3 viewDir = normalize(viewPos - FragPos);
 
-	vec3 albedo = texture(opacityTexture, vec3(mixx.a, GrassColor, 0)).rgb;
+	vec3 albedoVal = texture(opacityTexture, vec3(mixVal.a, GrassColor, 0)).rgb;
 
 	vec3 result;
 	for (int i = 0; i < NUMLIGHTS; i++)
-		result += getLight(Lights[i], albedo, norm, viewDir, mixx.b);
+		result += getLight(Lights[i], albedoVal, norm, viewDir, mixVal.b);
 
-	fragColor = vec4(result, opacity);
+	fragColor = vec4(result, opacityVal);
 
-	//fragColor = texture(albedoTexture, TexCoord);
-	//fragColor = vec4(norm, 1.0);
-	//fragColor = mixx;
-	if(fragColor.a < 0.1) discard;
+	if(fragColor.a < OPACITY_CUTOFF) discard;
 }

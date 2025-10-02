@@ -90,6 +90,7 @@ public:
 		Shader* Shader;
 		int Layer;
 		bool Translucent;
+		bool Opaque;
 
 		Mesh(ufbx_mesh* mesh, std::array<Bone, MaxBones>& bones, size_t boneCt);
 		const size_t Indices() { return indices.size(); }

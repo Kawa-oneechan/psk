@@ -1,5 +1,7 @@
 //---Common---
 
+#define OPACITY_CUTOFF 0.5
+
 #define NUMLIGHTS 8
 
 struct light {

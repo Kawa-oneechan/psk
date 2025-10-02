@@ -4,7 +4,8 @@
 		"albedo": "design*_alb.png",
 		"mix": "design*_mix.png",
 		"normal": "design*_nrm.png",
-		"opacity": "grasscolors.png" //not opacity
+		"opacity": "grasscolors.png", //not opacity
+		"opaque": true
 	},
 	"mCliff": {
 		"albedo": "cliff_alb.png",

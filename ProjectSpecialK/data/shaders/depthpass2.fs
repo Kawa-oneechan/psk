@@ -14,7 +14,5 @@ uniform int layer;
 
 void main()
 {
-	if (texture(opacityTexture, vec3(TexCoord, layer)).r < OPACITY_CUTOFF)
-		discard;
 	fragColor = vec4(0.0);
 }

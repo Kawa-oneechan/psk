@@ -162,6 +162,7 @@ Model::Model(const std::string& modelPath) : file(modelPath)
 			auto m = Mesh(node->mesh, Bones, BoneCt);
 			m.Shader = Shaders["model"];
 			m.Translucent = false;
+			m.Opaque = false;
 			m.Textures[0] = &fallback;
 			m.Textures[1] = &fallbackNormal;
 			m.Textures[2] = &white;
@@ -199,6 +200,8 @@ Model::Model(const std::string& modelPath) : file(modelPath)
 
 						if (mat["translucent"].is_boolean())
 							m.Translucent = mat["translucent"].as_boolean();
+						if (mat["opaque"].is_boolean())
+							m.Opaque = mat["opaque"].as_boolean();
 
 						foundIt = true;
 						break;

@@ -4,6 +4,7 @@
 		//Beckett
 		"model": "model.fs",
 		"depthpass": "depthpass.fs",
+		"depthpass2": "depthpass2.fs",
 		//Game
 		"grass": "grass.fs",
 		"grassedge": "grassedge.fs",

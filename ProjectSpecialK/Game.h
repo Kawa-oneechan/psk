@@ -39,7 +39,7 @@ extern int width, height;
 //#define BECKETT_ONLYMURCAN
 
 //If defined, enables multi-sample anti-aliasing.
-#define BECKETT_MSAA
+//#define BECKETT_MSAA
 
 //If defined, maps the left analog stick to the specified actions.
 //Assumes the actions are in the order north-west-south-east.
