@@ -112,11 +112,12 @@ public:
 	template<typename T>
 	T* GetChild(const std::string& n) const
 	{
-		for (auto i : ChildTickables)
+		auto it = std::find_if(ChildTickables.begin(), ChildTickables.end(), [n](auto e)
 		{
-			if (i->ID == n)
-				return (T*)(i.get());
-		}
+			return e->ID == n;
+		});
+		if (it != ChildTickables.end())
+			return (T*)(*it).get();
 		return nullptr;
 	}
 	

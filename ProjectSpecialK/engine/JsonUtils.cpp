@@ -71,9 +71,8 @@ glm::vec4 GetJSONColor(const jsonValue& val)
 	if (val.is_array())
 	{
 		auto arr = val.as_array();
-		for (auto x : arr)
-			if (!x.is_number())
-				throw std::runtime_error(fmt::format("GetJSONColor: {} is not a valid color.", val.stringify5()));
+		if (std::any_of(arr.cbegin(), arr.cend(), [](jsonValue x) { return !x.is_number(); }))
+			throw std::runtime_error(fmt::format("GetJSONColor: {} is not a valid color.", val.stringify5()));
 		float r, g, b, a;
 		if (arr.size() == 3)
 		{
@@ -118,10 +117,13 @@ glm::vec2 GetJSONDate(const jsonValue& val)
 		auto mon = str.substr(0, 3);
 		StringToLower(mon);
 		static const std::string names[] = { "jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec" };
-		for (int i = 0; i < 12; i++)
+		const auto& it = std::find_if(std::begin(names), std::end(names), [mon](const auto& e)
 		{
-			if (names[i] == mon)
-				return checkDate(glm::vec2(day, i + 1));
+			return e == mon;
+		});
+		if (it != std::end(names))
+		{
+			return checkDate(glm::vec2(day, (int)(it - std::begin(names)) + 1));
 		}
 	}
 	throw std::runtime_error(fmt::format("GetJSONDate: value {} is not a month/day pair.", val.stringify5()));

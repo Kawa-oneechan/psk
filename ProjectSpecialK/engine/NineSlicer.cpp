@@ -1,4 +1,5 @@
 #include "NineSlicer.h"
+#include "Texture.h"
 #include "SpriteRenderer.h"
 
 NineSlicer::NineSlicer(const std::string& texPath, int left, int top, int width, int height) : Position(left, top), Size(width, height)

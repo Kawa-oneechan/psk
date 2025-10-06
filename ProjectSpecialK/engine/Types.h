@@ -43,7 +43,7 @@ struct SpriteAtlas
 	std::map<std::string, int> names;
 	inline bool empty() const { return frames.empty(); }
 	inline size_t size() const { return frames.size(); }
-	inline void push_back(glm::vec4& frame) { frames.push_back(frame); }
+	inline void push_back(const glm::vec4& frame) { frames.push_back(frame); }
 	inline glm::vec4 operator[](size_t i) const { return frames[i]; }
 	inline glm::vec4 operator[](const std::string& s) const
 	{

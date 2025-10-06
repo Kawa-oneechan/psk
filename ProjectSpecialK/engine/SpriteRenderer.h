@@ -1,10 +1,9 @@
 #pragma once
-
+#include <string>
 #include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
 
-#include "Texture.h"
-#include "Shader.h"
+class Texture;
+class Shader;
 
 namespace Sprite
 {

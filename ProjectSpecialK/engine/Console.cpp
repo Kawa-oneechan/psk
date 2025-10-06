@@ -24,41 +24,39 @@ extern Texture* whiteRect;
 extern bool cheatsEnabled;
 extern float timeScale;
 
-static void CCmdVersion(jsonArray& args);
-static void CCmdCVarList(jsonArray& args);
-static void CCmdCmdList(jsonArray& args);
-static void CCmdCRC32(jsonArray& args);
+static void CCmdVersion(const jsonArray& args);
+static void CCmdCVarList(const jsonArray& args);
+static void CCmdCmdList(const jsonArray& args);
+static void CCmdCRC32(const jsonArray& args);
 
 void Console::predict()
 {
 	prediction.clear();
 	if (!inputLine->value.empty())
 	{
-		auto& input = inputLine->value;
-		for (const auto& cc : ccmds)
+		const auto& input = inputLine->value;
+		auto pred = [input](auto& e)
 		{
-			if (cc.name.length() >= input.length() && cc.name.substr(0, input.length()) == input)
-			{
-				prediction = cc.name;
-				return;
-			}
+			return e.name.length() >= input.length() && e.name.substr(0, input.length()) == input;
+		};
+		auto it1 = std::find_if(ccmds.cbegin(), ccmds.cend(), pred);
+		if (it1 != ccmds.cend())
+		{
+			prediction = it1->name;
+			return;
 		}
-		for (const auto& cv : cvars)
+		auto it2 = std::find_if(cvars.cbegin(), cvars.cend(), pred);
+		if (it2 != cvars.cend())
 		{
-			if (cv.name.length() >= input.length() && cv.name.substr(0, input.length()) == input)
-			{
-				prediction = cv.name;
-				return;
-			}
+			prediction = it2->name;
+			return;
 		}
 	}
 }
 
-Console::Console()
+Console::Console() : hardcopy(std::ofstream("console.log", std::ios::trunc))
 {
 	visible = false;
-
-	hardcopy = std::ofstream("console.log", std::ios::trunc);
 
 	Print(3, BECKETT_GAMENAME);
 	Print(3, "-------------------------");
@@ -75,7 +73,7 @@ Console::Console()
 	timer = 0.0f;
 	appearState = 0;
 
-	RegisterCCmd("clear", [&](jsonArray&) { buffer.clear(); scrollCursor = 0; });
+	RegisterCCmd("clear", [&](const jsonArray&) { buffer.clear(); scrollCursor = 0; });
 	RegisterCCmd("version", CCmdVersion);
 	RegisterCCmd("cvarlist", CCmdCVarList);
 	RegisterCCmd("cmdlist", CCmdCmdList);
@@ -89,8 +87,8 @@ void Console::Print(int color, const std::string& str)
 {
 	if (str.find('\n') != std::string::npos)
 	{
-		auto lines = Split((std::string&)str, '\n');
-		for (auto& line : lines)
+		auto lines = Split(std::decay_t<std::string>(str), '\n');
+		for (const auto& line : lines)
 			Print(color, line);
 		return;
 	}
@@ -192,7 +190,7 @@ bool Console::Execute(const std::string& str)
 	catch (sol::error& e)
 	{
 		std::string what = e.what();
-		if (what.find("attempt to yield from outside a coroutine") != -1)
+		if (what.find("attempt to yield from outside a coroutine") != std::string::npos)
 			return true; //Accept this silently.
 		else
 			conprint(1, "Error: {}", what);
@@ -347,15 +345,16 @@ void Console::Draw(float dt)
 
 void Console::RegisterCVar(const std::string& name, CVar::Type type, void* target, bool cheat, int min, int max)
 {
-	for (auto& cv : cvars)
+	auto it = std::find_if(cvars.begin(), cvars.end(), [name](const auto& e)
 	{
-		if (cv.name == name)
-		{
-			cv.type = type;
-			cv.asVoid = target;
-			cv.cheat = cheat;
-			return;
-		}
+		return e.name == name;
+	});
+	if (it != cvars.end())
+	{
+		it->type = type;
+		it->asVoid = target;
+		it->cheat = cheat;
+		return;
 	}
 	CVar cv;
 	cv.name = name;
@@ -367,15 +366,16 @@ void Console::RegisterCVar(const std::string& name, CVar::Type type, void* targe
 	cvars.push_back(cv);
 }
 
-void Console::RegisterCCmd(const std::string& name, std::function<void(jsonArray& args)> act)
+void Console::RegisterCCmd(const std::string& name, std::function<void(const jsonArray& args)> act)
 {
-	for (auto& cc : ccmds)
+	auto it = std::find_if(ccmds.begin(), ccmds.end(), [name](const auto& e)
 	{
-		if (cc.name == name)
-		{
-			cc.act = act;
-			return;
-		}
+		return e.name == name;
+	});
+	if (it != ccmds.end())
+	{
+		it->act = act;
+		return;
 	}
 	CCmd cc;
 	cc.name = name;
@@ -498,7 +498,7 @@ std::string CVar::ToString()
 	return "something";
 }
 
-static void CCmdVersion(jsonArray& args)
+static void CCmdVersion(const jsonArray& args)
 {
 	args;
 	conprint(8, BECKETT_GAMENAME " - " BECKETT_VERSIONJOKE);
@@ -526,7 +526,7 @@ static void CCmdVersion(jsonArray& args)
 #endif
 }
 
-static void CCmdCVarList(jsonArray& args)
+static void CCmdCVarList(const jsonArray& args)
 {
 	if (args.size() != 0 && !args[0].is_string())
 	{
@@ -556,7 +556,7 @@ static void CCmdCVarList(jsonArray& args)
 	conprint(0, "{} cvars", results);
 }
 
-static void CCmdCmdList(jsonArray& args)
+static void CCmdCmdList(const jsonArray& args)
 {
 	if (args.size() != 0 && !args[0].is_string())
 	{
@@ -575,7 +575,7 @@ static void CCmdCmdList(jsonArray& args)
 	conprint(0, "{} ccmds", results);
 }
 
-static void CCmdCRC32(jsonArray& args)
+static void CCmdCRC32(const jsonArray& args)
 {
 	if (args.size() == 0 || !args[0].is_string())
 	{

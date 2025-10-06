@@ -1,4 +1,5 @@
 ﻿#include <array>
+#include <algorithm>
 #include <ufbx.h>
 #include "Model.h"
 #include "Shader.h"
@@ -6,9 +7,8 @@
 
 #ifndef BECKETT_NO3DMODELS
 
-Model::Mesh::Mesh(ufbx_mesh* mesh, Armature& bones, size_t boneCt) : Visible(true), Layer(0), Translucent(false), Opaque(false)
+Model::Mesh::Mesh(ufbx_mesh* mesh, const Armature& bones, size_t boneCt) : Name(mesh->name.data), Visible(true), Layer(0), Translucent(false), Opaque(false)
 {
-	Name = mesh->name.data;
 	Hash = MatHash = GetCRC(Name);
 
 	{
@@ -38,13 +38,12 @@ Model::Mesh::Mesh(ufbx_mesh* mesh, Armature& bones, size_t boneCt) : Visible(tru
 		for (int i = 0; i < skinDeformer->clusters.count; i++)
 		{
 			std::string clusterName = skinDeformer->clusters[i]->name.data;
-			for (int j = 0; j < boneCt; j++)
+			const auto& it = std::find_if(bones.begin(), bones.end(), [clusterName](const auto& e) {
+				return e.Name == clusterName;
+			});
+			if (it != bones.end())
 			{
-				if (bones[j].Name == clusterName)
-				{
-					boneMap[i] = j;
-					break;
-				}
+				boneMap[i] = (int)(it - bones.begin());
 			}
 		}
 		for (int i = 0; i < mesh->num_vertices; i++)
@@ -105,8 +104,8 @@ Model::Mesh::Mesh(ufbx_mesh* mesh, Armature& bones, size_t boneCt) : Visible(tru
 
 			if (isSkinned)
 			{
-				auto bv1 = &vertBones[mesh->vertex_indices.data[index] * MaxWeights];
-				auto bv2 = &vertWeights[mesh->vertex_indices.data[index] * MaxWeights];
+				const int* bv1 = &vertBones[mesh->vertex_indices.data[index] * MaxWeights];
+				const float* bv2 = &vertWeights[mesh->vertex_indices.data[index] * MaxWeights];
 				for (int wi = 0; wi < MaxWeights; wi++)
 				{
 					v.Bones[wi] = bv1[wi];

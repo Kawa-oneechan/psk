@@ -1,5 +1,6 @@
 ﻿#include "engine/SpriteRenderer.h"
 #include "engine/Utilities.h"
+#include "engine/Shader.h"
 #include "Background.h"
 #include "Game.h"
 

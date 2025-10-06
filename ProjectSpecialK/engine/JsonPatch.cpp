@@ -25,13 +25,11 @@ namespace JSONPatch
 
 	static void mergeWorker(jsonValue& target, jsonValue& patch)
 	{
-		std::string state = target.stringify5(json5pp::rule::tab_indent<>());
 		if (patch.is_object())
 		{
 			if (!target.is_object())
 			{
 				target = json5pp::object({});
-				state = target.stringify5(json5pp::rule::tab_indent<>());
 			}
 			else
 			{
@@ -48,9 +46,8 @@ namespace JSONPatch
 						//auto res = merged.insert(p);
 						auto res = target.as_object().insert(p);
 						if (!res.second)
-							mergeWorker(res.first->second, (jsonValue&)p.second);
+							mergeWorker(res.first->second, static_cast<jsonValue&>(std::decay_t<jsonValue>(p.second)));
 					}
-					state = target.stringify5(json5pp::rule::tab_indent<>());
 				}
 			}
 		}

@@ -1,5 +1,7 @@
+#include <glm/glm.hpp>
 #include "Tickable.h"
-#include "Texture.h"
+
+class Texture;
 
 class NineSlicer : public Tickable
 {

@@ -73,7 +73,7 @@ Texture::Texture(const std::string& texturePath, int repeat, int filter, bool sk
 		conprint(1, "Failed to load texture \"{}\" -- no data.", texturePath);
 		return;
 	}
-	data = stbi_load_from_memory((unsigned char*)vfsData.get(), (int)vfsSize, &width, &height, &channels, 0);
+	data = stbi_load_from_memory(reinterpret_cast<unsigned char*>(vfsData.get()), (int)vfsSize, &width, &height, &channels, 0);
 
 	if (!skipAtlas)
 	{
@@ -86,7 +86,7 @@ Texture::Texture(const std::string& texturePath, int repeat, int filter, bool sk
 	{
 		if (colors && colorIndex > 0 && colorIndex < colors->numRows)
 		{
-			unsigned int* d = (unsigned int*)data;
+			auto d = reinterpret_cast<unsigned int*>(data);
 			for (int i = 0; i < width * height; i++)
 			{
 				for (int key = 0; key < colors->numCols; key++)
@@ -123,8 +123,8 @@ Texture::Texture(const unsigned char* externalData, int width, int height, int c
 
 	atlas.push_back(glm::vec4(0, 0, width, height));
 
-	int format = GL_RGB;
-	if (channels == 4) format = GL_RGBA;
+	//int format = GL_RGB;
+	//if (channels == 4) format = GL_RGBA;
 
 	if (externalData)
 	{
@@ -240,15 +240,13 @@ static bool loadArray(unsigned char** data, unsigned int *id, int width, int hei
 	return true;
 }
 
-TextureArray::TextureArray(const std::vector<std::string>& entries, int repeat, int filter) : repeat(repeat)
+TextureArray::TextureArray(const std::vector<std::string>& entries, int repeat, int filter) : repeat(repeat), file(entries[0])
 {
 	ID = 0;
 	width = height = channels = 0, layers = 0;
 	data = nullptr;
 
 	this->filter = filter == 0 ? BECKETT_DEFAULTFILTER : filter;
-
-	file = entries[0];
 
 	auto c = cacheArray.find(file);
 	if (c != cacheArray.end())
@@ -283,7 +281,7 @@ TextureArray::TextureArray(const std::vector<std::string>& entries, int repeat, 
 			conprint(1, "Failed to load texture array item \"{}\" -- no data.", entries[l]);
 			return;
 		}
-		data[l] = stbi_load_from_memory((unsigned char*)vfsData.get(), (int)vfsSize, &width, &height, &channels, 0);
+		data[l] = stbi_load_from_memory(reinterpret_cast<unsigned char*>(vfsData.get()), (int)vfsSize, &width, &height, &channels, 0);
 	}
 
 	if (!loadArray(data, &ID, width, height, channels, layers, repeat, this->filter))
@@ -356,7 +354,7 @@ TextureArray::TextureArray(const std::string& texturePath, int repeat, int filte
 			conprint(1, "Failed to load texture array item \"{}\" -- no data.", entries[l].path);
 			return;
 		}
-		data[l] = stbi_load_from_memory((unsigned char*)vfsData.get(), (int)vfsSize, &width, &height, &channels, 0);
+		data[l] = stbi_load_from_memory(reinterpret_cast<unsigned char*>(vfsData.get()), (int)vfsSize, &width, &height, &channels, 0);
 	}
 
 	if (!loadArray(data, &ID, width, height, channels, layers, repeat, this->filter))

@@ -16,14 +16,14 @@
 class Texture
 {
 private:
-	unsigned char* data;
+	unsigned char* data{ nullptr };
 	std::string file;
-	int filter, repeat;
+	int filter{ 0 }, repeat{ 0 };
 	SpriteAtlas atlas;
 
 public:
-	unsigned int ID;
-	int width, height, channels;
+	unsigned int ID{ (unsigned int)-1 };
+	int width{ 0 }, height{ 0 }, channels{ 0 };
 	bool delayed = false;
 	int refCount{ 0 };
 
@@ -51,6 +51,7 @@ public:
 	const size_t Frames() const { return atlas.size(); }
 	const SpriteAtlas& Atlas() const { return atlas; }
 
+	//TODO: look into proper copystructor
 	Texture(const Texture &x) = default;
 	Texture &operator=(const Texture &x) = default;
 };
@@ -58,21 +59,22 @@ public:
 class TextureArray : public Texture
 {
 private:
-	unsigned char** data;
+	unsigned char** data{ nullptr };
 	std::string file;
-	int filter, repeat;
+	int filter{ 0 }, repeat{ 0 };
 
 public:
-	int layers;
+	int layers{ 0 };
 
 	TextureArray() = default;
 	TextureArray(const std::vector<std::string>& entries, int repeat = GL_REPEAT, int filter = GL_LINEAR);
 	TextureArray(const std::string& texturePath, int repeat = GL_REPEAT, int filter = GL_LINEAR);
 
-	virtual ~TextureArray();
+	virtual ~TextureArray() override;
 	void Use() override;
 	void Use(int slot) override;
 
+	//TODO: look into proper copystructor
 	TextureArray(const TextureArray &x) = default;
 	TextureArray &operator=(const TextureArray &x) = default;
 };

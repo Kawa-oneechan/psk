@@ -8,7 +8,6 @@
 #include <stb_image.h>
 #include <format.h>
 #include "Types.h"
-#include "Shader.h"
 #include "Texture.h"
 #include "VFS.h"
 #include "../Game.h"
@@ -17,11 +16,11 @@
 
 inline void kawa_glVertexAttribPointer(GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei stride, GLsizeiptr offset)
 {
-glad_glVertexAttribPointer(index, size, type, normalized, stride, (void*)offset);
+glad_glVertexAttribPointer(index, size, type, normalized, stride, reinterpret_cast<void*>(offset));
 }
 inline void kawa_glVertexAttribIPointer(GLuint index, GLint size, GLenum type, GLsizei stride, GLsizeiptr offset)
 {
-glad_glVertexAttribIPointer(index, size, type, stride, (void*)offset);
+glad_glVertexAttribIPointer(index, size, type, stride, reinterpret_cast<void*>(offset));
 }
 #undef glVertexAttribPointer
 #undef glVertexAttribIPointer
@@ -31,6 +30,7 @@ glad_glVertexAttribIPointer(index, size, type, stride, (void*)offset);
 #ifndef BECKETT_NO3DMODELS
 
 struct ufbx_mesh;
+class Shader;
 
 //Max amount of bones in a mesh
 static constexpr int MaxBones = 100;
@@ -92,7 +92,7 @@ public:
 		bool Translucent;
 		bool Opaque;
 
-		Mesh(ufbx_mesh* mesh, std::array<Bone, MaxBones>& bones, size_t boneCt);
+		Mesh(ufbx_mesh* mesh, const std::array<Bone, MaxBones>& bones, size_t boneCt);
 		const size_t Indices() { return indices.size(); }
 	};
 
@@ -108,11 +108,11 @@ public:
 	std::vector<Mesh> Meshes;
 	std::array<Model::Bone, MaxBones> Bones;
 	glm::mat4 finalBoneMatrices[MaxBones];
-	size_t BoneCt;
+	size_t BoneCt{ 0 };
 
-	hash Hash;
+	hash Hash{ 0 };
 
-	const bool IsSkinned() const { return Bones.size() > 0; }
+	const bool IsSkinned() const { return BoneCt > 0; }
 
 	Model() = default;
 	Model(const std::string& modelPath);

@@ -7,6 +7,7 @@
 #include <glm/glm.hpp>
 #include "../Game.h"
 
+//A wrapper around FMOD, or whatever other audio backend may be used.
 class Audio
 {
 private:
@@ -28,6 +29,13 @@ private:
 	std::string filename;
 	std::unique_ptr<char[]> data{ nullptr };
 	float frequency{ 0 };
+	std::vector<class AudioEventListener*> listeners;
+	std::vector<std::tuple<float, std::string>> tags;
+	float lastTag{ -1.0f };
+	float nextTag{ -1.0f };
+	int currentTag{ 0 };
+
+	void update();
 
 public:
 	//Is audio enabled in general?
@@ -58,7 +66,7 @@ public:
 	//Depending on the path, its type is set to be music, ambient noise, speeeh,
 	//or a general sound. No matter the type, if it's an Ogg Vorbis file it's
 	//allowed to loop using the `LOOP_START` tag, specified in samples.
-	Audio(std::string filename);
+	Audio(const std::string& filename);
 	~Audio();
 	//Plays the sound. If it's already playing, it won't restart or anything
 	//*unless* `force` is true.
@@ -76,11 +84,20 @@ public:
 	//percentage where 1.0 is the original and 2.0 is double that.
 	//For convenience.
 	void SetPitch(float ratio);
-#ifdef BECKETT_3DAUDIO
 	//TODO: Test this.
 	void SetPosition(glm::vec3 pos);
-#endif
 	//Sets the sound's position in 2D stereo space where -1.0 is fully
 	//to the left and 1.0 is fully to the right.
 	void SetPan(float pos);
+
+	//Registers an AudioEventListener to receive messages for audio with timed events.
+	void RegisterListener(const class AudioEventListener* listener);
+	//Unregisters an AudioEventListener.
+	void UnregisterLister(const class AudioEventListener* listener);
+};
+
+class AudioEventListener
+{
+public:
+	virtual void AudioEvent(float time, const std::string& text) {};
 };

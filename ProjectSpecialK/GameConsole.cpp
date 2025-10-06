@@ -2,6 +2,7 @@
 #include "engine/Framebuffer.h"
 #include "engine/Audio.h"
 #include "engine/Game.h"
+#include "engine/Shader.h"
 #include "Game.h"
 #include "Player.h"
 #include <sol.hpp>
@@ -20,7 +21,7 @@ bool noWear; //placeholder
 
 extern Framebuffer* postFxBuffer;
 
-void CCmdReshade(jsonArray& args)
+void CCmdReshade(const jsonArray& args)
 {
 	args;
 

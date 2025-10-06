@@ -81,9 +81,9 @@ size_t Utf8CharLength(const std::string& what)
 	return ret;
 }
 
-void Table(std::vector<std::string> data, size_t stride)
+void Table(const std::vector< std::string>& data, size_t stride)
 {
-	size_t width[64] = { 0 };
+	size_t widths[64] = { 0 };
 	auto rows = data.size() / stride;
 	for (auto col = 0; col < stride; col++)
 	{
@@ -91,8 +91,8 @@ void Table(std::vector<std::string> data, size_t stride)
 		{
 			const auto& cel = data[row * stride + col];
 			auto here = Utf8CharLength(cel);
-			if (here > width[col])
-				width[col] = here;
+			if (here > widths[col])
+				widths[col] = here;
 		}
 	}
 
@@ -101,7 +101,7 @@ void Table(std::vector<std::string> data, size_t stride)
 	std::string bottom;
 	for (auto col = 0; col < stride; col++)
 	{
-		for (auto i = 0; i < width[col] + 2; i++)
+		for (auto i = 0; i < widths[col] + 2; i++)
 		{
 			top += u8"─";
 			middle += u8"─";
@@ -128,7 +128,7 @@ void Table(std::vector<std::string> data, size_t stride)
 #else
 			//More expensive, but handles Ismène.
 			auto celLen = Utf8CharLength(cel);
-			auto padding = width[col] - celLen;
+			auto padding = widths[col] - celLen;
 			line += fmt::format(u8"│ {}{:{}} ", cel, "", padding);
 #endif
 		}
@@ -173,7 +173,7 @@ void StringToUpper(std::string& data)
 
 void StripSpaces(std::string& data)
 {
-	while (data.find(' ') != -1)
+	while (data.find(' ') != std::string::npos)
 		data.erase(std::find(data.begin(), data.end(), ' '));
 }
 
@@ -307,7 +307,7 @@ std::string ResolvePath(const std::string& maybeRelative)
 {
 	if (maybeRelative.find("..") == std::string::npos)
 		return maybeRelative;
-	auto parts = Split((std::string&)maybeRelative, '/');
+	auto parts = Split(std::decay_t<std::string>(maybeRelative), '/');
 	for (int i = 0; i < parts.size(); i++)
 	{
 		if (parts[i] == "..")

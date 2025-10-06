@@ -148,7 +148,7 @@ void Shader::LoadAll()
 		auto vsFile = fmt::format("shaders/{}", vs.first);
 		for (auto& fs : vs.second.as_object())
 		{
-			auto& key = fs.first;
+			const auto& key = fs.first;
 			auto fsFile = fmt::format("shaders/{}", fs.second.as_string());
 			Shaders[key] = new Shader(vsFile, fsFile);
 		}

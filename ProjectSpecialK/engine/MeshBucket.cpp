@@ -1,4 +1,6 @@
 ﻿#include "Model.h"
+#include "Shader.h"
+#include "Texture.h"
 
 #ifndef BECKETT_NO3DMODELS
 

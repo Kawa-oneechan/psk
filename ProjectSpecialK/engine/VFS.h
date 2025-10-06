@@ -49,15 +49,15 @@ namespace VFS
 	extern jsonValue ReadSaveJSON(const std::string& archive, const std::string& path);
 	extern bool WriteSaveData(const std::string& archive, const std::string& path, char data[], size_t size);
 	extern bool WriteSaveString(const std::string& archive, const std::string& path, const std::string& data);
-	extern bool WriteSaveJSON(const std::string& archive, const std::string& path, jsonValue& data);
+	extern bool WriteSaveJSON(const std::string& archive, const std::string& path, const jsonValue& data);
 
 	extern std::unique_ptr<char[]> ReadSaveData(const std::string& path, size_t* size);
 	extern size_t ReadSaveData(void* ret, const std::string& path);
 	extern std::string ReadSaveString(const std::string& path);
 	extern jsonValue ReadSaveJSON(const std::string& path);
-	extern bool WriteSaveData(const std::string& path, void* data, size_t size);
+	extern bool WriteSaveData(const std::string& path, const void* data, size_t size);
 	extern bool WriteSaveString(const std::string& path, const std::string& data);
-	extern bool WriteSaveJSON(const std::string& path, jsonValue& data);
+	extern bool WriteSaveJSON(const std::string& path, const jsonValue& data);
 
 	extern void MakeSaveDir(const std::string& path);
 
@@ -65,6 +65,8 @@ namespace VFS
 	extern std::string GetPathPart(const std::string& path);
 	//Given "foo/bar/baz.txt", returns "baz.txt". Given "baz.txt", returns the empty string.
 	extern std::string GetFilePart(const std::string& path);
+	//Given "foo.txt", returns "txt".
+	extern std::string GetExtension(const std::string& path);
 	//Given "foo/bar/baz.txt" and "doc", returns "foo/bar/baz.doc".
 	extern std::string ChangeExtension(const std::string& path, const std::string& ext);
 	//Given "a/b/c", returns "a/b". Given "a", returns the empty string.

@@ -2,6 +2,7 @@
 #include <string>
 #include <sstream>
 #include <algorithm>
+#include <glm/gtc/matrix_transform.hpp>
 
 #include <format.h>
 #include <stb_truetype.h>
@@ -10,6 +11,9 @@
 #include "TextUtils.h"
 #include "Console.h"
 #include "Types.h"
+#include "Shader.h"
+#include "Texture.h"
+#include "VFS.h"
 
 extern int width, height;
 extern Texture* whiteRect;
@@ -288,7 +292,7 @@ namespace Sprite
 		if (!ttfData)
 			FatalError(fmt::format("Could not load font {}.", fonts[font].file));
 		auto ttfBitmap = new unsigned char[FontAtlasExtent * FontAtlasExtent];
-		stbtt_BakeFontBitmap((unsigned char*)ttfData.get(), 0, (float)fonts[font].size  * FontBaseScale, ttfBitmap, FontAtlasExtent, FontAtlasExtent, 256 * bank, 256, &cdata[(font * 0xFFFF) + (0x100 * bank)]);
+		stbtt_BakeFontBitmap(reinterpret_cast<unsigned char*>(ttfData.get()), 0, (float)fonts[font].size  * FontBaseScale, ttfBitmap, FontAtlasExtent, FontAtlasExtent, 256 * bank, 256, &cdata[(font * 0xFFFF) + (0x100 * bank)]);
 
 		unsigned int fontID;
 		glGenTextures(1, &fontID);
@@ -435,7 +439,7 @@ namespace Sprite
 			if (ch == '<' && !raw)
 			{
 				auto bjtsEnd = text.find_first_of('>', i);
-				if (bjtsEnd == -1) goto renderIt;
+				if (bjtsEnd == std::string::npos) goto renderIt;
 				auto bjtsStart = i;
 				i = bjtsEnd + 1;
 
@@ -479,7 +483,7 @@ namespace Sprite
 
 		//TODO: clip
 
-		for (auto& letter : toDraw)
+		for (const auto& letter : toDraw)
 		{
 			auto bank = letter.codepoint >> 8;
 			DrawSprite(fontShader, *fontTextures[(letter.font * 256) + bank], letter.position, letter.scale, letter.srcRect, letter.angle, letter.color);
@@ -541,7 +545,7 @@ namespace Sprite
 			if (ch == '<' && !raw)
 			{
 				auto bjtsEnd = text.find_first_of('>', i);
-				if (bjtsEnd == -1) goto measureIt;
+				if (bjtsEnd == std::string::npos) goto measureIt;
 				auto bjtsStart = i;
 				i = bjtsEnd + 1;
 

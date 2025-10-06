@@ -16,9 +16,9 @@ public:
 	size_t caret{ 0 };
 	float time{ 0 };
 
-	void Draw(float dt);
-	bool Character(unsigned int codepoint);
-	bool Scancode(unsigned int scancode);
+	void Draw(float dt) override;
+	bool Character(unsigned int codepoint) override;
+	bool Scancode(unsigned int scancode) override;
 	void Clear();
 	void Set(const std::string& to);
 };

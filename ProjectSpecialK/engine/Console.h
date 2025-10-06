@@ -47,7 +47,7 @@ struct CVar
 struct CCmd
 {
 	std::string name;
-	std::function<void(jsonArray& args)> act;
+	std::function<void(const jsonArray& args)> act;
 	std::string description;
 };
 
@@ -91,20 +91,20 @@ public:
 	void Flush();
 	//Internal use. Handles character input. Passes the buck to the
 	//internal TextField, then runs tab complete prediction.
-	bool Character(unsigned int codepoint);
+	bool Character(unsigned int codepoint) override;
 	//Internal use. Handles non-character input. Handles browsing the
 	//command history, execution, and tab completion.
-	bool Scancode(unsigned int scancode);
+	bool Scancode(unsigned int scancode) override;
 	//Opens the console with a little animation.
 	void Open();
 	//Closes the console with a little animation.
 	void Close();
-	bool Tick(float dt);
-	void Draw(float dt);
+	bool Tick(float dt) override;
+	void Draw(float dt) override;
 	//Registers a console variable, mapping it by name to an arbitrary variable in the game.
 	void RegisterCVar(const std::string& name, CVar::Type type, void* target, bool cheat = false, int min = -1, int max = -1);
 	//Registers a console command, mapping it by name to a void(jsonArray&) function.
-	void RegisterCCmd(const std::string& name, std::function<void(jsonArray& args)> act);
+	void RegisterCCmd(const std::string& name, std::function<void(const jsonArray& args)> act);
 
 	static bool CheckSplat(const std::string& pattern, const std::string& text);
 };

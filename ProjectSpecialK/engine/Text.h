@@ -48,7 +48,7 @@ namespace Text
 	//This deletes the original JSONValue afterwards - do NOT delete it yourself.
 	extern void Add(jsonValue& doc);
 	//Returns a localized string.
-	extern std::string Get(std::string key);
+	extern std::string Get(const std::string& key);
 	//Returns a localized date.
 	extern std::string DateMD(int month, int day);
 	//Returns the number of entries starting with the given key.

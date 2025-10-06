@@ -162,21 +162,22 @@ void Text::Add(jsonValue& doc)
 {
 	for (auto& entry : doc.as_object())
 	{
-		std::string& key = (std::string&)entry.first;
+		auto key = entry.first;
 		auto& map = entry.second;
 		Add(key, map);
 	}
 }
 
-std::string Text::Get(std::string key)
+std::string Text::Get(const std::string& key)
 {
-	for (const auto& entry : textEntries)
+	auto it = std::find_if(textEntries.cbegin(), textEntries.cend(), [key](const auto& e)
 	{
-		if (entry.first == key)
-		{
-			auto e = entry.second;
-			return e.get();
-		}
+		return e.first == key;
+	});
+	if (it != textEntries.cend())
+	{
+		auto e = it->second;
+		return e.get();
 	}
 	return std::string("???" + key + "???");
 }

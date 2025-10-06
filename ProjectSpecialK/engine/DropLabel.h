@@ -1,6 +1,6 @@
 #pragma once
+#include <string>
 #include <glm/glm.hpp>
-#include "Texture.h"
 
 class DropLabel
 {
@@ -13,7 +13,8 @@ public:
 private:
 	std::string text;
 	glm::vec2 size;
-	Texture canvas;
+	glm::vec4 color;
+	 Texture canvas;
 	float textSize;
 	int font;
 	Style style;
@@ -21,9 +22,10 @@ private:
 	void update();
 
 public:
-
-	DropLabel(const std::string& text, int font = 1, float size = 100.0f, Style style = Style::Blur);
+	DropLabel(const std::string& text, int font = 1, float size = 100.0f, glm::vec4 color = glm::vec4(-1), Style style = Style::Blur);
+	//Changes the text of the DropLabel, causing a refresh of the underlying texture.
 	void SetText(const std::string& text);
 	const glm::vec2 Size() const { return size; }
-	Texture& Texture() { return canvas; }
+	//Returns a reference to the underlying texture.
+	class Texture& Texture() { return canvas; }
 };

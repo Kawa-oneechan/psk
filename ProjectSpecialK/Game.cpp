@@ -209,7 +209,7 @@ void Game::PostDraw(float dt)
 	}
 }
 
-void Game::OnQuit ()
+void Game::OnQuit()
 {
 	thePlayer.Save();
 	town->Save();

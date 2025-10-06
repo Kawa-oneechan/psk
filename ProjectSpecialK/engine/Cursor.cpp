@@ -1,3 +1,4 @@
+#include <algorithm>
 #include "Cursor.h"
 #include "InputsMap.h"
 #include "VFS.h"
@@ -9,8 +10,11 @@ extern "C" { double glfwGetTime(void); }
 Cursor::Cursor()
 {
 	auto doc = VFS::ReadJSON("ui/cursors.json");
-	for (auto& hs : doc.as_object()["hotspots"].as_array())
-		hotspots.push_back(GetJSONVec2(hs));
+	auto spots = doc.as_object()["hotspots"].as_array();
+	std::for_each(spots.cbegin(), spots.cend(), [&](auto h)
+	{
+		hotspots.push_back(GetJSONVec2(h));
+	});
 
 	SetScale(1.0);
 	Select(0);

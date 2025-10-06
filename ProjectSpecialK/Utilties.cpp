@@ -1,11 +1,13 @@
 #include <ctime>
 #include <cctype>
+#include <glm/gtc/matrix_transform.hpp>
 #include "engine/Utilities.h"
 #include "engine/InputsMap.h"
 #include "engine/Tickable.h"
 #include "engine/JsonUtils.h"
 #include "engine/Console.h"
 #include "engine/Text.h"
+#include "engine/VFS.h"
 #include "Game.h"
 #include "Camera.h"
 

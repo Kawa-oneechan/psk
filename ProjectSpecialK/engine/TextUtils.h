@@ -13,7 +13,7 @@ extern void AppendChar(std::string& where, rune what);
 extern size_t Utf8CharLength(const std::string& what);
 
 //Renders a set of tabular data to the console in a nice lined table.
-extern void Table(std::vector<std::string> data, size_t stride);
+extern void Table(const std::vector<std::string>& data, size_t stride);
 
 //Given a piece of code (shader?) that may contain "#include" statements and a search path, inserts the included files, 
 extern void HandleIncludes(std::string& code, const std::string& path);

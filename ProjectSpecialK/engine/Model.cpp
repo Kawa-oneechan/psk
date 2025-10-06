@@ -1,9 +1,12 @@
-﻿#include <ufbx.h>
-#include <unordered_map>
+﻿#include <unordered_map>
 #include <functional>
+#include <algorithm>
+#include <ufbx.h>
 #include "Model.h"
 #include "Utilities.h"
 #include "Console.h"
+#include "Shader.h"
+#include "Texture.h"
 
 #ifndef BECKETT_NO3DMODELS
 
@@ -93,7 +96,7 @@ Model::Model(const std::string& modelPath) : file(modelPath)
 
 		for (unsigned int boneIndex = 0; boneIndex < BoneCt; boneIndex++)
 		{
-			auto& bone = *scene->bones.data[boneIndex];
+			const auto& bone = *scene->bones.data[boneIndex];
 			std::string boneName = bone.name.data;
 			nameToBoneIndex[boneName] = boneIndex;
 		}
@@ -119,7 +122,7 @@ Model::Model(const std::string& modelPath) : file(modelPath)
 					std::string clusterName = scene->skin_clusters.data[i]->name.data;
 					if (clusterName == b.Name)
 					{
-						auto& bone = scene->skin_clusters.data[i];
+						const auto& bone = scene->skin_clusters.data[i];
 						b.InverseBind = ufbxToGlmMat4(bone->geometry_to_bone);
 						break;
 					}
@@ -170,44 +173,44 @@ Model::Model(const std::string& modelPath) : file(modelPath)
 
 			if (node->mesh->materials.count > 0)
 			{
-				auto& m1 = node->mesh->materials[0]->name.data;
-				bool foundIt = false;
-				for (auto it : matMap.as_object())
+				const auto& m1 = node->mesh->materials[0]->name.data;
+				auto mmObj = matMap.as_object();
+				auto it = std::find_if(mmObj.cbegin(), mmObj.cend(), [m1](auto e)
 				{
-					if (it.first == m1)
+					return e.first == m1;
+				});
+				if (it != mmObj.cend())
+				{
+					auto mat = it->second.as_object();
+					if (mat["shader"])
 					{
-						auto mat = it.second.as_object();
-						if (mat["shader"])
-						{
-							auto s = mat["shader"].as_string();
-							m.Shader = Shaders[s];
-							/*
-							Secondary idea: look into custom properties in the FBX file
-							that may OVERRIDE the matmap file.
-							*/
-						}
-						if (mat["albedo"].is_string())
-							m.Textures[0] = new TextureArray(fmt::format("{}/{}", basePath, mat["albedo"].as_string()));
-						if (mat["normal"].is_string())
-							m.Textures[1] = new TextureArray(fmt::format("{}/{}", basePath, mat["normal"].as_string()));
-						if (mat["mix"].is_string())
-							m.Textures[2] = new TextureArray(fmt::format("{}/{}", basePath, mat["mix"].as_string()));
-						if (mat["opacity"].is_string())
-							m.Textures[3] = new TextureArray(fmt::format("{}/{}", basePath, mat["opacity"].as_string()));
-
-						if (mat["visible"].is_boolean())
-							m.Visible = mat["visible"].as_boolean();
-
-						if (mat["translucent"].is_boolean())
-							m.Translucent = mat["translucent"].as_boolean();
-						if (mat["opaque"].is_boolean())
-							m.Opaque = mat["opaque"].as_boolean();
-
-						foundIt = true;
-						break;
+						auto s = mat["shader"].as_string();
+						m.Shader = Shaders[s];
+						/*
+						Secondary idea: look into custom properties in the FBX file
+						that may OVERRIDE the matmap file.
+						*/
 					}
+					if (mat["albedo"].is_string())
+						m.Textures[0] = new TextureArray(fmt::format("{}/{}", basePath, mat["albedo"].as_string()));
+					if (mat["normal"].is_string())
+						m.Textures[1] = new TextureArray(fmt::format("{}/{}", basePath, mat["normal"].as_string()));
+					if (mat["mix"].is_string())
+						m.Textures[2] = new TextureArray(fmt::format("{}/{}", basePath, mat["mix"].as_string()));
+					if (mat["opacity"].is_string())
+						m.Textures[3] = new TextureArray(fmt::format("{}/{}", basePath, mat["opacity"].as_string()));
+
+					if (mat["visible"].is_boolean())
+						m.Visible = mat["visible"].as_boolean();
+
+					if (mat["translucent"].is_boolean())
+						m.Translucent = mat["translucent"].as_boolean();
+					if (mat["opaque"].is_boolean())
+						m.Opaque = mat["opaque"].as_boolean();
+					debprint(0, "* #{}: {} > {}", matCt, node->name.data, m1);
 				}
-				debprint(0, "* #{}: {} > {}{}", matCt, node->name.data, m1, foundIt ? "" : " (Unmapped)");
+				else
+					debprint(0, "* #{}: {} > {} (unmapped)", matCt, node->name.data, m1);
 				matCt++;
 			}
 			Meshes.emplace_back(m);
@@ -295,11 +298,12 @@ void Model::SetLayer(int index, int layer)
 Model::Mesh& Model::GetMesh(const std::string& name)
 {
 	auto hash = GetCRC(name);
-	for (auto& m : Meshes)
+	auto it = std::find_if(Meshes.cbegin(), Meshes.cend(), [hash](const auto& e)
 	{
-		if (m.Hash == hash || m.MatHash == hash)
-			return m;
-	}
+		return e.Hash == hash || e.MatHash == hash;
+	});
+	if (it != Meshes.cend())
+		return (Mesh&)(*it);
 	throw std::runtime_error(fmt::format("Model::GetMesh(): could not find a mesh with name \"{}\" in \"{}\".", name, file));
 }
 
@@ -312,11 +316,12 @@ Model::Mesh& Model::GetMesh(int index)
 
 int Model::FindBone(const std::string& name)
 {
-	for (auto i = 0; i < BoneCt; i++)
+	auto it = std::find_if(Bones.cbegin(), Bones.cend(), [name](const auto& e)
 	{
-		if (Bones[i].Name == name)
-			return i;
-	}
+		return e.Name == name;
+	});
+	if (it != Bones.cend())
+		return (int)(it - Bones.cbegin());
 	return NoBone;
 }
 
@@ -373,17 +378,20 @@ void Model::CopyBoneTransforms(ModelP target)
 		auto& m = map->second;
 		m.fill(NoBone);
 		auto& tb = target->Bones;
+
 		for (int i = 0; i < this->BoneCt; i++)
 		{
 			auto name = this->Bones[i].Name;
-			for (int j = 0; j < target->BoneCt; j++)
+			auto end = tb.cbegin() + target->BoneCt;
+			auto it = std::find_if(tb.cbegin(), end, [name](const auto& e)
 			{
-				if (tb[j].Name == name)
-				{
-					debprint(1, "* {} {} --> {} {}", i, name, j, tb[j].Name);
-					m[i] = j;
-					break;
-				}
+				return e.Name == name;
+			});
+			if (it != end)
+			{
+				auto j = (int)(it - tb.cbegin());
+				debprint(1, "* {} {} --> {} {}", i, name, j, tb[j].Name);
+				m[i] = j;
 			}
 		}
 	}
