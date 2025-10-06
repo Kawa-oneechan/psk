@@ -202,6 +202,8 @@ namespace UI
 
 		Game::SaveSettings(set);
 
+		settings.as_object() = set;
+
 		try
 		{
 			VFS::WriteSaveJSON("options.json", settings);

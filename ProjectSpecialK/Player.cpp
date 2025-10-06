@@ -312,19 +312,20 @@ void Player::Load()
 void Player::Serialize(jsonValue& target)
 {
 	target = json5pp::object({});
+	auto tgt = target.as_object();
+	
+	tgt["name"] = Name;
+	tgt["id"] = ID;
+	tgt["bells"] = (int)Bells;
 
-	target.as_object()["name"] = Name;
-	target.as_object()["id"] = ID;
-	target.as_object()["bells"] = (int)Bells;
-
-	target.as_object()["colors"] = json5pp::object({
+	tgt["colors"] = json5pp::object({
 		{ "skin", GetJSONVec(glm::vec3(SkinTone)) },
 		{ "eyes", GetJSONVec(glm::vec3(EyeColor)) },
 		{ "cheek", GetJSONVec(glm::vec3(CheekColor)) },
 		{ "hair", GetJSONVec(glm::vec3(HairColor))},
 	});
 
-	target.as_object()["style"] = json5pp::object({
+	tgt["style"] = json5pp::object({
 		{ "gender", (Gender == Gender::Boy || Gender == Gender::BEnby) ? "boy" : "girl" },
 		{ "eyes", eyeStyle },
 		{ "mouth", mouthStyle},
@@ -341,14 +342,14 @@ void Player::Serialize(jsonValue& target)
 		else
 			items.as_array().push_back(i->FullID());
 	}
-	target.as_object()["items"] = std::move(items);
+	tgt["items"] = std::move(items);
 
 	auto storage = json5pp::array({});
 	for (const auto& i : Storage)
 	{
 		storage.as_array().emplace_back(i->FullID());
 	}
-	target.as_object()["storage"] = std::move(storage);
+	tgt["storage"] = std::move(storage);
 
 	auto outfit = json5pp::object({});
 	{
@@ -359,7 +360,9 @@ void Player::Serialize(jsonValue& target)
 			i++;
 		}
 	}
-	target.as_object()["outfit"] = std::move(outfit);
+	tgt["outfit"] = std::move(outfit);
+
+	target.as_object() = tgt;
 }
 
 void Player::Deserialize(jsonValue& source)
