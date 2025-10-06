@@ -107,6 +107,9 @@ public:
 	void RegisterCCmd(const std::string& name, std::function<void(const jsonArray& args)> act);
 
 	static bool CheckSplat(const std::string& pattern, const std::string& text);
+
+	Console(const Console &x) = delete;
+	Console &operator=(const Console &x) = delete;
 };
 
 extern Console* console;

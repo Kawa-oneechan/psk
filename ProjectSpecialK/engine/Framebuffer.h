@@ -45,4 +45,7 @@ public:
 	void SetLut(Texture* newLut);
 	//Returns a pointer to the current color lookup table.
 	Texture* GetLut();
+
+	Framebuffer(const Framebuffer &x) = delete;
+	Framebuffer &operator=(const Framebuffer &x) = delete;
 };

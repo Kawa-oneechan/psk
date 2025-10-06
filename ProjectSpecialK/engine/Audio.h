@@ -66,7 +66,7 @@ public:
 	//Depending on the path, its type is set to be music, ambient noise, speeeh,
 	//or a general sound. No matter the type, if it's an Ogg Vorbis file it's
 	//allowed to loop using the `LOOP_START` tag, specified in samples.
-	Audio(const std::string& filename);
+	explicit Audio(const std::string& filename);
 	~Audio();
 	//Plays the sound. If it's already playing, it won't restart or anything
 	//*unless* `force` is true.
