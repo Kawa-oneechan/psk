@@ -4,10 +4,8 @@
 #include "Background.h"
 #include "Game.h"
 
-Background::Background(const std::string& file, glm::vec2 speed)
+Background::Background(const std::string& file, glm::vec2 speed) : wallpaper(std::make_unique<Texture>(file)), Speed(speed)
 {
-	wallpaper = std::make_unique<Texture>(file);
-	Speed = speed;
 }
 
 void Background::Draw(float dt)

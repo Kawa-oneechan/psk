@@ -76,7 +76,7 @@ public:
 	std::shared_ptr<sol::coroutine> currentCoro;
 	sol::state myState;
 	ScriptRunner(const std::string& entryPoint, const std::string& script, bool* mutex);
-	~ScriptRunner();
+	~ScriptRunner() override;
 	bool Runnable() const { return currentCoro->runnable(); }
 	void Call() { currentCoro->call(); }
 	sol::call_status Status() { return currentCoro->status(); }
@@ -146,8 +146,8 @@ public:
 	std::string Nickname();
 	std::string Nickname(const std::string& newNickname);
 
-	void Draw(float dt);
-	bool Tick(float dt);
+	void Draw(float dt) override;
+	bool Tick(float dt) override;
 
 	void Manifest();
 	void Depart();

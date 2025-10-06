@@ -31,7 +31,7 @@ void DoomMenuItem::Translate()
 	if (type == Type::Options)
 	{
 		options.clear();
-		for (auto& i : optionKeys)
+		for (const auto& i : optionKeys)
 			options.emplace_back(Text::Get(i));
 	}
 	if (type == Type::Page && page != nullptr)
@@ -162,7 +162,7 @@ bool DoomMenu::Tick(float dt)
 					{
 						if (state.buttons[i])
 						{
-							auto item = items->items[remapping];
+							const auto item = items->items[remapping];
 							Inputs.Keys[item->selection].GamepadButton = i;
 							//Inputs.Clear((Binds)item->selection);
 							Inputs.Clear();

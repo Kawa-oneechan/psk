@@ -14,5 +14,5 @@ public:
 	float Scale{ 1.0f };
 
 	NineSlicer(const std::string& texture, int left, int top, int width, int height);
-	void Draw(float dt);
+	void Draw(float dt) override;
 };

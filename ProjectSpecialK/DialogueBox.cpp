@@ -381,7 +381,7 @@ bool DialogueBox::Tick(float dt)
 		if (ch == '<')
 		{
 			auto bjtsEnd = toDisplay.find_first_of('>', displayCursor);
-			if (bjtsEnd == -1) goto displayIt;
+			if (bjtsEnd == std::string::npos) goto displayIt;
 			auto bjtsStart = displayCursor;
 			displayCursor = bjtsEnd + 1;
 

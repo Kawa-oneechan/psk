@@ -79,8 +79,8 @@ public:
 	void Text(const std::string& text, int style);
 	void Text(const std::string& text, VillagerP speaker);
 	void Style(int style);
-	void Draw(float dt);
-	bool Tick(float dt);
+	void Draw(float dt) override;
+	bool Tick(float dt) override;
 
 	VillagerP Speaker() { return speaker; }
 };

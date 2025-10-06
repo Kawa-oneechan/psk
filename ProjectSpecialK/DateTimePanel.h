@@ -13,8 +13,8 @@ private:
 public:
 	DateTimePanel();
 	void Update();
-	bool Tick(float dt);
-	void Draw(float dt);
+	bool Tick(float dt) override;
+	void Draw(float dt) override;
 	void Show();
 	void Hide();
 };

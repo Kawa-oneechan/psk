@@ -18,15 +18,13 @@ extern TextureArray* groundTextureNrms;
 extern TextureArray* groundTextureMixs;
 extern TextureArray* grassColors;
 
-Town::Town()
+Town::Town() : grassColorMap ("grasscolors.png"), grassTexture("design0_mix.png")
 {
 	Music = "clock";
 	CanOverrideMusic = true;
 	AllowRedeco = true;
 	AllowTools = true;
 
-	grassColorMap = "grasscolors.png";
-	grassTexture = "design0_mix.png";
 	if (Random::GetFloat() > 0.75f)
 		grassTexture = "squares_mix.png";
 	grassCanSnow = true;
@@ -373,11 +371,11 @@ void Town::Draw(float dt)
 	if (groundTextureAlbs == nullptr)
 	{
 		std::vector<std::string> groundAlbs, groundNrms, groundMixs;
-		for (auto& d : VFS::Enumerate("field/ground/design*_alb.png"))
+		for (const auto& d : VFS::Enumerate("field/ground/design*_alb.png"))
 			groundAlbs.push_back(d.path);
-		for (auto& d : VFS::Enumerate("field/ground/design*_nrm.png"))
+		for (const auto& d : VFS::Enumerate("field/ground/design*_nrm.png"))
 			groundNrms.push_back(d.path);
-		for (auto& d : VFS::Enumerate("field/ground/design*_mix.png"))
+		for (const auto& d : VFS::Enumerate("field/ground/design*_mix.png"))
 			groundMixs.push_back(d.path);
 		//also add user designs somehow.
 

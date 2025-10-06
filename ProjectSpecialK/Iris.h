@@ -15,8 +15,8 @@ private:
 
 public:
 	Iris();
-	bool Tick(float dt);
-	void Draw(float dt);
+	bool Tick(float dt) override;
+	void Draw(float dt) override;
 	void In();
 	void Out();
 	bool Done();

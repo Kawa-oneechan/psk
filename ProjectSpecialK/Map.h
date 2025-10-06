@@ -124,8 +124,8 @@ public:
 	//Returns the height of the lowest point at the given tile coordinate.
 	float GetHeight(int x, int y);
 
-	void Draw(float);
-	bool Tick(float);
+	void Draw(float) override;
+	bool Tick(float) override;
 
 	void SaveObjects(jsonValue& json);
 	void LoadObjects(jsonValue& json);

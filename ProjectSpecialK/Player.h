@@ -41,8 +41,8 @@ public:
 	ModelP Model();
 	std::string Birthday();
 	
-	void Draw(float dt);
-	bool Tick(float dt);
+	void Draw(float dt) override;
+	bool Tick(float dt) override;
 
 	//Returns true if the player has room in their inventory according to their current limit.
 	bool HasInventoryRoom();

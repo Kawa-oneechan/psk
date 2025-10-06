@@ -106,7 +106,7 @@ PanelLayout::PanelLayout(jsonValue& source)
 			{
 				if (pos[i].is_string())
 				{
-					auto& str = pos[i].as_string();
+					const auto& str = pos[i].as_string();
 					if (str == "middle")
 					{
 						if (i == 0)
@@ -179,7 +179,7 @@ PanelLayout::PanelLayout(jsonValue& source)
 				newBit.Function = glm::linearInterpolation<float>;
 				if (bitObj["easing"])
 				{
-					auto& easing = bitObj["easing"].as_string();
+					const auto& easing = bitObj["easing"].as_string();
 					if (easing == "bounceOut") newBit.Function = glm::bounceEaseOut<float>;
 				}
 
@@ -219,7 +219,7 @@ bool PanelLayout::Tick(float dt)
 		animationTime += dt * 1.0f;
 		auto anim = animations[currentAnimation];
 		auto endTime = 0.0f;
-		for (auto& bit : anim.Bits)
+		for (const auto& bit : anim.Bits)
 		{
 			if (bit.ToTime > endTime)
 				endTime = bit.ToTime;
@@ -297,7 +297,7 @@ bool PanelLayout::Tick(float dt)
 		auto parentID = panel->Parent;
 		while (parentID != -1)
 		{
-			auto& parent = panels[parentID];
+			const auto& parent = panels[parentID];
 			parentPos += parent->Position;
 			parentID = parent->Parent;
 		}
@@ -351,7 +351,7 @@ void PanelLayout::Draw(float dt)
 		auto parentID = panel->Parent;
 		while (parentID != -1)
 		{
-			auto& parent = panels[parentID];
+			const auto& parent = panels[parentID];
 			parentPos += parent->Position;
 			parentID = parent->Parent;
 		}
@@ -445,7 +445,7 @@ void PanelLayout::Play(const std::string& anim)
 		conprint(2, "Tried to play animation {} on a PanelLayout without animations.", anim);
 		return;
 	}
-	for (auto& a : animations)
+	for (const auto& a : animations)
 	{
 		if (a.first == anim)
 		{

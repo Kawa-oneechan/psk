@@ -44,7 +44,3 @@ bool InGame::Tick(float dt)
 	return true;
 }
 
-void InGame::Draw(float dt)
-{
-	Tickable::Draw(dt);
-}

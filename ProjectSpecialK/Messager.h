@@ -15,11 +15,11 @@ public:
 
 	Messager();
 	Message* Add(const std::string& text, bool persist = false);
-	bool Tick(float dt);
-	void Draw(float dt);
+	bool Tick(float dt) override;
+	void Draw(float dt) override;
 
 private:
-	std::array<Message, 8> messages;
+	std::array<Message, 8> messages {};
 	int cursor;
 };
 

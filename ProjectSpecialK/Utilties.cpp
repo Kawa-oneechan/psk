@@ -208,12 +208,10 @@ std::string GetKeyName(int scancode)
 bool IsID(const std::string& id)
 {
 	//valid IDs may only contain alphanumerics, :, and _.
-	for (auto& c : id)
+	return std::all_of(id.cbegin(), id.cend(), [&](const auto& c)
 	{
-		if (!(std::isalnum(c) || c == ':' || c == '_'))
-			return false;
-	}
-	return true;
+		return std::isalnum(c) || c == ':' || c == '_';
+	});
 }
 
 bool IDIsQualified(const std::string& id)

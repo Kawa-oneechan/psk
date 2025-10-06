@@ -15,5 +15,5 @@ protected:
 
 public:
 	OptionsMenu();
-	bool Scancode(unsigned int scancode);
+	bool Scancode(unsigned int scancode) override;
 };

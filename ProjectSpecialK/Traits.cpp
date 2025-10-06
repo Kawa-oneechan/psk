@@ -20,7 +20,6 @@ Personality::Personality(jsonObject& value, const std::string& filename) : Namea
 	*/
 }
 
-Hobby::Hobby(jsonObject& value, const std::string&)
+Hobby::Hobby(jsonObject& value, const std::string&) : ID(value["id"].as_string())
 {
-	ID = value["id"].as_string();
 }

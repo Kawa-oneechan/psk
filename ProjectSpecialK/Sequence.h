@@ -11,8 +11,8 @@ private:
 
 public:
 	Sequence(std::initializer_list<TickableP> tickables);
-	bool Tick(float dt);
-	void Draw(float dt);
+	bool Tick(float dt) override;
+	void Draw(float dt) override;
 };
 
 class FuncAsTickable : public Tickable
@@ -22,5 +22,5 @@ private:
 
 public:
 	FuncAsTickable(std::function<void()> function) : wrapped(function) {}
-	bool Tick(float dt);
+	bool Tick(float dt) override;
 };

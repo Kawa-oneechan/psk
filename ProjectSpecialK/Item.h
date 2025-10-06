@@ -136,9 +136,9 @@ class InventoryItem : public NameableThing
 {
 private:
 	ItemP _wrapped;
-	int _data;
-	int _wear;
-	int _packaging;
+	int _data{ 0 };
+	int _wear{ 0 };
+	int _packaging{ 0 };
 
 public:
 	InventoryItem(ItemP wrapped, int variant, int pattern);
@@ -160,8 +160,8 @@ public:
 	bool IsClothing() const;
 
 	std::string Icon() const;
-	std::string Style() const;
-	std::string PlayerModel() const;
+	std::string& Style() const;
+	std::string& PlayerModel() const;
 	int Data() const;
 	void Data(int data);
 	int Variant() const;

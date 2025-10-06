@@ -418,7 +418,7 @@ static void DoArmature()
 					}
 					json += fmt::format("\t\"{}\": {{ \"rot\": [ {}, {}, {} ] }},\n", bone.Name, rot.x, rot.y, rot.z);
 				}
-				json = json.substr(0, json.length() - 2); //remove trailing ",\n"
+				json.resize(json.length() - 2); //remove trailing ",\n"
 				json += "\n}\n";
 				ImGui::SetClipboardText(json.c_str());
 			}

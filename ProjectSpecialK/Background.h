@@ -12,7 +12,7 @@ private:
 public:
 	Background(const std::string& file, glm::vec2 speed = { 0.1f, -0.1f });
 
-	void Draw(float dt);
+	void Draw(float dt) override;
 
 	glm::vec2 Speed{ 0.1f, -0.1f };
 	glm::vec4 RecolorBlack{ 0.0f };

@@ -22,6 +22,5 @@ private:
 public:
 	InGame();
 
-	bool Tick(float dt);
-	void Draw(float dt);
+	bool Tick(float dt) override;
 };

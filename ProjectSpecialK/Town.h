@@ -50,7 +50,7 @@ public:
 	int GetFlag(const std::string& id, int def = 0);
 	bool GetFlag(const std::string& id, bool def = false);
 
-	void Draw(float dt);
+	void Draw(float dt) override;
 };
 
 extern std::shared_ptr<Town> town;

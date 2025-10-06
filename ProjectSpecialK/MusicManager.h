@@ -23,8 +23,8 @@ public:
 	std::string Override;
 
 	MusicManager();
-	bool Tick(float dt);
-	void Draw(float dt);
+	bool Tick(float dt) override;
+	void Draw(float dt) override;
 	void Play(const std::string& id, bool immediate = false);
 	void FadeOut();
 

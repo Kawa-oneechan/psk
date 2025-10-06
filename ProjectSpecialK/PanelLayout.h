@@ -85,8 +85,8 @@ private:
 	std::vector<Shader*> shaders;
 	std::vector<polygon> polygons;
 
-	bool hasAnimations;
-	float animationTime;
+	bool hasAnimations{ false };
+	float animationTime{ 0.0f };
 	std::string currentAnimation;
 	std::map<std::string, Animation> animations;
 
@@ -98,13 +98,13 @@ public:
 	enum class CornerOrigin
 	{
 		TopLeft, TopRight, BottomLeft, BottomRight
-	} Origin;
-	float Alpha;
+	} Origin = CornerOrigin::TopLeft;
+	float Alpha{ 1.0f };
 
 	PanelLayout() = default;
 	PanelLayout(jsonValue& source);
-	bool Tick(float dt);
-	void Draw(float dt);
+	bool Tick(float dt) override;
+	void Draw(float dt) override;
 	Panel* GetPanel(const std::string& id);
 	Tween<float>* Tween(float* target, float from, float to, float speed = 0.001f, std::function<float(float)> interpolator = glm::linearInterpolation<float>);
 	void Play(const std::string& anim);

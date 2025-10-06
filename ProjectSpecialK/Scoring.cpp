@@ -35,7 +35,7 @@ int GetLetterScore(const std::string& text, bool noCapitals)
 	rune ch;
 	size_t size;
 
-	auto find = [&](std::string haystack, rune pct, size_t pos)
+	auto find = [&](const std::string& haystack, rune pct, size_t pos)
 	{
 		rune ch2;
 		size_t size2;

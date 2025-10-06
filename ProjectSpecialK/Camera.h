@@ -20,7 +20,7 @@ protected:
 public:
 	Camera(const Camera& c) = default;
 	Camera(glm::vec3 target = glm::vec3(0), glm::vec3 angles = glm::vec3(0), float distance = 10);
-	virtual ~Camera();
+	virtual ~Camera() override;
 
 	glm::vec3 Position() const;
 	inline const glm::vec3& Target() const { return _target; }
@@ -49,8 +49,8 @@ public:
 	
 	void Target(glm::vec3* target);
 
-	bool Tick(float dt);
-	void Draw(float dt);
+	bool Tick(float dt) override;
+	void Draw(float dt) override;
 };
 
 extern std::shared_ptr<Camera> MainCamera;

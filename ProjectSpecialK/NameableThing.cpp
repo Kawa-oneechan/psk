@@ -8,9 +8,8 @@
 //TODO: hack, clean this up
 int articlePlease;
 
-NameableThing::NameableThing(jsonObject& value, const std::string& filename)
+NameableThing::NameableThing(jsonObject& value, const std::string& filename) : ID(value["id"].as_string())
 {
-	ID = value["id"].as_string();
 	Hash = GetCRC(ID);
 
 	auto ref = fmt::format("name:{}", ID);

@@ -28,8 +28,8 @@ private:
 
 public:
 	TitleScreen();
-	~TitleScreen();
+	~TitleScreen() override;
 
-	bool Tick(float dt);
-	void Draw(float dt);
+	bool Tick(float dt) override;
+	void Draw(float dt) override;
 };

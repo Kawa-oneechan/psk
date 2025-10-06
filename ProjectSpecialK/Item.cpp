@@ -141,9 +141,8 @@ void Item::DrawFieldModel(const glm::vec3& position, float facing)
 	fieldModel->Draw(position, facing);
 }
 
-InventoryItem::InventoryItem(ItemP wrapped, int data)
+InventoryItem::InventoryItem(ItemP wrapped, int data) : _wrapped(wrapped)
 {
-	_wrapped = wrapped;
 	_data = data;
 	_wear = 0;
 	_packaging = 0;
@@ -242,9 +241,8 @@ InventoryItem::InventoryItem(const std::string& reference)
 	Temporary = false;
 }
 
-InventoryItem::InventoryItem(hash hash)
+InventoryItem::InventoryItem(hash hash) : _wrapped(Database::Find<::Item>(hash, items))
 {
-	_wrapped = Database::Find<::Item>(hash, items);
 	if (!_wrapped)
 		_wrapped = Database::Find<::Item>("psk:thingfallback", items);
 	ID = _wrapped->ID;
@@ -337,12 +335,12 @@ std::string InventoryItem::Icon() const
 	return _wrapped->Icon;
 }
 
-std::string InventoryItem::Style() const
+std::string& InventoryItem::Style() const
 {
 	return _wrapped->Style;
 }
 
-std::string InventoryItem::PlayerModel() const
+std::string& InventoryItem::PlayerModel() const
 {
 	return _wrapped->PlayerModel;
 }

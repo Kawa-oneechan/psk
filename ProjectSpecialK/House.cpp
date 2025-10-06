@@ -44,6 +44,7 @@ bool VillagerHouse::Room::Tick(float dt)
 void VillagerHouse::SaveObjects(jsonValue& json)
 {
 	//Adapted from Town
+	//TODO: correct format
 	auto objects = json5pp::array({});
 	for (int r = 0; r < Rooms.size(); r++)
 	{
@@ -76,12 +77,17 @@ void VillagerHouse::SaveObjects(jsonValue& json)
 	json.as_object()["objects"] = std::move(objects);
 }
 
-void VillagerHouse::LoadObjects(jsonValue& json)
+void VillagerHouse::LoadObjects(jsonValue& json, int roomNum)
 {
 	//Adapted from Town
 	if (Rooms.empty())
 	{
 		conprint(4, "VillagerHouse::LoadObjects: must have Rooms to load to first.");
+		return;
+	}
+	if (roomNum >= Rooms.size())
+	{
+		conprint(4, "VillagerHouse::LoadObjects: tried to load out-of-range room objects.");
 		return;
 	}
 
@@ -91,7 +97,6 @@ void VillagerHouse::LoadObjects(jsonValue& json)
 	for (auto& _i : objects)
 	{
 		auto i = _i.as_object();
-		auto roomNum = i["room"].as_integer();
 		MapItem item;
 		item.Item = std::make_shared<InventoryItem>(i["id"].as_string());
 		item.Position = GetJSONVec2(i["position"]) * 10.0f;
@@ -108,12 +113,6 @@ void VillagerHouse::LoadObjects(jsonValue& json)
 			item.Fixed = i["fixed"].is_boolean() ? i["fixed"].as_boolean() : false;
 			item.Layer = (ItemLayer)(i["layer"].is_integer() ? i["layer"].as_integer() : 0);
 			item.Rotation = i["facing"].is_integer() ? i["facing"].as_integer() : 0;
-		}
-
-		if (roomNum >= Rooms.size())
-		{
-			conprint(4, "Item \"{}\" in room {} is out of range.", item.Item->FullID(), roomNum);
-			continue;
 		}
 		Rooms[roomNum].Objects.push_back(item);
 	}
@@ -153,14 +152,16 @@ void VillagerHouse::Load()
 		{
 			auto ownerFile = VFS::Enumerate(fmt::format("{}/*.json", owner->Path))[0];
 			auto temp = VFS::ReadJSON(ownerFile);
-			ownerJson = json5pp::array({ temp });
+			auto houseData = temp.as_object()["house"];
+			ownerJson = houseData.as_object()["rooms"];
 		}
 	}
 
 	for (auto& room : ownerJson.as_array())
 	{
-		Rooms.emplace_back(this, Rooms.size());
-		LoadObjects(room);
+		int roomNum = (int)Rooms.size();
+		Rooms.emplace_back(this, roomNum);
+		LoadObjects(room, roomNum);
 	}
 }
 

@@ -49,7 +49,7 @@ void DateTimePanel::Update()
 	{
 		lastHour = gm.tm_hour;
 		//TODO: check for specific maps and events
-		auto& thisMap = town;
+		const auto& thisMap = town;
 		if (!thisMap->CanOverrideMusic || musicManager->Override.empty())
 			musicManager->Play(thisMap->Music);
 		else
