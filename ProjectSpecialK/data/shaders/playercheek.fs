@@ -13,6 +13,7 @@ layout(binding=3) uniform sampler2DArray opacityTexture;
 
 uniform vec3 viewPos;
 uniform int layer;
+uniform mat4 model;
 
 #include "common.fs"
 #include "lighting.fs"
@@ -38,15 +39,11 @@ void main()
 
 	vec3 viewDir = normalize(viewPos - FragPos);
 
-	vec3 camPos = (InvView * vec4(0.0, 0.0, 0.0, 0.1)).xyz;
-	vec3 fresPos = normalize(camPos - WorldPos);
-	vec3 fresnel = 1.0 - fresnelSchlick(max(dot(norm, fresPos), 0.0), vec3(0.96));
-	fresnel = clamp(fresnelVal * fresnel, 0.0, 1.0);
-	//fresnel = 0.0;
+	float fresnel = getFresnel(model, norm);
 
 	vec3 result;
 	for (int i = 0; i < NUMLIGHTS; i++)
-		result += getLight(Lights[i], albedoVal.rgb, norm, viewDir, specularVal) + fresnel;
+		result += getLight(Lights[i], albedoVal.rgb, norm, viewDir, specularVal) + (fresnelVal * fresnel);
 	fragColor = vec4(result, opacityVal);
 
 	if(fragColor.a < OPACITY_CUTOFF) discard;

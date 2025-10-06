@@ -1,0 +1,52 @@
+{
+	"id": "psk:wrench",
+	"name": {
+		"en": "<info::a :the >wrench",
+		"ja": "レンチ",
+		"ko": "렌치",
+		"zh": "扳手",
+		"de": "<info:eine :eine :der >Schraubenschlüssel",
+		"es": "<info:una :una :la >llava",
+		"fr": "<info:une :une :la >clé",
+		"it": "<info:uno :una :la >chiave",
+		"nl": "<info:de :een :de >moersleutel"
+	},
+	"label": "ToolWrench",
+	"type": "tool",
+	"category": "tool",
+	"kind": "wrench",
+	"stack": 0,
+	"canHave": true,
+	"canBury": true,
+	"canEat": false,
+	"canPlace": true,
+	"canPlant": false,
+	"canDrop": true,
+	"canGive": true,
+	"canSell": true,
+	"canDropOff": true,
+	"canStore": true,
+	"canTrash": true,
+	"canGiveBDay": true,
+	"canGiftwrap": true,
+	"canWallFloor": false,
+	"canUseInStudio": true,
+	"canUseInParadise": true,
+	"inCloset": false,
+	"price": 2400,
+	"icon": "wrench",
+	"remake": {
+		"kits": 1,
+		"bodies": [
+			"red",
+			"yellow",
+			"green",
+			"blue",
+			"purple",
+			"pink",
+			"white",
+			"black"
+		]
+	},
+	"breakDamage": 100
+}
