@@ -29,15 +29,8 @@ void main()
 		mixVal.g = mixVal.b = 0;
 
 	float specularVal = mixVal.b;
+	const float fresnelVal = 0.0;
 
-	vec3 norm = Toon ? normalize(Normal) : calcNormal(normalVal);
-	vec3 viewDir = normalize(viewPos - FragPos);
 	vec3 albedoVal = texture(colorMapTexture, vec3(mixVal.a, GrassColor, 0)).rgb;
 
-	vec3 result;
-	for (int i = 0; i < NUMLIGHTS; i++)
-		result += getLight(Lights[i], albedoVal, norm, viewDir, mixVal.b);
-	fragColor = vec4(result, opacityVal);
-
-	if(fragColor.a < OPACITY_CUTOFF) discard;
-}
+#include "model_generic_bottom.fs"
