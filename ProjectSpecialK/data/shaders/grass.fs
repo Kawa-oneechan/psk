@@ -2,13 +2,15 @@ in vec2 TexCoord;
 in vec3 Normal;
 in vec3 Tangent;
 in vec3 FragPos;
+in vec3 WorldPos;
 
 out vec4 fragColor;
 
 layout(binding=0) uniform sampler2DArray albedoTexture;
 layout(binding=1) uniform sampler2DArray normalTexture;
 layout(binding=2) uniform sampler2DArray mixTexture;
-layout(binding=3) uniform sampler2DArray opacityTexture; //will be color if layer == 0
+layout(binding=3) uniform sampler2DArray opacityTexture;
+#define colorMapTexture opacityTexture //if layer = 0
 
 uniform vec3 viewPos;
 uniform int layer;
@@ -42,21 +44,21 @@ void main()
 	if (layer == 0)
 	{
 		//Special grass mode. Opacity will contain color map.
-		albedoVal.rgb = texture(opacityTexture, vec3(mixVal.a, GrassColor, 0)).rgb;
+		albedoVal.rgb = texture(colorMapTexture, vec3(mixVal.a, GrassColor, 0)).rgb;
 	}
 
 	if (mixVal.r == mixVal.g && mixVal.g == mixVal.b)
-	{
 		mixVal.g = mixVal.b = 0;
-	}
+
+	float specularVal = mixVal.b;
 
 	vec3 norm = Toon ? normalize(Normal) : calcNormal(normalVal);
-
 	vec3 viewDir = normalize(viewPos - FragPos);
+	float fresnel = getFresnel(model, norm);
 
 	vec3 result;
 	for (int i = 0; i < NUMLIGHTS; i++)
-		result += getLight(Lights[i], albedoVal.rgb, norm, viewDir, mixVal.b);
+		result += getLight(Lights[i], albedoVal.rgb, norm, viewDir, specularVal);
 	fragColor = vec4(result, 1.0);
 
 	//if(fragColor.a < OPACITY_CUTOFF) discard;
