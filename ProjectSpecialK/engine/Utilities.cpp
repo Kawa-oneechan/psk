@@ -107,7 +107,7 @@ hash GetCRC(const std::string& text)
 	return crc ^ 0xFFFFFFFFL;
 }
 
-hash GetCRC(unsigned char *buffer, int len)
+hash GetCRC(unsigned char *buffer, int len) // cppcheck-suppress constParameterPointer
 {
 	unsigned int crc = 0xFFFFFFFFL;
 

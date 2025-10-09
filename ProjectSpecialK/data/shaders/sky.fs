@@ -55,11 +55,8 @@ float clouds(vec2 uv)
 	uv += TotalTime * 0.045;
 	ret += texture(cloudImage, uv * 1.7).a * 0.35;
 
-	//TODO: smoothly fade out in the distance
-	//if (uvy < p + 0.10)
-		//ret *= uvy + p;
-	if (uvy < p)
-		ret = 0.0;
+    float fade = smoothstep(p, p + 0.5, uvy);
+    ret *= fade;
 
 	return ret;
 }
@@ -68,6 +65,7 @@ float clouds(vec2 uv)
 void main()
 {
 	vec2 uv = gl_FragCoord.xy / ScreenRes.xy;
+	float pit = pitch / 90.0;
 
 	vec3 sky = texture(skyImage, vec2(TimeOfDay, uv.y - 0.01)).rgb;
 	fragColor = vec4(sky, 1.0);
@@ -77,6 +75,6 @@ void main()
 	fragColor = mix(texture(starsImage, uv), fragColor, blend);
 	fragColor = mix(fragColor, vec4(1), clouds(uv * 1.25) * (blend * 0.75));
 
-	if (uv.y < 0.02)
-		fragColor.rgb = vec3(blend);
+	if (uv.y < pit)
+        fragColor = vec4(0.0, 0.0, 0.0, 1.0);
 }

@@ -355,7 +355,7 @@ namespace VFS
 
 		debprint(0, "Post-sort:");
 		table = std::vector<std::string>{ "ID", "Name", "Author", "Priority" };
-		for (const auto& source : sources)
+		for (const auto& source : sources) // cppcheck-suppress knownEmptyContainer
 		{
 			table.push_back(source.id);
 			table.push_back(source.friendlyName);
@@ -732,7 +732,7 @@ namespace VFS
 		if (path.empty()) return path;
 		if (path.find('/') != std::string::npos)
 			return path.substr(path.find_last_of('/') + 1);
-		return "";
+		return path;
 	}
 	
 	std::string GetExtension(const std::string& path)

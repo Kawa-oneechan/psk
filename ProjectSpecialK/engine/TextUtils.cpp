@@ -305,9 +305,12 @@ void HandleIncludes(std::string& code, const std::string& path)
 
 std::string ResolvePath(const std::string& maybeRelative)
 {
-	if (maybeRelative.find("..") == std::string::npos)
-		return maybeRelative;
-	auto parts = Split(std::decay_t<std::string>(maybeRelative), '/');
+	auto maybeSlashed = maybeRelative;
+	if (maybeSlashed[0] == '/')
+		maybeSlashed = maybeSlashed.erase(0, 1);
+	if (maybeSlashed.find("..") == std::string::npos)
+		return maybeSlashed;
+	auto parts = Split(std::decay_t<std::string>(maybeSlashed), '/');
 	for (int i = 0; i < parts.size(); i++)
 	{
 		if (parts[i] == "..")
