@@ -9,27 +9,28 @@ struct light {
 	vec4 color;
 };
 
-layout (std140) uniform CommonData
+layout(std140) uniform CommonData
 {
-	float TotalTime; //0
-	float DeltaTime; //4
-	float CurveAmount; //8
-	float CurvePower; //12
-	bool Curve; //16
-	bool Toon; //20
-	uvec2 ScreenRes; //24
-	mat4 View; //32
-	mat4 Projection; //96
-	mat4 InvView; //160
-	light Lights[NUMLIGHTS]; //224
-	vec4 PlayerSkin; //480
-	vec4 PlayerEyes; //496
-	vec4 PlayerCheeks; //512
-	vec4 PlayerHair; //528
-	vec4 PlayerHairHi; //544
-	float GrassColor; //560
-	float TimeOfDay; //564
-	int PostEffect; //568
+	float TotalTime;
+	float DeltaTime;
+	uvec2 ScreenRes;
+	mat4 View;
+	mat4 Projection;
+	mat4 InvView;
+	light Lights[NUMLIGHTS];
+	int PostEffect;
+	float CurveAmount;
+	float CurvePower;
+	bool Curve;
+	bool Toon;
+	float GrassColor;
+	float TimeOfDay;
+	float HorizonPitch;???
+	vec4 PlayerSkin;
+	vec4 PlayerEyes;
+	vec4 PlayerCheeks;
+	vec4 PlayerHair;
+	vec4 PlayerHairHi;
 };
 
 //------------

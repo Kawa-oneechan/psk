@@ -11,6 +11,7 @@
 #include "DateTimePanel.h"
 #include "ItemHotbar.h"
 #include "Player.h"
+#include "Camera.h"
 
 static std::array<ModelP, 80> tileModels;
 static std::array<std::string, 80> tileModelKeys;
@@ -21,6 +22,8 @@ TextureArray* groundTextureAlbs{ nullptr };
 TextureArray* groundTextureNrms{ nullptr };
 TextureArray* groundTextureMixs{ nullptr };
 TextureArray* grassColors{ nullptr };
+
+std::shared_ptr<Texture> cloudImage, starsImage, skyImage;
 
 static void UpdateGrass()
 {
@@ -302,22 +305,29 @@ void Map::drawWorker(float dt)
 {
 	UpdateGrass();
 
+	MeshBucket::DrawAllWithDepth(dt, [&, dt] { drawCharacters(dt); drawObjects(dt); drawGround(dt); });
+
+	glEnable(GL_DEPTH_TEST);
+	auto pitch = MainCamera->Angles().y;
+	if (pitch > 180) pitch -= 360;
+	commonUniforms.HorizonPitch = pitch;
+	cloudImage->Use(1);
+	starsImage->Use(2);
+	skyImage->Use(3);
+
 	Sprite::DrawSprite(Shaders["sky"], *whiteRect, glm::vec2(0), glm::vec2(width, height));
 	Sprite::FlushBatch();
-
-	MeshBucket::DrawAllWithDepth(dt, [&, dt] { drawCharacters(dt); drawObjects(dt); drawGround(dt); });
+	glDisable(GL_DEPTH_TEST);
 
 	//For an interior map:
 	/*
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-	glEnable(GL_DEPTH_TEST);
-	glPolygonMode(GL_FRONT_AND_BACK, wireframe ? GL_LINE : GL_FILL);
-	drawCharacters(dt);
-	drawObjects(dt);
-	drawRoom(dt); OR drawInterior(dt); I dunno
-	glDisable(GL_DEPTH_TEST);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	glClear(GL_COLOR_BUFFER_BIT);
+	MeshBucket::DrawAllWithDepth(dt, [&, dt] {
+		drawCharacters(dt);
+		drawObjects(dt);
+		drawRoom(dt); OR drawInterior(dt); I dunno
+	});
 	*/
 }
 

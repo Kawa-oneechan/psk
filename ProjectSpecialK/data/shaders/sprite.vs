@@ -14,4 +14,5 @@ void main()
 	index = gl_InstanceID;
 	TexCoords = vertex.zw;
 	gl_Position = projection * model[gl_InstanceID] * vec4(vertex.xy, 0.0, 1.0);
+	gl_Position.z = gl_Position.w;
 }

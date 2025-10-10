@@ -33,9 +33,9 @@ std::shared_ptr<Messager> messager;
 std::shared_ptr<MusicManager> musicManager;
 std::shared_ptr<Town> town;
 
-Framebuffer* postFxBuffer;
+extern std::shared_ptr<Texture> cloudImage, starsImage, skyImage;
 
-std::shared_ptr<Texture> cloudImage, starsImage, skyImage;
+Framebuffer* postFxBuffer;
 
 extern bool botherColliding;
 bool showPos = false;
@@ -186,12 +186,6 @@ void Game::LoopStart()
 void Game::PreDraw(float dt)
 {
 	dt;
-	auto pitch = MainCamera->Angles().y;
-	if (pitch > 180) pitch -= 360;
-	Shaders["sky"]->Set("pitch", pitch);
-	cloudImage->Use(1);
-	starsImage->Use(2);
-	skyImage->Use(3);
 }
 
 void Game::PostDraw(float dt)

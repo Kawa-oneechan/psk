@@ -59,27 +59,26 @@ struct Light
 struct CommonUniforms
 {
 	//Must match shaders/common.fs
-	float TotalTime; //0
-	float DeltaTime; //4
-	float CurveAmount; //8
-	float CurvePower; //12
-	bool CurveEnabled; //16
-	char _a[3];
-	bool Toon; //20
-	char _b[3];
-	glm::uvec2 ScreenRes; //24
-	glm::mat4 View; //32
-	glm::mat4 Projection; //96
-	glm::mat4 InvView; //160
-	Light Lights[MaxLights]; //224
-	glm::vec4 PlayerSkin; //480
-	glm::vec4 PlayerEyes; //496
-	glm::vec4 PlayerCheeks; //512
-	glm::vec4 PlayerHair; //528
-	glm::vec4 PlayerHairHi; //544
-	float GrassColor; //560
-	float TimeOfDay; //564
-	int PostEffect; //568
+	float TotalTime;
+	float DeltaTime;
+	glm::uvec2 ScreenRes;
+	glm::mat4 View;
+	glm::mat4 Projection;
+	glm::mat4 InvView;
+	Light Lights[MaxLights];
+	int PostEffect;
+	float CurveAmount;
+	float CurvePower;
+	alignas(4) bool CurveEnabled;
+	alignas(4) bool Toon;
+	float GrassColor;
+	float TimeOfDay;
+	float HorizonPitch;
+	glm::vec4 PlayerSkin;
+	glm::vec4 PlayerEyes;
+	glm::vec4 PlayerCheeks;
+	glm::vec4 PlayerHair;
+	glm::vec4 PlayerHairHi;
 };
 extern CommonUniforms commonUniforms;
 
