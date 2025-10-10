@@ -9,7 +9,7 @@ struct light {
 	vec4 color;
 };
 
-layout(std140) uniform CommonData
+layout (std140) uniform CommonData
 {
 	float TotalTime;
 	float DeltaTime;
@@ -25,7 +25,7 @@ layout(std140) uniform CommonData
 	bool Toon;
 	float GrassColor;
 	float TimeOfDay;
-	float HorizonPitch;???
+	float HorizonPitch;
 	vec4 PlayerSkin;
 	vec4 PlayerEyes;
 	vec4 PlayerCheeks;
