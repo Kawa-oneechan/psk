@@ -8,7 +8,7 @@
 Species::Species(jsonObject& value, const std::string& filename) : NameableThing(value, filename)
 {
 	auto filterNamesObj = json5pp::object({});
-	auto filterNames = filterNamesObj.as_object();
+	//auto filterNames = filterNamesObj.as_object();
 
 	if (value["name"].is_string())
 	{
@@ -17,12 +17,12 @@ Species::Species(jsonObject& value, const std::string& filename) : NameableThing
 		Text::Add(RefName + ":m", both);
 		Text::Add(RefName + ":f", both);
 
-		filterNames["USen"] = jsonValue(value["name"].as_string());
+		filterNamesObj.as_object()["USen"] = jsonValue(value["name"].as_string());
 	}
 	else if (value["name"].is_array())
 	{
 		auto narr = value["name"].as_array();
-		filterNames = narr[0].as_object();
+		filterNamesObj.as_object() = narr[0].as_object();
 		if (narr.size() == 1)
 		{
 			Text::Add(RefName + ":m", narr[0]);
@@ -45,16 +45,16 @@ Species::Species(jsonObject& value, const std::string& filename) : NameableThing
 	{
 		auto filter = fmt::format("filter:species:{}", ID);
 		if (value["filter"])
-			filterNames = value["filter"].as_object();
+			filterNamesObj.as_object() = value["filter"].as_object();
 		else
 		{
-			for (auto sn : filterNames)
+			for (auto sn : filterNamesObj.as_object())
 			{
 				auto it = sn.second.as_string();
 				it = StripBJTS(it);
 				if (it[0] > 32 && it[0] < 127 && std::islower(it[0]))
 					it[0] = (char)std::toupper(it[0]);
-				filterNames[sn.first] = jsonValue(it);
+				filterNamesObj.as_object()[sn.first] = jsonValue(it);
 			}
 		}
 		Text::Add(filter, filterNamesObj);

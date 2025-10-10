@@ -127,7 +127,7 @@ PanelLayout::PanelLayout(jsonValue& source)
 		{
 			if (pnl["parent"].is_string())
 			{
-				auto& prt = pnl["parent"].as_string();
+				const auto& prt = pnl["parent"].as_string();
 				for (int i = 0; i < panels.size(); i++)
 				{
 					if (panels[i]->ID == prt)
@@ -297,7 +297,7 @@ bool PanelLayout::Tick(float dt)
 		auto parentID = panel->Parent;
 		while (parentID != -1)
 		{
-			const auto& parent = panels[parentID];
+			const auto* parent = panels[parentID];
 			parentPos += parent->Position;
 			parentID = parent->Parent;
 		}
@@ -351,7 +351,7 @@ void PanelLayout::Draw(float dt)
 		auto parentID = panel->Parent;
 		while (parentID != -1)
 		{
-			const auto& parent = panels[parentID];
+			const auto* parent = panels[parentID];
 			parentPos += parent->Position;
 			parentID = parent->Parent;
 		}

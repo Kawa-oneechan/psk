@@ -95,7 +95,8 @@ Text::Entry& Text::Add(const std::string& key, jsonValue& value)
 		throw "TextAdd<Value>: JSONValue is not an Object or String.";
 	}
 
-	auto entry = new Entry();
+	textEntries[key] = Entry();
+	Entry* entry = &textEntries[key];
 	auto map = value.as_object();
 
 	for (auto& langs : map)
@@ -125,7 +126,6 @@ Text::Entry& Text::Add(const std::string& key, jsonValue& value)
 		entry->rep = entry->rep.substr(0, 16) + "...";
 	entry->rep.shrink_to_fit();
 
-	textEntries[key] = *entry;
 	return *entry;
 }
 

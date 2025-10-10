@@ -92,7 +92,7 @@ namespace Database
 			//TODO: this is fragile.
 			int l = (iconNum % cols) * iconSize;
 			int t = (iconNum / rows) * iconSize;
-			uint32_t* ps = (uint32_t*)data;
+			const uint32_t* ps = (uint32_t*)data;
 			uint32_t* pt = (uint32_t*)sheet + (((rows * iconSize)  - t) * (sheetW) + (l));
 			for (int y = 0; y < height; y++)
 			{

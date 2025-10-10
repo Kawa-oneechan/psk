@@ -303,7 +303,7 @@ static void DoPlayer()
 
 static void traverseArmature(int origin)
 {
-	Model::Bone& thisJoint = debugArmature->at(origin);
+	const Model::Bone& thisJoint = debugArmature->at(origin);
 	int flags = ImGuiTreeNodeFlags_OpenOnDoubleClick | ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth;
 	if (thisJoint.Children.size() == 0)
 		flags |= ImGuiTreeNodeFlags_Leaf;
@@ -332,7 +332,7 @@ static void applyPose(jsonValue& json)
 		bone.Rotation = glm::vec3(0.0f);
 	for (auto& b : j)
 	{
-		auto& name = b.first;
+		const auto& name = b.first;
 		auto trns = b.second.as_object();
 		for (auto& bone : *debugArmature)
 		{

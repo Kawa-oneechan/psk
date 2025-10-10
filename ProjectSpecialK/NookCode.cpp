@@ -97,7 +97,7 @@ namespace NookCode
 		unsigned char c[10]{ 0 };
 		for (int i = 0; i < 10; i++)
 		{
-			auto pos = strchr(alphabet, code[i]);
+			const char* pos = strchr(alphabet, code[i]);
 			if (pos == nullptr)
 			{
 				d.fill(0xFF);

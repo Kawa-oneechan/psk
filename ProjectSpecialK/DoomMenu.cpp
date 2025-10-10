@@ -142,6 +142,8 @@ bool DoomMenu::Tick(float dt)
 	auto metrics = UI::json["metrics"].as_object();
 	const int col = (int)(metrics["menuColumnSize"].as_number() * scale);
 
+	const auto shown = std::min(items->subheader.empty() ? visible : visible - 3, (int)items->items.size() - scroll);
+
 	if (remapping != -1)
 	{
 		if (Inputs.HaveGamePad)
@@ -162,7 +164,7 @@ bool DoomMenu::Tick(float dt)
 					{
 						if (state.buttons[i])
 						{
-							const auto item = items->items[remapping];
+							const auto* item = items->items[remapping];
 							Inputs.Keys[item->selection].GamepadButton = i;
 							//Inputs.Clear((Binds)item->selection);
 							Inputs.Clear();
@@ -249,7 +251,7 @@ bool DoomMenu::Tick(float dt)
 		if (highlight == 0)
 		{
 			highlight = (int)items->items.size();
-			scroll = (int)items->items.size() - visible;
+			scroll = (int)items->items.size() - shown;
 			if (scroll < 0) scroll = 0;
 		}
 		highlight--;
@@ -266,7 +268,7 @@ bool DoomMenu::Tick(float dt)
 	{
 		Inputs.Clear();
 		highlight++;
-		if (highlight - scroll >= visible)
+		if (highlight - scroll >= shown)
 			scroll++;
 		if (highlight == items->items.size())
 		{
@@ -459,7 +461,7 @@ void DoomMenu::Draw(float dt)
 			headerX = (width - xy.x) / 2;
 
 			//Sprite::DrawSprite(*whiteRect, glm::vec2(0, pos.y) * scale, glm::vec2(width, xy.y + 16) * scale, glm::vec4(0), 0.0f, UI::themeColors["primary"]);
-			gradientPanel(panels, pos.y, xy.y + 16, (float)col);
+			gradientPanel(panels, pos.y, xy.y + 0, (float)col);
 
 			Sprite::DrawText(1, items->subheader, glm::vec2(headerX, pos.y + subHeaderOffset) * scale, glm::vec4(1), subHeaderSize * scale);
 			pos.y += xy.y + (subHeaderPadding * scale);
@@ -468,7 +470,7 @@ void DoomMenu::Draw(float dt)
 		startY = pos.y + (headerPadding * scale);
 	}
 
-	const auto shown = std::min(visible, (int)items->items.size() - scroll);
+	const auto shown = std::min(items->subheader.empty() ? visible : visible - 3, (int)items->items.size() - scroll);
 
 	const auto partSize = controls[4].w * partScale * scale;
 	const auto thumbSize = glm::vec2(controls[3].z, controls[3].w) * partScale * scale;
@@ -493,17 +495,19 @@ void DoomMenu::Draw(float dt)
 		pos.y += (itemSpace * scale) + size - (itemSize * scale);
 		if (i + scroll == highlight)
 		{
-			auto offset = glm::vec2(item->type == DoomMenuItem::Type::Checkbox ? (checkboxOffset * scale) : 0, 0);
+			//auto offset = glm::vec2(item->type == DoomMenuItem::Type::Checkbox ? (checkboxOffset * scale) : 0, 0);
 			auto highlightSize = Sprite::MeasureText(1, item->caption, itemSize * scale);
+			if (item->type == DoomMenuItem::Type::Checkbox)
+				highlightSize.x += checkboxOffset;
 			highlightSize.x += hiliteBarOffset * scale;
-			highlightSize.y *= partScale;
-			Sprite::DrawSprite(controls, pos + offset + glm::vec2(-(highlightSize.y) * scale, 0), glm::vec2(highlightSize.y), controls[7], 0, UI::themeColors["secondary"]);
-			Sprite::DrawSprite(controls, pos + offset + glm::vec2(highlightSize.x, 0), glm::vec2(highlightSize.y), controls[8], 0, UI::themeColors["secondary"]);
-			Sprite::DrawSprite(controls, pos + offset, highlightSize, controls[9], 0, UI::themeColors["secondary"]);
+			highlightSize.y *= partScale * 0.5f;
+			Sprite::DrawSprite(controls, pos + glm::vec2(-(highlightSize.y) * scale, 0), glm::vec2(highlightSize.y), controls[7], 0, UI::themeColors["secondary"]);
+			Sprite::DrawSprite(controls, pos + glm::vec2(highlightSize.x, 0), glm::vec2(highlightSize.y), controls[8], 0, UI::themeColors["secondary"]);
+			Sprite::DrawSprite(controls, pos, highlightSize, controls[9], 0, UI::themeColors["secondary"]);
 			break;
 		}
 	}
-	pos.y = startY;
+	pos.y = startY - (16 * scale);
 
 	for (int i = 0; i < shown; i++)
 	{

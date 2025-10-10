@@ -32,7 +32,7 @@ static void UpdateGrass()
 
 	lastGrassColor = commonUniforms.GrassColor;
 
-	for (auto& model : tileModels)
+	for (const auto& model : tileModels)
 	{
 		if (!model)
 			continue;
