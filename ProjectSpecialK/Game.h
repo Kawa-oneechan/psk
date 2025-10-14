@@ -74,6 +74,8 @@ struct CommonUniforms
 	float GrassColor;
 	float TimeOfDay;
 	float HorizonPitch;
+	glm::vec3 NightSkyColor;
+	float Weather;
 	glm::vec4 PlayerSkin;
 	glm::vec4 PlayerEyes;
 	glm::vec4 PlayerCheeks;

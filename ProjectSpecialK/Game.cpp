@@ -33,7 +33,8 @@ std::shared_ptr<Messager> messager;
 std::shared_ptr<MusicManager> musicManager;
 std::shared_ptr<Town> town;
 
-extern std::shared_ptr<Texture> cloudImage, starsImage, skyImage;
+extern std::shared_ptr<TextureArray> cloudImage;
+extern std::shared_ptr<Texture> starsImage, skyImage;
 
 Framebuffer* postFxBuffer;
 
@@ -106,9 +107,9 @@ void Game::Initialize()
 	//Load the player *here* so we don't get inventory test results mixed in.
 	thePlayer.Load();
 
-	cloudImage = std::make_shared<Texture>("altostratus.png");
-	starsImage = std::make_shared<Texture>("starfield.png");
-	skyImage = std::make_shared<Texture>("skycolors.png");
+	cloudImage = std::make_shared<TextureArray>("sky/clouds*.png");
+	starsImage = std::make_shared<Texture>("sky/starfield.png");
+	skyImage = std::make_shared<Texture>("sky/skycolors.png");
 
 	if (!LoadLights("lights/initial.json").empty())
 	{

@@ -23,7 +23,8 @@ TextureArray* groundTextureNrms{ nullptr };
 TextureArray* groundTextureMixs{ nullptr };
 TextureArray* grassColors{ nullptr };
 
-std::shared_ptr<Texture> cloudImage, starsImage, skyImage;
+std::shared_ptr<TextureArray> cloudImage;
+std::shared_ptr<Texture> starsImage, skyImage;
 
 static void UpdateGrass()
 {
