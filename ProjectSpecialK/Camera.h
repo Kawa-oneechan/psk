@@ -19,7 +19,7 @@ protected:
 
 public:
 	Camera(const Camera& c) = default;
-	Camera(glm::vec3 target = glm::vec3(0), glm::vec3 angles = glm::vec3(0), float distance = 10);
+	explicit Camera(glm::vec3 target = glm::vec3(0), glm::vec3 angles = glm::vec3(0), float distance = 10);
 	virtual ~Camera() override;
 
 	glm::vec3 Position() const;

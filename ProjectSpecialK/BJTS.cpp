@@ -68,7 +68,7 @@ static void bjtsStr(std::string& data, BJTSParams)
 
 static void bjtsEllipses(std::string& data, BJTSParams)
 {
-	tags;
+	(void)(tags);
 	auto fakeTags = std::vector<std::string>
 	{
 		"str", "..."

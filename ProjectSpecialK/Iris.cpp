@@ -37,7 +37,7 @@ bool Iris::Tick(float dt)
 
 void Iris::Draw(float dt)
 {
-	dt;
+	(void)(dt);
 	auto shader = Shaders["iris"];
 	shader->Set("smoothness", 0.02f);
 	shader->Set("progress", 1.0f - time);

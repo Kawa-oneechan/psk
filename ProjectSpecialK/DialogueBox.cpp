@@ -19,7 +19,7 @@ constexpr float wobbleTimeScale{ 0.25f };
 
 void DialogueBox::bjtsDelay(BJTSParams)
 {
-	len; start;
+	(void)(len); (void)(start);
 	if (tags.size() < 2)
 	{
 		conprint(2, "Missing parameter in BJTS Delay: {}", toDisplay.substr(start, len));
@@ -60,7 +60,7 @@ void DialogueBox::bjtsDelay(BJTSParams)
 
 void DialogueBox::bjtsEmote(BJTSParams)
 {
-	tags; len; start;
+	(void)(tags); (void)(len); (void)(start);
 	if (!speaker)
 	{
 		conprint(2, "BJTS Emote called but no speaker is set.");
@@ -71,24 +71,24 @@ void DialogueBox::bjtsEmote(BJTSParams)
 
 void DialogueBox::bjtsBreak(BJTSParams)
 {
-	tags; len; start;
+	(void)(tags); (void)(len); (void)(start);
 	state = State::WaitingForKey;
 }
 
 void DialogueBox::bjtsClear(BJTSParams)
 {
-	tags; len; start;
+	(void)(tags); (void)(len); (void)(start);
 	displayed.clear();
 }
 
 void DialogueBox::bjtsEnd(BJTSParams)
 {
-	tags; len; start;
+	(void)(tags); (void)(len); (void)(start);
 	state = State::Closing;
 }
 void DialogueBox::bjtsPass(BJTSParams)
 {
-	tags;
+	(void)(tags);
 	displayed += toDisplay.substr(start, len);
 }
 

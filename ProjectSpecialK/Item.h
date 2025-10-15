@@ -16,7 +16,7 @@ private:
 	ModelP fieldModel{ nullptr };
 
 public:
-	Item(jsonObject& value, const std::string& filename = "");
+	explicit Item(jsonObject& value, const std::string& filename = "");
 	int FindVariantByName(const std::string& variantName) const;
 
 	//Returns true if the Item is a Thing, not a Tool, Furniture, or Clothing.
@@ -143,9 +143,9 @@ private:
 public:
 	InventoryItem(ItemP wrapped, int variant, int pattern);
 	InventoryItem(ItemP wrapped, int data);
-	InventoryItem(ItemP wrapped);
-	InventoryItem(const std::string& reference);
-	InventoryItem(hash hash);
+	explicit InventoryItem(ItemP wrapped);
+	explicit InventoryItem(const std::string& reference);
+	explicit InventoryItem(hash hash);
 	std::string FullID() const;
 	std::string FullName();
 	ItemP AsItem() const;

@@ -252,7 +252,7 @@ namespace Database
 		for (const auto& spec: species)
 		{
 			table.push_back(spec->ID);
-			table.push_back(spec->EnName[0]);
+			table.push_back(spec->EnNames[0]);
 			table.emplace_back(fmt::format("{:08X}", spec->Hash));
 		}
 		Table(table, 3);

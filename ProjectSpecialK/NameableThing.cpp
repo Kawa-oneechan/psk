@@ -40,7 +40,7 @@ NameableThing::NameableThing(jsonObject& value, const std::string& filename) : I
 std::string NameableThing::Name()
 {
 	auto text = Text::Get(RefName);
-	if (text.substr(0, 6) == "<info:")
+	if (text[0] == '<' && text.substr(0, 6) == "<info:")
 	{
 		auto bjtsEnd = text.find_first_of('>', 7);
 		auto rest = text.substr(bjtsEnd + 1);

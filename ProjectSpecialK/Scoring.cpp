@@ -29,7 +29,7 @@ int GetLetterScore(const std::string& text, bool noCapitals)
 	int score = 0;
 
 #ifdef CITYFOLKRULES
-	noCapitals;
+	(void)(noCapitals);
 #endif
 
 	rune ch;

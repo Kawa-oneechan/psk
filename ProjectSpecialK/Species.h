@@ -9,12 +9,11 @@ private:
 	ModelP _model;
 
 public:
-	std::string EnName[2];
+	std::string EnNames[2];
 	bool ModeledMuzzle;
 	std::string FilterAs;
 
-	Species(jsonObject& value, const std::string& filename = "");
-	std::string Name();
+	explicit Species(jsonObject& value, const std::string& filename = "");
 	void LoadModel();
 	ModelP Model();
 };

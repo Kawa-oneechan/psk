@@ -10,7 +10,7 @@ private:
 	float time{ 0 };
 
 public:
-	Background(const std::string& file, glm::vec2 speed = { 0.1f, -0.1f });
+	explicit Background(const std::string& file, glm::vec2 speed = { 0.1f, -0.1f });
 
 	void Draw(float dt) override;
 

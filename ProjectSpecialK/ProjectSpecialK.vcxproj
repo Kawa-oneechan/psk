@@ -195,6 +195,7 @@
     <ClCompile Include="NookCode.cpp" />
     <ClCompile Include="OptionsMenu.cpp" />
     <ClCompile Include="PanelLayout.cpp" />
+    <ClCompile Include="Person.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Scoring.cpp" />
     <ClCompile Include="Sequence.cpp" />
@@ -297,6 +298,7 @@
     <ClInclude Include="NookCode.h" />
     <ClInclude Include="OptionsMenu.h" />
     <ClInclude Include="PanelLayout.h" />
+    <ClInclude Include="Person.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Scoring.h" />
     <ClInclude Include="Sequence.h" />

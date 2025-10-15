@@ -102,7 +102,7 @@ public:
 	float Alpha{ 1.0f };
 
 	PanelLayout() = default;
-	PanelLayout(jsonValue& source);
+	explicit PanelLayout(jsonValue& source);
 	bool Tick(float dt) override;
 	void Draw(float dt) override;
 	Panel* GetPanel(const std::string& id);

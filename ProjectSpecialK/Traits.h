@@ -24,7 +24,7 @@ class Personality: public NameableThing
 public:
 	std::string Voices[2];
 
-	Personality(jsonObject& value, const std::string& filename = "");
+	explicit Personality(jsonObject& value, const std::string& filename = "");
 	Personality() = default;
 };
 
@@ -35,7 +35,7 @@ class Hobby
 {
 public:
 	std::string ID;
-	Hobby(jsonObject& value, const std::string& filename = "");
+	explicit Hobby(jsonObject& value, const std::string& filename = "");
 	Hobby() = default;
 };
 

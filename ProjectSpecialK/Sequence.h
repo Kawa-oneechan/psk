@@ -21,6 +21,6 @@ private:
 	std::function<void()> wrapped;
 
 public:
-	FuncAsTickable(std::function<void()> function) : wrapped(function) {}
+	explicit FuncAsTickable(std::function<void()> function) : wrapped(function) {}
 	bool Tick(float dt) override;
 };

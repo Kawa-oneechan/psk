@@ -186,12 +186,12 @@ void Game::LoopStart()
 
 void Game::PreDraw(float dt)
 {
-	dt;
+	(void)(dt);
 }
 
 void Game::PostDraw(float dt)
 {
-	dt;
+	(void)(dt);
 	if (showPos)
 	{
 		Sprite::DrawText(

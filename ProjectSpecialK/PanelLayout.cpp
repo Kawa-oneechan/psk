@@ -334,7 +334,7 @@ Tween<float>* PanelLayout::Tween(float* target, float from, float to, float spee
 
 void PanelLayout::Draw(float dt)
 {
-	dt;
+	(void)(dt);
 	if (!debugRenderPanelLayouts)
 		return;
 

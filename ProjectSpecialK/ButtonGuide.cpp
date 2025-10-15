@@ -29,8 +29,8 @@ void ButtonGuide::SetButtons(std::initializer_list<std::string> labels)
 			l = l.substr(1);
 			important = true;
 		}
-		auto width = Sprite::MeasureText(1, l, 90.0f).x + padding;
-		buttons.push_back({ l, width, important });
+		auto thisWidth = Sprite::MeasureText(1, l, 90.0f).x + padding;
+		buttons.push_back({ l, thisWidth, important });
 	}
 }
 

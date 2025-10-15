@@ -34,8 +34,8 @@ Species::Species(jsonObject& value, const std::string& filename) : NameableThing
 			Text::Add(RefName + ":f", narr[1]);
 		}
 	}
-	EnName[0] = StripBJTS(Text::Get(RefName + ":m"));
-	EnName[1] = StripBJTS(Text::Get(RefName + ":f"));
+	EnNames[0] = StripBJTS(Text::Get(RefName + ":m"));
+	EnNames[1] = StripBJTS(Text::Get(RefName + ":f"));
 
 	if (value["filterAs"])
 	{
@@ -67,11 +67,6 @@ Species::Species(jsonObject& value, const std::string& filename) : NameableThing
 	}
 	
 	ModeledMuzzle = value["hasMuzzle"].is_boolean() ? value["hasMuzzle"].as_boolean() : false;
-}
-
-std::string Species::Name()
-{
-	return Text::Get(RefName);
 }
 
 void Species::LoadModel()

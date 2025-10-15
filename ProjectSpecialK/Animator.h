@@ -9,7 +9,7 @@ class Animator
 public:
 	Armature Bones;
 
-	Animator(const Armature& bones);
+	explicit Animator(const Armature& bones);
 	void APose();
 	void CopyBones(const std::shared_ptr<Model>& client);
 };

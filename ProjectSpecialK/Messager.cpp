@@ -38,7 +38,7 @@ bool Messager::Tick(float dt)
 
 void Messager::Draw(float dt)
 {
-	dt;
+	(void)(dt);
 	auto pos = glm::vec2(8, 8);
 	for (const auto& message : messages)
 	{

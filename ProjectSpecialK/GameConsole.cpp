@@ -23,7 +23,7 @@ extern Framebuffer* postFxBuffer;
 
 void CCmdReshade(const jsonArray& args)
 {
-	args;
+	(void)(args);
 
 	Shader::ReloadAll();
 	//postFxBuffer->ReloadShader();

@@ -105,7 +105,7 @@ void Camera::Target(glm::vec3* target)
 
 bool Camera::Tick(float dt)
 {
-	dt;
+	(void)(dt);
 
 	if (_tracking)
 	{

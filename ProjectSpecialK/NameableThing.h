@@ -11,7 +11,7 @@ public:
 	std::string Path; //To locate specific stuff like models, textures, sounds...
 	std::string File; //Goes with the path: Path + "/" + File.
 	hash Hash{ 0 };
-	NameableThing(jsonObject& value, const std::string& filename = "");
+	explicit NameableThing(jsonObject& value, const std::string& filename = "");
 	NameableThing() = default;
 	std::string Name();
 

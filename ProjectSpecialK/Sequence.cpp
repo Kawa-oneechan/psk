@@ -52,7 +52,7 @@ void Sequence::Draw(float dt)
 
 bool FuncAsTickable::Tick(float dt)
 {
-	dt;
+	(void)(dt);
 	if (wrapped != nullptr)
 		wrapped();
 	if (Mutex != nullptr)
