@@ -157,6 +157,16 @@ namespace Sprite
 			position -= glm::vec2(size.x * 0.5f, size.y);
 		else if ((flags & SpriteFlags::CenterOrigin) == SpriteFlags::CenterOrigin)
 			position -= size * 0.5f;
+
+		//Clip any sprites that aren't visible
+		{
+			int vp[4]; glGetIntegerv(GL_VIEWPORT, vp);
+			if ((int)position.x > vp[2] ||
+				(int)position.x + size.x < vp[0] ||
+				(int)position.y > vp[3] ||
+				(int)position.y + size.y < vp[1])
+				return;
+		}
 		
 		glm::mat4 model = glm::mat4(1.0f);
 		model = glm::translate(model, glm::vec3(position, 0));

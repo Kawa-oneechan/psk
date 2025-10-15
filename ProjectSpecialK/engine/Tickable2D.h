@@ -32,18 +32,6 @@ public:
 		return true;
 	}
 
-	/*
-	virtual void Draw(float dt) override
-	{
-		for (const auto& t : ChildTickables)
-		{
-			if (!t->Visible)
-				continue;
-			t->Draw(dt);
-		}
-	}
-	*/
-
 	void AddChild(Tickable2D* newChild)
 	{
 		newChild->parent = this;
@@ -76,7 +64,8 @@ public:
 
 	void Draw(float) override
 	{
-		Sprite::DrawText(Font, Text, AbsolutePosition, Color, Size, Angle, Raw);
+		float s = Scale > 0 ? Scale : scale;
+		Sprite::DrawText(Font, Text, AbsolutePosition, Color, Size * s, Angle, Raw);
 	}
 };
 
@@ -105,6 +94,8 @@ public:
 
 	void Draw(float) override
 	{
-		Sprite::DrawSprite(*texture, AbsolutePosition, texture->operator[](Frame), 0.0f, glm::vec4(1), Flags);
+		float s = Scale > 0 ? Scale : scale;
+		auto size = texture->operator[](Frame);
+		Sprite::DrawSprite(*texture, AbsolutePosition, size * s, size, 0.0f, glm::vec4(1), Flags);
 	}
 };

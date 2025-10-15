@@ -11,7 +11,7 @@ public:
 	//Creates a new Shader from a pair of vertex and fragment files.
 	Shader(const std::string& vertexPath, const std::string& fragmentPath);
 	//Creates a new Shader from a fragment file, assuming the vertex shader is "sprite.vs".
-	Shader(const std::string& fragmentPath);
+	explicit Shader(const std::string& fragmentPath);
 	~Shader();
 	//Binds the shader.
 	void Use();
