@@ -73,8 +73,7 @@ struct CommonUniforms
 	alignas(4) bool Toon;
 	float GrassColor;
 	float TimeOfDay;
-	float HorizonPitch;
-	glm::vec3 NightSkyColor;
+	alignas(4*4) glm::vec3 NightSkyColor;
 	float Weather;
 	glm::vec4 PlayerSkin;
 	glm::vec4 PlayerEyes;

@@ -309,9 +309,6 @@ void Map::drawWorker(float dt)
 	MeshBucket::DrawAllWithDepth(dt, [&, dt] { drawCharacters(dt); drawObjects(dt); drawGround(dt); });
 
 	glEnable(GL_DEPTH_TEST);
-	auto pitch = MainCamera->Angles().y;
-	if (pitch > 180) pitch -= 360;
-	commonUniforms.HorizonPitch = pitch;
 	cloudImage->Use(1);
 	starsImage->Use(2);
 	skyImage->Use(3);

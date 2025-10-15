@@ -25,7 +25,6 @@ layout (std140) uniform CommonData
 	bool Toon;
 	float GrassColor;
 	float TimeOfDay;
-	float HorizonPitch;
 	vec3 NightSkyColor;
 	float Weather;
 	vec4 PlayerSkin;
