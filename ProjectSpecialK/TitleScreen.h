@@ -18,13 +18,10 @@ private:
 	std::shared_ptr<PanelLayout> logoAnim;
 	std::shared_ptr<OptionsMenu> optionsMenu;
 	std::shared_ptr<Iris> iris;
+	std::shared_ptr<NineSlicer> playerPanel;
 
-	//std::string psText;
-	//glm::vec2 psSize;
+	//TODO: make DropLabels Texture2D
 	DropLabel* pressStart = nullptr;
-	NineSlicer* playerPanel = nullptr;
-	std::string playerText;
-	int playerPanelWidth;
 
 public:
 	TitleScreen();

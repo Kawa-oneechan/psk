@@ -41,8 +41,20 @@ TitleScreen::TitleScreen()
 
 	//psText = PreprocessBJTS(Text::Get("title:pressstart"));
 	//psSize = Sprite::MeasureText(1, psText, 100);
-	playerText = fmt::format("{}\n{}", thePlayer.Name, town->Name);
-	playerPanelWidth = (int)(Sprite::MeasureText(1, playerText, 50.0f, true).x + 128);
+	auto playerText = fmt::format("{}\n{}", thePlayer.Name, town->Name);
+	auto playerPanelWidth = (int)(Sprite::MeasureText(1, playerText, 50.0f, true).x + 128);
+	playerPanel = std::make_shared<NineSlicer>("ui/roundrect.png", width - playerPanelWidth - 30, height - 170, 0, 0);
+	playerPanel->Scale = 1.0f;
+	playerPanel->Color = UI::themeColors["dialogue"];
+	playerPanel->Visible = false;
+
+	auto label = std::make_shared<TextLabel>(playerText, glm::vec2(32, 24));
+	label->Color = UI::textColors[7];
+	label->Size = 70.0f;
+	playerPanel->AddChild(label);
+	playerPanel->Position = glm::vec2(width - playerPanelWidth - 30, height - 170);
+	//playerPanel->Tick(0); //force label to go in the panel
+	AddChild(playerPanel);
 
 	optionsMenu = std::make_shared<OptionsMenu>();
 	optionsMenu->Enabled = false;
@@ -73,14 +85,7 @@ bool TitleScreen::Tick(float dt)
 			state = State::Wait;
 			logoAnim->Play("open");
 			pressStart = new DropLabel(PreprocessBJTS(Text::Get("title:pressstart")), 1, 150, UI::themeColors["white"], DropLabel::Style::Drop);
-			playerPanel = new NineSlicer("ui/roundrect.png", width - playerPanelWidth - 30, height - 170, playerPanelWidth, 140);
-			playerPanel->Scale = 1.0f;
-			playerPanel->Color = UI::themeColors["dialogue"];
-			auto label = std::make_shared<TextLabel>(playerText, glm::vec2(32, 24));
-			label->Color = UI::textColors[7];
-			label->Size = 70.0f;
-			playerPanel->AddChild(label);
-			playerPanel->Tick(dt);
+			playerPanel->Visible = true;
 		}
 	}
 	else if (state == State::Wait)
@@ -99,6 +104,7 @@ bool TitleScreen::Tick(float dt)
 				optionsMenu->Visible = true;
 				optionsMenu->Enabled = true;
 				logoAnim->Visible = false;
+				playerPanel->Visible = false;
 				return false;
 			}
 		}
@@ -111,6 +117,7 @@ bool TitleScreen::Tick(float dt)
 				optionsMenu->Enabled = false;
 				logoAnim->Visible = true;
 				logoAnim->Play("idle");
+				playerPanel->Visible = true;
 				return false;
 			}
 		}
@@ -131,7 +138,6 @@ bool TitleScreen::Tick(float dt)
 TitleScreen::~TitleScreen()
 {
 	delete pressStart;
-	delete playerPanel;
 }
 
 void TitleScreen::Draw(float dt)
@@ -145,8 +151,6 @@ void TitleScreen::Draw(float dt)
 			(glm::vec2(width, height) - (pressStart->Size() * scale)) * glm::vec2(0.5f, 0.86f),
 			pressStart->Size() * scale, glm::vec4(0), 0.0f,
 			glm::vec4(1, 1, 1, glm::abs(glm::sin((float)glfwGetTime())) * 1.0f));
-
-		playerPanel->Draw(dt);
 	}
 
 #ifdef DEBUG
