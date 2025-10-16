@@ -33,7 +33,7 @@ void DoImGui()
 	ImGui_ImplGlfw_NewFrame();
 	ImGui::NewFrame();
 
-	if (ImGui::Begin("Timing"))
+	if (ImGui::Begin("Timing", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse))
 	{
 		ImGui::Text("UI: %f\nGL: %f", uiTime, glTime);
 	}
