@@ -281,6 +281,7 @@
     <ClInclude Include="engine\Texture.h" />
     <ClInclude Include="engine\TextUtils.h" />
     <ClInclude Include="engine\Tickable.h" />
+    <ClInclude Include="engine\Tickable2D.h" />
     <ClInclude Include="engine\Types.h" />
     <ClInclude Include="engine\Utilities.h" />
     <ClInclude Include="engine\VFS.h" />

@@ -74,8 +74,13 @@ bool TitleScreen::Tick(float dt)
 			logoAnim->Play("open");
 			pressStart = new DropLabel(PreprocessBJTS(Text::Get("title:pressstart")), 1, 150, UI::themeColors["white"], DropLabel::Style::Drop);
 			playerPanel = new NineSlicer("ui/roundrect.png", width - playerPanelWidth - 30, height - 170, playerPanelWidth, 140);
-			playerPanel->Scale = 0.5f;
+			playerPanel->Scale = 1.0f;
 			playerPanel->Color = UI::themeColors["dialogue"];
+			auto label = std::make_shared<TextLabel>(playerText, glm::vec2(32, 24));
+			label->Color = UI::textColors[7];
+			label->Size = 70.0f;
+			playerPanel->AddChild(label);
+			playerPanel->Tick(dt);
 		}
 	}
 	else if (state == State::Wait)
@@ -142,7 +147,6 @@ void TitleScreen::Draw(float dt)
 			glm::vec4(1, 1, 1, glm::abs(glm::sin((float)glfwGetTime())) * 1.0f));
 
 		playerPanel->Draw(dt);
-		Sprite::DrawText(1, playerText, glm::vec2(playerPanel->Position.x + 32, playerPanel->Position.y + 24), UI::textColors[7], 70.0f, 0.0f, true);
 	}
 
 #ifdef DEBUG
