@@ -20,6 +20,8 @@ private:
 	std::shared_ptr<Iris> iris;
 	std::shared_ptr<NineSlicer> playerPanel;
 
+	float panelPop{ 0 };
+
 	//TODO: make DropLabels Texture2D
 	DropLabel* pressStart = nullptr;
 

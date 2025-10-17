@@ -43,17 +43,15 @@ TitleScreen::TitleScreen()
 	//psSize = Sprite::MeasureText(1, psText, 100);
 	auto playerText = fmt::format("{}\n{}", thePlayer.Name, town->Name);
 	auto playerPanelWidth = (int)(Sprite::MeasureText(1, playerText, 50.0f, true).x + 128);
-	playerPanel = std::make_shared<NineSlicer>("ui/roundrect.png", width - playerPanelWidth - 30, height - 170, 0, 0);
+	playerPanel = std::make_shared<NineSlicer>("ui/roundrect.png", width - playerPanelWidth - 30, height, playerPanelWidth, 140);
 	playerPanel->Scale = 1.0f;
 	playerPanel->Color = UI::themeColors["dialogue"];
 	playerPanel->Visible = false;
 
 	auto label = std::make_shared<TextLabel>(playerText, glm::vec2(32, 24));
 	label->Color = UI::textColors[7];
-	label->Size = 70.0f;
+	//label->Size = 100.0f;
 	playerPanel->AddChild(label);
-	playerPanel->Position = glm::vec2(width - playerPanelWidth - 30, height - 170);
-	//playerPanel->Tick(0); //force label to go in the panel
 	AddChild(playerPanel);
 
 	optionsMenu = std::make_shared<OptionsMenu>();
@@ -90,6 +88,13 @@ bool TitleScreen::Tick(float dt)
 	}
 	else if (state == State::Wait)
 	{
+		//panelPop.step();
+		if (panelPop < 1.0f)
+		{
+			panelPop += dt * 0.5f;
+			playerPanel->Position.y = glm::mix((float)height, (float)height - 170, glm::bounceEaseOut(glm::clamp(panelPop, 0.0f, 1.0f)));
+		}
+
 		if (!optionsMenu->Visible)
 		{
 			if (Inputs.KeyDown(Binds::Accept))
