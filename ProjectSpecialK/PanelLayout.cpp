@@ -204,16 +204,6 @@ PanelLayout::PanelLayout(jsonValue& source)
 
 bool PanelLayout::Tick(float dt)
 {
-	if (tweens.size() > 0)
-	{
-		for (auto i = 0; i < tweens.size(); i++)
-		{
-			auto& tween = tweens[i];
-			if (tween.step())
-				tweens.erase(tweens.begin() + i);
-		}
-	}
-
 	if (hasAnimations && !currentAnimation.empty())
 	{
 		animationTime += dt * 1.0f;
@@ -226,6 +216,7 @@ bool PanelLayout::Tick(float dt)
 		}
 		if (animationTime >= endTime)
 		{
+			//TODO: make sure all Bits are in their final state.
 			currentAnimation = anim.Next;
 			animationTime = 0.0;
 		}
@@ -259,16 +250,6 @@ bool PanelLayout::Tick(float dt)
 				if (prop == nullptr)
 					continue;
 
-				/*
-				if (animationTime < bit.FromTime)
-				{
-					*prop = bit.FromVal;
-				}
-				else if (animationTime > bit.ToTime)
-				{
-				}
-				else
-				*/
 				if (animationTime >= bit.FromTime && animationTime <= bit.ToTime)
 				{
 					//auto duration = bit.ToTime - bit.FromTime;
@@ -323,13 +304,6 @@ bool PanelLayout::Tick(float dt)
 		highlighted = newHl;
 
 	return true;
-}
-
-Tween<float>* PanelLayout::Tween(float* target, float from, float to, float speed, std::function<float(float)> interpolator)
-{
-	auto tween = new ::Tween<float>(target, from, to, speed, interpolator);
-	tweens.push_back(*tween);
-	return tween;
 }
 
 void PanelLayout::Draw(float dt)

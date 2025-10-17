@@ -11,34 +11,6 @@
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/easing.hpp>
 
-template<class T>
-struct Tween
-{
-	T from, to;
-	float speed;
-	T* target;
-	float progress;
-	std::function<T(float)> interpolator;
-
-	Tween(T* tg, T f, T t, float s = 0.001f, std::function<T(float)> i = glm::linearInterpolation) : target(tg), from(f), to(t), speed(s), interpolator(i),  progress(0) {}
-
-	T value()
-	{
-		progress = glm::clamp(progress, 0.0f, 1.0f);
-		return glm::mix(from, to, interpolator(progress));
-	}
-
-	bool step()
-	{
-		if (progress < 1.0)
-		{
-			progress += speed;
-			*target = value();
-		}
-		return (progress >= 1.0);
-	}
-};
-
 class PanelLayout : public Tickable
 {
 
@@ -90,7 +62,6 @@ private:
 	std::string currentAnimation;
 	std::map<std::string, Animation> animations;
 
-	std::vector<Tween<float>> tweens;
 	Panel* highlighted = nullptr;
 
 public:
@@ -106,7 +77,6 @@ public:
 	bool Tick(float dt) override;
 	void Draw(float dt) override;
 	Panel* GetPanel(const std::string& id);
-	Tween<float>* Tween(float* target, float from, float to, float speed = 0.001f, std::function<float(float)> interpolator = glm::linearInterpolation<float>);
 	void Play(const std::string& anim);
 	const bool Playing() { return !currentAnimation.empty(); };
 };
