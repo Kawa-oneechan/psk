@@ -41,9 +41,9 @@ void main()
 
 	vec3 viewPos = (InvView * vec4(0.0, 0.0, 0.0, 0.1)).xyz;
 	vec3 viewDir = normalize(viewPos);
-	float pit = asin(viewDir.y);
+	float pit = asin(viewDir.y); //not quite right yet...
 	//there is really no need to have this next line when you think about it.
-	uv.x += atan(viewDir.z, viewDir.x) * 0.25;
+	//uv.x += atan(viewDir.z, viewDir.x) * 0.25;
 
 	vec3 sky = texture(skyImage, vec2(TimeOfDay, uv.y - 0.01)).rgb;
 	fragColor = vec4(sky, 1.0);
@@ -56,7 +56,8 @@ void main()
 		1.0);
 
 	fragColor = mix(starsColor, fragColor, blend);
-	fragColor = mix(fragColor, vec4(1), clouds(uv * 1.25, pit) * (blend * 0.75));
+	for (float layer = 0.0; layer < 0.6; layer += 0.1)
+		fragColor = mix(fragColor, vec4(1.0 - (layer * 0.75)), clouds((uv + vec2(0, layer * 0.1)) * 1.25, pit) * (blend * 0.75));
 
 	if (uv.y < pit)
 		fragColor = vec4(0.0, 0.0, 0.0, 1.0);
