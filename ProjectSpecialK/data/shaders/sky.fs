@@ -39,16 +39,16 @@ void main()
 {
 	vec2 uv = gl_FragCoord.xy / ScreenRes.xy;
 
-	vec3 viewPos = (InvView * vec4(0.0, 0.0, 0.0, 0.1)).xyz;
-	vec3 viewDir = normalize(viewPos);
-	float pit = asin(viewDir.y); //not quite right yet...
+	//vec3 viewPos = InvView[3];
+	vec3 viewDir = -InvView[2].xyz;
+	float pit = (asin(viewDir.y) * 0.25) + 0.5;
 	//there is really no need to have this next line when you think about it.
 	//uv.x += atan(viewDir.z, viewDir.x) * 0.25;
 
 	vec3 sky = texture(skyImage, vec2(TimeOfDay, uv.y - 0.01)).rgb;
 	fragColor = vec4(sky, 1.0);
 
-	float blend = clamp(texture(skyImage, vec2(TimeOfDay, 0.0)).r * 3.0, 0.15, 1.0);
+	float blend = clamp(texture(skyImage, vec2(0.1, 0.0)).r * 3.0, 0.15, 1.0);
 
 	vec4 starsColor = vec4(
 			texture(starsImage, uv + vec2(0, -pit)).rgb +
