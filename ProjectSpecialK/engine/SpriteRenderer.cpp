@@ -52,7 +52,8 @@ namespace Sprite
 		std::string file;
 		int size;
 		bool alignToGrid;
-		int puaSource;
+		int puaSource1; //Input Prompts
+		int puaSource2; //Game-specific
 	};
 
 	struct letterToDraw
@@ -291,7 +292,8 @@ namespace Sprite
 				fonts[i].file = "fonts/" + thisFont["file"].as_string();
 				fonts[i].size = thisFont["size"].as_integer();
 				fonts[i].alignToGrid = thisFont["grid"].is_boolean() ? thisFont["grid"].as_boolean() : false;
-				fonts[i].puaSource = thisFont["pua"].is_number() ? thisFont["pua"].as_integer() : 0;
+				fonts[i].puaSource1 = thisFont["inputs"].is_number() ? thisFont["inputs"].as_integer() : 0;
+				fonts[i].puaSource2 = thisFont["icons"].is_number() ? thisFont["icons"].as_integer() : 0;
 			}
 		}
 
@@ -423,8 +425,10 @@ namespace Sprite
 
 			auto bank = ch >> 8;
 			auto actualFont = textRenderFont;
-			if (bank == 0xE0 && fonts[actualFont].puaSource != 0)
-				actualFont = fonts[actualFont].puaSource;
+			if (bank == 0xE0 && fonts[actualFont].puaSource1 != 0)
+				actualFont = fonts[actualFont].puaSource1;
+			else if (bank >= 0xE1 && fonts[actualFont].puaSource2 != 0)
+				actualFont = fonts[actualFont].puaSource2;
 			LoadFontBank(actualFont, bank);
 
 			//auto scaleF = textRenderSize / 100.0f;
@@ -537,8 +541,10 @@ namespace Sprite
 
 			auto bank = ch >> 8;
 			auto actualFont = textRenderFont;
-			if (bank == 0xE0 && fonts[actualFont].puaSource != 0)
-				actualFont = fonts[actualFont].puaSource;
+			if (bank == 0xE0 && fonts[actualFont].puaSource1 != 0)
+				actualFont = fonts[actualFont].puaSource1;
+			else if (bank >= 0xE1 && fonts[actualFont].puaSource2 != 0)
+				actualFont = fonts[actualFont].puaSource2;
 			LoadFontBank(actualFont, bank);
 
 			//auto scaleF = textRenderSize / 100.0f;

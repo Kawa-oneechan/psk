@@ -7,19 +7,26 @@
 	{	//1 - UI
 		"file": "seurat.ttf",
 		"size": 32,
-		"pua": 4
+		"inputs": 4,
+		"icons": 5
 	},
 	{	//2 - Dialogue
 		"file": "rodin.ttf",
 		"size": 32,
-		"pua": 4
+		"inputs": 4,
+		"icons": 5
 	},
 	{	//3 - ???
 		"file": "backissues.otf",
 		"size": 32,
-		"pua": 4
+		"inputs": 4,
+		"icons": 5
 	},
-	{	//4 - Icons
+	{	//4 - Input Prompts
+		"file": "kenney_input_xbox_series.otf",
+		"size": 32
+	},
+	{	//5 - Game Icons
 		"file": "icons.ttf",
 		"size": 32
 	}

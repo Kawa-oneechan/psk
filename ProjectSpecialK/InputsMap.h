@@ -66,26 +66,13 @@ constexpr int DefaultInputGamepadBindings[] = {
 const std::string GamepadPUAMap[] =
 {
 	//ABXY
-	u8"\uE0E0", u8"\uE0E1", u8"\uE0E2", u8"\uE0E3",
+	u8"\uE004", u8"\uE006", u8"\uE01E", u8"\uE020",
 	//Shoulders
-	u8"\uE0E4", u8"\uE0E5",
+	u8"\uE045", u8"\uE048",
 	//Back, Start, Guide
-	u8"\uE0F2", u8"\uE0F1", u8"\uE0F4",
+	u8"\uE008", u8"\uE018", u8"\uE041",
 	//Thumbs
-	u8"\uE101", u8"\uE102",
+	u8"\uE04F", u8"\uE057",
 	//DPad
-	u8"\uE0EB", u8"\uE0EE", u8"\uE0EC", u8"\uE0ED",
-
-	/* Outlined:
-	//ABXY
-	u8"\uE0A0", u8"\uE0A1", u8"\uE0A2", u8"\uE0A3",
-	//Shoulders
-	u8"\uE0A4", u8"\uE0A5",
-	//Back, Start, Guide
-	u8"\uE0B4", u8"\uE0B3", u8"\uE0B9",
-	//Thumbs
-	u8"\uE0C1", u8"\uE0C2",
-	//DPad
-	u8"\uE0AF", u8"\uE0B2", u8"\uE0B0", u8"\uE0B1",
-	*/
+	u8"\uE035", u8"\uE02B", u8"\uE024", u8"\uE028",
 };
