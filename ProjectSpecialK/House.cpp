@@ -53,7 +53,7 @@ void VillagerHouse::SaveObjects(jsonValue& json)
 			auto item = json5pp::object({});
 			item.as_object()["room"] = r;
 			item.as_object()["id"] = i.Item->FullID();
-			item.as_object()["position"] = GetJSONVec(i.Position / 10.0f, true);
+			item.as_object()["position"] = GetJSONVecI(i.Position / 10.0f);
 			if (i.State != 0)
 			{
 				item.as_object()["state"] = i.State;

@@ -129,52 +129,46 @@ glm::vec2 GetJSONDate(const jsonValue& val)
 	throw std::runtime_error(fmt::format("GetJSONDate: value {} is not a month/day pair.", val.stringify5()));
 }
 
-jsonValue GetJSONVec(const glm::vec2& vec, bool asInt)
+jsonValue GetJSONVec(const glm::vec2& vec)
 {
-	if (asInt)
-	{
-		return json5pp::array({
-			(int)vec.x, (int)vec.y
-		});
-	}
-	else
-	{
-		return json5pp::array({
-			vec.x, vec.y
-		});
-	}
+	return json5pp::array({
+		vec.x, vec.y
+	});
 }
 
-jsonValue GetJSONVec(const glm::vec3& vec, bool asInt)
+jsonValue GetJSONVecI(const glm::vec2& vec)
 {
-	if (asInt)
-	{
-		return json5pp::array({
-			(int)vec.x, (int)vec.y, (int)vec.z
-		});
-	}
-	else
-	{
-		return json5pp::array({
-			vec.x, vec.y, vec.z
-		});
-	}
+	return json5pp::array({
+		(int)vec.x, (int)vec.y
+	});
 }
 
-jsonValue GetJSONVec(const glm::vec4& vec, bool asInt)
+jsonValue GetJSONVec(const glm::vec3& vec)
 {
-	if (asInt)
-	{
-		return json5pp::array({
-			(int)vec.x, (int)vec.y, (int)vec.z, (int)vec.w
-		});
-	}
-	else
-	{
-		return json5pp::array({
-			vec.x, vec.y, vec.z, vec.w
-		});
-	}
+	return json5pp::array({
+		vec.x, vec.y, vec.z
+	});
+}
+
+jsonValue GetJSONVecI(const glm::vec3& vec)
+{
+	return json5pp::array({
+		(int)vec.x, (int)vec.y, (int)vec.z
+	});
+}
+
+jsonValue GetJSONVec(const glm::vec4& vec)
+{
+	return json5pp::array({
+		vec.x, vec.y, vec.z, vec.w
+	});
+}
+
+jsonValue GetJSONVecI(const glm::vec4& vec)
+{
+	return json5pp::array({
+		(int)vec.x, (int)vec.y, (int)vec.z, (int)vec.w
+	});
 }
 
 void GetAtlas(SpriteAtlas &ret, const std::string& jsonFile)
