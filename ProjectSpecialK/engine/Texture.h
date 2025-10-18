@@ -49,6 +49,8 @@ public:
 	}
 	const size_t Frames() const { return atlas.size(); }
 	const SpriteAtlas& Atlas() const { return atlas; }
+	const void Atlas(const SpriteAtlas& newAtlas) { atlas = newAtlas; }
+	const void Atlas(const std::map<std::string, glm::vec4>& newAtlas) { atlas.FromMap(newAtlas); }
 
 	//TODO: look into proper copystructor
 	Texture(const Texture &x) = default;

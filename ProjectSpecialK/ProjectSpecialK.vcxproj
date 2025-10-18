@@ -185,6 +185,7 @@
     <ClCompile Include="engine\VFS.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="House.cpp" />
+    <ClCompile Include="ImageSets.cpp" />
     <ClCompile Include="InGame.cpp" />
     <ClCompile Include="Iris.cpp" />
     <ClCompile Include="Item.cpp" />

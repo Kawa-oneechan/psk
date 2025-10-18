@@ -52,6 +52,19 @@ struct SpriteAtlas
 			return frames[it->second];
 		return frames[0];
 	}
+	void FromMap(const std::map<std::string, glm::vec4> &x)
+	{
+		this->frames.clear();
+		this->names.clear();
+		this->frames.reserve(x.size());
+		int i = 0;
+		for (const auto& f : x)
+		{
+			this->frames.push_back(f.second);
+			this->names[f.first] = i;
+			i++;
+		}
+	}
 };
 
 namespace UI

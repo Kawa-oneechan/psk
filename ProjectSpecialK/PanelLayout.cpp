@@ -389,7 +389,7 @@ void PanelLayout::Draw(float dt)
 				continue;
 
 			auto& texture = *Database::ItemIcons;
-			auto frame = Database::ItemIconAtlas[panel->Text];
+			auto frame = texture[panel->Text];
 			auto shader = Shaders["sprite"];
 
 			Sprite::DrawSprite(
