@@ -68,11 +68,24 @@ const std::string GamepadPUAMap[] =
 	//ABXY
 	u8"\uE004", u8"\uE006", u8"\uE01E", u8"\uE020",
 	//Shoulders
-	u8"\uE045", u8"\uE048",
+	u8"\uE043", u8"\uE049",
 	//Back, Start, Guide
 	u8"\uE008", u8"\uE018", u8"\uE041",
 	//Thumbs
 	u8"\uE04F", u8"\uE057",
 	//DPad
 	u8"\uE035", u8"\uE02B", u8"\uE024", u8"\uE028",
+
+	/* Outlined:
+	//ABXY
+	u8"\uE005", u8"\uE007", u8"\uE01F", u8"\uE021",
+	//Shoulders
+	u8"\uE044", u8"\uE04A",
+	//Back, Start, Guide
+	u8"\uE009", u8"\uE01C", u8"\uE042",
+	//Thumbs
+	u8"\uE050", u8"\uE058",
+	//DPad
+	u8"\uE036", u8"\uE029", u8"\uE025", u8"\uE029",
+	*/
 };

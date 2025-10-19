@@ -48,7 +48,7 @@ void main()
 	vec3 sky = texture(skyImage, vec2(TimeOfDay, uv.y - 0.01)).rgb;
 	fragColor = vec4(sky, 1.0);
 
-	float blend = clamp(texture(skyImage, vec2(0.1, 0.0)).r * 3.0, 0.15, 1.0);
+	float blend = clamp(texture(skyImage, vec2(TimeOfDay, 0.0)).r * 3.0, 0.15, 1.0);
 
 	vec4 starsColor = vec4(
 			texture(starsImage, uv + vec2(0, -pit)).rgb +
