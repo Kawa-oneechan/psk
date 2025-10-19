@@ -12,7 +12,7 @@ NineSlicer::NineSlicer(const std::string& texPath, int left, int top, int width,
 
 void NineSlicer::Draw(float dt)
 {
-	dt;
+	(void)(dt);
 	auto& tex = *texture;
 
 	auto sc = (Scale > 0) ? Scale : scale;

@@ -320,7 +320,7 @@ namespace Sprite
 #ifndef BECKETT_NOBJTS
 	static void bjtsColor(BJTSParams)
 	{
-		start; len;
+		(void)(start); (void)(len);
 		if (tags[0] == "/color")
 			textRenderColor = originalTextRenderColor;
 		else if (tags.size() < 2)
@@ -340,7 +340,7 @@ namespace Sprite
 
 	static void bjtsSize(BJTSParams)
 	{
-		start; len;
+		(void)(start); (void)(len);
 		if (tags[0] == "/size")
 			textRenderSize = 1.0f; //originalTextRenderSize;
 		else if (tags.size() < 2)
@@ -360,7 +360,7 @@ namespace Sprite
 
 	static void bjtsFont(BJTSParams)
 	{
-		start; len;
+		(void)(start); (void)(len);
 		if (tags[0] == "/font")
 			textRenderFont = originalTextRenderFont;
 		else if (tags.size() < 2)

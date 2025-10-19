@@ -241,7 +241,7 @@ static void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 
 static void char_callback(GLFWwindow* window, unsigned int codepoint)
 {
-	window;
+	(void)(window);
 	if (console->visible)
 	{
 		if (codepoint == '`') return;
@@ -327,7 +327,7 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 
 static void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
 {
-	window;
+	(void)(window);
 	float xpos = static_cast<float>(xposIn);
 	float ypos = static_cast<float>(yposIn);
 
@@ -351,7 +351,7 @@ static void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
 
 static void mousebutton_callback(GLFWwindow* window, int button, int action, int mods)
 {
-	window; mods;
+	(void)(window); (void)(mods);
 
 #ifdef DEBUG
 	if (IsImGuiHovered())
@@ -474,8 +474,7 @@ static void InitOpenGL()
 #ifdef DEBUG
 void GLAPIENTRY MessageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam)
 {
-	length;
-	userParam;
+	(void)(length); (void)(userParam);
 
 	static std::map<int, std::string> sources = {
 		{ GL_DEBUG_SOURCE_API, "API" },

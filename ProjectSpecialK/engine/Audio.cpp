@@ -14,6 +14,8 @@ float Audio::MusicVolume, Audio::SoundVolume;
 float Audio::AmbientVolume, Audio::SpeechVolume;
 #endif
 
+static auto epsilon = glm::epsilon<float>();
+
 void Audio::Initialize()
 {
 	Enabled = true;
@@ -35,7 +37,6 @@ void Audio::Update()
 {
 	system->update();
 
-	static auto epsilon = glm::epsilon<float>();
 	static auto oldMusicVolume = MusicVolume;
 	auto changed = false;
 
@@ -57,7 +58,7 @@ void Audio::Update()
 
 static FMOD_RESULT F_CALLBACK callback(FMOD_CHANNEL *channel, FMOD_CHANNEL_CALLBACKTYPE type, void *commanddata1, void *commanddata2)
 {
-	channel; type; commanddata1; commanddata2;
+	(void)(channel); (void)(type); (void)(commanddata1); (void)(commanddata2);
 	//FMOD::Channel *cppchannel = (FMOD::Channel *)channel;
 	return FMOD_OK;
 }

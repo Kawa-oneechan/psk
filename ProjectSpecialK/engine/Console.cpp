@@ -500,7 +500,7 @@ std::string CVar::ToString()
 
 static void CCmdVersion(const jsonArray& args)
 {
-	args;
+	(void)(args);
 	conprint(8, BECKETT_GAMENAME " - " BECKETT_VERSIONJOKE);
 #ifdef DEBUG
 	conprint(7, "Debug version: " __DATE__);
