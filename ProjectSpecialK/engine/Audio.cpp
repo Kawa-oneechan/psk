@@ -5,7 +5,7 @@
 #include "VFS.h"
 #include "../Game.h"
 
-FMOD::System* Audio::system;
+SoLoud::Soloud Audio::system;
 std::vector<Audio*> Audio::playing;
 
 bool Audio::Enabled;
@@ -19,24 +19,20 @@ static auto epsilon = glm::epsilon<float>();
 void Audio::Initialize()
 {
 	Enabled = true;
-	if (FMOD::System_Create(&system) != FMOD_OK)
+	if (system.init() != 0)
 	{
-		conprint(1, "Could not create FMOD system object. Sound disabled.");
+		conprint(1, "Could not initialize SoLoud. Sound disabled.");
 		Enabled = false;
 		return;
 	}
-	if (system->init(4, FMOD_INIT_NORMAL, NULL) != FMOD_OK)
-	{
-		conprint(1, "Could not initialize FMOD system object. Sound disabled.");
-		Enabled = false;
-		return;
-	}
+
+#ifdef BECKETT_3DAUDIO
+	system.set3dListenerUp(0.0f, 0.1f, 0.0f);
+#endif
 }
 
 void Audio::Update()
 {
-	system->update();
-
 	static auto oldMusicVolume = MusicVolume;
 	auto changed = false;
 
@@ -54,13 +50,10 @@ void Audio::Update()
 			x->UpdateVolume();
 		}
 	}
-}
 
-static FMOD_RESULT F_CALLBACK callback(FMOD_CHANNEL *channel, FMOD_CHANNEL_CALLBACKTYPE type, void *commanddata1, void *commanddata2)
-{
-	(void)(channel); (void)(type); (void)(commanddata1); (void)(commanddata2);
-	//FMOD::Channel *cppchannel = (FMOD::Channel *)channel;
-	return FMOD_OK;
+#ifdef BECKETT_3DAUDIO
+	system.update3dAudio();
+#endif
 }
 
 Audio::Audio(const std::string& filename) : filename(filename)
@@ -77,10 +70,6 @@ Audio::Audio(const std::string& filename) : filename(filename)
 		conprint(1, "Could not open audio file {}.", filename);
 		return;
 	}
-	auto soundEx = FMOD_CREATESOUNDEXINFO{ 0 };
-	soundEx.cbsize = sizeof(FMOD_CREATESOUNDEXINFO);
-	soundEx.length = (unsigned int)size;
-	auto mode = FMOD_HARDWARE | FMOD_2D | FMOD_OPENMEMORY;
 	if (filename.find("music/") != std::string::npos)
 		type = Type::Music;
 #ifdef BECKETT_MOREVOLUME
@@ -92,27 +81,26 @@ Audio::Audio(const std::string& filename) : filename(filename)
 	else
 		type = Type::Sound;
 
-	if (system->createStream(data.get(), mode, &soundEx, &theSound) != FMOD_OK)
-	{
-		fmt::format("Could not create stream for audio file {}.", filename);
-		return;
-	}
-	theChannel->setCallback(callback);
+#ifndef BECKETT_MOREVOLUME
+	isStream = (type == Type::Music);
+#else 
+	isStream = (type == Type::Music) || (type == Type::Ambient);
+#endif
 
-	//we don't have ends_with, that's a 20 thing.
-	auto ext = VFS::GetExtension(filename);
-	if (ext == "ogg")
+	if (isStream)
 	{
-		FMOD_TAG tag;
-		if (theSound->getTag("LOOP_START", 0, &tag) == FMOD_OK)
+		if (stream.loadMem((unsigned char*)data.get(), (unsigned int)size, true) != 0)
 		{
-			if (theSound->setMode(mode | FMOD_LOOP_NORMAL) != FMOD_OK)
-				conprint(1, "Wanted to enable looping for file {}, could not.", filename);
-			unsigned int start = atoi(static_cast<char*>(tag.data));
-			unsigned int end = 0;
-			theSound->getLength(&end, FMOD_TIMEUNIT_PCM);
-			if (theSound->setLoopPoints(start, FMOD_TIMEUNIT_PCM, end, FMOD_TIMEUNIT_PCM) != FMOD_OK)
-				conprint(1, "Wanted to set loop point for file {}, could not.", filename);
+			fmt::format("Could not create stream for audio file {}.", filename);
+			return;
+		}
+	}
+	else
+	{
+		if (sound.loadMem((unsigned char*)data.get(), (unsigned int)size, true) != 0)
+		{
+			fmt::format("Could not create sound for audio file {}.", filename);
+			return;
 		}
 	}
 
@@ -139,17 +127,21 @@ Audio::Audio(const std::string& filename) : filename(filename)
 Audio::~Audio()
 {
 	Stop();
-	if (Enabled)
-		theSound->release();
-	theChannel = NULL;
-	theSound = NULL;
 }
 
-void Audio::Play(bool force)
+void Audio::SetListenerPosition(const glm::vec3& pos)
 {
-	if (theSound == nullptr)
-		return;
+#ifdef BECKETT_3DAUDIO
+	system.set3dListenerPosition(pos.x, pos.y, pos.z);
+#endif
+}
 
+#ifndef BECKETT_3DAUDIO
+void Audio::Play(bool force)
+#else
+void Audio::Play(bool force, bool in3D)
+#endif
+{
 	if (force && status != Status::Stopped)
 		Stop();
 
@@ -157,24 +149,43 @@ void Audio::Play(bool force)
 	{
 		if (Enabled)
 		{
-			if (system->playSound(FMOD_CHANNEL_FREE, theSound, false, &theChannel) != FMOD_OK)
-				throw "Could not play stream.";
+			if (isStream)
+				handle = system.play(stream);
+			else
+				handle = system.play(sound);
+
+#ifdef BECKETT_3DAUDIO
+			is3D = in3D;
+			if (in3D)
+			{
+				if (isStream)
+					handle = system.play3d(stream, 0.0f, 0.0f, 0.0f);
+				else
+					handle = system.play3d(sound, 0.0f, 0.0f, 0.0f);
+			}
+			else
+#endif
+			{
+				if (isStream)
+					handle = system.play(stream);
+				else
+					handle = system.play(sound);
+			}
 			UpdateVolume();
 		}
 		playing.push_back(this);
 	}
 	else if (status == Status::Paused)
 	{
-		theChannel->setPaused(false);
+		system.setPause(handle, false);
 	}
-	theChannel->getFrequency(&frequency);
 	status = Status::Playing;
 }
 
 void Audio::Pause()
 {
 	if (Enabled)
-		theChannel->setPaused(true);
+		system.setPause(handle, true);
 	status = Status::Paused;
 }
 
@@ -183,7 +194,7 @@ void Audio::Stop()
 	if (status != Status::Stopped)
 	{
 		if (Enabled)
-			theChannel->stop();
+			system.stop(handle);
 	}
 	status = Status::Stopped;
 	playing.erase(std::remove(playing.begin(), playing.end(), this), playing.end());
@@ -191,19 +202,16 @@ void Audio::Stop()
 
 void Audio::update()
 {
+	if (!isStream)
+		return;
 	if (tags.empty())
 		return;
 	if (listeners.empty())
 		return;
 	if (currentTag >= tags.size())
 		return;
-	unsigned int pos;
-	theChannel->getPosition(&pos, FMOD_TIMEUNIT_MS);
-	float fpos = pos / 1000.0f;
+	float fpos = (float)system.getStreamPosition(handle);
 	
-	//adjust a bit, not sure if my fault or FMOD's.
-	fpos -= 0.100f; if (fpos < 0.0f) fpos = 0.0f;
-
 	while (fpos > nextTag)
 	{
 		for (auto listener : listeners)
@@ -231,29 +239,31 @@ void Audio::UpdateVolume()
 #endif
 	}
 	Volume = glm::clamp(Volume, 0.0f, 1.0f);
-	theChannel->setVolume(v * Volume);
+	system.setVolume(handle, v * Volume);
 }
 
 void Audio::SetPitch(float ratio)
 {
-	theChannel->setFrequency(frequency * ratio);
+	assert(ratio > 0.0f);
+	system.setRelativePlaySpeed(handle, ratio);
 }
 
-#ifdef BECKETT_3DAUDIO
-void Audio::SetPosition(glm::vec3 pos)
+void Audio::SetPosition(const glm::vec3& pos)
 {
-	//Only generic sounds can be positioned.
-	if (type != Type::Sound)
-		return;
-	FMOD_VECTOR v = { pos.x, pos.y, pos.z };
-	theChannel->set3DAttributes(&v, nullptr);
-}
+#ifdef BECKETT_3DAUDIO
+	if (is3D)
+		system.set3dSourceParameters(handle, pos.x, pos.y, pos.z, 0.0f, 0.0f, 0.0f);
 #endif
+}
 
 void Audio::SetPan(float pos)
 {
-	if (theChannel->setPan(pos) != FMOD_OK)
-		conprint(1, "Couldn't set pan position for {}.", filename);
+	system.setPan(handle, glm::clamp(pos, -1.0f, 1.0f));
+}
+
+void Audio::SetLoop(bool loop)
+{
+	system.setLooping(handle, loop);
 }
 
 void Audio::RegisterListener(const AudioEventListener* listener)

@@ -9,7 +9,7 @@
 
 //For version information
 #include <miniz.h>
-#include <fmodex/fmod.hpp>
+#include <soloud/soloud.h>
 #ifdef DEBUG
 #include <ImGUI/imgui.h>
 #endif
@@ -517,7 +517,7 @@ static void CCmdVersion(const jsonArray& args)
 	conprint(7, "UFBX: {}.{}.{}", ufbx_version_major(UFBX_VERSION), ufbx_version_minor(UFBX_VERSION), ufbx_version_patch(UFBX_VERSION));
 #endif
 	conprint(7, "MiniZip: " MZ_VERSION);
-	conprint(7, "FMOD: {}.{}.{}", (FMOD_VERSION >> 16) & 0xFFFF, (FMOD_VERSION >> 8) & 0xFF, FMOD_VERSION & 0xFF);
+	conprint(7, "SoLoud: {}", SOLOUD_VERSION);
 	conprint(7, "STB_Image: 2.30");
 	conprint(7, "STB_Image_Write: 1.16");
 	conprint(7, "STB_TrueType: 1.26");

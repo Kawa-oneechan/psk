@@ -93,7 +93,6 @@ Switch Toolbox by KillzXGaming et al
 
 #Third-party libraries
 Dear ImGUI	Omar Cornut
-FMOD Ex	Firelight Technologies
 FMT	Victor Zverovich
 GLAD	David Herberth
 GLFW	Marcus Geelnard
@@ -106,4 +105,5 @@ STB tools	Sean Barrett
 Scale2X	Thomas Bernard
 Sol	Rapptz
 	ThePhD, et al
+SoLoud	Jari Komppa
 UFBX	Samuli Raivio

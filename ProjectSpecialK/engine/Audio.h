@@ -3,18 +3,25 @@
 #include <vector>
 #include <map>
 #include <memory>
-#include <fmodex/fmod.hpp>
 #include <glm/glm.hpp>
+#include <soloud/soloud.h>
+#include <soloud/soloud_wav.h>
+#include <soloud/soloud_wavstream.h>
 #include "../Game.h"
 
-//A wrapper around FMOD, or whatever other audio backend may be used.
+//A wrapper around SoLoud, or whatever other audio backend may be used.
 class Audio
 {
 private:
-	static FMOD::System* Audio::system;
+	static SoLoud::Soloud system;
 	static std::vector<Audio*> playing;
-	FMOD::Sound* theSound{ nullptr };
-	FMOD::Channel* theChannel{ nullptr };
+	SoLoud::Wav sound;
+	SoLoud::WavStream stream;
+	unsigned int handle{ 0 };
+	bool isStream{ false };
+#ifdef BECKETT_3DAUDIO
+	bool is3D{ false };
+#endif
 	enum class Status
 	{
 		Invalid, Stopped, Paused, Playing,
@@ -28,7 +35,6 @@ private:
 	} type{ Type::Sound };
 	std::string filename;
 	std::unique_ptr<char[]> data{ nullptr };
-	float frequency{ 0 };
 	std::vector<class AudioEventListener*> listeners;
 	std::vector<std::tuple<float, std::string>> tags;
 	float lastTag{ -1.0f };
@@ -54,9 +60,9 @@ public:
 	static float SpeechVolume;
 #endif
 
-	//Initializes FMOD.
+	//Initializes SoLoud.
 	static void Initialize();
-	//Updates FMOD, then goes through any pending volume changes.
+	//Updates SoLoud, then goes through any pending volume changes.
 	static void Update();
 
 	//Volume control for this sound.
@@ -70,25 +76,27 @@ public:
 	~Audio();
 	//Plays the sound. If it's already playing, it won't restart or anything
 	//*unless* `force` is true.
+#ifndef BECKETT_3DAUDIO
 	void Play(bool force = false);
+#else
+	void Play(bool force = false, bool in3D = true);
+#endif
 	//Pauses the sound. Calling `Play` afterwards will resume playback.
 	void Pause();
 	//Stops playing the sound. Calling `Play` afterwards will restart playback.
 	void Stop();
 	//Mostly for internal use but you never know. Updates both the Volume
-	//member and the wrapped FMOD channel's volume.
+	//member and the wrapped SoLoud sound's volume.
 	void UpdateVolume();
 
 	//Changes the pitch of the sound. Works best if it's not already playing.
-	//FMOD's pitch functions take a target frequency, but Audio takes a
-	//percentage where 1.0 is the original and 2.0 is double that.
-	//For convenience.
 	void SetPitch(float ratio);
-	//TODO: Test this.
-	void SetPosition(glm::vec3 pos);
+	void SetPosition(const glm::vec3& pos);
+	static void Audio::SetListenerPosition(const glm::vec3& pos);
 	//Sets the sound's position in 2D stereo space where -1.0 is fully
 	//to the left and 1.0 is fully to the right.
 	void SetPan(float pos);
+	void SetLoop(bool loop);
 
 	//Registers an AudioEventListener to receive messages for audio with timed events.
 	void RegisterListener(const class AudioEventListener* listener);
