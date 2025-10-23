@@ -30,9 +30,9 @@ bool MusicManager::Tick(float dt)
 		}
 		if (bgm->Volume <= 0.0f)
 		{
+			bgm->Stop();
 			if (state == MusicState::FadeOut)
 			{
-				bgm->Stop();
 				state = MusicState::Idle;
 			}
 			else //if (state == MusicState::FadeToQueue)

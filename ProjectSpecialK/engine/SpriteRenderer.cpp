@@ -253,22 +253,14 @@ namespace Sprite
 	void DrawLine(const glm::vec2& from, const glm::vec2& to, const glm::vec4& color)
 	{
 		auto l = to - from;
-
-		auto len = 0.0f;
-		{
-			auto k = (l.x * l.x) + (l.y * l.y);
-			auto n = k / 2;
-			auto i = 0x5F3759DF - ((*(int *)&k) >> 1); //what the fuck?
-			if (k != 0)
-			{
-				k = *(float *)&i;
-				k = k * (1.5f - (n * k * k));
-				len = 1.0f / k;
-			}
-		}
 		auto a = glm::degrees(std::atan2(l.y, l.x));
 
-		DrawSprite(*whiteRect, from, glm::vec2(len, 1), glm::vec4(0), a, color, SpriteFlags::TopLeftOrigin);
+		auto k = (l.x * l.x) + (l.y * l.y);
+		__m128 temp = _mm_set_ss(k);
+		temp = _mm_rsqrt_ss(temp);
+		auto len = 1.0f / _mm_cvtss_f32(temp);
+
+		DrawSprite(*whiteRect, from, glm::vec2(len, 1), glm::vec4(0), a, color, SpriteFlags::RotateTopLeft);
 	}
 
 	static void LoadFontBank(int font, int bank)

@@ -89,7 +89,7 @@ Audio::Audio(const std::string& filename) : filename(filename)
 
 	if (isStream)
 	{
-		if (stream.loadMem((unsigned char*)data.get(), (unsigned int)size, true) != 0)
+		if (stream.loadMem(reinterpret_cast<unsigned char*>(data.get()), (unsigned int)size, true) != 0)
 		{
 			fmt::format("Could not create stream for audio file {}.", filename);
 			return;
@@ -97,7 +97,7 @@ Audio::Audio(const std::string& filename) : filename(filename)
 	}
 	else
 	{
-		if (sound.loadMem((unsigned char*)data.get(), (unsigned int)size, true) != 0)
+		if (sound.loadMem(reinterpret_cast<unsigned char*>(data.get()), (unsigned int)size, true) != 0)
 		{
 			fmt::format("Could not create sound for audio file {}.", filename);
 			return;
@@ -134,6 +134,7 @@ void Audio::SetListenerPosition(const glm::vec3& pos)
 #ifdef BECKETT_3DAUDIO
 	system.set3dListenerPosition(pos.x, pos.y, pos.z);
 #endif
+	return;
 }
 
 #ifndef BECKETT_3DAUDIO
