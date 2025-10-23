@@ -160,6 +160,7 @@ namespace Sprite
 			position -= size * 0.5f;
 
 		//Clip any sprites that aren't visible
+		if ((flags & SpriteFlags::NoClip) != SpriteFlags::NoClip)
 		{
 			int vp[4]; glGetIntegerv(GL_VIEWPORT, vp);
 			if ((int)position.x > vp[2] ||
@@ -260,7 +261,32 @@ namespace Sprite
 		temp = _mm_rsqrt_ss(temp);
 		auto len = 1.0f / _mm_cvtss_f32(temp);
 
-		DrawSprite(*whiteRect, from, glm::vec2(len, 1), glm::vec4(0), a, color, SpriteFlags::RotateTopLeft);
+		DrawSprite(*whiteRect, from, glm::vec2(len, 1), glm::vec4(0), a, color, (SpriteFlags)(SpriteFlags::RotateTopLeft | SpriteFlags::NoClip));
+	}
+
+	void DrawRect(const glm::vec4& bounds, const glm::vec4& color)
+	{
+		auto h = glm::vec2(bounds.z - bounds.x, 1);
+		auto v = glm::vec2(1, bounds.w - bounds.y + 1);
+		DrawSprite(*whiteRect, glm::vec2(bounds.x, bounds.y), h, glm::vec4(0), 0.0f, color);
+		DrawSprite(*whiteRect, glm::vec2(bounds.x, bounds.w), h, glm::vec4(0), 0.0f, color);
+		DrawSprite(*whiteRect, glm::vec2(bounds.x, bounds.y), v, glm::vec4(0), 0.0f, color);
+		DrawSprite(*whiteRect, glm::vec2(bounds.z, bounds.y), v, glm::vec4(0), 0.0f, color);
+	}
+
+	void DrawCircle(const glm::vec2& center, float radius, int segments, const glm::vec4& color)
+	{
+		auto step = glm::tau<float>() / segments;
+		auto there = 0.0f;
+		auto here = step;
+		for (int i = 0; i < segments; i++)
+		{
+			auto from = center + glm::vec2(glm::sin(there) * radius, glm::cos(there) * radius);
+			auto to   = center + glm::vec2(glm::sin( here) * radius, glm::cos( here) * radius);
+			DrawLine(from, to, color);
+			there = here;
+			here += step;
+		}
 	}
 
 	static void LoadFontBank(int font, int bank)
