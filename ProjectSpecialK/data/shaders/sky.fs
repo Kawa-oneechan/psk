@@ -39,11 +39,10 @@ void main()
 {
 	vec2 uv = gl_FragCoord.xy / ScreenRes.xy;
 
-	//vec3 viewPos = InvView[3];
-	vec3 viewDir = -InvView[2].xyz;
+	vec3 viewDir = mat4(mat3(View))[2].xyz;
 	float pit = (asin(viewDir.y) * 0.25) + 0.5;
 	//there is really no need to have this next line when you think about it.
-	//uv.x += atan(viewDir.z, viewDir.x) * 0.25;
+	//uv.x -= atan(viewDir.z, viewDir.x) * 0.25;
 
 	vec3 sky = texture(skyImage, vec2(TimeOfDay, uv.y - 0.01)).rgb;
 	fragColor = vec4(sky, 1.0);
