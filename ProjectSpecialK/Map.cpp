@@ -306,16 +306,25 @@ void Map::drawWorker(float dt)
 {
 	UpdateGrass();
 
+	if (wireframe)
+	{
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT);
+	}
+
 	MeshBucket::DrawAllWithDepth(dt, [&, dt] { drawCharacters(dt); drawObjects(dt); drawGround(dt); });
 
-	glEnable(GL_DEPTH_TEST);
-	cloudImage->Use(1);
-	starsImage->Use(2);
-	skyImage->Use(3);
+	if (!wireframe)
+	{
+		glEnable(GL_DEPTH_TEST);
+		cloudImage->Use(1);
+		starsImage->Use(2);
+		skyImage->Use(3);
 
-	Sprite::DrawSprite(Shaders["sky"], *whiteRect, glm::vec2(0), glm::vec2(width, height));
-	Sprite::FlushBatch();
-	glDisable(GL_DEPTH_TEST);
+		Sprite::DrawSprite(Shaders["sky"], *whiteRect, glm::vec2(0), glm::vec2(width, height));
+		Sprite::FlushBatch();
+		glDisable(GL_DEPTH_TEST);
+	}
 
 	//For an interior map:
 	/*

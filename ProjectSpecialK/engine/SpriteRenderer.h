@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <glm/glm.hpp>
+#include "Types.h"
 
 class Texture;
 class Shader;
@@ -33,6 +34,7 @@ namespace Sprite
 	void DrawLine(const glm::vec2& from, const glm::vec2& to, const glm::vec4& color);
 	void DrawRect(const glm::vec4& bounds, const glm::vec4& color);
 	void DrawCircle(const glm::vec2& center, float radius, int segments, const glm::vec4& color);
+	void DrawPoly(const polygon& poly, const glm::vec2& origin, float scale, const glm::vec4& color);
 
 	void DrawText(int font, const std::string& text, glm::vec2 position, const glm::vec4& color = glm::vec4(1), float size = 100, float angle = 0.0f, bool raw = false);
 	void DrawText(const std::string& text, const glm::vec2& position, const glm::vec4& color = glm::vec4(1), float size = 100, float angle = 0.0f, bool raw = false);

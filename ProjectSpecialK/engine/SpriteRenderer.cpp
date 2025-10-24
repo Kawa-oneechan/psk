@@ -289,6 +289,13 @@ namespace Sprite
 		}
 	}
 
+	void DrawPoly(const polygon& poly, const glm::vec2& origin, float scale, const glm::vec4& color)
+	{
+		for (int i = 1; i < poly.size(); i++)
+			DrawLine(origin + (poly[i - 1] * scale), origin + (poly[i] * scale), color);
+		DrawLine(origin + (poly[poly.size() - 1] * scale), origin + (poly[0] * scale), color);
+	}
+
 	static void LoadFontBank(int font, int bank)
 	{
 		if (!cdata)
