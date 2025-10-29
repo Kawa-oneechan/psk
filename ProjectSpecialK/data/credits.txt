@@ -1,8 +1,7 @@
+#— Project Special K —
+
 #Programming, data mining, design
 Kawa
-
-#Programming support
-Siapran	Vaartis
 
 #Mental support
 Lancette2201	Letrune
@@ -91,6 +90,16 @@ James Reyes
 Heaven Tool by rafacasari
 Switch Toolbox by KillzXGaming et al
 
+
+
+#— Beckett Engine —
+
+#Programming
+Kawa
+
+#Programming support
+Siapran	Vaartis
+
 #Third-party libraries
 Dear ImGUI	Omar Cornut
 FMT	Victor Zverovich
@@ -102,8 +111,10 @@ JSON5PP	Shuta Kimura
 Lua	PUC-Rio
 MiniZ	Rich Geldreich
 STB tools	Sean Barrett
-Scale2X	Thomas Bernard
+Scale2X	Andrea Mazzoleni
+	Thomas Bernard
 Sol	Rapptz
 	ThePhD, et al
 SoLoud	Jari Komppa
 UFBX	Samuli Raivio
+

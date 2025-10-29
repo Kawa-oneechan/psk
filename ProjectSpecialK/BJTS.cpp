@@ -103,8 +103,7 @@ static void bjtsWordstruct(std::string& data, BJTSParams)
 		{
 			key.replace(ppos, 1, speaker->personality->ID);
 			//check if this is available
-			auto result = Text::Get(fmt::format("{}:0", key));
-			if (result.length() >= 3 && result.substr(0, 3) == "???")
+			if (Text::Count(fmt::format("{}:0", key)) == 0)
 			{
 				//guess not :shrug:
 				key = data.substr(start + 1, len - 2);
@@ -113,17 +112,7 @@ static void bjtsWordstruct(std::string& data, BJTSParams)
 		}
 	}
 
-	//Count the number of options
-	int options = 0;
-	for (int i = 0; i < 32; i++)
-	{
-		auto result = Text::Get(fmt::format("{}:{}", key, i));
-		if (result.length() >= 3 && result.substr(0, 3) == "???")
-		{
-			options = i;
-			break;
-		}
-	}
+	auto options = Text::Count(fmt::format("{}:", key));
 	if (options == 0)
 	{
 		conprint(2, "Wordstructor: could not find anything for \"{}\".", key);

@@ -27,7 +27,7 @@ TitleScreen::TitleScreen()
 		if (options == 0)
 		{
 			conprint(2, "TitleScreen: could not find a logo joke.");
-			logoJoke->Text = "???";
+			logoJoke->Text = "404 logo joke not found";
 		}
 		else
 		{
