@@ -22,26 +22,39 @@ uniform mat4 finalBonesMatrices[MaxBones];
 
 void main()
 {
+	bool billboard = model[0][3] > 0.0;
+	mat4 _model = model;
+	_model[0][3] = 0.0;
+
 	vec4 totalPosition = vec4(0.0);
 	vec3 totalNormal = vec3(0.0);
 	vec4 aPos4 = vec4(aPos, 1.0f);
-	for(int i = 0; i < MaxWeights; i++)
+	for (int i = 0; i < MaxWeights; i++)
 	{
 		if (aBones[i] == -1) continue;
-		
+
 		vec4 localPosition = finalBonesMatrices[aBones[i]] * aPos4;
+
 		totalPosition += localPosition * aWeights[i];
 
 		vec3 localNormal = mat3(finalBonesMatrices[aBones[i]]) * aNormal;
 		totalNormal += localNormal * aWeights[i];
 	}
 
-	FragPos = vec3(model * totalPosition);
-	Normal = mat3(transpose(inverse(model))) * totalNormal;
-	Tangent = mat3(transpose(inverse(model))) * aTangent;
-	WorldPos = (model * totalPosition).xyz;
+	FragPos = vec3(_model * totalPosition);
+	Normal = mat3(transpose(inverse(_model))) * totalNormal;
+	Tangent = mat3(transpose(inverse(_model))) * aTangent;
+	WorldPos = (_model * totalPosition).xyz;
 
-	vec4 tm = View * model * totalPosition;
+	mat4 vm = View * _model;
+	if (billboard)
+	{
+		vm[0] = vec4(1, 0, 0, 0);
+		vm[1] = vec4(0, 1, 0, 0);
+		vm[2] = vec4(0, 0, 1, 0);
+	}
+
+	vec4 tm = vm * totalPosition;
 
 	if (Curve)
 	{

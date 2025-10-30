@@ -26,7 +26,7 @@ static inline int NumberValue(const std::string& value)
 	{
 		return std::stoi(value);
 	}
-	catch (std::invalid_argument)
+	catch (std::invalid_argument&)
 	{
 		return Sol.get<int>(value);
 	}

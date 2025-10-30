@@ -419,3 +419,25 @@ void TextureArray::Use(int slot)
 		currentTexture[slot] = ID;
 	}
 }
+
+void TextureArray::SetRepeat(int newRepeat)
+{
+	repeat = newRepeat;
+	if (delayed)
+		return;
+	glBindTexture(GL_TEXTURE_2D_ARRAY, ID);
+	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, repeat);
+	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, repeat);
+	glBindTexture(GL_TEXTURE_2D_ARRAY, 0);
+}
+
+void TextureArray::SetFilter(int newFilter)
+{
+	filter = newFilter;
+	if (delayed)
+		return;
+	glBindTexture(GL_TEXTURE_2D_ARRAY, ID);
+	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, filter);
+	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, filter);
+	glBindTexture(GL_TEXTURE_2D_ARRAY, 0);
+}

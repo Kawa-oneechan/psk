@@ -207,6 +207,16 @@ Model::Model(const std::string& modelPath) : file(modelPath)
 						m.Translucent = mat["translucent"].as_boolean();
 					if (mat["opaque"].is_boolean())
 						m.Opaque = mat["opaque"].as_boolean();
+					if (mat["billboard"].is_boolean())
+						m.Billboard = mat["billboard"].as_boolean();
+
+					if (mat["nearest"].is_boolean() && mat["nearest"].as_boolean())
+					{
+						m.Textures[0]->SetFilter(GL_NEAREST);
+						m.Textures[1]->SetFilter(GL_NEAREST);
+						m.Textures[2]->SetFilter(GL_NEAREST);
+						m.Textures[3]->SetFilter(GL_NEAREST);
+					}
 					debprint(0, "* #{}: {} > {}", matCt, node->name.data, m1);
 				}
 				else

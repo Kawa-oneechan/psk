@@ -91,6 +91,7 @@ public:
 		int Layer;
 		bool Translucent;
 		bool Opaque;
+		bool Billboard{ false };
 
 		Mesh(ufbx_mesh* mesh, const std::array<Bone, MaxBones>& bones, size_t boneCt);
 		const size_t Indices() { return indices.size(); }

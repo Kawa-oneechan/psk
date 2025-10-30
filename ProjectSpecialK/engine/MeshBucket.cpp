@@ -28,6 +28,7 @@ namespace MeshBucket
 		glm::mat4 Bones[MaxBones];
 		size_t BoneCount;
 		size_t Indices;
+		bool Billboard;
 	};
 
 	static int meshesInBucket;
@@ -85,6 +86,8 @@ namespace MeshBucket
 				auto r = (glm::mat4)m.Rotation;
 				//auto s = glm::scale(glm::mat4(1), scale);
 				auto model = t * r; //* s;
+				if (m.Billboard)
+					model[0][3] = 1.0;
 
 				theShader->Set("model", model);
 			}
@@ -148,6 +151,7 @@ namespace MeshBucket
 		bucket.Indices = mesh.Indices();
 		bucket.BoneCount = boneCt;
 		bucket.Layer = mesh.Layer;
+		bucket.Billboard = mesh.Billboard;
 		for (auto i = 0; i < 4; i++)
 			bucket.Textures[i] = mesh.Textures[i];
 		for (auto i = 0; i < boneCt; i++)

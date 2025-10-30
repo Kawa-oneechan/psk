@@ -44,20 +44,20 @@ namespace Database
 		{
 			auto key = f.first;
 			auto val = f.second.as_object();
-			auto items = std::vector<std::string>();
+			auto filterItems = std::vector<std::string>();
 			Text::Add(key, val["name"]);
 			for (const auto& i : val["items"].as_object())
 			{
 				auto k = i.first;
 				auto v = i.second.as_object();
 				Text::Add(k, v["name"]);
-				items.push_back(k);
+				filterItems.push_back(k);
 
 				Filters[k] = v["default"].is_boolean() ? v["default"].as_boolean() : true;
 				if (settings.find(k) != settings.end())
 					Filters[k] = settings[k].as_boolean();
 			}
-			FilterCategories[key] = items;
+			FilterCategories[key] = filterItems;
 		}
 	}
 
@@ -114,7 +114,7 @@ namespace Database
 			{
 				try
 				{
-					target.emplace_back(std::make_shared<T2>((jsonObject&)doc.as_object(), entry.path));
+					target.emplace_back(std::make_shared<T2>(doc.as_object(), entry.path));
 				}
 				catch (std::runtime_error& e)
 				{

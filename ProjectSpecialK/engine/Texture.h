@@ -36,8 +36,8 @@ public:
 	virtual void Use();
 	virtual void Use(int slot);
 
-	void SetRepeat(int newRepeat);
-	void SetFilter(int newFilter);
+	virtual void SetRepeat(int newRepeat);
+	virtual void SetFilter(int newFilter);
 
 	glm::vec4 operator[](size_t i) const
 	{
@@ -74,6 +74,9 @@ public:
 	virtual ~TextureArray() override;
 	void Use() override;
 	void Use(int slot) override;
+
+	void SetRepeat(int newRepeat) override;
+	void SetFilter(int newFilter) override;
 
 	//TODO: look into proper copystructor
 	TextureArray(const TextureArray &x) = default;
