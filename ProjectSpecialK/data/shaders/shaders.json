@@ -13,7 +13,8 @@
 		"playermouth": "playermouth.fs",
 		"playercheek": "playercheek.fs",
 		"playerlegs": "playerlegs.fs",
-		"playerhair": "playerhair.fs"
+		"playerhair": "playerhair.fs",
+		"billboard": "billboard.fs"
 	},
 	"sprite.vs": {
 		//Beckett

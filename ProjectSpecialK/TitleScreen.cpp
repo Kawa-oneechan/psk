@@ -39,8 +39,6 @@ TitleScreen::TitleScreen()
 	
 	LoadCamera("cameras/title.json");
 
-	//psText = PreprocessBJTS(Text::Get("title:pressstart"));
-	//psSize = Sprite::MeasureText(1, psText, 100);
 	auto playerText = fmt::format("{}\n{}", thePlayer.Name, town->Name);
 	auto playerPanelWidth = (int)(Sprite::MeasureText(1, playerText, 50.0f, true).x + 128);
 	playerPanel = std::make_shared<NineSlicer>("ui/roundrect.png", width - playerPanelWidth - 30, height, playerPanelWidth, 140);
@@ -88,7 +86,6 @@ bool TitleScreen::Tick(float dt)
 	}
 	else if (state == State::Wait)
 	{
-		//panelPop.step();
 		if (panelPop < 1.0f)
 		{
 			panelPop += dt * 0.5f;
@@ -151,7 +148,6 @@ void TitleScreen::Draw(float dt)
 
 	if (!optionsMenu->Visible && pressStart != nullptr)
 	{
-		//Sprite::DrawText(1, psText, (glm::vec2(width, height) - psSize) * glm::vec2(0.5f, 0.86f), glm::vec4(1, 1, 1, glm::abs(glm::sin((float)glfwGetTime())) * 1.0f), 150.0f * scale);
 		Sprite::DrawSprite(pressStart->Texture(),
 			(glm::vec2(width, height) - (pressStart->Size() * scale)) * glm::vec2(0.5f, 0.86f),
 			pressStart->Size() * scale, glm::vec4(0), 0.0f,

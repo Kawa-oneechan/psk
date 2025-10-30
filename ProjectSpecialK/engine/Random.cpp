@@ -20,7 +20,7 @@ namespace Random
 
 	int GetInt(int min, int max)
 	{
-		std::uniform_int_distribution<> dist(min, max);
+		std::uniform_int_distribution<> dist(min, max - 1);
 		return dist(engine);
 	}
 

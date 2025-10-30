@@ -1,0 +1,11 @@
+{
+	"mBody": {
+		"albedo": "albedo.png",
+		"mix": "mix.png",
+		"normal": "normal.png",
+		"opacity": "opacity.png",
+		"shader": "billboard",
+		"billboard": true,
+		"nearest": true
+	}
+}
