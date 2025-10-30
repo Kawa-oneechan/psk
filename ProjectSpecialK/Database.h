@@ -16,6 +16,7 @@ namespace Database
 {
 	extern std::map<std::string, std::vector<std::string>> FilterCategories;
 	extern std::map<std::string, bool> Filters;
+	extern std::map<std::string, std::tuple<std::string, float>> Currencies;
 
 	extern std::shared_ptr<Texture> ItemIcons, ReactionIcons;
 

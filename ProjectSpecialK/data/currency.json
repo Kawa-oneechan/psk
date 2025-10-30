@@ -2,9 +2,11 @@
 	/* One bell equals one yen (in-game Switch sells for 29980 bells,
 	while the real-life Switch sells for 29980 yen). One dollar is
 	about 150 yen.
+	
+	TODO: specify order and presence of separator. Possibly with a ">"?
 	*/
 	//id: [ name, sigil, rate ]
-	"bel": [ { "en": "Bell", "nl": "Klingel" }, "&#xE206;", 1 ],
+	"bel": [ { "en": "Bell", "nl": "Klingel" }, "\uE106", 1 ], //should be "X bells", but that's also localized!
 	"yen": [ { "en": "Yen" }, "¥", 1 ],
 	"usd": [ { "en": "U.S. dollar" }, "$", 150 ],
 	"eur": [ { "en": "Euro" }, "€", 160 ],

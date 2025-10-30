@@ -17,6 +17,7 @@ namespace Database
 {
 	std::map<std::string, std::vector<std::string>> FilterCategories;
 	std::map<std::string, bool> Filters;
+	std::map<std::string, std::tuple<std::string, float>> Currencies;
 
 	/*
 	1. Item icons
@@ -57,6 +58,21 @@ namespace Database
 					Filters[k] = settings[k].as_boolean();
 			}
 			FilterCategories[key] = items;
+		}
+	}
+
+	void LoadCurrencies()
+	{
+		Currencies.clear();
+	
+		auto doc = VFS::ReadJSON("currency.json");
+		for (const auto& r : doc.as_object())
+		{
+			auto key = r.first;
+			auto data = r.second.as_array();
+			auto textKey = fmt::format("currency:{}", key);
+			Text::Add(textKey, data[0]);
+			Currencies[key] = std::make_tuple(data[1].as_string(), 1.0f / data[2].as_number());
 		}
 	}
 
@@ -201,6 +217,7 @@ namespace Database
 	{
 		*progress = 0.0;
 		LoadContentFilters();
+		LoadCurrencies();
 
 		LoadIcons(progress);
 

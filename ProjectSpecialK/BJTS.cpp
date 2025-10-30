@@ -5,6 +5,8 @@
 #include "Game.h"
 #include "DialogueBox.h"
 #include "Player.h"
+#include "Types.h"
+#include "Database.h"
 
 static const char* bindingNames[] = {
 	"up", "down", "left", "right",
@@ -17,6 +19,18 @@ static const char* bindingNames[] = {
 	"hotbar6", "hotbar7", "hotbar8", "hotbar9", "hotbar10",
 	"console"
 };
+
+static inline int NumberValue(const std::string& value)
+{
+	try
+	{
+		return std::stoi(value);
+	}
+	catch (std::invalid_argument)
+	{
+		return Sol.get<int>(value);
+	}
+}
 
 static void bjtsStr(std::string& data, BJTSParams)
 {
@@ -120,7 +134,7 @@ static void bjtsWordstruct(std::string& data, BJTSParams)
 		return;
 	}
 
-	int choice = Random::GetInt(options - 1);
+	int choice = Random::GetInt((int)options - 1);
 	data.replace(start, len, Text::Get(fmt::format("{}:{}", key, choice)));
 }
 
@@ -202,6 +216,24 @@ static void bjtsGamepad(std::string& data, BJTSParams)
 	}
 }
 
+static void bjtsBells(std::string& data, BJTSParams)
+{
+	if (tags.size() < 2)
+	{
+		conprint(2, "Missing parameter in BJTS Bells: {}", data.substr(start, len));
+		return;
+	}
+	auto value = NumberValue(tags[1]);
+
+	//TODO: make the currency a setting. Special-case if it's bells
+	//so we can say "X bells" or "X klingels" or whatever.
+	auto currency = Database::Currencies["usd"];
+	auto symbol = std::get<0>(currency);
+	auto rate = std::get<1>(currency);
+
+	data.replace(start, len, fmt::format("{}{:.1}", symbol, value * rate));
+}
+
 typedef void(*BJTSFunc)(std::string& data, BJTSParams);
 
 //BJTS functions that actually change the string content.
@@ -211,6 +243,7 @@ const std::map<std::string, BJTSFunc> bjtsPhase1 = {
 	{ "ws", &bjtsWordstruct },
 	{ "key", &bjtsKeyControl },
 	{ "pad", &bjtsGamepad },
+	{ "bells", &bjtsBells },
 };
 
 //BJTS functions loaded from Lua scripts.
