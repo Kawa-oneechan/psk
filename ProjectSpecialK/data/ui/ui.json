@@ -93,5 +93,9 @@
 		"buttonGuideMargin": 8,
 		"buttonGuideEdgeX": 24,
 		"buttonGuideEdgeY": 4,
+
+		"titleProfileCardPadding": 24,
+		"titleProfileCardPhotoSize": 100,
+		"titleProfileCardMargin": 16,
 	}
 }

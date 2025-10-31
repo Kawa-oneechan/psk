@@ -40,32 +40,39 @@ TitleScreen::TitleScreen()
 	LoadCamera("cameras/title.json");
 
 	//TODO: only show the player panel if there IS a player.
-	auto playerText = fmt::format("{}\n{}", thePlayer.Name, town->Name);
-	auto playerPanelWidth = (int)(Sprite::MeasureText(1, playerText, 50.0f, true).x + 96 + 128);
-	playerPanel = std::make_shared<NineSlicer>("ui/roundrect.png", width - playerPanelWidth - 30, height, playerPanelWidth, 160);
-	playerPanel->Scale = 1.0f;
-	playerPanel->Color = UI::themeColors["dialogue"];
-	playerPanel->Visible = false;
 
-	auto label = std::make_shared<TextLabel>(playerText, glm::vec2(24 + 120, 24));
-	label->Color = UI::textColors[7];
-	//label->Size = 100.0f;
-	playerPanel->AddChild(label);
-
-	//Load player.png from save
 	{
+		auto metrics = UI::json["metrics"].as_object();
+		const int playerPadding = metrics["titleProfileCardPadding"].as_integer();
+		const int playerPadding2 = playerPadding * 2;
+		const int playerPhotoSize = metrics["titleProfileCardPhotoSize"].as_integer();
+		const int playerMargin = metrics["titleProfileCardMargin"].as_integer();
+
+		auto playerText = fmt::format("{}\n{}", thePlayer.Name, town->Name);
+		auto playerPanelWidth = (int)(Sprite::MeasureText(1, playerText, 50.0f, true).x + (playerPhotoSize * 2) + playerPadding2 + playerMargin);
+		playerPanel = std::make_shared<NineSlicer>("ui/roundrect2.png", width - playerPanelWidth - 30, height, playerPanelWidth, playerPhotoSize + playerPadding2);
+		playerPanel->Scale = 1.0f;
+		playerPanel->Color = UI::themeColors["dialogue"];
+		playerPanel->Visible = false;
+
+		auto label = std::make_shared<TextLabel>(playerText, glm::vec2(playerPadding + playerPhotoSize + playerMargin, playerPadding));
+		label->Color = UI::textColors[7];
+		label->Size = 100.0f;
+		playerPanel->AddChild(label);
+
+		//Load player.png from save
 		int prtWidth, prtHeight, prtChans;
 		size_t vfsSize = 0;
 		auto vfsData = VFS::ReadSaveData("player.png", &vfsSize);
 		unsigned char *prtData = stbi_load_from_memory((unsigned char*)vfsData.get(), (int)vfsSize, &prtWidth, &prtHeight, &prtChans, 0);
 		auto prtTexture = new Texture(prtData, prtWidth, prtHeight, prtChans);
-		auto portrait = std::make_shared<SimpleSprite>(prtTexture, 0, glm::vec2(24, 24));
+		auto portrait = std::make_shared<SimpleSprite>(prtTexture, 0, glm::vec2((float)playerMargin));
 		stbi_image_free(prtData);
-		portrait->Scale = 100.0f / prtWidth;
+		portrait->Scale = (float)playerPhotoSize / prtWidth;
 		playerPanel->AddChild(portrait);
-	}
 
-	AddChild(playerPanel);
+		AddChild(playerPanel);
+	}
 
 	optionsMenu = std::make_shared<OptionsMenu>();
 	optionsMenu->Enabled = false;
@@ -96,12 +103,13 @@ bool TitleScreen::Tick(float dt)
 			state = State::Wait;
 			logoAnim->Play("open");
 			pressStart = new DropLabel(PreprocessBJTS(Text::Get("title:pressstart")), 1, 150, UI::themeColors["white"], DropLabel::Style::Drop);
-			playerPanel->Visible = true;
+			if (playerPanel)
+				playerPanel->Visible = true;
 		}
 	}
 	else if (state == State::Wait)
 	{
-		if (panelPop < 1.0f)
+		if (playerPanel && (panelPop < 1.0f))
 		{
 			panelPop += dt * 0.5f;
 			playerPanel->Position.y = glm::mix((float)height, (float)height - 170, glm::bounceEaseOut(glm::clamp(panelPop, 0.0f, 1.0f)));
@@ -121,7 +129,8 @@ bool TitleScreen::Tick(float dt)
 				optionsMenu->Visible = true;
 				optionsMenu->Enabled = true;
 				logoAnim->Visible = false;
-				playerPanel->Visible = false;
+				if (playerPanel)
+					playerPanel->Visible = false;
 				return false;
 			}
 		}
@@ -134,7 +143,8 @@ bool TitleScreen::Tick(float dt)
 				optionsMenu->Enabled = false;
 				logoAnim->Visible = true;
 				logoAnim->Play("idle");
-				playerPanel->Visible = true;
+				if (playerPanel)
+					playerPanel->Visible = true;
 				return false;
 			}
 		}
