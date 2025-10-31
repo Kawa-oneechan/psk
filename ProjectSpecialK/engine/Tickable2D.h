@@ -87,6 +87,14 @@ public:
 		Frame = frame;
 	}
 
+	SimpleSprite(Texture* texture, int frame, glm::vec2 position)
+	{
+		parent = nullptr;
+		this->texture = texture;
+		Position = position;
+		Frame = frame;
+	}
+
 	~SimpleSprite() override
 	{
 		delete this->texture;
