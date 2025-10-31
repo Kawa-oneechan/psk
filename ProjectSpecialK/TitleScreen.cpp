@@ -39,17 +39,32 @@ TitleScreen::TitleScreen()
 	
 	LoadCamera("cameras/title.json");
 
+	//TODO: only show the player panel if there IS a player.
 	auto playerText = fmt::format("{}\n{}", thePlayer.Name, town->Name);
-	auto playerPanelWidth = (int)(Sprite::MeasureText(1, playerText, 50.0f, true).x + 128);
-	playerPanel = std::make_shared<NineSlicer>("ui/roundrect.png", width - playerPanelWidth - 30, height, playerPanelWidth, 140);
+	auto playerPanelWidth = (int)(Sprite::MeasureText(1, playerText, 50.0f, true).x + 96 + 128);
+	playerPanel = std::make_shared<NineSlicer>("ui/roundrect.png", width - playerPanelWidth - 30, height, playerPanelWidth, 160);
 	playerPanel->Scale = 1.0f;
 	playerPanel->Color = UI::themeColors["dialogue"];
 	playerPanel->Visible = false;
 
-	auto label = std::make_shared<TextLabel>(playerText, glm::vec2(32, 24));
+	auto label = std::make_shared<TextLabel>(playerText, glm::vec2(24 + 120, 24));
 	label->Color = UI::textColors[7];
 	//label->Size = 100.0f;
 	playerPanel->AddChild(label);
+
+	//Load player.png from save
+	{
+		int prtWidth, prtHeight, prtChans;
+		size_t vfsSize = 0;
+		auto vfsData = VFS::ReadSaveData("player.png", &vfsSize);
+		unsigned char *prtData = stbi_load_from_memory((unsigned char*)vfsData.get(), (int)vfsSize, &prtWidth, &prtHeight, &prtChans, 0);
+		auto prtTexture = new Texture(prtData, prtWidth, prtHeight, prtChans);
+		auto portrait = std::make_shared<SimpleSprite>(prtTexture, 0, glm::vec2(24, 24));
+		stbi_image_free(prtData);
+		portrait->Scale = 100.0f / prtWidth;
+		playerPanel->AddChild(portrait);
+	}
+
 	AddChild(playerPanel);
 
 	optionsMenu = std::make_shared<OptionsMenu>();

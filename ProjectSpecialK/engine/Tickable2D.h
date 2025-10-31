@@ -95,7 +95,8 @@ public:
 	void Draw(float) override
 	{
 		float s = Scale > 0 ? Scale : scale;
-		auto size = texture->operator[](Frame);
-		Sprite::DrawSprite(*texture, AbsolutePosition, size * s, size, 0.0f, glm::vec4(1), Flags);
+		auto frame = texture->operator[](Frame);
+		auto scaledSize = glm::vec2(frame.z, frame.w) * s;
+		Sprite::DrawSprite(*texture, AbsolutePosition, scaledSize, frame, 0.0f, glm::vec4(1), Flags);
 	}
 };
