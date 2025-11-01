@@ -134,10 +134,12 @@ void Item::DrawFieldIcon(const glm::vec3& position)
 	iconModel->Draw(position);
 }
 
-void Item::DrawFieldModel(const glm::vec3& position, float facing)
+void Item::DrawFieldModel(const glm::vec3& position, float facing, int variant, int pattern)
 {
 	if (!fieldModel)
 		fieldModel = std::make_shared<Model>(fmt::format("{}/model.fbx", Path));
+	fieldModel->SetLayerByMat("mReBody", variant);
+	fieldModel->SetLayerByMat("mReFabric", pattern);
 	fieldModel->Draw(position, facing);
 }
 
@@ -386,4 +388,9 @@ bool InventoryItem::WearDown(int howMuch)
 ItemP InventoryItem::Wrapped() const
 {
 	return _wrapped;
+}
+
+void InventoryItem::DrawFieldModel(const glm::vec3& position, float facing)
+{
+	_wrapped->DrawFieldModel(position, facing, Variant(), Pattern());
 }

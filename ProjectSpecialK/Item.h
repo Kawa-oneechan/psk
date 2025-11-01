@@ -84,7 +84,7 @@ public:
 	//There would be a canWardrobe, but only Clothing objects would ever appear there -- it's superfluous.
 
 	void DrawFieldIcon(const glm::vec3& position);
-	void DrawFieldModel(const glm::vec3& position, float facing);
+	void DrawFieldModel(const glm::vec3& position, float facing, int variant, int pattern);
 
 	enum class FurnKind
 	{
@@ -172,6 +172,8 @@ public:
 	bool InventoryItem::WearDown(int howMuch = 1);
 
 	ItemP Wrapped() const;
+
+	void DrawFieldModel(const glm::vec3& position, float facing);
 
 	//Safe to delete if true. If not, DO NOT DELETE.
 	bool Temporary;

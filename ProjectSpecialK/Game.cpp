@@ -91,6 +91,20 @@ void Game::Initialize()
 
 	UI::controls = std::make_shared<Texture>("ui/controls.png");
 
+
+	auto testScript = R"SOL(
+
+	function start()
+		total = 2
+		dialogue("That's <bells:total>.")
+	end
+
+	start();
+
+	)SOL";
+	Sol.do_string(testScript);
+
+
 	{
 		auto sounds = VFS::ReadJSON("sound/sounds.json").as_object();
 		for (auto category : sounds)

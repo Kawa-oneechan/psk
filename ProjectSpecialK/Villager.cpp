@@ -295,11 +295,11 @@ void Villager::Draw(float dt)
 	if (_model == nullptr)
 		LoadModel();
 
-	std::copy(&Textures[0], &Textures[2], _model->GetMesh("_mBody").Textures);
-	std::copy(&Textures[0], &Textures[2], _model->GetMesh("_mCapVis").Textures);
-	std::copy(&Textures[6], &Textures[8], _model->GetMesh("_mEye").Textures);
+	std::copy(&Textures[0], &Textures[2], _model->GetMesh("mBody").Textures);
+	std::copy(&Textures[0], &Textures[2], _model->GetMesh("mCapVis").Textures);
+	std::copy(&Textures[6], &Textures[8], _model->GetMesh("mEye").Textures);
 	if ((_customModel && !_customMuzzle) || !_species->ModeledMuzzle)
-		std::copy(&Textures[9], &Textures[11], _model->GetMesh("_mMouth").Textures);
+		std::copy(&Textures[9], &Textures[11], _model->GetMesh("mMouth").Textures);
 	else
 	{
 		std::copy(&Textures[9], &Textures[11], _model->GetMesh("FaceBad__mBeak").Textures);
@@ -308,8 +308,8 @@ void Villager::Draw(float dt)
 	}
 	//std::copy(&Textures[12], &Textures[14], _model->GetMesh("???").Textures);
 
-	_model->SetLayerByMat("_mEye", face);
-	_model->SetLayerByMat("_mMouth", mouth);
+	_model->SetLayerByMat("mEye", face);
+	_model->SetLayerByMat("mMouth", mouth);
 
 	animator->CopyBones(_model);
 	if ((_customModel && _customMuzzle) || _species->ModeledMuzzle)

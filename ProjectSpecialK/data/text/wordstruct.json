@@ -5,5 +5,16 @@
 	"ws:normal:init_hello:0": { "en": "Hello" },
 	"ws:normal:init_hello:1": { "en": "Hi" },
 	"ws:normal:init_hello:2": { "en": "Hello hello" },
-	"ws:normal:init_hello:3": { "en": "Hey" }
+	"ws:normal:init_hello:3": { "en": "Hey" },
+	
+	"ws:normal:mizzle:0": "b<ws:?:mizzle:first>b<ws:?:mizzle:second>e",
+	"ws:normal:mizzle:first:0": "a",
+	"ws:normal:mizzle:first:1": "e",
+	"ws:normal:mizzle:first:2": "i",
+	"ws:normal:mizzle:first:3": "o",
+	"ws:normal:mizzle:first:4": "u",
+	"ws:normal:mizzle:first:5": "uu",
+	"ws:normal:mizzle:first:6": "oo",
+	"ws:normal:mizzle:second:0": "l",
+	"ws:normal:mizzle:second:0": "i"
 }

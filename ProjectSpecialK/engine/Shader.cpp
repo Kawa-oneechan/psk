@@ -16,6 +16,8 @@ std::map<std::string, Shader*> Shaders;
 
 void Shader::load()
 {
+	conprint(0, "Compiling {}...", fragmentShaderPath);
+
 	auto vShaderCode = HEADER + VFS::ReadString(vertexShaderPath);
 	auto fShaderCode = HEADER + VFS::ReadString(fragmentShaderPath);
 

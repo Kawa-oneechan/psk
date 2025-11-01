@@ -5,13 +5,30 @@
 		"normal": "normal.png"
 	},
 	"mReBody": {
-		"albedo": "albedo.png",
-		"mix": "mix.png",
-		"normal": "normal.png"
+		"albedo": "variant_albedo*.png",
+		"mix": "variant_mix*.png",
+		"normal": "variant_normal.png"
 	},
 	"mReFabric": {
-		"albedo": "albedo.png",
-		"mix": "mix.png",
+		"albedo": "pattern_albedo*.png",
+		"mix": "pattern_mix*.png",
 		"normal": "normal.png"
+	},
+	"mGlass": {
+		"shader": "glass",
+		"albedo": "glass_albedo.png",
+		"mix": "glass_mix.png",
+		"normal": "glass_normal.png",
+		"opacity": "glass_opacity.png",
+		"translucent": true
+	},
+	"mGlassBack": {
+		"albedo": "watersurface_albedo.png",
+		"normal": "glassback_normal.png"
+	},
+	"mWaterSurface": {
+		"albedo": "watersurface_albedo.png",
+		"mix": "watersurface_mix.png",
+		"normal": "watersurface_normal.png"
 	}
 }

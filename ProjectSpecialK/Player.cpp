@@ -185,15 +185,15 @@ void Player::Draw(float dt)
 		LoadModel();
 
 	//TODO: Model::SetTexture method, yo!
-	std::copy(&Textures[0], &Textures[3], _model->GetMesh("_mEye").Textures);
-	std::copy(&Textures[3], &Textures[6], _model->GetMesh("_mMouth").Textures);
-	_model->GetMesh("_mCheek").Textures[0] = Textures[6];
+	std::copy(&Textures[0], &Textures[3], _model->GetMesh("mEye").Textures);
+	std::copy(&Textures[3], &Textures[6], _model->GetMesh("mMouth").Textures);
+	_model->GetMesh("mCheek").Textures[0] = Textures[6];
 
-	_model->SetLayerByMat("_mCheek", cheeksStyle);
-	_model->SetLayerByMat("_mEye", face);
-	_model->SetLayerByMat("_mMouth", mouth);
+	_model->SetLayerByMat("mCheek", cheeksStyle);
+	_model->SetLayerByMat("mEye", face);
+	_model->SetLayerByMat("mMouth", mouth);
 
-	std::copy(&ClothingTextures[12], &ClothingTextures[15], _model->GetMesh("_mSocks").Textures);
+	std::copy(&ClothingTextures[12], &ClothingTextures[15], _model->GetMesh("mSocks").Textures);
 
 	commonUniforms.PlayerSkin = SkinTone;
 	commonUniforms.PlayerEyes = EyeColor;

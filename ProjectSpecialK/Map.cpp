@@ -40,9 +40,9 @@ static void UpdateGrass()
 
 		for (auto& mesh : model->Meshes)
 		{
-			if (mesh.Name.find("_mGrass") != std::string::npos)
+			if (mesh.Name.find("mGrass") != std::string::npos)
 			{
-				if (mesh.Name.find("_mGrassCliffXlu") != std::string::npos)
+				if (mesh.Name.find("mGrassCliffXlu") != std::string::npos)
 					continue;
 				mesh.Textures[0] = groundTextureAlbs;
 				mesh.Textures[1] = groundTextureNrms;
@@ -260,7 +260,7 @@ void Map::drawObjects(float dt)
 			//TODO: handle layers
 			auto pos3 = glm::vec3(i.Position.x, height, i.Position.y);
 			auto rotation = i.Rotation * 90.0f;
-			i.Item->Wrapped()->DrawFieldModel(pos3, rotation);
+			i.Item->DrawFieldModel(pos3, rotation);
 		}
 	}
 	MeshBucket::Flush();
@@ -292,7 +292,7 @@ void Map::drawGround(float dt)
 			auto pos = glm::vec3(x * 10, tile.Elevation * ElevationHeight, y * 10);
 			auto rot = extra.Rotation * 90.0f;
 			if (extra.Model == 0 || extra.Model > 44)
-				model->SetLayerByMat("_mGrass", tile.Type); //ground, river, or waterfall.
+				model->SetLayerByMat("mGrass", tile.Type); //ground, river, or waterfall.
 			else if (extra.Model < 44)
 				model->SetLayer("GrassT__mGrass", tile.Type); //cliffs should only have the top grass changed.
 			model->Draw(pos, rot);
