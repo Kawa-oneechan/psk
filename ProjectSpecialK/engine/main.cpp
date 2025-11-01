@@ -1,8 +1,10 @@
-﻿#include <filesystem>
+﻿#include <ctime>
+#include <filesystem>
 #include <fstream>
 #include <glad/glad.h>
 #include <glfw/glfw3.h>
 #include <glm/gtc/matrix_transform.hpp>
+#include <stb_image_write.h>
 #include <sol.hpp>
 #include "Platform.h"
 #include "Tickable.h"
@@ -269,6 +271,22 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 			console->Close();
 		else
 			console->Open();
+		return;
+	}
+
+	if (scancode == Inputs.Keys[(int)Binds::Screenshot].ScanCode && action == GLFW_PRESS)
+	{
+		auto pixels = new unsigned char[3 * width * height];
+		glReadPixels(0, 0, width, height, GL_RGB, GL_UNSIGNED_BYTE, pixels);
+		stbi_flip_vertically_on_write(true);
+		char filename[128];
+		auto now = time(NULL);
+		tm gm;
+		localtime_s(&gm, &now);
+		std::strftime(filename, 128, "%Y%m%d_%H%M%S.png", &gm);
+		stbi_write_png(filename, width, height, 3, pixels, width * 3);
+		delete[] pixels;
+		conprint(0, "Screenshot taken.");
 		return;
 	}
 

@@ -78,6 +78,8 @@ void Game::SaveSettings(jsonObject& settings)
 
 void Game::Initialize()
 {
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 2);
+
 	SolBinds::Setup(Sol);
 
 	MainCamera = std::make_shared<Camera>();

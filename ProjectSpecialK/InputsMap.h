@@ -21,7 +21,7 @@ enum class Binds
 	HotBar1, HotBar2, HotBar3, HotBar4, HotBar5,
 	HotBar6, HotBar7, HotBar8, HotBar9, HotBar10,
 	//System stuff
-	Console
+	Console, Screenshot
 };
 constexpr int DefaultInputBindings[] = {
 	//Cursor controls
@@ -39,7 +39,7 @@ constexpr int DefaultInputBindings[] = {
 	GLFW_KEY_1, GLFW_KEY_2, GLFW_KEY_3, GLFW_KEY_4, GLFW_KEY_5,
 	GLFW_KEY_6, GLFW_KEY_7, GLFW_KEY_8, GLFW_KEY_9, GLFW_KEY_0,
 	//System stuff
-	GLFW_KEY_GRAVE_ACCENT
+	GLFW_KEY_GRAVE_ACCENT, GLFW_KEY_F12
 };
 constexpr int NumKeyBinds = sizeof(DefaultInputBindings) / sizeof(int);
 
@@ -59,7 +59,7 @@ constexpr int DefaultInputGamepadBindings[] = {
 	-1, -1, -1, -1, -1,
 	-1, -1, -1, -1, -1,
 	//System stuff
-	-1
+	-1, -1
 };
 
 //Maps GLFW gamepad buttons to Private Use Area characters.

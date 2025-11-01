@@ -265,6 +265,9 @@
 	"menu:options:keybinds:31": {
 		"en": "Console"
 	},
+	"menu:options:keybinds:32": {
+		"en": "Screenshot"
+	},
 
 	"menu:options:head:volume": {
 		"en": "Volume",
