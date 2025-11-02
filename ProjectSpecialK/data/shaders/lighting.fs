@@ -68,6 +68,9 @@ vec3 fresnelSchlick(float cosTheta, vec3 F0)
 
 float getFresnel(mat4 model, vec3 normal)
 {
+	if (!Fresnel)
+		return 0.0;
+
 	vec3 camPos = normalize(((InvView - model) * vec4(0.0, 0.0, 0.0, 0.1)).xyz);
 	camPos.y -= 0.25;
 	return clamp(0.25 - dot(normal, camPos), 0.0, 1.0);

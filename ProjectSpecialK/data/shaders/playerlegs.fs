@@ -6,7 +6,9 @@
 	const float fresnelVal = 0.5;
 
 	//TODO: get a "sockless" texture with zero alpha maybe.
-	albedoVal.rgb = mix(PlayerSkin.rgb, albedoVal.rgb, blendVal);
+	//albedoVal.rgb = mix(PlayerSkinEdge.rgb, PlayerSkin.rgb, albedoVal.r);
+	albedoVal.rgb = PlayerSkin.rgb;
+	albedoVal.rgb = pow(albedoVal.rgb, vec3(1.0 / 2.01));
 	//No need to worry about the normals.
 
 #include "model_generic_bottom.fs"

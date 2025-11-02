@@ -5,6 +5,7 @@
 	float specularVal = mixVal.b;
 	const float fresnelVal = 1.0;
 	
-	albedoVal.rgb = mix(albedoVal.rgb, PlayerHair.rgb, blendVal);
+	albedoVal.rgb = mix(PlayerHairHi.rgb, PlayerHair.rgb, albedoVal.r);
+	albedoVal.rgb = pow(albedoVal.rgb, vec3(1.0 / 2.01));
 
 #include "model_generic_bottom.fs"

@@ -23,11 +23,13 @@ layout (std140) uniform CommonData
 	float CurvePower;
 	bool Curve;
 	bool Toon;
+	bool Fresnel;
 	float GrassColor;
 	float TimeOfDay;
 	vec3 NightSkyColor;
 	float Weather;
 	vec4 PlayerSkin;
+	vec4 PlayerSkinEdge;
 	vec4 PlayerEyes;
 	vec4 PlayerCheeks;
 	vec4 PlayerHair;
