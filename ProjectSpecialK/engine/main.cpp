@@ -1,10 +1,8 @@
-﻿#include <ctime>
-#include <filesystem>
+﻿#include <filesystem>
 #include <fstream>
 #include <glad/glad.h>
 #include <glfw/glfw3.h>
 #include <glm/gtc/matrix_transform.hpp>
-#include <stb_image_write.h>
 #include <sol.hpp>
 #include "Platform.h"
 #include "Tickable.h"
@@ -274,21 +272,39 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 		return;
 	}
 
-	if (scancode == Inputs.Keys[(int)Binds::Screenshot].ScanCode && action == GLFW_PRESS)
+	Game::OnKey(key, scancode, action, mods);
+
+#ifdef BECKETT_RESIZABLE
+	if (key == GLFW_KEY_F11 && action == GLFW_PRESS)
 	{
-		auto pixels = new unsigned char[3 * width * height];
-		glReadPixels(0, 0, width, height, GL_RGB, GL_UNSIGNED_BYTE, pixels);
-		stbi_flip_vertically_on_write(true);
-		char filename[128];
-		auto now = time(NULL);
-		tm gm;
-		localtime_s(&gm, &now);
-		std::strftime(filename, 128, "%Y%m%d_%H%M%S.png", &gm);
-		stbi_write_png(filename, width, height, 3, pixels, width * 3);
-		delete[] pixels;
-		conprint(0, "Screenshot taken.");
+		auto monitor = glfwGetPrimaryMonitor();
+		const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+		auto isWindowed = glfwGetWindowAttrib(window, GLFW_DECORATED) != 0;
+		if (isWindowed)
+		{
+			glfwSetWindowMonitor(window, monitor, 0, 0, mode->width, mode->height, mode->refreshRate);
+		}
+		else
+		{
+			if (width == mode->width || height == mode->height)
+			{
+				width = ScreenWidth;
+				height = ScreenHeight;
+			}
+			glfwSetWindowMonitor(window, nullptr, 0, 0, ScreenWidth, ScreenHeight, mode->refreshRate);
+			glfwSetWindowAttrib(window, GLFW_DECORATED, 1);
+			glfwSetWindowPos(window, (mode->width / 2) - (width / 2), (mode->height / 2) - (height / 2));
+		}
 		return;
 	}
+#endif
+#ifdef DEBUG
+	else if (key == GLFW_KEY_D && mods == GLFW_MOD_CONTROL && action == GLFW_PRESS)
+	{
+		debuggerEnabled = !debuggerEnabled;
+		return;
+	}
+#endif
 
 	if (console->visible && action == GLFW_PRESS)
 	{
@@ -311,36 +327,6 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 
 	if (console->visible)
 		return;
-
-	if (key == GLFW_KEY_F1 && action == GLFW_PRESS)
-		wireframe = !wireframe;
-#ifdef BECKETT_RESIZABLE
-	else if (key == GLFW_KEY_F11 && action == GLFW_PRESS)
-	{
-		auto monitor = glfwGetPrimaryMonitor();
-		const GLFWvidmode* mode = glfwGetVideoMode(monitor);
-		auto isWindowed = glfwGetWindowAttrib(window, GLFW_DECORATED) != 0;
-		if (isWindowed)
-		{
-			glfwSetWindowMonitor(window, monitor, 0, 0, mode->width, mode->height, mode->refreshRate);
-		}
-		else
-		{
-			if (width == mode->width || height == mode->height)
-			{
-				width = ScreenWidth;
-				height = ScreenHeight;
-			}
-			glfwSetWindowMonitor(window, nullptr, 0, 0, ScreenWidth, ScreenHeight, mode->refreshRate);
-			glfwSetWindowAttrib(window, GLFW_DECORATED, 1);
-			glfwSetWindowPos(window, (mode->width / 2) - (width / 2), (mode->height / 2) - (height / 2));
-		}
-	}
-#endif
-#ifdef DEBUG
-	else if (key == GLFW_KEY_D && mods == GLFW_MOD_CONTROL && action == GLFW_PRESS)
-		debuggerEnabled = !debuggerEnabled;
-#endif
 }
 
 static void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)

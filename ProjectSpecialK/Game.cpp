@@ -85,6 +85,8 @@ void Game::Initialize()
 	MainCamera = std::make_shared<Camera>();
 	musicManager = std::make_shared<MusicManager>();
 
+	commonUniforms.Fresnel = true;
+
 	ThreadedLoader(Database::LoadGlobalStuff);
 
 	town = std::make_shared<Town>();
@@ -163,7 +165,7 @@ void Game::PrepareSaveDirs()
 	VFS::MakeSaveDir("map");
 }
 
-extern bool skipTitle;
+extern bool skipTitle, wireframe;
 
 void Game::Start(std::vector<TickableP>& tickables)
 {
@@ -178,6 +180,21 @@ void Game::Start(std::vector<TickableP>& tickables)
 		tickables.push_back(std::make_shared<InGame>());
 	else
 		tickables.push_back(std::make_shared<TitleScreen>());
+}
+
+void Game::OnKey(int key, int scancode, int action, int mods)
+{
+	if (scancode == Inputs.Keys[(int)Binds::Screenshot].ScanCode && action == 1)
+	{
+		Screenshot();
+		return;
+	}
+
+	if (key == GLFW_KEY_F1 && action == 1)
+	{
+		wireframe = !wireframe;
+		return;
+	}
 }
 
 void Game::OnMouse(double xPosIn, double yPosIn, float xoffset, float yoffset)

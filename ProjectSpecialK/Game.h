@@ -71,11 +71,13 @@ struct CommonUniforms
 	float CurvePower;
 	alignas(4) bool CurveEnabled;
 	alignas(4) bool Toon;
+	alignas(4) bool Fresnel;
 	float GrassColor;
 	float TimeOfDay;
 	alignas(4*4) glm::vec3 NightSkyColor;
 	float Weather;
 	glm::vec4 PlayerSkin;
+	glm::vec4 PlayerSkinEdge;
 	glm::vec4 PlayerEyes;
 	glm::vec4 PlayerCheeks;
 	glm::vec4 PlayerHair;

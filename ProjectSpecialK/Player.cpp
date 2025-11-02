@@ -196,9 +196,11 @@ void Player::Draw(float dt)
 	std::copy(&ClothingTextures[12], &ClothingTextures[15], _model->GetMesh("mSocks").Textures);
 
 	commonUniforms.PlayerSkin = SkinTone;
+	commonUniforms.PlayerSkinEdge = SkinEdge;
 	commonUniforms.PlayerEyes = EyeColor;
 	commonUniforms.PlayerCheeks = CheekColor;
 	commonUniforms.PlayerHair = HairColor;
+	commonUniforms.PlayerHairHi = HairHiliteColor;
 
 	_model->Draw(Position, Facing);
 
@@ -320,9 +322,11 @@ void Player::Serialize(jsonValue& target)
 
 	tgt["colors"] = json5pp::object({
 		{ "skin", GetJSONVec(glm::vec3(SkinTone)) },
+		{ "edge", GetJSONVec(glm::vec3(SkinEdge)) },
 		{ "eyes", GetJSONVec(glm::vec3(EyeColor)) },
 		{ "cheek", GetJSONVec(glm::vec3(CheekColor)) },
 		{ "hair", GetJSONVec(glm::vec3(HairColor))},
+		{ "hlite", GetJSONVec(glm::vec3(HairHiliteColor)) },
 	});
 
 	tgt["style"] = json5pp::object({
@@ -382,9 +386,11 @@ void Player::Deserialize(jsonValue& source)
 
 	auto& colors = s["colors"].as_object();
 	SkinTone = GetJSONColor(colors.at("skin"));
+	SkinEdge = GetJSONColor(colors.at("edge"));
 	EyeColor = GetJSONColor(colors.at("eyes"));
 	CheekColor = GetJSONColor(colors.at("cheek"));
 	HairColor = GetJSONColor(colors.at("hair"));
+	HairHiliteColor = GetJSONColor(colors.at("hlite"));
 
 	auto& style = s["style"].as_object();
 	Gender = StringToEnum<::Gender>(style.at("gender").as_string(), { "boy", "girl" });

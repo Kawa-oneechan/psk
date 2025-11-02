@@ -1,4 +1,8 @@
-﻿#include "Utilities.h"
+﻿#include <ctime>
+#include <glad/glad.h>
+#include <stb_image_write.h>
+#include "Utilities.h"
+#include "Console.h"
 #include "InputsMap.h"
 #include "Tickable.h"
 #include "JsonUtils.h"
@@ -59,6 +63,22 @@ void DrawAllTickables(const std::vector<TickableP>& tickables, float dt)
 			continue;
 		t->Draw(dt);
 	}
+}
+
+void Screenshot()
+{
+	auto pixels = new unsigned char[3 * width * height];
+	glPixelStorei(GL_PACK_ALIGNMENT, 1);
+	glReadPixels(0, 0, width, height, GL_RGB, GL_UNSIGNED_BYTE, pixels);
+	stbi_flip_vertically_on_write(true);
+	char filename[128];
+	auto now = time(NULL);
+	tm gm;
+	localtime_s(&gm, &now);
+	std::strftime(filename, 128, "%Y%m%d_%H%M%S.png", &gm);
+	stbi_write_png(filename, width, height, 3, pixels, width * 3);
+	delete[] pixels;
+	conprint(0, "Screenshot taken: {}", filename);
 }
 
 static constexpr unsigned int crcLut[256] =

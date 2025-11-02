@@ -26,10 +26,13 @@ private:
 public:
 	std::string Name{ "Mayor" };
 
-	glm::vec4 SkinTone{ 1.0f, 0.67f, 0.51f, 1.0f };
-	glm::vec4 EyeColor{ 0.75f, 0.15f, 0.17f, 1.0f };
-	glm::vec4 CheekColor{ 0.87f, 0.48f, 0.29f, 1.0f };
-	glm::vec4 HairColor{ 0.73f, 0.11f, 0.31f, 1.0f };
+	glm::vec4 SkinTone{ 0.94f, 0.52f, 0.33f, 1.0f };
+	glm::vec4 SkinEdge{ 0.7f, 0.0f, 0.09f, 1.0f };
+	glm::vec4 EyeColor{ 0.03f, 0.03f, 0.03f, 1.0f };
+	glm::vec4 CheekColor{ 1.0f, 0.82f, 0.84f, 1.0f };
+	glm::vec4 HairColor{ 0.022f, 0.022f, 0.022f, 1.0f };
+	glm::vec4 HairHiliteColor{ 0.06f, 0.06f, 0.06f, 1.0f };
+	
 
 	std::array<InventoryItemP, MaxOnHand> OnHand{ nullptr };
 	std::vector<InventoryItemP> Storage;

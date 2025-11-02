@@ -45,6 +45,7 @@ void Game::RegisterConsole(Console* console)
 	RV("r_drawgui", CVar::Type::Bool, &debugRenderPanelLayouts, true);
 	RV("r_drum", CVar::Type::Bool, &commonUniforms.CurveEnabled);
 	RV("r_drumexp", CVar::Type::Float, &commonUniforms.CurvePower);
+	RV("r_fresnel", CVar::Type::Bool, &commonUniforms.Fresnel);
 	RV("r_wireframe", CVar::Type::Bool, &wireframe);
 	RV("r_polygons", CVar::Type::Bool, &debugPanelLayoutPolygons);
 	RV("r_postfx", CVar::Type::Int, &commonUniforms.PostEffect, false, 0, 4);

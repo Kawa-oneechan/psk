@@ -18,6 +18,7 @@ public:
 	static void SaveSettings(jsonObject& settings);
 	static void Initialize();
 	static void Start(std::vector<TickableP>& tickables);
+	static void OnKey(int key, int scancode, int action, int mods);
 	static void OnMouse(double xPosIn, double yPosIn, float xoffset, float yoffset);
 	static void OnResize();
 	static void OnQuit();
