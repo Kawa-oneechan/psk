@@ -3,9 +3,11 @@
 	vec3 viewDir = normalize(viewPos - FragPos);
 	float fresnel = getFresnel(model, norm);
 
+	albedoVal.rgb += vec3(fresnelVal * fresnel);
+
 	vec3 result;
 	for (int i = 0; i < NUMLIGHTS; i++)
-		result += getLight(Lights[i], albedoVal.rgb, norm, viewDir, specularVal) + (fresnelVal * fresnel);
+		result += getLight(Lights[i], albedoVal.rgb, norm, viewDir, specularVal);
 	fragColor = vec4(result, opacityVal);
 
 	if(fragColor.a < OPACITY_CUTOFF) discard;
