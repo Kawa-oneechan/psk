@@ -299,7 +299,7 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 	}
 #endif
 #ifdef DEBUG
-	else if (key == GLFW_KEY_D && mods == GLFW_MOD_CONTROL && action == GLFW_PRESS)
+	if (key == GLFW_KEY_D && mods == GLFW_MOD_CONTROL && action == GLFW_PRESS)
 	{
 		debuggerEnabled = !debuggerEnabled;
 		return;

@@ -60,6 +60,12 @@ void Game::RegisterConsole(Console* console)
 	RV("gender", CVar::Type::Int, &thePlayer.Gender, false, 0, 3);
 	RV("name", CVar::Type::String, &thePlayer.Name);
 	RV("nowear", CVar::Type::Bool, &noWear, true);
+	RV("colorskin", CVar::Type::Color, &thePlayer.SkinTone);
+	RV("colorskinedge", CVar::Type::Color, &thePlayer.SkinEdge);
+	RV("colorhair", CVar::Type::Color, &thePlayer.HairColor);
+	RV("colorhairlite", CVar::Type::Color, &thePlayer.HairHiliteColor);
+	RV("colorcheeks", CVar::Type::Color, &thePlayer.CheekColor);
+	RV("coloreyes", CVar::Type::Color, &thePlayer.EyeColor);
 
 	RV("grass", CVar::Type::Float, &commonUniforms.GrassColor, false);
 
