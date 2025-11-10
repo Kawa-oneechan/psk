@@ -1,4 +1,5 @@
 #include "engine/Console.h"
+#include "engine/Random.h"
 #include "Types.h"
 #include "Database.h"
 #include "DialogueBox.h"
@@ -46,7 +47,7 @@ namespace SolBinds
 						speaker = va[1].as<VillagerP>();
 					else if (va[1].is<std::string>())
 						speaker = Database::Find<Villager>(va[1].as<std::string>(), villagers);
-					style = va[2].as<int>();
+					style = va[2].as<int>(); //BUG: won't ever happen.
 				}
 				break;
 			}
@@ -156,6 +157,49 @@ namespace SolBinds
 				}
 			}
 			return 2; //Valid NookCode, but unknown hash.
+		};
+
+		Sol["getRandomVillager"] = [](sol::variadic_args va)
+		{
+			hash thisPersonality = 0;
+			hash notThisVillager = 0;
+			if (va.size() == 1)
+			{
+				if (va[0].is<int>())
+					thisPersonality = (hash)(va[0].as<int>());
+				else
+					thisPersonality = GetCRC(va[0].as<std::string>());
+			}
+			if (va.size() == 2)
+			{
+				if (va[1].is<int>())
+					notThisVillager = (hash)(va[1].as<int>());
+				else
+					notThisVillager = GetCRC(va[1].as<std::string>());
+			}
+
+			if (thisPersonality == 0)
+			{
+				int attempts = 100;
+				while (attempts-- > 0)
+				{
+					auto ret = villagers[Random::GetInt((int)villagers.size())];
+					if (ret->Hash != notThisVillager)
+						return ret;
+				}
+				return (VillagerP)nullptr;
+			}
+
+			std::vector<hash> potentials;
+			potentials.reserve(50);
+			for (const auto& v : villagers)
+			{
+				if (v->personality->Hash == thisPersonality && v->Hash != notThisVillager)
+					potentials.push_back(v->Hash);
+			}
+			if (potentials.size() == 0)
+				return (VillagerP)nullptr;
+			return Database::Find(potentials[Random::GetInt((int)potentials.size())], villagers);
 		};
 	}
 }
