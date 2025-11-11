@@ -5,6 +5,7 @@
 #include "TextField.h"
 #include "TextUtils.h"
 #include "Game.h"
+#include "InputsMap.h"
 #include "../Game.h"
 
 //For version information
@@ -79,6 +80,8 @@ Console::Console() : hardcopy(std::ofstream("console.log", std::ios::trunc))
 	RegisterCCmd("cmdlist", CCmdCmdList);
 	RegisterCCmd("crc32", CCmdCRC32);
 	RegisterCVar("sv_cheats", CVar::Type::Bool, &cheatsEnabled);
+	RegisterCVar("in_deadzone", CVar::Type::Float, &Inputs.Deadzone);
+	RegisterCVar("in_runthreshold", CVar::Type::Float, &Inputs.RunThreshold);
 	RegisterCVar("timescale", CVar::Type::Float, &timeScale, true);
 	Game::RegisterConsole(this);
 }

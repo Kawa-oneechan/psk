@@ -51,14 +51,22 @@ namespace VFS
 	extern bool WriteSaveString(const std::string& archive, const std::string& path, const std::string& data);
 	extern bool WriteSaveJSON(const std::string& archive, const std::string& path, const jsonValue& data);
 
+	//Returns the contents of a file from the saved game folder.
 	extern std::unique_ptr<char[]> ReadSaveData(const std::string& path, size_t* size);
+	//Returns the contents of a file from the saved game folder.
 	extern size_t ReadSaveData(void* ret, const std::string& path);
+	//Returns the contents of a file from the saved game folder, as a string.
 	extern std::string ReadSaveString(const std::string& path);
+	//Returns the contents of a file from the saved game folder, as a JSON Document.
 	extern jsonValue ReadSaveJSON(const std::string& path);
+	//Writes data to a file in the saved game folder.
 	extern bool WriteSaveData(const std::string& path, const void* data, size_t size);
+	//Writes a string to a file in the saved game folder.
 	extern bool WriteSaveString(const std::string& path, const std::string& data);
+	//Writes a JSON Document to a file in the saved game folder.
 	extern bool WriteSaveJSON(const std::string& path, const jsonValue& data);
 
+	//Creates a folder in the saved game folder. Non-existent parts inbetween are handled.
 	extern void MakeSaveDir(const std::string& path);
 
 	//Given "foo/bar/baz.txt", returns "foo/bar".

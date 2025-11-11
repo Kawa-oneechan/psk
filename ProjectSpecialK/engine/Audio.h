@@ -91,11 +91,14 @@ public:
 
 	//Changes the pitch of the sound. Works best if it's not already playing.
 	void SetPitch(float ratio);
+	//Sets the sound's position in 3D space.
 	void SetPosition(const glm::vec3& pos);
+	//Sets the listener's position in 3D space.
 	static void Audio::SetListenerPosition(const glm::vec3& pos);
 	//Sets the sound's position in 2D stereo space where -1.0 is fully
 	//to the left and 1.0 is fully to the right.
 	void SetPan(float pos);
+	//Sets if the sound should repeat automatically.
 	void SetLoop(bool loop);
 
 	//Registers an AudioEventListener to receive messages for audio with timed events.

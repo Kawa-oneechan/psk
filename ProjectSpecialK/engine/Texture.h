@@ -53,7 +53,7 @@ public:
 	const void Atlas(const std::map<std::string, glm::vec4>& newAtlas) { atlas.FromMap(newAtlas); }
 
 	//TODO: look into proper copystructor
-	Texture(const Texture &x) = default;
+	Texture(const Texture &other) : data(other.data) {}
 	Texture &operator=(const Texture &x) = delete;
 };
 
@@ -79,6 +79,6 @@ public:
 	void SetFilter(int newFilter) override;
 
 	//TODO: look into proper copystructor
-	TextureArray(const TextureArray &x) = default;
+	TextureArray(const TextureArray &other) : data(other.data) {}
 	TextureArray &operator=(const TextureArray &x) = delete;
 };

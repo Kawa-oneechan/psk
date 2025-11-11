@@ -11,7 +11,7 @@ extern float scale;
 extern int width, height;
 
 #define BECKETT_GAMENAME "Project Special K"
-#define BECKETT_VERSIONJOKE "How Deep Does the Rabbit Hole Go"
+#define BECKETT_VERSIONJOKE "Love Shine a Light"
 #define BECKETT_SCREENWIDTH 1920
 #define BECKETT_SCREENHEIGHT 1080
 

@@ -124,6 +124,7 @@ namespace UI
 		DA("keyBinds", {});
 		DA("gamepadBinds", {});
 		DS("gamepadRunThreshold", Inputs.RunThreshold);
+		DS("gamepadDeadzone", Inputs.Deadzone);
 		DS("language", "USen");
 		DS("musicVolume", 70);
 		DS("soundVolume", 100);
@@ -196,6 +197,7 @@ namespace UI
 			binds2.as_array().push_back(k.GamepadButton);
 		set["gamepadBinds"] = std::move(binds2);
 		set["gamepadRunThreshold"] = Inputs.RunThreshold;
+		set["gamepadDeadzone"] = Inputs.Deadzone;
 
 		//Convert from float values to easier-to-read integers.
 		set["musicVolume"] = (int)(Audio::MusicVolume * 100.0f);

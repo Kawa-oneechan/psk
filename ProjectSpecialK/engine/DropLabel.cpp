@@ -1,7 +1,5 @@
 #include <glad/glad.h>
-#include "Texture.h"
 #include "DropLabel.h"
-#include "SpriteRenderer.h"
 
 extern int width, height;
 
@@ -51,20 +49,21 @@ void DropLabel::update()
 
 	::Texture tempTexture(tempTID, sizeX, sizeY, 4);
 
+	const int blurSizeDiv = 2;
+
 	//Step 2 - Draw TEMP to BLUR
 	if (style == Style::Blur)
 	{
-		const int div = 2;
-		createAndBindBuffer(&blurTID, &blurFBO, sizeX / div, sizeY / div);
+		createAndBindBuffer(&blurTID, &blurFBO, sizeX / blurSizeDiv, sizeY / blurSizeDiv);
 		Sprite::DrawSprite(tempTexture,
 			glm::vec2(0),
-			glm::vec2(sizeX / div, sizeY / div),
+			glm::vec2(sizeX / blurSizeDiv, sizeY / blurSizeDiv),
 			glm::vec4(0, 0, sizeX, sizeY),
 			0.0f, glm::vec4(0, 0, 0, 1));
 		Sprite::FlushBatch();
 	}
 
-	::Texture blurTexture(blurTID, sizeX / 2, sizeY / 2, 4);
+	::Texture blurTexture(blurTID, sizeX / blurSizeDiv, sizeY / blurSizeDiv, 4);
 
 	//Step 3 - Draw BLUR and TEMP to FINAL
 	{
@@ -80,6 +79,12 @@ void DropLabel::update()
 		else if (style == Style::Drop)
 		{
 			Sprite::DrawSprite(tempTexture, glm::vec2((float)disp), glm::vec2(sizeX, sizeY), glm::vec4(0), 0.0, glm::vec4(0, 0, 0, 1));
+		}
+		else if (style == Style::Outline)
+		{
+			for (int i = -disp; i <= disp; i++)
+				for (int j = -disp; j <= disp; j++)
+					Sprite::DrawSprite(tempTexture, glm::vec2(i, j), glm::vec2(sizeX, sizeY), glm::vec4(0), 0.0, glm::vec4(0, 0, 0, 1));
 		}
 		Sprite::DrawSprite(tempTexture, glm::vec2(0), glm::vec2(sizeX, sizeY));
 		Sprite::FlushBatch();
@@ -112,4 +117,9 @@ void DropLabel::SetText(const std::string& newText)
 		this->text = newText;
 		update();
 	}
+}
+
+void DropLabel::Draw(float)
+{
+	Sprite::DrawSprite(canvas, AbsolutePosition);
 }

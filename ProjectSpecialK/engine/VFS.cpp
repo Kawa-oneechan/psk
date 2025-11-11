@@ -8,7 +8,6 @@
 #include <format.h>
 #include "Platform.h"
 #include "VFS.h"
-#include "TextUtils.h"
 #include "Console.h"
 #include "Texture.h"
 #include "JsonUtils.h"

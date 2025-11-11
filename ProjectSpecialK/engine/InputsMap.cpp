@@ -63,13 +63,11 @@ bool InputsMap::UpdateGamepad()
 	GLFWgamepadstate state;
 	if (glfwGetGamepadState(GLFW_JOYSTICK_1, &state))
 	{
-		const float dead = 0.2f;
-
 		for (int i = 0; i < 2; i++)
 		{
 			auto x = state.axes[GLFW_GAMEPAD_AXIS_LEFT_X + (i * 2)];
 			auto y = state.axes[GLFW_GAMEPAD_AXIS_LEFT_Y + (i * 2)];
-			if (glm::abs(x) + glm::abs(y) > dead)
+			if (glm::abs(x) + glm::abs(y) > Deadzone)
 			{
 				StickAngles[i] = (360 + (int)glm::degrees(std::atan2f(y, x)) + 90) % 360;
 				auto dotdotdot = glm::vec2(x, y);
@@ -85,18 +83,18 @@ bool InputsMap::UpdateGamepad()
 		}
 
 #ifdef BECKETT_ANALOGLEFT
-		Keys[(int)BECKETT_ANALOGLEFT + 0].State = state.axes[GLFW_GAMEPAD_AXIS_LEFT_Y] < -dead;
-		Keys[(int)BECKETT_ANALOGLEFT + 1].State = state.axes[GLFW_GAMEPAD_AXIS_LEFT_X] < -dead;
-		Keys[(int)BECKETT_ANALOGLEFT + 2].State = state.axes[GLFW_GAMEPAD_AXIS_LEFT_Y] > dead;
-		Keys[(int)BECKETT_ANALOGLEFT + 3].State = state.axes[GLFW_GAMEPAD_AXIS_LEFT_X] > dead;
+		Keys[(int)BECKETT_ANALOGLEFT + 0].State = state.axes[GLFW_GAMEPAD_AXIS_LEFT_Y] < -Deadzone;
+		Keys[(int)BECKETT_ANALOGLEFT + 1].State = state.axes[GLFW_GAMEPAD_AXIS_LEFT_X] < -Deadzone;
+		Keys[(int)BECKETT_ANALOGLEFT + 2].State = state.axes[GLFW_GAMEPAD_AXIS_LEFT_Y] > Deadzone;
+		Keys[(int)BECKETT_ANALOGLEFT + 3].State = state.axes[GLFW_GAMEPAD_AXIS_LEFT_X] > Deadzone;
 		//TODO: Hold Shift if the axes are pushed further to run. Will need my gamepad to test.
 #endif
 
 #ifdef BECKETT_ANALOGRIGHT
-		Keys[(int)BECKETT_ANALOGRIGHT + 0].State = state.axes[GLFW_GAMEPAD_AXIS_RIGHT_Y] < -dead;
-		Keys[(int)BECKETT_ANALOGRIGHT + 1].State = state.axes[GLFW_GAMEPAD_AXIS_RIGHT_X] < -dead;
-		Keys[(int)BECKETT_ANALOGRIGHT + 2].State = state.axes[GLFW_GAMEPAD_AXIS_RIGHT_Y] > dead;
-		Keys[(int)BECKETT_ANALOGRIGHT + 3].State = state.axes[GLFW_GAMEPAD_AXIS_RIGHT_X] > dead;
+		Keys[(int)BECKETT_ANALOGRIGHT + 0].State = state.axes[GLFW_GAMEPAD_AXIS_RIGHT_Y] < -Deadzone;
+		Keys[(int)BECKETT_ANALOGRIGHT + 1].State = state.axes[GLFW_GAMEPAD_AXIS_RIGHT_X] < -Deadzone;
+		Keys[(int)BECKETT_ANALOGRIGHT + 2].State = state.axes[GLFW_GAMEPAD_AXIS_RIGHT_Y] > Deadzone;
+		Keys[(int)BECKETT_ANALOGRIGHT + 3].State = state.axes[GLFW_GAMEPAD_AXIS_RIGHT_X] > Deadzone;
 #endif
 
 		/*
