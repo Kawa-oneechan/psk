@@ -24,6 +24,9 @@ extern Texture* whiteRect;
 
 extern bool cheatsEnabled;
 extern float timeScale;
+extern float fieldOfView, nearPlane, farPlane;
+
+extern void RecalcProjections();
 
 static void CCmdVersion(const jsonArray& args);
 static void CCmdCVarList(const jsonArray& args);
@@ -55,6 +58,11 @@ void Console::predict()
 	}
 }
 
+static void recalcProj(CVar*)
+{
+	RecalcProjections();
+}
+
 Console::Console() : hardcopy(std::ofstream("console.log", std::ios::trunc))
 {
 	visible = false;
@@ -83,6 +91,9 @@ Console::Console() : hardcopy(std::ofstream("console.log", std::ios::trunc))
 	RegisterCVar("in_deadzone", CVar::Type::Float, &Inputs.Deadzone);
 	RegisterCVar("in_runthreshold", CVar::Type::Float, &Inputs.RunThreshold);
 	RegisterCVar("timescale", CVar::Type::Float, &timeScale, true);
+	RegisterCVar("r_fov", CVar::Type::Float, &fieldOfView, false, 10, 160, recalcProj);
+	RegisterCVar("r_nearz", CVar::Type::Float, &nearPlane, false, -1, 10, recalcProj);
+	RegisterCVar("r_farz", CVar::Type::Float, &farPlane, false, 1, 1000, recalcProj);
 	Game::RegisterConsole(this);
 }
 
@@ -125,8 +136,9 @@ bool Console::Execute(const std::string& str)
 		if (space != std::string::npos)
 		{
 			first = first.substr(0, space);
-			second = str.substr(space + 1);
-			haveArgs = true;
+			second = str.substr(space);
+			StripSpaces(second);
+			haveArgs = !second.empty();
 		}
 	}
 
@@ -346,7 +358,7 @@ void Console::Draw(float dt)
 	inputLine->Draw(dt);
 }
 
-void Console::RegisterCVar(const std::string& name, CVar::Type type, void* target, bool cheat, int min, int max)
+void Console::RegisterCVar(const std::string& name, CVar::Type type, void* target, bool cheat, int min, int max, CVarCallback onChange)
 {
 	auto it = std::find_if(cvars.begin(), cvars.end(), [name](const auto& e)
 	{
@@ -357,6 +369,7 @@ void Console::RegisterCVar(const std::string& name, CVar::Type type, void* targe
 		it->type = type;
 		it->asVoid = target;
 		it->cheat = cheat;
+		it->onChange = onChange;
 		return;
 	}
 	CVar cv;
@@ -366,6 +379,7 @@ void Console::RegisterCVar(const std::string& name, CVar::Type type, void* targe
 	cv.cheat = cheat;
 	cv.min = min;
 	cv.max = max;
+	cv.onChange = onChange;
 	cvars.push_back(cv);
 }
 
@@ -419,70 +433,79 @@ bool Console::CheckSplat(const std::string& pattern, const std::string& text)
 
 bool CVar::Set(const std::string& value)
 {
-	{
-		if (type == Type::String && value[0] != '\"')
-			return Set(fmt::format("\"{}\"", value));
-		if ((type == Type::Vec2 || type == Type::Vec3 || type == Type::Vec4) && value[0] != '[')
-			return Set(fmt::format("[{}]", value));
-		if (type == Type::Color)
-		{
-			if (value[0] == '#')
-				return Set(fmt::format("\"{}\"", value));
-			if (value[0] != '[')
-				return Set(fmt::format("[{}]", value));
-		}
-
-		auto json = json5pp::parse5(value);
-		switch (type)
-		{
-		case Type::Bool:
-			if (json.is_number())
-				*asBool = json.as_integer() != 0;
-			else if (json.is_boolean())
-				*asBool = json.as_boolean();
-			return true;
-		case Type::Int:
-			if (json.is_integer())
-			{
-				auto i = json.as_integer();
-				if (!(min == -1 && max == -1))
-					i = glm::clamp(i, min, max);
-				*asInt = i;
-			}
-			return true;
-		case Type::Float:
-			if (json.is_number())
-			{
-				auto i = (float)json.as_number();
-				if (!(min == -1 && max == -1))
-					i = glm::clamp(i, (float)min, (float)max);
-				*asFloat = i;
-			}
-			return true;
-		case Type::String:
-			if (json.is_number())
-				*asString = fmt::format("{}", json.as_number());
-			else if (json.is_string())
-				*asString = json.as_string();
-			return true;
-		case Type::Vec2:
-			if (json.is_array())
-				*asVec2 = GetJSONVec2(json);
-			return true;
-		case Type::Vec3:
-			if (json.is_array())
-				*asVec3 = GetJSONVec3(json);
-			return true;
-		case Type::Vec4:
-			if (json.is_array())
-				*asVec4 = GetJSONVec4(json);
-			return true;
-		case Type::Color:
-			*asVec4 = GetJSONColor(json);
-			return true;
-		}
+	if (value.empty())
 		return false;
+
+	if (type == Type::String && value[0] != '\"')
+		return Set(fmt::format("\"{}\"", value));
+	if ((type == Type::Vec2 || type == Type::Vec3 || type == Type::Vec4) && value[0] != '[')
+		return Set(fmt::format("[{}]", value));
+	if (type == Type::Color)
+	{
+		if (value[0] == '#')
+			return Set(fmt::format("\"{}\"", value));
+		if (value[0] != '[')
+			return Set(fmt::format("[{}]", value));
 	}
+
+	auto json = json5pp::parse5(value);
+	switch (type)
+	{
+	case Type::Bool:
+		if (json.is_number())
+			*asBool = json.as_integer() != 0;
+		else if (json.is_boolean())
+			*asBool = json.as_boolean();
+		if (onChange) onChange(this);
+		return true;
+	case Type::Int:
+		if (json.is_integer())
+		{
+			auto i = json.as_integer();
+			if (!(min == -1 && max == -1))
+				i = glm::clamp(i, min, max);
+			*asInt = i;
+		}
+		if (onChange) onChange(this);
+		return true;
+	case Type::Float:
+		if (json.is_number())
+		{
+			auto i = (float)json.as_number();
+			if (!(min == -1 && max == -1))
+				i = glm::clamp(i, (float)min, (float)max);
+			*asFloat = i;
+		}
+		if (onChange) onChange(this);
+		return true;
+	case Type::String:
+		if (json.is_number())
+			*asString = fmt::format("{}", json.as_number());
+		else if (json.is_string())
+			*asString = json.as_string();
+		if (onChange) onChange(this);
+		return true;
+	case Type::Vec2:
+		if (json.is_array())
+			*asVec2 = GetJSONVec2(json);
+		if (onChange) onChange(this);
+		return true;
+	case Type::Vec3:
+		if (json.is_array())
+			*asVec3 = GetJSONVec3(json);
+		if (onChange) onChange(this);
+		return true;
+	case Type::Vec4:
+		if (json.is_array())
+			*asVec4 = GetJSONVec4(json);
+		if (onChange) onChange(this);
+		return true;
+	case Type::Color:
+		*asVec4 = GetJSONColor(json);
+		if (onChange) onChange(this);
+		return true;
+	}
+	return false;
 }
 
 std::string CVar::ToString()

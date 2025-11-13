@@ -54,6 +54,9 @@ bool wireframe = false;
 
 double DeltaTime = 0.0;
 float timeScale = 1.0f;
+float fieldOfView = 45.0f;
+float nearPlane = 0.1f;
+float farPlane = 500.0f;
 bool cheatsEnabled;
 
 #ifdef DEBUG
@@ -222,6 +225,14 @@ namespace UI
 	}
 };
 
+void RecalcProjections()
+{
+	perspectiveProjection = glm::perspective(glm::radians(fieldOfView), (float)width / (float)height, nearPlane, farPlane);
+	constexpr auto orthoScale = 0.025f;
+	orthographicProjection = glm::ortho(-((float)width * orthoScale), ((float)width * orthoScale), -((float)height * orthoScale), ((float)height * orthoScale), -1.0f, 300.0f);
+	commonUniforms.Projection = useOrthographic ? orthographicProjection : perspectiveProjection;
+}
+
 static void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
 	if (glfwGetWindowAttrib(window, GLFW_ICONIFIED))
@@ -233,10 +244,7 @@ static void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 	glViewport(0, 0, width, height);
 	commonUniforms.ScreenRes = glm::uvec2(width, height);
 
-	perspectiveProjection = glm::perspective(glm::radians(45.0f), (float)width / (float)height, 0.1f, 500.0f);
-	constexpr auto orthoScale = 0.025f;
-	orthographicProjection = glm::ortho(-((float)width * orthoScale), ((float)width * orthoScale), -((float)height * orthoScale), ((float)height * orthoScale), -1.0f, 300.0f);
-	commonUniforms.Projection = useOrthographic ? orthographicProjection : perspectiveProjection;
+	RecalcProjections();
 
 	Game::OnResize();
 }
@@ -506,6 +514,8 @@ void GLAPIENTRY MessageCallback(GLenum source, GLenum type, GLuint id, GLenum se
 		{ GL_DEBUG_SEVERITY_LOW, "low" },
 		{ GL_DEBUG_SEVERITY_NOTIFICATION, "notification" },
 	};
+	if (source == GL_DEBUG_SOURCE_APPLICATION)
+		return;
 	conprint(5, "Message from OpenGL: ID {:X}, source {}, type {}, severity {}:  {}", id, sources[source], types[type], severities[severity], message);
 }
 #endif

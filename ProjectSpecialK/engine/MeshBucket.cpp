@@ -15,7 +15,7 @@ namespace MeshBucket
 	static constexpr int meshBucketSize = 64;
 	static constexpr int transMeshBucketSize = 256;
 
-	static int renderMode = 0; //color
+	bool DepthOnlyPass = false;
 
 	struct MeshInABucket
 	{
@@ -94,7 +94,7 @@ namespace MeshBucket
 
 			theShader->Set("finalBonesMatrices", m.Bones[0], m.BoneCount);
 
-			for (auto j = (renderMode == 0) ? 0 : 3; j < 4; j++)
+			for (auto j = DepthOnlyPass ? 3 : 0; j < 4; j++)
 			{
 				if (m.Textures[j]->ID != currentTextures[j])
 				{
@@ -126,7 +126,7 @@ namespace MeshBucket
 
 	void FlushTranslucent()
 	{
-		if (renderMode == 1)
+		if (DepthOnlyPass)
 			return; //don't render translucents in the depth prepass
 
 		for (auto i = 0; i < transMeshesInBucket; i++)
@@ -157,7 +157,7 @@ namespace MeshBucket
 		for (auto i = 0; i < boneCt; i++)
 			bucket.Bones[i] = bones[i];
 
-		if (renderMode == 1)
+		if (DepthOnlyPass)
 		{
 			bucket.Shader = mesh.Opaque ? Shaders["depthpass2"] : Shaders["depthpass"];
 		}
@@ -167,7 +167,7 @@ namespace MeshBucket
 			if (meshesInBucket == meshBucketSize)
 				Flush();
 		}
-		else if (renderMode != 1)
+		else if (!DepthOnlyPass)
 		{
 			transMeshBucket[transMeshesInBucket] = meshBucket[meshesInBucket];
 			bucket.VAO = 0;
@@ -182,7 +182,10 @@ namespace MeshBucket
 		if (Shaders.count("depthpass") == 0 || Shaders.count("depthpass2") == 0) //-V838
 			FatalError("Cannot do depth prepass rendering without \"depthpass\" and \"depthpass2\" shaders.");
 
-		renderMode = 1;
+		glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, 0, -1, "Depth pass");
+
+		DepthOnlyPass = true;
+		glColorMask(0, 0, 0, 0);
 		glDepthMask(GL_TRUE);
 		glClear(GL_DEPTH_BUFFER_BIT);
 		glEnable(GL_DEPTH_TEST);
@@ -190,13 +193,18 @@ namespace MeshBucket
 
 		renderer();
 
-		renderMode = 0;
+		glPopDebugGroup();
+		glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, 0, -1, "Color pass");
+
+		DepthOnlyPass = false;
 		glDepthFunc(GL_LEQUAL);
 		glColorMask(1, 1, 1, 1);
 		glDepthMask(GL_FALSE);
 		glPolygonMode(GL_FRONT_AND_BACK, wireframe ? GL_LINE : GL_FILL);
 
 		renderer();
+
+		glPopDebugGroup();
 
 		glDisable(GL_DEPTH_TEST);
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);

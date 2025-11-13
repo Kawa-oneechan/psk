@@ -63,7 +63,7 @@ yes	Zarky
 zeemczed
 ; DROP TABLE villagers;--
 
-#Cursors
+#Various UI elements
 Kenney (CC0)
 
 #Music
@@ -80,8 +80,9 @@ Cuyler	FloatyMonkey
 Foone	Hunter R.
 katepango	mikailborg
 Omnitechnomancer	Screwtape
-Siapran	Vaartis
-Vikxin	wareya
+Siapran	Snimax
+Vaartis	Vikxin
+wareya
 
 #Certain concepts cribbed from
 James Reyes
@@ -89,6 +90,8 @@ James Reyes
 #Tooling
 Heaven Tool by rafacasari
 Switch Toolbox by KillzXGaming et al
+glsl.app by Lutymane
+Shadertoy by Inigo Quilez and Pol Jeremias
 
 
 

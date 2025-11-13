@@ -8,6 +8,8 @@
 
 class TextField;
 
+using CVarCallback = std::function<void(struct CVar*)>;
+
 struct CVar
 {
 	//Should not contain any spaces so as to not confuse the parser.
@@ -34,6 +36,7 @@ struct CVar
 	//values allowed.
 	int min, max;
 	std::string description;
+	CVarCallback onChange;
 
 	//Attempts to set the variable to the given value, which is parsed as if
 	//it is JSON. So for a vec2 type console variable, the value should be in
@@ -102,7 +105,7 @@ public:
 	bool Tick(float dt) override;
 	void Draw(float dt) override;
 	//Registers a console variable, mapping it by name to an arbitrary variable in the game.
-	void RegisterCVar(const std::string& name, CVar::Type type, void* target, bool cheat = false, int min = -1, int max = -1);
+	void RegisterCVar(const std::string& name, CVar::Type type, void* target, bool cheat = false, int min = -1, int max = -1, CVarCallback onChange = nullptr);
 	//Registers a console command, mapping it by name to a void(jsonArray&) function.
 	void RegisterCCmd(const std::string& name, std::function<void(const jsonArray& args)> act);
 
