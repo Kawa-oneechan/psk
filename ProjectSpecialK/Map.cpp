@@ -287,29 +287,45 @@ void Map::drawGround(float dt)
 	glm::vec2 proj;
 	glm::vec3 pos;
 
+	auto draw = [&](int x, int y, glm::vec3& pos) -> bool
+	{
+		if (x < 0 || y < 0 || x >= Width || y >= Height)
+			return true;
+		Project(pos, proj);
+		if (proj.x < -cullMargin || proj.x > width + cullMargin)
+			return false;
+		auto index = (y * Width) + x;
+		auto tile = Terrain[index];
+		if (tile.Type == TileType::Special)
+			return true;
+		pos.y = (float)tile.Elevation * ElevationHeight;
+		auto extra = TerrainModels[(y * Width) + x];
+		auto model = tileModels[extra.Model];
+		auto rot = extra.Rotation * 90.0f;
+		if (extra.Model == 0 || extra.Model > 44)
+			model->SetLayerByMat("mGrass", tile.Type); //ground, river, or waterfall.
+		else if (extra.Model < 44)
+			model->SetLayer("GrassT__mGrass", tile.Type); //cliffs should only have the top grass changed.
+		model->Draw(pos, rot);
+		return true;
+	};
+
 	for (int y = y1; y < y2; y++)
 	{
 		pos.z = y * 10.0f;
-		for (int x = x1; x < x2; x++)
+		for (int x = (int)playerTile.x - 1; x >= x1; x--)
 		{
 			pos.x = x * 10.0f;
 			pos.y = 0.0f;
-			Project(pos, proj);
-			if (proj.x < -cullMargin || proj.x > width + cullMargin)
-				continue;
-
-			auto tile = Terrain[(y * Width) + x];
-			if (tile.Type == TileType::Special)
-				continue;
-			pos.y = (float)tile.Elevation * ElevationHeight;
-			auto extra = TerrainModels[(y * Width) + x];
-			auto model = tileModels[extra.Model];
-			auto rot = extra.Rotation * 90.0f;
-			if (extra.Model == 0 || extra.Model > 44)
-				model->SetLayerByMat("mGrass", tile.Type); //ground, river, or waterfall.
-			else if (extra.Model < 44)
-				model->SetLayer("GrassT__mGrass", tile.Type); //cliffs should only have the top grass changed.
-			model->Draw(pos, rot);
+			if (!draw(x, y, pos))
+				break;
+		}
+		for (int x = (int)playerTile.x; x < x2; x++)
+		{
+			pos.x = x * 10.0f;
+			pos.y = 0.0f;
+			if (!draw(x, y, pos))
+				break;
 		}
 	}
 	MeshBucket::Flush();
