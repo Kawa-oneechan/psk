@@ -8,6 +8,7 @@
 #include "Town.h"
 #include "Animator.h"
 #include "Player.h"
+#include "Utilities.h"
 
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/rotate_vector.hpp>
@@ -292,6 +293,13 @@ std::string Villager::Nickname(const std::string& newNickname)
 
 void Villager::Draw(float dt)
 {
+	const auto cullMargin = 192;
+
+	glm::vec2 proj;
+	Project(Position, proj);
+	if (proj.x < -cullMargin || proj.x > width + cullMargin)
+		return;
+
 	if (_model == nullptr)
 		LoadModel();
 

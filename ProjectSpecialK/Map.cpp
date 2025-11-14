@@ -12,6 +12,7 @@
 #include "ItemHotbar.h"
 #include "Player.h"
 #include "Camera.h"
+#include "Utilities.h"
 
 static std::array<ModelP, 80> tileModels;
 static std::array<std::string, 80> tileModelKeys;
@@ -280,16 +281,29 @@ void Map::drawGround(float dt)
 	const auto y2 = glm::clamp((int)playerTile.z + south, 0, Width);
 	const auto x1 = glm::clamp((int)playerTile.x - sides, 0, Height);
 	const auto x2 = glm::clamp((int)playerTile.x + sides, 0, Height);
+
+	const auto cullMargin = 192;
+
+	glm::vec2 proj;
+	glm::vec3 pos;
+
 	for (int y = y1; y < y2; y++)
 	{
+		pos.z = y * 10.0f;
 		for (int x = x1; x < x2; x++)
 		{
+			pos.x = x * 10.0f;
+			pos.y = 0.0f;
+			Project(pos, proj);
+			if (proj.x < -cullMargin || proj.x > width + cullMargin)
+				continue;
+
 			auto tile = Terrain[(y * Width) + x];
 			if (tile.Type == TileType::Special)
 				continue;
+			pos.y = (float)tile.Elevation * ElevationHeight;
 			auto extra = TerrainModels[(y * Width) + x];
 			auto model = tileModels[extra.Model];
-			auto pos = glm::vec3(x * 10, tile.Elevation * ElevationHeight, y * 10);
 			auto rot = extra.Rotation * 90.0f;
 			if (extra.Model == 0 || extra.Model > 44)
 				model->SetLayerByMat("mGrass", tile.Type); //ground, river, or waterfall.
