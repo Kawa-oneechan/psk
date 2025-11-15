@@ -271,8 +271,8 @@ bool PanelLayout::Tick(float dt)
 		if (panel->Polygon == -1)
 			continue;
 
-		if (!panel->Enabled)
-			continue;
+		//if (!panel->Enabled)
+		//	continue;
 
 		auto parentPos = glm::vec2(0);
 		auto parentID = panel->Parent;
@@ -303,6 +303,13 @@ bool PanelLayout::Tick(float dt)
 	if (newHl != highlighted)
 		highlighted = newHl;
 
+	if (Inputs.MouseLeft && highlighted && onClick)
+	{
+		Inputs.MouseLeft = false;
+		if (highlighted->Enabled)
+			onClick(highlighted->ID);
+	}
+
 	return true;
 }
 
@@ -315,7 +322,7 @@ void PanelLayout::Draw(float dt)
 	for (const auto& panel : panels)
 	{
 		auto color = panel->Color;
-		if (panel == highlighted)
+		if (panel == highlighted && panel->Enabled)
 			color *= 3.0f;
 
 		auto parentPos = glm::vec2(0);

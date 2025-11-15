@@ -72,6 +72,8 @@ public:
 	} Origin = CornerOrigin::TopLeft;
 	float Alpha{ 1.0f };
 
+	std::function<void(const std::string&)> onClick{ nullptr };
+
 	PanelLayout() = default;
 	explicit PanelLayout(jsonValue& source);
 	bool Tick(float dt) override;

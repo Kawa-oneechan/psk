@@ -214,7 +214,6 @@ void Game::OnResize()
 
 void Game::LoopStart()
 {
-	Audio::Update();
 }
 
 void Game::PreDraw(float dt)
