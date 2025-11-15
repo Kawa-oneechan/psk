@@ -4,7 +4,8 @@
 	float fresnel = getFresnel(model, norm);
 
 	vec3 result;
-	for (int i = 0; i < NUMLIGHTS; i++)
+	result = directLight(norm, albedoVal.rgb, specularVal, viewDir);
+	for (int i = 1; i < NUMLIGHTS; i++)
 		result += getLight(Lights[i], albedoVal.rgb, norm, viewDir, specularVal);
 	fragColor = vec4(result + vec3(fresnelVal * fresnel), opacityVal);
 

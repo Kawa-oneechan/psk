@@ -76,4 +76,21 @@ float getFresnel(mat4 model, vec3 normal)
 	return clamp(0.25 - dot(normal, camPos), 0.0, 1.0);
 }
 
+
+vec3 directLight(vec3 norm, vec3 albedo, float specularVal, vec3 viewDir)
+{
+	float ambient = Lights[0].color.a;
+
+	vec3 normal = normalize(norm);
+	vec3 lightDirection = normalize(Lights[0].pos.xyz);
+	float diffuse = max(dot(normal, lightDirection), 0.0);
+
+	vec3 reflectionDirection = reflect(-lightDirection, normal);
+	float specAmount = pow(max(dot(viewDir, reflectionDirection), 0.0), 16.0);
+	float specular = specAmount * specularVal;
+
+	return (albedo.rgb * (diffuse + ambient)) * Lights[0].color.rgb;
+}
+
+
 //--------------
