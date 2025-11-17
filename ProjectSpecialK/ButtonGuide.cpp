@@ -55,11 +55,11 @@ void ButtonGuide::Draw()
 		auto f = pos;
 
 		const auto color = buttons[i].important ? UI::themeColors["keybarh"] : UI::themeColors["keybar"];
-		Sprite::DrawSprite(controls, f, pillSize, controls[7], 0, color);
+		Sprite::DrawSprite(controls, f, pillSize, controls[10], 0, color);
 		f.x += pillWidth;
-		Sprite::DrawSprite(controls, f, glm::vec2(buttons[i].width - (pillWidth * 1.5f), pillHeight), controls[9], 0, color);
+		Sprite::DrawSprite(controls, f, glm::vec2(buttons[i].width - (pillWidth * 1.5f), pillHeight), controls[12], 0, color);
 		f.x += buttons[i].width - (pillWidth * 1.5f);
-		Sprite::DrawSprite(controls, f, pillSize, controls[8], 0, color);
+		Sprite::DrawSprite(controls, f, pillSize, controls[11], 0, color);
 		
 		f = pos + glm::vec2(18 * s, 9 * s);
 		Sprite::DrawText(1, buttons[i].text, f, buttons[i].important ? UI::themeColors["keybarhf"] : UI::themeColors["keybarf"], 90.0f * scale);

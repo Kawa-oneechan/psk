@@ -10,6 +10,9 @@
 		[   0,  44,  64,  44 ], //down arrow, message win "next"
 		[  88,   0,  32,  44 ], //highlight bar left
 		[ 144,   0,  32,  44 ], //highlight bar right
-		[ 120,   0,  24,  44 ]  //highlight bar middle
+		[ 120,   0,  24,  44 ], //highlight bar middle
+		[  88,  44,  32,  44 ], //button guide left
+		[ 144,  44,  32,  44 ], //button guide right
+		[ 120,  44,  24,  44 ]  //button guide middle
 	]
 }
