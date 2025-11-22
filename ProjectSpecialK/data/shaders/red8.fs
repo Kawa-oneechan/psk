@@ -12,9 +12,6 @@ void main()
 	vec2 uv = TexCoords;
 	vec4 sr = sourceRect[index];
 
-	sr.y = -sr.y;
-	sr.w = -sr.w;
-
 	if (sr.z != 0)
 	{
 		uv *= sr.zw;

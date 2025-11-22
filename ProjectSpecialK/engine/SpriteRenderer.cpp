@@ -107,9 +107,15 @@ namespace Sprite
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindVertexArray(0);
 
-		fontShader = Shaders["font"];
+		fontShader = Shaders["red8"];
 		if (fontShader == nullptr)
-			FatalError("No \"font\" entry specified in \"shaders/shaders.json\".");
+		{
+			fontShader = Shaders["font"];
+			if (fontShader == nullptr)
+			{
+				FatalError("No \"red8\" or \"font\" entry specified in \"shaders/shaders.json\".");
+			}
+		}
 
 		originalTextRenderSize = textRenderSize = 100;
 		originalTextRenderColor = textRenderColor = UI::textColors[0];
@@ -228,6 +234,9 @@ namespace Sprite
 		if (Shaders["sprite"] == nullptr)
 			FatalError("No \"sprite\" entry specified in \"shaders/shaders.json\".");
 
+		if (texture.channels == 1)
+			DrawSprite(Shaders["red8"], texture, position, size, srcRect, rotate, color, flags);
+		else
 		DrawSprite(Shaders["sprite"], texture, position, size, srcRect, rotate, color, flags);
 	}
 
@@ -238,7 +247,10 @@ namespace Sprite
 
 	void DrawSprite(Texture& texture, const glm::vec2& position, const glm::vec4& srcRect, float rotate, const glm::vec4& color, SpriteFlags flags)
 	{
-		DrawSprite(Shaders["sprite"], texture, position, glm::vec2(srcRect.z, srcRect.w), srcRect, rotate, color, flags);
+		if (texture.channels == 1)
+			DrawSprite(Shaders["red8"], texture, position, glm::vec2(srcRect.z, srcRect.w), srcRect, rotate, color, flags);
+		else
+			DrawSprite(Shaders["sprite"], texture, position, glm::vec2(srcRect.z, srcRect.w), srcRect, rotate, color, flags);
 	}
 
 	void DrawSprite(Shader* shader, Texture& texture, const glm::vec2 position)
@@ -331,10 +343,36 @@ namespace Sprite
 		auto ttfBitmap = new unsigned char[FontAtlasExtent * FontAtlasExtent];
 		stbtt_BakeFontBitmap(reinterpret_cast<unsigned char*>(ttfData.get()), 0, (float)fonts[font].size  * FontBaseScale, ttfBitmap, FontAtlasExtent, FontAtlasExtent, 256 * bank, 256, &cdata[(font * 0xFFFF) + (0x100 * bank)]);
 
+
+		//adapted from stb_image
+		{
+			int row;
+			constexpr size_t bytes_per_row = (size_t)FontAtlasExtent;
+			unsigned char temp[2048];
+			unsigned char *bytes = ttfBitmap;
+
+			for (row = 0; row < (FontAtlasExtent >> 1); row++)
+			{
+				auto row0 = bytes + row*bytes_per_row;
+				auto row1 = bytes + (FontAtlasExtent - row - 1)*bytes_per_row;
+				auto bytes_left = bytes_per_row;
+				while (bytes_left)
+				{
+					auto bytes_copy = (bytes_left < sizeof(temp)) ? bytes_left : sizeof(temp);
+					memcpy(temp, row0, bytes_copy);
+					memcpy(row0, row1, bytes_copy);
+					memcpy(row1, temp, bytes_copy);
+					row0 += bytes_copy;
+					row1 += bytes_copy;
+					bytes_left -= bytes_copy;
+				}
+			}
+		}
+
 		unsigned int fontID;
 		glGenTextures(1, &fontID);
 		glBindTexture(GL_TEXTURE_2D, fontID);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, FontAtlasExtent, FontAtlasExtent, 0, GL_RED, GL_UNSIGNED_BYTE, ttfBitmap);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, FontAtlasExtent, FontAtlasExtent, 0, GL_RED, GL_UNSIGNED_BYTE, ttfBitmap);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);

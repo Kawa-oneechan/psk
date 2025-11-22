@@ -20,7 +20,7 @@
 	"sprite.vs": {
 		//Beckett
 		"sprite": "sprite.fs",
-		"font": "font.fs",
+		"red8": "red8.fs",
 		//Game
 		"scroller": "scroller.fs",
 		"wobble": "wobble.fs",

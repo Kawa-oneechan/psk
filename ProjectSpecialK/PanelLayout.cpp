@@ -345,7 +345,7 @@ void PanelLayout::Draw(float dt)
 		{
 			auto& texture = *textures[panel->Texture];
 			auto frame = texture[panel->Frame];
-			auto shader = Shaders["sprite"];
+			auto shader = texture.channels > 1 ? Shaders["sprite"] : Shaders["red8"];
 			auto finalPos = Position + parentPos + panel->Position;
 
 			Sprite::DrawSprite(

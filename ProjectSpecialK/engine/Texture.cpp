@@ -23,7 +23,8 @@ static bool load(const unsigned char* data, unsigned int *id, int width, int hei
 	if (glGetError())
 		return false;
 
-	int format = (channels == 4) ? GL_RGBA : GL_RGB;
+	int format = (channels == 4) ? GL_RGBA : ((channels == 1) ? GL_RED : GL_RGB);
+	int target = (channels >= 3) ? GL_RGBA8 : GL_RED;
 
 	glBindTexture(GL_TEXTURE_2D, *id);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, repeat);
@@ -31,7 +32,7 @@ static bool load(const unsigned char* data, unsigned int *id, int width, int hei
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter);
 
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+	glTexImage2D(GL_TEXTURE_2D, 0, target, width, height, 0, format, GL_UNSIGNED_BYTE, data);
 	glBindTexture(GL_TEXTURE_2D, 0);
 
 	return true;
@@ -222,7 +223,7 @@ static bool loadArray(unsigned char** data, unsigned int *id, int width, int hei
 	if (glGetError())
 		return false;
 
-	int format = (channels == 4) ? GL_RGBA : GL_RGB;
+	int format = (channels == 4) ? GL_RGBA : ((channels == 1) ? GL_RED : GL_RGB);
 
 	glBindTexture(GL_TEXTURE_2D_ARRAY, *id);
 	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, repeat);
