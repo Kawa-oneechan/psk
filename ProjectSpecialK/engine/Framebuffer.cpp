@@ -71,13 +71,15 @@ void Framebuffer::Drop()
 
 void Framebuffer::Draw(const glm::vec2& pos)
 {
-	lut->Use(1);
+	if (lut)
+		lut->Use(1);
 	Sprite::DrawSprite(shader, *texture, pos, glm::vec2(texture->width, texture->height));
 }
 
 void Framebuffer::Draw(const glm::vec2& pos, const glm::vec2& size)
 {
-	lut->Use(1);
+	if (lut)
+		lut->Use(1);
 	Sprite::DrawSprite(shader, *texture, pos, size);
 }
 

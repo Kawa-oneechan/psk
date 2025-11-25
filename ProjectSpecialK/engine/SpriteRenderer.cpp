@@ -343,32 +343,6 @@ namespace Sprite
 		auto ttfBitmap = new unsigned char[FontAtlasExtent * FontAtlasExtent];
 		stbtt_BakeFontBitmap(reinterpret_cast<unsigned char*>(ttfData.get()), 0, (float)fonts[font].size  * FontBaseScale, ttfBitmap, FontAtlasExtent, FontAtlasExtent, 256 * bank, 256, &cdata[(font * 0xFFFF) + (0x100 * bank)]);
 
-
-		//adapted from stb_image
-		{
-			int row;
-			constexpr size_t bytes_per_row = (size_t)FontAtlasExtent;
-			unsigned char temp[2048];
-			unsigned char *bytes = ttfBitmap;
-
-			for (row = 0; row < (FontAtlasExtent >> 1); row++)
-			{
-				auto row0 = bytes + row*bytes_per_row;
-				auto row1 = bytes + (FontAtlasExtent - row - 1)*bytes_per_row;
-				auto bytes_left = bytes_per_row;
-				while (bytes_left)
-				{
-					auto bytes_copy = (bytes_left < sizeof(temp)) ? bytes_left : sizeof(temp);
-					memcpy(temp, row0, bytes_copy);
-					memcpy(row0, row1, bytes_copy);
-					memcpy(row1, temp, bytes_copy);
-					row0 += bytes_copy;
-					row1 += bytes_copy;
-					bytes_left -= bytes_copy;
-				}
-			}
-		}
-
 		unsigned int fontID;
 		glGenTextures(1, &fontID);
 		glBindTexture(GL_TEXTURE_2D, fontID);
@@ -537,7 +511,7 @@ namespace Sprite
 			auto w = bakedChar.x1 - bakedChar.x0 + 0.5f;
 			auto h = bakedChar.y1 - bakedChar.y0 + 0.5f;
 			auto stringScale = glm::vec2(w * scaleF, h * scaleF);
-			auto srcRect = glm::vec4(bakedChar.x0, bakedChar.y0, w, h);
+			auto srcRect = glm::vec4(bakedChar.x0, bakedChar.y0 * -1.0f, w, h * -1.0f);
 
 			auto adv = bakedChar.xadvance;
 
