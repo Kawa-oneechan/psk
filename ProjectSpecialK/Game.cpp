@@ -99,7 +99,7 @@ void Game::Initialize()
 	auto testScript = R"SOL(
 
 	function start()
-		total = 2
+		local total = 2
 		dialogue("That's <bells:total>.")
 	end
 

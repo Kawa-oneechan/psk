@@ -28,7 +28,25 @@ static inline int NumberValue(const std::string& value)
 	}
 	catch (std::invalid_argument&)
 	{
-		return Sol.get<int>(value);
+		auto v = Sol.get_or<int>(value, 0xDEADBEEF);
+		if (v == 0xDEADBEEF)
+		{
+			//Not a global. Try to grab a local.
+			int i = 1;
+			while (true)
+			{
+				std::tuple<std::string, int> res;
+				res = Sol["getlocal"](2, i);
+				auto k = std::get<0>(res);
+				v = std::get<1>(res);
+				i++;
+				if (k == value)
+					break;
+				if (k.empty())
+					return 0;
+			}
+		}
+		return v;
 	}
 }
 

@@ -316,13 +316,13 @@
     <ResourceCompile Include="res.rc" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="data\shaders\font.fs" />
     <None Include="data\shaders\grass.fs" />
     <None Include="data\shaders\iris.fs" />
     <None Include="data\shaders\lighting.fs" />
     <None Include="data\shaders\model.fs" />
     <None Include="data\shaders\model.vs" />
     <None Include="data\shaders\postfx.fs" />
+    <None Include="data\shaders\red8.fs" />
     <None Include="data\shaders\scroller.fs" />
     <None Include="data\shaders\shaders.json" />
     <None Include="data\shaders\sky.fs" />
