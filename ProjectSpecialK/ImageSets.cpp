@@ -24,7 +24,7 @@ namespace Database
 		//constexpr int rows = 16;
 		//constexpr int sheetW = cols * iconSize;
 		//constexpr int sheetH = rows * iconSize;
-		int cols = 16;
+		int cols = 4;
 		int rows = cols;
 
 		unsigned char* sheet;
@@ -61,17 +61,15 @@ namespace Database
 
 		stbi_set_flip_vertically_on_load(0);
 		int iconNum = 0;
+		int l = 0, t = 0;
 		for (const auto& entry : entries)
 		{
 			size_t vfsSize = 0;
 			auto vfsData = VFS::ReadData(entry.path, &vfsSize);
 			unsigned char *data = stbi_load_from_memory((unsigned char*)vfsData.get(), (int)vfsSize, &width, &height, &channels, 0);
 
-			//TODO: this is fragile.
-			int l = (iconNum % cols) * iconSize;
-			int t = (iconNum / rows) * iconSize;
 			const uint32_t* ps = (uint32_t*)data;
-			uint32_t* pt = (uint32_t*)sheet + (((rows * iconSize)  - t) * (sheetW) + (l));
+			uint32_t* pt = (uint32_t*)sheet + (((rows * iconSize) - t) * (sheetW) + (l));
 			for (int y = 0; y < height; y++)
 			{
 				pt -= sheetW;
@@ -80,6 +78,12 @@ namespace Database
 					*pt = *ps; ps++; pt++;
 				}
 				pt -= width;
+			}
+			l += iconSize;
+			if (l >= sheetW)
+			{
+				l = 0;
+				t += iconSize;
 			}
 
 			iconNum++;
