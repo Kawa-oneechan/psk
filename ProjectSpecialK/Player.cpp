@@ -202,11 +202,17 @@ void Player::Draw(float dt)
 	commonUniforms.PlayerHair = HairColor;
 	commonUniforms.PlayerHairHi = HairHiliteColor;
 
-	_model->Draw(Position, Facing);
+	auto& root = _model->Bones[_model->FindBone("Root")];
+	root.Translation = Position;
+	root.Rotation = glm::vec3(0, glm::radians(Facing), 0);;
+	_model->CalculateBoneTransforms();
+	//_model->Draw(Position, Facing);
+	_model->Draw();
 
 	if (_hairModel)
 	{
-		_hairModel->Draw(Position, Facing);
+		//_hairModel->Draw(Position, Facing);
+		_hairModel->Draw();
 	}
 
 	for (int i = 0; i < NumClothes; i++)

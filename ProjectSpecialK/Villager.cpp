@@ -330,9 +330,14 @@ void Villager::Draw(float dt)
 			(mouth % 3 == 1 ? 0.150f :
 				0.300f));
 	}
+
+	auto& root = _model->Bones[_model->FindBone("Root")];
+	root.Translation = Position;
+	root.Rotation = glm::vec3(0, glm::radians(Facing), 0);;
 	_model->CalculateBoneTransforms();
 
-	_model->Draw(Position, Facing);
+	//_model->Draw(Position, Facing);
+	_model->Draw();
 
 	if (_customAccessory && _accessoryModel)
 	{

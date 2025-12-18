@@ -112,6 +112,7 @@ void Person::Draw(float)
 		_model->CopyBoneTransforms(c);
 		//May need to special-case the glasses and mask, possibly the hat.
 
-		c->Draw(Position, Facing);
+		//c->Draw(Position, Facing);
+		c->Draw();
 	}
 }

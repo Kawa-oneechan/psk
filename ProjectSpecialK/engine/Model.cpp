@@ -365,7 +365,7 @@ void Model::CalculateBoneTransforms()
 		finalBoneMatrices[i] = Bones[i].GlobalTransform * Bones[i].InverseBind;
 }
 
-void Model::CopyBoneTransforms(ModelP target)
+void Model::CopyBoneTransforms(std::shared_ptr<Model> target)
 {
 	if (!target)
 		return;
