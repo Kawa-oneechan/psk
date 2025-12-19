@@ -349,6 +349,13 @@ void Model::CalculateBoneTransform(int id)
 
 void Model::CalculateBoneTransforms()
 {
+	if (BoneCt == 1)
+	{
+		CalculateBoneTransform(0);
+		finalBoneMatrices[0] = Bones[0].GlobalTransform * Bones[0].InverseBind;
+		return;
+	}
+
 	//Way I load my armature, the root can be *any* ID. Find it.
 	auto root = FindBone("Root");
 	if (root == NoBone)

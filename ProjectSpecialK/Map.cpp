@@ -306,7 +306,12 @@ void Map::drawGround(float dt)
 			model->SetLayerByMat("mGrass", tile.Type); //ground, river, or waterfall.
 		else if (extra.Model < 44)
 			model->SetLayer("GrassT__mGrass", tile.Type); //cliffs should only have the top grass changed.
-		model->Draw(pos, rot);
+		
+		model->Bones[0].Translation = pos;
+		model->Bones[0].Rotation = glm::vec3(0, glm::radians(rot), 0);;
+		model->CalculateBoneTransforms();
+		model->Draw();
+		//model->Draw(pos, rot);
 		return true;
 	};
 
