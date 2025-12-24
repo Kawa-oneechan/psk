@@ -18,7 +18,8 @@ layout (std140) uniform CommonData
 	mat4 Projection;
 	mat4 InvView;
 	light Lights[NUMLIGHTS];
-	int PostEffect;
+	uint PostEffect;
+	uint ColorLut;
 	float CurveAmount;
 	float CurvePower;
 	bool Curve;

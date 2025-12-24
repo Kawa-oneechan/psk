@@ -66,7 +66,8 @@ struct CommonUniforms
 	glm::mat4 Projection;
 	glm::mat4 InvView;
 	Light Lights[MaxLights];
-	int PostEffect;
+	unsigned int PostEffect;
+	unsigned int ColorLut;
 	float CurveAmount;
 	float CurvePower;
 	alignas(4) bool CurveEnabled;

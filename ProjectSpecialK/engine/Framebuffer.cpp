@@ -109,12 +109,12 @@ Texture& Framebuffer::GetTexture()
 	return *texture;
 }
 
-void Framebuffer::SetLut(Texture* newLut)
+void Framebuffer::SetLut(TextureArray* newLut)
 {
 	lut = newLut;
 }
 
-Texture* Framebuffer::GetLut()
+TextureArray* Framebuffer::GetLut()
 {
 	return lut;
 }

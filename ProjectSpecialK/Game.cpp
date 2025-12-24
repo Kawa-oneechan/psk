@@ -154,7 +154,7 @@ void Game::Initialize()
 	thePlayer.Position = glm::vec3(40, 0, 30);
 
 	postFxBuffer = new Framebuffer(Shaders["postfx"], width, height);
-	postFxBuffer->SetLut(new Texture("colormap.png"));
+	postFxBuffer->SetLut(new TextureArray("colormap*.png"));
 
 	commonUniforms.GrassColor = 0.5f;
 }

@@ -30,7 +30,7 @@ void CCmdReshade(const jsonArray& args)
 	{
 		auto lut = postFxBuffer->GetLut();
 		delete lut;
-		postFxBuffer->SetLut(new Texture("colormap.png"));
+		postFxBuffer->SetLut(new TextureArray("colormap*.png"));
 	}
 }
 
@@ -49,6 +49,7 @@ void Game::RegisterConsole(Console* console)
 	RV("r_wireframe", CVar::Type::Bool, &wireframe);
 	RV("r_polygons", CVar::Type::Bool, &debugPanelLayoutPolygons);
 	RV("r_postfx", CVar::Type::Int, &commonUniforms.PostEffect, false, 0, 4);
+	RV("r_colorlut", CVar::Type::Int, &commonUniforms.ColorLut, false, 0, 16);
 	RV("r_toon", CVar::Type::Bool, &commonUniforms.Toon);
 	RV("r_zomboid", CVar::Type::Bool, &useOrthographic);
 	RV("s_ambientvolume", CVar::Type::Float, &Audio::AmbientVolume, false, 0, 100);

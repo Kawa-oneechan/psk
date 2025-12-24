@@ -10,7 +10,7 @@ uniform vec4 spriteColor[200];
 uniform vec4 sourceRect[200];
 uniform bool flipX[200], flipY[200];
 
-layout(binding=1) uniform sampler2D colorTexture;
+layout(binding=1) uniform sampler2DArray colorTexture;
 
 vec3 filmic(in vec3 x)
 {
@@ -58,7 +58,7 @@ vec3 lottes(vec3 x)
 	return pow(x, a) / (pow(x, a * d) * b + c);
 }
 
-vec3 lookup(in vec3 textureColor, in sampler2D lookupTable) {
+vec3 lookup(in vec3 textureColor, in sampler2DArray lookupTable) {
 	mediump float blueColor = textureColor.b * 63.0;
 
 	mediump vec2 quad1;
@@ -81,8 +81,8 @@ vec3 lookup(in vec3 textureColor, in sampler2D lookupTable) {
 
 	texPos2.y = 1.0-texPos2.y;
 
-	lowp vec3 newColor1 = texture2D(lookupTable, texPos1).rgb;
-	lowp vec3 newColor2 = texture2D(lookupTable, texPos2).rgb;
+	lowp vec3 newColor1 = texture(lookupTable, vec3(texPos1, float(ColorLut))).rgb;
+	lowp vec3 newColor2 = texture(lookupTable, vec3(texPos2, float(ColorLut))).rgb;
 
 	lowp vec3 newColor = mix(newColor1, newColor2, fract(blueColor));
 	return newColor;
