@@ -150,11 +150,6 @@ void Audio::Play(bool force, bool in3D)
 	{
 		if (Enabled)
 		{
-			if (isStream)
-				handle = system.play(stream);
-			else
-				handle = system.play(sound);
-
 #ifdef BECKETT_3DAUDIO
 			is3D = in3D;
 			if (in3D)
@@ -167,12 +162,13 @@ void Audio::Play(bool force, bool in3D)
 			else
 #endif
 			{
+				UpdateVolume();
+
 				if (isStream)
-					handle = system.play(stream);
+					handle = system.play(stream, volume, panPot);
 				else
-					handle = system.play(sound);
+					handle = system.play(sound, volume, panPot);
 			}
-			UpdateVolume();
 		}
 		playing.push_back(this);
 	}
@@ -239,8 +235,8 @@ void Audio::UpdateVolume()
 	case Type::Speech: v = SpeechVolume; break;
 #endif
 	}
-	Volume = glm::clamp(Volume, 0.0f, 1.0f);
-	system.setVolume(handle, v * Volume);
+	volume = glm::clamp(v * Volume, 0.0f, 1.0f);
+	system.setVolume(handle, volume);
 }
 
 void Audio::SetPitch(float ratio)
@@ -259,7 +255,8 @@ void Audio::SetPosition(const glm::vec3& pos)
 
 void Audio::SetPan(float pos)
 {
-	system.setPan(handle, glm::clamp(pos, -1.0f, 1.0f));
+	panPot = glm::clamp(pos, -1.0f, 1.0f);
+	system.setPan(handle, panPot);
 }
 
 void Audio::SetLoop(bool loop)

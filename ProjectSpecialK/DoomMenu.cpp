@@ -51,8 +51,8 @@ void DoomMenuItem::Beep()
 		auto ccur = glm::clamp(selection, minVal, maxVal) - minVal;
 		auto panpot = -1.0f + ((ccur / (float)(maxVal - minVal)) * 2.0f);
 
-		beep->Play(true);
 		beep->SetPan(panpot);
+		beep->Play(true, false);
 		break;
 	}
 	case Type::Checkbox:

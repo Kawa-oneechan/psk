@@ -40,6 +40,8 @@ private:
 	float lastTag{ -1.0f };
 	float nextTag{ -1.0f };
 	int currentTag{ 0 };
+	float panPot{ 0.0f };
+	float volume{ 1.0f };
 
 	void update();
 

@@ -148,7 +148,7 @@ void MusicManager::Play(const std::string& id, bool immediate)
 	if (currentFile != file)
 	{
 		bgm = std::make_shared<Audio>(file);
-		bgm->Play();
+		bgm->Play(false, false);
 		state = MusicState::Playing;
 	}
 
