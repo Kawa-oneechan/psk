@@ -25,7 +25,7 @@ public:
 	MusicManager();
 	bool Tick(float dt) override;
 	void Draw(float dt) override;
-	void Play(const std::string& id, bool immediate = false);
+	void Play(const std::string& id, bool immediate = false, bool ignoreID = false);
 	void FadeOut();
 
 };

@@ -49,9 +49,10 @@ void DateTimePanel::Update()
 	{
 		lastHour = gm.tm_hour;
 		//TODO: check for specific maps and events
+		//TODO: instead of playing immediately, fade out while doing the chimes first.
 		const auto& thisMap = town;
 		if (!thisMap->CanOverrideMusic || musicManager->Override.empty())
-			musicManager->Play(thisMap->Music);
+			musicManager->Play(thisMap->Music, true, true);
 		else
 			musicManager->Play(musicManager->Override);
 	}

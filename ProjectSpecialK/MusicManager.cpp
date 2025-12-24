@@ -49,21 +49,24 @@ void MusicManager::Draw(float)
 	//Music doesn't visual.
 }
 
-void MusicManager::Play(const std::string& id, bool immediate)
+void MusicManager::Play(const std::string& id, bool immediate, bool ignoreID)
 {
-	if (id == currentID)
+	if (!ignoreID && id == currentID)
 		return;
 
 	if (library.size() == 0)
 		library = VFS::ReadJSON("music/music.json").as_object();
 	//don't bother deleting it here and now, we're holding onto this.
 
+	//TODO: rework this part, it's fucking up things.
+	/*
 	if (!immediate && !currentID.empty())
 	{
 		queued = id;
 		state = MusicState::FadeToQueue;
 		return;
 	}
+	*/
 
 	if (id.empty())
 	{
@@ -73,7 +76,7 @@ void MusicManager::Play(const std::string& id, bool immediate)
 		return;
 	}
 
-	tm gm;
+	tm gm{};
 	auto now = time(nullptr);
 	localtime_s(&gm, &now);
 
