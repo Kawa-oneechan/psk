@@ -319,23 +319,6 @@ void Villager::Draw(float dt)
 	_model->SetLayerByMat("mEye", face);
 	_model->SetLayerByMat("mMouth", mouth);
 
-	animator->CopyBones(_model);
-	if ((_customModel && _customMuzzle) || _species->ModeledMuzzle)
-	{
-		_model->SetVisibility("FaceBad__mBeak", mouth >= 3 && mouth < 6);
-		_model->SetVisibility("FaceGood__mBeak", mouth >= 6);
-		_model->SetVisibility("FaceNothing__mBeak", mouth < 3);
-		_model->Bones[_model->FindBone("Mouth")].Rotation.z =
-			(mouth % 3 == 0 ? 0.000f :
-			(mouth % 3 == 1 ? 0.150f :
-				0.300f));
-	}
-
-	auto& root = _model->Bones[_model->FindBone("Root")];
-	root.Translation = Position;
-	root.Rotation = glm::vec3(0, glm::radians(Facing), 0);;
-	_model->CalculateBoneTransforms();
-
 	//_model->Draw(Position, Facing);
 	_model->Draw();
 
@@ -373,6 +356,24 @@ bool Villager::Tick(float)
 {
 	if (!_model)
 		LoadModel();
+
+	//TODO: update animator
+	animator->CopyBones(_model);
+	auto& root = _model->Bones[_model->FindBone("Root")];
+	root.Translation = Position;
+	root.Rotation = glm::vec3(0, glm::radians(Facing), 0);;
+	_model->CalculateBoneTransforms();
+
+	if ((_customModel && _customMuzzle) || _species->ModeledMuzzle)
+	{
+		_model->SetVisibility("FaceBad__mBeak", mouth >= 3 && mouth < 6);
+		_model->SetVisibility("FaceGood__mBeak", mouth >= 6);
+		_model->SetVisibility("FaceNothing__mBeak", mouth < 3);
+		_model->Bones[_model->FindBone("Mouth")].Rotation.z =
+			(mouth % 3 == 0 ? 0.000f :
+			(mouth % 3 == 1 ? 0.150f :
+				0.300f));
+	}
 
 	if (scriptRunner && scriptRunner->Runnable() && !Mutex)
 	{

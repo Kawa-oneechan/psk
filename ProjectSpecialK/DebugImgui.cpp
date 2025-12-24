@@ -286,7 +286,7 @@ static void DoPlayer()
 		ImGui::InputInt("Bells", (int*)&thePlayer.Bells, 10, 100);
 		if (ImGui::Button("Armature"))
 		{
-			debugArmature = &thePlayer.Model()->Bones;
+			debugArmature = &thePlayer.Animator()->Bones; //&thePlayer.Model()->Bones;
 		}
 		ImGui::SameLine();
 		if (ImGui::Button("Track"))
