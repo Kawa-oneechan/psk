@@ -50,14 +50,15 @@ TitleScreen::TitleScreen()
 
 		auto playerText = fmt::format("{}\n{}", thePlayer.Name, town->Name);
 		auto playerPanelWidth = (int)(Sprite::MeasureText(1, playerText, 50.0f, true).x + (playerPhotoSize * 2) + playerPadding2 + playerMargin);
-		playerPanel = std::make_shared<NineSlicer>("ui/roundrect2.png", width - playerPanelWidth - 30, height, playerPanelWidth, playerPhotoSize + playerPadding2);
+		playerPanel = std::make_shared<NineSlicer>("ui/titlepassport.png", width - playerPanelWidth - 30, height, playerPanelWidth, playerPhotoSize + playerPadding2);
 		playerPanel->Scale = 1.0f;
 		playerPanel->Color = UI::themeColors["dialogue"];
 		playerPanel->Visible = false;
 
-		auto label = std::make_shared<TextLabel>(playerText, glm::vec2(playerPadding + playerPhotoSize + playerMargin, playerPadding));
+		auto label = std::make_shared<TextLabel>(playerText, glm::vec2(playerPadding + playerPhotoSize + playerMargin + playerMargin, playerPadding));
 		label->Color = UI::textColors[7];
-		label->Size = 100.0f;
+		label->Size = 70.0f;
+		//label->Scale = 1.0f;
 		playerPanel->AddChild(label);
 
 		//Load player.png from save
@@ -66,10 +67,15 @@ TitleScreen::TitleScreen()
 		auto vfsData = VFS::ReadSaveData("player - Copy.png", &vfsSize);
 		unsigned char *prtData = stbi_load_from_memory((unsigned char*)vfsData.get(), (int)vfsSize, &prtWidth, &prtHeight, &prtChans, 0);
 		auto prtTexture = new Texture(prtData, prtWidth, prtHeight, prtChans);
-		auto portrait = std::make_shared<SimpleSprite>(prtTexture, 0, glm::vec2((float)playerMargin));
+		auto portrait = std::make_shared<SimpleSprite>(prtTexture, 0, glm::vec2((float)playerMargin, (float)playerMargin + (12 * 1)));
 		stbi_image_free(prtData);
-		portrait->Scale = (float)playerPhotoSize / prtWidth;
+		portrait->ImgScale = ((float)playerPhotoSize / prtWidth); // *::scale;
 		playerPanel->AddChild(portrait);
+
+		auto portraitEdge = std::make_shared<SimpleSprite>("ui/titlepassport.png", 9, glm::vec2((float)playerMargin - 6, (float)playerMargin + 6));
+		portraitEdge->Color = UI::themeColors["dialogue"];
+		playerPanel->AddChild(portraitEdge);
+		//TODO: add watermark.
 
 		AddChild(playerPanel);
 	}

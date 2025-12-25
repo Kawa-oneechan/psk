@@ -20,7 +20,10 @@ public:
 
 	virtual bool Tick(float dt) override
 	{
-		AbsolutePosition = (parent ? parent->AbsolutePosition + Position : (Position * (Scale > 0 ? Scale : ::scale)));
+		auto s = Scale > 0 ? Scale : ::scale;
+		AbsolutePosition = parent ?
+			(parent->AbsolutePosition + (Position * s)) :
+			Position;
 		for (unsigned int i = (unsigned int)ChildTickables.size(); i-- > 0; )
 		{
 			auto t = ChildTickables[i];
@@ -78,6 +81,8 @@ private:
 public:
 	Sprite::SpriteFlags Flags{ Sprite::SpriteFlags::NoFlags };
 	int Frame;
+	float ImgScale{ 1.0f };
+	glm::vec4 Color{ 1.0f };
 
 	SimpleSprite(const std::string& texture, int frame, glm::vec2 position)
 	{
@@ -102,9 +107,8 @@ public:
 
 	void Draw(float) override
 	{
-		float s = Scale > 0 ? Scale : scale;
 		auto frame = texture->operator[](Frame);
-		auto scaledSize = glm::vec2(frame.z, frame.w) * s;
-		Sprite::DrawSprite(*texture, AbsolutePosition, scaledSize, frame, 0.0f, glm::vec4(1), Flags);
+		auto scaledSize = glm::vec2(frame.z, frame.w) * ImgScale;
+		Sprite::DrawSprite(*texture, AbsolutePosition, scaledSize, frame, 0.0f, Color, Flags);
 	}
 };
