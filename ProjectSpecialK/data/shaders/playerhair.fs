@@ -3,7 +3,7 @@
 	float blendVal = mixVal.r;
 	float roughnessVal = mixVal.g;
 	float specularVal = mixVal.b;
-	const float fresnelVal = 1.0;
+	const float fresnelVal = 0.5;
 	
 	albedoVal.rgb = mix(PlayerHairHi.rgb, PlayerHair.rgb, albedoVal.r);
 	albedoVal.rgb = pow(albedoVal.rgb, vec3(1.0 / 2.01));

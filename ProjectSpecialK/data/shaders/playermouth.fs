@@ -3,7 +3,7 @@
 	float blendVal = mixVal.r;
 	float roughnessVal = mixVal.g;
 	float specularVal = mixVal.b;
-	const float fresnelVal = 0.5;
+	const float fresnelVal = 1.0;
 
 	//vec3 edge = PlayerSkin.rgb * 0.8;
 	vec3 skin = pow(PlayerSkin.rgb, vec3(1.0 / 2.01));

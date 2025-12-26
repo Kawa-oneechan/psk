@@ -3,7 +3,7 @@
 	float blendVal = albedoVal.r;
 	float roughnessVal = mixVal.g;
 	float specularVal = mixVal.b;
-	const float fresnelVal = 0.5;
+	const float fresnelVal = 1.0;
 
 	//TODO: get a "sockless" texture with zero alpha maybe.
 	//albedoVal.rgb = mix(PlayerSkinEdge.rgb, PlayerSkin.rgb, albedoVal.r);
