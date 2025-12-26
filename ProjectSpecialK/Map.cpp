@@ -385,7 +385,7 @@ bool Map::Tick(float dt)
 {
 	//TODO: perhaps put this in a more sensible place.
 	//TODO: allow non-walltime
-	tm gm;
+	tm gm{};
 	auto now = time(nullptr);
 	localtime_s(&gm, &now);
 	commonUniforms.TimeOfDay = (gm.tm_hour / 24.0f) + ((gm.tm_min / 60.0f) / 24.0f);

@@ -326,7 +326,7 @@ Model::Mesh& Model::GetMesh(int index)
 
 int Model::FindBone(const std::string& name)
 {
-	auto it = std::find_if(Bones.cbegin(), Bones.cend(), [name](const auto& e)
+	auto it = std::find_if(Bones.cbegin(), Bones.cbegin() + BoneCt, [name](const auto& e)
 	{
 		return e.Name == name;
 	});
