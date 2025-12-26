@@ -47,6 +47,7 @@ TitleScreen::TitleScreen()
 		const int playerPadding2 = playerPadding * 2;
 		const int playerPhotoSize = metrics["titleProfileCardPhotoSize"].as_integer();
 		const int playerMargin = metrics["titleProfileCardMargin"].as_integer();
+		const int playerWatermarkSize = metrics["titleProfileCardWatermarkSize"].as_integer();
 
 		auto playerText = fmt::format("{}\n{}", thePlayer.Name, town->Name);
 		auto playerPanelWidth = (int)(Sprite::MeasureText(1, playerText, 50.0f, true).x + (playerPhotoSize * 2) + playerPadding2 + playerMargin);
@@ -54,6 +55,10 @@ TitleScreen::TitleScreen()
 		playerPanel->Scale = 1.0f;
 		playerPanel->Color = UI::themeColors["dialogue"];
 		playerPanel->Visible = false;
+
+		auto playerWatermark = std::make_shared<SimpleSprite>("ui/titlepassport.png", 10, glm::vec2(playerPanel->Size.x - playerWatermarkSize + playerPadding, playerPanel->Size.y - playerPadding - playerWatermarkSize));
+		playerWatermark->Color = UI::themeColors["dialogue"];
+		playerPanel->AddChild(playerWatermark);
 
 		auto label = std::make_shared<TextLabel>(playerText, glm::vec2(playerPadding + playerPhotoSize + playerMargin + playerMargin, playerPadding));
 		label->Color = UI::textColors[7];
@@ -75,7 +80,6 @@ TitleScreen::TitleScreen()
 		auto portraitEdge = std::make_shared<SimpleSprite>("ui/titlepassport.png", 9, glm::vec2((float)playerMargin - 6, (float)playerMargin + 6));
 		portraitEdge->Color = UI::themeColors["dialogue"];
 		playerPanel->AddChild(portraitEdge);
-		//TODO: add watermark.
 
 		AddChild(playerPanel);
 	}

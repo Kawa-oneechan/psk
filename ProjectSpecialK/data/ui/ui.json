@@ -97,5 +97,6 @@
 		"titleProfileCardPadding": 24,
 		"titleProfileCardPhotoSize": 100,
 		"titleProfileCardMargin": 16,
+		"titleProfileCardWatermarkSize": 100,
 	}
 }
