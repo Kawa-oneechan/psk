@@ -34,7 +34,7 @@ void Player::LoadModel()
 		Textures[6] = new TextureArray("player/cheek*_alb.png");
 	}
 
-	for (int i = 0; i < NumClothes; i++)
+	for (int i = 0; i < NumClothesSlots; i++)
 	{
 		if (!_clothesModels[i] && _clothesItems[i])
 		{
@@ -183,6 +183,62 @@ bool Player::Retrieve(InventoryItemP item)
 	return Retrieve(findStorageSlot(item));
 }
 
+bool Player::Wear(int slot)
+{
+	auto& iitem = OnHand[slot];
+	if (!iitem->IsClothing())
+	{
+		conprint(0, "Tried to take off non-clothing item {} \"{}\"", slot, iitem->Name());
+		return false;
+	}
+	auto& item = iitem->AsItem();
+	if (item->ClothingKind == Item::ClothingKind::OnePiece)
+	{
+		if (_clothesItems[(int)ClothingSlot::Bottom])
+		{
+			if (!HasInventoryRoom())
+			{
+				conprint(0, "Tried to wear onepiece while wearing bottoms \"{}\", but no room to take those off.", _clothesItems[(int)ClothingSlot::Bottom]->Name());
+				return false;
+			}
+		}
+
+		GiveItem(_clothesItems[(int)ClothingSlot::Bottom]);
+		_clothesItems[(int)ClothingSlot::Bottom] = nullptr;
+	}
+
+	const int kindsToSlots[] = {
+		0, //tops
+		1, //bottoms
+		0, //onepiece -> tops
+		2, //hat
+		-1, //accessory -> glasses/mask (3/4), handled specially
+		5, //socks
+		6,  //shoes
+		7, //bag -> bag
+		8, //swimwear
+	};
+	auto clothingSlot = kindsToSlots[(int)item->ClothingKind];
+	if (clothingSlot == -1)
+	{
+		//TODO: Handle accessory -> glasses/mask
+	}
+
+	auto& current = _clothesItems[clothingSlot];
+	auto id = iitem->FullID(); //because what follows will fuck it over.
+	RemoveItem(slot);
+	GiveItem(current);
+	_clothesItems[clothingSlot] = std::make_shared<InventoryItem>(id);
+
+	return true;
+}
+
+bool Player::Wear(InventoryItemP item)
+{
+	//TODO: make variants for closets and "nothing".
+	return Wear(findItemSlot(item));
+}
+
 void Player::Draw(float dt)
 {
 	if (!_model)
@@ -216,11 +272,17 @@ void Player::Draw(float dt)
 		_hairModel->Draw();
 	}
 
-	for (int i = 0; i < NumClothes; i++)
+	for (int i = 0; i < NumClothesSlots; i++)
 	{
 		if (!_clothesModels[i])
 			continue;
-		std::copy(&ClothingTextures[(i * 4)], &ClothingTextures[(i * 4) + 4], _clothesModels[i]->GetMesh(0).Textures);
+		
+		//tops have softmesh sorted before the actual top
+		int mesh = 0;
+		while (_clothesModels[i]->Meshes[mesh].Name == "Body__mSoftmesh")
+			mesh++;
+
+		std::copy(&ClothingTextures[(i * 4)], &ClothingTextures[(i * 4) + 4], _clothesModels[i]->GetMesh(mesh).Textures);
 	}
 
 	//TODO: handle hats, glasses, masks, and bags.
@@ -365,7 +427,7 @@ void Player::Serialize(jsonValue& target)
 	auto outfit = json5pp::object({});
 	{
 		int i = 0;
-		for (auto s : { "top", "bottom", "hat", "glasses", "mask", "shoes", "bag" })
+		for (auto s : { "top", "bottom", "hat", "glasses", "mask", "socks", "shoes", "bag", "swimwear" })
 		{
 			outfit.as_object()[s] = _clothesItems[i] ? _clothesItems[i]->FullID() : jsonValue(nullptr);
 			i++;
@@ -433,7 +495,7 @@ void Player::Deserialize(jsonValue& source)
 	{
 		{
 			int i = 0;
-			for (const auto& c : { "top", "bottom", "hat", "glasses", "mask", "shoes", "bag" })
+			for (const auto& c : { "top", "bottom", "hat", "glasses", "mask", "shoes", "bag", "swimwear", "socks" })
 			{
 				auto t = outfit.at(c);
 				_clothesItems[i] = t.is_string() ? std::make_shared<InventoryItem>(t.as_string()) : nullptr;

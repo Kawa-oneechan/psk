@@ -73,6 +73,11 @@ public:
 	//Moves the specified inventory item from the player's storage to their inventory.
 	bool Retrieve(InventoryItemP item);
 
+	//Wears an item. Returns false if the item is not clothing or there is no space to put what is already worn.
+	bool Wear(int slot);
+	//Wears an item. Returns false if the item is not clothing or there is no space to put what is already worn.
+	bool Wear(InventoryItemP item);
+
 	void Save();
 	void Load();
 

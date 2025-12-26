@@ -203,7 +203,7 @@ void Villager::LoadModel()
 		}
 	}
 
-	for (int i = 0; i < NumClothes; i++)
+	for (int i = 0; i < LastRegularClothingSlot; i++)
 	{
 		if (!_clothesModels[i] && _clothesItems[i])
 		{
@@ -340,7 +340,7 @@ void Villager::Draw(float dt)
 		_accessoryModel->Draw(Position, Facing);
 	}
 
-	for (int i = 0; i < NumClothes; i++)
+	for (int i = 0; i < LastRegularClothingSlot; i++)
 	{
 		if (!_clothesModels[i])
 			continue;
@@ -409,7 +409,7 @@ void Villager::Manifest()
 
 void Villager::DeleteAllThings()
 {
-	for (int i = 0; i < NumClothes; i++)
+	for (int i = 0; i < LastRegularClothingSlot; i++)
 	{
 		if (_clothesItems[i] && _clothesItems[i]->Temporary)
 			_clothesItems[i] = nullptr;

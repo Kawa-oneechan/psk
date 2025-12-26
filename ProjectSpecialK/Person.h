@@ -18,7 +18,8 @@ enum class ClothingSlot
 	TopFace = ClothingSlot::Glasses,
 	BottomFace = ClothingSlot::Mask,
 };
-#define NumClothes (int)ClothingSlot::Socks
+#define NumClothesSlots (int)ClothingSlot::Socks
+#define LastRegularClothingSlot (int)ClothingSlot::Shoes
 
 class Person
 {

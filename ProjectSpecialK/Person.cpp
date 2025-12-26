@@ -104,7 +104,15 @@ void Person::Draw(float)
 	//Remember: call this from Villager::Draw or Player::Draw.
 	//This ONLY handles outfits and held items.
 
-	for (int i = 0; i < NumClothes; i++)
+	if (_clothesModels[(int)ClothingSlot::Wetsuit])
+	{
+		auto& c = _clothesModels[(int)ClothingSlot::Wetsuit];
+		_model->CopyBoneTransforms(c);
+		c->Draw();
+		return;
+	}
+
+	for (int i = 0; i < LastRegularClothingSlot; i++)
 	{
 		if (!_clothesModels[i])
 			continue;
