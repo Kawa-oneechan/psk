@@ -4,5 +4,6 @@
 	"type": "clothes",
 	"category": "hat",
 	"price": 1,
-	"icon": "fallback"
+	"icon": "cap",
+	"canHideStings": false
 }
