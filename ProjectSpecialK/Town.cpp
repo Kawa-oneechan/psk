@@ -75,6 +75,11 @@ Town::Town() : grassColorMap ("grasscolors.png"), grassTexture("design0_mix.png"
 	//GenerateNew("mappers/test.lua", 6, 6);
 	Load();
 
+	//TODO: Determine if we've already started today
+	//Record the last time we looked. If it's before 05:00 and we are
+	//either on the same day past five OR any day after...
+	StartNewDay();
+
 #ifdef DEBUG
 	SaveToPNG();
 #endif
@@ -257,6 +262,17 @@ void Town::StartNewDay()
 		const auto day = gm.tm_mday;
 		debprint(0, "Today is {} {}. Let's see.", day, month);
 
+		{
+			auto newGrassColor = gm.tm_mon / 12.0f;
+			if (Hemisphere == Hemisphere::South)
+			{
+				newGrassColor += 0.5f;
+				if (newGrassColor > 1.0f)
+					newGrassColor -= 1.0f;
+			}
+			commonUniforms.GrassColor = newGrassColor;
+		}
+
 		std::srand(weatherSeed + (month << 8) + (day << 16));
 
 		auto doc = VFS::ReadJSON("weather.json");
@@ -366,6 +382,8 @@ bool Town::GetFlag(const std::string& id, bool def)
 	return GetFlag(id, (int)def) > 0;
 }
 
+extern void UpdateTileModelTextures();
+
 void Town::Draw(float dt)
 {
 	if (groundTextureAlbs == nullptr)
@@ -388,6 +406,8 @@ void Town::Draw(float dt)
 		groundTextureNrms = new TextureArray(groundNrms);
 		groundTextureMixs = new TextureArray(groundMixs);
 		grassColors = new TextureArray(fmt::format("field/ground/{}", grassColorMap), GL_CLAMP_TO_EDGE, GL_NEAREST);
+
+		UpdateTileModelTextures();
 	}
 
 	Map::Draw(dt);

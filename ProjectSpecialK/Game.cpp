@@ -156,7 +156,7 @@ void Game::Initialize()
 	postFxBuffer = new Framebuffer(Shaders["postfx"], width, height);
 	postFxBuffer->SetLut(new TextureArray("colormap*.png"));
 
-	commonUniforms.GrassColor = 0.5f;
+	//commonUniforms.GrassColor = 0.5f;
 }
 
 void Game::PrepareSaveDirs()

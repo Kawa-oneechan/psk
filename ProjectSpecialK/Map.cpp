@@ -27,13 +27,8 @@ TextureArray* grassColors{ nullptr };
 std::shared_ptr<TextureArray> cloudImage;
 std::shared_ptr<Texture> starsImage, skyImage;
 
-static void UpdateGrass()
+void UpdateTileModelTextures()
 {
-	if (glm::abs(lastGrassColor - commonUniforms.GrassColor) < glm::epsilon<float>())
-		return;
-
-	lastGrassColor = commonUniforms.GrassColor;
-
 	for (const auto& model : tileModels)
 	{
 		if (!model)
@@ -52,7 +47,19 @@ static void UpdateGrass()
 			}
 		}
 	}
+}
 
+static void UpdateGrass()
+{
+	if (glm::abs(lastGrassColor - commonUniforms.GrassColor) < glm::epsilon<float>())
+		return;
+
+	lastGrassColor = commonUniforms.GrassColor;
+	//if (commonUniforms.GrassColor <= 0.052f || commonUniforms.GrassColor >= 0.865f)
+	{
+		delete[] groundTextureAlbs;
+		groundTextureAlbs = nullptr;
+	}
 }
 
 float Map::GetHeight(const glm::vec3& pos)
