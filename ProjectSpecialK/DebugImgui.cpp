@@ -10,6 +10,11 @@
 #include "Camera.h"
 #include "Database.h"
 #include "Player.h"
+#include "DialogueBox.h"
+
+extern std::shared_ptr<DialogueBox> dlgBox;
+
+static bool showCamera, showLights, showVillager, showPlayer, showArmature, showDialogue;
 
 static void DoCamera()
 {
@@ -461,11 +466,41 @@ static void DoArmature()
 	ImGui::End();
 }
 
+static void DoDialogue()
+{
+	if (ImGui::Begin("Dialogue"))
+	{
+		static char test[1024] = "";
+		ImGui::InputTextMultiline("", test, 1024, ImVec2(-FLT_MIN, ImGui::GetTextLineHeight() * 4));
+		if (ImGui::Button("Show"))
+		{
+			dlgBox->Text(test);
+		}
+	}
+	ImGui::End();
+}
+
 void Game::ImGui()
 {
-	DoCamera();
-	DoLights();
-	DoVillager();
-	DoPlayer();
-	DoArmature();
+	if (ImGui::BeginMainMenuBar())
+	{
+		if (ImGui::BeginMenu("Debug"))
+		{
+			ImGui::MenuItem("Camera", 0, &showCamera);
+			ImGui::MenuItem("Lights", 0, &showLights);
+			ImGui::MenuItem("Villager", 0, &showVillager);
+			ImGui::MenuItem("Player", 0, &showPlayer);
+			ImGui::MenuItem("Armature", 0, &showArmature);
+			ImGui::MenuItem("Dialogue", 0, &showDialogue);
+			ImGui::EndMenu();
+		}
+		ImGui::EndMainMenuBar();
+	}
+
+	if (showCamera) DoCamera();
+	if (showLights) DoLights();
+	if (showVillager) DoVillager();
+	if (showPlayer) DoPlayer();
+	if (showArmature) DoArmature();
+	if (showDialogue) DoDialogue();
 }
