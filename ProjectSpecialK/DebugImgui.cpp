@@ -178,10 +178,13 @@ static void DoLights()
 static Armature* debugArmature = nullptr;
 static int selectedJoint = 0;
 
+static VillagerP debugVillager = nullptr;
+
 static void DoVillager()
 {
 	//TODO: use *current* map.
-	static VillagerP debugVillager = villagers[0];
+	if (debugVillager == nullptr && !villagers.empty())
+		debugVillager = villagers[0];
 	auto& townVillagers = town->Villagers;
 	
 	if (ImGui::Begin("Villagers"))
@@ -472,9 +475,11 @@ static void DoDialogue()
 	{
 		static char test[1024] = "";
 		ImGui::InputTextMultiline("", test, 1024, ImVec2(-FLT_MIN, ImGui::GetTextLineHeight() * 4));
+		static bool useVillager = false;
+		ImGui::Checkbox("Use currently selected villager", &useVillager);
 		if (ImGui::Button("Show"))
 		{
-			dlgBox->Text(test);
+			dlgBox->Text(test, useVillager ? debugVillager : nullptr);
 		}
 	}
 	ImGui::End();
