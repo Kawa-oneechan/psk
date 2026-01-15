@@ -364,7 +364,7 @@ bool Villager::Tick(float)
 	root.Rotation = glm::vec3(0, glm::radians(Facing), 0);;
 	_model->CalculateBoneTransforms();
 
-	if ((_customModel && _customMuzzle) || _species->ModeledMuzzle)
+	if ((_customModel && _customMuzzle) || (_species && _species->ModeledMuzzle))
 	{
 		_model->SetVisibility("FaceBad__mBeak", mouth >= 3 && mouth < 6);
 		_model->SetVisibility("FaceGood__mBeak", mouth >= 6);

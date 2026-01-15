@@ -68,6 +68,7 @@ void Game::RegisterConsole(Console* console)
 	RV("colorcheeks", CVar::Type::Color, &thePlayer.CheekColor);
 	RV("coloreyes", CVar::Type::Color, &thePlayer.EyeColor);
 
+	//TODO: add a change callback to handle the snow/grass change.
 	RV("grass", CVar::Type::Float, &commonUniforms.GrassColor, false);
 
 	//replace this with noclip below
