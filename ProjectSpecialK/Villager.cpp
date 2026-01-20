@@ -219,6 +219,15 @@ void Villager::LoadModel()
 		}
 	}
 
+	try
+	{
+		auto dummy = _model->GetMesh("mCapVis");
+	}
+	catch (std::runtime_error)
+	{
+		_hasCapViz = false;
+	}
+
 	if (animator == nullptr)
 		animator = std::make_unique<::Animator>(_model->Bones);
 	animator->APose();
@@ -304,7 +313,13 @@ void Villager::Draw(float dt)
 		LoadModel();
 
 	std::copy(&Textures[0], &Textures[2], _model->GetMesh("mBody").Textures);
-	std::copy(&Textures[0], &Textures[2], _model->GetMesh("mCapVis").Textures);
+	if (_hasCapViz)
+	{
+		if (_accessoryType != AccessoryType::BodyCap)
+			std::copy(&Textures[0], &Textures[2], _model->GetMesh("mCapVis").Textures);
+		else
+			std::copy(&Textures[12], &Textures[14], _model->GetMesh("mCapVis").Textures);
+	}
 	std::copy(&Textures[6], &Textures[8], _model->GetMesh("mEye").Textures);
 	if ((_customModel && !_customMuzzle) || !_species->ModeledMuzzle)
 		std::copy(&Textures[9], &Textures[11], _model->GetMesh("mMouth").Textures);

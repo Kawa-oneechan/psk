@@ -50,6 +50,7 @@ private:
 	bool _customAccessory{ false };
 	bool _accessoryFixed{ false };
 	bool _isSpecial{ false };
+	bool _hasCapViz{ true };
 
 	enum class AccessoryType
 	{
