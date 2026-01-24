@@ -211,7 +211,10 @@ void Villager::LoadModel()
 			auto& ci = _clothesItems[i];
 
 			auto path = (_customModel && _isSpecial) ? Path : _species->Path;
-			cm = std::make_shared<::Model>(fmt::format("{}/{}.fbx", path, ci->Style()));
+			auto modelFile = fmt::format("{}/{}.fbx", path, ci->Style());
+			if (ci->Style() == "")
+				modelFile = fmt::format("{}/model.fbx", ci->Path);
+			cm = std::make_shared<::Model>(modelFile);
 			ClothingTextures[(i * 4) + 0] = new TextureArray(fmt::format("{}/albedo*.png", ci->Path));
 			ClothingTextures[(i * 4) + 1] = new TextureArray(fmt::format("{}/normal*.png", ci->Path));
 			ClothingTextures[(i * 4) + 2] = new TextureArray(fmt::format("{}/mix*.png", ci->Path));
@@ -469,6 +472,24 @@ void Villager::PickClothing()
 	}
 
 	DeleteAllThings();
+
+	if (_isSpecial)
+	{
+		//TODO: split this up and allow picking outfits by ID/ordinal.
+		auto json = VFS::ReadJSON(fmt::format("{}/{}", Path, File));
+		auto value = json.as_object();
+		if (value["outfits"].is_array())
+		{
+			auto fits = value["outfits"].as_array();
+			auto firstFit = fits[0].as_object();
+			debprint(0, "Assigning outfit {} to {}.", firstFit["id"].as_string(), ID);
+			if (firstFit["tops"].is_string())
+				_clothesItems[0] = std::make_shared<InventoryItem>(firstFit["tops"].as_string());
+			if (firstFit["bottoms"].is_string())
+				_clothesItems[1] = std::make_shared<InventoryItem>(firstFit["bottoms"].as_string());
+		}
+		return;
+	}
 
 	if (memory && memory->Clothing.size() > 0 && Random::GetFloat() > 25)
 	{
