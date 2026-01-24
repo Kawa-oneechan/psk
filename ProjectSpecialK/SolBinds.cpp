@@ -84,6 +84,18 @@ namespace SolBinds
 			"Species", &Villager::Species,
 			"Test", &Villager::TestScript
 		);
+		Sol["pickSNPCOutfit"] = [](sol::variadic_args va)
+		{
+			if (va.size() != 2)
+			{
+				conprint(1, "pickSNPCOutfit needs to arguments.");
+				return;
+			}
+			VillagerP v = nullptr;
+			if (va[0].is<VillagerP>())
+				v = va[0].as<VillagerP>();
+			v->PickSNPCOutfit(va[1].as<sol::object>());
+		};
 
 		Sol["getVillager"] = [](sol::variadic_args va)
 		{

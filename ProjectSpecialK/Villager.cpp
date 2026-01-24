@@ -9,6 +9,7 @@
 #include "Animator.h"
 #include "Player.h"
 #include "Utilities.h"
+#include "DialogueBox.h"
 
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/rotate_vector.hpp>
@@ -464,6 +465,52 @@ void Villager::Depart()
 	memory.reset();
 }
 
+int Villager::PickSNPCOutfit(sol::object a)
+{
+	if (!_isSpecial)
+		return 0; //Not special
+
+	auto json = VFS::ReadJSON(fmt::format("{}/{}", Path, File));
+	auto value = json.as_object();
+	if (value["outfits"].is_array())
+	{
+		auto fits = value["outfits"].as_array();
+		jsonObject fit;
+
+		if (a.is<std::string>())
+		{
+			auto target = a.as<std::string>();
+			for (auto& _f : fits)
+			{
+				if (_f.as_object()["id"].as_string() == target)
+				{
+					fit = _f.as_object();
+					break;
+				}
+			}
+		}
+		else if (a.is<int>())
+		{
+			auto ordinal = a.as<int>();
+			if (ordinal < 0 || ordinal >= fits.size())
+				return 2; //Not found
+			fit = fits[a.as<int>()].as_object();
+		}
+
+		if (fit.empty())
+			return 2; //Not found
+
+		debprint(0, "Assigning outfit {} to {}.", fit["id"].as_string(), ID);
+		if (fit["tops"].is_string())
+			_clothesItems[0] = std::make_shared<InventoryItem>(fit["tops"].as_string());
+		if (fit["bottoms"].is_string())
+			_clothesItems[1] = std::make_shared<InventoryItem>(fit["bottoms"].as_string());
+		return 3; //Success!
+	}
+
+	return 1; //No outfits
+}
+
 void Villager::PickClothing()
 {
 	if (!memory)
@@ -475,19 +522,14 @@ void Villager::PickClothing()
 
 	if (_isSpecial)
 	{
-		//TODO: split this up and allow picking outfits by ID/ordinal.
-		auto json = VFS::ReadJSON(fmt::format("{}/{}", Path, File));
-		auto value = json.as_object();
-		if (value["outfits"].is_array())
+		auto script = VFS::ReadString(fmt::format("{}/spawn.lua", Path));
+		if (!script.empty())
 		{
-			auto fits = value["outfits"].as_array();
-			auto firstFit = fits[0].as_object();
-			debprint(0, "Assigning outfit {} to {}.", firstFit["id"].as_string(), ID);
-			if (firstFit["tops"].is_string())
-				_clothesItems[0] = std::make_shared<InventoryItem>(firstFit["tops"].as_string());
-			if (firstFit["bottoms"].is_string())
-				_clothesItems[1] = std::make_shared<InventoryItem>(firstFit["bottoms"].as_string());
+			Sol["me"] = Database::Find(Hash, villagers);
+			Sol.do_string(script);
 		}
+		else
+			PickSNPCOutfit(0);
 		return;
 	}
 
@@ -595,8 +637,6 @@ void Villager::Deserialize(jsonObject& source)
 	}
 }
 
-#include "Types.h"
-#include "DialogueBox.h"
 void Villager::TestScript()
 {
 	/*

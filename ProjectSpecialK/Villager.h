@@ -6,6 +6,7 @@
 #include "Species.h"
 #include "Traits.h"
 #include "Item.h"
+#include "Types.h"
 #include <sol.hpp>
 
 class VillagerMemory
@@ -105,6 +106,10 @@ public:
 
 	void Manifest();
 	void Depart();
+
+	int PickSNPCOutfit(int ordinal) { return PickSNPCOutfit(sol::make_object(Sol, ordinal)); }
+	int PickSNPCOutfit(const std::string& id) { return PickSNPCOutfit(sol::make_object(Sol, id)); }
+	int PickSNPCOutfit(sol::object a);
 
 	void PickClothing();
 
