@@ -326,17 +326,25 @@ void Villager::Draw(float dt)
 	}
 	std::copy(&Textures[6], &Textures[8], _model->GetMesh("mEye").Textures);
 	if ((_customModel && !_customMuzzle) || !_species->ModeledMuzzle)
+	{
 		std::copy(&Textures[9], &Textures[11], _model->GetMesh("mMouth").Textures);
+		_model->SetLayerByMat("mMouth", mouth);
+	}
 	else
 	{
-		std::copy(&Textures[9], &Textures[11], _model->GetMesh("FaceBad__mBeak").Textures);
-		std::copy(&Textures[9], &Textures[11], _model->GetMesh("FaceGood__mBeak").Textures);
-		std::copy(&Textures[9], &Textures[11], _model->GetMesh("FaceNothing__mBeak").Textures);
+		static const std::string meshes[] = { "FaceNothing__mBeak", "FaceGood__mBeak", "FaceBad__mBeak" };
+		for (int i = 0; i < 3; i++)
+		{
+			std::copy(&Textures[9], &Textures[11], _model->GetMesh(meshes[i]).Textures);
+			_model->SetVisibility(meshes[i], mouth / 3 == i);
+		}
+		//std::copy(&Textures[9], &Textures[11], _model->GetMesh("FaceBad__mBeak").Textures);
+		//std::copy(&Textures[9], &Textures[11], _model->GetMesh("FaceGood__mBeak").Textures);
+		//std::copy(&Textures[9], &Textures[11], _model->GetMesh("FaceNothing__mBeak").Textures);
 	}
 	//std::copy(&Textures[12], &Textures[14], _model->GetMesh("???").Textures);
 
 	_model->SetLayerByMat("mEye", face);
-	_model->SetLayerByMat("mMouth", mouth);
 
 	//_model->Draw(Position, Facing);
 	_model->Draw();
@@ -381,18 +389,18 @@ bool Villager::Tick(float)
 	auto& root = _model->Bones[_model->FindBone("Root")];
 	root.Translation = Position;
 	root.Rotation = glm::vec3(0, glm::radians(Facing), 0);;
-	_model->CalculateBoneTransforms();
 
 	if ((_customModel && _customMuzzle) || (_species && _species->ModeledMuzzle))
 	{
 		_model->SetVisibility("FaceBad__mBeak", mouth >= 3 && mouth < 6);
 		_model->SetVisibility("FaceGood__mBeak", mouth >= 6);
 		_model->SetVisibility("FaceNothing__mBeak", mouth < 3);
-		_model->Bones[_model->FindBone("Mouth")].Rotation.z =
-			(mouth % 3 == 0 ? 0.000f :
-			(mouth % 3 == 1 ? 0.150f :
-				0.300f));
+		static const float mouthPoses[] = { 0.0f, 0.15f, 0.40f };
+		const auto mouthBone = _model->FindBone("Mouth");
+		_model->Bones[mouthBone].Rotation.z = mouthPoses[mouth % 3];
 	}
+
+	_model->CalculateBoneTransforms();
 
 	if (scriptRunner && scriptRunner->Runnable() && !Mutex)
 	{
