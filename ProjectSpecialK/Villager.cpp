@@ -668,7 +668,7 @@ void Villager::TestScript()
 	function start()
 		dialogue("Panting and sweating...")
 		dialogue("Are we done yet?")
-		-- dialogue("Save complete.", 4)
+		dialogue("Save complete.", 4)
 		-- dialogue() --oops
 	end
 
@@ -677,7 +677,7 @@ void Villager::TestScript()
 	console->visible = false;
 	Mutex = false;
 	scriptRunner = std::make_shared<ScriptRunner>("start", testScript, &Mutex);
-	dlgBox->Mutex = scriptRunner->Mutex;
+	//dlgBox->Mutex = scriptRunner->Mutex; <-- now handled by ScriptRunner::Call but check there!
 }
 
 //TODO: split this into its own files
@@ -696,3 +696,13 @@ ScriptRunner::~ScriptRunner()
 {
 	currentCoro.reset();
 }
+void ScriptRunner::Call()
+{
+	/*TODO: DialogueBox clears its Mutex pointer when dismissed.
+	This prevents it from holding on to stale pointers, BUT
+	it also means *someone* has to reset it!
+	*/
+	dlgBox->Mutex = this->Mutex;
+	currentCoro->call();
+}
+

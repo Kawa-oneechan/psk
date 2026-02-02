@@ -33,7 +33,7 @@ public:
 	ScriptRunner(const std::string& entryPoint, const std::string& script, bool* mutex);
 	~ScriptRunner() override;
 	bool Runnable() const { return currentCoro->runnable(); }
-	void Call() { currentCoro->call(); }
+	void Call();
 	sol::call_status Status() { return currentCoro->status(); }
 };
 using ScriptRunnerP = std::shared_ptr<ScriptRunner>;
