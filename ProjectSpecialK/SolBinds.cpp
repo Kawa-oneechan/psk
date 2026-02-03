@@ -64,19 +64,15 @@ namespace SolBinds
 
 		Sol.new_usertype<Player>(
 			"__Player",
-			sol::constructors<Player()>(),
 			"Name", sol::readonly(&Player::Name),
 			"Gender", &Player::Gender,
 			"Bells", &Player::Bells
 		);
-		Sol["Player"] = &thePlayer;
-
-		Sol["PlayerBag"] = sol::new_table();
-		auto bag = Sol["PlayerBag"];
-		bag["HasInventoryRoom"] = [&]() { return thePlayer.HasInventoryRoom(); };
-		bag["SwapItems"] = [&](int from, int to) { thePlayer.SwapItems(from, to); };
-		bag["RemoveItem"] = [&](int slot) { thePlayer.RemoveItem(slot); };
-		bag["ConsumeItem"] = [&](int slot) { thePlayer.ConsumeItem(slot); };
+		Sol["__Player"]["HasInventoryRoom"] = [&]() { return  thePlayer.HasInventoryRoom(); };
+		Sol["__Player"]["SwapItems"] = [&](int from, int to) { thePlayer.SwapItems(from, to); };
+		Sol["__Player"]["RemoveItem"] = [&](int slot) { thePlayer.RemoveItem(slot); };
+		Sol["__Player"]["ConsumeItem"] = [&](int slot) { thePlayer.ConsumeItem(slot); };
+		Sol["player"] = &thePlayer;
 
 		Sol.new_usertype<Villager>(
 			"__Villager",
@@ -84,18 +80,7 @@ namespace SolBinds
 			"Species", &Villager::Species,
 			"Test", &Villager::TestScript
 		);
-		Sol["pickSNPCOutfit"] = [](sol::variadic_args va)
-		{
-			if (va.size() != 2)
-			{
-				conprint(1, "pickSNPCOutfit needs to arguments.");
-				return;
-			}
-			VillagerP v = nullptr;
-			if (va[0].is<VillagerP>())
-				v = va[0].as<VillagerP>();
-			v->PickSNPCOutfit(va[1].as<sol::object>());
-		};
+		Sol["__Villager"]["PickSpecialOutfit"] = &Villager::PickSNPCOutfit;
 
 		Sol["getVillager"] = [](sol::variadic_args va)
 		{

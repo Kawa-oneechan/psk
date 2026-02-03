@@ -533,7 +533,7 @@ void Villager::PickClothing()
 		auto script = VFS::ReadString(fmt::format("{}/spawn.lua", Path));
 		if (!script.empty())
 		{
-			Sol["me"] = Database::Find(Hash, villagers);
+			Sol["currentVillager"] = Database::Find(Hash, villagers);
 			Sol.do_string(script);
 		}
 		else
@@ -677,7 +677,7 @@ void Villager::TestScript()
 	console->visible = false;
 	Mutex = false;
 	scriptRunner = std::make_shared<ScriptRunner>("start", testScript, &Mutex);
-	//dlgBox->Mutex = scriptRunner->Mutex; <-- now handled by ScriptRunner::Call but check there!
+	dlgBox->Mutex = scriptRunner->Mutex;
 }
 
 //TODO: split this into its own files
@@ -695,14 +695,10 @@ ScriptRunner::ScriptRunner(const std::string& entryPoint, const std::string& scr
 ScriptRunner::~ScriptRunner()
 {
 	currentCoro.reset();
+	dlgBox->Mutex = nullptr;
 }
 void ScriptRunner::Call()
 {
-	/*TODO: DialogueBox clears its Mutex pointer when dismissed.
-	This prevents it from holding on to stale pointers, BUT
-	it also means *someone* has to reset it!
-	*/
-	dlgBox->Mutex = this->Mutex;
 	currentCoro->call();
 }
 

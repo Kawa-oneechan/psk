@@ -426,10 +426,7 @@ bool DialogueBox::Tick(float dt)
 				state = State::Closing;
 				tween = 1;
 				if (Mutex != nullptr)
-				{
 					*Mutex = false;
-					Mutex = nullptr;
-				}
 			}
 			else
 			{
