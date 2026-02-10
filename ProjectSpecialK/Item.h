@@ -150,6 +150,9 @@ public:
 	std::string FullName();
 	ItemP AsItem() const;
 
+	operator ItemP() const { return std::static_pointer_cast<Item>(_wrapped); }
+	operator Item*() const { return _wrapped.get(); }
+
 	//Returns true if the wrapped Item is a Thing, not a Tool, Furniture, or Clothing.
 	bool IsThing() const;
 	//Returns true if the wrapped Item is actually a Tool.
