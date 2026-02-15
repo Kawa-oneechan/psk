@@ -2,7 +2,7 @@
 
 	float blendVal = mixVal.r;
 	float roughnessVal = mixVal.g;
-	float specularVal = mixVal.b;
+	float specularVal = 0.0; //mixVal.b;
 	float eyeBlendVal = albedoVal.a;
 	const float fresnelVal = 1.0;
 
