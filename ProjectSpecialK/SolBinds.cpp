@@ -5,9 +5,8 @@
 #include "DialogueBox.h"
 #include "Player.h"
 #include "MusicManager.h"
+#include "Utilities.h"
 #include "NookCode.h"
-
-extern Tickable root;
 
 namespace SolBinds
 {

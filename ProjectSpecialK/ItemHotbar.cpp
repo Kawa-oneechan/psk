@@ -3,8 +3,7 @@
 #include "Player.h"
 #include "Town.h"
 #include "Messager.h"
-
-extern Tickable root;
+#include "Utilities.h"
 
 ItemHotbar::ItemHotbar()
 {

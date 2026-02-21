@@ -4,8 +4,7 @@
 #include "engine/Console.h"
 #include "MusicManager.h"
 #include "Town.h"
-
-extern Tickable root;
+#include "Utilities.h"
 
 void PlayMusic(const std::string& id)
 {

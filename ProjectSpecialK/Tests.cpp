@@ -12,8 +12,6 @@
 #include <stb_image.h>
 #include <stb_image_write.h>
 
-extern Tickable root;
-
 void TestScaler()
 {
 	const int scale = 4;

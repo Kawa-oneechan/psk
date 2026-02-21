@@ -78,8 +78,6 @@ __declspec(noreturn)
 
 //Currently active Tickables.
 Tickable root;
-//Tickables to add next cycle.
-std::vector<TickableP> newTickables;
 
 namespace UI
 {
@@ -645,14 +643,6 @@ int main(int argc, char** argv)
 
 		console->Draw(dt);
 		Sprite::FlushBatch();
-
-		root.EraseDead();
-		if (newTickables.size() > 0)
-		{
-			for (const auto& t : newTickables)
-				root.AddChild(t);
-			newTickables.clear();
-		}
 
 #ifdef DEBUG
 		DoImGui();

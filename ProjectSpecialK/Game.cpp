@@ -24,10 +24,7 @@ constexpr int ScreenWidth = 1920;
 constexpr int ScreenHeight = 1080;
 
 Audio* bgm = nullptr;
-
 std::map<std::string, std::map<std::string, std::shared_ptr<Audio>>> generalSounds;
-
-extern Tickable root;
 
 extern std::shared_ptr<TextureArray> cloudImage;
 extern std::shared_ptr<Texture> starsImage, skyImage;

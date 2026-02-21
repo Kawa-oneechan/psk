@@ -10,10 +10,10 @@
 #include "engine/VFS.h"
 #include "Game.h"
 #include "Camera.h"
+#include "Utilities.h"
 
 extern int width, height;
 
-extern Tickable root;
 
 std::string LoadCamera(jsonValue& json)
 {

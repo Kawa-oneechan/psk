@@ -10,11 +10,9 @@
 #include "InGame.h"
 #include "Utilities.h"
 #include "Player.h"
+#include "Messager.h"
 
 extern "C" { double glfwGetTime(void); }
-
-extern Tickable root;
-extern std::vector<TickableP> newTickables;
 
 TitleScreen::TitleScreen()
 {
@@ -166,16 +164,11 @@ bool TitleScreen::Tick(float dt)
 		if (iris->Done())
 		{
 			Dead = true;
-			//Bit of a hack here...
-			auto dlgBox = root.GetChild<DialogueBox>();
-			if (dlgBox)
-			{
-				dlgBox->ID = "dlgBox";
-				root.RemoveChild("dlgBox");
-			}
+			root.RemoveChild<DialogueBox>();
 			RemoveAll();
-			::newTickables.push_back(std::make_shared<InGame>());
-			::newTickables.push_back(std::make_shared<DialogueBox>());
+			root.AddChild(new InGame());
+			root.AddChild(new DialogueBox());
+			root.AddChild(new Messager());
 		}
 	}
 

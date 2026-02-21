@@ -12,8 +12,6 @@
 #include "Player.h"
 #include "DialogueBox.h"
 
-extern Tickable root;
-
 static bool showCamera, showLights, showVillager, showPlayer, showArmature, showDialogue;
 
 static void DoCamera()

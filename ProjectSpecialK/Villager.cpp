@@ -14,8 +14,6 @@
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/rotate_vector.hpp>
 
-extern Tickable root;
-
 static SpeciesP specialDummy;
 
 //TODO: special characters need support for more than just tops and accessories.

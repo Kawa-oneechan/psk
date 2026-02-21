@@ -8,9 +8,9 @@
 #include "Camera.h"
 #include "Town.h"
 #include "Game.h"
+#include "Utilities.h"
 
 extern bool useOrthographic;
-extern Tickable root;
 
 void Player::LoadModel()
 {

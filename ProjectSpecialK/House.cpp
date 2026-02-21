@@ -3,8 +3,7 @@
 #include "Town.h"
 #include "Database.h"
 #include "Player.h"
-
-extern Tickable root;
+#include "Utilities.h"
 
 VillagerHouse::Room::Room(VillagerHouse* parent, size_t roomNum)
 {

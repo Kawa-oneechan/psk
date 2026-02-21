@@ -4,8 +4,8 @@
 #include "Types.h"
 #include "Town.h"
 #include "MusicManager.h"
+#include "Utilities.h"
 
-extern Tickable root;
 extern void PlayMusic(const std::string& id);
 
 DateTimePanel::DateTimePanel()

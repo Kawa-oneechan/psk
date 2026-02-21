@@ -6,9 +6,8 @@
 #include "DialogueBox.h"
 #include "Player.h"
 #include "Types.h"
+#include "Utilities.h"
 #include "Database.h"
-
-extern Tickable root;
 
 static const char* bindingNames[] = {
 	"up", "down", "left", "right",

@@ -1,11 +1,8 @@
 #include "engine/Utilities.h"
 #include "InGame.h"
-#include "Messager.h"
 #include "Utilities.h"
 #include "Camera.h"
 #include "Player.h"
-
-extern Tickable root;
 
 InGame::InGame()
 {
@@ -16,10 +13,6 @@ InGame::InGame()
 	RemoveAll();
 	AddChild(dateTimePanel);
 	AddChild(itemHotbar);
-	//AddChild(new DialogueBox());
-	//AddChild(new Messager);
-	//We shouldn't add a DialogueBox or Messager as part of InGame.
-	//root.GetChild<T> wouldn't be able to find them.
 	AddChild(iris);
 
 	LoadCamera("cameras/field.json");

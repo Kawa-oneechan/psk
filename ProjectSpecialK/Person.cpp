@@ -6,11 +6,10 @@
 #include "Person.h"
 #include "Town.h"
 #include "Player.h"
+#include "Utilities.h"
 
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/rotate_vector.hpp>
-
-extern Tickable root;
 
 bool botherColliding = true;
 
