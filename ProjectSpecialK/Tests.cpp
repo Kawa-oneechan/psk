@@ -11,6 +11,9 @@
 
 #include <stb_image.h>
 #include <stb_image_write.h>
+
+extern Tickable root;
+
 void TestScaler()
 {
 	const int scale = 4;
@@ -129,6 +132,7 @@ void RunTests()
 		nookCode = NookCode::Encode(item, variant, pattern);
 	}
 
+	/*
 	{
 		using T = decltype(town);
 		if (std::is_same<T, std::shared_ptr<Town>>())
@@ -138,6 +142,7 @@ void RunTests()
 		if (std::is_same<T, std::shared_ptr<Player>>())
 			conprint(0, "town is a Player?!");
 	}
+	*/
 
 	std::string toLowerTest = u8"Tendō Akane!";
 	StringToLower(toLowerTest);
@@ -157,6 +162,7 @@ void RunTests()
 	auto blackFriday = GetNthWeekdayOfMonth(10, 5, 4);
 	asctime_s(ascTime, blackFriday);
 
+	auto town = root.GetChild<Town>();
 	conprint(0, u8"Elevation test: the tile at tile 4×4 is elevation {}.", town->GetHeight(4t, 4t));
 	conprint(0, u8"Elevation test: the tile at point 0.5×0.5 is elevation {}.", town->GetHeight(glm::vec3(0.50, 0.50, 10)));
 	//town.GenerateNew(nullptr, 2, 2);

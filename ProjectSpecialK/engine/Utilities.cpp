@@ -38,33 +38,6 @@ bool PointInRect(const glm::vec2 point, const glm::vec4 rect)
 		(point.y < rect.w);
 }
 
-bool RevAllTickables(const std::vector<TickableP>& tickables, float dt)
-{
-	//for (auto t = tickables.crbegin(); t != tickables.crend(); ++t)
-	for (unsigned int i = (unsigned int)tickables.size(); i-- > 0; )
-	{
-		auto t = tickables[i];
-		if (!t->Enabled)
-			continue;
-		if (!t->Tick(dt))
-			Inputs.Clear();
-		//return false;
-	//t->Tick(dt);
-	//(*t)->Tick(dt);
-	}
-	return true;
-}
-
-void DrawAllTickables(const std::vector<TickableP>& tickables, float dt)
-{
-	for (const auto& t : tickables)
-	{
-		if (!t->Visible)
-			continue;
-		t->Draw(dt);
-	}
-}
-
 void Screenshot()
 {
 	auto pixels = new unsigned char[3 * width * height];

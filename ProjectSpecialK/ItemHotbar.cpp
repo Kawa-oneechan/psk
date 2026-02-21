@@ -4,12 +4,14 @@
 #include "Town.h"
 #include "Messager.h"
 
+extern Tickable root;
+
 ItemHotbar::ItemHotbar()
 {
 	auto json = VFS::ReadJSON("ui/itemhotbar.json").as_object();
 	layout = PanelLayout(json["itemhotbar"]);
 	layout.onClick = [](const std::string& id) {
-		messager->Add(fmt::format("Hotbar: {}", id));
+		root.GetChild<Messager>()->Add(fmt::format("Hotbar: {}", id));
 	};
 
 	for (int i = 0; i < 9; i++)

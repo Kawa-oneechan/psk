@@ -13,8 +13,16 @@
 
 extern int width, height;
 
+extern Tickable root;
+
 std::string LoadCamera(jsonValue& json)
 {
+	static Camera* camera = nullptr;
+	if (!camera)
+		camera = root.GetChild<Camera>();
+	if (!camera)
+		return "no camera.";
+
 	std::string result = "";
 	try
 	{
@@ -29,12 +37,12 @@ std::string LoadCamera(jsonValue& json)
 				result = "not all required camera properties accounted for.";
 			else
 			{
-				MainCamera->Target(GetJSONVec3(obj["target"]));
-				MainCamera->Angles(GetJSONVec3(obj["angles"]));
+				camera->Target(GetJSONVec3(obj["target"]));
+				camera->Angles(GetJSONVec3(obj["angles"]));
 				if (!obj["distance"].is_number())
 					result = "distance is not a number.";
 				else
-					MainCamera->Distance(obj["distance"].as_number());
+					camera->Distance(obj["distance"].as_number());
 				if (obj["drum"].is_boolean())
 					commonUniforms.CurveEnabled = obj["drum"].as_boolean();
 				if (obj["drumAmount"].is_number())
@@ -42,7 +50,7 @@ std::string LoadCamera(jsonValue& json)
 				if (obj["drumPower"].is_number())
 					commonUniforms.CurvePower = obj["drumPower"].as_number();
 				//if (obj["locked"] != nullptr && obj["locked"].is_boolean())
-				//	MainCamera.Locked = obj["locked"].as_boolean();
+				//	camera.Locked = obj["locked"].as_boolean();
 			}
 		}
 	}

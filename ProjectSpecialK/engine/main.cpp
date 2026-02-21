@@ -77,7 +77,7 @@ __declspec(noreturn)
 }
 
 //Currently active Tickables.
-std::vector<TickableP> rootTickables;
+Tickable root;
 //Tickables to add next cycle.
 std::vector<TickableP> newTickables;
 
@@ -258,9 +258,9 @@ static void char_callback(GLFWwindow* window, unsigned int codepoint)
 		console->Character(codepoint);
 		return;
 	}
-	for (unsigned int i = (unsigned int)rootTickables.size(); i-- > 0; )
+	for (unsigned int i = (unsigned int)root.size(); i-- > 0; )
 	{
-		auto t = rootTickables[i];
+		auto t = root[i];
 		if (t->Character(codepoint))
 			break;
 	}
@@ -328,9 +328,9 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 
 	Inputs.Process(scancode, action);
 
-	for (unsigned int i = (unsigned int)rootTickables.size(); i-- > 0; )
+	for (unsigned int i = (unsigned int)root.size(); i-- > 0; )
 	{
-		auto t = rootTickables[i];
+		auto t = root[i];
 		if (t->Scancode(scancode))
 			break;
 	}
@@ -591,7 +591,7 @@ int main(int argc, char** argv)
 	auto oldTime = glfwGetTime();
 	commonUniforms.TotalTime = 0.0f;
 
-	Game::Start(rootTickables);
+	Game::Start(root);
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -628,7 +628,7 @@ int main(int argc, char** argv)
 		if (console->visible)
 			console->Tick(dt);
 		else
-			RevAllTickables(rootTickables, dt);
+			root.Tick(dt);
 
 		glBindBuffer(GL_UNIFORM_BUFFER, commonBuffer);
 		glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(CommonUniforms), &commonUniforms);
@@ -640,20 +640,17 @@ int main(int argc, char** argv)
 #endif
 
 		Game::PreDraw(dt * timeScale);
-		DrawAllTickables(rootTickables, dt * timeScale);
+		root.Draw(dt * timeScale);
 		Game::PostDraw(dt * timeScale);
 
 		console->Draw(dt);
 		Sprite::FlushBatch();
 
-		rootTickables.erase(std::remove_if(rootTickables.begin(), rootTickables.end(), [](TickableP i)
-		{
-			return i->Dead;
-		}), rootTickables.end());
+		root.EraseDead();
 		if (newTickables.size() > 0)
 		{
 			for (const auto& t : newTickables)
-				rootTickables.push_back(t);
+				root.AddChild(t);
 			newTickables.clear();
 		}
 

@@ -10,6 +10,7 @@
 #include "Game.h"
 
 extern bool useOrthographic;
+extern Tickable root;
 
 void Player::LoadModel()
 {
@@ -328,7 +329,7 @@ bool Player::Tick(float dt)
 
 	if (anythingPressed)
 	{
-		Move(facing + MainCamera->Angles().z + (useOrthographic ? 0.45f : 0), dt);
+		Move(facing + root.GetChild<Camera>()->Angles().z + (useOrthographic ? 0.45f : 0), dt);
 	}
 
 	if (!_model)

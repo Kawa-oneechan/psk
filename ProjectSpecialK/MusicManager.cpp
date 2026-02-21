@@ -5,9 +5,11 @@
 #include "MusicManager.h"
 #include "Town.h"
 
+extern Tickable root;
+
 void PlayMusic(const std::string& id)
 {
-	musicManager->Play(id, true);
+	root.GetChild<MusicManager>()->Play(id, true);
 }
 
 MusicManager::MusicManager()
@@ -123,7 +125,8 @@ void MusicManager::Play(const std::string& id, bool immediate, bool ignoreID)
 
 	{
 		auto weather = "sunny";
-		if (town->Clouds >= Town::Weather::RainClouds)
+		auto town = root.GetChild<Town>();
+		if (town && town->Clouds >= Town::Weather::RainClouds)
 			weather = "rainy";
 		auto tpos = file.find("{time}");
 		if (tpos != std::string::npos)

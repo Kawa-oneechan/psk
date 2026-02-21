@@ -4,6 +4,8 @@
 #include "Database.h"
 #include "Player.h"
 
+extern Tickable root;
+
 VillagerHouse::Room::Room(VillagerHouse* parent, size_t roomNum)
 {
 	parentHouse = parent;
@@ -167,6 +169,8 @@ void VillagerHouse::Load()
 
 VillagerHouse::VillagerHouse(int owner)
 {
+	auto town = root.GetChild<Town>();
+
 	if (owner == -1)
 	{
 		Owner = thePlayer.Hash;

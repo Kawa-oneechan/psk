@@ -5,6 +5,7 @@
 #include "Town.h"
 #include "MusicManager.h"
 
+extern Tickable root;
 extern void PlayMusic(const std::string& id);
 
 DateTimePanel::DateTimePanel()
@@ -50,7 +51,8 @@ void DateTimePanel::Update()
 		lastHour = gm.tm_hour;
 		//TODO: check for specific maps and events
 		//TODO: instead of playing immediately, fade out while doing the chimes first.
-		const auto& thisMap = town;
+		const auto thisMap = root.GetChild<Town>();
+		const auto musicManager = root.GetChild<MusicManager>();
 		if (!thisMap->CanOverrideMusic || musicManager->Override.empty())
 			musicManager->Play(thisMap->Music, true, true);
 		else

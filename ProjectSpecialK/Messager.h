@@ -23,4 +23,3 @@ private:
 	int cursor;
 };
 
-extern std::shared_ptr<Messager> messager;

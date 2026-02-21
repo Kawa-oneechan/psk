@@ -30,4 +30,3 @@ public:
 
 };
 
-extern std::shared_ptr<MusicManager> musicManager;

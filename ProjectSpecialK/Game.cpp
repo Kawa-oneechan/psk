@@ -23,15 +23,11 @@ extern void RunTests();
 constexpr int ScreenWidth = 1920;
 constexpr int ScreenHeight = 1080;
 
-std::shared_ptr<DialogueBox> dlgBox = nullptr;
 Audio* bgm = nullptr;
 
 std::map<std::string, std::map<std::string, std::shared_ptr<Audio>>> generalSounds;
 
-std::shared_ptr<Camera> MainCamera;
-std::shared_ptr<Messager> messager;
-std::shared_ptr<MusicManager> musicManager;
-std::shared_ptr<Town> town;
+extern Tickable root;
 
 extern std::shared_ptr<TextureArray> cloudImage;
 extern std::shared_ptr<Texture> starsImage, skyImage;
@@ -82,20 +78,16 @@ void Game::Initialize()
 
 	SolBinds::Setup(Sol);
 
-	MainCamera = std::make_shared<Camera>();
-	musicManager = std::make_shared<MusicManager>();
 
 	commonUniforms.Fresnel = true;
 
 	ThreadedLoader(Database::LoadGlobalStuff);
 
-	town = std::make_shared<Town>();
-	dlgBox = std::make_shared<DialogueBox>();
-	messager = std::make_shared<Messager>();
 
 	UI::controls = std::make_shared<Texture>("ui/controls.png");
 
 
+	/*
 	auto testScript = R"SOL(
 
 	function start()
@@ -107,6 +99,7 @@ void Game::Initialize()
 
 	)SOL";
 	Sol.do_string(testScript);
+	*/
 
 
 	{
@@ -117,10 +110,6 @@ void Game::Initialize()
 				generalSounds[category.first][sound.first] = std::make_shared<Audio>(sound.second.as_string());
 		}
 	}
-
-#ifdef DEBUG
-	//RunTests();
-#endif
 
 	//Load the player *here* so we don't get inventory test results mixed in.
 	thePlayer.Load();
@@ -136,22 +125,8 @@ void Game::Initialize()
 	}
 	if (!LoadCamera("cameras/field.json").empty())
 	{
-		MainCamera->Set(glm::vec3(0, 0, -6), glm::vec3(0, 110, 0), 60);
+		root.GetChild<Camera>()->Set(glm::vec3(0, 0, -6), glm::vec3(0, 110, 0), 60);
 	}
-
-	if (town->Villagers.size() == 0)
-	{
-		town->Villagers.push_back(Database::Find<Villager>("ac:cat01", villagers));
-	}
-	{
-		int i = 0;
-		for (auto& vgr : town->Villagers)
-		{
-			vgr->Manifest();
-			vgr->Position = glm::vec3(30, 0, 30 + (i++ * 10));
-		}
-	}
-	thePlayer.Position = glm::vec3(40, 0, 30);
 
 	postFxBuffer = new Framebuffer(Shaders["postfx"], width, height);
 	postFxBuffer->SetLut(new TextureArray("colormap*.png"));
@@ -167,19 +142,40 @@ void Game::PrepareSaveDirs()
 
 extern bool skipTitle, wireframe;
 
-void Game::Start(std::vector<TickableP>& tickables)
+void Game::Start(Tickable& root)
 {
 	//Now that we've loaded the key names we can fill in some blanks.
 	for (int i = 0; i < NumKeyBinds; i++)
 		Inputs.Keys[i].Name = GetKeyName(Inputs.Keys[i].ScanCode);
 
-	tickables.push_back(musicManager);
-	tickables.push_back(MainCamera);
-	tickables.push_back(town);
+	root.AddChild(new MusicManager());
+	root.AddChild(new Camera());
+	root.AddChild(new Town());
 	if (skipTitle)
-		tickables.push_back(std::make_shared<InGame>());
+		root.AddChild(new InGame());
 	else
-		tickables.push_back(std::make_shared<TitleScreen>());
+		root.AddChild(new TitleScreen());
+	root.AddChild(new DialogueBox());
+
+
+	auto town = root.GetChild<Town>();
+	if (town->Villagers.size() == 0)
+	{
+		town->Villagers.push_back(Database::Find<Villager>("ac:cat01", villagers));
+	}
+	{
+		int i = 0;
+		for (auto& vgr : town->Villagers)
+		{
+			vgr->Manifest();
+			vgr->Position = glm::vec3(30, 0, 30 + (i++ * 10));
+		}
+	}
+	thePlayer.Position = glm::vec3(40, 0, 30);
+
+#ifdef DEBUG
+	RunTests();
+#endif
 }
 
 void Game::OnKey(int key, int scancode, int action, int mods)
@@ -200,12 +196,18 @@ void Game::OnKey(int key, int scancode, int action, int mods)
 void Game::OnMouse(double xPosIn, double yPosIn, float xoffset, float yoffset)
 {
 	xPosIn, yPosIn;
-	if (Inputs.MouseHoldMiddle && !MainCamera->Locked)
+	static Camera* camera = nullptr;
+	if (!camera)
+		camera = root.GetChild<Camera>();
+	if (!camera)
+		return;
+
+	if (Inputs.MouseHoldMiddle && !camera->Locked)
 	{
-		auto angles = MainCamera->GetAngles();
+		auto angles = camera->GetAngles();
 		angles.z -= xoffset;
 		angles.y -= yoffset;
-		MainCamera->Angles(angles);
+		camera->Angles(angles);
 	}
 }
 
@@ -239,5 +241,5 @@ void Game::PostDraw(float dt)
 void Game::OnQuit()
 {
 	thePlayer.Save();
-	town->Save();
+	root.GetChild<Town>()->Save();
 }

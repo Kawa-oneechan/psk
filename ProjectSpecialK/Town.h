@@ -53,4 +53,3 @@ public:
 	void Draw(float dt) override;
 };
 
-extern std::shared_ptr<Town> town;

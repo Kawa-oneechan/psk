@@ -13,6 +13,7 @@
 
 extern "C" { double glfwGetTime(void); }
 
+extern Tickable root;
 extern std::vector<TickableP> newTickables;
 
 TitleScreen::TitleScreen()
@@ -36,7 +37,7 @@ TitleScreen::TitleScreen()
 		}
 		Text::Forget("logojoke:");
 	}
-	
+
 	LoadCamera("cameras/title.json");
 
 	//TODO: only show the player panel if there IS a player.
@@ -49,6 +50,7 @@ TitleScreen::TitleScreen()
 		const int playerMargin = metrics["titleProfileCardMargin"].as_integer();
 		const int playerWatermarkSize = metrics["titleProfileCardWatermarkSize"].as_integer();
 
+		auto town = root.GetChild<Town>();
 		auto playerText = fmt::format("{}\n{}", thePlayer.Name, town->Name);
 		auto playerPanelWidth = (int)(Sprite::MeasureText(1, playerText, 50.0f, true).x + (playerPhotoSize * 2) + playerPadding2 + playerMargin);
 		playerPanel = std::make_shared<NineSlicer>("ui/titlepassport.png", width - playerPanelWidth - 30, height, playerPanelWidth, playerPhotoSize + playerPadding2);
@@ -101,7 +103,7 @@ bool TitleScreen::Tick(float dt)
 
 	if (state == State::Init)
 	{
-		musicManager->Play("title", true);
+		root.GetChild<MusicManager>()->Play("title", true);
 		state = State::FadeIn;
 		//MainCamera.Target(&(town.Villagers[0]->Position));
 		iris->In();
@@ -130,7 +132,7 @@ bool TitleScreen::Tick(float dt)
 			if (Inputs.KeyDown(Binds::Accept))
 			{
 				state = State::FadeOut;
-				musicManager->FadeOut();
+				root.GetChild<MusicManager>()->FadeOut();
 				iris->Out();
 				return false;
 			}
@@ -164,8 +166,16 @@ bool TitleScreen::Tick(float dt)
 		if (iris->Done())
 		{
 			Dead = true;
+			//Bit of a hack here...
+			auto dlgBox = root.GetChild<DialogueBox>();
+			if (dlgBox)
+			{
+				dlgBox->ID = "dlgBox";
+				root.RemoveChild("dlgBox");
+			}
 			RemoveAll();
 			::newTickables.push_back(std::make_shared<InGame>());
+			::newTickables.push_back(std::make_shared<DialogueBox>());
 		}
 	}
 
@@ -179,7 +189,8 @@ TitleScreen::~TitleScreen()
 
 void TitleScreen::Draw(float dt)
 {
-	DrawAllTickables(ChildTickables, dt);
+	//DrawAllTickables(ChildTickables, dt);
+	Tickable::Draw(dt);
 
 	if (!optionsMenu->Visible && pressStart != nullptr)
 	{

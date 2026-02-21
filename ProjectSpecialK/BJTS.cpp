@@ -8,6 +8,8 @@
 #include "Types.h"
 #include "Database.h"
 
+extern Tickable root;
+
 static const char* bindingNames[] = {
 	"up", "down", "left", "right",
 	"accept", "back", "pageup", "pagedown",
@@ -58,7 +60,7 @@ static void bjtsStr(std::string& data, BJTSParams)
 		return;
 	}
 
-	auto speaker = dlgBox->Speaker();
+	auto speaker = root.GetChild<DialogueBox>()->Speaker();
 
 	if (tags[1] == "...")
 		data.replace(start, len, Text::Get("str:fix:001"));
@@ -120,7 +122,7 @@ static void bjtsWordstruct(std::string& data, BJTSParams)
 	//This method is cheaper than re-joining the tags.
 	auto key = data.substr(start + 1, len - 2);
 
-	auto speaker = dlgBox->Speaker();
+	auto speaker = root.GetChild<DialogueBox>()->Speaker();
 
 	auto ppos = key.find('?');
 	if (ppos != key.npos)

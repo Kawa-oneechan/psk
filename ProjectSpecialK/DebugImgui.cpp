@@ -12,62 +12,64 @@
 #include "Player.h"
 #include "DialogueBox.h"
 
-extern std::shared_ptr<DialogueBox> dlgBox;
+extern Tickable root;
 
 static bool showCamera, showLights, showVillager, showPlayer, showArmature, showDialogue;
 
 static void DoCamera()
 {
+	auto camera = root.GetChild<Camera>();
+
 	if (ImGui::Begin("Camera"))
 	{
 		ImGui::SeparatorText("Target");
 		{
-			auto& tar = MainCamera->GetTarget();
+			auto& tar = camera->GetTarget();
 			if (ImGui::DragFloat("X", &tar.x, 1.0, -50, 50))
-				MainCamera->Update();
+				camera->Update();
 			if (ImGui::DragFloat("Y", &tar.y, 1.0, -50, 50))
-				MainCamera->Update();
+				camera->Update();
 			if (ImGui::DragFloat("Z", &tar.z, 1.0, -100, 100))
-				MainCamera->Update();
+				camera->Update();
 		}
 
 		ImGui::SeparatorText("Angles");
 		{
-			auto& ang = MainCamera->GetAngles();
+			auto& ang = camera->GetAngles();
 			if (ImGui::DragFloat("Roll", &ang.x, 1.0, -359, 359))
-				MainCamera->Update();
+				camera->Update();
 			if (ImGui::DragFloat("Pitch", &ang.y, 1.0, -359, 359))
-				MainCamera->Update();
+				camera->Update();
 			if (ImGui::DragFloat("Yaw", &ang.z, 1.0, -359, 359))
-				MainCamera->Update();
+				camera->Update();
 		}
 
 		ImGui::Separator();
-		if (ImGui::DragFloat("Distance", &MainCamera->GetDistance(), 1.0, -100, 100, "%.3f", ImGuiSliderFlags_Logarithmic))
-			MainCamera->Update();
+		if (ImGui::DragFloat("Distance", &camera->GetDistance(), 1.0, -100, 100, "%.3f", ImGuiSliderFlags_Logarithmic))
+			camera->Update();
 
 
 		ImGui::SeparatorText("Settings");
 		ImGui::Checkbox("Drum", &commonUniforms.CurveEnabled);
 		ImGui::DragFloat("Drum amount", &commonUniforms.CurveAmount, 0.001f, -1.0, 1.0);
 		ImGui::DragFloat("Drum power", &commonUniforms.CurvePower, 0.25, -2.0, 2.0);
-		ImGui::Checkbox("Locked", &MainCamera->Locked);
+		ImGui::Checkbox("Locked", &camera->Locked);
 
 		if (ImGui::Button("Reset"))
 		{
-			MainCamera->Target(glm::vec3(0, 0, 0));
-			MainCamera->Angles(glm::vec3(0, 46, 0));
-			MainCamera->Distance(70);
-			MainCamera->Update();
+			camera->Target(glm::vec3(0, 0, 0));
+			camera->Angles(glm::vec3(0, 46, 0));
+			camera->Distance(70);
+			camera->Update();
 		}
 
 		if (ImGui::Button("Copy JSON"))
 		{
 			std::string json;
 			json += "{\n";
-			auto tar = MainCamera->GetTarget();
-			auto ang = MainCamera->GetAngles();
-			auto dis = MainCamera->GetDistance();
+			auto tar = camera->GetTarget();
+			auto ang = camera->GetAngles();
+			auto dis = camera->GetDistance();
 			json += fmt::format("\t\"target\": [{}, {}, {}],\n", tar[0], tar[1], tar[2]);
 			json += fmt::format("\t\"angles\": [{}, {}, {}],\n", ang[0], ang[1], ang[2]);
 			json += fmt::format("\t\"distance\": {},\n", dis);
@@ -182,6 +184,8 @@ static VillagerP debugVillager = nullptr;
 
 static void DoVillager()
 {
+	auto town = root.GetChild<Town>();
+
 	//TODO: use *current* map.
 	if (debugVillager == nullptr && !villagers.empty())
 		debugVillager = villagers[0];
@@ -266,7 +270,7 @@ static void DoVillager()
 				debugVillager->ReloadTextures();
 			ImGui::SameLine();
 			if (ImGui::Button("Track"))
-				MainCamera->Target(&debugVillager->Position);
+				root.GetChild<Camera>()->Target(&debugVillager->Position);
 
 			ImGui::SeparatorText("Animation");
 			ImGui::SliderInt("Face", &debugVillager->face, 0, 15);
@@ -299,7 +303,7 @@ static void DoPlayer()
 		ImGui::SameLine();
 		if (ImGui::Button("Track"))
 		{
-			MainCamera->Target(&thePlayer.Position);
+			root.GetChild<Camera>()->Target(&thePlayer.Position);
 		}
 
 		ImGui::SeparatorText("Animation");
@@ -479,7 +483,7 @@ static void DoDialogue()
 		ImGui::Checkbox("Use currently selected villager", &useVillager);
 		if (ImGui::Button("Show"))
 		{
-			dlgBox->Text(test, useVillager ? debugVillager : nullptr);
+			root.GetChild<DialogueBox>()->Text(test, useVillager ? debugVillager : nullptr);
 		}
 	}
 	ImGui::End();

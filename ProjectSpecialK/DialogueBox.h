@@ -85,4 +85,3 @@ public:
 	VillagerP Speaker() { return speaker; }
 };
 
-extern std::shared_ptr<DialogueBox> dlgBox;

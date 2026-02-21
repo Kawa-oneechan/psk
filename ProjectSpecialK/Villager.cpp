@@ -14,6 +14,8 @@
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/rotate_vector.hpp>
 
+extern Tickable root;
+
 static SpeciesP specialDummy;
 
 //TODO: special characters need support for more than just tops and accessories.
@@ -677,7 +679,7 @@ void Villager::TestScript()
 	console->visible = false;
 	Mutex = false;
 	scriptRunner = std::make_shared<ScriptRunner>("start", testScript, &Mutex);
-	dlgBox->Mutex = scriptRunner->Mutex;
+	root.GetChild<DialogueBox>()->Mutex = scriptRunner->Mutex;
 }
 
 //TODO: split this into its own files
@@ -695,7 +697,7 @@ ScriptRunner::ScriptRunner(const std::string& entryPoint, const std::string& scr
 ScriptRunner::~ScriptRunner()
 {
 	currentCoro.reset();
-	dlgBox->Mutex = nullptr;
+	root.GetChild<DialogueBox>()->Mutex = nullptr;
 }
 void ScriptRunner::Call()
 {

@@ -7,6 +7,8 @@
 #include "MusicManager.h"
 #include "NookCode.h"
 
+extern Tickable root;
+
 namespace SolBinds
 {
 	void Setup(sol::state& Sol)
@@ -54,6 +56,7 @@ namespace SolBinds
 				break;
 			}
 
+			auto dlgBox = root.GetChild<DialogueBox>();
 			if (dlgBox->Mutex != nullptr)
 				*dlgBox->Mutex = true;
 			dlgBox->Text(line, style);
@@ -117,6 +120,7 @@ namespace SolBinds
 
 		Sol["music"] = [](sol::variadic_args va)
 		{
+			auto musicManager = root.GetChild<MusicManager>();
 			if (va.size() == 1)
 				musicManager->Play(va[0].as<std::string>());
 			else if (va.size() == 2)

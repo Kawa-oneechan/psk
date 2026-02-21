@@ -5,6 +5,8 @@
 #include "Camera.h"
 #include "Player.h"
 
+extern Tickable root;
+
 InGame::InGame()
 {
 	dateTimePanel = std::make_shared<DateTimePanel>();
@@ -14,12 +16,14 @@ InGame::InGame()
 	RemoveAll();
 	AddChild(dateTimePanel);
 	AddChild(itemHotbar);
-	AddChild(dlgBox);
-	AddChild(messager);
+	//AddChild(new DialogueBox());
+	//AddChild(new Messager);
+	//We shouldn't add a DialogueBox or Messager as part of InGame.
+	//root.GetChild<T> wouldn't be able to find them.
 	AddChild(iris);
 
 	LoadCamera("cameras/field.json");
-	MainCamera->Target(&(thePlayer.Position));
+	root.GetChild<Camera>()->Target(&(thePlayer.Position));
 }
 
 bool InGame::Tick(float dt)

@@ -10,6 +10,8 @@
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/rotate_vector.hpp>
 
+extern Tickable root;
+
 bool botherColliding = true;
 
 void Person::Turn(float facing, float dt)
@@ -35,6 +37,12 @@ void Person::Turn(float facing, float dt)
 
 bool Person::Move(float facing, float dt)
 {
+	static Town* town = nullptr;
+	if (!town)
+		town = root.GetChild<Town>();
+	if (!town)
+		return true;
+
 	Turn(facing, dt);
 
 	const auto movement = glm::rotate(glm::vec2(0, 0.25f), glm::radians(Facing)) * dt;

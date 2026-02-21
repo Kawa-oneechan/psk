@@ -112,22 +112,58 @@ public:
 	template<typename T>
 	T* GetChild(const std::string& n) const
 	{
-		auto it = std::find_if(ChildTickables.begin(), ChildTickables.end(), [n](auto e)
+		for (auto& i : ChildTickables)
 		{
-			return e->ID == n;
-		});
-		if (it != ChildTickables.end())
-			return (T*)(*it).get();
+			auto e = std::dynamic_pointer_cast<T>(i);
+			if (e)
+			{
+				if (n.empty())
+					return e.get();
+				else if (i->ID == n)
+					return e.get();
+			}
+		}
+
 		return nullptr;
 	}
-	
+	template<typename T>
+	T* GetChild() const
+	{
+		for (auto& i : ChildTickables)
+		{
+			auto e = std::dynamic_pointer_cast<T>(i);
+			if (e)
+				return e.get();
+		}
+
+		return nullptr;
+	}
+
 	Tickable* operator[](size_t i) const
 	{
 		return GetChild<Tickable>(i);
 	}
 	Tickable* operator[](const std::string& n) const
 	{
-		return GetChild<Tickable>(n);
+		auto it = std::find_if(ChildTickables.begin(), ChildTickables.end(), [n](auto e)
+		{
+			return e->ID == n;
+		});
+		if (it != ChildTickables.end())
+			return it->get();
+	}
+
+	size_t size() const
+	{
+		return ChildTickables.size();
+	}
+
+	void EraseDead()
+	{
+		ChildTickables.erase(std::remove_if(ChildTickables.begin(), ChildTickables.end(), [](std::shared_ptr<Tickable> i)
+		{
+			return i->Dead;
+		}), ChildTickables.end());
 	}
 
 };
