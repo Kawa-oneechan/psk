@@ -42,6 +42,11 @@ extern std::string Qualify(const std::string& id, const std::string& ns);
 //Removes the frontmost namespace from an ID.
 extern std::string UnQualify(const std::string& id);
 
+extern int GetJSONVal(const jsonValue& jsonVal, int default);
+extern float GetJSONVal(const jsonValue& jsonVal, float default);
+extern const std::string& GetJSONVal(const jsonValue& jsonVal, const std::string& default);
+extern bool GetJSONBool(const jsonValue& jsonVal, bool default);
+
 //Shows a loading screen while running another thread.
 extern void ThreadedLoader(std::function<void(float*)> loader);
 

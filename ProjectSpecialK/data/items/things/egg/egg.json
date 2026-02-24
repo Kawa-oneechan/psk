@@ -16,7 +16,7 @@
 	"type": "thing",
 	"category": "others",
 	"kind": "egg",
-	"stack": 30,
+	"stack": "#fruitstack",
 	"canHave": true,
 	"canBury": true,
 	"canEat": true,

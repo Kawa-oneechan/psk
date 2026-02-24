@@ -1,6 +1,7 @@
 #include "engine/TextUtils.h"
 #include "Item.h"
 #include "Database.h"
+#include "Utilities.h"
 
 int Item::FindVariantByName(const std::string& variantName) const
 {
@@ -14,7 +15,7 @@ int Item::FindVariantByName(const std::string& variantName) const
 
 Item::Item(jsonObject& value, const std::string& filename) : NameableThing(value, filename)
 {
-	auto type = value["type"].is_string() ? value["type"].as_string() : "[missing value]";
+	auto type = GetJSONVal(value["type"], "[missing value]");
 	if (type == "thing") Type = Type::Thing;
 	else if (type == "tool") Type = Type::Tool;
 	else if (type == "furniture") Type = Type::Furniture;
@@ -24,31 +25,31 @@ Item::Item(jsonObject& value, const std::string& filename) : NameableThing(value
 	else
 		throw std::runtime_error(fmt::format("Don't know what to do with type \"{}\" while loading {}.", type, ID));
 
-	Icon = value["icon"].is_string() ? value["icon"].as_string() : "leaf";
-	Price = value["price"].is_integer() ? value["price"].as_integer() : 0;
-	WearLimit = value["breakDamage"].is_integer() ? value["breakDamage"].as_integer() : 0;
+	Icon = GetJSONVal(value["icon"], "leaf");
+	Price = GetJSONVal(value["price"], 0);
+	WearLimit = GetJSONVal(value["breakDamage"], 0);
 
 	if (Type != Type::Clothing)
 	{
-		StackLimit = value["stack"].is_integer() ? value["stack"].as_integer() : 0;
+		StackLimit = GetJSONVal(value["stack"], 0);
 
-		CanBury = value["canBury"].is_boolean() ? value["canBury"].as_boolean() : false;
-		CanEat = value["canEat"].is_boolean() ? value["canEat"].as_boolean() : false;
-		CanPlace = value["canPlace"].is_boolean() ? value["canPlace"].as_boolean() : false;
-		CanPlant = value["canPlant"].is_boolean() ? value["canPlant"].as_boolean() : false;
-		CanDrop = value["canDrop"].is_boolean() ? value["canDrop"].as_boolean() : false;
-		CanGive = value["canGive"].is_boolean() ? value["canGive"].as_boolean() : false;
-		CanSell = value["canSell"].is_boolean() ? value["canSell"].as_boolean() : (Price != 0);
-		CanDropOff = value["canDropOff"].is_boolean() ? value["canDropOff"].as_boolean() : CanSell;
-		CanStore = value["canStore"].is_boolean() ? value["canStore"].as_boolean() : false;
-		CanTrash = value["canTrash"].is_boolean() ? value["canTrash"].as_boolean() : false;
-		CanGift = value["canGiveBDay"].is_boolean() ? value["canGiveBDay"].as_boolean() : false;
-		CanWrap = value["canGiftwrap"].is_boolean() ? value["canGiftwrap"].as_boolean() : false;
-		CanHave = value["canHave"].is_boolean() ? value["canHave"].as_boolean() : true;
+		CanBury = GetJSONBool(value["canBury"], false);
+		CanEat = GetJSONBool(value["canEat"], false);
+		CanPlace = GetJSONBool(value["canPlace"], false);
+		CanPlant = GetJSONBool(value["canPlant"], false);
+		CanDrop = GetJSONBool(value["canDrop"], false);
+		CanGive = GetJSONBool(value["canGive"], false);
+		CanSell = GetJSONBool(value["canSell"], false);
+		CanDropOff = GetJSONBool(value["canDropOff"], false);
+		CanStore = GetJSONBool(value["canStore"], false);
+		CanTrash = GetJSONBool(value["canTrash"], false);
+		CanGift = GetJSONBool(value["canGiveBDay"], false);
+		CanWrap = GetJSONBool(value["canGiftwrap"], false);
+		CanHave = GetJSONBool(value["canHave"], false);
 
 		if (Type == Type::Furniture)
 		{
-			auto kind = value["category"].is_string() ? value["category"].as_string() : "[missing value]";
+			auto kind = GetJSONVal(value["category"], "[missing value]");
 			if (kind == "housewares") FurnKind = FurnKind::Houseware;
 			else if (kind == "houseware") FurnKind = FurnKind::Houseware;
 			else if (kind == "floor") FurnKind = FurnKind::Houseware;
@@ -66,12 +67,12 @@ Item::Item(jsonObject& value, const std::string& filename) : NameableThing(value
 			else
 				throw std::runtime_error(fmt::format("Don't know what to do with type \"{}\" while loading {}.", kind, ID));
 
-			CanGoOnWallsOrFloor = value["canWallFloor"].is_boolean() ? value["canWallFloor"].as_boolean() : false;
+			CanGoOnWallsOrFloor = GetJSONBool(value["canWallFloor"], false);
 		}
 	}
 	else
 	{
-		auto kind = value["category"].is_string() ? value["category"].as_string() : "[missing value]";
+		auto kind = GetJSONVal(value["category"], "[missing value]");
 		if (kind == "tops") ClothingKind = ClothingKind::Tops;
 		else if (kind == "bottoms") ClothingKind = ClothingKind::Bottoms;
 		else if (kind == "onepiece") ClothingKind = ClothingKind::OnePiece;
@@ -88,8 +89,8 @@ Item::Item(jsonObject& value, const std::string& filename) : NameableThing(value
 		else
 			throw std::runtime_error(fmt::format("Don't know what to do with type \"{}\" while loading {}.", kind, ID));
 
-		Style = value["style"].is_string() ? value["style"].as_string() : "";
-		PlayerModel = value["playerModel"].is_string() ? value["playerModel"].as_string() : "";
+		Style = GetJSONVal(value["style"], "");
+		PlayerModel = GetJSONVal(value["playerModel"], "");
 	}
 	
 	auto vars = value["variants"];
