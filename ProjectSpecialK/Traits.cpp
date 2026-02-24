@@ -2,11 +2,10 @@
 
 Personality::Personality(jsonObject& value, const std::string& filename) : NameableThing(value, filename)
 {
-	std::string voices[2];
 	{
 		auto v = value["voice"].as_array();
-		voices[0] = v[0].as_string();
-		voices[1] = v[1].as_string();
+		Voices[0] = v[0].as_string();
+		Voices[1] = v[1].as_string();
 	}
 	//auto& base = value["base"]->AsString();
 

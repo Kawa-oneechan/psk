@@ -211,7 +211,7 @@ void Town::Save()
 	conprint(0, "Saving...");
 	auto json = json5pp::object({});
 
-	VFS::WriteSaveData("map/map.bin", (void*)Terrain.get(), sizeof(MapTile) * Width * Height);
+	VFS::WriteSaveData("map/map.bin", Terrain.get(), sizeof(MapTile) * Width * Height);
 
 	json.as_object()["width"] = Width;
 	json.as_object()["height"] = Height;
@@ -256,7 +256,7 @@ void Town::StartNewDay()
 {
 	//Select weather
 	{
-		tm gm;
+		tm gm{};
 		auto now = time(nullptr);
 		localtime_s(&gm, &now);
 		const auto month = gm.tm_mon + 1;
@@ -339,7 +339,7 @@ void Town::StartNewDay()
 
 void Town::UpdateWeather()
 {
-	tm gm;
+	tm gm{};
 	auto now = time(nullptr);
 	localtime_s(&gm, &now);
 	auto hour = gm.tm_hour;

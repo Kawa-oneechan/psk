@@ -13,7 +13,7 @@ public:
 	hash Hash{ 0 };
 	explicit NameableThing(jsonObject& value, const std::string& filename = "");
 	NameableThing() = default;
-	std::string Name();
+	const std::string Name() const;
 
 	inline bool operator==(const NameableThing& r) const { return this->ID == r.ID; }
 	inline bool operator!= (const NameableThing& r) const { return this->ID != r.ID; }

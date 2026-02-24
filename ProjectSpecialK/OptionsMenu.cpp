@@ -44,7 +44,7 @@ void OptionsMenu::Build()
 	{
 		return fmt::format("{}%", i->selection);
 	};
-	auto speciesDrawer = [&](DoomMenuPage*, DoomMenuItem* i)
+	auto speciesDrawer = [&](DoomMenuPage*, const DoomMenuItem* i)
 	{
 		Sprite::DrawText(1, speciesText, glm::vec2(width * 0.6f, height * 0.4f) * scale, glm::vec4(1), 75.0f);
 		if (i->type == DoomMenuItem::Type::Checkbox)
@@ -81,7 +81,7 @@ void OptionsMenu::Build()
 			"menu:options:language:nl",
 			//"menu:options:language:uk"
 		},
-		[&](DoomMenuItem*i)
+		[&](const DoomMenuItem* i)
 		{
 			gameLang = opt2lan[i->selection];
 			UI::settings.as_object()["language"] = Text::GetLangCode(gameLang);
@@ -97,7 +97,7 @@ void OptionsMenu::Build()
 			"menu:options:continuefrom:2",
 			"menu:options:continuefrom:3",
 		},
-		[&](DoomMenuItem*i) { UI::settings.as_object()["continue"] = i->selection; }
+		[&](const DoomMenuItem* i) { UI::settings.as_object()["continue"] = i->selection; }
 		));
 		options.items.push_back(new DoomMenuItem("menu:options:speech", UI::settings.as_object()["speech"].as_integer(),
 		{
@@ -105,22 +105,22 @@ void OptionsMenu::Build()
 			"menu:options:speech:1",
 			"menu:options:speech:2",
 		},
-		[&](DoomMenuItem*i) { UI::settings.as_object()["speech"] = i->selection; }
+		[&](const DoomMenuItem* i) { UI::settings.as_object()["speech"] = i->selection; }
 		));
 		options.items.push_back(new DoomMenuItem("menu:options:24hourclock", UI::settings.as_object()["24hour"],
-			[&](DoomMenuItem*) { UI::settings.as_object()["24hour"] = !UI::settings.as_object()["24hour"]; }
+			[&](const DoomMenuItem*) { UI::settings.as_object()["24hour"] = !UI::settings.as_object()["24hour"]; }
 		));
 		options.items.push_back(new DoomMenuItem("menu:options:bothercolliding", botherColliding,
-			[&](DoomMenuItem*) { botherColliding = !botherColliding; }
+			[&](const DoomMenuItem*) { botherColliding = !botherColliding; }
 		));
 		options.items.push_back(new DoomMenuItem("menu:options:pingrate", 2, 60, UI::settings.as_object()["pingRate"].as_integer(), 1, minutes,
-			[&](DoomMenuItem*i) { UI::settings.as_object()["pingRate"] = i->selection; }
+			[&](const DoomMenuItem* i) { UI::settings.as_object()["pingRate"] = i->selection; }
 		));
 		options.items.push_back(new DoomMenuItem("menu:options:balloonchance", 10, 60, UI::settings.as_object()["balloonChance"].as_integer(), 5, percent,
-			[&](DoomMenuItem*i) { UI::settings.as_object()["balloonChance"] = i->selection; }
+			[&](const DoomMenuItem* i) { UI::settings.as_object()["balloonChance"] = i->selection; }
 		));
 		options.items.push_back(new DoomMenuItem("menu:options:cursorscale", 50, 150, UI::settings.as_object()["cursorScale"].as_integer(), 10, percent,
-			[&](DoomMenuItem*i)
+			[&](const DoomMenuItem* i)
 		{
 			cursor->SetScale(i->selection / 100.0f);
 			UI::settings.as_object()["cursorScale"] = i->selection;
@@ -135,9 +135,8 @@ void OptionsMenu::Build()
 			auto f = fmt::format("menu:options:keybinds:{}", i);
 			keybinds.items.push_back(new DoomMenuItem(f, (Binds)i));
 		}
-		keybinds.items.push_back(new DoomMenuItem("menu:options:keybinds:reset", [&](DoomMenuItem*i)
+		keybinds.items.push_back(new DoomMenuItem("menu:options:keybinds:reset", [&](const DoomMenuItem*)
 		{
-			i;
 			for (int j = 0; j < NumKeyBinds; j++)
 			{
 				Inputs.Keys[j].ScanCode = glfwGetKeyScancode(DefaultInputBindings[j]);
@@ -157,11 +156,10 @@ void OptionsMenu::Build()
 			auto f = "filter:species:" + s->ID;
 			if (!s->FilterAs.empty()) continue;
 
-			if (Database::Filters.find(f) == Database::Filters.end())
-				Database::Filters[f] = true;
+			Database::Filters.try_emplace(f, true);
 
-			species.items.push_back(new DoomMenuItem((std::string&)f, Database::Filters[f],
-				[&, f](DoomMenuItem*i)
+			species.items.push_back(new DoomMenuItem(f, Database::Filters[f],
+				[&, f](const DoomMenuItem* i)
 			{
 				Database::Filters[f] = i->selection > 0;
 				auto s = UI::settings.as_object()["contentFilters"].as_object(); //-V836 can't be helped for now
@@ -173,6 +171,7 @@ void OptionsMenu::Build()
 		}
 		species.DrawSpecial = speciesDrawer;
 
+		// cppcheck-suppress knownPointerToBool -- this is NOT actually calling the bool variant.
 		content.items.push_back(new DoomMenuItem("menu:options:content:species", &species));
 
 		for (const auto& fc : Database::FilterCategories)
@@ -183,8 +182,8 @@ void OptionsMenu::Build()
 			for (const auto& f : fc.second)
 			{
 
-				fcpage->items.push_back(new DoomMenuItem((std::string&)f, Database::Filters[f],
-					[&, f](DoomMenuItem*i)
+				fcpage->items.push_back(new DoomMenuItem(f, Database::Filters[f],
+					[&, f](const DoomMenuItem* i)
 				{
 					Database::Filters[f] = i->selection > 0;
 					auto s = UI::settings.as_object()["contentFilters"].as_object(); //-V836 can't be helped for now
@@ -205,16 +204,16 @@ void OptionsMenu::Build()
 	{
 		volume.headerKey = "menu:options:head:volume";
 		volume.items.push_back(new DoomMenuItem("menu:options:volume:music", 0, 100, (int)(Audio::MusicVolume * 100), 10, percent,
-			[&](DoomMenuItem*i) { Audio::MusicVolume = i->selection / 100.0f; }
+			[&](const DoomMenuItem* i) { Audio::MusicVolume = i->selection / 100.0f; }
 		));
 		volume.items.push_back(new DoomMenuItem("menu:options:volume:ambience", 0, 100, (int)(Audio::AmbientVolume * 100), 10, percent,
-			[&](DoomMenuItem*i) { Audio::AmbientVolume = i->selection / 100.0f; }
+			[&](const DoomMenuItem* i) { Audio::AmbientVolume = i->selection / 100.0f; }
 		));
 		volume.items.push_back(new DoomMenuItem("menu:options:volume:sfx", 0, 100, (int)(Audio::SoundVolume * 100), 10, percent,
-			[&](DoomMenuItem*i) { Audio::SoundVolume = i->selection / 100.0f; }
+			[&](const DoomMenuItem* i) { Audio::SoundVolume = i->selection / 100.0f; }
 		));
 		volume.items.push_back(new DoomMenuItem("menu:options:volume:speech", 0, 100, (int)(Audio::SpeechVolume * 100), 10, percent,
-			[&](DoomMenuItem*i) { Audio::SpeechVolume = i->selection / 100.0f; }
+			[&](const DoomMenuItem* i) { Audio::SpeechVolume = i->selection / 100.0f; }
 		));
 	}
 }

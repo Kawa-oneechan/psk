@@ -19,5 +19,5 @@ public:
 	void Draw(float dt) override;
 	void In();
 	void Out();
-	bool Done();
+	bool Done() const;
 };

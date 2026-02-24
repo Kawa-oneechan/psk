@@ -1,3 +1,4 @@
+#include <algorithm>
 #include "PanelLayout.h"
 #include "engine/InputsMap.h"
 #include "engine/TextUtils.h"
@@ -131,7 +132,7 @@ PanelLayout::PanelLayout(jsonValue& source)
 				for (int i = 0; i < panels.size(); i++)
 				{
 					if (panels[i]->ID == prt)
-					{
+					{ // cppcheck-suppress useStlAlgorithm
 						panel->Parent = i;
 						break;
 					}
@@ -225,6 +226,7 @@ bool PanelLayout::Tick(float dt)
 			for (auto& bit : anim.Bits)
 			{
 				auto* panel = panels[0];
+				/*
 				for (const auto& p : panels)
 				{
 					if (p->ID == bit.ID)
@@ -232,6 +234,12 @@ bool PanelLayout::Tick(float dt)
 						panel = p;
 						break;
 					}
+				}
+				*/
+				{
+					auto it = std::find_if(panels.begin(), panels.end(), [bit](auto p) { return p->ID == bit.ID; });
+					if (it != panels.end())
+						panel = *it;
 				}
 				float subsitute = 0.0;
 

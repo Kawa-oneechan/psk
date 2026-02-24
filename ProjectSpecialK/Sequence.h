@@ -10,7 +10,7 @@ private:
 	bool waiting;
 
 public:
-	Sequence(std::initializer_list<TickableP> tickables);
+	Sequence(std::initializer_list<TickableP> parts);
 	bool Tick(float dt) override;
 	void Draw(float dt) override;
 };

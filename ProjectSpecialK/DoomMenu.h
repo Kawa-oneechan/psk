@@ -39,7 +39,7 @@ public:
 
 	DoomMenuItem(const std::string& cap, int val, std::initializer_list<std::string> opts, std::function<void(DoomMenuItem*)> chg);
 
-	DoomMenuItem(const std::string& cap, int fnt = 0, int siz = 100) : key(cap), type(Type::Text), selection(fnt), maxVal(siz), page(nullptr) {}
+	explicit DoomMenuItem(const std::string& cap, int fnt = 0, int siz = 100) : key(cap), type(Type::Text), selection(fnt), maxVal(siz), page(nullptr) {}
 
 	DoomMenuItem(const std::string& cap, Binds bind) : key(cap), type(Type::KeyBind), selection((int)bind) {}
 

@@ -15,7 +15,7 @@ static int findBone(const Armature& bones, const std::string& name)
 {
 	for (auto i = 0; i < bones.size(); i++)
 	{
-		if (bones[i].Name == name)
+		if (bones[i].Name == name) // cppcheck-suppress useStlAlgorithm
 			return i;
 	}
 	return -1;

@@ -56,7 +56,7 @@ void Iris::Out()
 	time = 0.0f;
 }
 
-bool Iris::Done()
+bool Iris::Done() const
 {
 	return state == State::Idle;
 }

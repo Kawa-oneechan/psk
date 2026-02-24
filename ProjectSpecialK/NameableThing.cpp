@@ -37,7 +37,7 @@ NameableThing::NameableThing(jsonObject& value, const std::string& filename) : I
 	EnName = StripBJTS(Text::Get(ref));
 }
 
-std::string NameableThing::Name()
+const std::string NameableThing::Name() const
 {
 	auto text = Text::Get(RefName);
 	if (text[0] == '<' && text.substr(0, 6) == "<info:")

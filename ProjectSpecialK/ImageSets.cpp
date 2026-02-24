@@ -28,7 +28,7 @@ namespace Database
 		int rows = cols;
 
 		unsigned char* sheet;
-		int width, height, channels;
+		int imgWidth, imgHeight, channels;
 
 		auto startingTime = std::chrono::high_resolution_clock::now();
 		auto entries = VFS::Enumerate(fmt::format("icons\\{}\\*.png", path));
@@ -66,18 +66,18 @@ namespace Database
 		{
 			size_t vfsSize = 0;
 			auto vfsData = VFS::ReadData(entry.path, &vfsSize);
-			unsigned char *data = stbi_load_from_memory((unsigned char*)vfsData.get(), (int)vfsSize, &width, &height, &channels, 0);
+			unsigned char *data = stbi_load_from_memory(reinterpret_cast<unsigned char*>(vfsData.get()), (int)vfsSize, &imgWidth, &imgHeight, &channels, 0);
 
-			const uint32_t* ps = (uint32_t*)data;
-			uint32_t* pt = (uint32_t*)sheet + (((rows * iconSize) - t) * (sheetW) + (l));
-			for (int y = 0; y < height; y++)
+			const uint32_t* ps = reinterpret_cast<uint32_t*>(data);
+			uint32_t* pt = reinterpret_cast<uint32_t*>(sheet) + (((rows * iconSize) - t) * (sheetW) + (l));
+			for (int y = 0; y < imgHeight; y++)
 			{
 				pt -= sheetW;
-				for (int x = 0; x < width; x++)
+				for (int x = 0; x < imgWidth; x++)
 				{
 					*pt = *ps; ps++; pt++;
 				}
-				pt -= width;
+				pt -= imgWidth;
 			}
 			l += iconSize;
 			if (l >= sheetW)
@@ -97,7 +97,7 @@ namespace Database
 			*progress += progressStep;
 		}
 
-#if 0 //#ifdef DEBUG
+#if 1 //#ifdef DEBUG
 		{
 			stbi_flip_vertically_on_write(1);
 			stbi_write_png(fmt::format("{}.png", path).c_str(), sheetW, sheetH, 4, sheet, sheetW * 4);

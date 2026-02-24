@@ -80,5 +80,5 @@ public:
 	void Draw(float dt) override;
 	Panel* GetPanel(const std::string& id);
 	void Play(const std::string& anim);
-	const bool Playing() { return !currentAnimation.empty(); };
+	const bool Playing() const { return !currentAnimation.empty(); };
 };

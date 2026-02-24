@@ -2,8 +2,9 @@
 
 Sequence::Sequence(std::initializer_list<TickableP> parts)
 {
-	for (auto i : parts)
-		ChildTickables.emplace_back(i);
+	//for (auto i : parts)
+	//	ChildTickables.emplace_back(i);
+	std::copy(parts.begin(), parts.end(), ChildTickables.begin());
 	cursor = 0;
 	waiting = parts.size() > 0;
 }

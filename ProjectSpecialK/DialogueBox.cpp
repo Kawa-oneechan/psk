@@ -229,13 +229,13 @@ void DialogueBox::Text(const std::string& text)
 		state = State::Writing;
 }
 
-void DialogueBox::Text(const std::string& text, int style, const std::string& who, const glm::vec4& tagBack, const glm::vec4& tagInk)
+void DialogueBox::Text(const std::string& text, int style, const std::string& speaker, const glm::vec4& tagBack, const glm::vec4& tagInk)
 {
 	Style(style);
-	speaker = nullptr;
+	this->speaker = nullptr;
 	if (style != 3)
 	{
-		name = who;
+		name = speaker;
 		nametagWidth = Sprite::MeasureText(1, name, 120).x - 32;
 		nametagColor[0] = tagBack;
 		nametagColor[1] = tagInk;
@@ -253,16 +253,16 @@ void DialogueBox::Text(const std::string& text, int style)
 	Text(text);
 }
 
-void DialogueBox::Text(const std::string& text, VillagerP who)
+void DialogueBox::Text(const std::string& text, VillagerP speaker)
 {
 	Style(0);
-	speaker = who;
-	if (who != nullptr)
+	this->speaker = speaker;
+	if (speaker != nullptr)
 	{
-		name = who->Name();
+		name = speaker->Name();
 		nametagWidth = Sprite::MeasureText(1, name, 120).x - 32;
-		nametagColor[0] = who->NameTag[0];
-		nametagColor[1] = who->NameTag[1];
+		nametagColor[0] = speaker->NameTag[0];
+		nametagColor[1] = speaker->NameTag[1];
 	}
 	Text(text);
 }
@@ -380,7 +380,7 @@ bool DialogueBox::Tick(float dt)
 
 		if (ch == '<')
 		{
-			auto bjtsEnd = toDisplay.find_first_of('>', displayCursor);
+			auto bjtsEnd = toDisplay.find_first_of('>', displayCursor); // cppcheck-suppress shadowFunction
 			if (bjtsEnd == std::string::npos) goto displayIt;
 			auto bjtsStart = displayCursor;
 			displayCursor = bjtsEnd + 1;
