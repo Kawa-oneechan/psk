@@ -38,7 +38,7 @@ static bool load(const unsigned char* data, unsigned int *id, int width, int hei
 	return true;
 }
 
-Texture::Texture(const std::string& texturePath, int repeat, int filter, bool skipAtlas, ColorMap* colors, int colorIndex) : file(texturePath), repeat(repeat)
+Texture::Texture(const std::string& texturePath, int repeat, int filter, bool skipAtlas, ColorMap* colorMaps, int colorMapIndex) : file(texturePath), repeat(repeat)
 {
 	ID = 0;
 	width = height = channels = 0;
@@ -85,15 +85,15 @@ Texture::Texture(const std::string& texturePath, int repeat, int filter, bool sk
 
 	if (data)
 	{
-		if (colors && colorIndex > 0 && colorIndex < colors->numRows)
+		if (colorMaps && colorMapIndex > 0 && colorMapIndex < colorMaps->numRows)
 		{
 			auto d = reinterpret_cast<unsigned int*>(data);
 			for (int i = 0; i < width * height; i++)
 			{
-				for (int key = 0; key < colors->numCols; key++)
+				for (int key = 0; key < colorMaps->numCols; key++)
 				{
-					if (d[i] == colors->values[key])
-						d[i] = colors->values[(colorIndex * ColorMap::Cols) + key];
+					if (d[i] == colorMaps->values[key])
+						d[i] = colorMaps->values[(colorMapIndex * ColorMap::Cols) + key];
 				}
 			}
 		}
@@ -115,7 +115,7 @@ Texture::Texture(const std::string& texturePath, int repeat, int filter, bool sk
 	cache[file] = this;
 }
 
-Texture::Texture(const unsigned char* externalData, int width, int height, int channels, int repeat, int filter) : data(nullptr), width(width), height(height), channels(channels), repeat(repeat)
+Texture::Texture(const unsigned char* data, int width, int height, int channels, int repeat, int filter) : data(nullptr), width(width), height(height), channels(channels), repeat(repeat)
 {
 	ID = 0;
 	this->file.clear();
@@ -127,16 +127,16 @@ Texture::Texture(const unsigned char* externalData, int width, int height, int c
 	//int format = GL_RGB;
 	//if (channels == 4) format = GL_RGBA;
 
-	if (externalData)
+	if (data)
 	{
-		if (!load(externalData, &ID, width, height, channels, repeat, this->filter))
+		if (!load(data, &ID, width, height, channels, repeat, this->filter))
 		{
 			debprint(3, "glGenTextures indicates we're threading. Delaying load from memory...");
 			delayed = true;
 			//grab a copy we control for later
 			auto size = width * height * channels;
 			this->data = new unsigned char[size];
-			std::memcpy(this->data, externalData, width * height * channels);
+			std::memcpy(this->data, data, width * height * channels);
 			return;
 		}
 	}
@@ -148,6 +148,8 @@ Texture::Texture(const unsigned char* externalData, int width, int height, int c
 
 Texture::~Texture()
 {
+	if (Locked)
+		return;
 	if (cache.size() == 0)
 		return;
 	auto c = cache.find(file);
@@ -172,10 +174,6 @@ void Texture::Use(int slot)
 {
 	if (delayed)
 	{
-		if (file.empty())
-			debprint(3, "Delayed-loading texture on first use...");
-		else
-			debprint(3, "Delayed-loading texture \"{}\" on first use...", file);
 		if (!load(data, &ID, width, height, channels, repeat, filter))
 		{
 			debprint(2, "glGenTextures indicates we're still threading! WTF?");
@@ -374,14 +372,13 @@ TextureArray::TextureArray(const std::string& texturePath, int repeat, int filte
 
 TextureArray::~TextureArray()
 {
+	if (Locked)
+		return;
 	if (cacheArray.size() == 0)
 		return;
 	auto c = cacheArray.find(file);
 	if (c != cacheArray.end())
 	{
-		//BUGBUG
-		if (file == "white.png" || file == "fallback.png" || file == "fallback_nrm.png")
-			return;
 		TextureArray* t = c->second;
 		t->refCount--;
 		if (t->refCount > 0)

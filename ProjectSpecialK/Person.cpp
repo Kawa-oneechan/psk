@@ -36,7 +36,7 @@ void Person::Turn(float facing, float dt)
 
 bool Person::Move(float facing, float dt)
 {
-	static Town* town = nullptr;
+	static const Town* town = nullptr;
 	if (!town)
 		town = root.GetChild<Town>();
 	if (!town)

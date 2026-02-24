@@ -155,6 +155,7 @@
     </ClCompile>
     <ClCompile Include="engine\NineSlicer.cpp" />
     <ClCompile Include="engine\PlatformWin32.cpp" />
+    <ClCompile Include="engine\Tickable.cpp" />
     <ClCompile Include="GameConsole.cpp" />
     <ClCompile Include="Database.cpp" />
     <ClCompile Include="DateTimePanel.cpp" />
@@ -282,7 +283,6 @@
     <ClInclude Include="engine\Texture.h" />
     <ClInclude Include="engine\TextUtils.h" />
     <ClInclude Include="engine\Tickable.h" />
-    <ClInclude Include="engine\Tickable2D.h" />
     <ClInclude Include="engine\Types.h" />
     <ClInclude Include="engine\Utilities.h" />
     <ClInclude Include="engine\VFS.h" />

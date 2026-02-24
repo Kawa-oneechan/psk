@@ -48,7 +48,6 @@ public:
 
 private:
 	std::string vertexShaderPath, fragmentShaderPath;
-	void checkCompileErrors(unsigned int shader, const std::string& type);
 	void load();
 };
 

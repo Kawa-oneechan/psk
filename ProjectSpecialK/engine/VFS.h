@@ -23,7 +23,7 @@ namespace VFS
 		std::vector<std::string> namespaces;
 		std::vector<std::string> dependencies;
 
-		inline bool operator== (const struct Source& r) { return this->id == r.id; }
+		inline bool operator== (const struct Source& r) const { return this->id == r.id; }
 	};
 
 	//Initializes the Virtual File System.
@@ -42,7 +42,7 @@ namespace VFS
 	extern jsonValue ReadJSON(const std::string& path);
 	//Returns a list of VFSEntries matching a particular file pattern.
 	extern std::vector<Entry> Enumerate(const std::string& path);
-	extern void Forget(const std::vector<Entry>& entries);
+	extern void Forget(const std::vector<Entry>& entriesToForget);
 
 	extern std::unique_ptr<char[]> ReadSaveData(const std::string& archive, const std::string& path, size_t* size);
 	extern std::string ReadSaveString(const std::string& archive, const std::string& path);

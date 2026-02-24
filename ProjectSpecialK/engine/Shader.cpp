@@ -14,6 +14,8 @@ __declspec(noreturn)
 static unsigned int currentShader;
 std::map<std::string, Shader*> Shaders;
 
+static void CheckCompileErrors(unsigned int shader, const std::string& type);
+
 void Shader::load()
 {
 	conprint(0, "Compiling {}...", fragmentShaderPath);
@@ -31,18 +33,18 @@ void Shader::load()
 	vertex = glCreateShader(GL_VERTEX_SHADER);
 	glShaderSource(vertex, 1, &vs, NULL);
 	glCompileShader(vertex);
-	checkCompileErrors(vertex, "VERTEX");
+	CheckCompileErrors(vertex, "VERTEX");
 
 	fragment = glCreateShader(GL_FRAGMENT_SHADER);
 	glShaderSource(fragment, 1, &fs, NULL);
 	glCompileShader(fragment);
-	checkCompileErrors(fragment, "FRAGMENT");
+	CheckCompileErrors(fragment, "FRAGMENT");
 
 	ID = glCreateProgram();
 	glAttachShader(ID, vertex);
 	glAttachShader(ID, fragment);
 	glLinkProgram(ID);
-	checkCompileErrors(ID, "PROGRAM");
+	CheckCompileErrors(ID, "PROGRAM");
 
 	glDeleteShader(vertex);
 	glDeleteShader(fragment);
@@ -165,7 +167,7 @@ void Shader::ReloadAll()
 	}
 }
 
-void Shader::checkCompileErrors(unsigned int shader, const std::string& type)
+static void CheckCompileErrors(unsigned int shader, const std::string& type)
 {
 	int success;
 	char infoLog[1024];

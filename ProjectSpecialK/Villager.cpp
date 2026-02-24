@@ -386,9 +386,9 @@ bool Villager::Tick(float)
 
 	//TODO: update animator
 	animator->CopyBones(_model);
-	auto& root = _model->Bones[_model->FindBone("Root")];
-	root.Translation = Position;
-	root.Rotation = glm::vec3(0, glm::radians(Facing), 0);;
+	auto& rootBone = _model->Bones[_model->FindBone("Root")];
+	rootBone.Translation = Position;
+	rootBone.Rotation = glm::vec3(0, glm::radians(Facing), 0);;
 
 	if ((_customModel && _customMuzzle) || (_species && _species->ModeledMuzzle))
 	{

@@ -6,7 +6,7 @@ class OptionsMenu : public DoomMenu
 {
 protected:
 	void Build();
-	void Translate();
+	void Translate() override;
 
 	DoomMenuPage options, content, keybinds, volume, species;
 

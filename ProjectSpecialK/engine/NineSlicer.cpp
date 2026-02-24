@@ -4,7 +4,7 @@
 
 extern float scale;
 
-NineSlicer::NineSlicer(const std::string& texPath, int left, int top, int width, int height) : texture(std::make_shared<Texture>(texPath)), Size(glm::vec2(width, height))
+NineSlicer::NineSlicer(const std::string& texture, int left, int top, int width, int height) : texture(std::make_shared<Texture>(texture)), Size(glm::vec2(width, height))
 {
 	parent = nullptr;
 	Position = glm::vec2(left, top);
@@ -15,21 +15,18 @@ void NineSlicer::Draw(float dt)
 	(void)(dt);
 	auto& tex = *texture;
 
-	auto sc = (Scale > 0) ? Scale : scale;
-
-	auto minWidth = (tex[0].z + tex[2].z) * sc;
-	auto minHeight = (tex[0].w + tex[6].w) * sc;
+	auto minWidth = (tex[0].z + tex[2].z) * Scale;
+	auto minHeight = (tex[0].w + tex[6].w) * Scale;
 	if (Size.x < minWidth)
 		Size.x = minWidth;
 	if (Size.y < minHeight)
 		Size.y = minHeight;
-	auto sSize = Size * sc;
 
-	auto size = glm::vec2(tex[0].z, tex[0].w) * sc;
+	auto size = glm::vec2(tex[0].z, tex[0].w) * Scale;
 	auto left = AbsolutePosition.x;
 	auto top = AbsolutePosition.y;
-	auto width = sSize.x;
-	auto height = sSize.y;
+	auto width = Size.x;
+	auto height = Size.y;
 	auto right = left + width - size.x;
 	auto bottom = top + height - size.y;
 	auto edgeWidth = (width - size.x - size.x);

@@ -84,24 +84,21 @@ public:
 	public:
 		unsigned int VAO;
 		TextureArray* Textures[4];
-		bool Visible;
-		hash Hash, MatHash;
 		std::string Name;
 		Shader* Shader;
+		hash Hash, MatHash;
+		bool Visible;
 		int Layer;
 		bool Translucent;
 		bool Opaque;
 		bool Billboard{ false };
 
 		Mesh(ufbx_mesh* mesh, const std::array<Bone, MaxBones>& bones, size_t boneCt);
-		const size_t Indices() { return indices.size(); }
+		const size_t Indices() const { return indices.size(); }
 	};
 
 private:
 	std::string file;
-	TextureArray fallback{ "fallback.png" };
-	TextureArray fallbackNormal{ "fallback_nrm.png" };
-	TextureArray white{ "white.png" };
 
 	void CalculateBoneTransform(int id);
 
@@ -117,6 +114,9 @@ public:
 
 	Model() = default;
 	explicit Model(const std::string& modelPath);
+#if 0
+	~Model(); 
+#endif
 
 	//Queues the model for drawing at the specified position and rotation. If the mesh argument is -1, the entire model is drawn.
 	void Draw(const glm::vec3& pos = glm::vec3(0), float yaw = 0, int mesh = -1);
@@ -158,5 +158,24 @@ namespace MeshBucket
 
 using ModelP = std::shared_ptr<Model>;
 using Armature = std::array<Model::Bone, MaxBones>;
+
+class UfbxMisc
+{
+public:
+	struct Light
+	{
+		glm::vec3 Position;
+		glm::vec4 Color;
+	};
+	struct Camera
+	{
+		glm::vec3 Position;
+		glm::vec3 Direction;
+	};
+	std::vector<Light> Lights;
+	std::vector<Camera> Cameras;
+
+	explicit UfbxMisc(const std::string& modelPath);
+};
 
 #endif

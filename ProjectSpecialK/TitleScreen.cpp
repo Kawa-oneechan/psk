@@ -70,7 +70,7 @@ TitleScreen::TitleScreen()
 		int prtWidth, prtHeight, prtChans;
 		size_t vfsSize = 0;
 		auto vfsData = VFS::ReadSaveData("player - Copy.png", &vfsSize);
-		unsigned char *prtData = stbi_load_from_memory((unsigned char*)vfsData.get(), (int)vfsSize, &prtWidth, &prtHeight, &prtChans, 0);
+		unsigned char *prtData = stbi_load_from_memory(reinterpret_cast<unsigned char*>(vfsData.get()), (int)vfsSize, &prtWidth, &prtHeight, &prtChans, 0);
 		auto prtTexture = new Texture(prtData, prtWidth, prtHeight, prtChans);
 		auto portrait = std::make_shared<SimpleSprite>(prtTexture, 0, glm::vec2((float)playerMargin, (float)playerMargin + (12 * 1)));
 		stbi_image_free(prtData);

@@ -14,17 +14,17 @@
 
 void TestScaler()
 {
-	const int scale = 4;
+	const int target = 4;
 
-	int width, height, channels;
+	int imgWidth, imgHeight, channels;
 	size_t vfsSize = 0;
 	auto vfsData = VFS::ReadData("test-1.png", &vfsSize);
-	unsigned char* src = stbi_load_from_memory((unsigned char*)vfsData.get(), (int)vfsSize, &width, &height, &channels, 0);
+	unsigned char* src = stbi_load_from_memory(reinterpret_cast<unsigned char*>(vfsData.get()), (int)vfsSize, &imgWidth, &imgHeight, &channels, 0);
 	
-	auto dst = ScaleImage(src, width, height, channels, 4);
+	auto dst = ScaleImage(src, imgWidth, imgHeight, channels, 4);
 
 	stbi_flip_vertically_on_write(1);
-	stbi_write_png("scale2x.png", width * scale, height * scale, channels, dst, (width * scale) * channels);
+	stbi_write_png("scale2x.png", imgWidth * target, imgHeight * target, channels, dst, (imgWidth * target) * channels);
 	
 	delete dst;
 	stbi_image_free(src);
@@ -108,7 +108,7 @@ void RunTests()
 
 	auto testLine = "<ws:?:greeting> What's new?";
 	auto result = PreprocessBJTS(testLine); //-V808 yes yes I know
-
+	conprint(0, "RunTests: PreprocessBJTS says \"{}\"", result);
 
 	{
 		hash item = 0xD25C790C;
@@ -117,13 +117,13 @@ void RunTests()
 		auto nookCode = NookCode::Encode(item, variant, pattern);
 
 		if (nookCode != "UDQFUUHNIX")
-			conprint(2, "NookCode test: expected result \"UDQFUUHNIX\" but got \"{}\".", nookCode);
+			conprint(2, "RunTests: NookCode expected result \"UDQFUUHNIX\" but got \"{}\".", nookCode);
 
 		item = (hash)-1; variant = -1; pattern = -1;
 		NookCode::Decode(nookCode, item, variant, pattern);
 
 		if (item != 0xD25C790C || variant != 1 || pattern != 2)
-			conprint(2, "NookCode test: expected results 0xD25C790C 1 2 but got {:08X} {} {}.", item, variant, pattern);
+			conprint(2, "RunTests: NookCode expected results 0xD25C790C 1 2 but got {:08X} {} {}.", item, variant, pattern);
 
 		NookCode::Decode("=========", item, variant, pattern);
 		item = (hash)-2; variant = 0xFF, pattern = 0xFF;
@@ -144,9 +144,9 @@ void RunTests()
 
 	std::string toLowerTest = u8"Tendō Akane!";
 	StringToLower(toLowerTest);
-	conprint(0, "case folding: {}", toLowerTest);
+	conprint(0, "RunTests: case folding: {}", toLowerTest);
 	StringToUpper(toLowerTest);
-	conprint(0, "case folding: {}", toLowerTest);
+	conprint(0, "RunTests: case folding: {}", toLowerTest);
 
 	//test texture re-use
 	//auto textureCacheTest = Texture("ui/panels.png");

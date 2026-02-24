@@ -39,7 +39,10 @@ public:
 	bool UpdateGamepad();
 	void Clear(bool alsoGamepad = false);
 
-	bool KeyDown(Binds bind);
+	bool KeyDown(Binds bind) const
+	{
+		return Keys[(int)bind].State;
+	}
 	inline void Clear(Binds bind)
 	{
 		Keys[(int)bind].State = false;

@@ -145,9 +145,4 @@ void InputsMap::Clear(bool alsoGamepad)
 	//MouseHoldLeft = MouseHoldRight = MouseHoldMiddle = false;
 }
 
-bool InputsMap::KeyDown(Binds bind)
-{
-	return Keys[(int)bind].State;
-}
-
 InputsMap Inputs;

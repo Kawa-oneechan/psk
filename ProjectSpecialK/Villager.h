@@ -95,7 +95,7 @@ public:
 	void LoadModel();
 	ModelP Model();
 	std::string Birthday();
-	bool IsSpecial() { return _isSpecial; }
+	bool IsSpecial() const { return _isSpecial; }
 	std::string Catchphrase();
 	std::string Catchphrase(const std::string& newPhrase);
 	std::string Nickname();

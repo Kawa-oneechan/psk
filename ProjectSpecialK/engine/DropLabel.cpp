@@ -110,11 +110,11 @@ DropLabel::DropLabel(const std::string& text, int font, float size, glm::vec4 co
 	update();
 }
 
-void DropLabel::SetText(const std::string& newText)
+void DropLabel::SetText(const std::string& text)
 {
-	if (this->text != newText)
+	if (this->text != text)
 	{
-		this->text = newText;
+		this->text = text;
 		update();
 	}
 }

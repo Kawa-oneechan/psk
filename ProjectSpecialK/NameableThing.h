@@ -15,10 +15,10 @@ public:
 	NameableThing() = default;
 	std::string Name();
 
-	inline bool operator== (const NameableThing& r) { return this->ID == r.ID; }
-	inline bool operator!= (const NameableThing& r) { return this->ID != r.ID; }
-	inline bool operator== (const std::string& r) { return this->ID == r; }
-	inline bool operator!= (const std::string& r) { return this->ID != r; }
-	inline bool operator== (unsigned int r) { return this->Hash == r; }
-	inline bool operator!= (unsigned int r) { return this->Hash != r; }
+	inline bool operator==(const NameableThing& r) const { return this->ID == r.ID; }
+	inline bool operator!= (const NameableThing& r) const { return this->ID != r.ID; }
+	inline bool operator== (const std::string& r) const { return this->ID == r; }
+	inline bool operator!= (const std::string& r) const { return this->ID != r; }
+	inline bool operator== (unsigned int r) const { return this->Hash == r; }
+	inline bool operator!= (unsigned int r) const { return this->Hash != r; }
 };

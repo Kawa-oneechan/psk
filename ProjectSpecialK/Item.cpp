@@ -7,6 +7,7 @@ int Item::FindVariantByName(const std::string& variantName) const
 {
 	for (int i = 0; i < variantNames.size(); i++)
 	{
+		// cppcheck-suppress useStlAlgorithm
 		if (variantNames[i] == variantName)
 			return i;
 	}
@@ -98,13 +99,13 @@ Item::Item(jsonObject& value, const std::string& filename) : NameableThing(value
 	if (vars.is_array())
 	{
 		for (auto v : vars.as_array())
-			variantNames.push_back(v.as_string());
+			variantNames.push_back(v.as_string()); // cppcheck-suppress useStlAlgorithm
 	}
 	else if (remake.is_array())
 	{
 		auto bodies = remake.as_object().at("bodies");
 		for (auto v : bodies.as_array())
-			variantNames.push_back(v.as_string());
+			variantNames.push_back(v.as_string()); // cppcheck-suppress useStlAlgorithm
 	}
 }
 

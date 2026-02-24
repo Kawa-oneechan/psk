@@ -95,7 +95,7 @@ protected:
 
 public:
 	DoomMenu();
-	void Translate();
+	virtual void Translate();
 	bool Tick(float dt) override;
 	void Draw(float dt) override;
 };

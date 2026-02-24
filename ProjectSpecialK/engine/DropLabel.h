@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 #include <glm/glm.hpp>
-#include "Tickable2D.h"
+#include "Tickable.h"
 
 class DropLabel : public Tickable2D
 {

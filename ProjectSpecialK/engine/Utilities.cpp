@@ -1,4 +1,5 @@
 ﻿#include <ctime>
+#include <numeric>
 #include <glad/glad.h>
 #include <stb_image_write.h>
 #include "Utilities.h"
@@ -92,12 +93,14 @@ static constexpr unsigned int crcLut[256] =
 
 hash GetCRC(const std::string& text)
 {
-	unsigned int crc = 0xFFFFFFFFL;
-
-	for (auto c : text)
-		crc = (crc >> 8) ^ crcLut[c ^ crc & 0xFF];
-
-	return crc ^ 0xFFFFFFFFL;
+	//unsigned int crc = 0xFFFFFFFFL;
+	//for (auto c : text)
+	//	crc = (crc >> 8) ^ crcLut[c ^ crc & 0xFF];
+	//return crc ^ 0xFFFFFFFFL;
+	return std::accumulate(text.begin(), text.end(), 0xFFFFFFFFL, [](auto crc, auto chr)
+	{
+		return (crc >> 8) ^ crcLut[chr ^ crc & 0xFF];
+	}) ^ 0xFFFFFFFFL;
 }
 
 hash GetCRC(unsigned char *buffer, int len) // cppcheck-suppress constParameterPointer

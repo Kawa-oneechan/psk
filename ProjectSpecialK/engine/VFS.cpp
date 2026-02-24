@@ -537,13 +537,13 @@ namespace VFS
 		return r;
 	}
 
-	void Forget(const std::vector<Entry>& forget)
+	void Forget(const std::vector<Entry>& entriesToForget)
 	{
 #ifdef DEBUG
 		auto start = entries.size();
 #endif
 
-		for (const auto& f : forget)
+		for (const auto& f : entriesToForget)
 		{
 			auto e = entries.begin();
 			while (e != entries.end())

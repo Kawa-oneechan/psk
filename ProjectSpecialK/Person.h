@@ -43,8 +43,8 @@ public:
 	void Turn(float facing, float dt);
 	bool Move(float facing, float dt);
 
-	void SetFace(int face);
-	void SetMouth(int mouth);
+	void SetFace(int index);
+	void SetMouth(int index);
 	virtual bool Tick(float) = 0;
 	virtual void Draw(float);
 

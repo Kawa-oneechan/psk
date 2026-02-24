@@ -27,6 +27,8 @@ public:
 	bool delayed = false;
 	int refCount{ 0 };
 
+	bool Locked{ false };
+
 	Texture() = default;
 	explicit Texture(const std::string& texturePath, int repeat = GL_REPEAT, int filter = 0, bool skipAtlas = false, ColorMap* colorMaps = nullptr, int colorMapIndex = 0);
 	Texture(const unsigned char* data, int width, int height, int channels, int repeat = GL_REPEAT, int filter = 0);
