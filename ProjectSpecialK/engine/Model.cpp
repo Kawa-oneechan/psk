@@ -1,4 +1,6 @@
-﻿#include <unordered_map>
+﻿#include "../Game.h"
+#ifndef BECKETT_NO3DMODELS
+#include <unordered_map>
 #include <functional>
 #include <algorithm>
 #include <ufbx.h>
@@ -7,8 +9,6 @@
 #include "Console.h"
 #include "Shader.h"
 #include "Texture.h"
-
-#ifndef BECKETT_NO3DMODELS
 
 __declspec(noreturn)
 	extern void FatalError(const std::string& message);
