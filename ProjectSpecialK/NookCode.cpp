@@ -1,5 +1,6 @@
 #include <string>
 #include <array>
+#include <numeric>
 #include "engine/Types.h"
 
 namespace NookCode
@@ -57,7 +58,7 @@ namespace NookCode
 		for (int i = 0; i < 6; i++)
 			d[i] = rotateLeft(d[i], i + 1);
 
-		auto v = *(unsigned long long*)&d;
+		auto v = *(reinterpret_cast<unsigned long long*>(&d));
 		auto pv = v;
 		pv ^= pv >> 1;
 		pv ^= pv >> 2;
@@ -111,7 +112,7 @@ namespace NookCode
 
 		auto v = 0ULL;
 		for (int i = 0; i < 10; i++)
-			v |= ((unsigned long long)c[i]) << (5 * i);
+			v |= static_cast<unsigned long long>(c[i]) << (5 * i);
 
 		for (int i = 0; i < 8; i++)
 		{
@@ -129,9 +130,7 @@ namespace NookCode
 		for (int i = 0; i < 6; i++)
 			d[i] = reverseBits(d[i]);
 
-		unsigned char check = 0;
-		for (int i = 0; i < 5; i++)
-			check += d[i];
+		unsigned char check = std::accumulate(d.begin(), d.begin() + 5, 0);
 		if (check != d[5])
 		{
 			d.fill(0xFF);

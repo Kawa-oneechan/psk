@@ -97,7 +97,7 @@ namespace Database
 			*progress += progressStep;
 		}
 
-#if 1 //#ifdef DEBUG
+#if 0 //#ifdef DEBUG
 		{
 			stbi_flip_vertically_on_write(1);
 			stbi_write_png(fmt::format("{}.png", path).c_str(), sheetW, sheetH, 4, sheet, sheetW * 4);
