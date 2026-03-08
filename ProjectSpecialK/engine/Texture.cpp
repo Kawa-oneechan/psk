@@ -111,11 +111,12 @@ Texture::Texture(const std::string& texturePath, int repeat, int filter, bool sk
 		conprint(1, "Failed to load texture \"{}\" -- invalid data.", texturePath);
 	}
 	stbi_image_free(data);
+	data = nullptr;
 
 	cache[file] = this;
 }
 
-Texture::Texture(const unsigned char* data, int width, int height, int channels, int repeat, int filter) : data(nullptr), width(width), height(height), channels(channels), repeat(repeat)
+Texture::Texture(const unsigned char* data, int width, int height, int channels, int repeat, int filter) : data(nullptr), repeat(repeat), width(width), height(height), channels(channels)
 {
 	ID = 0;
 	this->file.clear();
@@ -180,6 +181,7 @@ void Texture::Use(int slot)
 			return;
 		}
 		delete data;
+		data = nullptr;
 		delayed = false;
 	}
 
@@ -239,7 +241,7 @@ static bool loadArray(unsigned char** data, unsigned int *id, int width, int hei
 	return true;
 }
 
-TextureArray::TextureArray(const std::vector<std::string>& entries, int repeat, int filter) : repeat(repeat), file(entries[0])
+TextureArray::TextureArray(const std::vector<std::string>& entries, int repeat, int filter) : file(entries[0]), repeat(repeat)
 {
 	ID = 0;
 	width = height = channels = 0, layers = 0;
@@ -293,6 +295,7 @@ TextureArray::TextureArray(const std::vector<std::string>& entries, int repeat, 
 		stbi_image_free(data[l]);
 	//std::free(data);
 	delete[] data;
+	data = nullptr;
 
 	cacheArray[file] = this;
 }
@@ -366,6 +369,7 @@ TextureArray::TextureArray(const std::string& texturePath, int repeat, int filte
 		stbi_image_free(data[l]);
 	//std::free(data);
 	delete[] data;
+	data = nullptr;
 
 	cacheArray[file] = this;
 }
@@ -407,6 +411,7 @@ void TextureArray::Use(int slot)
 		for (auto l = 0; l < layers; l++)
 			stbi_image_free(data[l]);
 		delete[] data;
+		data = nullptr;
 		delayed = false;
 	}
 

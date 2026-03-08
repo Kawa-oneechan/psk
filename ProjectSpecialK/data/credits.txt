@@ -7,8 +7,8 @@ Kawa
 Lancette2201	Letrune
 
 #Translations
-Hungarian:	Letrune
-Dutch:	Kawa
+Hungarian	Letrune
+Dutch	Kawa
 
 #Ideas
 0xb00b5	Andrea le Phrog
@@ -102,6 +102,7 @@ Kawa
 
 #Programming support
 Siapran	Vaartis
+Phil Fortier
 
 #Third-party libraries
 Dear ImGUI	Omar Cornut

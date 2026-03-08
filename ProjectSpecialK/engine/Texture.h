@@ -32,7 +32,7 @@ public:
 	Texture() = default;
 	explicit Texture(const std::string& texturePath, int repeat = GL_REPEAT, int filter = 0, bool skipAtlas = false, ColorMap* colorMaps = nullptr, int colorMapIndex = 0);
 	Texture(const unsigned char* data, int width, int height, int channels, int repeat = GL_REPEAT, int filter = 0);
-	Texture(unsigned int id, int width, int height, int channels) : ID(id), width(width), height(height), channels(channels), data(nullptr), filter(0), repeat(GL_REPEAT) {}
+	Texture(unsigned int id, int width, int height, int channels) : data(nullptr), filter(0), repeat(GL_REPEAT), ID(id), width(width), height(height), channels(channels) {}
 
 	virtual ~Texture();
 	virtual void Use();
@@ -55,7 +55,16 @@ public:
 	const void Atlas(const std::map<std::string, glm::vec4>& newAtlas) { atlas.FromMap(newAtlas); }
 
 	//TODO: look into proper copystructor
-	Texture(const Texture &other) : data(other.data) {}
+	//I HAVE NO IDEA IF THIS IS AT ALL THE RIGHT THING TO DO
+	Texture(const Texture &o) : file(o.file), filter(o.filter), repeat(o.repeat), ID(o.ID), width(o.width), height(o.height), channels(o.channels), delayed(o.delayed), refCount(o.refCount), Locked(o.Locked)
+	{
+		if (o.data)
+		{
+			auto size = width * height * channels;
+			data = new unsigned char[size];
+			std::memcpy(data, o.data, size);
+		}
+	}
 	Texture &operator=(const Texture &x) = delete;
 };
 
@@ -81,6 +90,19 @@ public:
 	void SetFilter(int newFilter) override;
 
 	//TODO: look into proper copystructor
-	TextureArray(const TextureArray &other) : data(other.data) {}
+	//I HAVE NO IDEA IF THIS IS AT ALL THE RIGHT THING TO DO
+	TextureArray(const TextureArray &o) : file(o.file), filter(o.filter), repeat(o.repeat), layers(o.layers)
+	{
+		if (o.data)
+		{
+			auto size = width * height * channels;
+			data = new unsigned char*[layers] { 0 };
+			for (auto l = 0; l < layers; l++)
+			{
+				data[l] = new unsigned char[size];
+				std::memcpy(data[l], o.data[l], size);
+			}
+		}
+	}
 	TextureArray &operator=(const TextureArray &x) = delete;
 };

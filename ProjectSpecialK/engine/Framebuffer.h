@@ -27,7 +27,7 @@ public:
 	//Binds the FrameBuffer for use.
 	void Use();
 	//Releases the FrameBuffer, switching back to none.
-	void Drop();
+	static void Drop();
 	//Draws the FrameBuffer's contents at full size using the currently attached shader.
 	void Draw(const glm::vec2& pos = glm::vec2(0));
 	//Draws the FrameBuffer's contents using the currently attached shader.
