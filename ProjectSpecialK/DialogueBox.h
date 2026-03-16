@@ -39,6 +39,7 @@ private:
 		Opening, Writing, WaitingForKey, Closing, Done
 	} state{ State::Done };
 
+	//Why can't I use using here?
 	typedef void(DialogueBox::*BJTSFunc)(BJTSParams);
 
 	void bjtsDelay(BJTSParams);

@@ -279,7 +279,7 @@ static void bjtsItemName(std::string& data, BJTSParams)
 	data.replace(start, len, fmt::format("<color:2>{}</color>", item->Name()));
 }
 
-typedef void(*BJTSFunc)(std::string& data, BJTSParams);
+using BJTSFunc = void(*)(std::string& data, BJTSParams);
 
 //BJTS functions that actually change the string content.
 const std::map<std::string, BJTSFunc> bjtsPhase1 = {

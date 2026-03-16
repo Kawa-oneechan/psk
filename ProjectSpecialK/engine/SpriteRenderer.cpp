@@ -415,7 +415,7 @@ namespace Sprite
 		}
 	}
 
-	typedef void(*BJTSFunc)(BJTSParams);
+	using BJTSFunc = void(*)(BJTSParams);
 	const std::map<std::string, BJTSFunc> bjtsPhase3
 	{
 		{ "color", &bjtsColor },
