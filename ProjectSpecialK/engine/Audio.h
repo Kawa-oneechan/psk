@@ -106,7 +106,7 @@ public:
 	//Registers an AudioEventListener to receive messages for audio with timed events.
 	void RegisterListener(const class AudioEventListener* listener);
 	//Unregisters an AudioEventListener.
-	void UnregisterLister(const class AudioEventListener* listener);
+	void UnregisterListener(const class AudioEventListener* listener);
 };
 
 class AudioEventListener

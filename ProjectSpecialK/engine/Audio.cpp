@@ -271,7 +271,7 @@ void Audio::RegisterListener(const AudioEventListener* listener)
 	listeners.push_back(const_cast<AudioEventListener*>(listener));
 }
 
-void Audio::UnregisterLister(const AudioEventListener* listener)
+void Audio::UnregisterListener(const AudioEventListener* listener)
 {
 	auto it = std::find_if(listeners.begin(), listeners.end(), [listener](auto e)
 	{
