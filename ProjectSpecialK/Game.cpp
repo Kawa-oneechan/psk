@@ -84,19 +84,18 @@ void Game::Initialize()
 	UI::controls = std::make_shared<Texture>("ui/controls.png");
 
 
-	/*
 	auto testScript = R"SOL(
 
 	function start()
-		local total = 2
-		dialogue("That's <bells:total>.")
+		-- local total = 2
+		-- dialogue("That's <bells:total>.")
+		dialogue("Holy shit! <cap><a><item:4142720200>?")
 	end
 
-	start();
+	-- start();
 
 	)SOL";
 	Sol.do_string(testScript);
-	*/
 
 
 	{
@@ -153,7 +152,6 @@ void Game::Start(Tickable& root)
 	else
 		root.AddChild(new TitleScreen());
 	root.AddChild(new DialogueBox());
-
 
 	auto town = root.GetChild<Town>();
 	if (town->Villagers.size() == 0)

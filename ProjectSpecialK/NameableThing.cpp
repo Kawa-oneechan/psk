@@ -3,10 +3,13 @@
 #include "engine/Text.h"
 #include "engine/TextUtils.h"
 #include "engine/Utilities.h"
+#include "engine/Platform.h"
 #include "engine/VFS.h"
 
 //TODO: hack, clean this up
-int articlePlease;
+//Put it in TextUtils and make <info> a proper tag.
+int articlePlease = 0;
+int capitalizePlease = 0;
 
 NameableThing::NameableThing(jsonObject& value, const std::string& filename) : ID(value["id"].as_string())
 {
@@ -50,10 +53,21 @@ const std::string NameableThing::Name() const
 			auto bjts = Split(bjtsWhole, ':');
 			auto art = articlePlease - 1;
 			articlePlease = 0;
-			return bjts[art] + rest;
+			text = bjts[art] + rest;
 		}
 		else
-			return rest;
+			text = rest;
+	}
+	if (capitalizePlease)
+	{
+		rune ch;
+		size_t size;
+		std::tie(ch, size) = GetChar(text, 0);
+		ch = Platform::CharUpper(ch);
+		std::string newBit;
+		AppendChar(newBit, ch);
+		text.replace(0, 1, newBit);
+		capitalizePlease = 0;
 	}
 	return text;
 }

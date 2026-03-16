@@ -9,6 +9,8 @@
 #include "Utilities.h"
 #include "Database.h"
 
+extern int articlePlease, capitalizePlease;
+
 static const char* bindingNames[] = {
 	"up", "down", "left", "right",
 	"accept", "back", "pageup", "pagedown",
@@ -25,7 +27,7 @@ static inline int NumberValue(const std::string& value)
 {
 	try
 	{
-		return std::stoi(value);
+		return std::stoul(value);
 	}
 	catch (std::invalid_argument&)
 	{
@@ -253,6 +255,30 @@ static void bjtsBells(std::string& data, BJTSParams)
 	data.replace(start, len, fmt::format("{}{:.1}", symbol, value * rate));
 }
 
+static void bjtsCapitalizeLetter(std::string& data, BJTSParams)
+{
+	capitalizePlease = 1;
+
+	data.replace(start, len, "");
+}
+
+static void bjtsArticle(std::string& data, BJTSParams)
+{
+	if (tags.size() < 2)
+		articlePlease = 1;
+	else
+		articlePlease = std::stoi(tags[1]) + 1;
+
+	data.replace(start, len, "");
+}
+
+static void bjtsItemName(std::string& data, BJTSParams)
+{
+	auto hash = NumberValue(tags[1]);
+	auto item = Database::Find<Item>(hash, items);
+	data.replace(start, len, fmt::format("<color:2>{}</color>", item->Name()));
+}
+
 typedef void(*BJTSFunc)(std::string& data, BJTSParams);
 
 //BJTS functions that actually change the string content.
@@ -263,6 +289,9 @@ const std::map<std::string, BJTSFunc> bjtsPhase1 = {
 	{ "key", &bjtsKeyControl },
 	{ "pad", &bjtsGamepad },
 	{ "bells", &bjtsBells },
+	{ "cap", &bjtsCapitalizeLetter }, //Consider using <A> to do both articles and caps?
+	{ "a", &bjtsArticle },
+	{ "item", &bjtsItemName },
 };
 
 //BJTS functions loaded from Lua scripts.

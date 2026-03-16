@@ -66,7 +66,7 @@ constexpr int DefaultInputGamepadBindings[] = {
 const std::string GamepadPUAMap[] =
 {
 	//ABXY
-	u8"\uE063", u8"\uE064", u8"\uE65", u8"\uE066",
+	u8"\uE063", u8"\uE064", u8"\uE655", u8"\uE066",
 	//u8"\uE004", u8"\uE006", u8"\uE01E", u8"\uE020",
 	//Shoulders
 	u8"\uE043", u8"\uE049",
