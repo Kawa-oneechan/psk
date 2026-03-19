@@ -25,6 +25,7 @@ public:
 	static void LoopStart();
 	static void PreDraw(float dt);
 	static void PostDraw(float dt);
+	static void ResetDelta();
 #ifdef BECKETT_EXTRASAVEDIRS
 	static void PrepareSaveDirs();
 #endif

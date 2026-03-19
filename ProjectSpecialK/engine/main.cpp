@@ -52,7 +52,7 @@ bool firstMouse = true;
 
 bool wireframe = false;
 
-double DeltaTime = 0.0;
+static bool resetDelta = false;
 float timeScale = 1.0f;
 float fieldOfView = 45.0f;
 float nearPlane = 0.1f;
@@ -520,6 +520,11 @@ void GLAPIENTRY MessageCallback(GLenum source, GLenum type, GLuint id, GLenum se
 
 bool skipTitle = false;
 
+void Game::ResetDelta()
+{
+	resetDelta = true;
+}
+
 int main(int argc, char** argv)
 {
 	setlocale(LC_ALL, "en_US.UTF-8");
@@ -612,9 +617,13 @@ int main(int argc, char** argv)
 		Inputs.UpdateGamepad();
 
 		auto newTime = glfwGetTime();
-		DeltaTime = newTime - oldTime;
+		if (resetDelta)
+		{
+			resetDelta = false;
+			oldTime = newTime;
+		}
+		float dt = (float)(newTime - oldTime);
 		oldTime = newTime;
-		float dt = (float)DeltaTime;
 		commonUniforms.TotalTime += dt;
 		commonUniforms.DeltaTime = dt;
 

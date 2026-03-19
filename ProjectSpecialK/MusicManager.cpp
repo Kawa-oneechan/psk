@@ -2,6 +2,7 @@
 #include <ctime>
 #include "engine/Random.h"
 #include "engine/Console.h"
+#include "engine/Game.h"
 #include "MusicManager.h"
 #include "Town.h"
 #include "Utilities.h"
@@ -155,6 +156,7 @@ void MusicManager::Play(const std::string& id, bool immediate, bool ignoreID)
 		bgm = std::make_shared<Audio>(file);
 		bgm->Play(false, false);
 		state = MusicState::Playing;
+		Game::ResetDelta();
 	}
 
 	currentFile = file;
