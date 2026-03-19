@@ -56,7 +56,7 @@ TitleScreen::TitleScreen()
 		playerPanel->Color = UI::themeColors["dialogue"];
 		playerPanel->Visible = false;
 
-		auto playerWatermark = std::make_shared<SimpleSprite>("ui/titlepassport.png", 10, glm::vec2(playerPanel->Size.x - playerWatermarkSize + playerPadding, playerPanel->Size.y - playerPadding - playerWatermarkSize));
+		auto playerWatermark = std::make_shared<SimpleSprite>("ui/titlepassport.png", 10, glm::vec2(playerPanel->Size.x - playerWatermarkSize - playerPadding, playerPanel->Size.y - playerPadding - playerWatermarkSize));
 		playerWatermark->Color = UI::themeColors["dialogue"];
 		playerPanel->AddChild(playerWatermark);
 

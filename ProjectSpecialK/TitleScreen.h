@@ -31,4 +31,7 @@ public:
 
 	bool Tick(float dt) override;
 	void Draw(float dt) override;
+
+	TitleScreen(const TitleScreen&) = delete;
+	TitleScreen& operator=(const TitleScreen&) = delete;
 };
