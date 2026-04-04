@@ -9,7 +9,6 @@ const int BatchSize = 200;
 layout(binding=0) uniform sampler2D image;
 uniform vec4 spriteColor[BatchSize];
 uniform vec4 sourceRect[BatchSize];
-uniform bool flipX[BatchSize], flipY[BatchSize];
 
 void main()
 {
@@ -18,12 +17,6 @@ void main()
 
 	if (sr.z != 0)
 	{
-		uv.x -= (uv.x * 2) * float(flipX[index]);
-		sr.x += sr.w * float(flipX[index]);
-
-		uv.y -= (uv.y * 2) * float(flipY[index]);
-		sr.y -= sr.z * float(flipY[index]);
-
 		uv *= sr.zw;
 		uv += sr.xy;
 	}

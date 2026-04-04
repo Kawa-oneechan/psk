@@ -43,8 +43,6 @@ namespace Sprite
 	static glm::mat4 models[BatchSize];
 	static glm::vec4 sourceRects[BatchSize];
 	static glm::vec4 spriteColors[BatchSize];
-	static int spriteFlipX[BatchSize];
-	static int spriteFlipY[BatchSize];
 	static int instanceCursor = 0;
 
 	struct font
@@ -144,15 +142,15 @@ namespace Sprite
 		glUniformMatrix4fv(glGetUniformLocation(currentShader->ID, "model"), instanceCursor, GL_FALSE, &models[0][0][0]);
 		glUniform4fv(glGetUniformLocation(currentShader->ID, "sourceRect"), instanceCursor, &sourceRects[0][0]);
 		glUniform4fv(glGetUniformLocation(currentShader->ID, "spriteColor"), instanceCursor, &spriteColors[0][0]);
-		glUniform1iv(glGetUniformLocation(currentShader->ID, "flipX"), instanceCursor, &spriteFlipX[0]);
-		glUniform1iv(glGetUniformLocation(currentShader->ID, "flipY"), instanceCursor, &spriteFlipY[0]);
 
 		if (currentVAO != quadVAO)
 		{
 			glBindVertexArray(quadVAO);
 			currentVAO = quadVAO;
 		}
+		glDisable(GL_CULL_FACE); //so flipped sprites still show up
 		glDrawElementsInstanced(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0, instanceCursor);
+		glEnable(GL_CULL_FACE);
 		instanceCursor = 0;
 	}
 
@@ -179,6 +177,18 @@ namespace Sprite
 		glm::mat4 model = glm::mat4(1.0f);
 		model = glm::translate(model, glm::vec3(position, 0));
 		// first translate (transformations are: scale happens first, then rotation, and then final translation happens; reversed order)
+
+		if ((flags & SpriteFlags::FlipX) == SpriteFlags::FlipX)
+		{
+			model = glm::translate(model, glm::vec3(size.x, 0, 0));
+			model = glm::scale(model, glm::vec3(-1, 1, 1));
+		}
+		if ((flags & SpriteFlags::FlipY) == SpriteFlags::FlipY)
+		{
+			model = glm::translate(model, glm::vec3(0, size.y, 0));
+			model = glm::scale(model, glm::vec3(1, -1, 1));
+		}
+
 		if ((flags & SpriteFlags::RotateTopLeft) != SpriteFlags::RotateTopLeft)
 			model = glm::translate(model, glm::vec3(0.5f * size.x, 0.5f * size.y, 0)); // move origin of rotation to center of quad
 		model = glm::rotate(model, glm::radians(rotate), glm::vec3(0, 0, 1)); // then rotate
@@ -224,8 +234,6 @@ namespace Sprite
 		models[instanceCursor] = model;
 		sourceRects[instanceCursor] = srcRect;
 		spriteColors[instanceCursor] = color;
-		spriteFlipX[instanceCursor] = ((flags & FlipX) == FlipX);
-		spriteFlipY[instanceCursor] = ((flags & FlipY) == FlipY);
 		instanceCursor++;
 	}
 
