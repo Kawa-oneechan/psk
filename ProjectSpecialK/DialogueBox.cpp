@@ -17,6 +17,7 @@
 constexpr float tweenTimeScale{ 5.0f };
 constexpr float wobbleTimeScale{ 0.25f };
 
+// cppcheck-suppress unusedPrivateFunction
 void DialogueBox::bjtsDelay(BJTSParams)
 {
 	(void)(len); (void)(start);
@@ -58,6 +59,7 @@ void DialogueBox::bjtsDelay(BJTSParams)
 	}
 }
 
+// cppcheck-suppress unusedPrivateFunction
 void DialogueBox::bjtsEmote(BJTSParams)
 {
 	(void)(tags); (void)(len); (void)(start);
@@ -69,23 +71,28 @@ void DialogueBox::bjtsEmote(BJTSParams)
 	//TODO LATER
 }
 
+// cppcheck-suppress unusedPrivateFunction
 void DialogueBox::bjtsBreak(BJTSParams)
 {
 	(void)(tags); (void)(len); (void)(start);
 	state = State::WaitingForKey;
 }
 
+// cppcheck-suppress unusedPrivateFunction
 void DialogueBox::bjtsClear(BJTSParams)
 {
 	(void)(tags); (void)(len); (void)(start);
 	displayed.clear();
 }
 
+// cppcheck-suppress unusedPrivateFunction
 void DialogueBox::bjtsEnd(BJTSParams)
 {
 	(void)(tags); (void)(len); (void)(start);
 	state = State::Closing;
 }
+
+// cppcheck-suppress unusedPrivateFunction
 void DialogueBox::bjtsPass(BJTSParams)
 {
 	(void)(tags);
@@ -143,8 +150,8 @@ void DialogueBox::Wrap()
 		if (space.x > 650)
 		{
 			//scan back for a whitespace.
-			bool wasLower = (iswlower((wint_t)ch) != 0);
-			bool wantHyphen = false;
+			//bool wasLower = (iswlower((wint_t)ch) != 0);
+			//bool wantHyphen = false;
 			bool insert = false;
 			size_t newSpacePos = 0xFFFF;
 
@@ -158,7 +165,7 @@ void DialogueBox::Wrap()
 					//found whitespace, replace it.
 					newSpacePos = b;
 					insert = false;
-					wantHyphen = false;
+					//wantHyphen = false;
 					break;
 				}
 				else if (b == start || bch == '\n') // || (b > 7 && toDisplay.substr(b - 7, 7) == "<break>"))
@@ -168,6 +175,7 @@ void DialogueBox::Wrap()
 					insert = true;
 					break;
 				}
+				/*
 				else if (wasLower && iswupper((wint_t)bch) && newSpacePos == 0xFFFF)
 				{
 					//went from lowercase to uppercase.
@@ -177,21 +185,22 @@ void DialogueBox::Wrap()
 					//keep looking for better options!
 					//break;
 				}
+				*/
 			}
 			if (newSpacePos != 0xFFFF)
 			{
 				if (insert)
 				{
-					if (wantHyphen)
-						toDisplay.insert(toDisplay.begin() + newSpacePos - 1, '-');
+					//if (wantHyphen)
+					//	toDisplay.insert(toDisplay.begin() + newSpacePos - 1, '-');
 					toDisplay.insert(toDisplay.begin() + newSpacePos, '\n');
 				}
 				else
 					toDisplay[newSpacePos] = '\n';
 				lastSpace = newSpacePos;
-				newSpacePos = 0xFFFF;
-				wasLower = false;
-				wantHyphen = false;
+				//newSpacePos = 0xFFFF;
+				//wasLower = false;
+				//wantHyphen = false;
 				lineCount++;
 			}
 		}
@@ -380,17 +389,17 @@ bool DialogueBox::Tick(float dt)
 
 		if (ch == '<')
 		{
-			auto bjtsEnd = toDisplay.find_first_of('>', displayCursor); // cppcheck-suppress shadowFunction
-			if (bjtsEnd == std::string::npos) goto displayIt;
+			auto bjtsEndPos = toDisplay.find_first_of('>', displayCursor); // cppcheck-suppress shadowFunction
+			if (bjtsEndPos == std::string::npos) goto displayIt;
 			auto bjtsStart = displayCursor;
-			displayCursor = bjtsEnd + 1;
+			displayCursor = bjtsEndPos + 1;
 
-			auto bjtsWhole = toDisplay.substr(bjtsStart, bjtsEnd - bjtsStart);
+			auto bjtsWhole = toDisplay.substr(bjtsStart, bjtsEndPos - bjtsStart);
 			auto bjts = Split(bjtsWhole, ':');
 			auto func = bjtsPhase2.find(bjts[0]);
 			if (func != bjtsPhase2.end())
 			{
-				std::invoke(func->second, this, bjts, (int)bjtsStart - 1, (int)(bjtsEnd - bjtsStart) + 2);
+				std::invoke(func->second, this, bjts, (int)bjtsStart - 1, (int)(bjtsEndPos - bjtsStart) + 2);
 			}
 			else
 				conprint(1, "DialogueBox::Tick: don't know how to handle {}.", bjtsWhole);
