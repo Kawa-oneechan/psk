@@ -104,6 +104,67 @@ Audio::Audio(const std::string& filename) : filename(filename)
 		}
 	}
 
+	//Try to find the loop start tag by hand.
+	{
+		char* tagStart = nullptr;
+		for (size_t i = 0; i < 1024; i++)
+		{
+			if (data[i + 0] == 0x03 && //comment block
+				data[i + 1] == 'v' &&
+				data[i + 2] == 'o' &&
+				data[i + 3] == 'r' &&
+				data[i + 4] == 'b' &&
+				data[i + 5] == 'i' &&
+				data[i + 6] == 's')
+				tagStart = data.get() + i + 7;
+		}
+		if (tagStart)
+		{
+			//Couldn't *not* find the comment block, there has to be a vendor string. But what the hell.
+			auto cursor = tagStart;
+			auto readInt = [&]() {
+				auto a = (unsigned char)*cursor; cursor++;
+				auto b = (unsigned char)*cursor; cursor++;
+				auto c = (unsigned char)*cursor; cursor++;
+				auto d = (unsigned char)*cursor; cursor++;
+				return (a << 0) | (b << 8) | (c << 16) | (d << 24);
+			};
+			auto readString = [&]() {
+				auto len = readInt();
+				std::string ret;
+				ret.reserve(len);
+				ret.append(cursor, len);
+				cursor += len;
+				return ret;
+			};
+			auto vendor = readString();
+			auto numTags = readInt();
+			for (int i = 0; i < numTags; i++)
+			{
+				auto tag = readString();
+				auto parts = Split(tag, '=');
+				auto key = parts[0];
+				auto value = parts[1];
+				if (key == "LOOP_START")
+				{
+					cursor = data.get() + 0x28;
+					auto sampleRate = readInt();
+					auto time = std::stof(value);
+					if (isStream)
+					{
+						stream.setLoopPoint(time / sampleRate);
+						stream.setLooping(true);
+					}
+					else
+					{
+						sound.setLoopPoint(time / sampleRate);
+						sound.setLooping(true);
+					}
+				}
+			}
+		}
+	}
+
 	auto maybeTagFile = VFS::ChangeExtension(filename, "txt");
 	auto maybeTags = VFS::ReadString(maybeTagFile);
 	if (!maybeTags.empty())
