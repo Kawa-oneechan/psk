@@ -121,7 +121,8 @@ Audio::Audio(const std::string& filename) : filename(filename)
 		if (tagStart)
 		{
 			//Couldn't *not* find the comment block, there has to be a vendor string. But what the hell.
-			auto cursor = tagStart;
+			auto cursor = data.get() + 0x28;
+
 			auto readInt = [&]() {
 				auto a = (unsigned char)*cursor; cursor++;
 				auto b = (unsigned char)*cursor; cursor++;
@@ -137,6 +138,11 @@ Audio::Audio(const std::string& filename) : filename(filename)
 				cursor += len;
 				return ret;
 			};
+
+			auto sampleRate = readInt();
+
+			cursor = tagStart;
+
 			auto vendor = readString();
 			auto numTags = readInt();
 			for (int i = 0; i < numTags; i++)
@@ -147,8 +153,6 @@ Audio::Audio(const std::string& filename) : filename(filename)
 				auto value = parts[1];
 				if (key == "LOOP_START")
 				{
-					cursor = data.get() + 0x28;
-					auto sampleRate = readInt();
 					auto time = std::stof(value);
 					if (isStream)
 					{

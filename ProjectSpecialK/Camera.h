@@ -45,8 +45,9 @@ public:
 
 	void Update();
 
-	bool Locked = false;
-	
+	bool Locked{ false };
+	glm::vec3 Shake{};
+
 	void Target(glm::vec3* target);
 
 	bool Tick(float dt) override;

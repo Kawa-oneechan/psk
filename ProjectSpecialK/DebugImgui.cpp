@@ -23,29 +23,21 @@ static void DoCamera()
 		ImGui::SeparatorText("Target");
 		{
 			auto& tar = camera->GetTarget();
-			if (ImGui::DragFloat("X", &tar.x, 1.0, -50, 50))
-				camera->Update();
-			if (ImGui::DragFloat("Y", &tar.y, 1.0, -50, 50))
-				camera->Update();
-			if (ImGui::DragFloat("Z", &tar.z, 1.0, -100, 100))
-				camera->Update();
+			ImGui::DragFloat("X", &tar.x, 1.0, -50, 50);
+			ImGui::DragFloat("Y", &tar.y, 1.0, -50, 50);
+			ImGui::DragFloat("Z", &tar.z, 1.0, -100, 100);
 		}
 
 		ImGui::SeparatorText("Angles");
 		{
 			auto& ang = camera->GetAngles();
-			if (ImGui::DragFloat("Roll", &ang.x, 1.0, -359, 359))
-				camera->Update();
-			if (ImGui::DragFloat("Pitch", &ang.y, 1.0, -359, 359))
-				camera->Update();
-			if (ImGui::DragFloat("Yaw", &ang.z, 1.0, -359, 359))
-				camera->Update();
+			ImGui::DragFloat("Roll", &ang.x, 1.0, -359, 359);
+			ImGui::DragFloat("Pitch", &ang.y, 1.0, -359, 359);
+			ImGui::DragFloat("Yaw", &ang.z, 1.0, -359, 359);
 		}
 
 		ImGui::Separator();
-		if (ImGui::DragFloat("Distance", &camera->GetDistance(), 1.0, -100, 100, "%.3f", ImGuiSliderFlags_Logarithmic))
-			camera->Update();
-
+		ImGui::DragFloat("Distance", &camera->GetDistance(), 1.0, -100, 100, "%.3f", ImGuiSliderFlags_Logarithmic);
 
 		ImGui::SeparatorText("Settings");
 		ImGui::Checkbox("Drum", &commonUniforms.CurveEnabled);
@@ -53,12 +45,13 @@ static void DoCamera()
 		ImGui::DragFloat("Drum power", &commonUniforms.CurvePower, 0.25, -2.0, 2.0);
 		ImGui::Checkbox("Locked", &camera->Locked);
 
+		ImGui::DragFloat3("Shake", &camera->Shake.x, 0.001f, 0.0f, 1.0f);
+
 		if (ImGui::Button("Reset"))
 		{
 			camera->Target(glm::vec3(0, 0, 0));
 			camera->Angles(glm::vec3(0, 46, 0));
 			camera->Distance(70);
-			camera->Update();
 		}
 
 		if (ImGui::Button("Copy JSON"))
