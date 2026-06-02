@@ -25,6 +25,9 @@ public:
 	bool MouseLeft, MouseRight, MouseMiddle;
 	bool MouseHoldLeft, MouseHoldRight, MouseHoldMiddle;
 	glm::vec2 MousePosition;
+	glm::vec2 MouseOffset;
+	glm::vec2 ScaledMousePosition;
+	float MouseScale{ 1 };
 
 	bool HaveGamePad = false;
 	int StickAngles[2];

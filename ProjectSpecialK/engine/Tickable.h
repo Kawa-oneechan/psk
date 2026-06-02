@@ -4,6 +4,7 @@
 #include <algorithm>
 #include "Texture.h"
 #include "SpriteRenderer.h"
+#include "Font.h"
 
 class Tickable;
 class Tickable2D;
@@ -125,7 +126,7 @@ public:
 	glm::vec4 Color{ 1, 1, 1, 1 };
 	float Size{ 100.0f };
 	float Angle{ 0.0f };
-	int Font{ 1 };
+	int Font{ 1 }; //TODO: replace with BeckettFont*?
 	bool Raw{ false };
 
 	TextLabel(const std::string& text, glm::vec2 position);

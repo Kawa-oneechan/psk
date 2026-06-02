@@ -48,6 +48,9 @@ extern int width, height;
 //Makes the same assumption as BECKETT_ANALOGLEFT.
 //#define BECKETT_ANALOGRIGHT Binds::CameraUp
 
+//If defined, uses vertex pulling to handle sprite quads instead of a full VBO.
+#define BECKETT_PULLEDPORK
+
 constexpr int MaxLights = 8;
 
 struct Light

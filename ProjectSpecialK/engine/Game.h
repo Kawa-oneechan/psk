@@ -17,7 +17,7 @@ public:
 	//Processes saving gsettings from variables and members to JSON.
 	static void SaveSettings(jsonObject& settings);
 	static void Initialize();
-	static void Start(Tickable& root);
+	static void Start();
 	static void OnKey(int key, int scancode, int action, int mods);
 	static void OnMouse(double xPosIn, double yPosIn, float xoffset, float yoffset);
 	static void OnResize();
@@ -32,4 +32,6 @@ public:
 #ifdef DEBUG
 	static void ImGui();
 #endif
+
+	static bool ShouldClose;
 };

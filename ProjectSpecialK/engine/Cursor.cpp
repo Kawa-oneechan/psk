@@ -56,7 +56,11 @@ void Cursor::Draw()
 		auto time = (float)glfwGetTime();
 		rotation = time * glm::radians(3000.0f);
 	}
-	Sprite::DrawSprite(hand, Inputs.MousePosition - (hotspot * scale), size, frame, rotation);
+
+	auto pos = glm::round((Inputs.MousePosition - (hotspot * scale)) / Inputs.MouseScale) * Inputs.MouseScale;
+
+	Sprite::DrawSprite(hand, pos, size, frame, rotation);
+
 	if (penFrame.x != -1)
-		Sprite::DrawSprite(hand, Inputs.MousePosition - (hotspot * scale), size, penFrame, rotation, Pen);
+		Sprite::DrawSprite(hand, pos, size, penFrame, rotation, Pen);
 }

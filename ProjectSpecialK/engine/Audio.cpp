@@ -282,7 +282,12 @@ void Audio::update()
 		}
 		currentTag++;
 		if (currentTag >= tags.size())
+		{
+			currentTag = 0;
+			lastTag = -1;
+			nextTag = std::get<0>(tags[0]);
 			return;
+		}
 		lastTag = nextTag;
 		nextTag = std::get<0>(tags[currentTag]);
 	}
@@ -326,7 +331,10 @@ void Audio::SetPan(float pos)
 
 void Audio::SetLoop(bool loop)
 {
-	system.setLooping(handle, loop);
+	if (isStream)
+		stream.setLooping(loop);
+	else
+		sound.setLooping(loop);
 }
 
 void Audio::RegisterListener(const AudioEventListener* listener)

@@ -36,6 +36,8 @@ constexpr int ScreenHeight = BECKETT_SCREENHEIGHT;
 glm::mat4 perspectiveProjection, orthographicProjection;
 bool useOrthographic = false;
 
+bool Game::ShouldClose{ false };
+
 GLFWwindow* window;
 sol::state Sol;
 
@@ -53,6 +55,7 @@ bool firstMouse = true;
 bool wireframe = false;
 
 static bool resetDelta = false;
+double DeltaTime = 0.0;
 float timeScale = 1.0f;
 float fieldOfView = 45.0f;
 float nearPlane = 0.1f;
@@ -594,7 +597,7 @@ int main(int argc, char** argv)
 	auto oldTime = glfwGetTime();
 	commonUniforms.TotalTime = 0.0f;
 
-	Game::Start(root);
+	Game::Start();
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -622,7 +625,8 @@ int main(int argc, char** argv)
 			resetDelta = false;
 			oldTime = newTime;
 		}
-		float dt = (float)(newTime - oldTime);
+		DeltaTime = newTime - oldTime;
+		float dt = (float)DeltaTime;
 		oldTime = newTime;
 		commonUniforms.TotalTime += dt;
 		commonUniforms.DeltaTime = dt;
@@ -662,6 +666,9 @@ int main(int argc, char** argv)
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
+
+		if (Game::ShouldClose)
+			glfwSetWindowShouldClose(window, 1);
 	}
 
 	Game::OnQuit();

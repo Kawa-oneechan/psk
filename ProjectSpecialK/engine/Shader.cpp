@@ -6,7 +6,11 @@
 #include "VFS.h"
 #include "Console.h"
 
+#ifndef BECKETT_PULLEDPORK
 #define HEADER "#version 430 core\n#define PSK\n"
+#else
+#define HEADER "#version 430 core\n#define PSK\n\n#define PULLEDPORK\n"
+#endif
 
 __declspec(noreturn)
 	extern void FatalError(const std::string& message);

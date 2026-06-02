@@ -1,33 +1,28 @@
 [
 	{	//0 - System
-		"file": "fixedsex.ttf",
-		"size": 16,
-		"grid": true
+		"type": "truetype",
+		"file": "fonts/fixedsex.ttf",
+		"size": 16
 	},
 	{	//1 - UI
-		"file": "seurat.ttf",
+		"type": "truetype",
+		"file": "fonts/seurat.ttf",
 		"size": 32,
-		"inputs": 4,
-		"icons": 5
+		"e0": "fonts/kenney_input_xbox_series.otf",
+		"e1": "fonts/icons.ttf"
 	},
 	{	//2 - Dialogue
-		"file": "rodin.ttf",
+		"type": "truetype",
+		"file": "fonts/rodin.ttf",
 		"size": 32,
-		"inputs": 4,
-		"icons": 5
+		"e0": "fonts/kenney_input_xbox_series.otf",
+		"e1": "fonts/icons.ttf"
 	},
 	{	//3 - ???
-		"file": "backissues.otf",
+		"type": "truetype",
+		"file": "fonts/backissues.otf",
 		"size": 32,
-		"inputs": 4,
-		"icons": 5
-	},
-	{	//4 - Input Prompts
-		"file": "kenney_input_xbox_series.otf",
-		"size": 32
-	},
-	{	//5 - Game Icons
-		"file": "icons.ttf",
-		"size": 32
+		"e0": "fonts/kenney_input_xbox_series.otf",
+		"e1": "fonts/icons.ttf"
 	}
 ]

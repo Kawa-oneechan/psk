@@ -149,6 +149,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="engine\Audio.cpp" />
     <ClCompile Include="engine\DropLabel.cpp" />
+    <ClCompile Include="engine\Font.cpp" />
     <ClCompile Include="engine\Framebuffer.cpp" />
     <ClCompile Include="engine\ImGuiDebugger.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
@@ -267,6 +268,7 @@
     <ClInclude Include="engine\Console.h" />
     <ClInclude Include="engine\Cursor.h" />
     <ClInclude Include="engine\DropLabel.h" />
+    <ClInclude Include="engine\Font.h" />
     <ClInclude Include="engine\Framebuffer.h" />
     <ClInclude Include="engine\Game.h" />
     <ClInclude Include="engine\GlfwKeys.h" />

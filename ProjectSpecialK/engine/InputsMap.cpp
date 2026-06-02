@@ -46,6 +46,7 @@ void InputsMap::MouseMove(float x, float y)
 	lastMousePos = MousePosition;
 	MousePosition.x = x;
 	MousePosition.y = y;
+	ScaledMousePosition = glm::floor((MousePosition - MouseOffset) / MouseScale);
 }
 
 bool InputsMap::MouseMoved()

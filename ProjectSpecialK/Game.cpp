@@ -138,7 +138,7 @@ void Game::PrepareSaveDirs()
 
 extern bool skipTitle, wireframe;
 
-void Game::Start(Tickable& root)
+void Game::Start()
 {
 	//Now that we've loaded the key names we can fill in some blanks.
 	for (int i = 0; i < NumKeyBinds; i++)
