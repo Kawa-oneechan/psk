@@ -28,7 +28,7 @@ private:
 	std::string file;
 	std::string e0, e1;
 	float size;
-	float kerning;
+	float kerning{ 0 };
 
 	stbtt_bakedchar* cdata{ nullptr };
 	Texture** fontTextures;
@@ -58,7 +58,7 @@ private:
 	char cdata[0x10000];
 
 	int celWidth{ -1 }, celHeight{ -1 };
-	int kerning;
+	int kerning{ 0 };
 
 	void loadBank(int bank);
 	void loadWidths(const jsonObject& json);

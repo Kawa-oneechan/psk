@@ -1,5 +1,6 @@
 #include "engine/Console.h"
 #include "engine/Random.h"
+#include "engine/CrcUtils.h"
 #include "Types.h"
 #include "Database.h"
 #include "DialogueBox.h"

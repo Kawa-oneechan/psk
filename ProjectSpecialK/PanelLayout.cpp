@@ -5,6 +5,7 @@
 #include "engine/Utilities.h"
 #include "engine/Console.h"
 #include "engine/SpriteRenderer.h"
+#include "engine/ShapeUtils.h"
 #include "Database.h"
 #include "Types.h"
 #include "Game.h"

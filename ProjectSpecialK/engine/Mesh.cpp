@@ -5,7 +5,7 @@
 #include <ufbx.h>
 #include "Model.h"
 #include "Shader.h"
-#include "Utilities.h"
+#include "CrcUtils.h"
 
 Model::Mesh::Mesh(ufbx_mesh* mesh, const Armature& bones, size_t boneCt) : Name(mesh->name.data), Visible(true), Layer(0), Translucent(false), Opaque(false)
 {

@@ -5,6 +5,7 @@
 #include "engine/Utilities.h"
 #include "engine/Platform.h"
 #include "engine/VFS.h"
+#include "engine/CrcUtils.h"
 
 //TODO: hack, clean this up
 //Put it in TextUtils and make <info> a proper tag.

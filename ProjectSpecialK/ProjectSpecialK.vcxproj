@@ -148,6 +148,8 @@
     <ClCompile Include="ButtonGuide.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="engine\Audio.cpp" />
+    <ClCompile Include="engine\ColorUtils.cpp" />
+    <ClCompile Include="engine\CrcUtils.cpp" />
     <ClCompile Include="engine\DropLabel.cpp" />
     <ClCompile Include="engine\Font.cpp" />
     <ClCompile Include="engine\Framebuffer.cpp" />
@@ -156,6 +158,7 @@
     </ClCompile>
     <ClCompile Include="engine\NineSlicer.cpp" />
     <ClCompile Include="engine\PlatformWin32.cpp" />
+    <ClCompile Include="engine\ShapeUtils.cpp" />
     <ClCompile Include="engine\Tickable.cpp" />
     <ClCompile Include="GameConsole.cpp" />
     <ClCompile Include="Database.cpp" />
@@ -265,7 +268,9 @@
     <ClInclude Include="DialogueBox.h" />
     <ClInclude Include="DoomMenu.h" />
     <ClInclude Include="engine\Audio.h" />
+    <ClInclude Include="engine\ColorUtils.h" />
     <ClInclude Include="engine\Console.h" />
+    <ClInclude Include="engine\CrcUtils.h" />
     <ClInclude Include="engine\Cursor.h" />
     <ClInclude Include="engine\DropLabel.h" />
     <ClInclude Include="engine\Font.h" />
@@ -279,6 +284,7 @@
     <ClInclude Include="engine\Platform.h" />
     <ClInclude Include="engine\Random.h" />
     <ClInclude Include="engine\Shader.h" />
+    <ClInclude Include="engine\ShapeUtils.h" />
     <ClInclude Include="engine\SpriteRenderer.h" />
     <ClInclude Include="engine\Text.h" />
     <ClInclude Include="engine\TextField.h" />

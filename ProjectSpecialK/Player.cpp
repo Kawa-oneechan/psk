@@ -4,6 +4,7 @@
 #include "engine/JSONUtils.h"
 #include "engine/Console.h"
 #include "engine/Random.h"
+#include "engine/CrcUtils.h"
 #include "Player.h"
 #include "Camera.h"
 #include "Town.h"

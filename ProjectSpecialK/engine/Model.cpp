@@ -5,7 +5,7 @@
 #include <algorithm>
 #include <ufbx.h>
 #include "Model.h"
-#include "Utilities.h"
+#include "CrcUtils.h"
 #include "Console.h"
 #include "Shader.h"
 #include "Texture.h"

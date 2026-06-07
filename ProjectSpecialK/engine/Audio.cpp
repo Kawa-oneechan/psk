@@ -150,9 +150,9 @@ Audio::Audio(const std::string& filename) : filename(filename)
 				auto tag = readString();
 				auto parts = Split(tag, '=');
 				auto key = parts[0];
-				auto value = parts[1];
 				if (key == "LOOP_START")
 				{
+					auto value = parts[1];
 					auto time = std::stof(value);
 					if (isStream)
 					{
