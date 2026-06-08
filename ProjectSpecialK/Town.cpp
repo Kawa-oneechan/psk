@@ -12,6 +12,10 @@
 #include "ItemHotbar.h"
 #include "Types.h"
 #include "Player.h"
+#include "Utilities.h"
+
+__declspec(noreturn)
+extern void FatalError(const std::string& message);
 
 extern TextureArray* groundTextureAlbs;
 extern TextureArray* groundTextureNrms;
@@ -151,15 +155,19 @@ void Town::Load()
 		auto json = VFS::ReadSaveJSON("map/town.json");
 		auto jsonObj = json.as_object();
 
-		Name = jsonObj["name"].as_string();
-		weatherSeed = jsonObj["weather"].as_integer();
-		Hemisphere = jsonObj["north"].as_boolean() ? Hemisphere::North : Hemisphere::South;
-		grassCanSnow = jsonObj["grassCanSnow"].as_boolean();
-		grassColorMap = jsonObj["grassColors"].as_string();
-		grassTexture = jsonObj["grassTexture"].as_string();
+		Name = GetJSONVal(jsonObj["name"], "Error");
+		TownFruit = GetJSONVal(jsonObj["townFruit"], -1);
+		weatherSeed = GetJSONVal(jsonObj["weather"], 69420);
+		Hemisphere = GetJSONBool(jsonObj["north"], true) ? Hemisphere::North : Hemisphere::South;
+		grassCanSnow = GetJSONBool(jsonObj["grassCanSnow"], true);
+		grassColorMap = GetJSONVal(jsonObj["grassColors"], "grasscolors.png");
+		grassTexture = GetJSONVal(jsonObj["grassTexture"], "design0_mix.png");
 
-		Width = jsonObj["width"].as_integer();
-		Height = jsonObj["height"].as_integer();
+		Width = GetJSONVal(jsonObj["width"], 0);
+		Height = GetJSONVal(jsonObj["height"], 0);
+		if (Width <= 0 || Height <= 0)
+			FatalError("Incorrect town map size.");
+
 		Terrain = std::make_unique<MapTile[]>(Width * Height);
 		TerrainModels = std::make_unique<ExtraTile[]>(Width * Height);
 		
@@ -218,6 +226,7 @@ void Town::Save()
 	json.as_object()["weather"] = (int)weatherSeed;
 	json.as_object()["name"] = Name;
 	json.as_object()["north"] = Hemisphere == Hemisphere::North;
+	json.as_object()["townFruit"] = (int)TownFruit;
 
 	json.as_object()["grassTexture"] = grassTexture;
 	json.as_object()["grassCanSnow"] = grassCanSnow;

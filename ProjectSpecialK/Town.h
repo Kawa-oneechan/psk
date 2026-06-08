@@ -18,6 +18,7 @@ private:
 
 public:
 	std::string Name{ "Fuck-All Nowhere" };
+	hash TownFruit;
 
 	static const int MaxVillagers{ 64 };
 
