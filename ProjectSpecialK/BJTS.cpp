@@ -168,7 +168,13 @@ static void bjtsKeyControl(std::string& data, BJTSParams)
 	}
 	if (tags[1] == "arrows")
 	{
-		data.replace(start, len, fmt::format("{}/{}/{}/{}",
+		std::string f = "{}/{}/{}/{}";
+		if (Inputs.Keys[(int)Binds::WalkN].Name.length() == 1 &&
+			Inputs.Keys[(int)Binds::WalkS].Name.length() == 1 &&
+			Inputs.Keys[(int)Binds::WalkE].Name.length() == 1 &&
+			Inputs.Keys[(int)Binds::WalkW].Name.length() == 1)
+			f = "{}{}{}{}";
+		data.replace(start, len, fmt::format(f,
 			Inputs.Keys[(int)Binds::WalkN].Name,
 			Inputs.Keys[(int)Binds::WalkS].Name,
 			Inputs.Keys[(int)Binds::WalkE].Name,
@@ -209,8 +215,28 @@ static void bjtsGamepad(std::string& data, BJTSParams)
 		conprint(2, "Missing parameter in BJTS Pad: {}", data.substr(start, len));
 		return;
 	}
+
+	bool canShorten = true;
+	for (int i = 0; i < 4; i++)
+	{
+		rune ch;
+		size_t chs;
+		auto button = GamepadPUAMap[Inputs.Keys[(int)Binds::WalkN + i].GamepadButton];
+		std::tie(ch, chs) = GetChar(button, 0);
+		if (!(ch == 0xE025 || ch == 0xE029 || ch == 0xE02C || ch == 0xE036))
+		{
+			canShorten = false;
+			break;
+		}
+	}
+
 	if (tags[1] == "dpad")
 	{
+		if (canShorten)
+		{
+			data.replace(start, len, u8"\uE022");
+			return;
+		}
 		data.replace(start, len, fmt::format("{}/{}/{}/{}",
 			GamepadPUAMap[Inputs.Keys[(int)Binds::WalkN].GamepadButton],
 			GamepadPUAMap[Inputs.Keys[(int)Binds::WalkS].GamepadButton],
@@ -221,6 +247,11 @@ static void bjtsGamepad(std::string& data, BJTSParams)
 	}
 	else if (tags[1] == "updown")
 	{
+		if (canShorten)
+		{
+			data.replace(start, len, u8"\uE038");
+			return;
+		}
 		data.replace(start, len, fmt::format("{}/{}",
 			GamepadPUAMap[Inputs.Keys[(int)Binds::Up].GamepadButton],
 			GamepadPUAMap[Inputs.Keys[(int)Binds::Down].GamepadButton]
