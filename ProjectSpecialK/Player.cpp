@@ -187,13 +187,13 @@ bool Player::Retrieve(InventoryItemP item)
 
 bool Player::Wear(int slot)
 {
-	auto& iitem = OnHand[slot];
+	auto const & iitem = OnHand[slot];
 	if (!iitem->IsClothing())
 	{
 		conprint(0, "Tried to take off non-clothing item {} \"{}\"", slot, iitem->Name());
 		return false;
 	}
-	auto& item = iitem->AsItem();
+	auto const& item = std::move(iitem->AsItem());
 	if (item->ClothingKind == Item::ClothingKind::OnePiece)
 	{
 		if (_clothesItems[(int)ClothingSlot::Bottom])
@@ -226,7 +226,7 @@ bool Player::Wear(int slot)
 		//TODO: Handle accessory -> glasses/mask
 	}
 
-	auto& current = _clothesItems[clothingSlot];
+	auto const& current = _clothesItems[clothingSlot];
 	auto id = iitem->FullID(); //because what follows will fuck it over.
 	RemoveItem(slot);
 	GiveItem(current);

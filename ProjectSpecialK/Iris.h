@@ -5,7 +5,7 @@
 class Iris : public Tickable
 {
 private:
-	float time;
+	float time{ 1.0f }; //assume we're all black, irising IN;
 	enum class State
 	{
 		Idle,
@@ -14,7 +14,6 @@ private:
 	} state{ State::Idle };
 
 public:
-	Iris();
 	bool Tick(float dt) override;
 	void Draw(float dt) override;
 	void In();

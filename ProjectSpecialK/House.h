@@ -45,7 +45,7 @@ public:
 	hash Owner;
 	bool IsPlayerOwned;
 
-	VillagerHouse(int owner);
+	explicit VillagerHouse(int owner);
 
 	void SaveObjects(jsonValue& json);
 	void LoadObjects(jsonValue& json, int roomNum);

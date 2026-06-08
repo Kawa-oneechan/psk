@@ -249,17 +249,17 @@ void Map::drawObjects(float dt)
 		for (auto& i : Acres[playerAcreIdx].Objects)
 		{
 			if (!i.Dropped) continue;
-			auto height = GetHeight(glm::vec3(i.Position.x, 100, i.Position.y));
-			auto pos3 = glm::vec3(i.Position.x, height, i.Position.y);
+			auto itemHeight = GetHeight(glm::vec3(i.Position.x, 100, i.Position.y));
+			auto pos3 = glm::vec3(i.Position.x, itemHeight, i.Position.y);
 			i.Item->Wrapped()->DrawFieldIcon(pos3);
 		}
 
 		for (auto& i : Acres[playerAcreIdx].Objects)
 		{
 			if (i.Dropped) continue;
-			auto height = GetHeight(glm::vec3(i.Position.x, 100, i.Position.y));
+			auto itemHeight = GetHeight(glm::vec3(i.Position.x, 100, i.Position.y));
 			//TODO: handle layers
-			auto pos3 = glm::vec3(i.Position.x, height, i.Position.y);
+			auto pos3 = glm::vec3(i.Position.x, itemHeight, i.Position.y);
 			auto rotation = i.Rotation * 90.0f;
 			i.Item->DrawFieldModel(pos3, rotation);
 		}

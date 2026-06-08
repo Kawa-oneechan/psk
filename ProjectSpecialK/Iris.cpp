@@ -5,11 +5,6 @@
 #include "Types.h"
 #include "Game.h"
 
-Iris::Iris()
-{
-	time = 1.0f; //assume we're all black, irising IN
-}
-
 bool Iris::Tick(float dt)
 {
 	if (state == State::Idle)

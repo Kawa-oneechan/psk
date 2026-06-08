@@ -22,7 +22,7 @@ VillagerHouse::Room::Room(VillagerHouse* parent, size_t roomNum)
 float VillagerHouse::Room::GetHeight(const glm::vec3& pos)
 {
 	//TODO: trick out the stairs.
-	pos;
+	(void)(pos);
 	return 0.0f;
 }
 
@@ -33,12 +33,12 @@ float VillagerHouse::Room::GetHeight(int x, int y)
 
 void VillagerHouse::Room::Draw(float dt)
 {
-	dt;
+	(void)(dt);
 }
 
 bool VillagerHouse::Room::Tick(float dt)
 {
-	dt;
+	(void)(dt);
 	return true;
 }
 
