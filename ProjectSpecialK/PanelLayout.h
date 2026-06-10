@@ -23,7 +23,8 @@ class PanelLayout : public Tickable
 			Image, Text, ItemIcon,
 		} Type;
 		float Alpha;
-		int Texture, Shader;
+		int Texture;
+		Shader* Shader;
 		int Frame;
 		int Font;
 		float Size;

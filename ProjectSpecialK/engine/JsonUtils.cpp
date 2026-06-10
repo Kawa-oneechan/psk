@@ -47,9 +47,9 @@ glm::vec4 GetJSONColor(const jsonValue& val)
 		auto hex = val.as_string();
 		int r = 0, g = 0, b = 0, a = 0;
 		if (hex.empty() || hex[0] != '#')
-			return glm::vec4(0, 0, 0, -1);
-		//TODO: consider checking if the value is in UI::themeColors.
-		//That way, colors in panel definitions can be hexcodes or float arrays too.
+		{
+			return UI::themeColors.find(hex) != UI::themeColors.end() ? UI::themeColors[hex] : glm::vec4(1, 0, 1, 1);
+		}
 		if (hex.length() == 7)
 		{
 			a = 0xFF;

@@ -9,6 +9,7 @@
 #include "Database.h"
 #include "Types.h"
 #include "Game.h"
+#include "Utilities.h"
 
 bool debugPanelLayoutPolygons = false;
 bool debugRenderPanelLayouts = true;
@@ -20,7 +21,7 @@ PanelLayout::PanelLayout(jsonValue& source)
 	auto& panelsSet = src["panels"].as_array();
 
 	Position = src["position"].is_array() ? GetJSONVec2(src["position"]) : glm::vec2(0);
-	Alpha = src["alpha"].is_number() ? src["alpha"].as_number() : 1.0f;
+	Alpha = GetJSONVal(src["alpha"], 1.0f);
 	Origin = src["origin"].is_string() ? StringToEnum<CornerOrigin>(src["origin"].as_string(), { "topleft", "topright", "bottomleft", "bottomright" }) : CornerOrigin::TopLeft;
 
 	if (src["textures"].is_array())
@@ -54,12 +55,10 @@ PanelLayout::PanelLayout(jsonValue& source)
 		auto pnl = p.as_object();
 		auto panel = new Panel();
 
-		if (pnl["id"].is_string())
-		{
-			panel->ID = pnl["id"].as_string();
-		}
+		panel->ID = GetJSONVal(pnl["id"], "");
 
 		panel->Polygon = -1;
+		panel->Shader = nullptr;
 
 		auto& type = pnl["type"].as_string();
 		if (type == "image") panel->Type = Panel::Type::Image;
@@ -69,16 +68,19 @@ PanelLayout::PanelLayout(jsonValue& source)
 		if (panel->Type == Panel::Type::Image)
 		{
 			panel->Texture = pnl["texture"].is_integer() ? pnl["texture"].as_integer() : 0;
-			panel->Frame = pnl["frame"].is_integer() ? pnl["frame"].as_integer() : 0;
+			panel->Frame = GetJSONVal(pnl["frame"], 0);
 			panel->Polygon = pnl["polygon"].is_integer() ? pnl["polygon"].as_integer() : -1;
 
 			panel->Enabled = pnl["enabled"].is_boolean() ? pnl["enabled"].as_boolean() : panel->Polygon != -1;
+			
+			panel->Shader = pnl["shader"].is_string() ? Shaders[pnl["shader"].as_string()] : nullptr;
 		}
 		else if (panel->Type == Panel::Type::Text)
 		{
-			panel->Text = pnl["text"].is_string() ? pnl["text"].as_string() : "???";
-			panel->Font = pnl["font"].is_integer() ? pnl["font"].as_integer() : 1;
-			panel->Size = pnl["size"].is_number() ? pnl["size"].as_number() : 100.0f;
+			panel->Text = GetJSONVal(pnl["text"], "???");
+			panel->Font = GetJSONVal(pnl["font"], 1);
+			panel->Size = GetJSONVal(pnl["size"], 100.0f);
+
 			panel->Alignment = 0;
 			if (pnl["alignment"].is_string())
 			{
@@ -90,8 +92,8 @@ PanelLayout::PanelLayout(jsonValue& source)
 		}
 		else if (panel->Type == Panel::Type::ItemIcon)
 		{
-			panel->Text = pnl["text"].is_string() ? pnl["text"].as_string() : "";
-			panel->Size = pnl["size"].is_number() ? pnl["size"].as_number() : 100.0f;
+			panel->Text = GetJSONVal(pnl["text"], "");
+			panel->Size = GetJSONVal(pnl["size"], 100.0f);
 			panel->Polygon = pnl["polygon"].is_integer() ? pnl["polygon"].as_integer() : -1;
 		}
 
@@ -121,8 +123,7 @@ PanelLayout::PanelLayout(jsonValue& source)
 			panel->Position = GetJSONVec2(pnl["position"]);
 		}
 
-		if (pnl["angle"].is_number())
-			panel->Angle = pnl["angle"].as_number();
+		panel->Angle = GetJSONVal(pnl["angle"], 0.0f);
 
 		panel->Parent = -1;
 		if (!pnl["parent"].is_null())
@@ -145,16 +146,8 @@ PanelLayout::PanelLayout(jsonValue& source)
 
 		panel->Color = glm::vec4(1, 1, 1, 1);
 		if (!pnl["color"].is_null())
-		{
-			if (pnl["color"].is_string())
-			{
-				auto& clr = pnl["color"].as_string();
-				panel->Color = UI::themeColors.find(clr) != UI::themeColors.end() ? UI::themeColors[clr] : glm::vec4(1);
-			}
-			else if (pnl["color"].is_array())
-				panel->Color = GetJSONColor(pnl["color"]);
-		}
-		panel->Alpha = pnl["alpha"].is_number() ? pnl["alpha"].as_number() : 1.0f;
+			panel->Color = GetJSONColor(pnl["color"]);
+		panel->Alpha = GetJSONVal(pnl["alpha"], 1.0f);
 		panels.push_back(panel);
 	}
 
@@ -354,7 +347,8 @@ void PanelLayout::Draw(float dt)
 		{
 			auto& texture = *textures[panel->Texture];
 			auto frame = texture[panel->Frame];
-			auto shader = texture.channels > 1 ? Shaders["sprite"] : Shaders["red8"];
+			//TODO: allow using panel->Shader.
+			auto shader = panel->Shader ? panel->Shader : (texture.channels > 1 ? Shaders["sprite"] : Shaders["red8"]);
 			auto finalPos = Position + parentPos + panel->Position;
 
 			Sprite::DrawSprite(
