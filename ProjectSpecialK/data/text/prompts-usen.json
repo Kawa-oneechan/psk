@@ -1,0 +1,8 @@
+{
+	"prompts:fourands": "{}, {}, {}, and {}",
+	"prompts:fourors": "{}, {}, {}, or {}",
+	"prompts:threeands": "{}, {}, and {}",
+	"prompts:threeors": "{}, {}, or {}",
+	"prompts:twoands": "{} and {}",
+	"prompts:twoors": "{} or {}"
+}

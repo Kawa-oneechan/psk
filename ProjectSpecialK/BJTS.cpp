@@ -168,13 +168,7 @@ static void bjtsKeyControl(std::string& data, BJTSParams)
 	}
 	if (tags[1] == "arrows")
 	{
-		std::string f = "{}/{}/{}/{}";
-		if (Inputs.Keys[(int)Binds::WalkN].Name.length() == 1 &&
-			Inputs.Keys[(int)Binds::WalkS].Name.length() == 1 &&
-			Inputs.Keys[(int)Binds::WalkE].Name.length() == 1 &&
-			Inputs.Keys[(int)Binds::WalkW].Name.length() == 1)
-			f = "{}{}{}{}";
-		data.replace(start, len, fmt::format(f,
+		data.replace(start, len, fmt::format(Text::Get("fixed:fourands"),
 			Inputs.Keys[(int)Binds::WalkN].Name,
 			Inputs.Keys[(int)Binds::WalkS].Name,
 			Inputs.Keys[(int)Binds::WalkE].Name,
@@ -184,7 +178,7 @@ static void bjtsKeyControl(std::string& data, BJTSParams)
 	}
 	else  if (tags[1] == "updown")
 	{
-		data.replace(start, len, fmt::format("{}/{}",
+		data.replace(start, len, fmt::format(Text::Get("fixed:twoands"),
 			Inputs.Keys[(int)Binds::Up].Name,
 			Inputs.Keys[(int)Binds::Down].Name
 		));
@@ -192,7 +186,7 @@ static void bjtsKeyControl(std::string& data, BJTSParams)
 	}
 	else  if (tags[1] == "page")
 	{
-		data.replace(start, len, fmt::format("{}/{}",
+		data.replace(start, len, fmt::format(Text::Get("fixed:twoands"),
 			Inputs.Keys[(int)Binds::PageUp].Name,
 			Inputs.Keys[(int)Binds::PageDown].Name
 		));
@@ -216,28 +210,9 @@ static void bjtsGamepad(std::string& data, BJTSParams)
 		return;
 	}
 
-	bool canShorten = true;
-	for (int i = 0; i < 4; i++)
-	{
-		rune ch;
-		size_t chs;
-		auto button = GamepadPUAMap[Inputs.Keys[(int)Binds::WalkN + i].GamepadButton];
-		std::tie(ch, chs) = GetChar(button, 0);
-		if (!(ch == 0xE025 || ch == 0xE029 || ch == 0xE02C || ch == 0xE036))
-		{
-			canShorten = false;
-			break;
-		}
-	}
-
 	if (tags[1] == "dpad")
 	{
-		if (canShorten)
-		{
-			data.replace(start, len, u8"\uE022");
-			return;
-		}
-		data.replace(start, len, fmt::format("{}/{}/{}/{}",
+		data.replace(start, len, fmt::format(Text::Get("fixed:fourands"),
 			GamepadPUAMap[Inputs.Keys[(int)Binds::WalkN].GamepadButton],
 			GamepadPUAMap[Inputs.Keys[(int)Binds::WalkS].GamepadButton],
 			GamepadPUAMap[Inputs.Keys[(int)Binds::WalkE].GamepadButton],
@@ -247,12 +222,7 @@ static void bjtsGamepad(std::string& data, BJTSParams)
 	}
 	else if (tags[1] == "updown")
 	{
-		if (canShorten)
-		{
-			data.replace(start, len, u8"\uE038");
-			return;
-		}
-		data.replace(start, len, fmt::format("{}/{}",
+		data.replace(start, len, fmt::format(Text::Get("fixed:twoands"),
 			GamepadPUAMap[Inputs.Keys[(int)Binds::Up].GamepadButton],
 			GamepadPUAMap[Inputs.Keys[(int)Binds::Down].GamepadButton]
 		));
