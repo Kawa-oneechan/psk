@@ -17,14 +17,14 @@
 
 	//Panel Layout part
 	"cinematic": {
-		"textures": [
-			"cinematics/logo/logo.png"
-		],
+		"textures": {
+			"main": "cinematics/logo/logo.png"
+		},
 		"panels": [
 			{
 				"id": "woodBack",
 				"type": "image",
-				"texture": 0,
+				"texture": "main",
 				"frame": 0, //backing plate
 				"alpha": 0.0,
 				"position": [ 586, 32 ]

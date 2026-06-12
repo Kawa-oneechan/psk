@@ -18,17 +18,17 @@ PanelLayout::PanelLayout(jsonValue& source)
 {
 	auto src = source.as_object();
 
-	auto& panelsSet = src["panels"].as_array();
+	auto const& panelsSet = src["panels"].as_array();
 
 	Position = src["position"].is_array() ? GetJSONVec2(src["position"]) : glm::vec2(0);
 	Alpha = GetJSONVal(src["alpha"], 1.0f);
 	Origin = src["origin"].is_string() ? StringToEnum<CornerOrigin>(src["origin"].as_string(), { "topleft", "topright", "bottomleft", "bottomright" }) : CornerOrigin::TopLeft;
 
-	if (src["textures"].is_array())
+	if (src["textures"].is_object())
 	{
-		for (const auto& t : src["textures"].as_array())
+		for (const auto& t : src["textures"].as_object())
 		{
-			textures.push_back(new Texture(t.as_string()));
+			textures[t.first] = new Texture(t.second.as_string());
 		}
 	}
 
@@ -60,19 +60,19 @@ PanelLayout::PanelLayout(jsonValue& source)
 		panel->Polygon = -1;
 		panel->Shader = nullptr;
 
-		auto& type = pnl["type"].as_string();
+		auto const& type = pnl["type"].as_string();
 		if (type == "image") panel->Type = Panel::Type::Image;
 		else if (type == "text") panel->Type = Panel::Type::Text;
 		else if (type == "itemicon") panel->Type = Panel::Type::ItemIcon;
 
 		if (panel->Type == Panel::Type::Image)
 		{
-			panel->Texture = pnl["texture"].is_integer() ? pnl["texture"].as_integer() : 0;
+			panel->Texture = pnl["texture"].is_string() ? textures[pnl["texture"].as_string()] : textures.begin()->second;
 			panel->Frame = GetJSONVal(pnl["frame"], 0);
 			panel->Polygon = pnl["polygon"].is_integer() ? pnl["polygon"].as_integer() : -1;
 
 			panel->Enabled = pnl["enabled"].is_boolean() ? pnl["enabled"].as_boolean() : panel->Polygon != -1;
-			
+
 			panel->Shader = pnl["shader"].is_string() ? Shaders[pnl["shader"].as_string()] : nullptr;
 		}
 		else if (panel->Type == Panel::Type::Text)
@@ -103,8 +103,8 @@ PanelLayout::PanelLayout(jsonValue& source)
 			auto h = 0;
 			if (panel->Type == Panel::Type::Image)
 			{
-				w = textures[panel->Texture]->width;
-				h = textures[panel->Texture]->height;
+				w = panel->Texture->width;
+				h = panel->Texture->height;
 			}
 			for (int i = 0; i < 2; i++)
 			{
@@ -197,8 +197,46 @@ PanelLayout::PanelLayout(jsonValue& source)
 	animationTime = 0;
 }
 
+PanelLayout::~PanelLayout()
+{
+	for (auto const& t : textures)
+	{
+		delete t.second;
+	}
+}
+
 bool PanelLayout::Tick(float dt)
 {
+	auto apply = [&](AnimationBit& bit, float val)
+	{
+		auto* panel = panels[0];
+		{
+			auto it = std::find_if(panels.begin(), panels.end(), [bit](auto p) { return p->ID == bit.ID; });
+			if (it != panels.end())
+				panel = *it;
+		}
+		float substitute = 0.0;
+
+		float* prop = nullptr;
+		if (bit.Property == "alpha")
+			prop = &(panel->Alpha);
+		else if (bit.Property == "x")
+			prop = &(panel->Position.x);
+		else if (bit.Property == "y")
+			prop = &(panel->Position.y);
+		else if (bit.Property == "frame")
+			prop = &substitute;
+		else if (bit.Property == "size")
+			prop = &(panel->Size);
+
+		if (prop)
+		{
+			*prop = val;
+			if (bit.Property == "frame")
+				panel->Frame = (int)val;
+		}
+	};
+
 	if (hasAnimations && !currentAnimation.empty())
 	{
 		animationTime += dt * 1.0f;
@@ -209,60 +247,29 @@ bool PanelLayout::Tick(float dt)
 			if (bit.ToTime > endTime)
 				endTime = bit.ToTime;
 		}
-		if (animationTime >= endTime)
+
+		if (animationTime < endTime)
 		{
-			//TODO: make sure all Bits are in their final state.
-			currentAnimation = anim.Next;
-			animationTime = 0.0;
+			for (auto& bit : anim.Bits)
+			{
+				if (animationTime >= bit.FromTime && animationTime <= bit.ToTime)
+				{
+					auto percent = (animationTime - bit.FromTime) / (bit.ToTime - bit.FromTime);
+					auto val = glm::mix(bit.FromVal, bit.ToVal, bit.Function(percent));
+					apply(bit, val);
+				}
+				else if (animationTime >= bit.ToTime)
+					apply(bit, bit.ToVal);
+			}
 		}
 		else
 		{
 			for (auto& bit : anim.Bits)
-			{
-				auto* panel = panels[0];
-				/*
-				for (const auto& p : panels)
-				{
-					if (p->ID == bit.ID)
-					{
-						panel = p;
-						break;
-					}
-				}
-				*/
-				{
-					auto it = std::find_if(panels.begin(), panels.end(), [bit](auto p) { return p->ID == bit.ID; });
-					if (it != panels.end())
-						panel = *it;
-				}
-				float subsitute = 0.0;
-
-				float* prop = nullptr;
-				if (bit.Property == "alpha")
-					prop = &(panel->Alpha);
-				else if (bit.Property == "x")
-					prop = &(panel->Position.x);
-				else if (bit.Property == "y")
-					prop = &(panel->Position.y);
-				else if (bit.Property == "frame")
-					prop = &subsitute;
-				else if (bit.Property == "size")
-					prop = &(panel->Size);
-
-				if (prop == nullptr)
-					continue;
-
-				if (animationTime >= bit.FromTime && animationTime <= bit.ToTime)
-				{
-					//auto duration = bit.ToTime - bit.FromTime;
-					auto percent = (animationTime - bit.FromTime) / (bit.ToTime - bit.FromTime);
-					*prop = glm::mix(bit.FromVal, bit.ToVal, bit.Function(percent));
-
-					if (bit.Property == "frame")
-						panel->Frame = (int)glm::floor(subsitute);
-				}
-			}
+				apply(bit, bit.ToVal);
+			currentAnimation = anim.Next;
+			animationTime = 0.0;
 		}
+
 	}
 
 	polygon poly;
@@ -288,7 +295,7 @@ bool PanelLayout::Tick(float dt)
 		//if (panel->Polygon != prevPoly)
 		{
 			poly.clear();
-			auto const frame = textures[panel->Texture]->operator[](panel->Frame);
+			auto const frame = panel->Texture->operator[](panel->Frame);
 			auto const size = glm::vec2(frame.z, frame.w);
 			for (const auto& point : polygons[panel->Polygon])
 				poly.emplace_back(((point * size) + Position + parentPos + panel->Position) * scale);
@@ -345,14 +352,13 @@ void PanelLayout::Draw(float dt)
 
 		if (panel->Type == Panel::Type::Image)
 		{
-			auto& texture = *textures[panel->Texture];
-			auto frame = texture[panel->Frame];
-			//TODO: allow using panel->Shader.
-			auto shader = panel->Shader ? panel->Shader : (texture.channels > 1 ? Shaders["sprite"] : Shaders["red8"]);
+			auto texture = panel->Texture;
+			auto frame = texture->operator[](panel->Frame);
+			auto shader = panel->Shader ? panel->Shader : (texture->channels > 1 ? Shaders["sprite"] : Shaders["red8"]);
 			auto finalPos = Position + parentPos + panel->Position;
 
 			Sprite::DrawSprite(
-				shader, texture,
+				shader, *texture,
 				finalPos * scale,
 				glm::vec2(frame.z, frame.w) * scale,
 				frame,
