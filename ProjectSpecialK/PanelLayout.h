@@ -20,7 +20,7 @@ class PanelLayout : public Tickable
 		glm::vec2 Position;
 		enum class Type
 		{
-			Image, Text, ItemIcon,
+			Image, Text
 		} Type;
 		float Alpha;
 		Texture* Texture;
@@ -33,8 +33,10 @@ class PanelLayout : public Tickable
 		std::string Text;
 		glm::vec4 Color;
 		int Polygon;
-		int Parent;
+		struct Panel* Parent;
 		bool Enabled;
+
+		void SetFrame(const std::string& name);
 	};
 
 	struct AnimationBit

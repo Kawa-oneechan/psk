@@ -6,7 +6,7 @@
 class ItemHotbar : public Tickable
 {
 private:
-	PanelLayout layout;
+	std::shared_ptr<PanelLayout> layout;
 	std::array<int, 10> items{};
 
 public:

@@ -1,8 +1,8 @@
 {
 	"datetime": {
-		"textures": [
-			"ui/datetime.png"
-		],
+		"textures": {
+			"main": "ui/datetime.png"
+		},
 		"alpha": 0.75,
 		"origin": "bottomleft",
 		"panels": [
@@ -11,8 +11,6 @@
 				//"position": [ 0, 850 ],
 				"position": [ 0, -200 ],
 				"type": "sprite",
-				"texture": 0,
-				"frame": 0,
 				"color": "primary"
 			},
 			{

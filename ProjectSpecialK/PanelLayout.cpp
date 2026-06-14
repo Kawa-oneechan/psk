@@ -1,13 +1,11 @@
 #include <algorithm>
-#include "PanelLayout.h"
 #include "engine/InputsMap.h"
 #include "engine/TextUtils.h"
 #include "engine/Utilities.h"
 #include "engine/Console.h"
 #include "engine/SpriteRenderer.h"
 #include "engine/ShapeUtils.h"
-#include "Database.h"
-#include "Types.h"
+#include "PanelLayout.h"
 #include "Game.h"
 #include "Utilities.h"
 
@@ -36,11 +34,10 @@ PanelLayout::PanelLayout(jsonValue& source)
 	{
 		for (const auto& p : src["polygons"].as_array())
 		{
-			polygon poly;
-			for (const auto& point : p.as_array())
-			{
-				poly.emplace_back(GetJSONVec2(point));
-			}
+			auto& pArr = p.as_array();
+			auto poly = std::vector<glm::vec2>(pArr.size() + 1);
+			std::transform(pArr.cbegin(), pArr.cend(), poly.begin(),
+				[](const auto& point) { return GetJSONVec2(point); });
 
 			//ensure a closed loop
 			if (poly[0] != poly[poly.size() - 1])
@@ -59,21 +56,20 @@ PanelLayout::PanelLayout(jsonValue& source)
 
 		panel->Polygon = -1;
 		panel->Shader = nullptr;
+		panel->Texture = nullptr;
 
 		auto const& type = pnl["type"].as_string();
 		if (type == "image") panel->Type = Panel::Type::Image;
 		else if (type == "text") panel->Type = Panel::Type::Text;
-		else if (type == "itemicon") panel->Type = Panel::Type::ItemIcon;
 
 		if (panel->Type == Panel::Type::Image)
 		{
 			panel->Texture = pnl["texture"].is_string() ? textures[pnl["texture"].as_string()] : textures.begin()->second;
 			panel->Frame = GetJSONVal(pnl["frame"], 0);
 			panel->Polygon = pnl["polygon"].is_integer() ? pnl["polygon"].as_integer() : -1;
-
 			panel->Enabled = pnl["enabled"].is_boolean() ? pnl["enabled"].as_boolean() : panel->Polygon != -1;
-
 			panel->Shader = pnl["shader"].is_string() ? Shaders[pnl["shader"].as_string()] : nullptr;
+			panel->Size = GetJSONVal(pnl["size"], 100.0f);
 		}
 		else if (panel->Type == Panel::Type::Text)
 		{
@@ -89,12 +85,6 @@ PanelLayout::PanelLayout(jsonValue& source)
 				else if (pnl["alignment"].as_string() == "center")
 					panel->Alignment = 2;
 			}
-		}
-		else if (panel->Type == Panel::Type::ItemIcon)
-		{
-			panel->Text = GetJSONVal(pnl["text"], "");
-			panel->Size = GetJSONVal(pnl["size"], 100.0f);
-			panel->Polygon = pnl["polygon"].is_integer() ? pnl["polygon"].as_integer() : -1;
 		}
 
 		{
@@ -125,23 +115,21 @@ PanelLayout::PanelLayout(jsonValue& source)
 
 		panel->Angle = GetJSONVal(pnl["angle"], 0.0f);
 
-		panel->Parent = -1;
+		panel->Parent = nullptr;
 		if (!pnl["parent"].is_null())
 		{
 			if (pnl["parent"].is_string())
 			{
 				const auto& prt = pnl["parent"].as_string();
-				for (int i = 0; i < panels.size(); i++)
+				auto parent = std::find_if(panels.cbegin(), panels.cend(), [&](auto const& p)
 				{
-					if (panels[i]->ID == prt)
-					{ // cppcheck-suppress useStlAlgorithm
-						panel->Parent = i;
-						break;
-					}
-				}
+					return p->ID == prt;
+				});
+				if (parent != panels.cend())
+					panel->Parent = *parent;
 			}
 			else if(pnl["parent"].is_integer())
-				panel->Parent = pnl["parent"].as_integer();
+				panel->Parent = panels[pnl["parent"].as_integer()];
 		}
 
 		panel->Color = glm::vec4(1, 1, 1, 1);
@@ -284,12 +272,11 @@ bool PanelLayout::Tick(float dt)
 		//	continue;
 
 		auto parentPos = glm::vec2(0);
-		auto parentID = panel->Parent;
-		while (parentID != -1)
+		auto parent = panel->Parent;
+		while (parent != nullptr)
 		{
-			const auto* parent = panels[parentID];
 			parentPos += parent->Position;
-			parentID = parent->Parent;
+			parent = parent->Parent;
 		}
 
 		//if (panel->Polygon != prevPoly)
@@ -297,8 +284,10 @@ bool PanelLayout::Tick(float dt)
 			poly.clear();
 			auto const frame = panel->Texture->operator[](panel->Frame);
 			auto const size = glm::vec2(frame.z, frame.w);
-			for (const auto& point : polygons[panel->Polygon])
-				poly.emplace_back(((point * size) + Position + parentPos + panel->Position) * scale);
+			auto& thisPoly = polygons[panel->Polygon];
+			poly.resize(thisPoly.size());
+			std::transform(thisPoly.cbegin(), thisPoly.cend(), poly.begin(),
+				[&](const auto& point) { return ((point * size) + Position + parentPos + panel->Position) * scale; });
 
 			//prevPoly = panel->Polygon;
 		}
@@ -338,19 +327,18 @@ void PanelLayout::Draw(float dt)
 		if (Origin == CornerOrigin::TopRight || Origin == CornerOrigin::BottomRight) parentPos.x = 1920; //(float)width;
 		else if (Origin == CornerOrigin::BottomLeft) parentPos.y = 1080; //(float)height;
 
-		auto parentID = panel->Parent;
-		while (parentID != -1)
+		const auto* parent = panel->Parent;
+		while (parent != nullptr)
 		{
-			const auto* parent = panels[parentID];
 			parentPos += parent->Position;
-			parentID = parent->Parent;
+			parent = parent->Parent;
 		}
 
 		color.a = glm::clamp(Alpha * panel->Alpha, 0.0f, 1.0f);
 		if (color.a == 0)
 			continue;
 
-		if (panel->Type == Panel::Type::Image)
+		if (panel->Type == Panel::Type::Image && panel->Texture != nullptr)
 		{
 			auto texture = panel->Texture;
 			auto frame = texture->operator[](panel->Frame);
@@ -360,7 +348,7 @@ void PanelLayout::Draw(float dt)
 			Sprite::DrawSprite(
 				shader, *texture,
 				finalPos * scale,
-				glm::vec2(frame.z, frame.w) * scale,
+				glm::vec2(frame.z, frame.w) * (panel->Size / 100.0f) * scale,
 				frame,
 				panel->Angle,
 				color
@@ -372,7 +360,7 @@ void PanelLayout::Draw(float dt)
 				const auto plen = poly.size();
 				const auto size = glm::vec2(frame.z, frame.w);
 				for (auto i = 0; i < plen; i++)
-					Sprite::DrawLine((poly[i] * size) + finalPos, (poly[(i + 1) % plen] * size) + finalPos, glm::vec4(1));
+					Sprite::DrawLine(((poly[i] * size) + finalPos) * scale, ((poly[(i + 1) % plen] * size) + finalPos) * scale, glm::vec4(1));
 			}
 		}
 		else if (panel->Type == Panel::Type::Text)
@@ -399,32 +387,14 @@ void PanelLayout::Draw(float dt)
 				panel->Angle
 			);
 		}
-		else if (panel->Type == Panel::Type::ItemIcon)
-		{
-			if (panel->Text.empty())
-				continue;
-
-			auto& texture = *Database::ItemIcons;
-			auto frame = texture[panel->Text];
-			auto shader = Shaders["sprite"];
-
-			Sprite::DrawSprite(
-				shader, texture,
-				(Position + parentPos + panel->Position) * scale,
-				glm::vec2(frame.z, frame.w) * (panel->Size / 100.0f) * scale,
-				frame,
-				panel->Angle,
-				color
-			);
-		}
 	}
 }
 
 PanelLayout::Panel* PanelLayout::GetPanel(const std::string& id)
 {
-	for (const auto& p : panels)
-		if (p->ID == id)
-			return p;
+	auto it = std::find_if(panels.cbegin(), panels.cend(), [id](auto const& p) { return p->ID == id; });
+	if (it != panels.end())
+		return *it;
 	return nullptr;
 }
 
@@ -435,14 +405,23 @@ void PanelLayout::Play(const std::string& anim)
 		conprint(2, "Tried to play animation {} on a PanelLayout without animations.", anim);
 		return;
 	}
-	for (const auto& a : animations)
+
+	if (std::any_of(animations.cbegin(), animations.cend(), [anim](auto const& a) { return a.first == anim; }))
 	{
-		if (a.first == anim)
-		{
-			currentAnimation = anim;
-			animationTime = 0.0f;
-			return;
-		}
+		currentAnimation = anim;
+		animationTime = 0.0f;
+		return;
 	}
+
 	conprint(2, "Tried to play animation {} on a PanelLayout with no such animation.", anim);
+}
+
+void PanelLayout::Panel::SetFrame(const std::string& name)
+{
+	if (Type != Type::Image || Texture == nullptr)
+		return;
+	auto atlas = Texture->Atlas();
+	auto it = atlas.names.find(name);
+	if (it != atlas.names.end())
+		Frame = it->second;
 }

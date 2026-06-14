@@ -8,7 +8,7 @@ private:
 	int lastHour{ -1 };
 	int lastMinute{ -1 };
 	tm gm;
-	PanelLayout layout;
+	std::shared_ptr<PanelLayout> layout;
 
 public:
 	DateTimePanel();
