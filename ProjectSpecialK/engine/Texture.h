@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <memory>
 #include <glm/glm.hpp>
 #include "Types.h"
 
@@ -25,7 +26,6 @@ public:
 	unsigned int ID{ (unsigned int)-1 };
 	int width{ 0 }, height{ 0 }, channels{ 0 };
 	bool delayed = false;
-	int refCount{ 0 };
 
 	bool Locked{ false };
 
@@ -33,6 +33,8 @@ public:
 	explicit Texture(const std::string& texturePath, int repeat = GL_REPEAT, int filter = 0, bool skipAtlas = false, ColorMap* colorMaps = nullptr, int colorMapIndex = 0);
 	Texture(const unsigned char* data, int width, int height, int channels, int repeat = GL_REPEAT, int filter = 0);
 	Texture(unsigned int id, int width, int height, int channels) : data(nullptr), filter(0), repeat(GL_REPEAT), ID(id), width(width), height(height), channels(channels) {}
+
+	static void Reset();
 
 	virtual ~Texture();
 	virtual void Use();
@@ -56,7 +58,7 @@ public:
 
 	//TODO: look into proper copystructor
 	//I HAVE NO IDEA IF THIS IS AT ALL THE RIGHT THING TO DO
-	Texture(const Texture &o) : file(o.file), filter(o.filter), repeat(o.repeat), ID(o.ID), width(o.width), height(o.height), channels(o.channels), delayed(o.delayed), refCount(o.refCount), Locked(o.Locked)
+	Texture(const Texture &o) : file(o.file), filter(o.filter), repeat(o.repeat), ID(o.ID), width(o.width), height(o.height), channels(o.channels), delayed(o.delayed), Locked(o.Locked)
 	{
 		if (o.data)
 		{
@@ -67,6 +69,8 @@ public:
 	}
 	Texture &operator=(const Texture &x) = delete;
 };
+
+using TextureP = std::shared_ptr<Texture>;
 
 class TextureArray : public Texture
 {
@@ -106,3 +110,13 @@ public:
 	}
 	TextureArray &operator=(const TextureArray &x) = delete;
 };
+
+using TexArrayP = std::shared_ptr<TextureArray>;
+
+namespace VFS
+{
+	TextureP GetTexture(const std::string& filename, int repeat = GL_REPEAT, int filter = 0, bool skipAtlas = false, ColorMap* colorMaps = nullptr, int colorMapIndex = 0);
+	TexArrayP GetTextureArray(const std::string& filename, int repeat = GL_REPEAT, int filter = 0);
+	TexArrayP GetTextureArray(const std::vector<std::string>& entries, int repeat = GL_REPEAT, int filter = 0);
+}
+

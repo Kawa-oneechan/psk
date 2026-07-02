@@ -1,7 +1,7 @@
 #pragma once
 #include <functional>
 #include <fstream>
-#include <format.h>
+#include <fmt/format.h>
 #include <glm/glm.hpp>
 #include "Tickable.h"
 #include "JsonUtils.h"
@@ -88,6 +88,8 @@ public:
 	//the text is marked to be in the specific color. Internal line breaks
 	//are allowed.
 	void Print(int color, const std::string& str);
+	//Appends the given formatted string to the console log.
+	void Print(int color, fmt::string_view fmt, fmt::format_args args);
 	//Appends the given string to the console log, in white.
 	void Print(const std::string& str);
 	//Flushes pending writes to the log file.
@@ -117,9 +119,17 @@ public:
 
 extern Console* console;
 
-#define conprint(C, F, ...) console->Print(C, fmt::format(F, __VA_ARGS__))
+template <typename... T>
+void conprint(int color, fmt::format_string<T...> fmt, T&&... args)
+{
+	console->Print(color, fmt, fmt::make_format_args(args...));
+}
 #ifdef DEBUG
-#define debprint(C, F, ...) console->Print(C, fmt::format(F, __VA_ARGS__))
+template <typename... T>
+void debprint(int color, fmt::format_string<T...> fmt, T&&... args)
+{
+	console->Print(color, fmt, fmt::make_format_args(args...));
+}
 #else
 #define debprint(C, F, ...)
 #endif

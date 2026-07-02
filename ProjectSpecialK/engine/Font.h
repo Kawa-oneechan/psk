@@ -3,11 +3,6 @@
 #include <glm/glm.hpp>
 #include "Types.h"
 
-class Texture;
-
-//TODO: can we not?
-#include <stb_truetype.h>
-
 namespace Sprite
 {
 	void DrawText(int font, const std::string& text, glm::vec2 position, const glm::vec4& color = glm::vec4(1), float size = 100, float angle = 0.0f, bool raw = false);
@@ -30,7 +25,7 @@ private:
 	float size;
 	float kerning{ 0 };
 
-	stbtt_bakedchar* cdata{ nullptr };
+	void* cdata{ nullptr };
 	Texture** fontTextures;
 
 	void loadBank(int bank);

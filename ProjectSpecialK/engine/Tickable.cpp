@@ -231,7 +231,7 @@ void TextLabel::Draw(float)
 SimpleSprite::SimpleSprite(const std::string& texture, int frame, glm::vec2 position)
 {
 	parent = nullptr;
-	this->texture = std::make_shared<Texture>(texture);
+	this->texture = VFS::GetTexture(texture);
 	Position = position;
 	Frame = frame;
 }
@@ -239,7 +239,7 @@ SimpleSprite::SimpleSprite(const std::string& texture, int frame, glm::vec2 posi
 SimpleSprite::SimpleSprite(Texture* texture, int frame, glm::vec2 position)
 {
 	parent = nullptr;
-	this->texture = std::shared_ptr<Texture>(texture);
+	this->texture = TextureP(texture);
 	Position = position;
 	Frame = frame;
 }

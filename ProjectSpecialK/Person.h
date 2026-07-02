@@ -27,8 +27,8 @@ protected:
 	ModelP _model;
 	std::array<ModelP, 10> _clothesModels;
 	std::array<InventoryItemP, 10> _clothesItems;
-	std::array<TextureArray*, 24> Textures;
-	std::array<TextureArray*, 32> ClothingTextures;
+	std::array<TexArrayP, 24> Textures;
+	std::array<TexArrayP, 32> ClothingTextures;
 
 	std::unique_ptr<Animator> animator;
 	unsigned int _birthday[2]{ 26, 6 };

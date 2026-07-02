@@ -157,26 +157,26 @@ void Villager::LoadModel()
 
 	if (Textures[0] == nullptr)
 	{
-		Textures[0] = new TextureArray(fmt::format("{}/body_alb.png", Path));
-		Textures[1] = new TextureArray(fmt::format("{}/body_nrm.png", Path));
-		Textures[2] = new TextureArray(fmt::format("{}/body_mix.png", Path));
+		Textures[0] = VFS::GetTextureArray(fmt::format("{}/body_alb.png", Path));
+		Textures[1] = VFS::GetTextureArray(fmt::format("{}/body_nrm.png", Path));
+		Textures[2] = VFS::GetTextureArray(fmt::format("{}/body_mix.png", Path));
 		Textures[3] = Textures[0]; //new TextureArray(fmt::format("{}/body_alb.png", Path));
 		Textures[4] = Textures[1]; //new TextureArray(fmt::format("{}/body_nrm.png", Path));
 		Textures[5] = Textures[2]; //new TextureArray(fmt::format("{}/body_mix.png", Path));
-		Textures[6] = new TextureArray(fmt::format("{}/eye*_alb.png", Path));
-		Textures[7] = new TextureArray(fmt::format("{}/eye*_nrm.png", Path));
-		Textures[8] = new TextureArray(fmt::format("{}/eye*_mix.png", Path));
+		Textures[6] = VFS::GetTextureArray(fmt::format("{}/eye*_alb.png", Path));
+		Textures[7] = VFS::GetTextureArray(fmt::format("{}/eye*_nrm.png", Path));
+		Textures[8] = VFS::GetTextureArray(fmt::format("{}/eye*_mix.png", Path));
 		if ((_customModel && !_customMuzzle) || !_species->ModeledMuzzle)
 		{
-			Textures[9] = new TextureArray(fmt::format("{}/mouth*_alb.png", Path));
-			Textures[10] = new TextureArray(fmt::format("{}/mouth*_nrm.png", Path));
-			Textures[11] = new TextureArray(fmt::format("{}/mouth*_mix.png", Path));
+			Textures[9] = VFS::GetTextureArray(fmt::format("{}/mouth*_alb.png", Path));
+			Textures[10] = VFS::GetTextureArray(fmt::format("{}/mouth*_nrm.png", Path));
+			Textures[11] = VFS::GetTextureArray(fmt::format("{}/mouth*_mix.png", Path));
 		}
 		else
 		{
-			Textures[9] = new TextureArray(fmt::format("{}/beak_alb.png", Path));
-			Textures[10] = new TextureArray(fmt::format("{}/beak_nrm.png", Path));
-			Textures[11] = new TextureArray(fmt::format("{}/beak_mix.png", Path));
+			Textures[9] = VFS::GetTextureArray(fmt::format("{}/beak_alb.png", Path));
+			Textures[10] = VFS::GetTextureArray(fmt::format("{}/beak_nrm.png", Path));
+			Textures[11] = VFS::GetTextureArray(fmt::format("{}/beak_mix.png", Path));
 
 			_model->SetVisibility("FaceBad__mBeak", false);
 			_model->SetVisibility("FaceGood__mBeak", true);
@@ -185,21 +185,21 @@ void Villager::LoadModel()
 
 		if (_accessoryType == AccessoryType::Cap || _accessoryType == AccessoryType::BodyCap)
 		{
-			Textures[12] = new TextureArray(fmt::format("{}/cap_alb.png", Path));
-			Textures[13] = new TextureArray(fmt::format("{}/cap_nrm.png", Path));
-			Textures[14] = new TextureArray(fmt::format("{}/cap_mix.png", Path));
+			Textures[12] = VFS::GetTextureArray(fmt::format("{}/cap_alb.png", Path));
+			Textures[13] = VFS::GetTextureArray(fmt::format("{}/cap_nrm.png", Path));
+			Textures[14] = VFS::GetTextureArray(fmt::format("{}/cap_mix.png", Path));
 		}
 		else if (_accessoryType == AccessoryType::Glass || _accessoryType == AccessoryType::GlassAlpha)
 		{
-			Textures[12] = new TextureArray(fmt::format("{}/glass_alb.png", Path));
-			Textures[13] = new TextureArray(fmt::format("{}/glass_nrm.png", Path));
-			Textures[14] = new TextureArray(fmt::format("{}/glass_mix.png", Path));
+			Textures[12] = VFS::GetTextureArray(fmt::format("{}/glass_alb.png", Path));
+			Textures[13] = VFS::GetTextureArray(fmt::format("{}/glass_nrm.png", Path));
+			Textures[14] = VFS::GetTextureArray(fmt::format("{}/glass_mix.png", Path));
 			if (_accessoryType == AccessoryType::GlassAlpha)
 			{
-				Textures[16] = new TextureArray(fmt::format("{}/glassalpha_alb.png", Path));
-				Textures[17] = new TextureArray(fmt::format("{}/glassalpha_nrm.png", Path));
-				Textures[18] = new TextureArray(fmt::format("{}/glassalpha_mix.png", Path));
-				Textures[19] = new TextureArray(fmt::format("{}/glassalpha_op.png", Path));
+				Textures[16] = VFS::GetTextureArray(fmt::format("{}/glassalpha_alb.png", Path));
+				Textures[17] = VFS::GetTextureArray(fmt::format("{}/glassalpha_nrm.png", Path));
+				Textures[18] = VFS::GetTextureArray(fmt::format("{}/glassalpha_mix.png", Path));
+				Textures[19] = VFS::GetTextureArray(fmt::format("{}/glassalpha_op.png", Path));
 			}
 		}
 	}
@@ -216,10 +216,10 @@ void Villager::LoadModel()
 			if (ci->Style() == "")
 				modelFile = fmt::format("{}/model.fbx", ci->Path);
 			cm = std::make_shared<::Model>(modelFile);
-			ClothingTextures[(i * 4) + 0] = new TextureArray(fmt::format("{}/albedo*.png", ci->Path));
-			ClothingTextures[(i * 4) + 1] = new TextureArray(fmt::format("{}/normal*.png", ci->Path));
-			ClothingTextures[(i * 4) + 2] = new TextureArray(fmt::format("{}/mix*.png", ci->Path));
-			ClothingTextures[(i * 4) + 3] = new TextureArray(fmt::format("{}/opacity*.png", ci->Path));
+			ClothingTextures[(i * 4) + 0] = VFS::GetTextureArray(fmt::format("{}/albedo*.png", ci->Path));
+			ClothingTextures[(i * 4) + 1] = VFS::GetTextureArray(fmt::format("{}/normal*.png", ci->Path));
+			ClothingTextures[(i * 4) + 2] = VFS::GetTextureArray(fmt::format("{}/mix*.png", ci->Path));
+			ClothingTextures[(i * 4) + 3] = VFS::GetTextureArray(fmt::format("{}/opacity*.png", ci->Path));
 		}
 	}
 
@@ -249,12 +249,15 @@ void Villager::ReloadTextures()
 {
 	for (int i = 0; i < Textures.size(); i++)
 	{
+		Textures[i].reset();
+		/*
 		if (Textures[i] != nullptr)
 		{
 			if (Textures[i]->height >= 0)
 				delete Textures[i];
 			Textures[i] = nullptr;
 		}
+		*/
 	}
 
 	LoadModel();
@@ -452,12 +455,15 @@ void Villager::Depart()
 	}
 	for (int i = 0; i < Textures.size(); i++)
 	{
+		Textures[i].reset();
+		/*
 		if (Textures[i] != nullptr)
 		{
 			if (Textures[i]->height >= 0)
 				delete Textures[i];
 			Textures[i] = nullptr;
 		}
+		*/
 	}
 	_model = nullptr;
 	animator = nullptr;

@@ -17,10 +17,10 @@
 __declspec(noreturn)
 extern void FatalError(const std::string& message);
 
-extern TextureArray* groundTextureAlbs;
-extern TextureArray* groundTextureNrms;
-extern TextureArray* groundTextureMixs;
-extern TextureArray* grassColors;
+extern TexArrayP groundTextureAlbs;
+extern TexArrayP groundTextureNrms;
+extern TexArrayP groundTextureMixs;
+extern TexArrayP grassColors;
 
 Town::Town() : grassColorMap ("grasscolors.png"), grassTexture("design0_mix.png")
 {
@@ -342,8 +342,9 @@ void Town::StartNewDay()
 	}
 
 	//Reset textures so snow can appear/disappear
-	delete[] groundTextureAlbs;
-	groundTextureAlbs = nullptr;
+	//delete[] groundTextureAlbs;
+	//groundTextureAlbs = nullptr;
+	groundTextureAlbs.reset();
 }
 
 void Town::UpdateWeather()
@@ -410,10 +411,10 @@ void Town::Draw(float dt)
 		else
 			groundMixs[0] = fmt::format("field/ground/{}", grassTexture);
 
-		groundTextureAlbs = new TextureArray(groundAlbs);
-		groundTextureNrms = new TextureArray(groundNrms);
-		groundTextureMixs = new TextureArray(groundMixs);
-		grassColors = new TextureArray(fmt::format("field/ground/{}", grassColorMap), GL_CLAMP_TO_EDGE, GL_NEAREST);
+		groundTextureAlbs = VFS::GetTextureArray(groundAlbs);
+		groundTextureNrms = VFS::GetTextureArray(groundNrms);
+		groundTextureMixs = VFS::GetTextureArray(groundMixs);
+		grassColors = VFS::GetTextureArray(fmt::format("field/ground/{}", grassColorMap), GL_CLAMP_TO_EDGE, GL_NEAREST);
 	}
 
 	Map::Draw(dt);

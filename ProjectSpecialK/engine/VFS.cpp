@@ -5,7 +5,7 @@
 #include <functional>
 
 #include <miniz.h>
-#include <format.h>
+#include <fmt/format.h>
 #include "Platform.h"
 #include "VFS.h"
 #include "Console.h"
@@ -146,7 +146,7 @@ namespace VFS
 	{
 		if (!fs::exists(path))
 		{
-			conprint(2, "VFS: can't find asset source {}. Skipping.", path);
+			conprint(2, "VFS: can't find asset source {}. Skipping.", path.string());
 			return;
 		}
 

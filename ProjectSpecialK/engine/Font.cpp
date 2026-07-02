@@ -6,7 +6,7 @@
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/rotate_vector.hpp>
 
-#include <format.h>
+#include <fmt/format.h>
 #include <stb_truetype.h>
 #include <stb_image_write.h>
 #include "SpriteRenderer.h"
@@ -294,7 +294,7 @@ void TrueTypeFont::loadBank(int bank)
 	if (!ttfData)
 		FatalError(fmt::format("Could not load font {}.", theFile));
 	auto ttfBitmap = new unsigned char[FontAtlasExtent * FontAtlasExtent];
-	stbtt_BakeFontBitmap(reinterpret_cast<unsigned char*>(ttfData.get()), 0, (float)size  * FontBaseScale, ttfBitmap, FontAtlasExtent, FontAtlasExtent, 256 * bank, 256, &cdata[0x100 * bank]);
+	stbtt_BakeFontBitmap(reinterpret_cast<unsigned char*>(ttfData.get()), 0, (float)size  * FontBaseScale, ttfBitmap, FontAtlasExtent, FontAtlasExtent, 256 * bank, 256, &(static_cast<stbtt_bakedchar*>(cdata))[0x100 * bank]);
 
 	unsigned int fontID;
 	glGenTextures(1, &fontID);
@@ -322,6 +322,8 @@ void TrueTypeFont::Draw(const std::string& text, glm::vec2 position, const glm::
 
 	size_t i = 0;
 
+	auto _cdata = static_cast<stbtt_bakedchar*>(cdata);
+
 	std::vector<letterToDraw> toDraw;
 	toDraw.reserve(text.length()); //will overshoot on tags and UTF8 but that's cool
 
@@ -340,13 +342,13 @@ void TrueTypeFont::Draw(const std::string& text, glm::vec2 position, const glm::
 
 		if (ch == ' ')
 		{
-			pos.x += (cdata[' '].xadvance + kerning) * scaleF;
+			pos.x += (_cdata[' '].xadvance + kerning) * scaleF;
 			continue;
 		}
 		if (ch == '\n')
 		{
 			pos.x = 0.0f;
-			pos.y += (cdata['A'].x1 - cdata['A'].x0) * lineHeight * scaleF;
+			pos.y += (_cdata['A'].x1 - _cdata['A'].x0) * lineHeight * scaleF;
 			continue;
 		}
 
@@ -355,7 +357,7 @@ void TrueTypeFont::Draw(const std::string& text, glm::vec2 position, const glm::
 			continue;
 #endif
 
-		auto bakedChar = cdata[ch];
+		auto bakedChar = _cdata[ch];
 
 		auto w = bakedChar.x1 - bakedChar.x0 + 0.5f;
 		auto h = bakedChar.y1 - bakedChar.y0 + 0.5f;
@@ -400,6 +402,8 @@ glm::vec2 TrueTypeFont::Measure(const std::string& text, float size, bool raw)
 
 	size_t i = 0;
 
+	auto _cdata = static_cast<stbtt_bakedchar*>(cdata);
+
 	while (text[i] != 0)
 	{
 		rune ch;
@@ -416,7 +420,7 @@ glm::vec2 TrueTypeFont::Measure(const std::string& text, float size, bool raw)
 		if (ch == '\n')
 		{
 			thisLine = 0.0f;
-			result.y += cdata['A'].x1 - cdata['A'].x0 * lineHeight * scaleF;
+			result.y += _cdata['A'].x1 - _cdata['A'].x0 * lineHeight * scaleF;
 			continue;
 		}
 
@@ -432,7 +436,7 @@ glm::vec2 TrueTypeFont::Measure(const std::string& text, float size, bool raw)
 			continue;
 #endif
 
-		auto bakedChar = cdata[ch];
+		auto bakedChar = _cdata[ch];
 
 		auto w = bakedChar.x1 - bakedChar.x0 + 0.5f;
 		auto h = bakedChar.y1 - bakedChar.y0 + 0.5f;
@@ -444,7 +448,7 @@ glm::vec2 TrueTypeFont::Measure(const std::string& text, float size, bool raw)
 			result.x = thisLine;
 	}
 
-	auto h = cdata['A'].x1 - cdata['A'].x0;
+	auto h = _cdata['A'].x1 - _cdata['A'].x0;
 	result.y += (h * lineHeight) * (originalTextRenderSize / 100.0f);
 
 	return result;

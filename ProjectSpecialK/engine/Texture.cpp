@@ -11,9 +11,6 @@
 #define BECKETT_DEFAULTFILTER GL_LINEAR
 #endif
 
-static std::map<std::string, Texture*> cache;
-static std::map<std::string, TextureArray*> cacheArray;
-
 static unsigned int currentTextureSlot = 0;
 static unsigned int currentTexture[32]{ 0 };
 
@@ -43,28 +40,8 @@ Texture::Texture(const std::string& texturePath, int repeat, int filter, bool sk
 	ID = 0;
 	width = height = channels = 0;
 	data = nullptr;
-
 	this->filter = filter == 0 ? BECKETT_DEFAULTFILTER : filter;
 
-	auto c = cache.find(texturePath);
-	if (c != cache.end())
-	{
-		Texture* t = c->second;
-		ID = t->ID;
-		width = t->width;
-		height = t->height;
-		channels = t->channels;
-		data = t->data;
-		delayed = t->delayed;
-		this->repeat = t->repeat;
-		this->filter = t->filter;
-		atlas = t->atlas;
-		t->refCount++;
-		refCount = t->refCount;
-		return;
-	}
-
-	refCount = 1;
 	stbi_set_flip_vertically_on_load(1);
 
 	size_t vfsSize = 0;
@@ -102,7 +79,6 @@ Texture::Texture(const std::string& texturePath, int repeat, int filter, bool sk
 		{
 			debprint(3, "glGenTextures indicates we're threading. Delaying \"{}\"...", texturePath);
 			delayed = true;
-			cache[file] = this;
 			return;
 		}
 	}
@@ -112,8 +88,6 @@ Texture::Texture(const std::string& texturePath, int repeat, int filter, bool sk
 	}
 	stbi_image_free(data);
 	data = nullptr;
-
-	cache[file] = this;
 }
 
 Texture::Texture(const unsigned char* data, int width, int height, int channels, int repeat, int filter) : data(nullptr), repeat(repeat), width(width), height(height), channels(channels)
@@ -149,20 +123,6 @@ Texture::Texture(const unsigned char* data, int width, int height, int channels,
 
 Texture::~Texture()
 {
-	if (Locked)
-		return;
-	if (cache.size() == 0)
-		return;
-	auto c = cache.find(file);
-	if (c != cache.end())
-	{
-		Texture* t = c->second;
-		t->refCount--;
-		if (t->refCount > 0)
-			return;
-		else
-			cache.erase(c);
-	}
 	glDeleteTextures(1, &ID);
 }
 
@@ -175,12 +135,15 @@ void Texture::Use(int slot)
 {
 	if (delayed)
 	{
-		if (!load(data, &ID, width, height, channels, repeat, filter))
+		if (data)
 		{
-			debprint(2, "glGenTextures indicates we're still threading! WTF?");
-			return;
+			if (!load(data, &ID, width, height, channels, repeat, filter))
+			{
+				debprint(2, "glGenTextures indicates we're still threading! WTF?");
+				return;
+			}
+			delete data;
 		}
-		delete data;
 		data = nullptr;
 		delayed = false;
 	}
@@ -249,25 +212,6 @@ TextureArray::TextureArray(const std::vector<std::string>& entries, int repeat, 
 
 	this->filter = filter == 0 ? BECKETT_DEFAULTFILTER : filter;
 
-	auto c = cacheArray.find(file);
-	if (c != cacheArray.end())
-	{
-		TextureArray* t = c->second;
-		ID = t->ID;
-		width = t->width;
-		height = t->height;
-		channels = t->channels;
-		data = t->data;
-		delayed = t->delayed;
-		this->repeat = t->repeat;
-		this->filter = t->filter;
-		t->refCount++;
-		refCount = t->refCount;
-		return;
-	}
-
-	refCount = 1;
-
 	stbi_set_flip_vertically_on_load(1);
 
 	layers = (int)entries.size();
@@ -296,8 +240,6 @@ TextureArray::TextureArray(const std::vector<std::string>& entries, int repeat, 
 	//std::free(data);
 	delete[] data;
 	data = nullptr;
-
-	cacheArray[file] = this;
 }
 
 TextureArray::TextureArray(const std::string& texturePath, int repeat, int filter) : file(texturePath), repeat(repeat)
@@ -305,32 +247,11 @@ TextureArray::TextureArray(const std::string& texturePath, int repeat, int filte
 	ID = 0;
 	width = height = channels = 0, layers = 0;
 	data = nullptr;
-
 	this->filter = filter == 0 ? BECKETT_DEFAULTFILTER : filter;
-
-	auto c = cacheArray.find(texturePath);
-	if (c != cacheArray.end())
-	{
-		TextureArray* t = c->second;
-		ID = t->ID;
-		width = t->width;
-		height = t->height;
-		channels = t->channels;
-		data = t->data;
-		delayed = t->delayed;
-		this->repeat = t->repeat;
-		this->filter = t->filter;
-		t->refCount++;
-		refCount = t->refCount;
-		return;
-	}
-
-	refCount = 1;
-
+	
 	stbi_set_flip_vertically_on_load(1);
 
 	auto entries = VFS::Enumerate(texturePath);
-
 	if (entries.empty())
 	{
 		std::string tp = texturePath;
@@ -342,7 +263,6 @@ TextureArray::TextureArray(const std::string& texturePath, int repeat, int filte
 	if (layers == 0)
 	{
 		//No textures found at all.
-		cacheArray[file] = this;
 		return;
 	}
 
@@ -370,26 +290,10 @@ TextureArray::TextureArray(const std::string& texturePath, int repeat, int filte
 	//std::free(data);
 	delete[] data;
 	data = nullptr;
-
-	cacheArray[file] = this;
 }
 
 TextureArray::~TextureArray()
 {
-	if (Locked)
-		return;
-	if (cacheArray.size() == 0)
-		return;
-	auto c = cacheArray.find(file);
-	if (c != cacheArray.end())
-	{
-		TextureArray* t = c->second;
-		t->refCount--;
-		if (t->refCount > 0)
-			return;
-		else
-			cacheArray.erase(c);
-	}
 	glDeleteTextures(1, &ID);
 }
 
@@ -443,4 +347,94 @@ void TextureArray::SetFilter(int newFilter)
 	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, filter);
 	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, filter);
 	glBindTexture(GL_TEXTURE_2D_ARRAY, 0);
+}
+
+//------------------------
+
+void Texture::Reset()
+{
+	std::fill(currentTexture, currentTexture + 32, 0);
+}
+
+//------------------------
+
+//New cache system devised by Vaartis of the Ratular Bells.
+
+namespace VFS
+{
+	static std::map<std::string, std::weak_ptr<Texture>> textureCache;
+	static std::map<std::string, std::weak_ptr<TextureArray>> textureArrayCache;
+
+	TextureP GetTexture(const std::string& filename, int repeat, int filter, bool skipAtlas, ColorMap* colorMaps, int colorMapIndex)
+	{
+		auto it = textureCache.find(filename);
+		if (it != textureCache.end())
+		{
+			if (it->second.expired())
+			{
+				auto newShared = std::make_shared<Texture>(filename, repeat, filter, skipAtlas, colorMaps, colorMapIndex);
+				debprint(0, "VFS::GetTexture: {} expired and recreated.", filename);
+				textureCache[filename] = std::weak_ptr<Texture>(newShared);
+				return textureCache[filename].lock();
+			}
+			debprint(0, "VFS::GetTexture: {} returned.", filename);
+			return it->second.lock();
+		}
+		else
+		{
+			auto newShared = std::make_shared<Texture>(filename, repeat, filter, skipAtlas, colorMaps, colorMapIndex);
+			textureCache[filename] = std::weak_ptr<Texture>(newShared);
+			debprint(0, "VFS::GetTexture: {} created.", filename);
+			return textureCache[filename].lock();
+		}
+	}
+
+	TexArrayP GetTextureArray(const std::string& filename, int repeat, int filter)
+	{
+		auto it = textureArrayCache.find(filename);
+		if (it != textureArrayCache.end())
+		{
+			if (it->second.expired())
+			{
+				auto newShared = std::make_shared<TextureArray>(filename, repeat, filter);
+				debprint(0, "VFS::GetTextureArray: {} expired and recreated.", filename);
+				textureArrayCache[filename] = std::weak_ptr<TextureArray>(newShared);
+				return textureArrayCache[filename].lock();
+			}
+			debprint(0, "VFS::GetTextureArray: {} returned.", filename);
+			return it->second.lock();
+		}
+		else
+		{
+			auto newShared = std::make_shared<TextureArray>(filename, repeat, filter);
+			textureArrayCache[filename] = std::weak_ptr<TextureArray>(newShared);
+			debprint(0, "VFS::GetTextureArray: {} created.", filename);
+			return textureArrayCache[filename].lock();
+		}
+	}
+
+	TexArrayP GetTextureArray(const std::vector<std::string>& entries, int repeat, int filter)
+	{
+		auto filename = entries[0];
+		auto it = textureArrayCache.find(filename);
+		if (it != textureArrayCache.end())
+		{
+			if (it->second.expired())
+			{
+				auto newShared = std::make_shared<TextureArray>(entries, repeat, filter);
+				debprint(0, "VFS::GetTextureArray: {} expired and recreated.", filename);
+				textureArrayCache[filename] = std::weak_ptr<TextureArray>(newShared);
+				return textureArrayCache[filename].lock();
+			}
+			debprint(0, "VFS::GetTextureArray: {} returned.", filename);
+			return it->second.lock();
+		}
+		else
+		{
+			auto newShared = std::make_shared<TextureArray>(entries, repeat, filter);
+			textureArrayCache[filename] = std::weak_ptr<TextureArray>(newShared);
+			debprint(0, "VFS::GetTextureArray: {} created.", filename);
+			return textureArrayCache[filename].lock();
+		}
+	}
 }

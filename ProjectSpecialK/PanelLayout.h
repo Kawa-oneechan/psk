@@ -32,9 +32,11 @@ class PanelLayout : public Tickable
 		float Angle;
 		std::string Text;
 		glm::vec4 Color;
-		int Polygon;
+		polygon* Polygon;
 		struct Panel* Parent;
 		bool Enabled;
+		bool Sliced;
+		glm::vec2 PanelSize;
 
 		void SetFrame(const std::string& name);
 	};
@@ -56,9 +58,8 @@ class PanelLayout : public Tickable
 
 private:
 	std::vector<Panel*> panels;
-	std::map<std::string, Texture*> textures;
-	//std::vector<Shader*> shaders;
-	std::vector<polygon> polygons;
+	std::map<std::string, TextureP> textures;
+	std::map<std::string, polygon> polygons;
 
 	bool hasAnimations{ false };
 	float animationTime{ 0.0f };
@@ -79,7 +80,6 @@ public:
 
 	PanelLayout() = default;
 	explicit PanelLayout(jsonValue& source);
-	~PanelLayout() override;
 	bool Tick(float dt) override;
 	void Draw(float dt) override;
 	Panel* GetPanel(const std::string& id);

@@ -1,6 +1,6 @@
 #include <glad/glad.h>
 #include <map>
-#include <format.h>
+#include <fmt/format.h>
 #include "Shader.h"
 #include "TextUtils.h"
 #include "VFS.h"
@@ -9,7 +9,7 @@
 #ifndef BECKETT_PULLEDPORK
 #define HEADER "#version 430 core\n#define PSK\n"
 #else
-#define HEADER "#version 430 core\n#define PSK\n\n#define PULLEDPORK\n"
+#define HEADER "#version 430 core\n#define PSK\n#define PULLEDPORK\n"
 #endif
 
 __declspec(noreturn)

@@ -19,13 +19,13 @@ static std::array<std::string, 80> tileModelKeys;
 
 float lastGrassColor = 100.0f;
 
-TextureArray* groundTextureAlbs{ nullptr };
-TextureArray* groundTextureNrms{ nullptr };
-TextureArray* groundTextureMixs{ nullptr };
-TextureArray* grassColors{ nullptr };
+TexArrayP groundTextureAlbs{ nullptr };
+TexArrayP groundTextureNrms{ nullptr };
+TexArrayP groundTextureMixs{ nullptr };
+TexArrayP grassColors{ nullptr };
 
-std::shared_ptr<TextureArray> cloudImage;
-std::shared_ptr<Texture> starsImage, skyImage;
+TexArrayP cloudImage;
+TextureP starsImage, skyImage;
 
 static void UpdateGrass()
 {

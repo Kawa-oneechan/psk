@@ -17,23 +17,23 @@ void Player::LoadModel()
 {
 	if (!_model)
 	{
-		_model = std::make_shared<::Model>("player/model.fbx");
-		_hairModel = std::make_shared<::Model>(fmt::format("player/hair/{}/model.fbx", hairStyle));
+		_model = VFS::GetModel("player/model.fbx");
+		_hairModel = VFS::GetModel(fmt::format("player/hair/{}/model.fbx", hairStyle));
 	}
 
 	_model->SetVisibility(fmt::format("Nose{:02}__mNose", noseStyle), true);
 
 	if (Textures[0] == nullptr)
 	{
-		Textures[0] = new TextureArray(fmt::format("player/eyes/{}/eye*_alb.png", eyeStyle));
-		Textures[1] = new TextureArray(fmt::format("player/eyes/{}/eye*_nrm.png", eyeStyle));
-		Textures[2] = new TextureArray(fmt::format("player/eyes/{}/eye*_mix.png", eyeStyle));
+		Textures[0] = VFS::GetTextureArray(fmt::format("player/eyes/{}/eye*_alb.png", eyeStyle));
+		Textures[1] = VFS::GetTextureArray(fmt::format("player/eyes/{}/eye*_nrm.png", eyeStyle));
+		Textures[2] = VFS::GetTextureArray(fmt::format("player/eyes/{}/eye*_mix.png", eyeStyle));
 
-		Textures[3] = new TextureArray(fmt::format("player/mouth/{}/mouth*_alb.png", mouthStyle));
-		Textures[4] = new TextureArray(fmt::format("player/mouth/{}/mouth*_nrm.png", mouthStyle));
-		Textures[5] = new TextureArray(fmt::format("player/mouth/{}/mouth*_mix.png", mouthStyle));
+		Textures[3] = VFS::GetTextureArray(fmt::format("player/mouth/{}/mouth*_alb.png", mouthStyle));
+		Textures[4] = VFS::GetTextureArray(fmt::format("player/mouth/{}/mouth*_nrm.png", mouthStyle));
+		Textures[5] = VFS::GetTextureArray(fmt::format("player/mouth/{}/mouth*_mix.png", mouthStyle));
 
-		Textures[6] = new TextureArray("player/cheek*_alb.png");
+		Textures[6] = VFS::GetTextureArray("player/cheek*_alb.png");
 	}
 
 	for (int i = 0; i < NumClothesSlots; i++)
@@ -44,19 +44,19 @@ void Player::LoadModel()
 			auto& ci = _clothesItems[i];
 
 			cm = std::make_shared<::Model>(fmt::format("player/outfits/{}.fbx", ci->PlayerModel()));
-			ClothingTextures[(i * 4) + 0] = new TextureArray(fmt::format("{}/albedo*.png", ci->Path));
-			ClothingTextures[(i * 4) + 1] = new TextureArray(fmt::format("{}/normal*.png", ci->Path));
-			ClothingTextures[(i * 4) + 2] = new TextureArray(fmt::format("{}/mix*.png", ci->Path));
-			ClothingTextures[(i * 4) + 3] = new TextureArray(fmt::format("{}/opacity.png", ci->Path));
+			ClothingTextures[(i * 4) + 0] = VFS::GetTextureArray(fmt::format("{}/albedo*.png", ci->Path));
+			ClothingTextures[(i * 4) + 1] = VFS::GetTextureArray(fmt::format("{}/normal*.png", ci->Path));
+			ClothingTextures[(i * 4) + 2] = VFS::GetTextureArray(fmt::format("{}/mix*.png", ci->Path));
+			ClothingTextures[(i * 4) + 3] = VFS::GetTextureArray(fmt::format("{}/opacity.png", ci->Path));
 		}
 	}
 
 	if (!_clothesItems[8])
 	{
-		ClothingTextures[12] = new TextureArray("player/nosocks_alb.png");
-		ClothingTextures[13] = new TextureArray("fallback_nrm.png");
-		ClothingTextures[14] = new TextureArray("white.png");
-		ClothingTextures[15] = new TextureArray("white.png");
+		ClothingTextures[12] = VFS::GetTextureArray("player/nosocks_alb.png");
+		ClothingTextures[13] = VFS::GetTextureArray("fallback_nrm.png");
+		ClothingTextures[14] = VFS::GetTextureArray("white.png");
+		ClothingTextures[15] = VFS::GetTextureArray("white.png");
 	}
 	else
 	{

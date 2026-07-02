@@ -143,7 +143,7 @@ void VillagerHouse::Load()
 	{
 		VillagerP owner = nullptr;
 		owner = Database::Find<Villager>(Owner, villagers);
-		auto savedHouseFile = fmt::format("homes/{}.json", owner);
+		auto savedHouseFile = fmt::format("homes/{}.json", owner->ID);
 
 		ownerJson = VFS::ReadSaveJSON(savedHouseFile);
 		//Catch if this worked or not.

@@ -6,7 +6,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <stb_image.h>
-#include <format.h>
+#include <fmt/format.h>
 #include "Types.h"
 #include "Texture.h"
 #include "VFS.h"
@@ -28,9 +28,6 @@ glad_glVertexAttribIPointer(index, size, type, stride, reinterpret_cast<void*>(o
 #define glVertexAttribIPointer kawa_glVertexAttribIPointer
 
 #ifndef BECKETT_NO3DMODELS
-
-struct ufbx_mesh;
-class Shader;
 
 //Max amount of bones in a mesh
 static constexpr int MaxBones = 100;
@@ -83,9 +80,9 @@ public:
 		std::vector<unsigned int> indices;
 	public:
 		unsigned int VAO;
-		TextureArray* Textures[4];
+		TexArrayP Textures[4];
 		std::string Name;
-		Shader* Shader;
+		class Shader* Shader;
 		hash Hash, MatHash;
 		bool Visible;
 		int Layer;
@@ -93,8 +90,34 @@ public:
 		bool Opaque;
 		bool Billboard{ false };
 
-		Mesh(ufbx_mesh* mesh, const std::array<Bone, MaxBones>& bones, size_t boneCt);
+		Mesh(struct ufbx_mesh* mesh, const std::array<Bone, MaxBones>& bones, size_t boneCt);
 		const size_t Indices() const { return indices.size(); }
+	};
+
+
+	struct UfbxMisc
+	{
+		struct Light
+		{
+			glm::vec4 Position;
+			glm::vec4 Color;
+			std::string Name;
+			std::map<std::string, jsonValue> Properties;
+		};
+		struct Camera
+		{
+			glm::vec3 Position;
+			glm::vec3 Direction;
+			std::string Name;
+			std::map<std::string, jsonValue> Properties;
+		};
+		struct Empty
+		{
+			glm::vec3 Position;
+			glm::vec3 Direction;
+			std::string Name;
+			std::map<std::string, jsonValue> Properties;
+		};
 	};
 
 private:
@@ -104,6 +127,9 @@ private:
 
 public:
 	std::vector<Mesh> Meshes;
+	std::vector<UfbxMisc::Light> Lights;
+	std::vector<UfbxMisc::Camera> Cameras;
+	std::vector<UfbxMisc::Empty> Empties;
 	std::array<Model::Bone, MaxBones> Bones;
 	glm::mat4 finalBoneMatrices[MaxBones];
 	size_t BoneCt{ 0 };
@@ -114,9 +140,6 @@ public:
 
 	Model() = default;
 	explicit Model(const std::string& modelPath);
-#if 1
-	~Model(); 
-#endif
 
 	//Queues the model for drawing at the specified position and rotation. If the mesh argument is -1, the entire model is drawn.
 	void Draw(const glm::vec3& pos = glm::vec3(0), float yaw = 0, int mesh = -1);
@@ -159,35 +182,9 @@ namespace MeshBucket
 using ModelP = std::shared_ptr<Model>;
 using Armature = std::array<Model::Bone, MaxBones>;
 
-class UfbxMisc
+namespace VFS
 {
-public:
-	struct Light
-	{
-		glm::vec3 Position;
-		glm::vec4 Color;
-		std::string Name;
-		std::map<std::string, jsonValue> Properties;
-	};
-	struct Camera
-	{
-		glm::vec3 Position;
-		glm::vec3 Direction;
-		std::string Name;
-		std::map<std::string, jsonValue> Properties;
-	};
-	struct Empty
-	{
-		glm::vec3 Position;
-		glm::vec3 Direction;
-		std::string Name;
-		std::map<std::string, jsonValue> Properties;
-	};
-	std::vector<Light> Lights;
-	std::vector<Camera> Cameras;
-	std::vector<Empty> Empties;
-
-	explicit UfbxMisc(const std::string& modelPath);
-};
+	extern ModelP GetModel(const std::string& filename);
+}
 
 #endif

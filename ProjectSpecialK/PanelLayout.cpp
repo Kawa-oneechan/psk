@@ -5,6 +5,7 @@
 #include "engine/Console.h"
 #include "engine/SpriteRenderer.h"
 #include "engine/ShapeUtils.h"
+#include "engine/NineSlicer.h"
 #include "PanelLayout.h"
 #include "Game.h"
 #include "Utilities.h"
@@ -26,16 +27,16 @@ PanelLayout::PanelLayout(jsonValue& source)
 	{
 		for (const auto& t : src["textures"].as_object())
 		{
-			textures[t.first] = new Texture(t.second.as_string());
+			textures[t.first] = VFS::GetTexture(t.second.as_string());
 		}
 	}
 
-	if (src["polygons"].is_array())
+	if (src["polygons"].is_object())
 	{
-		for (const auto& p : src["polygons"].as_array())
+		for (const auto& p : src["polygons"].as_object())
 		{
-			auto& pArr = p.as_array();
-			auto poly = std::vector<glm::vec2>(pArr.size() + 1);
+			auto& pArr = p.second.as_array();
+			auto poly = polygon(pArr.size());
 			std::transform(pArr.cbegin(), pArr.cend(), poly.begin(),
 				[](const auto& point) { return GetJSONVec2(point); });
 
@@ -43,7 +44,7 @@ PanelLayout::PanelLayout(jsonValue& source)
 			if (poly[0] != poly[poly.size() - 1])
 				poly.emplace_back(glm::vec2(poly[0]));
 
-			polygons.emplace_back(poly);
+			polygons[p.first] = poly;
 		}
 	}
 
@@ -54,9 +55,10 @@ PanelLayout::PanelLayout(jsonValue& source)
 
 		panel->ID = GetJSONVal(pnl["id"], "");
 
-		panel->Polygon = -1;
+		panel->Polygon = nullptr;
 		panel->Shader = nullptr;
 		panel->Texture = nullptr;
+		panel->Sliced = false;
 
 		auto const& type = pnl["type"].as_string();
 		if (type == "image") panel->Type = Panel::Type::Image;
@@ -64,12 +66,18 @@ PanelLayout::PanelLayout(jsonValue& source)
 
 		if (panel->Type == Panel::Type::Image)
 		{
-			panel->Texture = pnl["texture"].is_string() ? textures[pnl["texture"].as_string()] : textures.begin()->second;
+			panel->Texture = pnl["texture"].is_string() ? textures[pnl["texture"].as_string()].get() : textures.begin()->second.get();
 			panel->Frame = GetJSONVal(pnl["frame"], 0);
-			panel->Polygon = pnl["polygon"].is_integer() ? pnl["polygon"].as_integer() : -1;
-			panel->Enabled = pnl["enabled"].is_boolean() ? pnl["enabled"].as_boolean() : panel->Polygon != -1;
+			panel->Polygon = pnl["polygon"].is_string() ? &polygons[pnl["polygon"].as_string()] : nullptr;
+			panel->Enabled = pnl["enabled"].is_boolean() ? pnl["enabled"].as_boolean() : panel->Polygon != nullptr;
 			panel->Shader = pnl["shader"].is_string() ? Shaders[pnl["shader"].as_string()] : nullptr;
 			panel->Size = GetJSONVal(pnl["size"], 100.0f);
+
+			if (pnl["panelSize"].is_array())
+			{
+				panel->Sliced = GetJSONBool(pnl["sliced"], false);
+				panel->PanelSize = GetJSONVec2(pnl["panelSize"]);
+			}
 		}
 		else if (panel->Type == Panel::Type::Text)
 		{
@@ -185,14 +193,6 @@ PanelLayout::PanelLayout(jsonValue& source)
 	animationTime = 0;
 }
 
-PanelLayout::~PanelLayout()
-{
-	for (auto const& t : textures)
-	{
-		delete t.second;
-	}
-}
-
 bool PanelLayout::Tick(float dt)
 {
 	auto apply = [&](AnimationBit& bit, float val)
@@ -216,6 +216,10 @@ bool PanelLayout::Tick(float dt)
 			prop = &substitute;
 		else if (bit.Property == "size")
 			prop = &(panel->Size);
+		else if (bit.Property == "xsize")
+			prop = &(panel->PanelSize.x);
+		else if (bit.Property == "ysize")
+			prop = &(panel->PanelSize.y);
 
 		if (prop)
 		{
@@ -265,7 +269,7 @@ bool PanelLayout::Tick(float dt)
 	//auto prevPoly = -1;
 	for (const auto& panel : panels)
 	{
-		if (panel->Polygon == -1)
+		if (panel->Polygon == nullptr)
 			continue;
 
 		//if (!panel->Enabled)
@@ -284,7 +288,7 @@ bool PanelLayout::Tick(float dt)
 			poly.clear();
 			auto const frame = panel->Texture->operator[](panel->Frame);
 			auto const size = glm::vec2(frame.z, frame.w);
-			auto& thisPoly = polygons[panel->Polygon];
+			auto thisPoly = *panel->Polygon;
 			poly.resize(thisPoly.size());
 			std::transform(thisPoly.cbegin(), thisPoly.cend(), poly.begin(),
 				[&](const auto& point) { return ((point * size) + Position + parentPos + panel->Position) * scale; });
@@ -337,7 +341,7 @@ void PanelLayout::Draw(float dt)
 		color.a = glm::clamp(Alpha * panel->Alpha, 0.0f, 1.0f);
 		if (color.a == 0)
 			continue;
-
+		
 		if (panel->Type == Panel::Type::Image && panel->Texture != nullptr)
 		{
 			auto texture = panel->Texture;
@@ -345,18 +349,34 @@ void PanelLayout::Draw(float dt)
 			auto shader = panel->Shader ? panel->Shader : (texture->channels > 1 ? Shaders["sprite"] : Shaders["red8"]);
 			auto finalPos = Position + parentPos + panel->Position;
 
-			Sprite::DrawSprite(
-				shader, *texture,
-				finalPos * scale,
-				glm::vec2(frame.z, frame.w) * (panel->Size / 100.0f) * scale,
-				frame,
-				panel->Angle,
-				color
-			);
-
-			if (debugPanelLayoutPolygons && panel->Polygon != -1)
+			if (panel->Sliced)
 			{
-				auto poly = polygons[panel->Polygon];
+				NineSlicer::Draw(
+					*texture,
+					finalPos  * scale,
+					panel->PanelSize * scale,
+					glm::round(scale),
+					color
+				);
+			}
+			else
+			{
+				auto ps = glm::vec2(frame.z, frame.w);
+				if (panel->PanelSize.x + panel->PanelSize.y > 0.0f)
+					ps = panel->PanelSize;
+				Sprite::DrawSprite(
+					shader, *texture,
+					finalPos * scale,
+					ps * (panel->Size / 100.0f) * scale,
+					frame,
+					panel->Angle,
+					color
+				);
+			}
+
+			if (debugPanelLayoutPolygons && panel->Polygon != nullptr)
+			{
+				auto poly = *panel->Polygon;
 				const auto plen = poly.size();
 				const auto size = glm::vec2(frame.z, frame.w);
 				for (auto i = 0; i < plen; i++)
