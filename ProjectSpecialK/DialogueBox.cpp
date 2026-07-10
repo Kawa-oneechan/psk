@@ -6,8 +6,8 @@
 #include "engine/Console.h"
 #include "engine/SpriteRenderer.h"
 #include "engine/Audio.h"
+#include "engine/Shader.h"
 #include "DialogueBox.h"
-#include "PanelLayout.h"
 #include "Types.h"
 #include "Game.h"
 

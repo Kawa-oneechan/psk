@@ -4,6 +4,7 @@
 #include "engine/Random.h"
 #include "engine/Framebuffer.h"
 #include "engine/Console.h"
+#include "engine/Shader.h"
 #include "Types.h"
 #include "Map.h"
 #include "Game.h"

@@ -2,14 +2,13 @@
 
 #include <functional>
 #include <vector>
+#include <map>
 #include <glm/glm.hpp>
-#include "engine/Tickable.h"
-#include "engine/Shader.h"
-#include "engine/Texture.h"
-#include "engine/JsonUtils.h"
-#include "engine/Types.h"
+#include "Tickable.h"
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/easing.hpp>
+
+class Audio;
 
 class PanelLayout : public Tickable
 {
@@ -36,7 +35,9 @@ class PanelLayout : public Tickable
 		struct Panel* Parent;
 		bool Enabled;
 		bool Sliced;
+		bool Percents;
 		glm::vec2 PanelSize;
+		glm::vec2 Origin;
 
 		void SetFrame(const std::string& name);
 	};
@@ -53,6 +54,7 @@ class PanelLayout : public Tickable
 	struct Animation
 	{
 		std::vector<AnimationBit> Bits;
+		std::map<float, std::shared_ptr<Audio>> SoundCues;
 		std::string Next;
 	};
 
@@ -63,6 +65,7 @@ private:
 
 	bool hasAnimations{ false };
 	float animationTime{ 0.0f };
+	float lastSoundCue{ 0.0f };
 	std::string currentAnimation;
 	std::map<std::string, Animation> animations;
 

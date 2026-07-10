@@ -3,6 +3,7 @@
 #include "engine/Framebuffer.h"
 #include "engine/Console.h"
 #include "engine/Game.h"
+#include "engine/Shader.h"
 #include "Types.h"
 #include "Game.h"
 #include "DialogueBox.h"

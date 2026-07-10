@@ -1,11 +1,11 @@
 #pragma once
 
 #include "engine/Tickable.h"
-#include "Iris.h"
-#include "PanelLayout.h"
-#include "OptionsMenu.h"
+#include "engine/PanelLayout.h"
 #include "engine/DropLabel.h"
 #include "engine/NineSlicer.h"
+#include "Iris.h"
+#include "OptionsMenu.h"
 
 class TitleScreen : public Tickable
 {

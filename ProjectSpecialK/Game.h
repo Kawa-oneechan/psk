@@ -7,9 +7,6 @@
 #include "engine/Utilities.h"
 #include "engine/Tickable.h"
 
-extern float scale;
-extern int width, height;
-
 #define BECKETT_GAMENAME "Project Special K"
 #define BECKETT_VERSIONJOKE "Love Shine a Light"
 #define BECKETT_SCREENWIDTH 1920
@@ -51,6 +48,10 @@ extern int width, height;
 //If defined, uses vertex pulling to handle sprite quads instead of a full VBO.
 #define BECKETT_PULLEDPORK
 
+//If defined, allows "#" in JSON string values to denote a named constant.
+//Values are listed in /constants.json and can be bools, numbers, or strings.
+#define BECKETT_JSONCONSTANTS
+
 constexpr int MaxLights = 8;
 
 struct Light
@@ -87,6 +88,10 @@ struct CommonUniforms
 	glm::vec4 PlayerHair;
 	glm::vec4 PlayerHairHi;
 };
+
+extern float scale;
+extern int width, height;
+extern Texture* whiteRect;
 extern CommonUniforms commonUniforms;
 
 //BJTS functions that actually change the string content.

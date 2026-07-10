@@ -28,6 +28,14 @@ extern jsonValue GetJSONVec(const glm::vec4& vec);
 //Returns a JSON array initialized from a vec4, its values cast to int.
 extern jsonValue GetJSONVecI(const glm::vec4& vec);
 
+extern int GetJSONVal(const jsonValue& jsonVal, int default);
+
+extern float GetJSONVal(const jsonValue& jsonVal, float default);
+
+extern const std::string& GetJSONVal(const jsonValue& jsonVal, const std::string& default);
+
+extern bool GetJSONBool(const jsonValue& jsonVal, bool default);
+
 extern void GetAtlas(SpriteAtlas &ret, const std::string& jsonFile);
 
 extern void GetColorMap(ColorMap &ret, const std::string& jsonFile);

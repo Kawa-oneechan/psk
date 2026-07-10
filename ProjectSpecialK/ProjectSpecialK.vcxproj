@@ -157,6 +157,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="engine\NineSlicer.cpp" />
+    <ClCompile Include="engine\PanelLayout.cpp" />
     <ClCompile Include="engine\PlatformWin32.cpp" />
     <ClCompile Include="engine\ShapeUtils.cpp" />
     <ClCompile Include="engine\Tickable.cpp" />
@@ -200,7 +201,6 @@
     <ClCompile Include="NameableThing.cpp" />
     <ClCompile Include="NookCode.cpp" />
     <ClCompile Include="OptionsMenu.cpp" />
-    <ClCompile Include="PanelLayout.cpp" />
     <ClCompile Include="Person.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Scoring.cpp" />
@@ -281,6 +281,7 @@
     <ClInclude Include="engine\JsonUtils.h" />
     <ClInclude Include="engine\Model.h" />
     <ClInclude Include="engine\NineSlicer.h" />
+    <ClInclude Include="engine\PanelLayout.h" />
     <ClInclude Include="engine\Platform.h" />
     <ClInclude Include="engine\Random.h" />
     <ClInclude Include="engine\Shader.h" />
@@ -307,7 +308,6 @@
     <ClInclude Include="NameableThing.h" />
     <ClInclude Include="NookCode.h" />
     <ClInclude Include="OptionsMenu.h" />
-    <ClInclude Include="PanelLayout.h" />
     <ClInclude Include="Person.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Scoring.h" />
