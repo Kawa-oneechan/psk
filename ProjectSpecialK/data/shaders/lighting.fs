@@ -1,6 +1,7 @@
 //---Lighting---
 
 #define LIGHTOFF 0.004
+#define TOONBANDS 4
 
 const float specPower = 4.0; //32.0;
 
@@ -15,14 +16,7 @@ vec3 diffuseLight(vec3 normal, vec3 litPos, vec3 litCol)
 	float diff = max(dot(normal, litDir), 0.0);
 
 	if (Toon)
-	{
-		//Toon shading for lol
-			 if (diff < 0.15) diff = 0.15;
-		else if (diff < 0.20) diff = 0.20;
-		else if (diff < 0.50) diff = 0.50;
-		else if (diff < 0.90) diff = 0.90;
-		else             diff = 1.00;
-	}
+		diff = floor(pow(diff, 0.5) * TOONBANDS) / (TOONBANDS - 1.0);
 
 	return diff * litCol;
 }
