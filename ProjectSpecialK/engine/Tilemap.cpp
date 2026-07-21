@@ -307,10 +307,12 @@ bool Tilemap::Tick(float dt)
 	return Tickable2D::Tick(dt);
 }
 
+/*
 void Tilemap::Draw(float dt)
 {
 	Tickable2D::Draw(dt);
 }
+*/
 
 std::shared_ptr<Tickable> Tilemap::GetLayer(size_t i)
 {

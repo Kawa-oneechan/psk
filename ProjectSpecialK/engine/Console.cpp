@@ -1,5 +1,4 @@
 #include <glad/glad.h>
-#include <sol.hpp>
 
 #include "Console.h"
 #include "TextField.h"
@@ -20,7 +19,6 @@
 #endif
 extern "C" { const char* glfwGetVersionString(void); }
 
-extern sol::state Sol;
 extern Texture* whiteRect;
 
 extern bool cheatsEnabled;
@@ -138,13 +136,15 @@ bool Console::Execute(const std::string& str)
 {
 	auto first = std::string(str);
 	auto second = std::string("");
+	auto fullSec = std::string("");
 	auto haveArgs = false;
 	{
 		auto space = first.find(' ');
 		if (space != std::string::npos)
 		{
 			first = first.substr(0, space);
-			second = str.substr(space);
+			second = str.substr(space + 1);
+			fullSec = str.substr(space + 1);
 			StripSpaces(second);
 			haveArgs = !second.empty();
 		}
@@ -183,6 +183,13 @@ bool Console::Execute(const std::string& str)
 	{
 		if (cc.name == first)
 		{
+			if (cc.takesString)
+			{
+				auto a = json5pp::array({ fullSec });
+				cc.act(a.as_array());
+				return true;
+			}
+
 			try
 			{
 				cc.act(json5pp::parse5(fmt::format("[ {} ]", second)).as_array());
@@ -204,19 +211,6 @@ bool Console::Execute(const std::string& str)
 				return false;
 			}
 		}
-	}
-
-	try
-	{
-		Sol.script(str);
-	}
-	catch (sol::error& e)
-	{
-		std::string what = e.what();
-		if (what.find("attempt to yield from outside a coroutine") != std::string::npos)
-			return true; //Accept this silently.
-		else
-			conprint(1, "Error: {}", what);
 	}
 	return false;
 }
@@ -391,7 +385,7 @@ void Console::RegisterCVar(const std::string& name, CVar::Type type, void* targe
 	cvars.push_back(cv);
 }
 
-void Console::RegisterCCmd(const std::string& name, std::function<void(const jsonArray& args)> act)
+void Console::RegisterCCmd(const std::string& name, std::function<void(const jsonArray& args)> act, bool takesString)
 {
 	auto it = std::find_if(ccmds.begin(), ccmds.end(), [name](const auto& e)
 	{
@@ -405,6 +399,7 @@ void Console::RegisterCCmd(const std::string& name, std::function<void(const jso
 	CCmd cc;
 	cc.name = name;
 	cc.act = act;
+	cc.takesString = takesString;
 	ccmds.push_back(cc);
 }
 

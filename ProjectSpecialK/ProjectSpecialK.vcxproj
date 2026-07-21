@@ -205,7 +205,7 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Scoring.cpp" />
     <ClCompile Include="Sequence.cpp" />
-    <ClCompile Include="SolBinds.cpp" />
+    <ClCompile Include="Scripting.cpp" />
     <ClCompile Include="Species.cpp" />
     <ClCompile Include="support\format.cc" />
     <ClCompile Include="support\glad\glad.c">
@@ -284,6 +284,7 @@
     <ClInclude Include="engine\PanelLayout.h" />
     <ClInclude Include="engine\Platform.h" />
     <ClInclude Include="engine\Random.h" />
+    <ClInclude Include="engine\Scripting.h" />
     <ClInclude Include="engine\Shader.h" />
     <ClInclude Include="engine\ShapeUtils.h" />
     <ClInclude Include="engine\SpriteRenderer.h" />

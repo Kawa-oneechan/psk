@@ -29,7 +29,6 @@ class ScriptRunner : public Tickable
 {
 public:
 	std::shared_ptr<sol::coroutine> currentCoro;
-	sol::state myState;
 	ScriptRunner(const std::string& entryPoint, const std::string& script, bool* mutex);
 	~ScriptRunner() override;
 	bool Runnable() const { return currentCoro->runnable(); }

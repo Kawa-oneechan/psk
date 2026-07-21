@@ -21,7 +21,7 @@ PanelLayout::PanelLayout(jsonValue& source)
 
 	auto const& panelsSet = src["panels"].as_array();
 
-	Position = src["position"].is_array() ? GetJSONVec2(src["position"]) : glm::vec2(0);
+	Position = GetJSONVal(src["position"], glm::vec2(0));
 	Alpha = GetJSONVal(src["alpha"], 1.0f);
 	Origin = src["origin"].is_string() ? StringToEnum<CornerOrigin>(src["origin"].as_string(), { "topleft", "topright", "bottomleft", "bottomright" }) : CornerOrigin::TopLeft;
 
@@ -104,8 +104,8 @@ PanelLayout::PanelLayout(jsonValue& source)
 
 		{
 			panel->Percents = GetJSONBool(pnl["percents"], false);
-			panel->Position = pnl["position"].is_array() ? GetJSONVec2(pnl["position"]) : glm::vec2(0);
-			panel->Origin = pnl["origin"].is_array() ? GetJSONVec2(pnl["origin"]) : (panel->Percents ? glm::vec2(0.5) : glm::vec2(0.0));
+			panel->Position = GetJSONVal(pnl["position"], glm::vec2(0));
+			panel->Origin = GetJSONVal(pnl["origin"], glm::vec2(panel->Percents ? 0.5f : 0.0f));
 		}
 
 		panel->Angle = GetJSONVal(pnl["angle"], 0.0f);

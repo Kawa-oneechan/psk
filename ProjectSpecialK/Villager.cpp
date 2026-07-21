@@ -14,6 +14,8 @@
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/rotate_vector.hpp>
 
+namespace Scripting { extern sol::state Sol; }
+
 static SpeciesP specialDummy;
 
 //TODO: special characters need support for more than just tops and accessories.
@@ -539,8 +541,8 @@ void Villager::PickClothing()
 		auto script = VFS::ReadString(fmt::format("{}/spawn.lua", Path));
 		if (!script.empty())
 		{
-			Sol["currentVillager"] = Database::Find(Hash, villagers);
-			Sol.do_string(script);
+			Scripting::Sol["currentVillager"] = Database::Find(Hash, villagers);
+			Scripting::Sol.do_string(script);
 		}
 		else
 			PickSNPCOutfit(0);
@@ -687,16 +689,11 @@ void Villager::TestScript()
 }
 
 //TODO: split this into its own files
-namespace SolBinds
-{
-	extern void Setup(sol::state& sol);
-}
 ScriptRunner::ScriptRunner(const std::string& entryPoint, const std::string& script, bool* mutex)
 {
-	SolBinds::Setup(myState);
 	Mutex = mutex;
-	myState.do_string(script);
-	currentCoro = std::make_shared<sol::coroutine>(myState[entryPoint]);
+	Scripting::Sol.do_string(script);
+	currentCoro = std::make_shared<sol::coroutine>(Scripting::Sol[entryPoint]);
 }
 ScriptRunner::~ScriptRunner()
 {

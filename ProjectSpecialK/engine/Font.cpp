@@ -245,15 +245,12 @@ static handleBJTSresult handleBJTS(const std::string& text, size_t& i, rune ch, 
 #endif
 
 
-TrueTypeFont::TrueTypeFont(const std::string& font, float size)
+TrueTypeFont::TrueTypeFont(const std::string& file, float size) : file(file), size(size)
 {
 	if (!initialized) Initialize();
 
 	cdata = new stbtt_bakedchar[0x10000]{ 0 };
 	fontTextures = new Texture*[256]{ 0 };
-
-	this->file = font;
-	this->size = size;
 }
 
 TrueTypeFont::TrueTypeFont(const jsonValue& json)
@@ -455,7 +452,7 @@ glm::vec2 TrueTypeFont::Measure(const std::string& text, float size, bool raw)
 }
 
 
-BitmapFont::BitmapFont(const std::string& font, int dummy) : file(font)
+BitmapFont::BitmapFont(const std::string& file, int dummy) : file(file)
 {
 	(void)(dummy);
 	if (!initialized) Initialize();

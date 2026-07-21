@@ -35,9 +35,10 @@ Framebuffer* postFxBuffer;
 extern bool botherColliding;
 bool showPos = false;
 
-namespace SolBinds
+namespace Scripting
 {
-	extern void Setup(sol::state& sol);
+	extern void Setup();
+	extern sol::state Sol;
 }
 
 namespace UI
@@ -74,7 +75,7 @@ void Game::Initialize()
 {
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 2);
 
-	SolBinds::Setup(Sol);
+	Scripting::Setup();
 
 
 	commonUniforms.Fresnel = true;
@@ -96,7 +97,7 @@ void Game::Initialize()
 	-- start();
 
 	)SOL";
-	Sol.do_string(testScript);
+	Scripting::Sol.do_string(testScript);
 
 
 	{

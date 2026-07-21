@@ -5,9 +5,6 @@
 #include "engine/Shader.h"
 #include "Game.h"
 #include "Player.h"
-#include <sol.hpp>
-
-extern sol::state Sol;
 
 extern bool debugPanelLayoutPolygons;
 extern bool debugRenderPanelLayouts;

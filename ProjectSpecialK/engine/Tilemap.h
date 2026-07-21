@@ -77,7 +77,7 @@ public:
 	float Scale{ 1.0f };
 
 	explicit Tilemap(const std::string& source);
-	void Draw(float) override;
+	//void Draw(float) override;
 	bool Tick(float) override;
 
 	//std::shared_ptr<Tickable2D> operator[](size_t i) const; // cppcheck-suppress duplInheritedMember

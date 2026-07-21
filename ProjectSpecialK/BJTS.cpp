@@ -9,7 +9,11 @@
 #include "Utilities.h"
 #include "Database.h"
 
+#ifndef BECKETT_NOBJTS
+
 extern int articlePlease, capitalizePlease;
+
+namespace Scripting { extern sol::state Sol; }
 
 static const char* bindingNames[] = {
 	"up", "down", "left", "right",
@@ -31,7 +35,7 @@ static inline int NumberValue(const std::string& value)
 	}
 	catch (std::invalid_argument&)
 	{
-		auto v = Sol.get_or<int>(value, 0xDEADBEEF);
+		auto v = Scripting::Sol.get_or<int>(value, 0xDEADBEEF);
 		if (v == 0xDEADBEEF)
 		{
 			//Not a global. Try to grab a local.
@@ -39,7 +43,7 @@ static inline int NumberValue(const std::string& value)
 			while (true)
 			{
 				std::tuple<std::string, int> res;
-				res = Sol["getlocal"](2, i);
+				res = Scripting::Sol["getlocal"](2, i);
 				auto k = std::get<0>(res);
 				v = std::get<1>(res);
 				i++;
@@ -295,5 +299,4 @@ const std::map<std::string, BJTSFunc> bjtsPhase1 = {
 	{ "item", &bjtsItemName },
 };
 
-//BJTS functions loaded from Lua scripts.
-std::map<std::string, std::string> bjtsPhase1X;
+#endif

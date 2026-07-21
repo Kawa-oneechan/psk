@@ -1,12 +1,12 @@
 #include <string>
 #include <fmt/format.h>
-#include <sol.hpp>
 #include "Text.h"
 #include "TextUtils.h"
+#ifdef BECKETT_SCRIPTEDTEXT
+#include "Scripting.h"
+#endif
 
 using namespace std::literals;
-
-extern sol::state Sol;
 
 Language gameLang = Language::USen;
 
@@ -75,8 +75,12 @@ std::string Text::Entry::get()
 {
 	if (condition.size())
 	{
-		bool result = Sol.script("return (" + condition + ")");
+#ifdef BECKETT_SCRIPTEDTEXT
+		bool result = Scripting::Conditional(condition);
 		return Get(result ? ifTrue : ifElse);
+#else
+		return ifTrue;
+#endif
 	}
 
 	return text;

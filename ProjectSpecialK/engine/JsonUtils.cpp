@@ -189,7 +189,7 @@ int GetJSONVal(const jsonValue& jsonVal, int default)
 {
 	if (jsonVal.is_integer())
 		return jsonVal.as_integer();
-	if (jsonVal.is_string())
+	else if (jsonVal.is_string())
 	{
 		auto str = jsonVal.as_string();
 #ifdef BECKETT_JSONCONSTANTS
@@ -199,7 +199,10 @@ int GetJSONVal(const jsonValue& jsonVal, int default)
 #endif
 			throw std::exception("Found string in JSON where int was expected.");
 	}
-	return default;
+	else if (jsonVal.is_null())
+		return default;
+	else
+		throw std::exception("Expected an int in JSON.");
 }
 
 float GetJSONVal(const jsonValue& jsonVal, float default)
@@ -216,7 +219,10 @@ float GetJSONVal(const jsonValue& jsonVal, float default)
 #endif
 			throw std::exception("Found string in JSON where number was expected.");
 	}
-	return default;
+	else if (jsonVal.is_null())
+		return default;
+	else
+		throw std::exception("Expected a float in JSON.");
 }
 
 const std::string& GetJSONVal(const jsonValue& jsonVal, const std::string& default)
@@ -235,6 +241,66 @@ const std::string& GetJSONVal(const jsonValue& jsonVal, const std::string& defau
 		return default;
 	else
 		throw std::exception("Found non-string in JSON where string was expected.");
+}
+
+glm::vec2 GetJSONVal(const jsonValue& jsonVal, glm::vec2 default)
+{
+	if (jsonVal.is_array())
+		return GetJSONVec2(jsonVal);
+	if (jsonVal.is_string())
+	{
+		auto str = jsonVal.as_string();
+#ifdef BECKETT_JSONCONSTANTS
+		if (str[0] == '#')
+			return GetJSONVal(getConstant(str.substr(1)), default);
+		else
+#endif
+			throw std::exception("Found string in JSON where two-value array was expected.");
+	}
+	else if (jsonVal.is_null())
+		return default;
+	else
+		throw std::exception("Expected a two-value array in JSON.");
+}
+
+glm::vec3 GetJSONVal(const jsonValue& jsonVal, glm::vec3 default)
+{
+	if (jsonVal.is_array())
+		return GetJSONVec3(jsonVal);
+	if (jsonVal.is_string())
+	{
+		auto str = jsonVal.as_string();
+#ifdef BECKETT_JSONCONSTANTS
+		if (str[0] == '#')
+			return GetJSONVal(getConstant(str.substr(1)), default);
+		else
+#endif
+			throw std::exception("Found string in JSON where three-value array was expected.");
+	}
+	else if (jsonVal.is_null())
+		return default;
+	else
+		throw std::exception("Expected a three-value array in JSON.");
+}
+
+glm::vec4 GetJSONVal(const jsonValue& jsonVal, glm::vec4 default)
+{
+	if (jsonVal.is_array())
+		return GetJSONVec4(jsonVal);
+	if (jsonVal.is_string())
+	{
+		auto str = jsonVal.as_string();
+#ifdef BECKETT_JSONCONSTANTS
+		if (str[0] == '#')
+			return GetJSONVal(getConstant(str.substr(1)), default);
+		else
+#endif
+			throw std::exception("Found string in JSON where three-value array was expected.");
+	}
+	else if (jsonVal.is_null())
+		return default;
+	else
+		throw std::exception("Expected a four-value array in JSON.");
 }
 
 bool GetJSONBool(const jsonValue& jsonVal, bool default)

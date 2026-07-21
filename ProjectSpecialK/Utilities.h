@@ -42,7 +42,4 @@ extern std::string Qualify(const std::string& id, const std::string& ns);
 //Removes the frontmost namespace from an ID.
 extern std::string UnQualify(const std::string& id);
 
-//Shows a loading screen while running another thread.
-extern void ThreadedLoader(std::function<void(float*)> loader);
-
 extern Tickable root;

@@ -26,5 +26,3 @@ namespace UI
 };
 
 extern Texture* whiteRect;
-
-extern sol::state Sol;

@@ -1,6 +1,7 @@
 #include "engine/Console.h"
 #include "engine/Random.h"
 #include "engine/CrcUtils.h"
+#include "engine/CrcUtils.h"
 #include "Types.h"
 #include "Database.h"
 #include "DialogueBox.h"
@@ -9,9 +10,13 @@
 #include "Utilities.h"
 #include "NookCode.h"
 
-namespace SolBinds
+namespace Scripting
 {
-	void Setup(sol::state& Sol)
+	sol::state Sol;
+
+	static void CCmdLua(const jsonArray& args);
+
+	void Setup()
 	{
 		Sol.open_libraries(sol::lib::base, sol::lib::coroutine, sol::lib::string, sol::lib::math, sol::lib::debug);
 
@@ -128,7 +133,7 @@ namespace SolBinds
 			console->Close();
 		};
 
-		Sol["decodeNookCode"] = [&Sol](const std::string& code)
+		Sol["decodeNookCode"] = [&](const std::string& code)
 		{
 			hash itemHash;
 			int variant, pattern;
@@ -204,5 +209,36 @@ namespace SolBinds
 				return (VillagerP)nullptr;
 			return Database::Find(potentials[Random::GetInt((int)potentials.size())], villagers);
 		};
+
+		console->RegisterCCmd("lua", CCmdLua, true);
+	}
+
+	bool Conditional(const std::string& snippet)
+	{
+		return Sol.script(fmt::format("return ({})", snippet));
+	}
+
+	std::string BJTS(const std::string& func, const std::vector<std::string> bjts)
+	{
+		Sol["bjts"] = bjts;
+		auto ret = Sol.script(func).get<std::string>();
+		Sol["bjts"] = nullptr;
+		return ret;
+	}
+
+	static void CCmdLua(const jsonArray& args)
+	{
+		try
+		{
+			Sol.script(args[0].as_string());
+		}
+		catch (sol::error& e)
+		{
+			std::string what = e.what();
+			if (what.find("attempt to yield from outside a coroutine") != std::string::npos)
+				return; //Accept this silently.
+			else
+				conprint(1, "Error: {}", what);
+		}
 	}
 }

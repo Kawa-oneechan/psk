@@ -2,27 +2,15 @@
 #include <iostream>
 #include <sstream>
 #include <string>
-#include <sol.hpp>
 #include "VFS.h"
 #include "Platform.h"
 #include "TextUtils.h"
 #include "InputsMap.h"
 #include "Console.h"
 #include "../Game.h"
-
-extern sol::state Sol;
-
-static const char* bindingNames[] = {
-	"up", "down", "left", "right",
-	"accept", "back", "pageup", "pagedown",
-	"walkn", "walkw", "walks", "walke",
-	"interact", "pickup",
-	"cameracw", "cameraccw", "cameraup", "cameradown",
-	"inventory", "map", "react",
-	"hotbar1", "hotbar2", "hotbar3", "hotbar4", "hotbar5",
-	"hotbar6", "hotbar7", "hotbar8", "hotbar9", "hotbar10",
-	"console"
-};
+#ifdef BECKETT_SCRIPTEDTEXT
+#include "Scripting.h"
+#endif
 
 std::tuple<rune, size_t> GetChar(const std::string& what, size_t where)
 {
@@ -193,6 +181,10 @@ void ReplaceAll(std::string& data, const std::string& find, const std::string& r
 }
 
 #ifndef BECKETT_NOBJTS
+#ifdef BECKETT_SCRIPTEDTEXT
+std::map<std::string, std::string> bjtsPhase1X;
+#endif
+
 std::string StripBJTS(const std::string& data)
 {
 	std::string ret = data;
@@ -207,6 +199,7 @@ std::string StripBJTS(const std::string& data)
 
 std::string PreprocessBJTS(const std::string& data)
 {
+#ifdef BECKETT_SCRIPTEDTEXT
 	if (bjtsPhase1X.empty())
 	{
 		auto extensions = VFS::ReadJSON("bjts/content.json");
@@ -237,6 +230,7 @@ std::string PreprocessBJTS(const std::string& data)
 			}
 		}
 	}
+#endif
 
 	auto ret = std::string(data);
 	for (size_t i = 0; i < ret.length(); i++)
@@ -259,17 +253,18 @@ std::string PreprocessBJTS(const std::string& data)
 				//std::invoke(func->second, bjts, (int)bjtsStart - 1, (int)(bjtsEnd - bjtsStart) + 2);
 				i = (size_t)-1; //-1 because we may have subbed in a new tag.
 			}
+#ifdef BECKETT_SCRIPTEDTEXT
 			else
 			{
 				//Is it an extension?
 				auto func2 = bjtsPhase1X.find(bjts[0]);
 				if (func2 != bjtsPhase1X.end())
 				{
-					Sol.set("bjts", bjts);
-					ret.replace(start, len, Sol.script(func2->second).get<std::string>());
+					ret.replace(start, len, Scripting::BJTS(func2->second, bjts));
 					i = bjtsStart;
 				}
 			}
+#endif
 		}
 		else
 			break;

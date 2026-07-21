@@ -3,7 +3,6 @@
 #include <glad/glad.h>
 #include <glfw/glfw3.h>
 #include <glm/gtc/matrix_transform.hpp>
-#include <sol.hpp>
 #include "Platform.h"
 #include "Tickable.h"
 #include "Audio.h"
@@ -39,7 +38,6 @@ bool useOrthographic = false;
 bool Game::ShouldClose{ false };
 
 GLFWwindow* window;
-sol::state Sol;
 
 Texture* whiteRect = nullptr;
 CursorP cursor = nullptr;
