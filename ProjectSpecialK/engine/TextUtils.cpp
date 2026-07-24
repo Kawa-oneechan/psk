@@ -1,8 +1,4 @@
-﻿#include <ctype.h>
-#include <iostream>
-#include <sstream>
-#include <string>
-#include "VFS.h"
+﻿#include "VFS.h"
 #include "Platform.h"
 #include "TextUtils.h"
 #include "InputsMap.h"

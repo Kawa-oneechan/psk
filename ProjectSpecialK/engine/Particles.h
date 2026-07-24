@@ -1,5 +1,6 @@
 #pragma once
 #include <functional>
+#include <array>
 #include "Tickable.h"
 #include "Types.h"
 

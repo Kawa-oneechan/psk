@@ -93,8 +93,7 @@ public:
 		Mesh(struct ufbx_mesh* mesh, const std::array<Bone, MaxBones>& bones, size_t boneCt);
 		const size_t Indices() const { return indices.size(); }
 	};
-
-
+	
 	struct UfbxMisc
 	{
 		struct Light

@@ -93,7 +93,6 @@ Console::Console() : hardcopy(std::ofstream("console.log", std::ios::trunc))
 	RegisterCVar("r_fov", CVar::Type::Float, &fieldOfView, false, 10, 160, recalcProj);
 	RegisterCVar("r_nearz", CVar::Type::Float, &nearPlane, false, -1, 10, recalcProj);
 	RegisterCVar("r_farz", CVar::Type::Float, &farPlane, false, 1, 1000, recalcProj);
-	Game::RegisterConsole(this);
 }
 
 void Console::Print(int color, const std::string& str)

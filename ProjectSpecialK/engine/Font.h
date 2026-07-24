@@ -13,6 +13,7 @@ glm::vec2 MeasureText(int font, const std::string& text, float size, bool raw = 
 class BeckettFont
 {
 public:
+	virtual ~BeckettFont() = default;
 	virtual void Draw(const std::string& text, glm::vec2 position, const glm::vec4& color = glm::vec4(1), float size = 100, float angle = 0.0f, bool raw = false) = 0;
 	virtual glm::vec2 Measure(const std::string& text, float size, bool raw = false) = 0;
 };
@@ -33,7 +34,7 @@ private:
 public:
 	TrueTypeFont(const std::string& file, float size);
 	explicit TrueTypeFont(const jsonValue& json);
-	~TrueTypeFont();
+	~TrueTypeFont() override;
 
 	virtual void Draw(const std::string& text, glm::vec2 position, const glm::vec4& color = glm::vec4(1), float size = 100, float angle = 0.0f, bool raw = false) override;
 	virtual glm::vec2 Measure(const std::string& text, float size, bool raw = false) override;
@@ -61,7 +62,7 @@ private:
 public:
 	BitmapFont(const std::string& file, int dummy);
 	explicit BitmapFont(const jsonValue& json);
-	~BitmapFont();
+	~BitmapFont() override;
 
 	virtual void Draw(const std::string& text, glm::vec2 position, const glm::vec4& color = glm::vec4(1), float size = 100, float angle = 0.0f, bool raw = false) override;
 	virtual glm::vec2 Measure(const std::string& text, float size, bool raw = false) override;

@@ -77,9 +77,9 @@ static glm::vec3 jsonToGlmVec3(const jsonValue& val)
 	return glm::vec3(arr[0].as_number(), arr[1].as_number(), arr[2].as_number());
 }
 
-static TexArrayP fallback{ nullptr }; //{ "fallback.png" };
-static TexArrayP fallbackNormal{ nullptr }; // { "fallback_nrm.png" };
-static TexArrayP white{ nullptr }; //{ "white.png" };
+static TexArrayP fallback{ nullptr };
+static TexArrayP fallbackNormal{ nullptr };
+static TexArrayP white{ nullptr };
 
 Model::Model(const std::string& modelPath) : file(modelPath)
 {
@@ -208,7 +208,10 @@ Model::Model(const std::string& modelPath) : file(modelPath)
 
 			if (node->mesh->materials.count > 0)
 			{
+				//We only grab the one. Fuck you.
 				const auto& m1 = node->mesh->materials[0]->name.data;
+				m.MatHash = GetCRC(m1);
+
 				auto mmObj = matMap.as_object();
 				auto it = std::find_if(mmObj.cbegin(), mmObj.cend(), [m1](auto e)
 				{
@@ -252,10 +255,10 @@ Model::Model(const std::string& modelPath) : file(modelPath)
 						m.Textures[2]->SetFilter(GL_NEAREST);
 						m.Textures[3]->SetFilter(GL_NEAREST);
 					}
-					debprint(0, "* #{}: {} > {}", matCt, node->name.data, m1);
+					debprint(0, "* #{}: {} > {}", matCt, m.Name, m1);
 				}
 				else
-					debprint(0, "* #{}: {} > {} (unmapped)", matCt, node->name.data, m1);
+					debprint(0, "* #{}: {} > {} (unmapped)", matCt, m.Name, m1);
 				matCt++;
 			}
 			Meshes.emplace_back(m);

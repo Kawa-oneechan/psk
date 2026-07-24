@@ -545,6 +545,7 @@ int main(int argc, char** argv)
 	}
 
 	console = new Console();
+	Game::RegisterConsole(console);
 	try
 	{
 		VFS::Initialize();
