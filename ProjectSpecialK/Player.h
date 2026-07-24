@@ -17,8 +17,8 @@ private:
 
 	unsigned char _flags[255]{ 0 };
 
-	int findItemSlot(InventoryItemP target);
-	int findStorageSlot(InventoryItemP target);
+	int findItemSlot(InventoryItemP target) const;
+	int findStorageSlot(InventoryItemP target) const;
 
 	int eyeStyle{ 0 }, mouthStyle{ 0 }, cheeksStyle{ 2 }, noseStyle{ 1 }, hairStyle{ 0 };
 	bool stung{ false };
@@ -42,7 +42,7 @@ public:
 
 	void LoadModel();
 	ModelP Model();
-	std::string Birthday();
+	std::string Birthday() const;
 	
 	void Draw(float dt) override;
 	bool Tick(float dt) override;
@@ -60,10 +60,12 @@ public:
 	//Removes an item from the inventory entirely.
 	bool RemoveItem(InventoryItemP item);
 	//Takes one item from a stack. If it's not stackable or there was only one item, removes it.
-	bool ConsumeItem(int slot);
+	bool ConsumeItem(int slot) const;
 	//Takes one item from a stack. If it's not stackable or there was only one item, removes it.
-	bool ConsumeItem(InventoryItemP item);
+	bool ConsumeItem(InventoryItemP item) const;
 
+	//Returns true if the player has room in their storage according to their current limit.
+	bool HasStorageRoom();
 	//Moves the specified inventory item from the player's inventory to their storage.
 	bool Store(int slot);
 	//Moves the specified inventory item from the player's inventory to their storage.

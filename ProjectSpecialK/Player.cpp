@@ -75,25 +75,24 @@ ModelP Player::Model()
 	return _model;
 }
 
-std::string Player::Birthday()
+std::string Player::Birthday() const
 {
 	return Text::DateMD(_birthday[1], _birthday[0]);
 }
 
-int Player::findItemSlot(InventoryItemP target)
+int Player::findItemSlot(InventoryItemP target) const
 {
 	if (!target)
 		return NoItem;
-	for (int i = 0; i < OnHandLimit; i++)
-	{
-		if (OnHand[i] == target)
-			return i;
-	}
-	return NoItem;
+	auto i = std::find(OnHand.cbegin(), OnHand.cend(), target);
+	if (i == OnHand.cend())
+		return NoItem;
+	return (int)(i - OnHand.cbegin());
 }
 
 bool Player::HasInventoryRoom()
 {
+	//TODO: limit to OnHandLimit
 	return std::any_of(OnHand.cbegin(), OnHand.cend(), [](InventoryItemP i) { return i; });
 }
 
@@ -133,34 +132,38 @@ bool Player::RemoveItem(InventoryItemP item)
 	return RemoveItem(findItemSlot(item));
 }
 
-bool Player::ConsumeItem(int slot)
+bool Player::ConsumeItem(int slot) const
 {
 	if (slot == NoItem)
 		return false;
 	return true;
 }
 
-bool Player::ConsumeItem(InventoryItemP item)
+bool Player::ConsumeItem(InventoryItemP item) const
 {
 	return ConsumeItem(findItemSlot(item));
 }
 
-int Player::findStorageSlot(InventoryItemP target)
+int Player::findStorageSlot(InventoryItemP target) const
 {
 	if (!target)
 		return NoItem;
-	for (int i = 0; i < StorageLimit; i++)
-	{
-		if (Storage[i] == target)
-			return i;
-	}
-	return NoItem;
+	auto i = std::find(Storage.cbegin(), Storage.cend(), target);
+	if (i == Storage.cend())
+		return NoItem;
+	return (int)(i - Storage.cbegin());
+}
+
+bool Player::HasStorageRoom()
+{
+	return std::any_of(Storage.cbegin(), Storage.cbegin() + StorageLimit - 1, [](InventoryItemP i) { return i; });
 }
 
 bool Player::Store(int slot)
 {
 	if (Storage.size() >= StorageLimit)
 		return false;
+	//TODO: handle stackables
 	Storage.push_back(OnHand[slot]);
 	RemoveItem(slot);
 	return true;
@@ -173,6 +176,8 @@ bool Player::Store(InventoryItemP item)
 
 bool Player::Retrieve(int slot)
 {
+	if (slot == NoItem)
+		return false;
 	if (!HasInventoryRoom())
 		return false;
 	GiveItem(Storage[slot]);
@@ -221,10 +226,10 @@ bool Player::Wear(int slot)
 		8, //swimwear
 	};
 	auto clothingSlot = kindsToSlots[(int)item->ClothingKind];
-	if (clothingSlot == -1)
-	{
-		//TODO: Handle accessory -> glasses/mask
-	}
+	//if (clothingSlot == -1)
+	//{
+	//	//TODO: Handle accessory -> glasses/mask
+	//}
 
 	auto const& current = _clothesItems[clothingSlot];
 	auto id = iitem->FullID(); //because what follows will fuck it over.
@@ -338,9 +343,9 @@ bool Player::Tick(float dt)
 
 	//TODO: update animator
 	animator->CopyBones(_model);
-	auto& root = _model->Bones[_model->FindBone("Root")];
-	root.Translation = Position;
-	root.Rotation = glm::vec3(0, glm::radians(Facing), 0);;
+	auto& rootBone = _model->Bones[_model->FindBone("Root")];
+	rootBone.Translation = Position;
+	rootBone.Rotation = glm::vec3(0, glm::radians(Facing), 0);;
 	_model->CalculateBoneTransforms();
 
 	//TODO: make this a generic function for later.

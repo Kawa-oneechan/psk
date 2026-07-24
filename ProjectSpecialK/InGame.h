@@ -15,9 +15,9 @@ private:
 		Init, FadeIn, Playing
 	} state{ State::Init };
 
-	std::shared_ptr<Iris> iris;
-	std::shared_ptr<ItemHotbar> itemHotbar;
-	std::shared_ptr<DateTimePanel> dateTimePanel;
+	std::shared_ptr<Iris> iris{ std::make_shared<Iris>() };
+	std::shared_ptr<ItemHotbar> itemHotbar{ std::make_shared<ItemHotbar>() };
+	std::shared_ptr<DateTimePanel> dateTimePanel{ std::make_shared<DateTimePanel>() };
 	
 public:
 	InGame();

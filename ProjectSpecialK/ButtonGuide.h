@@ -4,6 +4,17 @@
 
 class ButtonGuide
 {
+private:
+	struct Button
+	{
+		std::string text;
+		float width;
+		bool important;
+	};
+
+	std::vector<Button> buttons;
+
+
 public:
 	//Replaces the buttons for this Guide entirely. Precede an entry with '!' to highlight it.
 	void SetButtons(std::initializer_list<std::string>);
@@ -11,3 +22,4 @@ public:
 };
 
 //Not a Tickable because the ButtonGuide does not animate or anything. Let other things call Draw on it.
+//TODO: reconsider that.

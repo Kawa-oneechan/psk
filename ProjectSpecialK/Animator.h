@@ -11,7 +11,7 @@ public:
 
 	explicit Animator(const Armature& clientBones);
 	void APose();
-	void CopyBones(const std::shared_ptr<Model>& client);
+	void CopyBones(const std::shared_ptr<Model>& client) const;
 };
 
 using AnimatorP = std::shared_ptr<Animator>;

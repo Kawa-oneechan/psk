@@ -5,15 +5,6 @@
 #include "Types.h"
 #include "Game.h"
 
-struct button
-{
-	std::string text;
-	float width;
-	bool important;
-};
-
-std::vector<button> buttons;
-
 void ButtonGuide::SetButtons(std::initializer_list<std::string> labels)
 {
 	buttons.clear();

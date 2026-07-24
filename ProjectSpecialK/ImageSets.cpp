@@ -5,7 +5,8 @@
 #include "Database.h"
 #include "Types.h"
 
-namespace fs = std::experimental::filesystem;
+//TODO: Consider using TextureArrays instead, with a separate list to map names to layer indices.
+//Enumerate first, then use the result to create the TextureArray *and* name list.
 
 namespace Database
 {

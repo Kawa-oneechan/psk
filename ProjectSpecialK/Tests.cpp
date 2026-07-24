@@ -66,6 +66,11 @@ void TestInventorySystems()
 	thePlayer.GiveItem(std::make_shared<InventoryItem>("acnh:denimcutoffs/navyblue"));
 	thePlayer.GiveItem(std::make_shared<InventoryItem>("acnh:palatialtankdress"));
 
+	auto testItem1 = thePlayer.OnHand[1];
+	auto testItem2 = thePlayer.OnHand[2];
+	thePlayer.Store(testItem1);
+	thePlayer.Retrieve(testItem1);
+
 	conprint(0, "------Initial------");
 	for (auto& i : thePlayer.OnHand)
 		conprint(0, "{} ", i != nullptr ? '[' + i->Name() + ']' : "*");

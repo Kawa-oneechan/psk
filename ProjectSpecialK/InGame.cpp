@@ -6,10 +6,6 @@
 
 InGame::InGame()
 {
-	dateTimePanel = std::make_shared<DateTimePanel>();
-	itemHotbar = std::make_shared<ItemHotbar>();
-	iris = std::make_shared<Iris>();
-
 	RemoveAll();
 	AddChild(dateTimePanel);
 	AddChild(itemHotbar);

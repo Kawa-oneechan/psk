@@ -39,7 +39,7 @@ void Animator::APose()
 	apply("Arm_2_R", glm::vec3(0, 0, 0.5f));
 }
 
-void Animator::CopyBones(const std::shared_ptr<Model>& client)
+void Animator::CopyBones(const std::shared_ptr<Model>& client) const
 {
 	//We assume that the client's bones are in the same order as ours.
 	auto& cbones = client->Bones;
