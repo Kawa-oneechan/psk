@@ -93,11 +93,11 @@ public:
 	std::string SpeciesName();
 	void LoadModel();
 	ModelP Model();
-	std::string Birthday();
+	std::string Birthday() const;
 	bool IsSpecial() const { return _isSpecial; }
-	std::string Catchphrase();
+	std::string Catchphrase() const;
 	std::string Catchphrase(const std::string& newPhrase);
-	std::string Nickname();
+	std::string Nickname() const;
 	std::string Nickname(const std::string& newNickname);
 
 	void Draw(float dt) override;

@@ -67,37 +67,36 @@ void TestInventorySystems()
 	thePlayer.GiveItem(std::make_shared<InventoryItem>("acnh:palatialtankdress"));
 
 	auto testItem1 = thePlayer.OnHand[1];
-	auto testItem2 = thePlayer.OnHand[2];
 	thePlayer.Store(testItem1);
 	thePlayer.Retrieve(testItem1);
 
 	conprint(0, "------Initial------");
-	for (auto& i : thePlayer.OnHand)
+	for (auto const& i : thePlayer.OnHand)
 		conprint(0, "{} ", i != nullptr ? '[' + i->Name() + ']' : "*");
 
 	conprint(0, "------Remove flipflops------");
 	thePlayer.RemoveItem(2);
-	for (auto& i : thePlayer.OnHand)
+	for (auto const& i : thePlayer.OnHand)
 		conprint(0, "{} ", i != nullptr ? '[' + i->Name() + ']' : "*");
 
 	conprint(0, "------Switch #3 and #5------");
 	thePlayer.SwapItems(3, 5);
-	for (auto& i : thePlayer.OnHand)
+	for (auto const& i : thePlayer.OnHand)
 		conprint(0, "{} ", i != nullptr ? '[' + i->Name() + ']' : "*");
 
 	conprint(0, "------Put #3 in storage-----");
 	thePlayer.Store(3);
-	for (auto& i : thePlayer.OnHand)
+	for (auto const& i : thePlayer.OnHand)
 		conprint(0, "{} ", i != nullptr ? '[' + i->Name() + ']' : "*");
 	conprint(0, "****");
-	for (auto& i : thePlayer.Storage)
+	for (auto const& i : thePlayer.Storage)
 		conprint(0, "{} ", i != nullptr ? '[' + i->Name() + ']' : "*");
 	conprint(0, "----Take #3 from storage----");
 	thePlayer.Retrieve(0);
-	for (auto& i : thePlayer.OnHand)
+	for (auto const& i : thePlayer.OnHand)
 		conprint(0, "{} ", i != nullptr ? '[' + i->Name() + ']' : "*");
 	conprint(0, "****");
-	for (auto& i : thePlayer.Storage)
+	for (auto const& i : thePlayer.Storage)
 		conprint(0, "{} ", i != nullptr ? '[' + i->Name() + ']' : "*");
 
 	conprint(0, "------------");

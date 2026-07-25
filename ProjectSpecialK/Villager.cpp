@@ -266,12 +266,12 @@ void Villager::ReloadTextures()
 }
 #endif
 
-std::string Villager::Birthday()
+std::string Villager::Birthday() const
 {
 	return Text::DateMD(_birthday[1], _birthday[0]);
 }
 
-std::string Villager::Catchphrase()
+std::string Villager::Catchphrase() const
 {
 	if (memory && !memory->_customCatchphrase.empty())
 		return memory->_customCatchphrase;
@@ -290,7 +290,7 @@ std::string Villager::Catchphrase(const std::string& newPhrase)
 	return oldPhrase;
 }
 
-std::string Villager::Nickname()
+std::string Villager::Nickname() const
 {
 	if (memory && !memory->_customNickname.empty())
 		return memory->_customNickname;

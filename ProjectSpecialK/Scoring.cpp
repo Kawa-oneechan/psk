@@ -32,8 +32,8 @@ int GetLetterScore(const std::string& text, bool noCapitals)
 	(void)(noCapitals);
 #endif
 
-	rune ch;
-	size_t size;
+	rune ch; // cppcheck-suppress variableScope
+	size_t size; // cppcheck-suppress variableScope
 
 	auto find = [&](const std::string& haystack, rune pct, size_t pos)
 	{
@@ -109,12 +109,12 @@ int GetLetterScore(const std::string& text, bool noCapitals)
 		checkFor(0xFF0E);
 		checkFor(0xFF1F);
 	}
-#else
-	std::map<std::string, int> triCounter;
 #endif
 
 	//Check B: trigrams
 	{
+		std::map<std::string, int> triCounter;
+
 		size_t pos = 0;
 		int trisFound = 0;
 
