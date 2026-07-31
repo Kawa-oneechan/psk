@@ -1,23 +1,24 @@
 # GLFW binaries for 64-bit Windows
 
 This archive contains documentation, headers, pre-compiled static libraries,
-import libraries and DLLs for GLFW 3.4.
+import libraries and DLLs for GLFW 3.5.1.
 
 Binaries for the following compilers are included
 
- - Visual C++ 2022 (built with 17.9.0)
- - Visual C++ 2019 (built with 16.11.34)
- - Visual C++ 2017 (built with 15.9.60)
- - Visual C++ 2015 (built with 14.0.25431.01)
- - Visual C++ 2013 (built with 12.0.40629.00)
- - MinGW-w64 (built with 13.2.0-win32-dwarf-msvcrt)
+ - Visual C++ 2026
+ - Visual C++ 2022
+ - Visual C++ 2019
+ - Visual C++ 2017
+ - MinGW-w64 (win32-msvcrt)
+
+Binaries for Visual C++ 2013 and 2015 are no longer included.  These versions
+are no longer supported by Microsoft and should not be used.  This release of
+GLFW can still be compiled with these versions if necessary.
+
+Support for Windows XP has been removed and these binaries will not run there.
 
 
 ## Binaries for Visual C++
-
-All binaries for Visual C++ 2017 and earlier are compatible with Windows XP, but
-this is not supported by Visual C++ 2019.  This support has been deprecated by
-Microsoft and GLFW will also drop support for Windows XP in a future release.
 
 ### GLFW as a DLL
 
