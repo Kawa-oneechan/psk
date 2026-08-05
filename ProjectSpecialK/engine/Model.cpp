@@ -184,10 +184,22 @@ Model::Model(const std::string& modelPath) : file(modelPath)
 				traverseNodeHierarchy(node->children.data[childIndex], boneIndex);
 			}
 		};
-		traverseNodeHierarchy(scene->root_node, -1);
+		traverseNodeHierarchy(scene->root_node, NoBone);
 
 		for (int i = 0; i < BoneCt && i < MaxBones; i++)
 			finalBoneMatrices[i] = glm::mat4(1.0f);
+	}
+	else
+	{
+		debprint(5, "No bones -- assuming a single root.");
+		BoneCt = 1;
+		auto b = Bone();
+		b.Name = "GeneratedRoot";
+		b.Parent = NoBone;
+		b.InverseBind = glm::identity<glm::mat4>();
+		b.LocalTransform = glm::identity<glm::mat4>();
+		Bones[0] = b;
+		finalBoneMatrices[0] = glm::mat4(1.0f);
 	}
 
 	debprint(5, "Meshes:");

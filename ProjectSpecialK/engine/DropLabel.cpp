@@ -1,4 +1,5 @@
 #include <glad/glad.h>
+#include "Font.h"
 #include "DropLabel.h"
 
 extern int width, height;
@@ -30,7 +31,7 @@ void DropLabel::update()
 
 	Sprite::FlushBatch();
 
-	size = Sprite::MeasureText(font, text, textSize);
+	size = font->Measure(text, textSize);
 	size += glm::vec2(16);
 
 	int sizeX = (int)size.x, sizeY = (int)size.y;
@@ -43,7 +44,7 @@ void DropLabel::update()
 	//Step 1 - Draw text to TEMP
 	{
 		createAndBindBuffer(&tempTID, &tempFBO, sizeX, sizeY);
-		Sprite::DrawText(font, text, glm::vec2(8), glm::vec4(1), textSize);
+		font->Draw(text, glm::vec2(8), glm::vec4(1), textSize);
 		Sprite::FlushBatch();
 	}
 
@@ -105,7 +106,7 @@ void DropLabel::update()
 	glDeleteFramebuffers(1, &finalFBO);
 }
 
-DropLabel::DropLabel(const std::string& text, int font, float size, glm::vec4 color, Style style) : text(text), textSize(size), font(font), style(style)
+DropLabel::DropLabel(const std::string& text, BeckettFont* font, float size, glm::vec4 color, Style style) : text(text), textSize(size), font(font), style(style)
 {
 	update();
 }
@@ -117,6 +118,11 @@ void DropLabel::SetText(const std::string& text)
 		this->text = text;
 		update();
 	}
+}
+
+std::string& DropLabel::GetText()
+{
+	return text;
 }
 
 void DropLabel::Draw(float)

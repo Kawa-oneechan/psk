@@ -62,11 +62,11 @@ void Tilemap::MapLayer::Draw(float dt)
 
 	auto top = (int)(cam.y / tiles.tileGridHeight);
 	if (top < 0) top = 0;
-	auto bottom = top + (int)((BECKETT_SCREENHEIGHT / tiles.tileGridHeight) / s) + 1;
+	auto bottom = top + (int)glm::ceil((::height / tiles.tileGridHeight) / s) + 2;
 	if (bottom > height) bottom = height;
 	auto left = (int)(cam.x / tiles.tileGridWidth);
 	if (left < 0) left = 0;
-	auto right = left + (int)((BECKETT_SCREENWIDTH / tiles.tileGridWidth) / s) + 1;
+	auto right = left + (int)glm::ceil((::width / tiles.tileGridWidth) / s) + 1;
 	if (right > width) right = width;
 
 	const auto tileSize = glm::vec2(tiles.tileWidth, tiles.tileHeight) * s;

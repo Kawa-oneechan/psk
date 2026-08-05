@@ -6,6 +6,7 @@
 #include "Game.h"
 #include "InputsMap.h"
 #include "CrcUtils.h"
+#include "Font.h"
 #include "../Game.h"
 
 //For version information

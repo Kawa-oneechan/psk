@@ -15,17 +15,18 @@ private:
 	std::string text;
 	glm::vec2 size;
 	glm::vec4 color;
-	 Texture canvas;
+	Texture canvas;
 	float textSize;
-	int font;
+	class BeckettFont* font;
 	Style style;
 
 	void update();
 
 public:
-	explicit DropLabel(const std::string& text, int font = 1, float size = 100.0f, glm::vec4 color = glm::vec4(-1), Style style = Style::Blur);
+	explicit DropLabel(const std::string& text, BeckettFont* font, float size = 100.0f, glm::vec4 color = glm::vec4(-1), Style style = Style::Blur);
 	//Changes the text of the DropLabel, causing a refresh of the underlying texture.
 	void SetText(const std::string& text);
+	std::string& GetText();
 	const glm::vec2 Size() const { return size; }
 	class Texture& Texture() { return canvas; }
 	void Draw(float dt) override;

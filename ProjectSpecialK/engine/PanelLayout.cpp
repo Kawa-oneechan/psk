@@ -10,6 +10,7 @@
 #include "NineSlicer.h"
 #include "Audio.h"
 #include "Shader.h"
+#include "Font.h"
 #include "../Game.h"
 
 bool debugPanelLayoutPolygons = false;
@@ -175,7 +176,7 @@ PanelLayout::PanelLayout(jsonValue& source)
 				for (const auto& _cue : animObj["sounds"].as_array())
 				{
 					auto cueObj = _cue.as_object();
-					newAnim.SoundCues[cueObj["time"].as_number()] = std::make_shared<Audio>(cueObj["file"].as_string());
+					newAnim.SoundCues[cueObj["time"].as_number()] = std::make_shared<Sound>(cueObj["file"].as_string());
 				}
 			}
 

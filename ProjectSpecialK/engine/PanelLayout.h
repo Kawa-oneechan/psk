@@ -8,7 +8,7 @@
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/easing.hpp>
 
-class Audio;
+class Sound;
 
 class PanelLayout : public Tickable
 {
@@ -54,7 +54,7 @@ class PanelLayout : public Tickable
 	struct Animation
 	{
 		std::vector<AnimationBit> Bits;
-		std::map<float, std::shared_ptr<Audio>> SoundCues;
+		std::map<float, std::shared_ptr<Sound>> SoundCues;
 		std::string Next;
 	};
 

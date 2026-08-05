@@ -113,6 +113,8 @@ Model::Mesh::Mesh(ufbx_mesh* mesh, const Armature& bones, size_t boneCt) : Name(
 					v.Bones[wi] = NoBone;
 					v.Weights[wi] = 0.0f;
 				}
+				v.Bones[0] = 0;
+				v.Weights[0] = 1.0f;
 			}
 
 			vertices.push_back(v);

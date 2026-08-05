@@ -99,5 +99,4 @@ extern const std::map<std::string, BJTSFunc> bjtsPhase1;
 //BJTS functions loaded from Lua scripts.
 extern std::map<std::string, std::string> bjtsPhase1X;
 
-class Audio;
-extern std::map<std::string, std::map<std::string, std::shared_ptr<Audio>>> generalSounds;
+extern std::map<std::string, std::map<std::string, std::shared_ptr<class Sound>>> generalSounds;

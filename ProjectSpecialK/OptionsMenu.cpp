@@ -5,6 +5,7 @@
 #include "engine/SpriteRenderer.h"
 #include "engine/Utilities.h"
 #include "engine/Audio.h"
+#include "engine/Font.h"
 #include "Utilities.h"
 #include "Database.h"
 #include "Types.h"

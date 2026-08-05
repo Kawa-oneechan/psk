@@ -16,6 +16,8 @@ public:
 	virtual ~BeckettFont() = default;
 	virtual void Draw(const std::string& text, glm::vec2 position, const glm::vec4& color = glm::vec4(1), float size = 100, float angle = 0.0f, bool raw = false) = 0;
 	virtual glm::vec2 Measure(const std::string& text, float size, bool raw = false) = 0;
+
+	static BeckettFont* GetSystemFont(size_t i);
 };
 
 class TrueTypeFont : public BeckettFont
@@ -27,7 +29,7 @@ private:
 	float kerning{ 0 };
 
 	void* cdata{ nullptr };
-	Texture** fontTextures;
+	class Texture** fontTextures;
 
 	void loadBank(int bank);
 

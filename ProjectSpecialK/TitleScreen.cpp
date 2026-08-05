@@ -4,6 +4,7 @@
 #include "engine/Random.h"
 #include "engine/Console.h"
 #include "engine/SpriteRenderer.h"
+#include "engine/Font.h"
 #include "TitleScreen.h"
 #include "MusicManager.h"
 #include "Town.h"
@@ -112,7 +113,7 @@ bool TitleScreen::Tick(float dt)
 		{
 			state = State::Wait;
 			logoAnim->Play("open");
-			pressStart = new DropLabel(PreprocessBJTS(Text::Get("title:pressstart")), 1, 150, UI::themeColors["white"], DropLabel::Style::Drop);
+			pressStart = new DropLabel(PreprocessBJTS(Text::Get("title:pressstart")), BeckettFont::GetSystemFont(1), 150, UI::themeColors["white"], DropLabel::Style::Drop);
 			if (playerPanel)
 				playerPanel->Visible = true;
 		}

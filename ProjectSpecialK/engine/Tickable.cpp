@@ -1,4 +1,5 @@
 #include "Tickable.h"
+#include "Font.h"
 #include "InputsMap.h"
 
 class Tickable;
@@ -217,7 +218,14 @@ using Tickable2DP = std::shared_ptr<Tickable2D>;
 
 
 
-TextLabel::TextLabel(const std::string& text, glm::vec2 position) : Text(text)
+TextLabel::TextLabel(const std::string& text, glm::vec2 position, int font) : Text(text)
+{
+	parent = nullptr;
+	Position = position;
+	Font = BeckettFont::GetSystemFont(font);
+}
+
+TextLabel::TextLabel(const std::string& text, glm::vec2 position, BeckettFont* font) : Text(text), Font(font)
 {
 	parent = nullptr;
 	Position = position;
@@ -225,7 +233,7 @@ TextLabel::TextLabel(const std::string& text, glm::vec2 position) : Text(text)
 
 void TextLabel::Draw(float)
 {
-	Sprite::DrawText(Font, Text, AbsolutePosition, Color, Size, Angle, Raw);
+	Font->Draw(Text, AbsolutePosition, Color, Size, Angle, Raw);
 }
 
 SimpleSprite::SimpleSprite(const std::string& texture, int frame, glm::vec2 position)

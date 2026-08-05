@@ -7,6 +7,7 @@
 #include "engine/Audio.h"
 #include "engine/Utilities.h"
 #include "engine/SpriteRenderer.h"
+#include "engine/Font.h"
 #include "DoomMenu.h"
 #include "Types.h"
 #include "Game.h"

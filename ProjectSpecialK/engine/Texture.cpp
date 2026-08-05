@@ -373,18 +373,18 @@ namespace VFS
 			if (it->second.expired())
 			{
 				auto newShared = std::make_shared<Texture>(filename, repeat, filter, skipAtlas, colorMaps, colorMapIndex);
-				debprint(0, "VFS::GetTexture: {} expired and recreated.", filename);
+				//debprint(0, "VFS::GetTexture: {} expired and recreated.", filename);
 				textureCache[filename] = std::weak_ptr<Texture>(newShared);
 				return textureCache[filename].lock();
 			}
-			debprint(0, "VFS::GetTexture: {} returned.", filename);
+			//debprint(0, "VFS::GetTexture: {} returned.", filename);
 			return it->second.lock();
 		}
 		else
 		{
 			auto newShared = std::make_shared<Texture>(filename, repeat, filter, skipAtlas, colorMaps, colorMapIndex);
 			textureCache[filename] = std::weak_ptr<Texture>(newShared);
-			debprint(0, "VFS::GetTexture: {} created.", filename);
+			//debprint(0, "VFS::GetTexture: {} created.", filename);
 			return textureCache[filename].lock();
 		}
 	}
@@ -397,18 +397,18 @@ namespace VFS
 			if (it->second.expired())
 			{
 				auto newShared = std::make_shared<TextureArray>(filename, repeat, filter);
-				debprint(0, "VFS::GetTextureArray: {} expired and recreated.", filename);
+				//debprint(0, "VFS::GetTextureArray: {} expired and recreated.", filename);
 				textureArrayCache[filename] = std::weak_ptr<TextureArray>(newShared);
 				return textureArrayCache[filename].lock();
 			}
-			debprint(0, "VFS::GetTextureArray: {} returned.", filename);
+			//debprint(0, "VFS::GetTextureArray: {} returned.", filename);
 			return it->second.lock();
 		}
 		else
 		{
 			auto newShared = std::make_shared<TextureArray>(filename, repeat, filter);
 			textureArrayCache[filename] = std::weak_ptr<TextureArray>(newShared);
-			debprint(0, "VFS::GetTextureArray: {} created.", filename);
+			//debprint(0, "VFS::GetTextureArray: {} created.", filename);
 			return textureArrayCache[filename].lock();
 		}
 	}
@@ -422,18 +422,18 @@ namespace VFS
 			if (it->second.expired())
 			{
 				auto newShared = std::make_shared<TextureArray>(entries, repeat, filter);
-				debprint(0, "VFS::GetTextureArray: {} expired and recreated.", filename);
+				//debprint(0, "VFS::GetTextureArray: {} expired and recreated.", filename);
 				textureArrayCache[filename] = std::weak_ptr<TextureArray>(newShared);
 				return textureArrayCache[filename].lock();
 			}
-			debprint(0, "VFS::GetTextureArray: {} returned.", filename);
+			//debprint(0, "VFS::GetTextureArray: {} returned.", filename);
 			return it->second.lock();
 		}
 		else
 		{
 			auto newShared = std::make_shared<TextureArray>(entries, repeat, filter);
 			textureArrayCache[filename] = std::weak_ptr<TextureArray>(newShared);
-			debprint(0, "VFS::GetTextureArray: {} created.", filename);
+			//debprint(0, "VFS::GetTextureArray: {} created.", filename);
 			return textureArrayCache[filename].lock();
 		}
 	}

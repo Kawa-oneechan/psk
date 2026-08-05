@@ -1,5 +1,6 @@
 #include "engine/Console.h"
 #include "engine/SpriteRenderer.h"
+#include "engine/Font.h"
 #include "Messager.h"
 
 Messager::Messager()

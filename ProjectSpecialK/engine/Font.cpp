@@ -16,6 +16,7 @@
 #include "Shader.h"
 #include "Texture.h"
 #include "VFS.h"
+#include "Font.h"
 
 extern int width, height;
 
@@ -138,6 +139,12 @@ static void applyRotation(std::vector<letterToDraw>& toDraw, float angle)
 	{
 		letter.position = glm::rotate(letter.position, glm::radians(angle));
 	}
+}
+
+BeckettFont* BeckettFont::GetSystemFont(size_t i)
+{
+	LoadFonts();
+	return fonts[glm::clamp((int)i, 0, numFonts - 1)];
 }
 
 
@@ -363,6 +370,13 @@ void TrueTypeFont::Draw(const std::string& text, glm::vec2 position, const glm::
 
 		auto chPos = pos + glm::vec2(bakedChar.xoff * scaleF, bakedChar.yoff * scaleF);
 		toDraw.push_back({ ch, angle, stringScale, chPos, srcRect, textRenderColor });
+
+		if (ch >= 0xE004 && ch <= 0xE04D)
+		{
+			auto extraChar = _cdata[((ch >> 1) << 1) + 1];
+			auto srcRect = glm::vec4(extraChar.x0, extraChar.y0 * -1.0f, w, h * -1.0f);
+			toDraw.push_back({ ch, angle, stringScale, chPos, srcRect, glm::vec4(1, 0, 0, 1) });
+		}
 
 		pos.x += (bakedChar.xadvance + kerning) * scaleF;
 	}

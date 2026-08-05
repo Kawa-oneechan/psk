@@ -153,7 +153,7 @@ void MusicManager::Play(const std::string& id, bool immediate, bool ignoreID)
 
 	if (currentFile != file)
 	{
-		bgm = std::make_shared<Audio>(file);
+		bgm = std::make_shared<Stream>(file);
 		bgm->Play(false, false);
 		state = MusicState::Playing;
 		Game::ResetDelta();

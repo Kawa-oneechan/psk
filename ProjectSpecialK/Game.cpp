@@ -4,6 +4,7 @@
 #include "engine/Console.h"
 #include "engine/Game.h"
 #include "engine/Shader.h"
+#include "engine/Font.h"
 #include "Types.h"
 #include "Game.h"
 #include "DialogueBox.h"
@@ -24,8 +25,8 @@ extern void RunTests();
 constexpr int ScreenWidth = 1920;
 constexpr int ScreenHeight = 1080;
 
-Audio* bgm = nullptr;
-std::map<std::string, std::map<std::string, std::shared_ptr<Audio>>> generalSounds;
+Stream* bgm = nullptr;
+std::map<std::string, std::map<std::string, std::shared_ptr<Sound>>> generalSounds;
 
 extern std::shared_ptr<TextureArray> cloudImage;
 extern std::shared_ptr<Texture> starsImage, skyImage;
@@ -105,7 +106,7 @@ void Game::Initialize()
 		for (auto category : sounds)
 		{
 			for (auto sound : category.second.as_object())
-				generalSounds[category.first][sound.first] = std::make_shared<Audio>(sound.second.as_string());
+				generalSounds[category.first][sound.first] = std::make_shared<Sound>(sound.second.as_string());
 		}
 	}
 

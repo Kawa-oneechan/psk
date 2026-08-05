@@ -1,6 +1,7 @@
 #include <vector>
 #include "engine/SpriteRenderer.h"
 #include "engine/Utilities.h"
+#include "engine/Font.h"
 #include "ButtonGuide.h"
 #include "Types.h"
 #include "Game.h"
