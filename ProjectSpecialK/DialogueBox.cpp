@@ -390,7 +390,7 @@ bool DialogueBox::Tick(float dt)
 
 		if (ch == '<')
 		{
-			auto bjtsEndPos = toDisplay.find_first_of('>', displayCursor); // cppcheck-suppress shadowFunction
+			auto bjtsEndPos = toDisplay.find_first_of('>', displayCursor);
 			if (bjtsEndPos == std::string::npos) goto displayIt;
 			auto bjtsStart = displayCursor;
 			displayCursor = bjtsEndPos + 1;

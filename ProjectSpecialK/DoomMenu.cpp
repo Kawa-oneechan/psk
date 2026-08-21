@@ -209,7 +209,7 @@ bool DoomMenu::Tick(float dt)
 					cursor->Select(6);
 					auto item = items->items[highlight];
 
-					//thanks GZDoom
+					//thanks UZDoom
 					auto x = glm::clamp(Inputs.MousePosition.x, sliderStart, sliderEnd);
 					auto  v = item->minVal + ((x - sliderStart) * (item->maxVal - item->minVal)) / (sliderEnd - sliderStart);
 					item->selection = glm::clamp((int)(round(v / item->step) * item->step), item->minVal, item->maxVal);
@@ -584,7 +584,7 @@ void DoomMenu::Draw(float dt)
 			sliderStart = pos.x + col + partSize;
 			sliderEnd = sliderStart + barLength;
 
-			//thanks GZDoom
+			//thanks UZDoom
 			auto range = item->maxVal - item->minVal;
 			auto ccur = glm::clamp(item->selection, item->minVal, item->maxVal) - item->minVal;
 			auto thumbPos = partSize + ((ccur * (barLength - (partSize * 2))) / range);
