@@ -40,7 +40,7 @@ TitleScreen::TitleScreen()
 	LoadCamera("cameras/title.json");
 
 	//TODO: only show the player panel if there IS a player.
-
+	if (thePlayer.ID != "player:00000000")
 	{
 		auto metrics = UI::json["metrics"].as_object();
 		const int playerPadding = metrics["titleProfileCardPadding"].as_integer();
@@ -61,7 +61,7 @@ TitleScreen::TitleScreen()
 		playerWatermark->Color = UI::themeColors["dialogue"];
 		playerPanel->AddChild(playerWatermark);
 
-		auto label = std::make_shared<TextLabel>(playerText, glm::vec2(playerPadding + playerPhotoSize + playerMargin + playerMargin, playerPadding));
+		auto label = std::make_shared<TextLabel>(playerText, glm::vec2(playerPadding + playerPhotoSize + playerMargin + playerMargin, playerPadding), 1);
 		label->Color = UI::textColors[7];
 		label->Size = 70.0f;
 		//label->Scale = 1.0f;

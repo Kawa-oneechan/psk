@@ -156,7 +156,7 @@ namespace UI
 		if (keyBinds.size() != NumKeyBinds)
 		{
 			keyBinds.resize(NumKeyBinds);
-			std::transform(DefaultInputBindings, DefaultInputBindings + 32, keyBinds.begin(),
+			std::transform(DefaultInputBindings, DefaultInputBindings + NumKeyBinds, keyBinds.begin(),
 				[](const auto& k) { return jsonValue(glfwGetKeyScancode(k)); });
 		}
 
@@ -164,7 +164,7 @@ namespace UI
 		if (padBinds.size() != NumKeyBinds)
 		{
 			padBinds.resize(NumKeyBinds);
-			std::transform(DefaultInputGamepadBindings, DefaultInputGamepadBindings + 32, padBinds.begin(),
+			std::transform(DefaultInputGamepadBindings, DefaultInputGamepadBindings + NumKeyBinds, padBinds.begin(),
 				[](const auto& k) { return jsonValue(k); });
 		}
 

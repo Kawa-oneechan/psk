@@ -373,7 +373,7 @@ void TrueTypeFont::Draw(const std::string& text, glm::vec2 position, const glm::
 
 		if (ch >= 0xE004 && ch <= 0xE04D)
 		{
-			auto extraChar = _cdata[((ch >> 1) << 1) + 1];
+			auto extraChar = _cdata[ch + 1];
 			auto srcRect = glm::vec4(extraChar.x0, extraChar.y0 * -1.0f, w, h * -1.0f);
 			toDraw.push_back({ ch, angle, stringScale, chPos, srcRect, glm::vec4(1, 0, 0, 1) });
 		}

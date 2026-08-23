@@ -17,6 +17,7 @@
 
 	//Panel Layout part
 	"cinematic": {
+		"scaled": true,
 		"textures": {
 			"main": "cinematics/logo/logo.png"
 		},

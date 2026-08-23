@@ -15,6 +15,7 @@ class Player : public NameableThing, public Person
 private:
 	ModelP _hairModel;
 
+	//TODO: Consider replacing this with std::map<std::string, int> like in Town.
 	unsigned char _flags[255]{ 0 };
 
 	int findItemSlot(InventoryItemP target) const;
