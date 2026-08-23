@@ -221,8 +221,8 @@ bool DoomMenu::Tick(float dt)
 			}
 		}
 	}
-	if (mouseHighlight != highlight && Inputs.MouseLeft)
-		Inputs.MouseLeft = false;
+	if (mouseHighlight != highlight && Inputs.LastClickLeft.x >= 0.0f)
+		Inputs.LastClickLeft.x = -1000.0f;
 
 	while (items->items[highlight]->type == DoomMenuItem::Type::Text)
 		highlight++;
@@ -286,7 +286,7 @@ bool DoomMenu::Tick(float dt)
 
 	if (item->type == DoomMenuItem::Type::Page)
 	{
-		if (Inputs.KeyDown(Binds::Accept) || Inputs.MouseLeft)
+		if (Inputs.KeyDown(Binds::Accept) || Inputs.LastClickLeft.x >= 0.0f)
 		{
 			stack.push(item->page);
 			items = item->page;
@@ -300,7 +300,7 @@ bool DoomMenu::Tick(float dt)
 	}
 	else if (item->type == DoomMenuItem::Type::Action)
 	{
-		if (Inputs.KeyDown(Binds::Accept) || Inputs.MouseLeft)
+		if (Inputs.KeyDown(Binds::Accept) || Inputs.LastClickLeft.x >= 0.0f)
 		{
 			Inputs.Clear(Binds::Accept);
 			item->Beep();
@@ -310,7 +310,7 @@ bool DoomMenu::Tick(float dt)
 	}
 	else if (item->type == DoomMenuItem::Type::KeyBind)
 	{
-		if (Inputs.KeyDown(Binds::Accept) || Inputs.MouseLeft)
+		if (Inputs.KeyDown(Binds::Accept) || Inputs.LastClickLeft.x >= 0.0f)
 		{
 			Inputs.Clear(Binds::Accept);
 			remapping = highlight;
@@ -319,7 +319,7 @@ bool DoomMenu::Tick(float dt)
 	}
 	else if (item->type == DoomMenuItem::Type::Checkbox)
 	{
-		if (Inputs.KeyDown(Binds::Accept) || Inputs.MouseLeft)
+		if (Inputs.KeyDown(Binds::Accept) || Inputs.LastClickLeft.x >= 0.0f)
 		{
 			item->selection ^= 1;
 			item->Beep();
@@ -329,11 +329,11 @@ bool DoomMenu::Tick(float dt)
 	}
 	else if (item->type == DoomMenuItem::Type::Options)
 	{
-		if (Inputs.KeyDown(Binds::Accept) || Inputs.MouseLeft)
+		if (Inputs.KeyDown(Binds::Accept) || Inputs.LastClickLeft.x >= 0.0f)
 		{
 			Inputs.Clear(Binds::Accept);
 			Inputs.Keys[(int)Binds::Right].State = true;
-			Inputs.MouseLeft = false;
+			Inputs.LastClickLeft.x = -100.0f;
 		}
 		if (Inputs.KeyDown(Binds::Left))
 		{

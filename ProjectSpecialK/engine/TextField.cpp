@@ -21,7 +21,11 @@ void TextField::Draw(float dt)
 	if (glm::mod(time, 1.0f) < 0.5f)
 	{
 		auto ms = Sprite::MeasureText(font, value.substr(0, caret), size, true);
-		Sprite::DrawText(font, u8"\u258F", pos + glm::vec2(ms.x, 0), glm::vec4(0, 1, 0, 1), size, 0.0f, true);
+		if (ms.y == 0.0f)
+			ms.y = Sprite::MeasureText(font, u8"\u258F", size, true).y;
+		ms.y++;
+		ms.x++;
+		Sprite::DrawLine(pos + glm::vec2(ms.x, 0), pos + glm::vec2(ms.x, ms.y), glm::vec4(0, 1, 0, 1));
 	}
 
 	Sprite::FlushBatch();

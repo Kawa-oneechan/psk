@@ -368,29 +368,26 @@ static void mousebutton_callback(GLFWwindow* window, int button, int action, int
 
 #ifdef DEBUG
 	if (IsImGuiHovered())
-	{
-		Inputs.MouseLeft = false;
 		return;
-	}
 #endif
 
 	if (button == GLFW_MOUSE_BUTTON_LEFT)
 	{
 		Inputs.MouseHoldLeft = action == GLFW_PRESS;
-		if (!Inputs.MouseLeft && action == GLFW_RELEASE) //-V1051 no I'm pretty sure I meant this
-			Inputs.MouseLeft = true;
+		if (action == GLFW_RELEASE)
+			Inputs.LastClickLeft = Inputs.ScaledMousePosition;
 	}
 	else if (button == GLFW_MOUSE_BUTTON_MIDDLE)
 	{
 		Inputs.MouseHoldMiddle = action == GLFW_PRESS;
-		if (!Inputs.MouseMiddle && action == GLFW_RELEASE) //-V1051
-			Inputs.MouseMiddle = true;
+		if (action == GLFW_RELEASE)
+			Inputs.LastClickMiddle = Inputs.ScaledMousePosition;
 	}
 	else if (button == GLFW_MOUSE_BUTTON_RIGHT)
 	{
 		Inputs.MouseHoldRight = action == GLFW_PRESS;
-		if (!Inputs.MouseRight && action == GLFW_RELEASE) //-V1051
-			Inputs.MouseRight = true;
+		if (action == GLFW_RELEASE)
+			Inputs.LastClickRight = Inputs.ScaledMousePosition;
 	}
 }
 

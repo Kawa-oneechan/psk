@@ -8,8 +8,6 @@
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/easing.hpp>
 
-class Sound;
-
 class PanelLayout : public Tickable
 {
 
@@ -54,7 +52,7 @@ class PanelLayout : public Tickable
 	struct Animation
 	{
 		std::vector<AnimationBit> Bits;
-		std::map<float, std::shared_ptr<Sound>> SoundCues;
+		std::map<float, std::shared_ptr<class Sound>> SoundCues;
 		std::string Next;
 	};
 
@@ -72,12 +70,9 @@ private:
 	Panel* highlighted = nullptr;
 
 public:
-	glm::vec2 Position;
-	enum class CornerOrigin
-	{
-		TopLeft, TopRight, BottomLeft, BottomRight
-	} Origin = CornerOrigin::TopLeft;
+	//glm::vec2 Position;
 	float Alpha{ 1.0f };
+	bool Scaled{ true };
 
 	std::function<void(const std::string&)> onClick{ nullptr };
 

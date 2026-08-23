@@ -22,9 +22,10 @@ PanelLayout::PanelLayout(jsonValue& source)
 
 	auto const& panelsSet = src["panels"].as_array();
 
-	Position = GetJSONVal(src["position"], glm::vec2(0));
+	//Position = GetJSONVal(src["position"], glm::vec2(0));
 	Alpha = GetJSONVal(src["alpha"], 1.0f);
-	Origin = src["origin"].is_string() ? StringToEnum<CornerOrigin>(src["origin"].as_string(), { "topleft", "topright", "bottomleft", "bottomright" }) : CornerOrigin::TopLeft;
+	//Origin = src["origin"].is_string() ? StringToEnum<CornerOrigin>(src["origin"].as_string(), { "topleft", "topright", "bottomleft", "bottomright" }) : CornerOrigin::TopLeft;
+	Scaled = GetJSONBool(src["scaled"], false);
 
 	if (src["textures"].is_object())
 	{
@@ -193,6 +194,14 @@ PanelLayout::PanelLayout(jsonValue& source)
 
 bool PanelLayout::Tick(float dt)
 {
+	auto scale1d = ::width / 1920.0f;
+	auto scale2d = glm::vec2(::width / 1920.0f, ::height / 1080.0f);
+	if (!Scaled)
+	{
+		scale1d = 1.0f;
+		scale2d = glm::vec2(1.0f);
+	}
+
 	auto apply = [&](AnimationBit& bit, float val)
 	{
 		auto* panel = panels[0];
@@ -299,12 +308,13 @@ bool PanelLayout::Tick(float dt)
 			auto thisPoly = *panel->Polygon;
 			poly.resize(thisPoly.size());
 			std::transform(thisPoly.cbegin(), thisPoly.cend(), poly.begin(),
-				[&](const auto& point) { return ((point * size) + Position + parentPos + panel->Position) * scale; });
+				//[&](const auto& point) { return ((point * size) + Position + parentPos + panel->Position) * scale; });
+				[&](const auto& point) { return ((point * size) + parentPos + panel->Position) * scale2d; });
 
 			//prevPoly = panel->Polygon;
 		}
 
-		if (PointInPoly(Inputs.MousePosition, poly))
+		if (PointInPoly(Inputs.ScaledMousePosition, poly))
 		{
 			newHl = panel;
 			break;
@@ -313,9 +323,9 @@ bool PanelLayout::Tick(float dt)
 	if (newHl != highlighted)
 		highlighted = newHl;
 
-	if (Inputs.MouseLeft && highlighted && onClick)
+	if (Inputs.LastClickLeft.x >= 0.0f && highlighted && onClick)
 	{
-		Inputs.MouseLeft = false;
+		Inputs.LastClickLeft.x = -1000;
 		if (highlighted->Enabled)
 			onClick(highlighted->ID);
 	}
@@ -331,6 +341,11 @@ void PanelLayout::Draw(float dt)
 
 	auto scale1d = ::width / 1920.0f;
 	auto scale2d = glm::vec2(::width / 1920.0f, ::height / 1080.0f);
+	if (!Scaled)
+	{
+		scale1d = 1.0f;
+		scale2d = glm::vec2(1.0f);
+	}
 
 	for (const auto& panel : panels)
 	{
@@ -339,8 +354,8 @@ void PanelLayout::Draw(float dt)
 			color *= 3.0f;
 
 		auto parentPos = glm::vec2(0);
-		if (Origin == CornerOrigin::TopRight || Origin == CornerOrigin::BottomRight) parentPos.x = 1920; //(float)width;
-		else if (Origin == CornerOrigin::BottomLeft) parentPos.y = 1080; //(float)height;
+		//if (Origin == CornerOrigin::TopRight || Origin == CornerOrigin::BottomRight) parentPos.x = 1920; //(float)width;
+		//else if (Origin == CornerOrigin::BottomLeft) parentPos.y = 1080; //(float)height;
 
 		const auto* parent = panel->Parent;
 		while (parent != nullptr)
@@ -358,13 +373,14 @@ void PanelLayout::Draw(float dt)
 			auto texture = panel->Texture;
 			auto frame = texture->operator[](panel->Frame);
 			auto shader = panel->Shader ? panel->Shader : (texture->channels > 1 ? Shaders["sprite"] : Shaders["red8"]);
-			auto finalPos = Position + parentPos + panel->Position;
+			//auto finalPos = Position + parentPos + panel->Position;
+			auto finalPos = parentPos + panel->Position;
 			if (panel->Percents)
 			{
 				auto ps = glm::round(glm::vec2(frame.z, frame.w) * (panel->Size / 100.0f));
 				finalPos = glm::vec2(1920, 1080) * panel->Position;
 				finalPos -= ps * panel->Origin;
-				finalPos += Position;
+				//finalPos += Position;
 			}
 
 			if (panel->Sliced)
@@ -406,7 +422,8 @@ void PanelLayout::Draw(float dt)
 			if (panel->Text.empty())
 				continue;
 
-			auto pos = Position + parentPos + panel->Position;
+			//auto pos = Position + parentPos + panel->Position;
+			auto pos = parentPos + panel->Position;
 			if (panel->Alignment > 0)
 			{
 				auto w = Sprite::MeasureText(panel->Font, panel->Text, panel->Size * scale1d).x;

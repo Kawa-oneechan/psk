@@ -22,8 +22,9 @@ public:
 	InputKey Keys[NumKeyBinds]{ 0 };
 	bool Shift, Control, Alt;
 
-	bool MouseLeft, MouseRight, MouseMiddle;
+	//TODO: rename to MouseLeft et al after adjusting everything else.
 	bool MouseHoldLeft, MouseHoldRight, MouseHoldMiddle;
+	glm::vec2 LastClickLeft, LastClickRight, LastClickMiddle;
 	glm::vec2 MousePosition;
 	glm::vec2 MouseOffset;
 	glm::vec2 ScaledMousePosition;

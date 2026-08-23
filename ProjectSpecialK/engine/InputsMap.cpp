@@ -9,6 +9,7 @@ InputsMap::InputsMap()
 	Clear();
 
 	lastMousePos = MousePosition = glm::vec2(width, height) + 20.0f;
+	LastClickLeft = LastClickMiddle = LastClickRight = glm::vec2(-1000);
 	MouseHoldLeft = MouseHoldMiddle = MouseHoldRight = false;
 	Shift = Control = Alt = false;
 	StickAngles[0] = StickAngles[1] = 0;
@@ -142,8 +143,9 @@ void InputsMap::Clear(bool alsoGamepad)
 	if (alsoGamepad)
 		for (int i = 0; i < 15; i++)
 			cnt[i] = trg[i] = 0;
-	MouseLeft = MouseRight = MouseMiddle = false;
+	//MouseLeft = MouseRight = MouseMiddle = false;
 	//MouseHoldLeft = MouseHoldRight = MouseHoldMiddle = false;
+	LastClickLeft = LastClickMiddle = LastClickRight = glm::vec2(-1000);
 }
 
 InputsMap Inputs;

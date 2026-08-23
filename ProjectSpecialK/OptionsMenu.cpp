@@ -230,7 +230,7 @@ bool OptionsMenu::Scancode(unsigned int scancode)
 
 	if (remapBounce)
 	{
-		if (!(Inputs.KeyDown(Binds::Accept) || Inputs.MouseLeft))
+		if (!(Inputs.KeyDown(Binds::Accept) || Inputs.LastClickLeft.x >= 0.0f))
 			remapBounce = false;
 		return false;
 	}

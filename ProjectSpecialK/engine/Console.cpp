@@ -28,6 +28,9 @@ extern float fieldOfView, nearPlane, farPlane;
 
 extern void RecalcProjections();
 
+static void CCmdPrint(const jsonArray& args);
+static void CCmdWait(const jsonArray& args);
+static void CCmdAlias(const jsonArray& args);
 static void CCmdVersion(const jsonArray& args);
 static void CCmdCVarList(const jsonArray& args);
 static void CCmdCmdList(const jsonArray& args);
@@ -82,7 +85,10 @@ Console::Console() : hardcopy(std::ofstream("console.log", std::ios::trunc))
 	timer = 0.0f;
 	appearState = 0;
 
+	RegisterCCmd("print", CCmdPrint);
+	RegisterCCmd("wait", CCmdWait);
 	RegisterCCmd("clear", [&](const jsonArray&) { buffer.clear(); scrollCursor = 0; });
+	RegisterCCmd("alias", CCmdAlias);
 	RegisterCCmd("version", CCmdVersion);
 	RegisterCCmd("cvarlist", CCmdCVarList);
 	RegisterCCmd("cmdlist", CCmdCmdList);
@@ -135,6 +141,8 @@ void Console::Flush()
 bool Console::Execute(const std::string& str)
 {
 	auto first = std::string(str);
+	while (!first.empty() && first[0] == ' ')
+		first = first.substr(1);
 	auto second = std::string("");
 	auto fullSec = std::string("");
 	auto haveArgs = false;
@@ -145,7 +153,8 @@ bool Console::Execute(const std::string& str)
 			first = first.substr(0, space);
 			second = str.substr(space + 1);
 			fullSec = str.substr(space + 1);
-			StripSpaces(second);
+			while (!second.empty() && second[0] == ' ')
+				second = second.substr(1);
 			haveArgs = !second.empty();
 		}
 	}
@@ -212,6 +221,13 @@ bool Console::Execute(const std::string& str)
 			}
 		}
 	}
+	{
+		auto ca = calis.find(first);
+		if (ca != calis.end())
+		{
+			commandBuffer = fmt::format("{}; {}", ca->second, commandBuffer);
+		}
+	}
 	return false;
 }
 
@@ -230,7 +246,7 @@ bool Console::Scancode(unsigned int scancode)
 			history.emplace_back(inputLine->value);
 		historyCursor = 0;
 		Print(8, fmt::format("]{}", inputLine->value));
-		Execute(inputLine->value);
+		commandBuffer = inputLine->value;
 		inputLine->Clear();
 	}
 	else if (scancode == 328) //up
@@ -318,6 +334,36 @@ bool Console::Tick(float dt)
 	}
 	timer = glm::clamp(timer, 0.0f, 1.0f);
 
+	if (!commandBuffer.empty())
+	{
+		if (waitTimer > 0)
+		{
+			waitTimer--;
+			return false;
+		}
+		else
+		{
+			while (!commandBuffer.empty() && commandBuffer[0] == ' ')
+				commandBuffer = commandBuffer.substr(1);
+
+			auto sep = commandBuffer.find(';');
+			if (sep != std::string::npos && commandBuffer.substr(0, 6) != "alias ")
+			{
+				//multiple commands left
+				auto command = commandBuffer.substr(0, sep);
+				commandBuffer = commandBuffer.substr(sep + 1);
+				Execute(command);
+			}
+			else
+			{
+				auto command = commandBuffer;
+				commandBuffer.clear();
+				Execute(command);
+			}
+		}
+		return false;
+	}
+
 	return inputLine->Tick(dt);
 }
 
@@ -353,7 +399,7 @@ void Console::Draw(float dt)
 		pos.y -= 15;
 	}
 
-	inputLine->rect = glm::vec4(16, offset.y + (h - 24), width - 8, offset.y + (h - 24) + 20);
+	inputLine->rect = glm::vec4(12, offset.y + (h - 24), width - 8, offset.y + (h - 24) + 20);
 	Sprite::DrawText(0, "]", glm::vec2(4, inputLine->rect.y));
 	if (!prediction.empty())
 		Sprite::DrawText(0, prediction, glm::vec2(inputLine->rect.x, inputLine->rect.y), glm::vec4(0.5f));
@@ -525,6 +571,65 @@ std::string CVar::ToString()
 	case CVar::Type::Vec4: return fmt::format("[{}, {}, {}, {}]", asVec4->x, asVec4->y, asVec4->z, asVec4->w);
 	}
 	return "something";
+}
+
+static void CCmdPrint(const jsonArray& args)
+{
+	if (args.size() < 1 && !args[0].is_string())
+	{
+		conprint(0, "Input value must be a string.");
+		return;
+	}
+	if (args.size() == 2 && args[0].is_integer() && args[1].is_string())
+	{
+		conprint(args[0].as_integer(), "{}", args[1].as_string());
+		return;
+	}
+	conprint(0, "{}", args[0].as_string());
+}
+
+static void CCmdWait(const jsonArray& args)
+{
+	if (args.size() == 0 || !args[0].is_integer())
+	{
+		conprint(0, "Input value must be an integer.");
+		return;
+	}
+	console->waitTimer = args[0].as_integer();
+}
+
+static void CCmdAlias(const jsonArray& args)
+{
+	if (args.size() == 0)
+	{
+		for (const auto& a : console->calis)
+		{
+			conprint(0, "  {}: {}", a.first, a.second);
+		}
+		return;
+	}
+	else
+	{
+		if (!args[0].is_string())
+		{
+			conprint(1, "Alias name must be a string.");
+			return;
+		}
+		if (args.size() > 1 && !args[1].is_string())
+		{
+			conprint(1, "Alias content must be string.");
+			return;
+		}
+	}
+
+	auto key = args[0].as_string();
+	auto it = console->calis.find(key);
+	if (args.size() == 1)
+	{
+		console->calis.erase(it);
+		return;
+	}
+	console->calis[key] = args[1].as_string();
 }
 
 static void CCmdVersion(const jsonArray& args)

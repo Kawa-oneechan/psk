@@ -75,7 +75,10 @@ private:
 public:
 	std::vector<CVar> cvars;
 	std::vector<CCmd> ccmds;
+	std::map<std::string, std::string> calis;
 	bool visible;
+	int waitTimer{ 0 };
+	std::string commandBuffer;
 
 	Console();
 	//Attempts to execute user input. If the input is just a console
