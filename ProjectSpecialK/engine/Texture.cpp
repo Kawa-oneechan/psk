@@ -88,6 +88,11 @@ Texture::Texture(const std::string& texturePath, int repeat, int filter, bool sk
 	}
 	stbi_image_free(data);
 	data = nullptr;
+
+	{
+		auto name = fmt::format("Texture {} ({})", file, ID);
+		glObjectLabel(GL_TEXTURE, ID, (GLsizei)name.length(), name.c_str());
+	}
 }
 
 Texture::Texture(const unsigned char* data, int width, int height, int channels, int repeat, int filter) : data(nullptr), repeat(repeat), width(width), height(height), channels(channels)
@@ -146,6 +151,10 @@ void Texture::Use(int slot)
 		}
 		data = nullptr;
 		delayed = false;
+		{
+			auto name = fmt::format("Texture {} ({})", file, ID);
+			glObjectLabel(GL_TEXTURE, ID, (GLsizei)name.length(), name.c_str());
+		}
 	}
 
 	if (currentTexture[slot] != ID)
@@ -240,6 +249,11 @@ TextureArray::TextureArray(const std::vector<std::string>& entries, int repeat, 
 	//std::free(data);
 	delete[] data;
 	data = nullptr;
+
+	{
+		auto name = fmt::format("Texture {} ({})", file, ID);
+		glObjectLabel(GL_TEXTURE, ID, (GLsizei)name.length(), name.c_str());
+	}
 }
 
 TextureArray::TextureArray(const std::string& texturePath, int repeat, int filter) : file(texturePath), repeat(repeat)
@@ -317,6 +331,10 @@ void TextureArray::Use(int slot)
 		delete[] data;
 		data = nullptr;
 		delayed = false;
+		{
+			auto name = fmt::format("Texture {} ({})", file, ID);
+			glObjectLabel(GL_TEXTURE, ID, (GLsizei)name.length(), name.c_str());
+		}
 	}
 
 	if (currentTexture[slot] != ID)

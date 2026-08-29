@@ -327,6 +327,9 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 
 	Inputs.Process(scancode, action);
 
+	if (action != GLFW_PRESS)
+		return;
+	
 	for (unsigned int i = (unsigned int)root.size(); i-- > 0; )
 	{
 		auto t = root[i];

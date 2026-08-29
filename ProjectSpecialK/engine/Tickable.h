@@ -110,7 +110,6 @@ public:
 	virtual bool Tick(float dt) override;
 
 	virtual glm::vec2 GetMinimalSize();
-
 	virtual glm::vec2 GetSize();
 
 	void UpdatePosition();

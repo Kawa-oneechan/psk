@@ -56,6 +56,11 @@ void Shader::load()
 	//Hook up Common Uniforms if any.
 	auto commonBlockIndex = glGetUniformBlockIndex(ID, "CommonData");
 	glUniformBlockBinding(ID, commonBlockIndex, 1);
+
+	{
+		auto name = fmt::format("Shader {} ({})", fragmentShaderPath, ID);
+		glObjectLabel(GL_PROGRAM, ID, (GLsizei)name.length(), name.c_str());
+	}
 }
 
 Shader::Shader(const std::string& vertexPath, const std::string& fragmentPath) : vertexShaderPath(vertexPath), fragmentShaderPath(fragmentPath)

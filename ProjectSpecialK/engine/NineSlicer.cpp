@@ -10,7 +10,7 @@ NineSlicer::NineSlicer(const std::string& texture, int left, int top, int width,
 	Position = glm::vec2(left, top);
 }
 
-void NineSlicer::Draw(Texture& tex, const glm::vec2& position, glm::vec2& size, float scale, const glm::vec4& color)
+void NineSlicer::Draw(Texture& tex, const glm::vec2& position, glm::vec2& size, float scale, const glm::vec4& color, int startFrame)
 {
 	auto minWidth = (tex[0].z + tex[2].z) * scale;
 	auto minHeight = (tex[0].w + tex[6].w) * scale;
@@ -30,36 +30,36 @@ void NineSlicer::Draw(Texture& tex, const glm::vec2& position, glm::vec2& size, 
 	auto edgeHeight = (height - _size.y - _size.y);
 
 	//Top left
-	Sprite::DrawSprite(tex, glm::vec2(left, top), _size, tex[0], 0.0f, color);
+	Sprite::DrawSprite(tex, glm::vec2(left, top), _size, tex[0 + startFrame], 0.0f, color);
 
 	//Top
 	if (width > minWidth)
-		Sprite::DrawSprite(tex, glm::vec2(left + _size.x, top), glm::vec2(edgeWidth, _size.y), tex[1], 0.0f, color);
+		Sprite::DrawSprite(tex, glm::vec2(left + _size.x, top), glm::vec2(edgeWidth, _size.y), tex[1 + startFrame], 0.0f, color);
 
 	//Top right
-	Sprite::DrawSprite(tex, glm::vec2(right, top), _size, tex[2], 0.0f, color);
+	Sprite::DrawSprite(tex, glm::vec2(right, top), _size, tex[2 + startFrame], 0.0f, color);
 
 	//Left
 	if (height > minHeight)
-		Sprite::DrawSprite(tex, glm::vec2(left, top + _size.y), glm::vec2(_size.x, edgeHeight), tex[3], 0.0f, color);
+		Sprite::DrawSprite(tex, glm::vec2(left, top + _size.y), glm::vec2(_size.x, edgeHeight), tex[3 + startFrame], 0.0f, color);
 
 	//Fill
 	if (width > minWidth && height > minHeight)
-		Sprite::DrawSprite(tex, glm::vec2(left + _size.x, top + _size.y), glm::vec2(edgeWidth, edgeHeight), tex[4], 0.0f, color);
+		Sprite::DrawSprite(tex, glm::vec2(left + _size.x, top + _size.y), glm::vec2(edgeWidth, edgeHeight), tex[4 + startFrame], 0.0f, color);
 
 	//Right
 	if (height > minHeight)
-		Sprite::DrawSprite(tex, glm::vec2(right, top + _size.y), glm::vec2(_size.x, edgeHeight), tex[5], 0.0f, color);
+		Sprite::DrawSprite(tex, glm::vec2(right, top + _size.y), glm::vec2(_size.x, edgeHeight), tex[5 + startFrame], 0.0f, color);
 
 	//Bottom left
-	Sprite::DrawSprite(tex, glm::vec2(left, bottom), _size, tex[6], 0.0f, color);
+	Sprite::DrawSprite(tex, glm::vec2(left, bottom), _size, tex[6 + startFrame], 0.0f, color);
 
 	//Bottom
 	if (width > minWidth)
-		Sprite::DrawSprite(tex, glm::vec2(left + _size.x, bottom), glm::vec2(edgeWidth, _size.y), tex[7], 0.0f, color);
+		Sprite::DrawSprite(tex, glm::vec2(left + _size.x, bottom), glm::vec2(edgeWidth, _size.y), tex[7 + startFrame], 0.0f, color);
 
 	//Bottom right
-	Sprite::DrawSprite(tex, glm::vec2(right, bottom), _size, tex[8], 0.0f, color);
+	Sprite::DrawSprite(tex, glm::vec2(right, bottom), _size, tex[8 + startFrame], 0.0f, color);
 }
 
 void NineSlicer::Draw(float dt)
