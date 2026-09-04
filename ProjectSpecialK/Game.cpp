@@ -80,6 +80,7 @@ void Game::Initialize()
 
 
 	commonUniforms.Fresnel = true;
+	commonUniforms.FresnelPower = 4.0f;
 
 	ThreadedLoader(Database::LoadGlobalStuff);
 

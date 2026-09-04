@@ -48,7 +48,10 @@ void Game::RegisterConsole(Console* console)
 	RV("r_postfx", CVar::Type::Int, &commonUniforms.PostEffect, false, 0, 4);
 	RV("r_colorlut", CVar::Type::Int, &commonUniforms.ColorLut, false, 0, 16);
 	RV("r_toon", CVar::Type::Bool, &commonUniforms.Toon);
+	RV("r_fresnel", CVar::Type::Bool, &commonUniforms.Fresnel);
+	RV("r_fresnelpow", CVar::Type::Float, &commonUniforms.FresnelPower, false, 0, 6);
 	RV("r_zomboid", CVar::Type::Bool, &useOrthographic);
+
 	RV("s_ambientvolume", CVar::Type::Float, &Audio::AmbientVolume, false, 0, 100);
 	RV("s_effectvolume", CVar::Type::Float, &Audio::SoundVolume, false, 0, 100);
 	RV("s_musicvolume", CVar::Type::Float, &Audio::MusicVolume, false, 0, 100);

@@ -65,9 +65,20 @@ float getFresnel(mat4 model, vec3 normal)
 	if (!Fresnel)
 		return 0.0;
 
+/*
 	vec3 camPos = normalize(((InvView - model) * vec4(0.0, 0.0, 0.0, 0.1)).xyz);
 	camPos.y -= 0.25;
-	return clamp(0.25 - dot(normal, camPos), 0.0, 1.0);
+	//return clamp(0.25 - dot(normal, camPos), 0.0, 1.0);
+	return pow(clamp(1.0 - dot(normal, camPos), 0.0, 1.0), FresnelPower);
+*/
+`
+vec3 camPos = (InvView * vec4(1.0)).xyz;
+	vec3 WorldPos = (model * vec4(1.0)).xyz;
+
+	vec3 V = normalize(camPos - WorldPos);
+	vec3 L = normalize(Lights[0].pos.xyz - WorldPos);
+	vec3 H = normalize(V + L);
+	return pow(clamp(1.0 - dot(normal, V), 0.0, 1.0), FresnelPower);
 }
 
 

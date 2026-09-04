@@ -25,6 +25,7 @@ layout (std140) uniform CommonData
 	bool Curve;
 	bool Toon;
 	bool Fresnel;
+	float FresnelPower;
 	float GrassColor;
 	float TimeOfDay;
 	vec3 NightSkyColor;

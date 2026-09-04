@@ -77,6 +77,7 @@ struct CommonUniforms
 	alignas(4) bool CurveEnabled;
 	alignas(4) bool Toon;
 	alignas(4) bool Fresnel;
+	float FresnelPower;
 	float GrassColor;
 	float TimeOfDay;
 	alignas(4*4) glm::vec3 NightSkyColor;
