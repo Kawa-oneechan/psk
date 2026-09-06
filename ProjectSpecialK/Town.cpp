@@ -17,7 +17,7 @@
 __declspec(noreturn)
 extern void FatalError(const std::string& message);
 
-namespace Scripting { extern sol::state Sol; }
+namespace Scripting { extern sol::state* Sol; }
 
 extern TexArrayP groundTextureAlbs;
 extern TexArrayP groundTextureNrms;
@@ -134,14 +134,14 @@ void Town::GenerateNew(const std::string& mapper, int width, int height)
 		return (int)Terrain[(y * Width) + x].Elevation;
 	};
 
-	Scripting::Sol["map"] = sol::new_table();
-	Scripting::Sol["map"]["Width"].set(Width - 1);
-	Scripting::Sol["map"]["Height"].set(Height - 1);
-	Scripting::Sol["map"]["SetTile"].set_function(setTile);
-	Scripting::Sol["map"]["Raise"].set_function(raise);
-	Scripting::Sol["map"]["Elevation"].set_function(elevation);
-	Scripting::Sol.script(VFS::ReadString(mapper));
-	Scripting::Sol["map"] = nullptr;
+	(*Scripting::Sol)["map"] = sol::new_table();
+	(*Scripting::Sol)["map"]["Width"].set(Width - 1);
+	(*Scripting::Sol)["map"]["Height"].set(Height - 1);
+	(*Scripting::Sol)["map"]["SetTile"].set_function(setTile);
+	(*Scripting::Sol)["map"]["Raise"].set_function(raise);
+	(*Scripting::Sol)["map"]["Elevation"].set_function(elevation);
+	Scripting::Sol->script(VFS::ReadString(mapper));
+	(*Scripting::Sol)["map"] = nullptr;
 
 #ifdef DEBUG
 	SaveToPNG();

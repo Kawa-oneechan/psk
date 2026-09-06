@@ -2,8 +2,9 @@
 
 #include <functional>
 #include "engine/Tickable.h"
+#include "Scriptable.h"
 
-class Sequence : public Tickable
+class Sequence : public Tickable, public Scriptable
 {
 private:
 	int cursor;
@@ -15,7 +16,7 @@ public:
 	void Draw(float dt) override;
 };
 
-class FuncAsTickable : public Tickable
+class FuncAsTickable : public Tickable, public Scriptable
 {
 private:
 	std::function<void()> wrapped;

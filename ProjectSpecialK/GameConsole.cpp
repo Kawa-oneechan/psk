@@ -35,41 +35,40 @@ void Game::RegisterConsole(Console* console)
 {
 #define RV console->RegisterCVar
 
-	RV("cl_showpos", CVar::Type::Bool, &showPos);
+	RV("cl_showpos", CVar::Type::Bool, &showPos, "Shows player position on screen");
 #ifdef DEBUG
-	RV("debugger", CVar::Type::Bool, &debuggerEnabled);
+	RV("debugger", CVar::Type::Bool, &debuggerEnabled, "Enables ImGui debugger");
 #endif
-	RV("r_drawgui", CVar::Type::Bool, &debugRenderPanelLayouts, true);
-	RV("r_drum", CVar::Type::Bool, &commonUniforms.CurveEnabled);
-	RV("r_drumexp", CVar::Type::Float, &commonUniforms.CurvePower);
-	RV("r_fresnel", CVar::Type::Bool, &commonUniforms.Fresnel);
-	RV("r_wireframe", CVar::Type::Bool, &wireframe);
-	RV("r_polygons", CVar::Type::Bool, &debugPanelLayoutPolygons);
-	RV("r_postfx", CVar::Type::Int, &commonUniforms.PostEffect, false, 0, 4);
-	RV("r_colorlut", CVar::Type::Int, &commonUniforms.ColorLut, false, 0, 16);
-	RV("r_toon", CVar::Type::Bool, &commonUniforms.Toon);
-	RV("r_fresnel", CVar::Type::Bool, &commonUniforms.Fresnel);
-	RV("r_fresnelpow", CVar::Type::Float, &commonUniforms.FresnelPower, false, 0, 6);
-	RV("r_zomboid", CVar::Type::Bool, &useOrthographic);
+	RV("r_drawgui", CVar::Type::Bool, &debugRenderPanelLayouts, CVar::Flags::Cheat, "Render panel layouts");
+	RV("r_drum", CVar::Type::Bool, &commonUniforms.CurveEnabled, "Enable camera distortion");
+	RV("r_drumexp", CVar::Type::Float, &commonUniforms.CurvePower, "Camera distortion strength");
+	RV("r_wireframe", CVar::Type::Bool, &wireframe, "Renders 3D models as wireframes");
+	RV("r_polygons", CVar::Type::Bool, &debugPanelLayoutPolygons, "Shows outlines for clickable panel layout panels");
+	RV("r_postfx", CVar::Type::Int, &commonUniforms.PostEffect, CVar::Flags::Normal, 0, 4, nullptr, "Post-processing effect");
+	RV("r_colorlut", CVar::Type::Int, &commonUniforms.ColorLut, CVar::Flags::Normal, 0, 16, nullptr, "Post-processing color lookup palette");
+	RV("r_toon", CVar::Type::Bool, &commonUniforms.Toon, "Enables toon shading");
+	RV("r_fresnel", CVar::Type::Bool, &commonUniforms.Fresnel, "Enables fresnel effect on 3D models");
+	RV("r_fresnelpow", CVar::Type::Float, &commonUniforms.FresnelPower, CVar::Flags::Normal, 0, 6, nullptr, "Strength of fresnel effect");
+	RV("r_zomboid", CVar::Type::Bool, &useOrthographic, "Enables orthographic rendering");
 
-	RV("s_ambientvolume", CVar::Type::Float, &Audio::AmbientVolume, false, 0, 100);
-	RV("s_effectvolume", CVar::Type::Float, &Audio::SoundVolume, false, 0, 100);
-	RV("s_musicvolume", CVar::Type::Float, &Audio::MusicVolume, false, 0, 100);
-	RV("s_voicevolume", CVar::Type::Float, &Audio::SpeechVolume, false, 0, 100);
+	RV("s_ambientvolume", CVar::Type::Float, &Audio::AmbientVolume, CVar::Flags::Normal, 0, 100);
+	RV("s_effectvolume", CVar::Type::Float, &Audio::SoundVolume, CVar::Flags::Normal, 0, 100);
+	RV("s_musicvolume", CVar::Type::Float, &Audio::MusicVolume, CVar::Flags::Normal, 0, 100);
+	RV("s_voicevolume", CVar::Type::Float, &Audio::SpeechVolume, CVar::Flags::Normal, 0, 100);
 
-	RV("bells", CVar::Type::Int, &thePlayer.Bells, true);
-	RV("gender", CVar::Type::Int, &thePlayer.Gender, false, 0, 3);
-	RV("name", CVar::Type::String, &thePlayer.Name);
-	RV("nowear", CVar::Type::Bool, &noWear, true);
-	RV("colorskin", CVar::Type::Color, &thePlayer.SkinTone);
-	RV("colorskinedge", CVar::Type::Color, &thePlayer.SkinEdge);
-	RV("colorhair", CVar::Type::Color, &thePlayer.HairColor);
-	RV("colorhairlite", CVar::Type::Color, &thePlayer.HairHiliteColor);
-	RV("colorcheeks", CVar::Type::Color, &thePlayer.CheekColor);
-	RV("coloreyes", CVar::Type::Color, &thePlayer.EyeColor);
+	RV("bells", CVar::Type::Int, &thePlayer.Bells, CVar::Flags::Cheat, "Number of Bells on hand");
+	RV("gender", CVar::Type::Int, &thePlayer.Gender, CVar::Flags::Normal, 0, 3);
+	RV("name", CVar::Type::String, &thePlayer.Name, "Player's name");
+	RV("nowear", CVar::Type::Bool, &noWear, CVar::Flags::Cheat, "Disables wear and tear on tools");
+	RV("colorskin", CVar::Type::Color, &thePlayer.SkinTone, "Player's skintone");
+	RV("colorskinedge", CVar::Type::Color, &thePlayer.SkinEdge, "Player's skintone");
+	RV("colorhair", CVar::Type::Color, &thePlayer.HairColor, "Player's hair color");
+	RV("colorhairlite", CVar::Type::Color, &thePlayer.HairHiliteColor, "Player's hair color");
+	RV("colorcheeks", CVar::Type::Color, &thePlayer.CheekColor, "Player's cheek color");
+	RV("coloreyes", CVar::Type::Color, &thePlayer.EyeColor, "Player's eye color");
 
 	//TODO: add a change callback to handle the snow/grass change.
-	RV("grass", CVar::Type::Float, &commonUniforms.GrassColor, false);
+	RV("grass", CVar::Type::Float, &commonUniforms.GrassColor, "Grass color in progression through the year");
 
 	//replace this with noclip below
 	RV("collidenpc", CVar::Type::Bool, &botherColliding, false);
@@ -82,5 +81,5 @@ void Game::RegisterConsole(Console* console)
 
 #undef RV
 
-	console->RegisterCCmd("reshade", CCmdReshade);
+	console->RegisterCCmd("reshade", CCmdReshade, false, "Forces reload of all shaders");
 }

@@ -7,7 +7,7 @@
 #include "Traits.h"
 #include "Item.h"
 #include "Types.h"
-#include <sol.hpp>
+#include "Scriptable.h"
 
 class VillagerMemory
 {
@@ -24,6 +24,7 @@ public:
 
 using VillagerMemoryP = std::shared_ptr<VillagerMemory>;
 
+/*
 //TODO: split this into its own files
 class ScriptRunner : public Tickable
 {
@@ -36,9 +37,9 @@ public:
 	sol::call_status Status() { return currentCoro->status(); }
 };
 using ScriptRunnerP = std::shared_ptr<ScriptRunner>;
+*/
 
-
-class Villager : public NameableThing, public Person
+class Villager : public NameableThing, public Person, public Scriptable
 {
 private:
 	//ModelP _model, _clothingModel, _accessoryModel;
@@ -124,8 +125,9 @@ public:
 
 	InventoryItem* Clothing() { return _clothesItems[0].get(); };
 
-	bool Mutex{ false };
-	ScriptRunnerP scriptRunner;
+	//bool Mutex{ false };
+	//ScriptRunnerP scriptRunner;
+	bool MyMutex{ false };
 	void TestScript();
 };
 

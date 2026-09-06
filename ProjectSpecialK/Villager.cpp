@@ -14,7 +14,7 @@
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/rotate_vector.hpp>
 
-namespace Scripting { extern sol::state Sol; }
+namespace Scripting { extern sol::state* Sol; }
 
 static SpeciesP specialDummy;
 
@@ -407,6 +407,12 @@ bool Villager::Tick(float)
 
 	_model->CalculateBoneTransforms();
 
+	if (!ScriptID.empty() && CanRun() && !Mutex)
+	{
+		Call();
+		//if (Status() == sol::call_status::ok) //not yielded
+	}
+	/*
 	if (scriptRunner && scriptRunner->Runnable() && !Mutex)
 	{
 		scriptRunner->Call();
@@ -416,6 +422,7 @@ bool Villager::Tick(float)
 			scriptRunner.reset();
 		}
 	}
+	*/
 
 	return true;
 }
@@ -538,11 +545,12 @@ void Villager::PickClothing()
 
 	if (_isSpecial)
 	{
+		//TODO: see about using the new Scriptable interface for this.
 		auto script = VFS::ReadString(fmt::format("{}/spawn.lua", Path));
 		if (!script.empty())
 		{
-			Scripting::Sol["currentVillager"] = Database::Find(Hash, villagers);
-			Scripting::Sol.do_string(script);
+			(*Scripting::Sol)["currentVillager"] = Database::Find(Hash, villagers);
+			Scripting::Sol->do_string(script);
 		}
 		else
 			PickSNPCOutfit(0);
@@ -683,11 +691,14 @@ void Villager::TestScript()
 	)SOL";
 
 	console->visible = false;
-	Mutex = false;
-	scriptRunner = std::make_shared<ScriptRunner>("start", testScript, &Mutex);
-	root.GetChild<DialogueBox>()->Mutex = scriptRunner->Mutex;
+	//Mutex = false;
+	//scriptRunner = std::make_shared<ScriptRunner>("start", testScript, &Mutex);
+	//root.GetChild<DialogueBox>()->Mutex = scriptRunner->Mutex;
+	MyMutex = false;
+	root.GetChild<DialogueBox>()->Mutex = &MyMutex;
 }
 
+/*
 //TODO: split this into its own files
 ScriptRunner::ScriptRunner(const std::string& entryPoint, const std::string& script, bool* mutex)
 {
@@ -704,4 +715,4 @@ void ScriptRunner::Call()
 {
 	currentCoro->call();
 }
-
+*/

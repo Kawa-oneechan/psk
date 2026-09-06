@@ -12,28 +12,30 @@
 
 namespace Scripting
 {
-	sol::state Sol;
+	sol::state* Sol{ nullptr };
 
 	static void CCmdLua(const jsonArray& args);
 
 	void Setup()
 	{
-		Sol.open_libraries(sol::lib::base, sol::lib::coroutine, sol::lib::string, sol::lib::math, sol::lib::debug);
+		Sol = new sol::state();
+
+		Sol->open_libraries(sol::lib::base, sol::lib::coroutine, sol::lib::string, sol::lib::math, sol::lib::debug);
 
 		//Remove some base stuff
-		Sol["dofile"] = nullptr;
-		Sol["load"] = nullptr;
-		Sol["loadfile"] = nullptr;
-		Sol["loadstring"] = nullptr;
-		Sol["getlocal"] = Sol["debug"]["getlocal"];
-		Sol["debug"] = nullptr;
+		(*Sol)["dofile"] = nullptr;
+		(*Sol)["load"] = nullptr;
+		(*Sol)["loadfile"] = nullptr;
+		(*Sol)["loadstring"] = nullptr;
+		(*Sol)["getlocal"] = (*Sol)["debug"]["getlocal"];
+		(*Sol)["debug"] = nullptr;
 
-		Sol["print"] = [&](sol::variadic_args va)
+		(*Sol)["print"] = [&](sol::variadic_args va)
 		{
 			console->Print(0, va[0]);
 		};
 
-		Sol["dialogue"] = sol::yielding([&](sol::variadic_args va)
+		(*Sol)["dialogue"] = sol::yielding([&](sol::variadic_args va)
 		{
 			VillagerP speaker = nullptr;
 			int style = 0;
@@ -70,27 +72,27 @@ namespace Scripting
 				console->Close();
 		});
 
-		Sol.new_usertype<Player>(
+		(*Sol).new_usertype<Player>(
 			"__Player",
 			"Name", sol::readonly(&Player::Name),
 			"Gender", &Player::Gender,
 			"Bells", &Player::Bells
 		);
-		Sol["__Player"]["HasInventoryRoom"] = [&]() { return  thePlayer.HasInventoryRoom(); };
-		Sol["__Player"]["SwapItems"] = [&](int from, int to) { thePlayer.SwapItems(from, to); };
-		Sol["__Player"]["RemoveItem"] = [&](int slot) { thePlayer.RemoveItem(slot); };
-		Sol["__Player"]["ConsumeItem"] = [&](int slot) { thePlayer.ConsumeItem(slot); };
-		Sol["player"] = &thePlayer;
+		(*Sol)["__Player"]["HasInventoryRoom"] = [&]() { return  thePlayer.HasInventoryRoom(); };
+		(*Sol)["__Player"]["SwapItems"] = [&](int from, int to) { thePlayer.SwapItems(from, to); };
+		(*Sol)["__Player"]["RemoveItem"] = [&](int slot) { thePlayer.RemoveItem(slot); };
+		(*Sol)["__Player"]["ConsumeItem"] = [&](int slot) { thePlayer.ConsumeItem(slot); };
+		(*Sol)["player"] = &thePlayer;
 
-		Sol.new_usertype<Villager>(
+		(*Sol).new_usertype<Villager>(
 			"__Villager",
 			"Name", sol::property(&Villager::Name),
 			"Species", &Villager::Species,
 			"Test", &Villager::TestScript
 		);
-		Sol["__Villager"]["PickSpecialOutfit"] = &Villager::PickSNPCOutfit;
+		(*Sol)["__Villager"]["PickSpecialOutfit"] = &Villager::PickSNPCOutfit;
 
-		Sol["getVillager"] = [](sol::variadic_args va)
+		(*Sol)["getVillager"] = [](sol::variadic_args va)
 		{
 			if (va.size() == 1)
 			{
@@ -106,7 +108,7 @@ namespace Scripting
 			conprint(1, "getVillager needs one argument, a hash or an ID.");
 			return (VillagerP)nullptr;
 		};
-		Sol["getItem"] = [](sol::variadic_args va)
+		(*Sol)["getItem"] = [](sol::variadic_args va)
 		{
 			if (va.size() == 1)
 			{
@@ -123,7 +125,7 @@ namespace Scripting
 			return (ItemP)nullptr;
 		};
 
-		Sol["music"] = [](sol::variadic_args va)
+		(*Sol)["music"] = [](sol::variadic_args va)
 		{
 			auto musicManager = root.GetChild<MusicManager>();
 			if (va.size() == 1)
@@ -133,11 +135,11 @@ namespace Scripting
 			console->Close();
 		};
 
-		Sol["decodeNookCode"] = [&](const std::string& code)
+		(*Sol)["decodeNookCode"] = [&](const std::string& code)
 		{
 			hash itemHash;
 			int variant, pattern;
-			Sol["nookName"] = "XXX";
+			(*Sol)["nookName"] = "XXX";
 			NookCode::Decode(code, itemHash, variant, pattern);
 			if (itemHash == (hash)-1)
 				return 0; //Invalid characters in NookCode.
@@ -150,7 +152,7 @@ namespace Scripting
 				{
 					//TODO: check if we already have this item.
 					//TODO: put this item in the delivery queue for tomorrow
-					Sol["nookName"] = item->Name();
+					(*Sol)["nookName"] = item->Name();
 					return 3; //Item will be delivered.
 				}
 			}
@@ -160,14 +162,14 @@ namespace Scripting
 				{
 					//TODO: check if this villager already lives here.
 					//TODO: put this villager on the move-in queue
-					Sol["nookName"] = villager->Name();
+					(*Sol)["nookName"] = villager->Name();
 					return 5; //Villager will move in.
 				}
 			}
 			return 2; //Valid NookCode, but unknown hash.
 		};
 
-		Sol["getRandomVillager"] = [](sol::variadic_args va)
+		(*Sol)["getRandomVillager"] = [](sol::variadic_args va)
 		{
 			hash thisPersonality = 0;
 			hash notThisVillager = 0;
@@ -215,14 +217,14 @@ namespace Scripting
 
 	bool Conditional(const std::string& snippet)
 	{
-		return Sol.script(fmt::format("return ({})", snippet));
+		return Sol->script(fmt::format("return ({})", snippet));
 	}
 
 	std::string BJTS(const std::string& func, const std::vector<std::string>& bjts)
 	{
-		Sol["bjts"] = bjts;
-		auto ret = Sol.script(func).get<std::string>();
-		Sol["bjts"] = nullptr;
+		(*Sol)["bjts"] = bjts;
+		auto ret = Sol->script(func).get<std::string>();
+		(*Sol)["bjts"] = nullptr;
 		return ret;
 	}
 
@@ -230,7 +232,7 @@ namespace Scripting
 	{
 		try
 		{
-			Sol.script(args[0].as_string());
+			Sol->script(args[0].as_string());
 		}
 		catch (sol::error& e)
 		{

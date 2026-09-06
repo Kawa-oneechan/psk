@@ -18,7 +18,6 @@ protected:
 	std::vector<std::shared_ptr<Tickable>> ChildTickables;
 
 public:
-	bool* Mutex{ nullptr };
 	bool Dead{ false };
 	bool Visible{ true };
 	bool Enabled{ true };

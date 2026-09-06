@@ -3,8 +3,9 @@
 #include "engine/Tickable.h"
 #include "engine/Texture.h"
 #include "Villager.h"
+#include "Scriptable.h"
 
-class DialogueBox : public Tickable
+class DialogueBox : public Tickable, public Scriptable
 {
 private:
 	Texture bubble[5] = {

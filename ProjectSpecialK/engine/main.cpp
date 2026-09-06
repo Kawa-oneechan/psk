@@ -174,6 +174,7 @@ namespace UI
 			Inputs.Keys[i].GamepadButton = padBinds[i].as_integer();
 		}
 
+		console->LoadPersistentCVars(sets);
 		Game::LoadSettings(sets);
 	}
 
@@ -209,6 +210,7 @@ namespace UI
 		set["speechVolume"] = (int)(Audio::SpeechVolume * 100.0f);
 #endif
 
+		console->SavePersistentCVars(set);
 		Game::SaveSettings(set);
 
 		settings.as_object() = set;

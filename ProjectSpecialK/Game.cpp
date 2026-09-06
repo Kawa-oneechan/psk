@@ -39,7 +39,7 @@ bool showPos = false;
 namespace Scripting
 {
 	extern void Setup();
-	extern sol::state Sol;
+	extern sol::state* Sol;
 }
 
 namespace UI
@@ -99,7 +99,7 @@ void Game::Initialize()
 	-- start();
 
 	)SOL";
-	Scripting::Sol.do_string(testScript);
+	Scripting::Sol->do_string(testScript);
 
 
 	{

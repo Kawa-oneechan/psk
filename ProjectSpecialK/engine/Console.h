@@ -29,9 +29,12 @@ struct CVar
 		glm::vec3* asVec3;
 		glm::vec4* asVec4;
 	};
-	//If enabled, the player is not allowed to change the variable's value
-	//without first setting cheatsEnabled in some way.
-	bool cheat;
+	enum Flags
+	{
+		Normal = 0,
+		Cheat = 1,
+		Persistent = 2
+	} flags;
 	//For int and float type variables, specifies the minimum and maximum
 	//values allowed.
 	int min, max;
@@ -111,11 +114,14 @@ public:
 	bool Tick(float dt) override;
 	void Draw(float dt) override;
 	//Registers a console variable, mapping it by name to an arbitrary variable in the game.
-	void RegisterCVar(const std::string& name, CVar::Type type, void* target, bool cheat = false, int min = -1, int max = -1, CVarCallback onChange = nullptr);
+	void RegisterCVar(const std::string& name, CVar::Type type, void* target, CVar::Flags flags = CVar::Flags::Normal, int min = -1, int max = -1, CVarCallback onChange = nullptr, const std::string& description = "");
+	void RegisterCVar(const std::string& name, CVar::Type type, void* target, CVar::Flags flags = CVar::Flags::Normal, const std::string& description = "");
+	void RegisterCVar(const std::string& name, CVar::Type type, void* target, const std::string& description = "");
 	//Registers a console command, mapping it by name to a void(jsonArray&) function.
-	void RegisterCCmd(const std::string& name, std::function<void(const jsonArray& args)> act, bool takesString = false);
+	void RegisterCCmd(const std::string& name, std::function<void(const jsonArray& args)> act, bool takesString = false, const std::string& description = "");
 
-	static bool CheckSplat(const std::string& pattern, const std::string& text);
+	void LoadPersistentCVars(jsonObject&);
+	void SavePersistentCVars(jsonObject&);
 
 	Console(const Console &x) = delete;
 	Console &operator=(const Console &x) = delete;

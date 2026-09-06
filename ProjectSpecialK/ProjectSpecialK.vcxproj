@@ -204,6 +204,7 @@
     <ClCompile Include="Person.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Scoring.cpp" />
+    <ClCompile Include="Scriptable.cpp" />
     <ClCompile Include="Sequence.cpp" />
     <ClCompile Include="Scripting.cpp" />
     <ClCompile Include="Species.cpp" />
@@ -312,6 +313,7 @@
     <ClInclude Include="Person.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Scoring.h" />
+    <ClInclude Include="Scriptable.h" />
     <ClInclude Include="Sequence.h" />
     <ClInclude Include="Species.h" />
     <ClInclude Include="TitleScreen.h" />

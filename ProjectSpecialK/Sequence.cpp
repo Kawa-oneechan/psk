@@ -20,7 +20,8 @@ bool Sequence::Tick(float dt)
 	if (waiting)
 	{
 		auto now = ChildTickables[cursor];
-		now->Mutex = &waiting;
+		if (auto scriptable = std::dynamic_pointer_cast<Scriptable>(now))
+			scriptable->Mutex = &waiting;
 		ret = now->Tick(dt);
 	}
 	//No longer waiting?
@@ -46,7 +47,8 @@ void Sequence::Draw(float dt)
 	if (waiting)
 	{
 		auto now = ChildTickables[cursor];
-		now->Mutex = &waiting;
+		if (auto scriptable = std::dynamic_pointer_cast<Scriptable>(now))
+			scriptable->Mutex = &waiting;
 		now->Draw(dt);
 	}
 }
