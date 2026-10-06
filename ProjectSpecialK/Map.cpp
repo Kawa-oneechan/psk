@@ -389,7 +389,7 @@ bool Map::Tick(float dt)
 	tm gm{};
 	auto now = time(nullptr);
 	localtime_s(&gm, &now);
-	commonUniforms.TimeOfDay = (gm.tm_hour / 24.0f) + ((gm.tm_min / 60.0f) / 24.0f);
+	commonUniforms.Environment.a = (gm.tm_hour / 24.0f) + ((gm.tm_min / 60.0f) / 24.0f);
 
 	for (const auto& p : People)
 	{

@@ -21,7 +21,7 @@ float clouds(vec2 uv, float pitch)
 	uv = planarUV * 0.24;
 	uv.y += 0.5;
 	uv.x *= 0.4;
-	uv += TotalTime * Wind; //0.045;
+	uv += TotalTime * Environment.b; //0.045;
 
 	float n1 = texture(cloudImage, vec3(uv * 0.25, 0)).r * 0.5;
 	float n2 = texture(cloudImage, vec3(uv + vec2(0.5) * 0.15, 0)).r * 0.5;
@@ -44,14 +44,14 @@ void main()
 	//there is really no need to have this next line when you think about it.
 	//uv.x -= atan(viewDir.z, viewDir.x) * 0.25;
 
-	vec3 sky = texture(skyImage, vec2(TimeOfDay, uv.y - 0.01)).rgb;
+	vec3 sky = texture(skyImage, vec2(Environment.a, uv.y - 0.01)).rgb;
 	fragColor = vec4(sky, 1.0);
 
-	float blend = clamp(texture(skyImage, vec2(TimeOfDay, 0.0)).r * 3.0, 0.15, 1.0);
+	float blend = clamp(texture(skyImage, vec2(Environment.a, 0.0)).r * 3.0, 0.15, 1.0);
 
 	vec4 starsColor = vec4(
 			texture(starsImage, uv + vec2(0, -pit)).rgb +
-			mix(NightSkyColor, vec3(0), uv.y),
+			mix(NightSkyColor.rgb, vec3(0), uv.y),
 		1.0);
 
 	fragColor = mix(starsColor, fragColor, blend);

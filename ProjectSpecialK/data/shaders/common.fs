@@ -27,10 +27,8 @@ layout (std140) uniform CommonData
 	bool Fresnel;
 	float FresnelPower;
 	float GrassColor;
-	float TimeOfDay;
-	vec3 NightSkyColor;
-	float Weather;
-	float Wind;
+	vec4 Environment;
+	vec4 NightSkyColor;
 	vec4 PlayerSkin;
 	vec4 PlayerSkinEdge;
 	vec4 PlayerEyes;

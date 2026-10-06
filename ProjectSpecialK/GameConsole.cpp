@@ -67,14 +67,17 @@ void Game::RegisterConsole(Console* console)
 	RV("colorcheeks", CVar::Type::Color, &thePlayer.CheekColor, "Player's cheek color");
 	RV("coloreyes", CVar::Type::Color, &thePlayer.EyeColor, "Player's eye color");
 
-	RV("weather", CVar::Type::Float, &commonUniforms.Weather, "Weather");
-	RV("wind", CVar::Type::Float, &commonUniforms.Wind, CVar::Flags::Normal, -2, 2, nullptr, "Wind");
+	RV("weather", CVar::Type::Float, &commonUniforms.Environment.r, "Weather");
+	RV("wind", CVar::Type::Float, &commonUniforms.Environment.b, CVar::Flags::Normal, -2, 2, nullptr, "Wind");
 
 	//TODO: add a change callback to handle the snow/grass change.
 	RV("grass", CVar::Type::Float, &commonUniforms.GrassColor, "Grass color in progression through the year");
 
 	//replace this with noclip below
 	RV("collidenpc", CVar::Type::Bool, &botherColliding, "");
+
+	int x = offsetof(CommonUniforms, NightSkyColor);
+	conprint(7, "{}", x);
 
 	//RV("ai_disable", CVar::Type::Bool, &);
 	//RV("cl_showpos", CVar::Type::Bool, &);
