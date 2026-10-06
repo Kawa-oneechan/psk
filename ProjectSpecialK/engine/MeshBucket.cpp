@@ -23,6 +23,7 @@ namespace MeshBucket
 		Shader* Shader;
 		TextureArray* Textures[4];
 		int Layer;
+		int Pass;
 		glm::vec3 Position;
 		glm::quat Rotation;
 		glm::mat4 Bones[MaxBones];
@@ -41,7 +42,9 @@ namespace MeshBucket
 	{
 		std::sort(meshBucket.begin(), meshBucket.begin() + meshesInBucket, [](const MeshInABucket& a, const MeshInABucket& b)
 		{
-			if (a.Shader < b.Shader)
+			if (a.Pass < b.Pass)
+				return true;
+			else if (a.Shader < b.Shader)
 				return true;
 			else if (a.Shader > b.Shader)
 				return false;
@@ -49,8 +52,6 @@ namespace MeshBucket
 				return true;
 			else if (a.Textures[0] > b.Textures[0])
 				return false;
-			else if (a.Layer < b.Layer)
-				return true;
 			else
 				return false;
 		});
@@ -152,6 +153,7 @@ namespace MeshBucket
 		bucket.Indices = mesh.Indices();
 		bucket.BoneCount = boneCt;
 		bucket.Layer = mesh.Layer;
+		bucket.Pass = mesh.Pass;
 		bucket.Billboard = mesh.Billboard;
 		for (auto i = 0; i < 4; i++)
 			bucket.Textures[i] = mesh.Textures[i].get();

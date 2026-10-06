@@ -86,6 +86,7 @@ public:
 		hash Hash, MatHash;
 		bool Visible;
 		int Layer;
+		int Pass;
 		bool Translucent;
 		bool Opaque;
 		bool Billboard{ false };

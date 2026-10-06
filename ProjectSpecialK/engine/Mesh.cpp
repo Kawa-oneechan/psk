@@ -7,7 +7,7 @@
 #include "Shader.h"
 #include "CrcUtils.h"
 
-Model::Mesh::Mesh(ufbx_mesh* mesh, const Armature& bones, size_t boneCt) : Name(mesh->name.data), Visible(true), Layer(0), Translucent(false), Opaque(false)
+Model::Mesh::Mesh(ufbx_mesh* mesh, const Armature& bones, size_t boneCt) : Name(mesh->name.data), Visible(true), Layer(0), Pass(0), Translucent(false), Opaque(false)
 {
 	Hash = GetCRC(Name);
 	MatHash = (hash)-1; //filled in later

@@ -71,6 +71,47 @@ static void addProps(std::map<std::string, jsonValue>& map, const ufbx_props& pr
 	}
 }
 
+static void applyMatProps(Model::Mesh& mesh, const std::string& basePath, std::map<std::string, jsonValue>& props)
+{
+	for (const auto& c : { "visible", "translucent", "opaque", "billboard", "nearest" })
+	{
+		if (props[c].is_integer())
+			props[c] = jsonValue(props[c].as_integer() != 0);
+	}
+
+
+	if (props["shader"].is_string())
+		mesh.Shader = Shaders[props["shader"].as_string()];
+
+	const std::string textures[] = { "albedo", "normal", "mix", "opacity" };
+	for (int i = 0; i < 4; i++)
+	{
+		if (props[textures[i]].is_string())
+			mesh.Textures[i] = VFS::GetTextureArray(fmt::format("{}/{}", basePath, props[textures[i]].as_string()));
+	}
+
+	if (props["visible"].is_boolean())
+		mesh.Visible = props["visible"].as_boolean();
+
+	if (props["translucent"].is_boolean())
+		mesh.Translucent = props["translucent"].as_boolean();
+	if (props["opaque"].is_boolean())
+		mesh.Opaque = props["opaque"].as_boolean();
+	if (props["billboard"].is_boolean())
+		mesh.Billboard = props["billboard"].as_boolean();
+
+	if (props["pass"].is_integer())
+		mesh.Pass = props["pass"].as_integer();
+
+	if (props["nearest"].is_boolean() && props["nearest"].as_boolean())
+	{
+		mesh.Textures[0]->SetFilter(GL_NEAREST);
+		mesh.Textures[1]->SetFilter(GL_NEAREST);
+		mesh.Textures[2]->SetFilter(GL_NEAREST);
+		mesh.Textures[3]->SetFilter(GL_NEAREST);
+	}
+}
+
 static glm::vec3 jsonToGlmVec3(const jsonValue& val)
 {
 	auto& arr = val.as_array();
@@ -218,6 +259,8 @@ Model::Model(const std::string& modelPath) : file(modelPath)
 			m.Textures[2] = white;
 			m.Textures[3] = white;
 
+			std::map<std::string, jsonValue> properties;
+
 			if (node->mesh->materials.count > 0)
 			{
 				//We only grab the one. Fuck you.
@@ -229,50 +272,26 @@ Model::Model(const std::string& modelPath) : file(modelPath)
 				{
 					return e.first == m1;
 				});
+				if (it == mmObj.cend())
+				{
+					it = std::find_if(mmObj.cbegin(), mmObj.cend(), [m1](auto e)
+					{
+						return e.first == "*";
+					});
+				}
 				if (it != mmObj.cend())
 				{
-					auto mat = it->second.as_object();
-					if (mat["shader"])
-					{
-						auto s = mat["shader"].as_string();
-						m.Shader = Shaders[s];
-						/*
-						Secondary idea: look into custom properties in the FBX file
-						that may OVERRIDE the matmap file.
-						*/
-					}
-					if (mat["albedo"].is_string())
-						m.Textures[0] = VFS::GetTextureArray(fmt::format("{}/{}", basePath, mat["albedo"].as_string()));
-					if (mat["normal"].is_string())
-						m.Textures[1] = VFS::GetTextureArray(fmt::format("{}/{}", basePath, mat["normal"].as_string()));
-					if (mat["mix"].is_string())
-						m.Textures[2] = VFS::GetTextureArray(fmt::format("{}/{}", basePath, mat["mix"].as_string()));
-					if (mat["opacity"].is_string())
-						m.Textures[3] = VFS::GetTextureArray(fmt::format("{}/{}", basePath, mat["opacity"].as_string()));
-
-					if (mat["visible"].is_boolean())
-						m.Visible = mat["visible"].as_boolean();
-
-					if (mat["translucent"].is_boolean())
-						m.Translucent = mat["translucent"].as_boolean();
-					if (mat["opaque"].is_boolean())
-						m.Opaque = mat["opaque"].as_boolean();
-					if (mat["billboard"].is_boolean())
-						m.Billboard = mat["billboard"].as_boolean();
-
-					if (mat["nearest"].is_boolean() && mat["nearest"].as_boolean())
-					{
-						m.Textures[0]->SetFilter(GL_NEAREST);
-						m.Textures[1]->SetFilter(GL_NEAREST);
-						m.Textures[2]->SetFilter(GL_NEAREST);
-						m.Textures[3]->SetFilter(GL_NEAREST);
-					}
-					debprint(0, "* #{}: {} > {}", matCt, m.Name, m1);
+					properties = it->second.as_object();
 				}
-				else
-					debprint(0, "* #{}: {} > {} (unmapped)", matCt, m.Name, m1);
+				debprint(0, "* #{}: {} > {}", matCt, m.Name, m1);
 				matCt++;
 			}
+
+			//Override matmap file with custom properties where available
+			addProps(properties, node->mesh->instances[0]->props);
+
+			applyMatProps(m, basePath, properties);
+
 			Meshes.emplace_back(m);
 		}
 		else if (node->light)
