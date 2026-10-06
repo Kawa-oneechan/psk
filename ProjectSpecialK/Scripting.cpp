@@ -213,15 +213,15 @@ namespace Scripting
 		console->RegisterCCmd("lua", CCmdLua, true);
 	}
 
-	bool Conditional(const std::string& snippet)
+	bool Conditional(const std::string& expression)
 	{
-		return Sol->script(fmt::format("return ({})", snippet));
+		return Sol->script(fmt::format("return ({})", expression));
 	}
 
-	std::string BJTS(const std::string& func, const std::vector<std::string>& bjts)
+	std::string BJTS(const std::string& code, const std::vector<std::string>& args)
 	{
-		(*Sol)["bjts"] = bjts;
-		auto ret = Sol->script(func).get<std::string>();
+		(*Sol)["bjts"] = args;
+		auto ret = Sol->script(code).get<std::string>();
 		(*Sol)["bjts"] = nullptr;
 		return ret;
 	}
