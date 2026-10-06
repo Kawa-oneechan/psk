@@ -15,12 +15,13 @@
 		"normal": "normal.png"
 	},
 	"mGlass": {
-		"shader": "glass",
+		//"shader": "glass",
 		"albedo": "glass_albedo.png",
 		"mix": "glass_mix.png",
 		"normal": "glass_normal.png",
 		"opacity": "glass_opacity.png",
-		"translucent": true
+		"translucent": true,
+		"pass": 100
 	},
 	"mGlassBack": {
 		"albedo": "watersurface_albedo.png",

@@ -71,7 +71,7 @@ void Game::RegisterConsole(Console* console)
 	RV("grass", CVar::Type::Float, &commonUniforms.GrassColor, "Grass color in progression through the year");
 
 	//replace this with noclip below
-	RV("collidenpc", CVar::Type::Bool, &botherColliding, false);
+	RV("collidenpc", CVar::Type::Bool, &botherColliding, "");
 
 	//RV("ai_disable", CVar::Type::Bool, &);
 	//RV("cl_showpos", CVar::Type::Bool, &);
@@ -81,5 +81,5 @@ void Game::RegisterConsole(Console* console)
 
 #undef RV
 
-	console->RegisterCCmd("reshade", CCmdReshade, false, "Forces reload of all shaders");
+	console->RegisterCCmd("reshade", CCmdReshade, CVar::Flags::Normal, "Forces reload of all shaders");
 }

@@ -142,9 +142,9 @@ namespace Scripting
 			(*Sol)["nookName"] = "XXX";
 			NookCode::Decode(code, itemHash, variant, pattern);
 			if (itemHash == (hash)-1)
-				return 0; //Invalid characters in NookCode.
+				return 0; //return sol::tie(0, std::string("XXX")); //Invalid characters in NookCode.
 			if (itemHash == (hash)-2)
-				return 1; //Checksum mismatch.
+				return 1; //return sol::tie(1, std::string("XXX")); //Checksum mismatch.
 			//See if this identifies an item (despite the itemHash name)
 			{
 				auto item = Database::Find(itemHash, items);
@@ -154,6 +154,7 @@ namespace Scripting
 					//TODO: put this item in the delivery queue for tomorrow
 					(*Sol)["nookName"] = item->Name();
 					return 3; //Item will be delivered.
+					//return sol::tie(3, std::string(item->Name()));
 				}
 			}
 			{
@@ -164,9 +165,10 @@ namespace Scripting
 					//TODO: put this villager on the move-in queue
 					(*Sol)["nookName"] = villager->Name();
 					return 5; //Villager will move in.
+					//return sol::tie(5, std::string(villager->Name()));
 				}
 			}
-			return 2; //Valid NookCode, but unknown hash.
+			return 2; //return sol::tie(2, std::string("")); //Valid NookCode, but unknown hash.
 		};
 
 		(*Sol)["getRandomVillager"] = [](sol::variadic_args va)
