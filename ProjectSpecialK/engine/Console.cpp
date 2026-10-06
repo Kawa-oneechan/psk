@@ -121,7 +121,7 @@ static std::string quake2json(const std::string& input)
 				else if (token.length() > 2 && token[0] == '0' && token[1] == 'x')
 					needsQuotes = std::any_of(token.cbegin() + 2, token.cend(), [](auto c) { return !isxdigit(c); });
 				else
-					needsQuotes = std::any_of(token.cbegin(), token.cend(), [](auto c) { return !(isdigit(c) || c == '.'); });
+					needsQuotes = std::any_of(token.cbegin(), token.cend(), [](auto c) { return !(isdigit(c) || c == '.' || c == '-'); });
 
 				if (needsQuotes)
 					token = "\"" + token + "\"";

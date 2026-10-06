@@ -67,6 +67,9 @@ void Game::RegisterConsole(Console* console)
 	RV("colorcheeks", CVar::Type::Color, &thePlayer.CheekColor, "Player's cheek color");
 	RV("coloreyes", CVar::Type::Color, &thePlayer.EyeColor, "Player's eye color");
 
+	RV("weather", CVar::Type::Float, &commonUniforms.Weather, "Weather");
+	RV("wind", CVar::Type::Float, &commonUniforms.Wind, CVar::Flags::Normal, -2, 2, nullptr, "Wind");
+
 	//TODO: add a change callback to handle the snow/grass change.
 	RV("grass", CVar::Type::Float, &commonUniforms.GrassColor, "Grass color in progression through the year");
 

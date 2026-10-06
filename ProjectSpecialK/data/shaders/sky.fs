@@ -21,7 +21,7 @@ float clouds(vec2 uv, float pitch)
 	uv = planarUV * 0.24;
 	uv.y += 0.5;
 	uv.x *= 0.4;
-	uv += TotalTime * 0.045;
+	uv += TotalTime * Wind; //0.045;
 
 	float n1 = texture(cloudImage, vec3(uv * 0.25, 0)).r * 0.5;
 	float n2 = texture(cloudImage, vec3(uv + vec2(0.5) * 0.15, 0)).r * 0.5;

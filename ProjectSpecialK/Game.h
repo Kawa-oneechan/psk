@@ -79,9 +79,14 @@ struct CommonUniforms
 	alignas(4) bool Fresnel;
 	float FresnelPower;
 	float GrassColor;
+	//CONSIDER: vec4 Environment[Weather, WeatherTarget, Wind, TimeOfDay]
 	float TimeOfDay;
 	alignas(4*4) glm::vec3 NightSkyColor;
 	float Weather;
+	float Wind;
+	float __bluh;
+	float __blah;
+	float __fuuh;
 	glm::vec4 PlayerSkin;
 	glm::vec4 PlayerSkinEdge;
 	glm::vec4 PlayerEyes;

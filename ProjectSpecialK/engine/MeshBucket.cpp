@@ -44,6 +44,8 @@ namespace MeshBucket
 		{
 			if (a.Pass < b.Pass)
 				return true;
+			else if (a.Pass > b.Pass)
+				return false;
 			else if (a.Shader < b.Shader)
 				return true;
 			else if (a.Shader > b.Shader)
